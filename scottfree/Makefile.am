@@ -1,6 +1,8 @@
 INCLUDES = 			\
 	-I../.. 		\
+	-I../gemvt		\
 	-I$(srcdir)/../.. 	\
+	-I$(srcdir)/..	 	\
 	-I$(includedir)		\
 	$(X_CFLAGS)
 

@@ -244,8 +244,7 @@ set_score (int new_score)
 void
 show_scores ( gchar *title, guint pos )
 {
-	gnome_scores_display (_("The Same Gnome", "samegnome", title, pos);
-}
+	gnome_scores_display (_("The Same Gnome"), "samegnome", title, pos);
 }
 
 void 
