@@ -1,3 +1,12 @@
+1999-02-23  Marcin Gorycki  <mgo@olicom.dk>
+
+	* tetris.h, tetris.cpp, blockops.h, blockops.cpp: fast fall fixed
+
+1999-02-21  sipan  <sipan@mit.edu>
+
+	* gnometris.desktop: Added Russian lines to the *.desktop files
+
+
 1999-02-19  Janusz Marcin Gorycki  <mgo@olicom.dk>
 
 	* tetris.h, tetris.cpp, field.cpp: smooth fast fall, backgrounds
