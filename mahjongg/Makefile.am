@@ -9,8 +9,7 @@ INCLUDES =						\
 	-I..						\
 	-I$(srcdir)/..					\
 	$(GNOME_GAMES_CFLAGS)				\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
-	-I$(includedir)	
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"
 
 bin_PROGRAMS = mahjongg
 

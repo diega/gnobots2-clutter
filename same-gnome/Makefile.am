@@ -7,8 +7,7 @@ SUBDIRS = help
 INCLUDES = -I.. -I$(srcdir)/..		\
 	$(GNOME_GAMES_CFLAGS) \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
-	-DPIXMAPDIR=\""$(datadir)/pixmaps/same-gnome"\" \
-	-I$(includedir)			
+	-DPIXMAPDIR=\""$(datadir)/pixmaps/same-gnome"\"
 
 bin_PROGRAMS = same-gnome
 
