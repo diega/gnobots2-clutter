@@ -45,6 +45,12 @@ Preview::show()
 	gdk_window_set_background(w->window, &c);
 
 	gtk_widget_show(w);
+	updateSize();
+}
+
+void
+Preview::updateSize()
+{
 	gtk_drawing_area_size(GTK_DRAWING_AREA(w), PREVIEW_SIZE * BLOCK_SIZE, PREVIEW_SIZE * BLOCK_SIZE);
 }
 

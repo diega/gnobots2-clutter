@@ -26,6 +26,7 @@
 
 #include <gdk/gdkkeysyms.h>
 #include <config.h>
+#include <dirent.h>
 
 GdkImlibImage *image;
 GdkPixmap *pix;
@@ -49,9 +50,21 @@ int color_next = -1;
 bool random_block_colors = false;
 bool do_preview = true;
 
-Tetris::Tetris(int cmdlLevel)
-	: paused(false), timeoutId(-1), onePause(false), setupdialog(NULL), 
-		cmdlineLevel(cmdlLevel), doPreviewTmp(do_preview), randomBlocksTmp(random_block_colors)
+char *Tetris::blockPixmapTmp = NULL;
+
+Tetris::Tetris(int cmdlLevel): 
+	paused(false), 
+	timeoutId(-1), 
+	onePause(false), 
+	setupdialog(NULL), 
+	cmdlineLevel(cmdlLevel), 
+	doPreviewTmp(do_preview), 
+	randomBlocksTmp(random_block_colors),
+	blockPixmap(NULL),
+	image(NULL),
+	scoreFrame(NULL),
+	field(NULL),
+	preview(NULL)
 {
 	w = gnome_app_new("gnometris", _("Gnometris"));
   gtk_window_set_policy(GTK_WINDOW(w), FALSE, FALSE, TRUE);
@@ -59,7 +72,7 @@ Tetris::Tetris(int cmdlLevel)
 
 	GnomeUIInfo game_menu[] = 
 	{
-	        GNOMEUIINFO_MENU_NEW_GAME_ITEM(gameNew, this),
+		GNOMEUIINFO_MENU_NEW_GAME_ITEM(gameNew, this),
 		GNOMEUIINFO_MENU_PREFERENCES_ITEM(gameProperties, this),
 		GNOMEUIINFO_MENU_SCORES_ITEM(gameTopTen, this),
 		GNOMEUIINFO_MENU_EXIT_ITEM(gameQuit, this),
@@ -68,21 +81,24 @@ Tetris::Tetris(int cmdlLevel)
 
 	GnomeUIInfo help_menu[] = 
 	{
-	        GNOMEUIINFO_HELP((gpointer)"gnometris"),
-	        GNOMEUIINFO_MENU_ABOUT_ITEM(gameAbout, this),
+		GNOMEUIINFO_HELP((gpointer)"gnometris"),
+		GNOMEUIINFO_MENU_ABOUT_ITEM(gameAbout, this),
 		GNOMEUIINFO_END
 	};
 
 	GnomeUIInfo mainmenu[] = 
 	{
-	        GNOMEUIINFO_MENU_GAME_TREE(game_menu),
+		GNOMEUIINFO_MENU_GAME_TREE(game_menu),
 		GNOMEUIINFO_MENU_HELP_TREE(help_menu),
 		GNOMEUIINFO_END
 	};
 
+	blockPixmap = strdup(gnome_config_get_string_with_default("/gnometris/Properties/BlockPixmap=7blocks.png", NULL));
+	setupPixmap();
+
 	gnome_app_create_menus(GNOME_APP(w), mainmenu);
 
-	GtkWidget * hb = gtk_hbox_new(FALSE, 0);
+  GtkWidget * hb = gtk_hbox_new(FALSE, 0);
 	gnome_app_set_contents(GNOME_APP(w), hb);
 
 	ops = new BlockOps();
@@ -125,6 +141,12 @@ Tetris::~Tetris()
 	delete field;
 	delete preview;
 	delete scoreFrame;
+
+	if (image)
+		gdk_imlib_destroy_image(image);
+
+	if (blockPixmap)
+		free(blockPixmap);
 }
 
 void 
@@ -133,6 +155,54 @@ Tetris::setupdialogDestroy(GtkWidget *widget, void *d)
 	Tetris *t = (Tetris*) d;
 	gtk_widget_destroy(t->setupdialog);
 	t->setupdialog = NULL;
+}
+
+void
+Tetris::setupPixmap()
+{
+	char *pixname, *fullpixname;
+	
+	pixname = g_copy_strings("gnometris/", blockPixmap, NULL);
+	fullpixname = gnome_unconditional_pixmap_file(pixname);
+	g_free(pixname);
+
+	if (!g_file_exists(fullpixname)) 
+	{
+		printf(_("Could not find the \'%s\' theme for gnometris\n"), fullpixname);
+		exit(1);
+	}
+
+	if(image)
+		gdk_imlib_destroy_image(image);
+
+	image = gdk_imlib_load_image(fullpixname);
+	gdk_imlib_render(image, image->rgb_width, image->rgb_height);
+	pix = gdk_imlib_move_image(image);
+
+	BLOCK_SIZE = image->rgb_height;
+	nr_of_colors = image->rgb_width / BLOCK_SIZE;
+
+	if (field)
+	{
+		field->updateSize();
+		gtk_widget_draw(field->getWidget(), NULL);
+	}
+	
+	if (preview)
+	{
+		preview->updateSize();
+		gtk_widget_draw(preview->getWidget(), NULL);
+	}
+
+	// FIXME: this really sucks, but I can't find a better way to resize 
+	// all widgets after the block pixmap change
+	if (scoreFrame)
+	{
+		int l = scoreFrame->getLevel();
+		scoreFrame->setLevel(l + 1);
+		scoreFrame->setLevel(l);
+	}
+	
 }
 
 void
@@ -147,10 +217,19 @@ Tetris::doSetup(GtkWidget *widget, void *d)
 	gnome_config_set_int("/gnometris/Properties/StartingLevel", t->startingLevel);
 	gnome_config_set_int("/gnometris/Properties/DoPreview", do_preview);
 	gnome_config_set_int("/gnometris/Properties/RandomBlockColors", random_block_colors);
+	
+	if (t->blockPixmap)
+		free(t->blockPixmap);
+	
+	t->blockPixmap = strdup(blockPixmapTmp);
+	
+	gnome_config_set_string("/gnometris/Properties/BlockPixmap", t->blockPixmap);
+	
 	gnome_config_sync();
 	
 	t->scoreFrame->setLevel(t->startingLevel);
 	setupdialogDestroy(widget, d);
+	t->setupPixmap();
 }
 
 void 
@@ -167,10 +246,61 @@ Tetris::setSelectionBlocks(GtkWidget *widget, void *d)
 	t->randomBlocksTmp = GTK_TOGGLE_BUTTON(widget)->active;
 }
 
+void
+Tetris::setSelection(GtkWidget *widget, void *data)
+{
+	blockPixmapTmp = (char*) data;
+}
+
+void
+Tetris::freeStr(GtkWidget *widget, void *data)
+{
+	free(data);
+}
+
+void
+Tetris::fillMenu(GtkWidget *menu)
+{
+	struct dirent *e;
+	char *dname = gnome_unconditional_pixmap_file("gnometris");
+	DIR *dir;
+  int itemno = 0;
+	
+	dir = opendir (dname);
+
+	if (!dir)
+		return;
+	
+	while ((e = readdir (dir)) != NULL)
+	{
+		GtkWidget *item;
+		char *s = strdup(e->d_name);
+
+		if (!strstr (e->d_name, ".png")) 
+		{
+			free(s);
+			continue;
+		}
+			
+		item = gtk_menu_item_new_with_label(s);
+		gtk_widget_show(item);
+		gtk_menu_append(GTK_MENU(menu), item);
+		gtk_signal_connect(GTK_OBJECT(item), "activate", (GtkSignalFunc) setSelection, s);
+		gtk_signal_connect(GTK_OBJECT(item), "destroy", (GtkSignalFunc) freeStr, s);
+	  
+		if (!strcmp(blockPixmap, s))
+		{
+		  gtk_menu_set_active(GTK_MENU(menu), itemno);
+		}
+		itemno++;
+	}
+	closedir(dir);
+}
+
 int 
 Tetris::gameProperties(GtkWidget *widget, void *d)
 {
-        GtkWidget *allBoxes;
+	GtkWidget *allBoxes;
 	GtkWidget *box, *box2;
 	GtkWidget *button, *label;
 	GtkWidget *frame;
@@ -238,6 +368,21 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_signal_connect(GTK_OBJECT(cb), "clicked", (GtkSignalFunc)setSelectionBlocks, d);
 	gtk_box_pack_start(GTK_BOX(box), cb, 0, 0, 0);
 	gtk_widget_show(cb);
+
+	box2 = gtk_hbox_new(FALSE, 0);
+  gtk_container_border_width(GTK_CONTAINER(box2), 10);
+	gtk_box_pack_start(GTK_BOX(box), box2, TRUE, TRUE, 0);
+	label = gtk_label_new(_("Block Pixmap: "));
+	gtk_box_pack_start(GTK_BOX(box2), label, 0, 0, 0);
+	gtk_widget_show(label);
+	GtkWidget *omenu = gtk_option_menu_new();
+	GtkWidget *menu = gtk_menu_new();
+	t->fillMenu(menu);
+	gtk_widget_show(omenu);
+	gtk_option_menu_set_menu(GTK_OPTION_MENU(omenu), menu);
+	gtk_box_pack_end(GTK_BOX(box2), omenu, 0, 0, 0);
+	gtk_box_pack_start(GTK_BOX(box), box2, 0, 0, 0);
+	gtk_widget_show(box2);
 
 	box = gtk_hbox_new(TRUE, 5);
 	gtk_box_pack_start(GTK_BOX(allBoxes), box, TRUE, TRUE, 0);

@@ -3,7 +3,6 @@ ASAP:
    less static methods etc.
 
 Next:
-* configurable block shapes and block pictures
 * changeable field background
 * configurable field size
 * major redesign: tetris, jewel and trojka in one shell (Sergey's (sipan@mit.edu) idea)

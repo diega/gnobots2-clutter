@@ -47,6 +47,12 @@ Field::show()
 	gdk_window_set_background(w->window, &c);
 
 	gtk_widget_show(w);
+	updateSize();
+}
+
+void
+Field::updateSize()
+{
 	gtk_drawing_area_size(GTK_DRAWING_AREA(w), COLUMNS * BLOCK_SIZE, LINES * BLOCK_SIZE);
 }
 

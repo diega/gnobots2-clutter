@@ -45,29 +45,9 @@ main(int argc, char *argv[])
 
 	GnomeClient *client= gnome_master_client();
 	
-	char *pixname, *fullpixname;
-	pixname = g_copy_strings( "gnometris/", "7blocks.png", NULL);
-	fullpixname = gnome_unconditional_pixmap_file(pixname);
-	g_free(pixname);
-
-	if (!g_file_exists(fullpixname)) 
-	{
-		printf(_("Could not find the \'%s\' theme for gnometris\n"), fullpixname);
-		exit(1);
-	}
-
-	GdkImlibImage *image = gdk_imlib_load_image(fullpixname);
-	gdk_imlib_render(image, image->rgb_width, image->rgb_height);
-	pix = gdk_imlib_move_image(image);
-
-	BLOCK_SIZE = image->rgb_height;
-	nr_of_colors = image->rgb_width / BLOCK_SIZE;
-	
 	Tetris * t = new Tetris(cmdlineLevel);
 
 	gtk_main();
-
-	gdk_imlib_destroy_image(image);
 
 	delete t;
 	

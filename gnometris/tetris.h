@@ -24,7 +24,7 @@
 #include <config.h>
 #include <gnome.h>
 
-#define TETRIS_VERSION "0.2.0"
+#define TETRIS_VERSION "0.3.0"
 
 extern int LINES;
 extern int COLUMNS;
@@ -77,10 +77,14 @@ public:
 	void togglePause();
 	void generate();
 	void endOfGame();
+	void setupPixmap();
 	
 private:
 	GtkWidget * w;
 
+	char *blockPixmap;
+	GdkImlibImage *image;
+	
 	Field *field;
 	Preview *preview;
 	BlockOps *ops;
@@ -101,7 +105,13 @@ private:
 	static void doSetup(GtkWidget *widget, void *d);
 	static void setSelectionPreview(GtkWidget *widget, void *d);
 	static void setSelectionBlocks(GtkWidget *widget, void *d);
-		
+	static void setSelection (GtkWidget *widget, void *data);
+	static void freeStr (GtkWidget *widget, void *data);
+	
+	static char *blockPixmapTmp;
+	
+	void fillMenu(GtkWidget *menu);
+	
 	GtkWidget *setupdialog;
 	GtkWidget *sentry;
 	int startingLevel;
@@ -114,3 +124,8 @@ private:
 };
 
 #endif // __tetris_h__
+
+
+
+
+
