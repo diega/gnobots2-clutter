@@ -1,10 +1,12 @@
 [Desktop Entry]
 Name=Gnometris
+Name[de]=Gnometris
 Name[es]=Gnometris
 Name[fi]=Gnometris
 Name[fr]=Gnometris
 Name[ru]=Гнометрис
 Comment=Gnome Tetris Game
+Comment[de]=Gnome-Tetris-Spiel
 Comment[es]=El juego de Tetris de Gnome
 Comment[fi]=Gnome-tetrisklooni
 Comment[fr]=Le jeu Tetris de Gnome
