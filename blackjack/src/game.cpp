@@ -478,16 +478,17 @@ bj_clear_table ()
         playerHands = g_list_append (playerHands, player);
   
         // Create slots
-        bj_slot_add (0, DEALER_SLOT_ORIGIN_X, DEALER_SLOT_ORIGIN_Y);
-        bj_slot_add (1, PLAYER_SLOT_ORIGIN_X, PLAYER_SLOT_ORIGIN_Y);
+        bj_slot_add (0);
+        bj_slot_add (1);
+        bj_draw_set_geometry (1, 2);
 
         // Clear the table.
         dealer->hslot = (hslot_type) g_list_nth_data (slot_list, 0);
         player->hslot = (hslot_type) g_list_nth_data (slot_list, 1);
 
         bj_chip_stack_new_with_value (bj_get_wager (),
-                                      player->hslot->x - bj_chip_get_width () - 5,
-                                      player->hslot->y + bj_card_get_height () / 2);
+                                      player->hslot->pixelx - bj_chip_get_width () - 5,
+                                      player->hslot->pixely + card_height / 2);
 
         // Create source chip stacks 
         bj_chip_stack_create_sources ();

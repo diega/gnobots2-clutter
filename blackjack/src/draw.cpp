@@ -43,6 +43,31 @@ using namespace std;
 #include "game.h"
 #include "hand.h"
 
+/* The ratio of height to width for a card. */
+#define CARD_HW_RATIO (0.65)
+  	 
+/* The proportion of a slot dedicated to the card (horiz or vert). */
+#define CARD_SLOT_PROP (0.8)
+
+/* The size of the drawing area. */
+int window_width = 0;
+int window_height = 0;
+
+/* The size of a slot in pixels. */
+static double xslotstep = 0;
+static double yslotstep = 0;
+
+/* The size of a slot in scaled units. */
+static int slot_width = 1;
+static int slot_height = 2;
+
+/* The size of a card. */
+int card_width;
+int card_height;
+
+/* The offset of the cards within the slot. */
+int xoffset, yoffset;
+
 gchar *dealer_markup = NULL;
 gchar *player_markup = NULL;
 
@@ -156,45 +181,111 @@ bj_draw_chips ()
                         }
                 }
         }
-        gdk_gc_set_clip_mask (draw_gc, NULL);
+}
+
+static void
+calculate_card_location (hslot_type hslot)
+{
+        int xofs, yofs;
+
+        xofs = xoffset;
+        yofs = yoffset;
+
+        /* If this is an extended slot, position the cards to one side. */
+        if (hslot->dx > 0.0)
+                xofs = yofs;
+        if (hslot->dy > 0.0)
+                yofs = xofs;
+
+        hslot->pixelx = (int)(window_width * hslot->x + xofs);
+        hslot->pixely = (int)(window_height * hslot->y + yofs);
+        hslot->pixeldx = (int)(hslot->dx * card_width);
+        hslot->pixeldy = (int)(hslot->dy * card_height);
+
+        bj_slot_update_length (hslot);
+}
+
+/* Work out new sizes and spacings for the cards. */
+void
+bj_draw_set_geometry (gint new_width, gint new_height)
+{
+        double twidth, theight;
+
+        slot_width = new_width;
+        slot_height = new_height;
+
+        /* We are called for two reasons: if the logical size of the board
+         * has changed and if the physical size of the board has changed.
+         * This catches the case where the logical size is set before the
+         * physical size. In that case we ignore anything that needs
+         * knowledge of the physical size. Yes, this probably is a sign that
+         * the code needs reorganising. */
+        if ((window_height == 0) || (window_width == 0))
+                return;
+
+        xslotstep = window_width / slot_width;
+        yslotstep = window_height / slot_height;
+
+        twidth = CARD_SLOT_PROP * xslotstep;
+        theight = CARD_SLOT_PROP * yslotstep;
+        if (twidth / theight < CARD_HW_RATIO) {
+                card_height = (int) (twidth / CARD_HW_RATIO);
+                card_width = (int)twidth;
+        } else {
+                card_width = (int) (CARD_HW_RATIO * theight);
+                card_height = (int)theight;
+        }
+        xoffset = (int)(xslotstep - twidth) / 2;
+        yoffset = (int)(yslotstep - theight) / 2;
+
+        bj_card_set_size (card_width, card_height);
+
+        /* Recalculate the slot locations. */
+        g_list_foreach (bj_slot_get_list (),
+                        (GFunc) calculate_card_location, NULL);
+}
+
+void
+bj_draw_rescale_cards (void)
+{
+  bj_draw_set_geometry (slot_width, slot_height);
 }
 
 static void
 bj_draw_cards ()
 {
-        GList* slot;
-        gint x, y;
-        GList* card_list;
-        GdkPixmap *image;
+        GList *slot;
 
-        gdk_gc_set_clip_mask (draw_gc, bj_card_get_mask ()); 
-  
         for (slot = bj_slot_get_list (); slot; slot = slot->next) {
                 hslot_type hslot = (hslot_type) slot->data;
       
-                if ((card_list = hslot->cards)) {
-                        card_list = g_list_nth (card_list, hslot->length - hslot->exposed);
-          
-                        x = hslot->x;
-                        y = hslot->y;
-          
+                if (hslot->cards) {
+                        gint x = hslot->pixelx;
+                        gint y = hslot->pixely;
+                        GList *card_list = g_list_nth (hslot->cards, hslot->length - hslot->exposed);
+
                         for (; card_list; card_list = card_list->next) {
+                                GdkPixmap *image;
                                 card_type *card = (card_type*)card_list->data;
                                 
                                 if (card->direction == DOWN) 
                                         image = bj_card_get_back_pixmap ();
                                 else 
-                                        image = bj_card_get_picture (card->suit, card->value);
+                                        image = bj_card_get_picture (card->suit,
+                                                                     card->value);
                                 
                                 gdk_gc_set_clip_origin (draw_gc, x, y);
-                                if (image != NULL)
-                                        gdk_draw_drawable (surface, draw_gc, image, 0, 0, x, y, -1, -1);
-                                
-                                x += hslot->dx; y += hslot->dy;
+                                if (image)
+                                        gdk_draw_drawable (surface, draw_gc, image,
+                                                           0, 0,
+                                                           x, y,
+                                                           -1, -1);
+
+                                x += hslot->pixeldx;
+                                y += hslot->pixeldy;
                         }
                 }
         }
-        gdk_gc_set_clip_mask (draw_gc, NULL); 
 }
 
 void
@@ -204,7 +295,7 @@ bj_draw_take_snapshot ()
         GdkPixbuf *chip_pixbuf;
         gint x, y, x_offset;
 
-        gdk_draw_rectangle (surface, draw_gc, TRUE, 0, 0, -1, -1);
+        gdk_draw_rectangle (surface, bg_gc, TRUE, 0, 0, -1, -1);
 
         // Draw chips under source chip stacks
         x = CHIP_X_ORIGIN;
@@ -212,11 +303,11 @@ bj_draw_take_snapshot ()
         x_offset = 0;
         for (int i=0; i < 4; i++) {
                 chip_pixbuf = bj_chip_get_pixbuf (i);
-                if (chip_pixbuf != NULL)
+                if (chip_pixbuf)
                         gdk_draw_pixbuf (surface,
                                          draw_gc,
                                          chip_pixbuf,
-                                         0, 0, 
+                                         0, 0,
                                          x + x_offset, y, 
                                          -1, -1, 
                                          GDK_RGB_DITHER_MAX,
@@ -225,18 +316,20 @@ bj_draw_take_snapshot ()
         }
 
         for (slot = bj_slot_get_list (); slot; slot = slot->next) {
-                GdkPixbuf *slot_pixbuf;
-                slot_pixbuf = bj_slot_get_pixbuf ();
-                if (slot_pixbuf != NULL)
+                GdkPixbuf *slot_pixbuf = bj_slot_get_scaled_pixbuf ();
+
+                if (slot_pixbuf) {
+                        gint x = ((hslot_type)slot->data)->pixelx;
+                        gint y = ((hslot_type)slot->data)->pixely;
                         gdk_draw_pixbuf (surface,
-                                         draw_gc,
+                                         slot_gc,
                                          slot_pixbuf,
-                                         0, 0, 
-                                         ((hslot_type) slot->data)->x, 
-                                         ((hslot_type) slot->data)->y,
-                                         -1, -1, 
+                                         0, 0,
+                                         x, y,
+                                         -1, -1,
                                          GDK_RGB_DITHER_MAX,
                                          0, 0);
+                }
         }
         bj_draw_cards ();
         bj_draw_chips ();

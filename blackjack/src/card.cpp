@@ -23,6 +23,7 @@
 
 #include "blackjack.h"
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <games-card-pixmaps.h>
 #include "card.h"
 
 #include "chips.h"
@@ -36,54 +37,26 @@ using namespace std;
 
 GdkBitmap *mask;
 
-GdkPixmap*
-bj_card_get_picture (gint suit, gint rank ) 
+GamesCardPixmaps *images = NULL;
+
+GdkPixmap *
+bj_card_get_picture (gint suit, gint rank) 
 {
-        return gdk_card_deck_face (GDK_CARD_DECK (card_deck), 
-                                   (GdkCardSuit)suit, 
-                                   (rank == 14) ? (GdkCardRank)1:(GdkCardRank)rank);
+        return games_card_pixmaps_get_card (images,
+                                            suit, 
+                                            (rank == 14) ? 1 : rank);
 }
 
-GdkPixmap*
+GdkPixmap *
 bj_card_get_back_pixmap ()
 {
-        return gdk_card_deck_back (GDK_CARD_DECK (card_deck));
+        return games_card_pixmaps_get_back (images);
 }
 
-GdkBitmap*
+GdkBitmap *
 bj_card_get_mask ()
 {
         return mask;
-}
-
-int
-bj_card_get_width ()
-{
-        int width, height;
-        gdk_drawable_get_size (gdk_card_deck_back (GDK_CARD_DECK (card_deck)), 
-                               &width, &height);
-        return width;
-}
-
-int
-bj_card_get_height ()
-{
-        int width, height;
-        gdk_drawable_get_size (gdk_card_deck_back (GDK_CARD_DECK (card_deck)), 
-                               &width, &height);
-        return height;
-}
-
-int
-bj_card_get_horiz_offset ()
-{
-        return bj_card_get_width () + x_spacing;
-}
-
-int
-bj_card_get_vert_offset ()
-{
-        return bj_card_get_height () + y_spacing;
 }
 
 int
@@ -98,8 +71,8 @@ bj_card_get_horiz_start ()
         return 30;
 }
 
-GdkPixbuf*
-get_pixbuf (const char* filename)
+GdkPixbuf *
+get_pixbuf (const char *filename)
 {
         GdkPixbuf *im;
         char* fullname = gnome_program_locate_file (NULL,
@@ -115,12 +88,12 @@ get_pixbuf (const char* filename)
         return im;
 }
 
-GdkPixmap*
-get_pixmap (const char* filename)
+GdkPixmap *
+get_pixmap (const char *filename)
 {
-        GdkPixmap* ret;
+        GdkPixmap *ret;
         GdkPixbuf *im;
-        char* fullname = gnome_program_locate_file (NULL,
+        char *fullname = gnome_program_locate_file (NULL,
                                                     GNOME_FILE_DOMAIN_APP_PIXMAP,
                                                     filename, TRUE, NULL);
 
@@ -141,26 +114,9 @@ get_pixmap (const char* filename)
 }
 
 void
-bj_card_load_pixmaps (GtkWidget* app, GdkCardDeckOptions deck_options) 
+bj_card_load_pixmaps (GtkWidget *app, gchar *card_style) 
 {
         gchar *buffer;
-
-        card_deck = (GObject*) gdk_card_deck_new (app->window, deck_options);
-        if (card_deck == NULL) {
-                GtkWidget *error_dialog;
-                error_dialog = gtk_message_dialog_new (GTK_WINDOW (app),
-                                                       GTK_DIALOG_MODAL,
-                                                       GTK_MESSAGE_ERROR,
-                                                       GTK_BUTTONS_CLOSE,
-                                                       "<b>%s</b>\n\n%s",
-                                                       _("Could not load the card deck images."),
-                                                       _("Blackjack will now exit."));
-                gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (error_dialog)->label), TRUE);
-                gtk_dialog_run (GTK_DIALOG (error_dialog));
-                gtk_widget_destroy (error_dialog);
-                exit (1);
-        }
-        mask = gdk_card_deck_mask (GDK_CARD_DECK (card_deck)); 
 
         buffer = g_build_filename ("blackjack", "chip-100.png", NULL);
         chip_pixbuf[CHIP_100] = get_pixbuf (buffer);
@@ -179,8 +135,6 @@ bj_card_load_pixmaps (GtkWidget* app, GdkCardDeckOptions deck_options)
 void
 bj_card_free_pixmaps () 
 {
-        gtk_object_sink (GTK_OBJECT (card_deck));
-
         for (int i=0; i < 4; i++)
                 if (chip_pixbuf[i] != NULL)
                         g_object_unref (chip_pixbuf[i]);
@@ -197,4 +151,35 @@ bj_card_new (gint value, gint suit, gint direction)
         temp_card->direction = direction;
 
         return temp_card;
+}
+
+void
+bj_card_set_size (gint width, gint height)
+{
+        GdkPixbuf *scaled = NULL;
+        GdkBitmap *mask;
+
+        if (bj_slot_get_pixbuf ()) {
+                scaled = gdk_pixbuf_scale_simple (bj_slot_get_pixbuf (), width, height,
+                                                  GDK_INTERP_BILINEAR);
+
+                bj_slot_set_scaled_pixbuf (scaled);
+        }
+
+        if (!images) {
+                images = games_card_pixmaps_new (playing_area->window);
+                games_card_pixmaps_set_theme (images, bj_get_card_style ());
+        }
+
+        games_card_pixmaps_set_size (images, width, height);
+        mask = games_card_pixmaps_get_mask (images);
+        gdk_gc_set_clip_mask (draw_gc, mask);
+}
+
+void
+bj_card_set_theme (gchar *theme)
+{
+        games_card_pixmaps_set_theme (images, theme);
+        mask = games_card_pixmaps_get_mask (images);
+        gdk_gc_set_clip_mask (draw_gc, mask);
 }

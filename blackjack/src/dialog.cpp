@@ -24,7 +24,8 @@
 
 #include <stdlib.h>
 #include <dirent.h>
-#include "gnome.h"
+#include <gnome.h>
+#include <games-card-selector.h>
 #include "blackjack.h"
 #include "menu.h"
 #include "dialog.h"
@@ -123,15 +124,9 @@ pref_dialog_response (GtkWidget *w, int response, gpointer data)
 }
 
 void
-card_deck_options_changed (GtkWidget *w, gpointer data)
+card_deck_options_changed (GtkWidget *w, gchar *name, gpointer data)
 {
-        GdkCardDeckOptions deck_options = NULL;
-
-        if (GTK_IS_CARD_DECK_OPTIONS_EDIT (deck_edit)) {
-                deck_options = gtk_card_deck_options_edit_get
-                        (GTK_CARD_DECK_OPTIONS_EDIT (deck_edit));
-                bj_set_deck_options (deck_options);
-        }
+        bj_set_card_style (name);
 }
 
 void
@@ -188,7 +183,6 @@ show_preferences_dialog ()
 {
         static GtkWidget* pref_dialog = NULL;
         static GtkWidget* notebook = NULL;
-        GdkCardDeckOptions deck_options = NULL;
         GtkWidget *hbox, *vbox;
         GtkWidget *toggle;
         gboolean show_probabilities = false;
@@ -384,7 +378,8 @@ show_preferences_dialog ()
                 g_free (current_rule);
                 
                 // Cards Tab
-                deck_edit = gtk_card_deck_options_edit_new ();
+                deck_edit = games_card_selector_new (bj_get_card_style ());
+
                 gtk_notebook_append_page (GTK_NOTEBOOK (notebook), deck_edit,
                                           gtk_label_new_with_mnemonic (_("Card _Deck")));
                 
@@ -400,9 +395,8 @@ show_preferences_dialog ()
         }
         
         if (pref_dialog && !GTK_WIDGET_VISIBLE (pref_dialog)) {
-                deck_options = bj_get_deck_options ();
-                gtk_card_deck_options_edit_set (GTK_CARD_DECK_OPTIONS_EDIT (deck_edit),
-                                                deck_options);
+                // Set card style?
+
                 gtk_widget_show_all (pref_dialog);
         }
         gtk_window_present (GTK_WINDOW (pref_dialog));

@@ -158,14 +158,14 @@ Hand::draw (int card, bool faceUp)
                                (faceUp) ? UP : DOWN);
         cardlist = g_list_append (cardlist, newcard);
         bj_slot_add_cards (cardlist, hslot);
-        bj_draw_refresh_screen();
+        bj_draw_refresh_screen ();
 }
 
 void
 Hand::redraw ()
 {
         for (int card = 0; card < getCards(); card++)
-                draw(card);
+                draw (card);
 }
 
 void
@@ -210,8 +210,8 @@ Hand::showCount (bool blackjack)
         g_free (message);
         g_free (results);
         if (getCount () > 0)
-                bj_draw_playing_area_text (markup, hslot->x + bj_card_get_width () / 2, 
-                                           hslot->y + bj_card_get_height () + 2);
+                bj_draw_playing_area_text (markup, hslot->pixelx + card_width / 2, 
+                                           hslot->pixely + card_height + 2);
         g_free (markup);
 }
 

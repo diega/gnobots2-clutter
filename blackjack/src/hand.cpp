@@ -500,17 +500,17 @@ bj_hand_split ()
       
                 // Remove card from slot
                 hslot = player->hslot;
-                hcard_type card = (hcard_type) g_list_last(hslot->cards)->data;
+                hcard_type card = (hcard_type) g_list_last (hslot->cards)->data;
                 if (card)
-                        hslot->cards = g_list_remove(hslot->cards,card);
+                        hslot->cards = g_list_remove (hslot->cards,card);
       
                 // set slot origin for split hands
                 if (numHands == 1) {
                         // Two hands centered on the initial slot position
-                        slot_start_x = (gint)PLAYER_SLOT_ORIGIN_X - (PLAYER_SLOT_SPACING/2);
+                        slot_start_x = (gint)(PLAYER_SLOT_ORIGIN_X - (PLAYER_SLOT_SPACING / 2));
                 }
                 else
-                        slot_start_x = (gint)PLAYER_SLOT_ORIGIN_X - PLAYER_SLOT_SPACING;
+                        slot_start_x = (gint)(PLAYER_SLOT_ORIGIN_X - PLAYER_SLOT_SPACING);
                 
                 // Add another slot and hand
                 PlayerHand *newHand = (PlayerHand*)g_malloc (sizeof (PlayerHand));
@@ -523,34 +523,33 @@ bj_hand_split ()
                 playerHands = g_list_insert_before (playerHands,
                                                     tempptr,
                                                     newHand);
+                numHands++;
 
-                hslot_type new_hslot = bj_slot_add_before_slot 
-                        ((tempptr) ? newHand->nextHand->hslot : NULL,
-                         numHands + 1, 
-                         slot_start_x + numHands * PLAYER_SLOT_SPACING,
-                         PLAYER_SLOT_ORIGIN_Y);
+                hslot_type new_hslot = bj_slot_add_before_slot ((tempptr) ? newHand->nextHand->hslot : NULL,
+                                                                numHands);
       
                 newHand->hslot = new_hslot;
                 newHand->reset ();
-
+                
                 // Also need to recreate chip stacks
                 bj_chip_stack_delete_all_wagers ();
 
                 // Reposition all slots
-                gint i=1;
+                gint i = 1;
                 for (tempptr = playerHands; tempptr; tempptr = tempptr->next) {
                         hslot_type slot = ((PlayerHand*)tempptr->data)->hslot;
-                        slot->x = slot_start_x + (i - 1) * PLAYER_SLOT_SPACING;
-                        i++;
+                        slot->x = (double)i / (numHands + 1);
                         bj_chip_stack_new_with_value (bj_get_wager (),
-                                                      slot->x - bj_chip_get_width () - 5,
-                                                      slot->y + bj_card_get_height () / 2);
+                                                      slot->pixelx - bj_chip_get_width () - 5,
+                                                      slot->pixely + card_height / 2);
+                        i++;
                 }
-                
+ 
+                bj_draw_set_geometry (numHands, 2);
+
                 bj_adjust_balance (-1 * player->wager);
       
                 newHand->deal (tempCard);
-                numHands++;
         }
         bj_hand_finish_play ();
 }

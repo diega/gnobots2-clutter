@@ -39,12 +39,12 @@ bj_press_data_generate ()
         GdkColor masked = {0, 0, 0, 0}, unmasked = {1, 65535, 65535, 65535};
 
         delta = hslot->exposed - (hslot->length - press_data->cardid) - 1;
-        press_data->xoffset -= x = hslot->x + delta * hslot->dx;
-        press_data->yoffset -= y = hslot->y + delta * hslot->dy;
+        press_data->xoffset -= x = hslot->pixelx + delta * hslot->pixeldx;
+        press_data->yoffset -= y = hslot->pixely + delta * hslot->pixeldy;
 
         press_data->cards = g_list_nth(hslot->cards, press_data->cardid - 1);
-        width = bj_card_get_width() + (hslot->length - press_data->cardid) * hslot->dx;
-        height= bj_card_get_height() + (hslot->length - press_data->cardid) * hslot->dy;
+        width = card_width + (hslot->length - press_data->cardid) * hslot->pixeldx;
+        height = card_height + (hslot->length - press_data->cardid) * hslot->pixeldy;
   
         gdk_window_resize (press_data->moving_cards, width, height);
         gdk_window_move (press_data->moving_cards, x, y);
@@ -65,7 +65,7 @@ bj_press_data_generate ()
         gdk_gc_set_clip_mask (gc1, bj_card_get_mask ()); 
         gdk_gc_set_clip_mask (gc2, bj_card_get_mask ()); 
 
-        x = y = 0; width = bj_card_get_width(); height = bj_card_get_height();
+        x = y = 0; width = card_width; height = card_height;
 
         for (tempptr = press_data->cards; tempptr; tempptr = tempptr->next) {
                 hcard_type hcard = (hcard_type) tempptr->data; 
@@ -84,7 +84,7 @@ bj_press_data_generate ()
                 gdk_draw_rectangle (press_data->moving_mask, gc2, TRUE, 
                                     x, y, width, height);
       
-                x += hslot->dx; y += hslot->dy;
+                x += hslot->pixeldx; y += hslot->pixeldy;
         }
         g_object_unref (gc1);
         g_object_unref (gc2);

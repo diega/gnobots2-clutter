@@ -40,10 +40,14 @@ typedef struct {
 
   gint id;
   GList* cards;
-  gint x;
-  gint y;
-  gint dx;
-  gint dy;
+  double x;
+  double y;
+  double dx;
+  double dy;
+  gint pixelx;
+  gint pixely;
+  gint pixeldx;
+  gint pixeldy;
   gint length;
   gint exposed;
   gint expansion_depth;
@@ -63,13 +67,15 @@ extern GList *slot_list;
 void bj_slot_load_pixmaps (void);
 void bj_slot_free_pixmaps (void);
 
-GdkPixbuf* bj_slot_get_pixbuf ( void );
+GdkPixbuf* bj_slot_get_pixbuf (void);
+GdkPixbuf* bj_slot_get_scaled_pixbuf (void);
+void bj_slot_set_scaled_pixbuf (GdkPixbuf *pixmap);
 
 void delete_surface ();
-GdkPixmap* get_background_pixmap ( void );
+GdkPixmap* get_background_pixmap (void);
 
-void bj_slot_add (gint, gint, gint);
-hslot_type bj_slot_add_before_slot (hslot_type, gint, gint, gint);
+void bj_slot_add (gint);
+hslot_type bj_slot_add_before_slot (hslot_type, gint);
 
 void bj_slot_pressed (gint, gint, hslot_type *, gint*);
 

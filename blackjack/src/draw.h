@@ -25,6 +25,14 @@
 #define CHIP_X_ORIGIN 25
 #define CHIP_Y_ORIGIN 340
 
+/* The size of the drawing area. */
+extern int window_width;
+extern int window_height;
+
+/* The size of a card. */
+extern int card_width;
+extern int card_height;
+
 void bj_draw_set_dealer_text (gchar *);
 void bj_draw_set_player_text (gchar *);
 void bj_draw_playing_area_text (gchar *, gint, gint);
@@ -32,5 +40,8 @@ void bj_draw_dealer_probabilities ();
 
 void bj_draw_take_snapshot (void);
 void bj_draw_refresh_screen (void);
+
+void bj_draw_rescale_cards (void);
+void bj_draw_set_geometry (gint width, gint height);
 
 #endif

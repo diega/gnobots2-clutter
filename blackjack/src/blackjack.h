@@ -20,7 +20,6 @@
 #ifndef BLACKJACK_H
 #define BLACKJACK_H
 #include <gtk/gtk.h>
-#include "gdk-card-image.h"
 #include <gconf/gconf-client.h>
 #include "press_data.h"
 
@@ -43,11 +42,23 @@
 #define KEY_F1 GDK_F1
 #define KEY_ENTER GDK_Return
 
-#define DEALER_SLOT_ORIGIN_X 275
-#define DEALER_SLOT_ORIGIN_Y 25
-#define PLAYER_SLOT_ORIGIN_X 275
-#define PLAYER_SLOT_ORIGIN_Y 185
-#define PLAYER_SLOT_SPACING 200
+#define DEALER_SLOT_ORIGIN_X 0.5
+#define DEALER_SLOT_ORIGIN_Y 0.0
+#define PLAYER_SLOT_ORIGIN_X 0.5
+#define PLAYER_SLOT_ORIGIN_Y 0.45
+#define PLAYER_SLOT_SPACING 0.1
+
+#define GCONF_KEY_DIR                "/apps/blackjack"
+#define GCONF_KEY_BALANCE            GCONF_KEY_DIR "/global/balance"
+#define GCONF_KEY_GAME_VARIATION     GCONF_KEY_DIR "/settings/variation"
+#define GCONF_KEY_SHOW_PROBABILITIES GCONF_KEY_DIR "/settings/show_probabilities"
+#define GCONF_KEY_QUICK_DEAL         GCONF_KEY_DIR "/settings/quick_deal"
+#define GCONF_KEY_SHOW_TOOLBAR       GCONF_KEY_DIR "/toolbar"
+#define GCONF_KEY_DECK_OPTIONS       GCONF_KEY_DIR "/deck/options"
+#define GCONF_KEY_CARD_STYLE         GCONF_KEY_DIR "/deck/card_style"
+
+#define GCONF_KEY_WIDTH              GCONF_KEY_DIR "/width"
+#define GCONF_KEY_HEIGHT             GCONF_KEY_DIR "/height"
 
 // Global variables
 
@@ -55,9 +66,12 @@ extern GtkWidget        *app;
 extern GtkWidget        *playing_area;
 extern GtkWidget        *option_dialog;
 extern GdkGC            *draw_gc;
+extern GdkGC            *bg_gc;
+extern GdkGC            *slot_gc;
 extern GdkPixmap        *surface;
 
 extern GObject          *card_deck;
+extern gchar            *card_style;
 
 extern GtkProgressBar   *progress_bar;
 extern GtkWidget        *status_bar;
@@ -67,8 +81,8 @@ extern guint            seed;
 
 extern guint            x_spacing;
 extern guint            y_spacing;
-extern guint            x_expanded_offset;
-extern guint            y_expanded_offset;
+extern double           x_expanded_offset;
+extern double           y_expanded_offset;
 
 extern gboolean         events_pending;
 
@@ -86,15 +100,16 @@ void                    bj_adjust_wager (gdouble);
 void                    bj_adjust_balance (gdouble);
 gdouble                 bj_get_balance (void);
 void                    bj_set_balance (gdouble);
-GdkCardDeckOptions      bj_get_deck_options (void);
-void                    bj_set_deck_options (GdkCardDeckOptions);
+
+gchar                  *bj_get_card_style (void);
+void                    bj_set_card_style (gchar *);
 gboolean                bj_get_show_probabilities (void);
 void                    bj_set_show_probabilities (gboolean);
 gboolean                bj_get_show_toolbar (void);
 void                    bj_set_show_toolbar (gboolean);
 gboolean                bj_get_quick_deal (void);
 void                    bj_set_quick_deal (gboolean);
-gchar*                  bj_get_game_variation (void);
+gchar                  *bj_get_game_variation (void);
 void                    bj_set_game_variation (const gchar *);
 
 GConfClient            *bj_gconf_client (void);

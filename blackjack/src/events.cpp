@@ -120,8 +120,8 @@ drop_moving_cards (gint x, gint y)
         gint width, height;
         gboolean do_split = false;
 
-        bj_slot_pressed (x + bj_card_get_width() / 2 - press_data->xoffset, 
-                         y + bj_card_get_height() / 2 - press_data->yoffset, 
+        bj_slot_pressed (x + card_width / 2 - press_data->xoffset, 
+                         y + card_height / 2 - press_data->yoffset, 
                          &hslot, &cardid);
 
         if (!hslot) {
@@ -140,8 +140,8 @@ drop_moving_cards (gint x, gint y)
 
         gdk_drawable_get_size (press_data->moving_cards, &width, &height);
         gdk_window_move (press_data->moving_cards, 
-                         hslot->x + hslot->width - width, 
-                         hslot->y + hslot->height - height);
+                         hslot->pixelx + hslot->width - width, 
+                         hslot->pixely + hslot->height - height);
 
         bj_draw_refresh_screen ();
 
@@ -245,8 +245,8 @@ handle_slot_pressed (GdkEventButton *event, hslot_type hslot, gint cardid)
                 
                 if (card->direction == UP) {
                         guint delta = hslot->exposed - (hslot->length - cardid) - 1;
-                        int x = hslot->x + delta * hslot->dx;
-                        int y = hslot->y + delta * hslot->dy;
+                        int x = hslot->pixelx + delta * hslot->pixeldx;
+                        int y = hslot->pixely + delta * hslot->pixeldy;
           
                         press_data->status = STATUS_SHOW;
                         press_data->moving_pixmap = bj_card_get_picture (card->suit, card->value);
@@ -588,30 +588,39 @@ bj_event_expose_callback (GtkWidget *widget, GdkEventExpose *event, void *d)
 }
 
 gint
-bj_event_configure (GtkWidget *widget, GdkEventConfigure *event)
+bj_event_playing_area_configure (GtkWidget *widget, GdkEventConfigure *event)
 {
         gint tmptime;
-        GtkSettings * settings;
+        GtkSettings *settings;
 
         if (surface) {
-                gint old_w, old_h;
-                
-                gdk_drawable_get_size (surface, &old_w, &old_h);
-                if (old_w == event->width && old_h == event->height)
+                if (window_width == event->width && window_height == event->height)
                         return TRUE;
                 g_object_unref (surface);
         }
   
         if (!draw_gc) {
                 draw_gc = gdk_gc_new (playing_area->window);
-                if (get_background_pixmap ())
-                        gdk_gc_set_tile (draw_gc, get_background_pixmap());
-                gdk_gc_set_fill (draw_gc, GDK_TILED);
         }
 
-        surface = gdk_pixmap_new
-                (playing_area->window, event->width, event->height,
-                 gdk_drawable_get_visual (playing_area->window)->depth);
+        if (!slot_gc)
+                slot_gc = gdk_gc_new (playing_area->window);
+
+        if (!bg_gc) {
+                bg_gc = gdk_gc_new (playing_area->window);
+                if (get_background_pixmap ())
+                        gdk_gc_set_tile (bg_gc, get_background_pixmap());
+                gdk_gc_set_fill (bg_gc, GDK_TILED);
+        }
+
+        window_width = event->width;
+        window_height = event->height;
+                
+        surface = gdk_pixmap_new (playing_area->window,
+                                  event->width, event->height,
+                                  gdk_drawable_get_visual (playing_area->window)->depth);
+
+        bj_draw_rescale_cards ();
   
         bj_draw_refresh_screen ();
 
@@ -621,6 +630,21 @@ bj_event_configure (GtkWidget *widget, GdkEventConfigure *event)
         settings = gtk_settings_get_default ();
         g_object_get (settings, "gtk-double-click-time", &tmptime, NULL);
         dbl_click_time = tmptime / 1000.0;
+
+        return FALSE;
+}
+
+gint
+bj_event_configure (GtkWidget *widget, GdkEventConfigure *event)
+{
+        GConfClient *gconf_client = gconf_client_get_default ();
+
+        gconf_client_set_int (gconf_client, GCONF_KEY_WIDTH,
+                              event->width, NULL);
+        gconf_client_set_int (gconf_client, GCONF_KEY_HEIGHT,
+                              event->height, NULL);
+
+        g_object_unref (gconf_client);
 
         return FALSE;
 }

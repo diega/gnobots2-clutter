@@ -1,3 +1,34 @@
+2004-05-18  William Jon McCann  <mccann@jhu.edu>
+
+	* src/slot.cpp (bj_slot_get_scaled_pixbuf) 
+	(bj_slot_set_scaled_pixbuf, bj_slot_add, bj_slot_add_before_slot) 
+	(bj_slot_pressed, bj_slot_update_length): 
+	* src/press_data.cpp (bj_press_data_generate): 
+	* src/player.cpp (showCount): 
+	* src/hand.cpp (bj_hand_split): 
+	* src/game.cpp (bj_clear_table): 
+	* src/events.cpp (drop_moving_cards, handle_slot_pressed) 
+	(bj_event_playing_area_configure): 
+	* src/draw.cpp (calculate_card_location, bj_draw_set_geometry) 
+	(bj_draw_rescale_cards): 
+	* src/blackjack.cpp (bj_create_board, create_press_data):
+	Use normal coordinates and dynamically resize the board.  Chips
+	don't resize yet.
+
+	* src/Makefile.am (INCLUDES): 
+	* data/blackjack.schemas.in: 
+	* src/blackjack.cpp (main_prog, bj_gconf_card_style_cb)
+	(bj_get_card_style, bj_set_card_style):
+	* src/card.cpp (bj_card_get_picture, bj_card_get_back_pixmap)
+	(bj_card_load_pixmaps, bj_card_free_pixmaps, bj_card_set_size)
+	(bj_card_set_theme):
+	* src/dialog.cpp (show_preferences_dialog, card_deck_options_changed): 
+	Use new games card API.
+	
+	* src/events.cpp (create_main_window): 
+	* src/blackjack.cpp (bj_event_configure): Save the window
+	size.
+	
 2004-05-15  William Jon McCann  <mccann@jhu.edu>
 
 	* src/blackjack.cpp:
