@@ -39,7 +39,8 @@ gnome_stones_SOURCES =				\
 
 gnome_stones_LDADD =				\
 	$(GNOME_GAMES_LIBS) \
-	$(INTLLIBS)
+	$(INTLLIBS)	\
+	-lprof-parasite
 
 gnome_stones_LDFLAGS=-export-dynamic
 
@@ -60,8 +61,8 @@ Mime_DATA  = gnome-stones.keys gnome-stones.mime
 
 EXTRA_DIST    =					\
 	$(Pixmap_DATA)				\
-	$(Games_DATA)				\
-	$(Caves_DATA)				\
+	$(Games_in_files)			\
+	$(Caves_in_files)			\
 	$(gtkrc_DATA)				\
 	TODO					\
 	README					\
