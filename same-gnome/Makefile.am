@@ -1,7 +1,7 @@
 
 
 
-pixmapdir = $(datadir)/pixmaps/same-gnome
+pixmapdir = $(datadir)/gnome-games/same-gnome/themes
 sharedpixmapdir = $(datadir)/pixmaps
 Gamesdir = $(datadir)/applications
 
@@ -11,13 +11,20 @@ INCLUDES = -I.. -I$(srcdir)/..		\
 	-I$(top_srcdir)/libgames-support                \
 	$(GNOME_GAMES_CFLAGS) \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
-	-DDATADIR=\""$(datadir)"\"		   \
-	-DPIXMAPDIR=\""$(datadir)/pixmaps/same-gnome"\"
+	-DTHEMEDIR=\""$(pixmapdir)"\"
 
 bin_PROGRAMS = same-gnome
 
 same_gnome_SOURCES = 	\
-	same-gnome.c
+	same-gnome.c \
+	same-gnome.h \
+	drawing.c \
+	drawing.h \
+	game.c \
+	game.h \
+	globals.h \
+	input.c \
+	input.h
 
 same_gnome_LDADD =		\
 	../libgames-support/libgames-support.la \
@@ -29,7 +36,7 @@ schema_in_files = same-gnome.schemas.in
 schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 @INTLTOOL_SCHEMAS_RULE@
 
-pixmap_DATA = planets.png stones.png
+pixmap_DATA = planets.png
 sharedpixmap_DATA = gnome-gsame.png
 EXTRA_DIST = same-gnome.desktop.in $(pixmap_DATA) $(sharedpixmap_DATA) $(schema_in_files)
 
