@@ -1,5 +1,9 @@
 2000-04-09  Ian Peters  <itp@gnu.org>
 
+	* src/main.c, src/main.h: Added a help menu, and an about dialog.
+
+2000-04-09  Ian Peters  <itp@gnu.org>
+
 	* src/preferences.c: Added back on a Graphics page so you can change the
 	  tileset again
 

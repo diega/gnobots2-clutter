@@ -43,11 +43,50 @@ settings_menu[] = {
   GNOMEUIINFO_END
 };
 
+static GnomeUIInfo
+help_menu[] = {
+  GNOMEUIINFO_HELP ("iagno2"),
+  GNOMEUIINFO_MENU_ABOUT_ITEM (about_cb, NULL),
+  GNOMEUIINFO_END
+};
+
 GnomeUIInfo iagno2_menu[] = {
   GNOMEUIINFO_MENU_GAME_TREE (game_menu),
   GNOMEUIINFO_MENU_SETTINGS_TREE (settings_menu),
+  GNOMEUIINFO_MENU_HELP_TREE (help_menu),
   GNOMEUIINFO_END
 };
+
+gint
+about_cb ()
+{
+  static GtkWidget *about;
+
+  const gchar *authors[] = {
+    "Ian Peters",
+    NULL
+  };
+
+  if (about != NULL) {
+    gdk_window_raise (about->window);
+    gdk_window_show (about->window);
+    return;
+  }
+
+  about = gnome_about_new (_("Iagno II"),
+                           "0.1.0",
+                           _("Copyright 2000 Ian Peters"),
+                           (const char **) authors,
+                           _("A reversi game for GNOME."),
+                           NULL);
+
+  gtk_signal_connect (GTK_OBJECT (about), "destroy",
+                      GTK_SIGNAL_FUNC (gtk_widget_destroyed),
+                      &about);
+  gnome_dialog_set_parent (GNOME_DIALOG (about), GTK_WINDOW (app));
+
+  gtk_widget_show (about);
+}
 
 gint
 delete_event_cb (GtkWidget *window, GdkEventAny *event, gpointer data)
