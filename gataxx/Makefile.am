@@ -11,10 +11,15 @@ INCLUDES = 			\
 bin_PROGRAMS = gataxx
 
 gataxx_SOURCES = \
+	ai.c \
+	appbar.c \
+	appbar.h \
+	gtkgridboard.c \
+	gtkgridboard.h \
+	menus.c \
+	menus.h \
 	gataxx.c \
 	gataxx.h \
-	ataxx.c \
-	ataxx.h \
 	properties.c \
 	properties.h
 
@@ -37,7 +42,7 @@ EXTRA_DIST = AUTHORS \
 	$(appicon_DATA) \
 	$(schema_in_files)
 
-SUBDIRS = sounds help
+SUBDIRS = help
 
 CLEANFILES = $(Games_DATA) $(schema_DATA) $(soundlist_DATA)
 

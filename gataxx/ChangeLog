@@ -1,5 +1,19 @@
 2004-03-25  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* ai.*:
+	* appbar.*:
+	* gataxx.*:
+	* gtkgridboard.*:
+	* menus.*:
+	* properties.*:
+	* Makefile.am: Import Sjoerd Langkemper's rewrite. This also
+	includes several changes to bring the new gataxx into line with
+	the old one. The important ones are: White now starts, the timer
+	has gone, session management should save the state of the game.
+	
+	* ataxx.c:
+	* ataxx.h: Removed, replaced by ai.[ch].
+
 	* For_Iagno: Added to the repository: a list of what needs to be
 	done for the Iagno merge.
 

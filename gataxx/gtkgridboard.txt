@@ -1,0 +1,92 @@
+GtkGridBoard
+
+1.0 Introduction
+
+        GtkGridBoard is a widget for board games. It supports a grid, animation,
+        two different types of pieces, of which the pixmap to use can be set by
+        the user.
+
+2.0 API
+
+2.1 Definitions
+
+EMPTY, WHITE, BLACK
+
+        Denotes the content of a box.
+
+2.2 Functions
+
+GTK_GRIDBOARD(obj)
+
+        Casts an object to a GtkGridBoard.
+
+GtkWidget * gtk_gridboard_new(gint width, gint height, char * tileset);
+
+        This creates a new gridboard, with width * height boxes. The parameter
+        tileset is the filename of a pixmap to use. By default, it 
+        enables animation and shows the grid, using boxes of 60x60 pixels.
+
+[gtk_gridboard_draw_box]
+
+void gtk_gridboard_set_show_grid(GtkGridBoard * gridboard, gboolean showgrid);
+
+        This shows or hides the grid, depending whether showgrid is TRUE or
+        FALSE, respectively.
+
+void gtk_gridboard_set_animate(GtkGridBoard * gridboard, gboolean animate);
+
+        This function enables or disables animation. If animation is enabled,
+        the pieces roll over or blend when they are changed from black to
+        white or vice versa. Currently, there is no animation involved in
+        changing from empty squares to pieces or the other way around. When
+        changing between pieces never happens in the game you are coding, it
+        is advised to disable animation.
+
+void gtk_gridboard_set_tileset(GtkGridBoard * gridboard, gchar * tileset);
+
+        This changes the tileset. The parameter tileset is the path of the
+        pixmap to use. Note that you should already specify the tileset in
+        gtk_gridboard_new().
+
+void gtk_gridboard_set_piece(GtkGridBoard * gridboard, int x, int y, int piece);
+
+        This sets the piece at location (x, y) to piece. Parameter x is the
+        position of the box, counting from left to right, starting at 0.
+        Parameter y is the position of the box, counting from top to bottom,
+        starting at 0. Piece is either WHITE, BLACK, or EMPTY, defined in
+        gtkgridboard.h. By default, all boxes are empty.
+
+int gtk_gridboard_get_piece(GtkGridBoard * gridboard, int x, int y);
+
+        This returns the current piece at location x, y. See also
+        gtk_gridboard_set_piece().
+
+int gtk_gridboard_count_pieces(GtkGridBoard * gridboard, int piece);
+
+        This function returns the number of pieces with color piece on the
+        whole board. Parameter piece must be WHITE, BLACK or EMPTY.
+
+2.3 Signals
+
+boxclicked
+
+        This signal is emited every time a user clicks on the widget with the
+        mouse. A callback can be connected with the following prototype:
+
+                void boxclicked_cb(GtkWidget * widget, int x, int y);
+        
+        Where widget is the GtkGridBoard object casted to a widget, and x and
+        y indicate the position of the box. See gtk_gridboard_set_piece() for
+        information about the position.
+
+3.0 Appendix
+
+3.1 Pixmap layout
+
+        The pixmaps are image files (PNG) with 32 images with 60 x 60 pixels.
+        The first image (top-left) is an empty box, thus consisting only of
+        the background color. The second image is a black piece and the last
+        image (32) is a white piece. Everything between this is used for
+        animation. When a black piece is turned white, images 2 through 32 are
+        displayed with a small delay between them.
+

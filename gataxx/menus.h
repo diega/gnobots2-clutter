@@ -1,8 +1,6 @@
-/*
- * ataxx.h - headr file for ataxx.c
- * Written by Chris Rogers (gandalf@pobox.com)
- * Based on iagno code written by  Ian Peters (itp@gnu.org)
- *
+/* 
+ * menus.h - Menu definitions
+ * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -20,21 +18,12 @@
  * For more details see the file COPYING.
  */
 
-#ifndef _ATAXX_H_
-#define _ATAXX_H_
 
-#define MAX_DEPTH 4;
-gint is_valid_piece (guint, guint, guint);
-gint is_valid_piece_board (gint8[7][7], guint, guint, guint);
-gint is_valid_move (guint, guint, guint, guint, guint);
-gint is_valid_move_board (gint8[7][7], guint, guint, guint, guint, guint);
-gint move (guint, guint, guint, guint, guint);
-gint move_board (gint8[7][7], guint, guint, guint, guint, guint, gint);
-gint count_pieces (gint8[7][7], gint);
-gint check_valid_moves (void);
-gint computer_move_1 (guint);
-gint computer_move_2 (guint);
-gint computer_move_3 (guint);
+#ifndef MENUS_H
+#define MENUS_H
 
+#include <gnome.h>
 
-#endif
+extern GnomeUIInfo mainmenu[];
+
+#endif /* MENUS_H */

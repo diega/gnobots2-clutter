@@ -1,8 +1,6 @@
-/*
- * properties.h - header file for properties.c
- * Written by Chris Rogers (gandalf@pobox.com)
- * Based on iagno code written by  Ian Peters (itp@gnu.org)
- *
+/* (C) 2003/2004 Sjoerd Langkemper
+ * properties.h - 
+ * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -23,8 +21,34 @@
 #ifndef _PROPERTIES_H_
 #define _PROPERTIES_H_
 
+#include <glib.h>
+
 void load_properties (void);
 void reload_properties (void);
 void show_properties_dialog (void);
+int props_get_level(int piece);
+int props_get_white_level(void);
+int props_get_black_level(void);
+void load_properties(void);
+void show_properties_dialog(void);
+void reload_properties(void);
+gboolean props_get_flip_final(void);
+gboolean props_get_show_grid(void);
+gboolean props_get_animate(void);
+gboolean props_get_quick_moves(void);
+gchar * props_get_tile_set(void);
+int props_is_human(int piece);
+void props_init(GtkWindow * window, char * title);
+
+typedef struct {
+	gint black_level;
+	gint white_level;
+	gboolean flip_final;
+	gboolean animate;
+/*	gboolean stagger; */
+	gboolean show_grid;
+	gboolean quick_moves;
+	gchar * tile_set;
+} PropertiesData;
 
 #endif
