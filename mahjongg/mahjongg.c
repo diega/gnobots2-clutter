@@ -1078,36 +1078,13 @@ you_won (void)
 
         score = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
         if (pos = gnome_score_log (score, score_current_mapset, FALSE)) {
-                gnome_scores_display (_(APPNAME_LONG), APPNAME, score_current_mapset, pos);
-                message = g_strdup_printf
-			(_("Fantastic!  %.2f!\n"
-			   "You have reached #%d in the Top Ten.\n\n"
-			   "Another game?"), score, pos);
-        } else {
-                message = g_strdup_printf
-			(_("Great!\nYou made it in %.2f.\n\n"
-			   "Another game?"), score);
-	}
-
-	update_score_state ();
-       	
-       	dialog = gtk_message_dialog_new (
-		GTK_WINDOW (window),
-		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-		GTK_MESSAGE_QUESTION,
-		GTK_BUTTONS_YES_NO,
-		message);
-
-       	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
-
-       	response = gtk_dialog_run (GTK_DIALOG (dialog));
-		
-       	gtk_widget_destroy (dialog);
-       	
-       	if (response == GTK_RESPONSE_YES) {
-		ensure_pause_off ();
-		new_game (TRUE);
-	}       	
+                dialog = gnome_scores_display (_(APPNAME_LONG), APPNAME, score_current_mapset, pos);
+		if (dialog != NULL) {
+			gtk_window_set_transient_for (GTK_WINDOW(dialog),
+						      GTK_WINDOW(window));
+			gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
+		}
+        }
 }
 
 static void
@@ -1439,7 +1416,14 @@ void ensure_pause_off (void)
 void
 scores_callback (GtkWidget *widget, gpointer data)
 {
-        gnome_scores_display (_(APPNAME_LONG), APPNAME, score_current_mapset, 0);
+	GtkWidget *dialog;
+
+	dialog = gnome_scores_display (_(APPNAME_LONG), APPNAME, score_current_mapset, 0);
+	if (dialog != NULL) {
+		gtk_window_set_transient_for (GTK_WINDOW(dialog),
+					      GTK_WINDOW(window));
+		gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
+	}
 }
 
 void
