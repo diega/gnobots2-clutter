@@ -167,7 +167,6 @@ drop_moving_chips (gint x, gint y)
 {
   hstack_type hstack;
   gint chipid; 
-  gint width, height;
   gboolean moved = false;
 
   bj_chip_stack_pressed (x, y, &hstack, &chipid);
@@ -198,8 +197,6 @@ drop_moving_chips (gint x, gint y)
               gfloat value = bj_chip_stack_get_chips_value 
                 (chip_stack_press_data->chips);
               bj_adjust_wager (-1 * value);
-              gint x = chip_stack_press_data->hstack->x;
-              gint y = chip_stack_press_data->hstack->y;
               bj_clear_table ();
               moved = true;
             }

@@ -95,7 +95,6 @@ bj_slot_add (gint id, gint x, gint y)
 hslot_type
 bj_slot_add_before_slot (hslot_type next_slot, gint id, gint x, gint y)
 {
-  GList *tempptr;
   GList *list_ptr = NULL;
 
   hslot_type hslot = (hslot_type) g_malloc (sizeof (slot_type));

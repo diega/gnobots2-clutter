@@ -522,7 +522,6 @@ bj_adjust_balance (gdouble offset)
 static void
 bj_gconf_init (GConfClient *client)
 {
-  GError *error = NULL;
   gdouble balance;
   gchar *variation_tmp;
 

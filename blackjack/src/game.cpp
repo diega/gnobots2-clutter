@@ -390,10 +390,6 @@ void bj_game_new (gchar* file, guint *seedp )
 
   if (file && strcmp (file, game_file))
     {
-      gchar buf[100];
-      GtkWidget *ms;
-      gint pos;
-
       game_file = file;
 
       bj_game_eval_installed_file (file);

@@ -128,8 +128,6 @@ show_hint_dialog ()
 void 
 pref_dialog_response (GtkWidget *w, int response, gpointer data)
 {
-  GdkCardDeckOptions deck_options = NULL;
-
   gtk_widget_hide (w);
 }
 
@@ -370,7 +368,6 @@ show_preferences_dialog ()
       for (GList *temptr = bj_game_get_rules_list (); temptr; temptr=temptr->next)
         {
           gchar *text;
-          gint row;
           ruleset = bj_game_find_and_read_rules ((gchar*)temptr->data);
           if (ruleset)
             {

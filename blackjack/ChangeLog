@@ -1,3 +1,19 @@
+2003-12-28  William Jon McCann  <mccann@jhu.edu>
+
+	* src/hand.cpp (bj_hand_show_options):
+	(bj_hand_new5, bj_hand_new, bj_hand_finish, bj_hand_split):
+	* src/events.cpp (drop_moving_chips): 
+	* src/dialog.cpp (pref_dialog_response, show_preferences_dialog): 
+	* src/slot.cpp (bj_slot_add_before_slot): 
+	* src/blackjack.cpp (bj_gconf_init): 
+	* src/game.cpp (bj_game_new): 
+	Remove unused variables.
+	
+	* src/hand.cpp (bj_hand_new5): Always set the playing area text
+	whether it is displayed or not.  Fixes a bug introduced by last
+	change.
+	 
+
 2003-12-20  William Jon McCann  <mccann@jhu.edu>
 
 	* src/hand.cpp (bj_hand_hit, bj_hand_double, bj_hand_finish_play): 
