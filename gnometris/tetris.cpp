@@ -485,6 +485,18 @@ Tetris::gameQuit(GtkWidget *widget, void *d)
 }
 
 void
+Tetris::generateTimer(int level)
+{
+	gtk_timeout_remove(timeoutId);
+
+	int intv = 1000 - 100 * (level - 1);
+	if (intv <= 0)
+		intv = 100;
+		
+	timeoutId = gtk_timeout_add(intv, timeoutHandler, this);
+}
+
+void
 Tetris::manageFallen()
 {
 	ops->fallingToLaying();
@@ -493,15 +505,7 @@ Tetris::manageFallen()
 	ops->checkFullLines(scoreFrame);
 	int levelAfter = scoreFrame->getLevel();
 	if ((levelBefore != levelAfter) || fastFall)
-	{
-		gtk_timeout_remove(timeoutId);
-
-		int intv = 1000 - 100 * (levelAfter - 1);
-		if (intv <= 0)
-			intv = 100;
-		
-		timeoutId = gtk_timeout_add(intv, timeoutHandler, this);
-	}
+		generateTimer(levelAfter);
 	
 	generate();
 }
@@ -522,8 +526,15 @@ Tetris::timeoutHandler(void *d)
  	else
 	{
 		bool res = t->ops->moveBlockDown();
-		
 		gtk_widget_draw(t->field->getWidget(), NULL);
+
+		if (t->fastFall)
+		{
+			int l = t->ops->getLinesToBottom();
+			if (l <= 2)
+				t->generateTimer(t->scoreFrame->getLevel());
+		}
+		
 
 		if (res)
 		{

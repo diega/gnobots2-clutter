@@ -24,7 +24,7 @@
 #include <config.h>
 #include <gnome.h>
 
-#define TETRIS_VERSION "0.99.0"
+#define TETRIS_VERSION "0.99.1"
 
 extern int LINES;
 extern int COLUMNS;
@@ -98,6 +98,8 @@ private:
 	bool paused;
 	int timeoutId;
 	bool onePause;
+
+	void generateTimer(int level);
 	
 	static gint eventHandler(GtkWidget *widget, GdkEvent *event, void *d);
 	static int timeoutHandler(void *d);

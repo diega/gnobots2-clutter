@@ -40,6 +40,7 @@ public:
 	bool generateFallingBlock();
 	void emptyField();
 	void putBlockInField(bool erase);
+	int getLinesToBottom();
 	
 	const Block * const getFieldAt(int x, int y) {return &(field[x][y]);}
 

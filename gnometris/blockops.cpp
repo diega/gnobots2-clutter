@@ -61,6 +61,30 @@ BlockOps::blockOkHere(int x, int y, int b, int r)
 	return true;	
 }
 
+int
+BlockOps::getLinesToBottom()
+{
+	int lines = LINES;
+	
+	for (int x = 0; x < 4; ++x)
+	{
+		for (int y = 3; y >= 0; --y)
+		{
+			if (!blockTable[blocknr][rot][x][y])
+				continue;
+			int yy = posy + y;
+			for (; yy < LINES; ++yy)
+			{
+				if (field[posx + x - 2][yy].what == LAYING)
+					break;
+			}
+			int tmp = yy - posy - y;
+			if (lines > tmp)
+				lines = tmp;
+		}
+	}
+	return lines;
+}
 
 bool 
 BlockOps::moveBlockLeft()
