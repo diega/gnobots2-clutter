@@ -39,7 +39,7 @@ gnome_stones_SOURCES =				\
 
 gnome_stones_LDADD =				\
 	$(GNOME_GAMES_LIBS) \
-	$(INTLLIBS)	\
+	$(INTLLIBS)
 
 gnome_stones_LDFLAGS=-export-dynamic
 
