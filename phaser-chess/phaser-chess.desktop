@@ -23,6 +23,7 @@ Comment[ko]=╠вЁП фДюлюЗ ц╪╫╨
 Comment[no]=Sjakkspill for Gnome
 Comment[pt]=Xadrez phaser do GNOME
 Comment[ru]=Шахматы для Gnome
+Comment[sv]=Schackspel fЖr Gnome
 Exec=phaser_chess
 Icon=
 Terminal=0
