@@ -767,10 +767,10 @@
    <application>GNOME Mahjongg</application>, please visit the <ulink
    url="http://www.my-gnome-app.org" type="http">MY-GNOME-APP Web
    page</ulink>.-->  Please send all comments, suggestions, and bug
-   reports to the <ulink url="http://bugs.gnome.org" type="http">GNOME
+   reports to the <ulink url="http://bugzilla.gnome.org" type="http">GNOME
    bug tracking database</ulink>. (Instructions for submitting bug
    reports can be found <ulink
-   url="http://bugs.gnome.org/Reporting.html" type="http">
+   url="http://bugzilla.gnome.org/bug-HOWTO.html" type="http">
    on-line</ulink>.) If you are using
    GNOME 1.1 or later, you can also use <application>Bug Report
    Tool</application> (<command>bug-buddy</command>), available in the

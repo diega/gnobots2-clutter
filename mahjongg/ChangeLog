@@ -1,5 +1,10 @@
 2003-02-19  Alex Duggan  <aldug@astrolinux.com>
 
+	* help/C/mahjongg.xml: update old bug links from bugs.gnome.org to 
+	bugzilla.gnome.org
+
+2003-02-19  Alex Duggan  <aldug@astrolinux.com>
+
 	* mahjongg.c (pref_dialog_response): remove old unused call to
 	gnome_help_display,  (proporties_callback): remove help button
 	from preferences dialog.  (Fixes #103928)
