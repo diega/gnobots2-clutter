@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <dirent.h>
+#include <config.h>
 #include "gnome.h"
 
 #define STONE_SIZE 40
@@ -32,8 +33,12 @@ int tagged_count = 0;
 int ball_timeout_id = -1;
 int old_x = -1, old_y = -1;
 int score;
+gchar *scenario;
 
-char *selected_scenario = 0;
+struct {
+	char *scenario;
+	int make_it_default;
+	} selected_scenario = {0,0};
 
 struct {
 	int color;
@@ -42,6 +47,7 @@ struct {
 } field [STONE_COLS][STONE_LINES];
 
 int nstones;
+int ncolors;
 int sync_stones = 0;
 
 #define mapx(x) (x)
@@ -236,8 +242,64 @@ set_score (int new_score)
 }
 
 void
+show_scores ( gchar *level, gchar *title, guint pos )
+{
+ GtkWidget *hs;
+ GdkColor ctitle = {0, 0, 0, 65535};
+ GdkColor col = {0, 65535, 0, 0};
+ gchar **names = NULL;
+ gfloat *scores = NULL;
+ time_t *scoretimes = NULL;
+ gint top;
+ int i;
+
+ top = gnome_score_get_notable("samegnome",level, &names, &scores, &scoretimes);
+ hs = gnome_scores_new(top, names, scores, scoretimes, 0);
+ gnome_scores_set_logo_label (GNOME_SCORES(hs), _("The Same Gnome"), 0,
+       &ctitle);
+ gtk_window_set_title (GTK_WINDOW (hs), title);
+
+ if(pos)
+   gnome_scores_set_color(hs, pos-1, &col);
+
+ gtk_widget_show (hs);
+}
+
+void 
+game_top_ten_callback(GtkWidget *widget, gpointer data)
+{
+show_scores(scenario, _("High Scores"), 0);
+}
+
+void
+end_of_game (char *title)
+{
+	int pos;
+
+	pos = gnome_score_log(score, scenario, 1);
+	show_scores(scenario, title, pos);
+}
+
+void
 check_game_over (void)
 {
+int cleared=1;
+int x,y;
+
+for(x=0;x<STONE_COLS;x++)
+   for(y=0;y<STONE_LINES;y++) {
+	if(!field[x][y].color) continue;
+	cleared=0;
+	if( x+1 < STONE_COLS ) 
+		if(field[x][y].color == field[x+1][y].color) return;
+	if( y+1 < STONE_LINES ) 
+		if(field[x][y].color == field[x][y+1].color) return;
+   	}
+if(cleared) {
+	set_score(score+1000);
+	end_of_game(_("You win!"));
+	}
+else end_of_game(_("The Game Is Over"));
 }
 
 void
@@ -301,7 +363,7 @@ fill_board (void)
 
 	for (x = 0; x < STONE_COLS; x++)
 		for (y = 0; y < STONE_LINES; y++){
-			field [x][y].color = 1 + (rand () % 3);
+			field [x][y].color = 1 + (rand () % ncolors);
 			field [x][y].tag   = 0;
 			field [x][y].frame = sync_stones ? 0 : (rand () % nstones);
 		}
@@ -328,12 +390,28 @@ load_scenario (char *fname)
 {
 	GtkStyle  *style;
 	int width, height;
+	char *tmp, *fn; 
+
+	tmp = g_copy_strings ( "samegnome/", fname, NULL);
+
+	fn = gnome_unconditional_pixmap_file ( tmp ); 
+	g_free( tmp );
+
+	if (!g_file_exists (fn)){
+			printf (_("Could not find the \'%s\' theme for SameGnome\n"), fn);
+			exit (1);
+		}
+
+	if(scenario) free(scenario);
+	scenario = strdup(fname);
 
 	style = gtk_widget_get_style (draw_area);
 	configure_sync (fname);
-	stones = gdk_pixmap_create_from_xpm (app->window, &mask, &style->bg [GTK_STATE_NORMAL], fname);
+	stones = gdk_pixmap_create_from_xpm (app->window, &mask, &style->bg [GTK_STATE_NORMAL], fn);
+	g_free( fn );
 	gdk_window_get_size (stones, &width, &height);
 	nstones = width / STONE_SIZE;
+	ncolors = height / STONE_SIZE;
 	new_game ();
 	gtk_widget_draw (draw_area, NULL);
 }
@@ -341,7 +419,13 @@ load_scenario (char *fname)
 void
 set_selection (GtkWidget *widget, void *data)
 {
-	selected_scenario = data;
+	selected_scenario.scenario = data;
+}
+
+void
+set_selection_def (GtkWidget *widget, gpointer *data)
+{
+	selected_scenario.make_it_default = GTK_TOGGLE_BUTTON (widget)->active;
 }
 
 void
@@ -376,7 +460,7 @@ game_new_callback (GtkWidget *widget, void *data)
 int
 yes (GtkWidget *widget, void *data)
 {
-	selected_scenario = 0;
+	selected_scenario.scenario = 0;
 	return TRUE;
 }
 
@@ -402,9 +486,11 @@ fill_menu (GtkWidget *menu)
 		GtkWidget *item;
 		char *s = strdup (e->d_name);
 
-		if (!strstr (e->d_name, ".xpm"))
+		if (!strstr (e->d_name, ".xpm")) {
+			free (s);
 			continue;
-
+			}
+			
 		item = gtk_menu_item_new_with_label (s);
 		gtk_widget_show (item);
 		gtk_menu_append (GTK_MENU(menu), item);
@@ -424,8 +510,15 @@ cancel (GtkWidget *widget, void *data)
 void
 load_scenario_callback (GtkWidget *widget, void *data)
 {
-	if (selected_scenario)
-		load_scenario (selected_scenario);
+	if (selected_scenario.scenario) {
+		load_scenario (selected_scenario.scenario);
+		if (selected_scenario.make_it_default) {
+			gnome_config_set_string (
+				"/same-gnome/Preferences/Scenario", 
+				selected_scenario.scenario);
+			gnome_config_sync();
+			}
+		}
 	cancel (0,0);
 }
 
@@ -437,7 +530,7 @@ GnomeActionAreaItem sel_actions [] = {
 void
 game_preferences_callback (GtkWidget *widget, void *data)
 {
-	GtkWidget *menu, *omenu, *l, *hb;
+	GtkWidget *menu, *omenu, *l, *hb, *cb; 
 	GtkDialog *d;
 
 	if (pref_dialog)
@@ -461,7 +554,13 @@ game_preferences_callback (GtkWidget *widget, void *data)
 	    
 	gtk_box_pack_start_defaults (GTK_BOX(hb), l);
 	gtk_box_pack_start_defaults (GTK_BOX(hb), omenu);
+
+	cb = gtk_check_button_new_with_label ( _("Make it the default scenario") );
+	gtk_signal_connect (GTK_OBJECT(cb), "clicked", (GtkSignalFunc)set_selection_def, NULL);
+	gtk_widget_show (cb);
+
 	gtk_box_pack_start_defaults (GTK_BOX(d->vbox), hb);
+	gtk_box_pack_start_defaults (GTK_BOX(d->vbox), cb);
 
 	sel_actions [0].label = _("Ok");
 	sel_actions [1].label = _("Cancel");
@@ -487,10 +586,11 @@ game_quit_callback (GtkWidget *widget, void *data)
 }
 
 GtkMenuEntry same_menu [] = {
-	{ "Game/New",         "<control>N", game_new_callback, NULL },
-	{ "Game/Scenario",    "<control>S", game_preferences_callback, NULL },
-	{ "Game/<separator>", NULL, NULL, NULL },
-	{ "Game/Quit",        "<control>Q", (GtkMenuCallback) game_quit_callback, NULL }, 
+	{ _("Game/New"),        "<control>N", game_new_callback, NULL },
+	{ _("Game/Scenario"),   "<control>S", game_preferences_callback, NULL },
+	{ _("Game/Top Ten"),    "<control>T", game_top_ten_callback, NULL },
+	{ _("Game/<separator>"), NULL, NULL, NULL },
+	{ _("Game/Quit"),       "<control>Q", (GtkMenuCallback) game_quit_callback, NULL }, 
 };
 
 #define ELEMENTS(x) (sizeof (x) / sizeof (x [0]))
@@ -528,12 +628,9 @@ main (int argc, char *argv [])
 	if (argc > 1)
 		fname = strdup (argv [1]);
 	else {
-		fname = gnome_unconditional_pixmap_file ("samegnome/stones.xpm");
-		if (!g_file_exists (fname)){
-			printf ("Could not find the %s default theme for SameGnome\n", fname);
-			exit (1);
-		}
+		fname = gnome_config_get_string ( "/same-gnome/Preferences/Scenario=stones.xpm" );
 	}
+
 	srand (time (NULL));
 
 	app = create_main_window ();
@@ -558,7 +655,7 @@ main (int argc, char *argv [])
 	gtk_widget_show (vb);
 	gtk_widget_show (GTK_WIDGET(label));
 	gtk_widget_show (GTK_WIDGET(scorew));
-	
+
 	gtk_main ();
 	return 0;
 }
