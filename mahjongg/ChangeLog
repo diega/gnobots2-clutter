@@ -1,3 +1,7 @@
+2002-10-31  Ross Burton  <ross@burtonini.com>
+
+	* Makefile.am: Use correct GConf install rules.
+
 2002-09-20  Ross Burton  <ross@burtonini.com>
 
 	* mahjongg.c (you_won): Fix a silly logic bug. Fixes #92823.

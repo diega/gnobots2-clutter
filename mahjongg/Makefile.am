@@ -4,7 +4,7 @@ bgdir = $(datadir)/pixmaps/mahjongg/bg
 Gamesdir = $(datadir)/applications
 appicondir=$(datadir)/pixmaps
 
-schemadir   = $(sysconfdir)/gconf/schemas
+schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_in_files = mahjongg.schemas.in
 schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 INCLUDES =						\
