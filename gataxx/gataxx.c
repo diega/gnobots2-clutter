@@ -229,22 +229,16 @@ gboolean quit_game_cb(GtkWidget *widget, gpointer data)
     gint response;
 
     box = gtk_message_dialog_new (GTK_WINDOW (window),
-                                 GTK_DIALOG_MODAL,
+                                 GTK_DIALOG_DESTROY_WITH_PARENT,
                                  GTK_MESSAGE_QUESTION,
-                                 GTK_BUTTONS_NONE,
-                                 _("Really exit Gataxx?"));
-    gtk_dialog_add_buttons (GTK_DIALOG (box),
-            GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
-            GTK_STOCK_QUIT, GTK_RESPONSE_ACCEPT,
-            NULL);
-
-    
-    gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_REJECT);
+                                 GTK_BUTTONS_YES_NO,
+                                 _("Do you really want to quit?"));
+    gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_YES);
 
     response = gtk_dialog_run (GTK_DIALOG (box));
     gtk_widget_destroy (box);
 
-    if (response == GTK_RESPONSE_REJECT)
+    if (response == GTK_RESPONSE_NO)
       return TRUE;
   }
 
