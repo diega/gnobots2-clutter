@@ -487,16 +487,16 @@ void gtk_gridboard_set_show_grid(GtkGridBoard *gridboard, gboolean showgrid) {
         gridboard->showgrid=showgrid;
         gtk_gridboard_paint(gridboard);
 }
-        
+
 void gtk_gridboard_set_animate(GtkGridBoard *gridboard, gboolean animate) {
         g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
 
         gridboard->animate=animate;
         if (animate) { 
-                g_timeout_add(PIXMAP_FLIP_DELAY, 
-                                gtk_gridboard_flip_pixmaps,
-                                (gpointer) gridboard);
-        }
+	  timeoutid = g_timeout_add(PIXMAP_FLIP_DELAY, 
+				    gtk_gridboard_flip_pixmaps,
+				    (gpointer) gridboard);
+        } else timeoutid = 0;
 }
 
 void gtk_gridboard_set_visibility(GtkGridBoard *gridboard, gboolean visibility) {

@@ -1,3 +1,10 @@
+2005-01-25  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gataxx.h: 
+	* gtkgridboard.c:
+	* gtkgridboard.h: Patch from Richard which should fix bug
+	#162892, but doesn't. It is a good idea in any case.
+
 2005-01-21  Richard Hoelscher  <rah@rahga.com>
 
 	* gataxx.c (save_state_cb): Redone, no longer crashes. Bug #164806. 

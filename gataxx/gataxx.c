@@ -333,8 +333,11 @@ void undo_move_cb(GtkWidget * widget, gpointer data) {
 }
 
 /* menu: Game->Quit */
-void quit_game_cb(GtkWidget * widget, gpointer data) {
+gboolean quit_game_cb(GtkWidget * widget, gpointer data) {
+        g_source_remove (timeoutid);
 	gtk_main_quit();
+	
+	return TRUE;
 }
 
 /* menu: Settings->Preferences */

@@ -43,7 +43,7 @@ typedef struct {
 
 void new_game_cb(GtkWidget * widget, gpointer data);
 void undo_move_cb(GtkWidget * widget, gpointer data);
-void quit_game_cb(GtkWidget * widget, gpointer data);
+gboolean quit_game_cb(GtkWidget * widget, gpointer data);
 void properties_cb(GtkWidget * widget, gpointer data);
 void about_cb(GtkWidget * widget, gpointer data);
 void boxclicked_cb(GtkWidget * widget, int x, int y);
