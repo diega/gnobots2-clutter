@@ -682,6 +682,9 @@ void create_window() {
   GtkWidget *table;
   GtkWidget *sep;
   
+  gtk_widget_push_visual (gdk_imlib_get_visual ());
+  gtk_widget_push_colormap (gdk_imlib_get_colormap ());
+
   window = gnome_app_new("gataxx", _("gataxx"));
   
   gtk_widget_realize(window);
@@ -691,6 +694,9 @@ void create_window() {
   gnome_app_create_menus(GNOME_APP(window), mainmenu);
   
   drawing_area = gtk_drawing_area_new();
+
+  gtk_widget_pop_colormap ();
+  gtk_widget_pop_visual ();
   
   gnome_app_set_contents(GNOME_APP(window), drawing_area);
 
@@ -869,8 +875,10 @@ int main(int argc, char **argv) {
     gtk_signal_connect(GTK_OBJECT(client), "save_yourself", GTK_SIGNAL_FUNC(save_state), argv[0]);
     gtk_signal_connect(GTK_OBJECT(client), "die", GTK_SIGNAL_FUNC(quit_game_cb), argv[0]);
     
+    /*
     gtk_widget_push_visual (gdk_imlib_get_visual ());
     gtk_widget_push_colormap (gdk_imlib_get_colormap ());
+    */
   
     create_window();
     

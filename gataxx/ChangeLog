@@ -1,3 +1,8 @@
+2000-04-22  Ian Peters <itp@gnu.org>
+
+	* gataxx.c: Moved call to _push_[colormap|visual], added calls to
+	  _pop_[colormap|visual], to fix outstanding multi-depth issues
+
 2000-01-01	Chris Rogers <gandalf@darkcorner.net>
 	* gataxx.c:	Added Robert Mibus's (mibus@bigpond.com) patch to highlight 
 		possible moves
