@@ -1,0 +1,7 @@
+[Desktop Entry]
+Icon=gnome-gtetris.png
+Name=GTetris
+Comment=Gnome Tetris Game
+Exec=gtetris
+Terminal=0
+Type=Application
