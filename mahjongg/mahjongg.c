@@ -256,6 +256,7 @@ static GdkPixbuf *tiles_image, *bg_image;
 static gchar *tileset = NULL;
 static gchar *bg_tileset = NULL;
 static gchar *mapset = NULL;
+static gchar *score_current_mapset = NULL;
 
 static gchar *selected_tileset = NULL;
 static gchar *selected_bg = NULL;
@@ -434,6 +435,7 @@ GnomeUIInfo toolbar_uiinfo [] = {
 };
 
 #define PAUSE_BUTTON GTK_TOGGLE_BUTTON(toolbar_uiinfo[6].widget)
+#define HIGHSCORE_WIDGET gamemenu[9].widget
 
 static void
 tileset_callback (GtkWidget *widget, void *data)
@@ -735,6 +737,25 @@ message (gchar *message)
 	gnome_appbar_pop (GNOME_APPBAR (appbar));
 	gnome_appbar_push (GNOME_APPBAR (appbar), message);
 }
+
+void update_score_state ()
+{
+        gchar **names = NULL;
+        gfloat *scores = NULL;
+        time_t *scoretimes = NULL;
+	gint top;
+
+	top = gnome_score_get_notable(APPNAME, score_current_mapset, &names, &scores, &scoretimes);
+	if (top > 0) {
+		gtk_widget_set_sensitive (HIGHSCORE_WIDGET, TRUE);
+		g_strfreev(names);
+		g_free(scores);
+		g_free(scoretimes);
+	} else {
+		gtk_widget_set_sensitive (HIGHSCORE_WIDGET, FALSE);
+	}
+}
+
 
 void
 chrono_start (void)
@@ -1054,8 +1075,8 @@ you_won (void)
         seconds = GAMES_CLOCK (chrono)->stopped;
 
         score = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
-        if (!(pos = gnome_score_log (score, mapset, FALSE))) {
-                gnome_scores_display (_(APPNAME_LONG), APPNAME, mapset, pos);
+        if (!(pos = gnome_score_log (score, score_current_mapset, FALSE))) {
+                gnome_scores_display (_(APPNAME_LONG), APPNAME, score_current_mapset, pos);
                 message = g_strdup_printf
 			(_("Fantastic!  %.2f!\n"
 			   "You have reached #%d in the Top Ten.\n\n"
@@ -1065,6 +1086,8 @@ you_won (void)
 			(_("Great!\nYou made it in %.2f.\n\n"
 			   "Another game?"), score);
 	}
+
+	update_score_state ();
        	
        	dialog = gtk_message_dialog_new (
 		GTK_WINDOW (window),
@@ -1411,7 +1434,7 @@ void ensure_pause_off (void)
 void
 scores_callback (GtkWidget *widget, gpointer data)
 {
-        gnome_scores_display (_(APPNAME_LONG), APPNAME, mapset, 0);
+        gnome_scores_display (_(APPNAME_LONG), APPNAME, score_current_mapset, 0);
 }
 
 void
@@ -1887,6 +1910,7 @@ create_mahjongg_board (GtkWidget *mbox)
         g_free (buf2);
 	g_free (buf);
 	init_game ();
+	update_score_state ();
 }
 
 void
@@ -1914,6 +1938,12 @@ new_game (gboolean re_seed)
 	}
 
 	init_game ();
+
+	if (score_current_mapset != NULL)
+		g_free (score_current_mapset);
+
+	score_current_mapset = strdup (mapset);
+	update_score_state ();
 }
 
 void
@@ -2111,6 +2141,8 @@ main (int argc, char *argv [])
         }
 
 	init_config();
+
+	update_score_state ();
 
   	gnome_app_flash (GNOME_APP (window), 
   				_("Welcome to GNOME Mahjongg!")); 

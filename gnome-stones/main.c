@@ -104,6 +104,12 @@ static const struct poptOption options[] = {
   {NULL, '\0', 0, NULL, 0}
 };
 
+/****************************************************************************/
+/* The menus */
+static GnomeUIInfo game_menu[];
+static GnomeUIInfo help_menu[];
+static GnomeUIInfo settings_menu[];
+static GnomeUIInfo main_menu[];
 
 
 /****************************************************************************/
@@ -114,7 +120,6 @@ curtain_start (GStonesCave *cave);
 
 static void
 game_start_cb (GtkWidget *widget, gpointer data);
-
 
 
 
@@ -466,6 +471,26 @@ game_widget_fill (void)
 }
 #endif /* USE_GNOME_CANVAS */
 
+/****************************************************************************/
+/* High score enabling/disabling */
+
+void update_score_state ()
+{
+        gchar **names = NULL;
+        gfloat *scores = NULL;
+        time_t *scoretimes = NULL;
+	gint top;
+
+	top = gnome_score_get_notable(APP_NAME, NULL, &names, &scores, &scoretimes);
+	if (top > 0) {
+		gtk_widget_set_sensitive (game_menu[5].widget, TRUE);
+		g_strfreev(names);
+		g_free(scores);
+		g_free(scoretimes);
+	} else {
+		gtk_widget_set_sensitive (game_menu[5].widget, FALSE);
+	}
+}
 
 
 /****************************************************************************/
@@ -622,6 +647,8 @@ countdown_timeout_function (gpointer data)
 	  gint pos;
 
 	  pos= gnome_score_log (player->score, NULL, TRUE);
+
+	update_score_state ();
 
 	  gnome_scores_display ("Gnome-Stones", APP_NAME, NULL, pos);
 	  gnome_app_flash (GNOME_APP (app), _("Congratulations, you win!"));
@@ -808,6 +835,8 @@ iteration_timeout_function (gpointer data)
 	    {
 	      /* That's it.  No lives anymore.  */
 	      gint pos= gnome_score_log (player->score, NULL, TRUE);
+
+		update_score_state ();
 
 	      /* FIXME: somewhere is a bug, that makes this needed.  */
 	      if (pos > 10) pos= 0;
@@ -1268,6 +1297,10 @@ main (int argc, char *argv[])
   gnome_app_set_contents (GNOME_APP (app), vbox);
   
   gtk_widget_set_events (app, gtk_widget_get_events (app) | GAME_EVENTS);
+
+ /* are there any high scores? */
+
+  update_score_state ();
 
   g_signal_connect (GTK_OBJECT (app), "key_press_event",
 		      GTK_SIGNAL_FUNC (game_widget_key_press_callback), 0);

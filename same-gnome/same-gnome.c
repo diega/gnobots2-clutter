@@ -44,6 +44,8 @@ static gchar *scenario;
 static gint restarted;
 static gboolean game_over = FALSE;
 
+void update_score_state ();
+
 /* Prefs */
 GConfClient *conf_client = NULL;
 char *selected_scenario = NULL;
@@ -292,6 +294,7 @@ check_game_over (void)
 		set_score (score+1000);
 
 	pos = gnome_score_log(score, NULL, TRUE);
+	update_score_state ();
 	show_scores(pos);
 	game_over = TRUE;
 }
@@ -717,6 +720,24 @@ GnomeUIInfo mainmenu[] = {
 	GNOMEUIINFO_END
 };
 
+void update_score_state ()
+{
+        gchar **names = NULL;
+        gfloat *scores = NULL;
+        time_t *scoretimes = NULL;
+	gint top;
+
+	top = gnome_score_get_notable("same-gnome", NULL, &names, &scores, &scoretimes);
+	if (top > 0) {
+		gtk_widget_set_sensitive (gamemenu[2].widget, TRUE);
+		g_strfreev(names);
+		g_free(scores);
+		g_free(scoretimes);
+	} else {
+		gtk_widget_set_sensitive (gamemenu[2].widget, FALSE);
+	}
+}
+
 static int
 save_state (GnomeClient *client,
 	    gint phase,
@@ -859,6 +880,8 @@ main (int argc, char *argv [])
 
 	create_same_board (fname);
 	selected_scenario = g_strdup (fname);
+
+	update_score_state ();
 
 	separator = gtk_vseparator_new ();
 	label = gtk_label_new (_("Marked: "));
