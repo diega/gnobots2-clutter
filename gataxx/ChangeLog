@@ -1,5 +1,8 @@
 2004-11-27  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* properties.c: Patch from Paolo Borelli <pborelli@katamail.com>
+	to fix a resource leak for tooltips.
+
 	* help/C/gataxx.xml: Documentation update from Sjoerd Langkemper
 	<sjoerd-games linuxonly nl>.
 

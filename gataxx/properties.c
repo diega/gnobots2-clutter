@@ -38,7 +38,7 @@ PropertiesData * props=&_props;
 
 static GtkWidget *propbox = NULL;
 static GtkWindow * mainwindow = NULL;
-
+static GtkTooltips *tooltips = NULL;
 static GamesFileList * theme_file_list = NULL;
 
 /* makes sure input lies between low and high */
@@ -265,6 +265,8 @@ static GtkWidget * add_level(GtkWidget * container,
 static gboolean quit_properties_dialog(GtkWidget * widget, gpointer data) {
 	save_properties();
 	apply_changes();
+	g_object_unref (tooltips);
+	tooltips = NULL;
 	g_object_unref (theme_file_list);
 	theme_file_list = NULL;
 	gtk_widget_destroy(propbox);
@@ -286,13 +288,11 @@ void show_properties_dialog (void) {
 	GtkWidget *vbox, *vbox2;
 	GtkWidget *hbox;
 	GtkWidget *menu;
-	GtkTooltips * tooltips=gtk_tooltips_new();
 	
 	if (propbox != NULL) {
 		gtk_window_present (GTK_WINDOW(propbox));
 		return;
 	}
-
 
 	/* create window */
         propbox = gtk_dialog_new_with_buttons (_("Ataxx Preferences"),
@@ -307,7 +307,12 @@ void show_properties_dialog (void) {
 
 	g_signal_connect (G_OBJECT (propbox), "delete_event",
 			  G_CALLBACK (quit_properties_dialog), &propbox);
-	
+
+	/* create tooltips */	
+	tooltips = gtk_tooltips_new();
+	g_object_ref (tooltips);
+	gtk_object_sink (GTK_OBJECT (tooltips));
+
 	/* create notebook (tabs) */
 	notebook = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_TOP);
