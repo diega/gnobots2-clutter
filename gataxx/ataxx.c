@@ -231,7 +231,7 @@ gint computer_move_3(guint me)
 		xs[num_moves] = k;
 		ys[num_moves] = l;
 		weights[num_moves] = tmp;
-		num_maxes++;;
+		num_maxes++;
 		num_moves++;
 	      } 
 	      else if (tmp > maxpieces) {
@@ -279,7 +279,7 @@ gint computer_move_2(guint me) {
 
  
   gint * tmplist;
-  gint num_maxes;
+  gint num_maxes = 0;
 
   
   not_me = (me == WHITE_TURN) ? BLACK_TURN : WHITE_TURN;
@@ -383,7 +383,7 @@ gint computer_move_1(guint me) {
 
  
   gint * tmplist;
-  gint num_maxes;
+  gint num_maxes = 0;
 
   
   not_me = (me == WHITE_TURN) ? BLACK_TURN : WHITE_TURN;

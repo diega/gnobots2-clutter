@@ -1,3 +1,12 @@
+2001-06-07  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	Apply patch from drk@sgi.com. Bug #52641.
+
+	* ataxx.c (computer_move_3): Remove duplicate `;'
+	  (computer_move_1), (computer_move_2): Initialize num_maxes to 0. 
+	* properties.c (apply_changes): We need only [7][7] in pixmap, not
+	  [8][8].
+
 2000-10-21  Dan Mueth <d-mueth@uchicago.edu>
 
 	* help/C/Makefile.am: Added $(gataxx_help_DATA) to EXTRA_DIST

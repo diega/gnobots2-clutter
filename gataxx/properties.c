@@ -40,7 +40,7 @@ extern guint black_computer_id;
 extern guint white_computer_id;
 extern gchar tile_set[255];
 extern gchar tile_set_tmp[255];
-extern gint8 pixmaps[8][8];
+extern gint8 pixmaps[7][7];
 extern gint animate;
 extern gint flip_pixmaps_id;
 extern gint flip_final;
@@ -181,8 +181,8 @@ void apply_changes ()
 	if (strcmp (tile_set, tile_set_tmp)) {
 		strncpy (tile_set, tile_set_tmp, 255);
 		load_pixmaps ();
-		for (i = 0; i < 8; i++)
-			for (j = 0; j < 8; j++)
+		for (i = 0; i < 7; i++)
+			for (j = 0; j < 7; j++)
 				if (pixmaps [i][j] >= BLACK_TURN &&
 						pixmaps[i][j] <= WHITE_TURN)
 					gui_draw_pixmap (pixmaps[i][j], i, j);
