@@ -1,16 +1,16 @@
 imagedir      = $(datadir)/pixmaps/blackjack
 image_DATA    = blackjack-splash.png \
-		chip-100.png \
-		chip-25.png \
-		chip-5.png \
-		chip-1.png \
+		chip-100.svg \
+		chip-25.svg \
+		chip-5.svg \
+		chip-1.svg \
 		baize.png
 
 icondir       = $(datadir)/pixmaps
 icon_DATA     = gnome-blackjack.png 
 
 cardslotdir   = $(datadir)/pixmaps/cards/slots/
-cardslot_DATA = white-outline.png
+cardslot_DATA = white-outline.svg
 
 EXTRA_DIST    = $(image_DATA) \
 		$(icon_DATA) \

@@ -1,5 +1,17 @@
 2004-07-16  William Jon McCann  <mccann@jhu.edu>
 
+	* pixmaps/chip-100.svg:
+	* pixmaps/chip-25.svg:
+	* pixmaps/chip-5.svg:
+	* pixmaps/chip-1.svg:
+	* pixmaps/white-outline.svg:
+	* pixmaps/Makefile.am (image_DATA): Add new SVG chip and slot
+	images.
+
+	* src/card.cpp (bj_card_load_pixmaps): Use SVG chips.
+
+	* src/slot.cpp (bj_slot_load_pixmaps): Use SVG slot.
+
 	* data/Vegas_Strip.rules.dat: Removed.
 
 2004-07-11  William Jon McCann  <mccann@jhu.edu>

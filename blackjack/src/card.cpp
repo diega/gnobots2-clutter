@@ -35,6 +35,11 @@
 #include <iostream>
 using namespace std;
 
+#define CHIP_FILENAME_100 "chip-100.svg"
+#define CHIP_FILENAME_25  "chip-25.svg"
+#define CHIP_FILENAME_5   "chip-5.svg"
+#define CHIP_FILENAME_1   "chip-1.svg"
+
 GdkBitmap *mask;
 
 GamesCardPixmaps *images = NULL;
@@ -118,16 +123,16 @@ bj_card_load_pixmaps (GtkWidget *lapp, gchar *lcard_style)
 {
         gchar *buffer;
 
-        buffer = g_build_filename ("blackjack", "chip-100.png", NULL);
+        buffer = g_build_filename ("blackjack", CHIP_FILENAME_100, NULL);
         chip_pixbuf[CHIP_100] = get_pixbuf (buffer);
         g_free (buffer);
-        buffer = g_build_filename ("blackjack", "chip-25.png", NULL);
+        buffer = g_build_filename ("blackjack", CHIP_FILENAME_25, NULL);
         chip_pixbuf[CHIP_25] = get_pixbuf (buffer);
         g_free (buffer);
-        buffer = g_build_filename ("blackjack", "chip-5.png", NULL);
+        buffer = g_build_filename ("blackjack", CHIP_FILENAME_5, NULL);
         chip_pixbuf[CHIP_5] = get_pixbuf (buffer);
         g_free (buffer);
-        buffer = g_build_filename ("blackjack", "chip-1.png", NULL);
+        buffer = g_build_filename ("blackjack", CHIP_FILENAME_1, NULL);
         chip_pixbuf[CHIP_1] = get_pixbuf (buffer);
         g_free (buffer);
 }

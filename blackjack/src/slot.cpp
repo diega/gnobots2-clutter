@@ -27,6 +27,8 @@
 #include "chips.h"
 #include "draw.h"
 
+#define SLOT_FILENAME "white-outline.svg"
+
 GList *slot_list = NULL;
 
 GdkPixbuf *slot_pixbuf = NULL;
@@ -65,7 +67,7 @@ bj_slot_load_pixmaps (void)
 {
         gchar *buffer;
 
-        buffer = g_build_filename ("cards", "slots", "white-outline.png", NULL);
+        buffer = g_build_filename ("cards", "slots", SLOT_FILENAME, NULL);
         slot_pixbuf = get_pixbuf (buffer);
         g_free (buffer);
         buffer = g_build_filename ("blackjack", "baize.png", NULL);
