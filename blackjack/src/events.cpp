@@ -31,6 +31,7 @@
 #include <dirent.h>
 #include <ctype.h>
 #include <iostream>
+#include <math.h>
 using namespace std;
 
 #include "events.h"
@@ -488,9 +489,12 @@ handle_other_motion_event (GtkWidget *widget, GdkEventMotion *event)
       if (bj_game_is_active ())
         { 
           if (hslot == bj_hand_get_slot ())
-            message = g_strdup (_("Click to deal another card"));
-          else
-            message = g_strdup (_("Click to stand on your hand"));
+            if (bj_hand_can_be_split ())
+              message = g_strdup (_("Click to deal another card; drag card to split pair"));
+            else
+              message = g_strdup (_("Click to deal another card"));
+           else
+            message = g_strdup (_("Click to finish adding cards to your hand"));
         }
       else
         message = g_strdup (_("Click to deal a new hand"));
@@ -515,7 +519,7 @@ handle_other_motion_event (GtkWidget *widget, GdkEventMotion *event)
                   gfloat chip_value = 
                     ((hchip_type)g_list_last (hstack->chips)->data)->value;
                   gchar *message = g_strdup_printf
-                    ("Double click to increase your wager by %.2f", 
+                    (_("Double click to increase your wager by %.2f"), 
                      chip_value);
                   gnome_appbar_set_status (GNOME_APPBAR (status_bar), 
                                            message);
@@ -529,7 +533,7 @@ handle_other_motion_event (GtkWidget *widget, GdkEventMotion *event)
                   gfloat chip_value = 
                     ((hchip_type)g_list_last (hstack->chips)->data)->value;
                   gchar *message = g_strdup_printf
-                    ("Double click to decrease your wager by %.2f", 
+                    (_("Double click to decrease your wager by %.2f"), 
                      chip_value);
                   gnome_appbar_set_status (GNOME_APPBAR (status_bar), 
                                            message);
@@ -559,8 +563,8 @@ handle_slot_motion_event (GtkWidget *widget, GdkEventMotion *event)
       return TRUE;
     }
   else if (press_data->status == STATUS_MAYBE_DRAG
-           && (abs (press_data->xoffset - event->x) > 2 
-               || abs (press_data->yoffset - event->y) > 2))
+           && (fabs (press_data->xoffset - event->x) > 2.0 
+               || fabs (press_data->yoffset - event->y) > 2.0))
     {
       press_data->status = STATUS_IS_DRAG;
       bj_press_data_generate ();
@@ -586,8 +590,8 @@ handle_chip_stack_motion_event (GtkWidget *widget, GdkEventMotion *event)
       return TRUE;
     }
   else if (chip_stack_press_data->status == STATUS_MAYBE_DRAG
-           && (abs (chip_stack_press_data->xoffset - event->x) > 2 
-               || abs (chip_stack_press_data->yoffset - event->y) > 2))
+           && (fabs (chip_stack_press_data->xoffset - event->x) > 2.0 
+               || fabs (chip_stack_press_data->yoffset - event->y) > 2.0))
     {
       chip_stack_press_data->status = STATUS_IS_DRAG;
       bj_chip_stack_press_data_generate ();
@@ -607,6 +611,8 @@ bj_event_motion_notify (GtkWidget *widget, GdkEventMotion *event)
   if (! handle_slot_motion_event (widget, event))
     if (! handle_chip_stack_motion_event (widget, event))
       handle_other_motion_event (widget, event);
+
+  return TRUE;
 }
 
 gint

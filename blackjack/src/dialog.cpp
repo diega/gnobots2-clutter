@@ -48,7 +48,7 @@ get_insurance_choice ()
   gchar* message;
   gboolean choice = false;
 
-  message = _("Would you like insurance? ");
+  message = _("Would you like insurance?");
 
   dialog = gtk_message_dialog_new (GTK_WINDOW (app),
                                    GTK_DIALOG_MODAL,
@@ -103,7 +103,7 @@ hint_destroy_callback (void)
 void
 show_hint_dialog ()
 {
-  gchar *gmessage, *option_str;
+  gchar *gmessage;
 
   if (bj_game_is_first_hand ()) {
     gmessage = g_strdup (_("Set your wager and click in the white outline to deal a new hand."));
@@ -112,9 +112,7 @@ show_hint_dialog ()
     gmessage = g_strdup (_("Set your wager or click on the cards to deal a new hand."));
   }  
   else {
-    option_str = bj_hand_get_best_option_string ();
-    gmessage = g_strdup_printf (_("The best option is to %s"), option_str);
-    g_free (option_str);
+    gmessage = bj_hand_get_best_option_string ();
   }
   
   if (hint_dlg)

@@ -493,7 +493,7 @@ LoadablePlayer::writeFile (const char *filename)
   fp = gzopen (filename, "wb9");
   if (! fp) 
     {
-      cerr << "could not open required file " << filename << endl;
+      cerr << "Could not open required file " << filename << endl;
       return;
     }
 
@@ -518,7 +518,7 @@ LoadablePlayer::readFile (const char *filename)
   fp = gzopen (filename, "rb");
   if (! fp) 
     {
-      cerr << "could not open required file " << filename << endl;
+      cerr << "Could not open required file " << filename << endl;
       return;
     }
 
@@ -562,7 +562,7 @@ LoadablePlayer::save (const char *filename)
   fp = gzopen (filename, "wb9");
   if (! fp) 
     {
-      cerr << "could not open required file " << filename << endl;
+      cerr << "Could not open required file " << filename << endl;
       return;
     }
 
@@ -600,7 +600,7 @@ LoadablePlayer::load (const char *filename)
   fp = gzopen (filename, "rb");
   if (! fp) 
     {
-      cerr << "could not open required file " << filename << endl;
+      cerr << "Could not open required file " << filename << endl;
       return;
     }
 

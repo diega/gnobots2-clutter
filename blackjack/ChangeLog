@@ -1,3 +1,21 @@
+2003-06-03  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* src/Makefile.am: 
+	* src/dialog.cpp:
+	* src/game.cpp:
+	* src/hand.cpp:
+	* src/menu.cpp:
+	* src/player.cpp:
+	* src/blackjack.cpp: 
+	* src/events.cpp: Fixes to remove compiler warnings.  Also made
+	i18n changes as per Christian Rose's suggestions. Also removed
+	score stuff since it isn't used.
+
+2003-06-02  William Jon McCann  <mccann@jhu.edu>
+
+	* src/events.cpp: Improved appbar text tips shown when hovering
+	over objects in playing area.
+
 2003-06-02  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* src/chips.cpp: If we're going to use sqrt, we'd better include

@@ -80,15 +80,15 @@ bj_hand_get_best_option_string ()
                                         numHands);
 
   switch (bestOption) {
-  case KEY_S : option_str = g_strdup (_("stand"));
+  case KEY_S : option_str = g_strdup (_("The best option is to stand"));
     break;
-  case KEY_H : option_str = g_strdup (_("hit"));
+  case KEY_H : option_str = g_strdup (_("The best option is to hit"));
     break;
-  case KEY_D : option_str = g_strdup (_("double down"));
+  case KEY_D : option_str = g_strdup (_("The best option is to double down"));
     break;
-  case KEY_P : option_str = g_strdup (_("split"));
+  case KEY_P : option_str = g_strdup (_("The best option is to split"));
     break;
-  case KEY_R : option_str = g_strdup (_("surrender"));
+  case KEY_R : option_str = g_strdup (_("The best option is to surrender"));
   }
 
   return option_str;

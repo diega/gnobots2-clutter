@@ -86,7 +86,7 @@ bj_make_window_title (gchar *game_name, gint seed)
 {
   char *title;
 
-  title = g_strdup_printf ("Blackjack:  %s  ( %d )", game_name, seed);
+  title = g_strdup_printf (_("Blackjack:  %s  ( %d )"), game_name, seed);
 
   gtk_window_set_title (GTK_WINDOW (app), title); 
 
@@ -333,7 +333,7 @@ main_prog(int argc, char *argv[])
                            _("Place your wager or deal a hand"));
 
 	group_box = gtk_hbox_new (FALSE, 0);
-  GtkWidget *shoe_label = gtk_label_new (_("Cards left: "));
+  GtkWidget *shoe_label = gtk_label_new (_("Cards left:"));
   gtk_box_pack_start (GTK_BOX (group_box), shoe_label, FALSE, FALSE, 0);
   shoe_value_label = gtk_label_new ("");
   gtk_box_pack_start (GTK_BOX (group_box), shoe_value_label, 
@@ -341,19 +341,19 @@ main_prog(int argc, char *argv[])
 	gtk_box_pack_start (GTK_BOX (balance_box), group_box, FALSE, FALSE, 0);
 
 	group_box = gtk_hbox_new (FALSE, 0);
-  wager_label = gtk_label_new (_("Wager: "));
+  wager_label = gtk_label_new (_("Wager:"));
   gtk_box_pack_start (GTK_BOX (group_box), wager_label, 
                       FALSE, FALSE, 0);
 
   wager_value = 5.0;
-  wager_value_label = gtk_label_new (_("5.00"));
+  wager_value_label = gtk_label_new ("5.00");
   gtk_box_pack_start (GTK_BOX (group_box), wager_value_label, 
                       FALSE, FALSE, 0);
 
 	gtk_box_pack_start (GTK_BOX (balance_box), group_box, FALSE, FALSE, 0);
 
 	group_box = gtk_hbox_new (FALSE, 0);
-  balance_label = gtk_label_new (_("Balance: "));
+  balance_label = gtk_label_new (_("Balance:"));
   gtk_box_pack_start (GTK_BOX (group_box), balance_label, 
                       FALSE, FALSE, 0);
   balance_value_label = gtk_label_new ("0.00");
@@ -612,8 +612,6 @@ main (int argc, char *argv [])
   blackjack_opts[0].descrip = N_("Variation on game rules");
   blackjack_opts[0].argDescrip = N_("NAME");
 
-  gnome_score_init ("Blackjack");
-  
   bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
   textdomain (GETTEXT_PACKAGE);

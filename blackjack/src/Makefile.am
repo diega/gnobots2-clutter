@@ -1,5 +1,3 @@
-scoredir=$(localstatedir)/games
-
 INCLUDES =  \
 	-I$(top_srcdir)/gdk-card-image             \
 	-I$(top_srcdir)/libgames-support           \
