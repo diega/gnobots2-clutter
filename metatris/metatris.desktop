@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Tetris-G
+Name[es]=Tetris-G
+Name[fr]=Tetris-G
+Name[no]=Tetris-G
+Name[pt]=Tetris-G
+Comment=Gnome's Tetris Clone
+TryExec=tetris-g
+Exec=tetris-g
+Icon=gnome-tetris.png
+Terminal=0
+Type=Game
