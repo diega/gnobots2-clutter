@@ -1,5 +1,11 @@
 2002-05-09  Bastien Nocera  <hadess@hadess.net>
 
+	* mahjongg.c: (about_callback), (main): moved the "moves left" and
+	"tiles left" labels to the status bar (Closes: #80712), added icon in
+	the about box
+
+2002-05-09  Bastien Nocera  <hadess@hadess.net>
+
 	* mahjongg.c: (set_popup), (apply_preferences),
 	(create_mahjongg_board), (main): more gconf work, not instant apply
 	and doesn't listen to changes

@@ -410,9 +410,6 @@ GnomeUIInfo toolbar_uiinfo [] = {
          GNOME_APP_PIXMAP_DATA, mini_sound_xpm, 0, 0, NULL},
 #endif
 
-
-        {GNOME_APP_UI_SEPARATOR},
-
 	{GNOME_APP_UI_ENDOFINFO}
 };
 
@@ -1180,6 +1177,7 @@ void hint_callback (GtkWidget *widget, gpointer data)
 void about_callback (GtkWidget *widget, gpointer data)
 {
 	GtkWidget *about;
+	GdkPixbuf *pixbuf = NULL;
 	const gchar *authors [] = {
 		"Code: Francisco Bustamante",
 		"      Max Watson",
@@ -1196,6 +1194,21 @@ void about_callback (GtkWidget *widget, gpointer data)
         /* Translator credits */
         gchar *translator_credits = _("translator_credits");
 
+	{
+		char *filename = NULL;
+
+		filename = gnome_program_locate_file (NULL,
+				GNOME_FILE_DOMAIN_PIXMAP, 
+				"gnome-mahjongg.png",
+				TRUE, NULL);
+		if (filename != NULL)
+		{
+			pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+			g_free (filename);
+		}
+	}
+
+
 	about = gnome_about_new (_("GNOME Mahjongg"), MAH_VERSION,
 				 "(C) 1998 The Free Software Foundation",
 				  _("Send comments and bug reports to:\n"
@@ -1205,7 +1218,7 @@ void about_callback (GtkWidget *widget, gpointer data)
 				 (const gchar **)authors,
 				 (const gchar **)documenters,
 				 strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
-				NULL);
+				pixbuf);
 
 	gtk_widget_show (about);
 }
@@ -1821,8 +1834,7 @@ int main (int argc, char *argv [])
 {
 	BonoboDockItem *gdi;
 	GtkWidget *mbox;
-	GtkWidget *chrono_label,*chrono_box;
-	GtkWidget *toolbar;
+	GtkWidget *chrono_label,*status_box;
         gboolean show=TRUE;
 
         gnome_score_init (APPNAME);
@@ -1843,18 +1855,35 @@ int main (int argc, char *argv [])
 	window = gnome_app_new (APPNAME, _(APPNAME_LONG));
 	gtk_window_set_resizable (GTK_WINDOW (window), FALSE);
 
-	/* Statusbar for a chrono */
-	chrono_box = gtk_hbox_new(0, FALSE);
-	chrono_label = gtk_label_new (_("Time : "));
-	gtk_box_pack_start (GTK_BOX(chrono_box), chrono_label, FALSE, FALSE, 0);
-	chrono = games_clock_new ();
-	gtk_box_pack_start (GTK_BOX(chrono_box), chrono, FALSE, FALSE, 0);
+	/* Statusbar for a chrono, Tiles left and Moves left */
+	status_box = gtk_hbox_new(0, FALSE);
+
+	tiles_label = gtk_label_new(_("Tiles Left: "));
+	gtk_widget_show(tiles_label);
+	gtk_box_pack_start (GTK_BOX(status_box), tiles_label, FALSE, FALSE, 0);
+	tiles_label = gtk_label_new(MAX_TILES_STR);
+	gtk_widget_show(tiles_label);
+	gtk_box_pack_start (GTK_BOX(status_box), tiles_label, FALSE, FALSE, 0);
+
+	moves_label = gtk_label_new(_(" / Moves Left: "));
+	gtk_widget_show(moves_label);
+	gtk_box_pack_start (GTK_BOX(status_box), moves_label, FALSE, FALSE, 0);
+	moves_label = gtk_label_new(MAX_TILES_STR);
+	gtk_widget_show(moves_label);
+	gtk_box_pack_start (GTK_BOX(status_box), moves_label, FALSE, FALSE, 0);
+
+	chrono_label = gtk_label_new (_(" / Time : "));
 	gtk_widget_show (chrono_label);
+	gtk_box_pack_start (GTK_BOX(status_box), chrono_label, FALSE, FALSE, 0);
+	chrono = games_clock_new ();
+	gtk_box_pack_start (GTK_BOX(status_box), chrono, FALSE, FALSE, 0);
 	gtk_widget_show (chrono);
-	gtk_widget_show (chrono_box);
+
+	/* show the status bar items */
+	gtk_widget_show (status_box);
 
 	appbar = gnome_appbar_new (FALSE, TRUE, GNOME_PREFERENCES_USER);
-	gtk_box_pack_end(GTK_BOX(appbar), chrono_box, FALSE, FALSE, 0);
+	gtk_box_pack_end(GTK_BOX(appbar), status_box, FALSE, FALSE, 0);
 	gnome_app_set_statusbar (GNOME_APP (window), appbar);
 
 	gnome_app_create_menus (GNOME_APP (window), mainmenu);
@@ -1863,29 +1892,6 @@ int main (int argc, char *argv [])
         gnome_app_create_toolbar (GNOME_APP (window), toolbar_uiinfo);
 
 	gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
-	toolbar = bonobo_dock_item_get_child (gdi);
-#if 0
-        gtk_toolbar_set_space_size(GTK_TOOLBAR (toolbar), 25);
-#endif
-
-        tiles_label = gtk_label_new(_("Tiles Left: "));
-        gtk_widget_show(tiles_label);
-	gtk_toolbar_append_widget(GTK_TOOLBAR(toolbar), tiles_label,
-				  NULL, NULL);
-        tiles_label = gtk_label_new(MAX_TILES_STR);
-        gtk_widget_show(tiles_label);
-	gtk_toolbar_append_widget(GTK_TOOLBAR(toolbar), tiles_label,
-				  NULL, NULL);
-	gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
-
-        moves_label = gtk_label_new(_("Moves Left: "));
-        gtk_widget_show(moves_label);
-	gtk_toolbar_append_widget(GTK_TOOLBAR(toolbar), moves_label,
-				  NULL, NULL);
-        moves_label = gtk_label_new(MAX_TILES_STR);
-        gtk_widget_show(moves_label);
-	gtk_toolbar_append_widget(GTK_TOOLBAR(toolbar), moves_label,
-				  NULL, NULL);
 
 	g_signal_connect (G_OBJECT (window), "delete_event",
 			  G_CALLBACK (delete_event_callback), (gpointer)QUIT_GAME);
