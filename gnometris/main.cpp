@@ -34,16 +34,16 @@ main(int argc, char *argv[])
 	poptOption options[] = 
 	{
 		{"level", 'l', POPT_ARG_INT, &cmdlineLevel, 0, N_("Set starting level (1-10)"), N_("LEVEL")},
-		{NULL, '\0', 0, NULL, 0}
+		{0, '\0', 0, 0, 0}
 	};
 
-	srand(time(NULL));
+	srand(time(0));
 
 	gnome_score_init("gnometris");
 
-	gnome_init_with_popt_table("gnometris", TETRIS_VERSION, argc, argv, options, 0, NULL);
+	gnome_init_with_popt_table("gnometris", TETRIS_VERSION, argc, argv, options, 0, 0);
 
-	GnomeClient *client= gnome_master_client();
+//	GnomeClient *client= gnome_master_client();
 	
 	Tetris * t = new Tetris(cmdlineLevel);
 

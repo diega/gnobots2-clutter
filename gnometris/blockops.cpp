@@ -33,7 +33,7 @@ GnomeCanvasItem *BlockOps::generateItem(int x, int y, int color)
   			"width", (double) BLOCK_SIZE,
   			"height", (double) BLOCK_SIZE,
   			"anchor", GTK_ANCHOR_NW,
-  			NULL);
+  			0);
 
 	return it;
 }
@@ -226,7 +226,7 @@ BlockOps::checkFullLines(ScoreFrame *s)
 						if (field[x][y1].item)
 						{
 							gtk_object_destroy(GTK_OBJECT(field[x][y1].item));
-							field[x][y1].item = NULL;
+							field[x][y1].item = 0;
 							if (y1 < y)
 								field[x][y1 + 1].item = generateItem(x, y1 + 1, field[x][y1 + 1].color);
 						}
@@ -268,10 +268,10 @@ BlockOps::emptyField()
 	{
 		for (int x = 0; x < COLUMNS; ++x)
 		{
-			if (field[x][y].item != NULL)
+			if (field[x][y].item != 0)
 			{
 				gtk_object_destroy(GTK_OBJECT(field[x][y].item));
-				field[x][y].item = NULL;
+				field[x][y].item = 0;
 			}
 			field[x][y].what = EMPTY;
 		}
@@ -289,7 +289,7 @@ BlockOps::putBlockInField(bool erase)
 				if (erase)
 				{
 					gtk_object_destroy(GTK_OBJECT(field[posx - 2 + x][y + posy].item));
-					field[posx - 2 + x][y + posy].item = NULL;
+					field[posx - 2 + x][y + posy].item = 0;
 				}
 				else
 				{

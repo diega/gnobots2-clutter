@@ -23,7 +23,7 @@
 
 Field::	Field()
 {
-	bg = NULL;
+	bg = 0;
 	w = gnome_canvas_new();
 }
 
@@ -33,7 +33,7 @@ Field::show()
 	gtk_widget_realize(w);
 
 	gtk_widget_show(w);
-	updateSize(NULL);
+	updateSize(0);
 }
 
 void
@@ -55,7 +55,7 @@ Field::updateSize(GdkImlibImage * bgImage)
   			"width", (double) COLUMNS * BLOCK_SIZE,
   			"height", (double) LINES * BLOCK_SIZE,
   			"anchor", GTK_ANCHOR_NW,
-  			NULL);
+  			0);
 		else
 			bg = gnome_canvas_item_new(
   			gnome_canvas_root(GNOME_CANVAS(w)),
@@ -67,5 +67,5 @@ Field::updateSize(GdkImlibImage * bgImage)
 				"fill_color", "black",
 				"outline_color", "black",
 				"width_units", 1.0,
-  			NULL);
+  			0);
 }

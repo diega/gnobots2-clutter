@@ -23,9 +23,9 @@
 #include "scoreframe.h"
 
 ScoreFrame::ScoreFrame(int cmdlLevel)
-	:lines(0), score(0)
+	: score(0), lines(0)
 {
-  startingLevel = cmdlLevel ? cmdlLevel : gnome_config_get_int_with_default("/gnometris/Properties/StartingLevel=1", NULL);
+  startingLevel = cmdlLevel ? cmdlLevel : gnome_config_get_int_with_default("/gnometris/Properties/StartingLevel=1", 0);
 	level = startingLevel;
 	
 	w = gtk_frame_new(_("Game Status"));

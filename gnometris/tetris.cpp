@@ -52,24 +52,24 @@ int color_next = -1;
 bool random_block_colors = false;
 bool do_preview = true;
 
-char *Tetris::blockPixmapTmp = NULL;
-char *Tetris::bgPixmapTmp = NULL;
+char *Tetris::blockPixmapTmp = 0;
+char *Tetris::bgPixmapTmp = 0;
 
 Tetris::Tetris(int cmdlLevel): 
+	blockPixmap(0),
+	bgPixmap(0),
+	field(0),
+	preview(0),
+	scoreFrame(0),
 	paused(false), 
 	timeoutId(-1), 
 	onePause(false), 
-	setupdialog(NULL), 
+	image(0),
+	bgimage(0),
+	setupdialog(0), 
 	cmdlineLevel(cmdlLevel), 
 	doPreviewTmp(do_preview), 
 	randomBlocksTmp(random_block_colors),
-	blockPixmap(NULL),
-	bgPixmap(NULL),
-	image(NULL),
-	bgimage(NULL),
-	scoreFrame(NULL),
-	field(NULL),
-	preview(NULL),
 	fastFall(false)
 {
 	pic = new GdkImlibImage*[tableSize];
@@ -117,8 +117,8 @@ Tetris::Tetris(int cmdlLevel):
 		GNOMEUIINFO_END
 	};
 
-	blockPixmap = strdup(gnome_config_get_string_with_default("/gnometris/Properties/BlockPixmap=7blocks-tig.png", NULL));
-	bgPixmap = strdup(gnome_config_get_string_with_default("/gnometris/Properties/BackgroundPixmap=fishy-bg.png", NULL));
+	blockPixmap = strdup(gnome_config_get_string_with_default("/gnometris/Properties/BlockPixmap=7blocks-tig.png", 0));
+	bgPixmap = strdup(gnome_config_get_string_with_default("/gnometris/Properties/BackgroundPixmap=fishy-bg.png", 0));
 
 
 	gnome_app_create_menus(GNOME_APP(w), mainmenu);
@@ -190,7 +190,7 @@ Tetris::setupdialogDestroy(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
 	gtk_widget_destroy(t->setupdialog);
-	t->setupdialog = NULL;
+	t->setupdialog = 0;
 }
 
 void
@@ -198,7 +198,7 @@ Tetris::setupPixmap()
 {
 	char *pixname, *fullpixname;
 	
-	pixname = g_copy_strings("gnometris/", blockPixmap, NULL);
+	pixname = g_copy_strings("gnometris/", blockPixmap, 0);
 	fullpixname = gnome_unconditional_pixmap_file(pixname);
 	g_free(pixname);
 
@@ -226,7 +226,7 @@ Tetris::setupPixmap()
 		pic[i] = gdk_imlib_crop_and_clone_image(image, (i % nr_of_colors) * BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE);
 	}
 
-	pixname = g_copy_strings("gnometris/bg/", bgPixmap, NULL);
+	pixname = g_copy_strings("gnometris/bg/", bgPixmap, 0);
 	fullpixname = gnome_unconditional_pixmap_file(pixname);
 	g_free(pixname);
 
@@ -236,18 +236,18 @@ Tetris::setupPixmap()
 	if (g_file_exists(fullpixname)) 
 		bgimage = gdk_imlib_load_image(fullpixname);
 	else
-		bgimage = NULL;
+		bgimage = 0;
 
 	if (field)
 	{
 		field->updateSize(bgimage);
-		gtk_widget_draw(field->getWidget(), NULL);
+		gtk_widget_draw(field->getWidget(), 0);
 	}
 	
 	if (preview)
 	{
 		preview->updateSize();
-		gtk_widget_draw(preview->getWidget(), NULL);
+		gtk_widget_draw(preview->getWidget(), 0);
 	}
 
 	// FIXME: this really sucks, but I can't find a better way to resize 
@@ -347,7 +347,7 @@ Tetris::fillMenu(GtkWidget *menu, char *pixname, char *dirname, GtkSignalFunc se
 	GtkWidget *item;
 	char *s;
 	
-	while ((e = readdir (dir)) != NULL)
+	while ((e = readdir (dir)) != 0)
 	{
 		s = strdup(e->d_name);
 
@@ -388,7 +388,8 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 {
 	GtkWidget *allBoxes;
 	GtkWidget *box, *box2;
-	GtkWidget *button, *label;
+//	GtkWidget *button;
+	GtkWidget *label;
 	GtkWidget *frame;
 	GtkObject *adj;
         
@@ -400,7 +401,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	t->setupdialog = gnome_dialog_new(_("Gnometris setup"), 
 																		GNOME_STOCK_BUTTON_OK, 
 																		GNOME_STOCK_BUTTON_CANCEL, 
-																		NULL);
+																		0);
 	gnome_dialog_set_parent(GNOME_DIALOG(t->setupdialog), GTK_WINDOW(t->w));
 
 	gtk_container_border_width(GTK_CONTAINER(t->setupdialog), 10);
@@ -426,9 +427,9 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_box_pack_start(GTK_BOX(box2), label, 0, 0, 0);
 	gtk_widget_show(label);
 
-  t->startingLevel = gnome_config_get_int_with_default("/gnometris/Properties/StartingLevel=1", NULL);
-	random_block_colors = gnome_config_get_int_with_default("/gnometris/Properties/RandomBlockColors=0", NULL) != 0;
-	do_preview = gnome_config_get_int_with_default("/gnometris/Properties/DoPreview=0", NULL) != 0;
+  t->startingLevel = gnome_config_get_int_with_default("/gnometris/Properties/StartingLevel=1", 0);
+	random_block_colors = gnome_config_get_int_with_default("/gnometris/Properties/RandomBlockColors=0", 0) != 0;
+	do_preview = gnome_config_get_int_with_default("/gnometris/Properties/DoPreview=0", 0) != 0;
 
   adj = gtk_adjustment_new(t->startingLevel, 1, 10, 1, 5, 10);
 	t->sentry = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 10, 0);
@@ -457,7 +458,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_box_pack_start(GTK_BOX(box), cb, 0, 0, 0);
 	gtk_widget_show(cb);
 
-	blockPixmapTmp=NULL;
+	blockPixmapTmp=0;
 	box2 = gtk_hbox_new(FALSE, 0);
   gtk_container_border_width(GTK_CONTAINER(box2), 10);
 	gtk_box_pack_start(GTK_BOX(box), box2, TRUE, TRUE, 0);
@@ -473,7 +474,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_box_pack_start(GTK_BOX(box), box2, 0, 0, 0);
 	gtk_widget_show(box2);
 
-	bgPixmapTmp=NULL;
+	bgPixmapTmp=0;
 	box2 = gtk_hbox_new(FALSE, 0);
   gtk_container_border_width(GTK_CONTAINER(box2), 10);
 	gtk_box_pack_start(GTK_BOX(box), box2, TRUE, TRUE, 0);
@@ -498,6 +499,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 															GTK_SIGNAL_FUNC(setupdialogDestroy), d);
 	
 	gtk_widget_show(t->setupdialog);
+	return TRUE;
 }
 
 int
@@ -505,6 +507,7 @@ Tetris::gamePause(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
 	t->togglePause();
+	return TRUE;
 }
 
 int
@@ -516,6 +519,7 @@ Tetris::gameEnd(GtkWidget *widget, void *d)
 	t->timeoutId = -1;
 	blocknr_next = -1;
 	t->endOfGame();
+	return TRUE;
 }
 
 int
@@ -566,12 +570,12 @@ Tetris::timeoutHandler(void *d)
  	if (t->onePause)
  	{
 		t->onePause = false;
-		gtk_widget_draw(t->field->getWidget(), NULL);
+		gtk_widget_draw(t->field->getWidget(), 0);
 	}
  	else
 	{
 		bool res = t->ops->moveBlockDown();
-		gtk_widget_draw(t->field->getWidget(), NULL);
+		gtk_widget_draw(t->field->getWidget(), 0);
 
 		if (res)
 		{
@@ -657,7 +661,7 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 	}
 
 	if (res)
-		gtk_widget_draw(t->field->getWidget(), NULL);
+		gtk_widget_draw(t->field->getWidget(), 0);
 
 	return (keyEvent == true);
 }
@@ -674,7 +678,7 @@ Tetris::generate()
 	if (ops->generateFallingBlock())
 	{
 		ops->putBlockInField(false);
-		gtk_widget_draw(preview->getWidget(), NULL);
+		gtk_widget_draw(preview->getWidget(), 0);
 		onePause = true;
 	}
 	else
@@ -699,7 +703,7 @@ Tetris::endOfGame()
 	
 	if (scoreFrame->getScore() > 0) 
 	{
-		int pos = gnome_score_log(scoreFrame->getScore(), NULL, TRUE);
+		int pos = gnome_score_log(scoreFrame->getScore(), 0, TRUE);
 		showScores("Gnometris", pos);
 	}
 }
@@ -707,7 +711,7 @@ Tetris::endOfGame()
 void
 Tetris::showScores(gchar *title, guint pos)
 {
-	gnome_scores_display(title, "gnometris", NULL, pos);
+	gnome_scores_display(title, "gnometris", 0, pos);
 }
 
 int
@@ -721,16 +725,16 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 		t->timeoutId = -1;
 
 		if (t->scoreFrame->getScore() > 0) 
-			gnome_score_log(t->scoreFrame->getScore(), NULL, TRUE);
+			gnome_score_log(t->scoreFrame->getScore(), 0, TRUE);
 	}
 
 	t->fastFall = false;
 	
   int level = t->cmdlineLevel ? t->cmdlineLevel :
-		gnome_config_get_int_with_default("/gnometris/Properties/StartingLevel=1", NULL);
+		gnome_config_get_int_with_default("/gnometris/Properties/StartingLevel=1", 0);
 	t->scoreFrame->setLevel(level);
-	random_block_colors = gnome_config_get_int_with_default("/gnometris/Properties/RandomBlockColors=0", NULL) != 0;
-	do_preview = gnome_config_get_int_with_default("/gnometris/Properties/DoPreview=0", NULL) != 0;
+	random_block_colors = gnome_config_get_int_with_default("/gnometris/Properties/RandomBlockColors=0", 0) != 0;
+	do_preview = gnome_config_get_int_with_default("/gnometris/Properties/DoPreview=0", 0) != 0;
 	
 	t->timeoutId = gtk_timeout_add(1000 - 100 * (level - 1), timeoutHandler, t);
 	t->ops->emptyField();
@@ -739,8 +743,8 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 	t->paused = false;
 	
 	t->ops->generateFallingBlock();
-	gtk_widget_draw(t->field->getWidget(), NULL);
-	gtk_widget_draw(t->preview->getWidget(), NULL);
+	gtk_widget_draw(t->field->getWidget(), 0);
+	gtk_widget_draw(t->preview->getWidget(), 0);
 
 	gtk_widget_set_sensitive(t->gameMenuPtr[1].widget, TRUE);
 	gtk_widget_set_sensitive(t->gameMenuPtr[4].widget, TRUE);
@@ -756,12 +760,12 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 
 	GtkWidget *about;
 
-	const gchar *authors[] = {"J. Marcin Gorycki", NULL};
+	const gchar *authors[] = {"J. Marcin Gorycki", 0};
 
 	about = gnome_about_new("Gnometris", TETRIS_VERSION, "(C) 1999 J. Marcin Gorycki", 
 													(const char **)authors,
 													_("Written for my wife, Matylda\n"
-														"Send comments and bug reports to: mgo@olicom.dk"), NULL);
+														"Send comments and bug reports to: mgo@olicom.dk"), 0);
 	gnome_dialog_set_parent(GNOME_DIALOG(about), GTK_WINDOW(t->w));
 	gtk_window_set_modal(GTK_WINDOW(about), TRUE);
 
