@@ -1,3 +1,7 @@
+2000-05-12  Andreas Hyden  <a.hyden@cyberpoint.se>
+
+	* gnobots.desktop: Added Swedish translation.
+
 1999-01-26  Miguel de Icaza  <miguel@nuclecu.unam.mx>
 
 	* gnobots.c: Kill the file menu as well.
