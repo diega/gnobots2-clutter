@@ -1,4 +1,4 @@
-same_gnome_helpdir = $(datadir)/gnome/help/samegnome/C
+same_gnome_helpdir = $(datadir)/gnome/help/samegnome/ru
 
 same_gnome_help_DATA = 	\
 	index.html		\
