@@ -1,5 +1,13 @@
 2004-11-12  William Jon McCann  <mccann@jhu.edu>
 
+	* src/hand.cpp (bj_hand_finish_play, bj_hand_new5)
+	(bj_hand_finish): 
+	* src/blackjack.cpp (control_menu_set_sensitive)
+	(bj_update_control_menu, create_main_window): 
+	Add Control menu and desensitize unavailable options.
+
+2004-11-12  William Jon McCann  <mccann@jhu.edu>
+
 	* src/dialog.cpp (show_hint_dialog): 
 	* src/hand.cpp (bj_hand_get_best_option_string):
 	Add helpful secondary text to hint dialog and insurance

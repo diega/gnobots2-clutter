@@ -40,8 +40,6 @@ using namespace std;
 
 #include "menu.h"
 #include "dialog.h"
-#include "draw.h"
-#include "events.h"
 
 #include "game.h"
 #include "hand.h"
@@ -95,6 +93,48 @@ on_preferences_activate (GtkAction *action,
                          gpointer   data)
 {
         show_preferences_dialog ();
+}
+
+void
+on_control_deal_activate (GtkAction *action,
+                         gpointer   data)
+{
+        bj_hand_new_deal ();
+}
+
+void
+on_control_hit_activate (GtkAction *action,
+                         gpointer   data)
+{
+        bj_hand_hit_with_delay ();
+}
+
+void
+on_control_stand_activate (GtkAction *action,
+                           gpointer   data)
+{
+        bj_hand_stand ();
+}
+
+void
+on_control_surrender_activate (GtkAction *action,
+                               gpointer   data)
+{
+        bj_hand_surrender ();
+}
+
+void
+on_control_split_activate (GtkAction *action,
+                               gpointer   data)
+{
+        bj_hand_split ();
+}
+
+void
+on_control_double_activate (GtkAction *action,
+                            gpointer   data)
+{
+        bj_hand_double ();
 }
 
 void

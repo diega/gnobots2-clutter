@@ -91,6 +91,7 @@ extern gboolean         events_pending;
 
 gboolean                bj_quit_app (void);
 void                    bj_make_window_title (gchar *game_name);
+void                    bj_update_control_menu (void);
 
 void                    bj_show_balance (gfloat);
 void                    bj_show_shoe_cards (gfloat);

@@ -118,26 +118,26 @@ bj_hand_get_best_option_string (char **secondary_message)
         case KEY_S : option_str = g_strdup (_("The best option is to stand"));
                 if (secondary_message)
                         *secondary_message = g_strdup (_("To stand means to stop adding cards to your hand.  "
-                                                         "Do this by clicking on the dealer's cards or by selecting the option from the Controls menu."));
+                                                         "Do this by clicking on the dealer's cards or by selecting the option from the Control menu."));
                 break;
         case KEY_H : option_str = g_strdup (_("The best option is to hit"));
                 if (secondary_message)
                         *secondary_message = g_strdup (_("To hit means to add another card to your hand.  "
-                                                         "Do this by clicking once on your cards or by selecting the option from the Controls menu."));
+                                                         "Do this by clicking once on your cards or by selecting the option from the Control menu."));
                 break;
         case KEY_D : option_str = g_strdup (_("The best option is to double down"));
                 if (secondary_message)
                         *secondary_message = g_strdup (_("To double down means to double the initial wager and receive exactly one more card.  "
-                                                         "Do this by clicking once on the chips at the bottom of the window or by selecting the option from the Controls menu."));
+                                                         "Do this by clicking once on the chips at the bottom of the window or by selecting the option from the Control menu."));
                 break;
         case KEY_P : option_str = g_strdup (_("The best option is to split"));
                 if (secondary_message)
-                        *secondary_message = g_strdup (_("To split means to divide your current hand into two separate hands.  Do this by dragging one of your cards and dropping it off to the side or by selecting the option from the Controls menu."));
+                        *secondary_message = g_strdup (_("To split means to divide your current hand into two separate hands.  Do this by dragging one of your cards and dropping it off to the side or by selecting the option from the Control menu."));
                 break;
         case KEY_R : option_str = g_strdup (_("The best option is to surrender"));
                 if (secondary_message)
                         *secondary_message = g_strdup (_("To surrender means to give up half your wager and not complete the hand.  "
-                                                         "Do this by selecting the option from the Controls menu."));
+                                                         "Do this by selecting the option from the Control menu."));
                 break;
         default:
                 break;
@@ -311,7 +311,8 @@ bj_hand_new5 (gpointer data)
                                                numHands);
                 events_pending = false;
         }
-        
+
+        bj_update_control_menu ();
         bj_draw_refresh_screen ();
         deal_timeout_id = 0;
         return FALSE;
@@ -434,6 +435,7 @@ bj_hand_finish ()
         hcard_type card = (hcard_type) g_list_nth_data (dealer->hslot->cards, 1);
         card->direction = UP;
         dealer->showCount ();
+        bj_update_control_menu ();
         bj_draw_refresh_screen ();
 
         finish_timeout_id = g_timeout_add ((gint)bj_get_deal_delay (), 
@@ -622,5 +624,7 @@ bj_hand_finish_play ()
                         bj_hand_show_options ();
                 }
         }
+
+        bj_update_control_menu ();
         bj_draw_refresh_screen ();
 }

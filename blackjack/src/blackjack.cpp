@@ -219,6 +219,40 @@ bj_quit_app (void)
 }
 
 static void
+control_menu_set_sensitive (const char *name,
+                            gboolean    value)
+{
+        GtkWidget *widget;
+        char      *path;
+
+        path = g_strdup_printf ("/MenuBar/ControlMenu/%s", name);
+        widget = gtk_ui_manager_get_widget (ui, path);
+        gtk_widget_set_sensitive (widget, value);
+        g_free (path);
+}
+
+void
+bj_update_control_menu (void)
+{
+        gboolean  active;
+        gboolean  value;
+
+        active = bj_game_is_active ();
+        control_menu_set_sensitive ("Deal", !active);
+
+        value = active && bj_hand_can_be_hit ();
+        control_menu_set_sensitive ("Hit", value);
+        value = active;
+        control_menu_set_sensitive ("Stand", value);
+        value = active && bj_hand_can_be_split ();
+        control_menu_set_sensitive ("Split", value);
+        value = active && bj_hand_can_be_doubled ();
+        control_menu_set_sensitive ("DoubleDown", value);
+        value = active && bj_hand_can_be_surrendered ();
+        control_menu_set_sensitive ("Surrender", value);
+}
+
+static void
 create_main_window (void)
 {
         GtkWidget    *vbox;
@@ -245,7 +279,13 @@ create_main_window (void)
                 "      <menuitem name='Toolbar' action='show-toolbar'/>"
                 "      <menuitem name='Preferences' action='show-preferences'/>"
                 "    </menu>"
-                "    <menu name='ActionsMenu' action='actions-menu'>"
+                "    <menu name='ControlMenu' action='control-menu'>"
+                "      <menuitem name='Deal' action='hand-deal' />"
+                "      <menuitem name='Hit' action='hand-hit' />"
+                "      <menuitem name='Stand' action='hand-stand' />"
+                "      <menuitem name='DoubleDown' action='hand-double-down' />"
+                "      <menuitem name='Split' action='hand-split' />"
+                "      <menuitem name='Surrender' action='hand-surrender' />"
                 "      <placeholder name='ActionsMenuAdditions' />"
                 "    </menu>"
                 "    <menu name='HelpMenu' action='help-menu'>"
@@ -263,19 +303,25 @@ create_main_window (void)
                 "  </toolbar>"
                 "</ui>";
 
-	static GtkActionEntry entries [] = {
-		{ "game-menu", NULL, "_Game" },
-		{ "new-game", GTK_STOCK_NEW, "_New game", "<Control>N", "Start a new game", G_CALLBACK (on_game_new_activate) },
-		{ "restart-game", GTK_STOCK_REFRESH, "_Restart game", "<Control>R", "Restart the current game", G_CALLBACK (on_game_restart_activate) },
-		{ "show-hint", GTK_STOCK_HELP, "_Hint", NULL, "Get a hint for the next action", G_CALLBACK (on_game_hint_activate) },
-		{ "quit-game", GTK_STOCK_QUIT, "_Quit", "<Control>Q", "Quit application", G_CALLBACK (on_game_quit_activate) },
-		{ "settings-menu", NULL, "_Settings" },
+        static GtkActionEntry entries [] = {
+                { "game-menu", NULL, "_Game" },
+                { "new-game", GTK_STOCK_NEW, "_New game", "<Control>N", "Start a new game", G_CALLBACK (on_game_new_activate) },
+                { "restart-game", GTK_STOCK_REFRESH, "_Restart game", "<Control>R", "Restart the current game", G_CALLBACK (on_game_restart_activate) },
+                { "show-hint", GTK_STOCK_HELP, "_Hint", NULL, "Get a hint for the next action", G_CALLBACK (on_game_hint_activate) },
+                { "quit-game", GTK_STOCK_QUIT, "_Quit", "<Control>Q", "Quit application", G_CALLBACK (on_game_quit_activate) },
+                { "settings-menu", NULL, "_Settings" },
                 { "show-preferences", GTK_STOCK_PREFERENCES, "_Preferences", NULL, "Show game preferences", G_CALLBACK (on_preferences_activate) },
-		{ "actions-menu", NULL, "_Actions" },
-		{ "help-menu", NULL, "_Help" },
-		{ "show-help-contents", GTK_STOCK_HELP, "_Contents", "F1", "Display help for this game", G_CALLBACK (on_help_contents_activate) },
-		{ "show-about", GTK_STOCK_ABOUT, "_About", NULL, "About this game", G_CALLBACK (on_help_about_activate) },
-	};
+                { "control-menu", NULL, "_Control" },
+                { "hand-deal", NULL, "Deal", NULL, "Deal a new hand", G_CALLBACK (on_control_deal_activate) },
+                { "hand-hit", NULL, "_Hit", "H", "Add a card to the hand", G_CALLBACK (on_control_hit_activate) },
+                { "hand-stand", NULL, "_Stand", "S", "Stop adding cards to the hand", G_CALLBACK (on_control_stand_activate) },
+                { "hand-surrender", NULL, "Surrender", "R", "Surrender the hand", G_CALLBACK (on_control_surrender_activate) },
+                { "hand-double-down", NULL, "_Double down", "D", "Double down", G_CALLBACK (on_control_double_activate) },
+                { "hand-split", NULL, "Split the hand", "P", "Split the hand", G_CALLBACK (on_control_split_activate) },
+                { "help-menu", NULL, "_Help" },
+                { "show-help-contents", GTK_STOCK_HELP, "_Contents", "F1", "Display help for this game", G_CALLBACK (on_help_contents_activate) },
+                { "show-about", GTK_STOCK_ABOUT, "_About", NULL, "About this game", G_CALLBACK (on_help_about_activate) },
+        };
 
 	static GtkToggleActionEntry toggle_entries [] = {
                 { "show-toolbar", NULL, "_Toolbar", "<Control>T", "Show toolbar", G_CALLBACK (on_toolbar_activate), show_toolbar },
@@ -348,6 +394,8 @@ create_main_window (void)
         height = gconf_client_get_int (gconf_client, GCONF_KEY_HEIGHT, NULL);
 
         gtk_window_set_default_size (GTK_WINDOW (toplevel_window), width, height);
+
+        bj_update_control_menu ();
 
         g_signal_connect (toplevel_window, "delete_event", 
                           G_CALLBACK (bj_quit_app), NULL);
