@@ -1,3 +1,8 @@
+1999-02-08  Janusz Marcin Gorycki  <mgo@spiderman.pl.olicom.com>
+
+	* tetris.cpp:
+	now it compiles without warnings (patch from andrewtv@usa.net)
+
 1999-02-01  Marcin Gorycki  <mgo@olicom.dk>
 
 	* tetris.h, tetris.cpp, scoreframe.cpp, preview.cpp, main.cpp, blockops.h, blockops.cpp, TODO, Makefile.am, ChangeLog:
