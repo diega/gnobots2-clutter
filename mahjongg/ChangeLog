@@ -1,3 +1,8 @@
+2000-05-06  Tuomas Kuosmanen  <tigert@tigert.gimp.org>
+
+	* gnome-mahjongg.png: shaped up the icon a bit. It now has a shadow
+	and it is a bit brighter too.
+
 2000-04-26  Ian Peters  <itp@gnu.org>
 
 	* mahjongg.c: use GNOME_STOCK_BUTTON_OK like a good little gnome program
