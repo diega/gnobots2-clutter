@@ -340,7 +340,9 @@ area_event (GtkWidget *widget, GdkEvent *event, void *d)
 		return TRUE;
 	}
 	
-	case GDK_LEAVE_NOTIFY: 
+	case GDK_LEAVE_NOTIFY:
+		old_x = -1;
+		old_y = -1;
 		disable_timeout ();
 		untag_all ();
 		return TRUE;

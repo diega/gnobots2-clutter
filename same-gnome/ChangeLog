@@ -1,3 +1,10 @@
+1999-05-05  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* same-gnome.c (area_event): Fix from Winston I. Brybin
+	ph0t0n@hotmail.com that fixes a small case in which the code would
+	not notice when you leave the board with the mouse and you return
+	to the same X/Y pair you left on.  Fixes a cheating bug :-)
+
 1999-02-19  Raja R Harinath  <harinath@cs.umn.edu>
 
 	* help/C/Makefile.am (index.html): Don't fail if `db2html' failed.
