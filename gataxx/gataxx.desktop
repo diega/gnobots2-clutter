@@ -1,6 +1,7 @@
 [Desktop Entry]
 Icon=gataxx.png
 Name=gataxx
+Name[pt_BR]=gataxx
 Name[da]=gataxx
 Name[de]=gataxx
 Name[et]=gataxx
@@ -13,6 +14,7 @@ Name[lt]=gataxx
 Name[no]=gataxx
 Name[sv]=gataxx
 Comment=Gnome ataxx game
+Comment[pt_BR]=Jogo attax Gnome
 Comment[da]=Ataxx-spil til Gnome
 Comment[de]=Ataxx-Spiel für Gnome
 Comment[et]=ataxx mäng GNOME-le

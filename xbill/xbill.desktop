@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Gnome xBill
+Name[pt_BR]=Gnome xBill
 Name[da]=Gnome xBill
 Name[de]=GNOME xBill
 Name[et]=Gnome Bill
@@ -11,6 +12,7 @@ Name[lt]=Gnome xBill
 Name[no]=Gnome xBill
 Name[sv]=Gnome xBill
 Comment=Gnome version of the popular xBill game
+Comment[pt_BR]=Versão Gnome do popular jogo xBill
 Comment[da]=Gnome version af det populære xBill spil
 Comment[de]=Die GNOME-Variante des populären xBill-Spiels
 Comment[es]=Salve el planeta de Bill

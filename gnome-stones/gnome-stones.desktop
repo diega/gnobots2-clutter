@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Gnome-Stones
+Name[pt_BR]=Gnome-Stones
 Name[da]=Gnome-sten
 Name[de]=Gnome-Stones
 Name[et]=Gnome koopad
@@ -12,6 +13,7 @@ Name[no]=Gnome-steiner
 Name[ru]=Gnome-камни
 Name[sv]=Gnome-stenar
 Comment=Gnome Stones game
+Comment[pt_BR]=Jogo Stones Gnome
 Comment[da]=Spillet Gnome-sten
 Comment[de]=Das Spiel Gnome-Stones
 Comment[es]=Juego Gnome Stones
