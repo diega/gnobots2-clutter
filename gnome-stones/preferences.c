@@ -1,8 +1,8 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <2002/05/02 17:26:51 dave>
+ * Time-stamp: <2003/05/26 22:44:23 callum>
  *
- * Copyright (C) 1998 Carsten Schaar
+ * Copyright (C) 1998, 2003 Carsten Schaar
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -450,7 +450,7 @@ preferences_response_cb (GtkWidget *w, gint response_id, gpointer data)
 
   switch(response_id)
   {
-  case GTK_RESPONSE_CLOSE:
+  case GTK_RESPONSE_DELETE_EVENT:
   case GTK_RESPONSE_ACCEPT:
        /* FIXME: Add some checks and warnings here.  */
        if (prdata->selected_game > -1)
@@ -472,28 +472,6 @@ preferences_response_cb (GtkWidget *w, gint response_id, gpointer data)
 
 }
 
-
-static gint
-preferences_destroy_cb (GtkWidget *w, gpointer data)
-{
-  g_free (data);
-
-  preferences_dialog= NULL;
-
-  return FALSE;
-}
-
-
-static void
-preferences_changed_cb (GtkWidget *w, gpointer data)
-{
-  PreferencesData *prdata= (PreferencesData *) data;
-  
-  g_return_if_fail (prdata != NULL);
-
-}
-
-
 static void 
 game_selector_select_row (GtkTreeSelection * selection,
                           gpointer data)
@@ -506,7 +484,6 @@ game_selector_select_row (GtkTreeSelection * selection,
   g_return_if_fail (prdata != NULL);
 
   view = gtk_tree_selection_get_tree_view(selection);
-  preferences_changed_cb (GTK_WIDGET(view), data);
 
   if(gtk_tree_selection_get_selected(selection, &model, &iter))
   {
@@ -596,8 +573,6 @@ preferences_dialog_new (void)
                                            GTK_STOCK_HELP, GTK_RESPONSE_HELP,
                                            GTK_STOCK_CLOSE, GTK_RESPONSE_ACCEPT,
                                            NULL);
-  g_signal_connect (GTK_OBJECT(properties), "destroy",
-                    GTK_SIGNAL_FUNC(gtk_widget_destroyed), &properties);
   
   notebook = gtk_notebook_new();
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG(properties)->vbox), notebook, 
@@ -959,8 +934,6 @@ preferences_dialog_new (void)
 
   g_signal_connect (GTK_OBJECT (properties), "response",
 		      GTK_SIGNAL_FUNC (preferences_response_cb), prdata);
-  g_signal_connect (GTK_OBJECT (properties), "close",
-		      GTK_SIGNAL_FUNC (preferences_destroy_cb), prdata);
 
   return properties;
 }

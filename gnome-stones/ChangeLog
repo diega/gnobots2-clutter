@@ -1,3 +1,9 @@
+2003-05-26  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* preferences.c: Fixed bug #105135 (crash/warnings when opening
+	preferences). Used Simon Howard's patch plus some extra pruning of
+	dead code.
+
 2003-05-09  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* main.c (load_image_from_path): HIG fixup as per bug #112244.
