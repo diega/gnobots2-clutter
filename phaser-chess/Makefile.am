@@ -53,7 +53,7 @@ phaser_chess_SOURCES = 		\
 	meta_server.h
 
 phaser_chess_LDADD = \
-	$(OBGTK_LIBS) $(GNOMEUI_LIBS) $(INTLLIBS) $(OBJC_LIBS)
+	$(OBGNOME_LIBS) -lgtktty $(OBGTK_LIBS) $(GNOMEUI_LIBS) $(INTLLIBS) $(OBJC_LIBS)
 
 EXTRA_DIST = phaser-chess.desktop
 

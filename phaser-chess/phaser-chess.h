@@ -1,7 +1,8 @@
 #ifndef __PHASER_CHESS_H__
 #define __PHASER_CHESS_H__
 
-@interface phaser_chess_app : Gtk_App
+#include <obgnome/obgnome.h>
+@interface phaser_chess_app : Gnome_App
 {
   Board_View *bv;
   Logical_Board *lb;
