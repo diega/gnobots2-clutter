@@ -1,3 +1,78 @@
+1998-09-12  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* Makefile.am (SUBDIRS): Added graphics subdirectory.
+	(gnome_stones_SOURCES): Added the 'preferences.*' files.
+	(Caves_DATA): Added new tutorial game.
+	(pixmap_DATA): Removed.
+	(EXTRA_DIST): Removed 'title.xcf' and 'tiles.xcf'. Added
+ 	'README'.
+
+	* main.c: 'stone_images' and 'image_table' variables not needed
+ 	anymore. Therefore added 'curtain_[imlib_]image' variables.
+	(load_images): Split into the two functions 'title_image_load' and
+ 	'curtain_image_load'.
+	(title_image_load): New function.
+	(curtain_image_load): Likewise.
+	(game_widget_expose_event_cb): Doesn't use 'stone_images' anymore,
+ 	but uses the new 'cave_get_image' function to get the image to
+ 	display.
+	(game_update_image): Now uses 'cave_get_imlib_image' to get the
+ 	image to display.
+	(game_widget_key_press_callback): 'start_cave' is saved to disc
+ 	now.
+	(game_widget_create): The preparation of the canvas widget was
+ 	moved to 'game_widget_fill'.
+	(game_widget_fill): New function.
+	(joystick_get_information): Joystick is only evaluated, if the
+ 	gnome-stones window has focus.
+	(joystick_focus_change_event): New function.
+	(joystick_set_widget): Likewise.
+	Definition of some global variables moved to
+ 	'preferences.c'.
+	Preferences stuff moved to 'preferences.c'.
+
+	* cave.c (object_register): This function now loads the objects
+ 	image file and cuts it into pieces.
+	(object_get_type): New function.
+	(object_get_image): Likewise.
+	(gnome_scanned): Now stores the gnomes last movement.
+	(gnome_animate): New function.
+	(objects_register_all): Added missing registration of the
+ 	open_exit object.
+	(cave_get_image): New function.
+	(cave_get_imlib_image): Likewise.
+	(empty_animate): Made function fit the new
+ 	'AnimationFunction'definition.
+	(amoeba_animate): Likewise.
+	(magic_wall_animate): Likewise.
+	(eight_animate): Likewise.
+	(explosion_animate): Likewise.
+	(entrance_animate): Likewise.
+	(cave_get_image): Likewiese.
+	(cave_get_image): Renamed and returns image now.
+	(object_register): Now loads objects image.
+	(object_get_image): Name says it all;-)
+
+	* types.h (struct _GStonesCave): Added members 'translation_table'
+ 	and 'key_size'.  The members are not used yet.
+	(struct _GStonesObject): Renamed member 'iy' to
+ 	'editor_index' and member 'ix' to 'image_index'.  Added two
+ 	memebers 'image' and 'imlib_image'.
+	(*AnimationFunction): Removed 'ix' and 'iy' parameter. An
+ 	AnimationFunction now has to return the image index in the
+ 	object's image.
+	(struct _GStonesObject): Added 'image_name' member.
+	(struct _GStonesCave): New members 'key_size' and
+ 	'translation_table'.
+
+	* cave.h (cave_get_image): 'cave_get_image_index' renamed and new
+ 	parameter 'image' added.
+	(object_get_image): Declaration added.
+
+	* preferences.c: New file.
+
+	* preferences.h: New file.
+
 1998-08-28  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
 	* main.c: Added the global variables 'joystick_deviceid' and
