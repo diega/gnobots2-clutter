@@ -21,6 +21,9 @@
 #include "mahjongg.h"
 #include "solubility.h"
 
+/* Undefine to test the new code. */
+#define USE_CREEPING_HORROR
+
 jmp_buf unsolvable ;
 
 /* If defined this cooks the sequence no.s,
@@ -112,6 +115,20 @@ typeinfo type_info [MAX_TILES/2] = {
 	{ 35, 0, {38, 39} },
 	{ 35, 0, {40, 41} }
 };
+
+#ifndef USE_CREEPING_HORROR
+typedef struct _dep_entry {
+  gboolean free;    /* Is this a valid place to put a tile. */
+  gboolean filled;  /* Has a tile been placed here. */
+  gint foundation[4]; /* Up to four we build on. */
+  gint left[2];  /* Up to two on the left. */
+  gint right[2]; /* and two on the right. */
+  gint overhead[4]; /* Up to four we support. */
+} dep_entry;
+
+dep_entry dependencies[MAX_TILES];
+
+#endif
 
 struct _dep_tree {
   int turn_dep[4] ;	/* Turning dependancies all must be clear */
@@ -407,6 +424,8 @@ validate_tile (int t)
   if ((lfilled) || (rfilled))
     dep_tree[t].free = 1 ;
 }
+
+#ifdef USE_CREEPING_HORROR
 /* Place tile in map at position f, with pic & type from t */
 static void
 place_tile (int f, int t, int idx)
@@ -446,6 +465,106 @@ place_tile (int f, int t, int idx)
       }
   }
 }
+
+#else
+
+/* This version checks that the tile has a foundation to build on
+ * and that there is a tile to but against either to the left or right.
+ * failing that it checks for a complete free row. */
+static void check_tile_is_free (gint index)
+{
+  int i;
+  gboolean ok;
+  dep_entry * dep;
+
+  dep = dependencies + index;
+
+  if (dep->filled)
+    return;
+  
+  /* First of all check if we're OK with the foundation. */
+  ok = TRUE;
+  for (i=0; i<4; i++) {
+    if (dep->foundation[i] == -1)
+      break;
+    if (!dependencies[dep->foundation[i]].filled) {
+      ok = FALSE;
+      break;
+    }
+  }
+  if (!ok)
+    return;
+
+  /* Now check to the left. */
+  ok = TRUE;
+  for (i=0; i<2; i++) {
+    if (dep->left[i] == -1)
+      break;
+    if (!dependencies[dep->left[i]].filled) {
+      ok = FALSE;
+      break;
+    }
+  }
+  if (ok) {
+    dep->free = TRUE;
+    return;
+  }
+
+  /* And now the right. */
+  ok = TRUE;
+  for (i=0; i<2; i++) {
+    if (dep->right[i] == -1)
+      break;
+    if (!dependencies[dep->right[i]].filled) {
+      ok = FALSE;
+      break;
+    }
+  }
+  if (ok) {
+    dep->free = TRUE;
+  }
+  return;
+}
+
+static void place_tile (int location, int type, int index)
+{
+  gint i;
+  guint target;
+
+  g_print ("(%d) %d, %d, %d\n",location,pos[location].x, pos[location].y, pos[location].layer);
+  
+  /* Set up the tile. */
+  tiles[location].visible = TRUE;
+  tiles[location].selected = FALSE;
+  tiles[location].type = type_info[type].type;
+  tiles[location].image = type_info[type].image[index] ;
+  
+  /* Recalculate dependencies. */
+  dependencies[location].filled = TRUE;
+  dependencies[location].free = FALSE;
+
+  /* See if we've freed anything above us. */
+  for (i=0; i<4; i++) {
+    target = dependencies[location].overhead[i];
+    if (target == -1)
+      break;
+    check_tile_is_free (target);
+  }
+
+  /* See if we've freed anything to the left or right. */
+  for (i=0; i<2; i++) {
+    target = dependencies[location].left[i];
+    if (target != -1)
+      check_tile_is_free (target);
+    target = dependencies[location].right[i];
+    if (target != -1)
+      check_tile_is_free (target);
+  }
+}
+
+#endif
+
+#ifdef USE_CREEPING_HORROR
 
 int tile_free (int tile_num)
 {
@@ -488,6 +607,44 @@ int tile_free (int tile_num)
   if ((lfree) || (rfree)) return 1;
   else return 0 ;
 }
+
+#else
+
+int tile_free (int index)
+{
+  dep_entry * dep;
+  int i;
+  gboolean free;
+  
+  dep = dependencies + index;
+
+  /* Check to see we aren't covered. */
+  for (i = 0; i<4; i++) {
+    if ((dep->overhead[i] != -1) && tiles[dep->overhead[i]].visible)
+      return 0;
+  }
+
+  /* Look left. */
+  free = TRUE;
+  for (i = 0; i<2; i++) {
+    if ((dep->left[i] != -1) && tiles[dep->left[i]].visible)
+      free = FALSE;
+  }
+  if (free)
+    return 1;
+
+  /* Look right. */
+  free = TRUE;
+  for (i = 0; i<2; i++) {
+    if ((dep->right[i] != -1) && tiles[dep->right[i]].visible)
+      free = FALSE;
+  }
+
+  return free ? 1 : 0;
+  
+}
+
+#endif
 
 static int
 random_tile_type (void)
@@ -571,6 +728,8 @@ tile_deps (int tn)
   unique(dep_tree[tn].rhs_dep, 2) ;
 }
 
+#ifdef USE_CREEPING_HORROR
+
 /* This calculates the tree of up and down dependancies that is used
    to determine which tiles can be turned / how to place the tiles */
 void generate_dependancies ()
@@ -586,8 +745,77 @@ void generate_dependancies ()
     }
 }
 
+#else
 
-#define USE_CREEPING_HORROR
+#define generate_dependencies generate_dependancies
+
+void generate_dependencies ()
+{
+  int i,j;
+  int fc, lc, rc, oc;
+  int x,y,l;
+  int tx, ty, tl;
+  dep_entry * dep;
+  
+  dep = dependencies;
+  for (i = 0; i<MAX_TILES; i++) {
+    x = pos[i].x;
+    y = pos[i].y;
+    l = pos[i].layer;
+    dep->free = l == 0;
+    dep->filled = FALSE;
+    
+    dep->foundation[0] = dep->foundation[1] = dep->foundation[2]
+      = dep->foundation[3] = -1;
+    dep->left[0] = dep->left[1] = -1;
+    dep->right[0] = dep->right[1] = -1;
+    dep->overhead[0] = dep->overhead[1] = dep->overhead[2]
+      = dep->overhead[3] = -1;
+    fc = lc = rc = oc = 0;
+    for (j = 0; j<MAX_TILES; j++) {
+      ty = pos[j].y;
+      
+      /* Nothing we are interested in is outside +/- 1 units on the y axis. */
+      if (abs(ty - y) > 1)
+        continue;
+
+      tl = pos[j].layer;
+      tx = pos[j].x;
+        
+      /* First check if it is a foundation tile. */
+      if ((tl == (l - 1)) && (abs(tx - x) < 2)) {
+        dep->foundation[fc++] = j;
+        continue;
+      }
+
+      /* Then do the overhead tiles. */
+      if ((tl == (l + 1)) && (abs(tx - x) < 2)) {
+        dep->overhead[oc++] = j;
+        continue;
+      }
+
+      /* Everything else is on this layer. */
+      if (tl != l)
+        continue;
+      
+      /* Now look left ... */
+      if (tx == (x - 2)) {
+        dep->left[lc++] = j;
+        continue;
+      }
+
+      /* ... and right. */
+      if (tx == (x + 2)) {
+        dep->right[rc++] = j;
+        continue;
+      }      
+    }
+    dep++;
+  }
+}
+
+#endif
+
 #ifdef USE_CREEPING_HORROR
 
 /* Do the tile placement for a soluable game */
@@ -708,21 +936,45 @@ void generate_game (guint seed)
 
 #else
 
-int remaining_tiles = 0;
+/* If the tile is the first in a row then everything left
+ * and right of it instantly becomes an invalid choice (except
+ * for it's immediate neighbours which are fixed up later). */
+static void clear_row_deps (gint index)
+{
+  int i;
+  dep_entry * d;
+
+  d = dependencies+index;
+
+  if (d->free == FALSE)
+    return;
+  
+  d->free = FALSE;
+
+  for (i = 0; i<2; i++) {
+    if (d->left[i] != -1) {
+      clear_row_deps (d->left[i]);
+    }
+    if (d->right[i] != -1) {
+      clear_row_deps (d->right[i]);
+    }
+  }
+}
 
 static guint get_free_location (GRand * generator)
 {
   int a,i,j;
 
-  a = g_rand_int_range (generator, 0, remaining_tiles);
+  a = g_rand_int_range (generator, 0, MAX_TILES);
   j = 0;
-  for (i=0; i<a; i++) {
-/*    while (dep_tree[j].free != 1)
-      j++; */
-    while (tiles[j].visible)
-      j++;
-  }
 
+  for (i=0; i<a; i++) {
+    do {
+      j = (j + 1) % MAX_TILES;
+    } while (!dependencies[j].free);
+  }
+  g_print ("%d, %d\n",a,j);
+  
   return j;
 }
 
@@ -732,7 +984,6 @@ void generate_game (guint32 seed)
   int i, a, b, c, t;
   
   generator = g_rand_new_with_seed (seed);
-  remaining_tiles = MAX_TILES;
   
   for (i=0; i<MAX_TILES/2; i++) {
     /* Find a random available pair of tiles. */
@@ -745,15 +996,18 @@ void generate_game (guint32 seed)
 
     /* Now find some places to put them. */
     a = get_free_location (generator);
-    do {
-      b = get_free_location (generator);
-    } while (a != b);
-      
-    /* Finally we actually place them. */
-    place_tile(a,t,0);
-    place_tile(b,t,1);
+    clear_row_deps (a);
 
-    remaining_tiles -= 2;
+    /* There are no collisions because of the preliminary work done
+     * in clear_row_deps. */
+    b = get_free_location (generator);
+    clear_row_deps (b);
+      
+    /* Finally we actually place them. Including the
+     * dependency updates. */
+    place_tile(a,t,0);
+
+    place_tile(b,t,1);
   }
 }
 
