@@ -24,8 +24,8 @@
 		     GDK_LEAVE_NOTIFY_MASK          |\
 		     GDK_POINTER_MOTION_MASK)
 	
-GtkWidget *window, *pref_dialog, *scorew;
-GtkWidget *draw_area, *vb;
+GtkWidget *pref_dialog, *scorew;
+GtkWidget *app, *draw_area, *vb;
 GtkMenuFactory *mf;
 GdkPixmap *stones, *mask;
 int tagged_count = 0;
@@ -331,7 +331,7 @@ load_scenario (char *fname)
 
 	style = gtk_widget_get_style (draw_area);
 	configure_sync (fname);
-	stones = gdk_pixmap_create_from_xpm (window->window, &mask, &style->bg [GTK_STATE_NORMAL], fname);
+	stones = gdk_pixmap_create_from_xpm (app->window, &mask, &style->bg [GTK_STATE_NORMAL], fname);
 	gdk_window_get_size (stones, &width, &height);
 	nstones = width / STONE_SIZE;
 	new_game ();
@@ -445,7 +445,7 @@ game_preferences_callback (GtkWidget *widget, void *data)
 	
 	pref_dialog = gtk_dialog_new ();
 	d = GTK_DIALOG(pref_dialog);
-	gtk_signal_connect (GTK_OBJECT(window), "delete_event", (GtkSignalFunc)yes, NULL);
+	gtk_signal_connect (GTK_OBJECT(app), "delete_event", (GtkSignalFunc)yes, NULL);
 
 	omenu = gtk_option_menu_new ();
 	menu = gtk_menu_new ();
@@ -480,7 +480,7 @@ game_quit_callback (GtkWidget *widget, void *data)
 				    _("Yes"), _("No"), NULL);
 	gnome_messagebox_set_modal (GNOME_MESSAGEBOX (box));
 	
-	gtk_widget_destroy (window);
+	gtk_widget_destroy (app);
 	gtk_main_quit ();
 
 	return TRUE;
@@ -506,21 +506,20 @@ create_menu ()
 	return subfactory;
 }
 
-void
 create_main_window ()
 {
-	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	gtk_widget_realize (window);
-	gtk_signal_connect (GTK_OBJECT(window), "delete_event", GTK_SIGNAL_FUNC(game_quit_callback), NULL);
-	gtk_window_set_title (GTK_WINDOW(window), _("SameGnome"));
-	gtk_window_set_policy (GTK_WINDOW(window), 0, 0, 1);
+	app = gnome_app_new ("samegnome", "Same Gnome");
+	gtk_widget_realize (app);
+	
+	gtk_signal_connect (GTK_OBJECT(app), "delete_event", GTK_SIGNAL_FUNC(game_quit_callback), NULL);
+	gtk_window_set_policy (GTK_WINDOW(app), 0, 0, 1);
+	return app;
 }
 
 int
 main (int argc, char *argv [])
 {
 	GtkWidget *label, *hb;
-	
 	char *fname;
 	
 	gnome_init (&argc, &argv);
@@ -536,16 +535,16 @@ main (int argc, char *argv [])
 	}
 	srand (time (NULL));
 
-	create_main_window ();
+	app = create_main_window ();
 	vb = gtk_vbox_new (FALSE, 0);
 	hb = gtk_hbox_new (FALSE, 0);
-	gtk_container_add (GTK_CONTAINER(window), vb);
+	gnome_app_set_contents (app, vb);
 	mf = create_menu ();
-	gtk_widget_show (mf->widget);
+	gnome_app_set_menus (GNOME_APP (app), GTK_MENU_BAR (mf->widget));
+	
 	label = gtk_label_new (_("Score: "));
 	scorew = gtk_label_new ("0");
 	gtk_box_pack_start_defaults (GTK_BOX(vb), hb);
-	gtk_box_pack_start (GTK_BOX(hb), mf->widget, 0, 0, 0);
 	gtk_box_pack_end   (GTK_BOX(hb), scorew, 0, 0, 10);
 	gtk_box_pack_end   (GTK_BOX(hb), label,  0, 0, 0);
 	
@@ -553,7 +552,7 @@ main (int argc, char *argv [])
 	
 	free (fname);
 
-	gtk_widget_show (window);
+	gtk_widget_show (app);
 	gtk_widget_show (hb);
 	gtk_widget_show (vb);
 	gtk_widget_show (GTK_WIDGET(label));
