@@ -260,8 +260,11 @@ static gboolean render_cb (GtkWidget *canvas)
 										 0, 0, 0, 0, tile_size, tile_size, GDK_RGB_DITHER_NORMAL,
 										 0, 0);
 
-		/* FIXME: We should also look for different suffices, e.g.
-		 * in case of a .png -> .svg changeover. */
+		/* This code is far from perfect. For starters it only checks to
+			 see if the file exists before deciding that the filename is the
+			 correct one. For example, if the user's copy of a file is
+			 corrupt, it should move onto the system one. */
+
 		/* First look in the players home directory. */
 		filename = g_build_filename (localthemedir, theme, NULL);
 		if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {

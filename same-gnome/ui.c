@@ -171,6 +171,8 @@ void game_over_dialog (gint place)
 		dialog = GTK_DIALOG (baddialog);
   } else { /* Case 2: It was a top ten score. */
 		if (gooddialog) {
+			games_scores_dialog_set_category (gooddialog, 
+																				scorenames[game_size - SMALL]);
 			gtk_window_present (GTK_WINDOW (gooddialog));
 		} else {
 			/* We build two, slightly different, high score dialogs. Once here and

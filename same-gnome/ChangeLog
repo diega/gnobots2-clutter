@@ -1,5 +1,9 @@
 2005-02-25  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* ui.c (game_over_dialog): Make sure we set the category correctly
+	for the high score dialog so that if we score on one game, and
+	then score in another, the correct category is shown.
+
 	* help/C/same-gnome.xml: More work on the help file. Changed the
 	screenshot graphics files.
 
