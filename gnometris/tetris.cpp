@@ -1,4 +1,6 @@
-/* -*- mode:C; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*-
+/* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
+
+/*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -26,6 +28,8 @@
 #include "scoreframe.h"
 
 #include <games-gconf.h>
+#include <games-frame.h>
+
 #include <gdk/gdkkeysyms.h>
 #include <config.h>
 #include <dirent.h>
@@ -594,7 +598,6 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	GtkWidget *table;
 	GtkWidget *hbox, *fvbox, *space_label;
 	GtkObject *adj;
-	gchar *markup;
         
 	Tetris *t = (Tetris*) d;
 	
@@ -611,20 +614,13 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 					    GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 					    NULL);
 	gtk_dialog_set_has_separator (GTK_DIALOG (t->setupdialog), FALSE);
-	gtk_container_set_border_width(GTK_CONTAINER(t->setupdialog), 12);
+	gtk_container_set_border_width (GTK_CONTAINER (t->setupdialog), 12);
 	g_signal_connect (t->setupdialog, "close",
 			  G_CALLBACK (setupdialogDestroy), d);
 	g_signal_connect (t->setupdialog, "response",
 			  G_CALLBACK (setupdialogResponse), d);
 
-	markup = g_strdup_printf ("<span weight=\"bold\">%s</span>", _("Setup"));
-	frame = gtk_frame_new (markup);
-	g_free (markup);
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
-	gtk_label_set_use_markup
-		(GTK_LABEL (gtk_frame_get_label_widget (GTK_FRAME (frame))), TRUE);
-	gtk_misc_set_alignment
-		(GTK_MISC (gtk_frame_get_label_widget (GTK_FRAME (frame))), 0, 0.5);
+	frame = games_frame_new (_("Setup"));
 	table = gtk_table_new (3, 2, FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 0);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
@@ -635,69 +631,57 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
 
-	adj = gtk_adjustment_new(t->line_fill_height,0,LINES-1,1,5,0);
-	t->fill_height_spinner = gtk_spin_button_new(GTK_ADJUSTMENT(adj),10,0);
+	adj = gtk_adjustment_new (t->line_fill_height, 0, LINES-1, 1, 5, 0);
+	t->fill_height_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 10, 0);
 	gtk_spin_button_set_update_policy
-		(GTK_SPIN_BUTTON(t->fill_height_spinner), GTK_UPDATE_ALWAYS);
+		(GTK_SPIN_BUTTON (t->fill_height_spinner), GTK_UPDATE_ALWAYS);
 	gtk_spin_button_set_snap_to_ticks 
-		(GTK_SPIN_BUTTON(t->fill_height_spinner), TRUE);
+		(GTK_SPIN_BUTTON (t->fill_height_spinner), TRUE);
 	g_signal_connect (t->fill_height_spinner, "value_changed",
 			  G_CALLBACK (lineFillHeightChanged), t);
 	gtk_table_attach_defaults (GTK_TABLE (table), t->fill_height_spinner, 1, 2, 0, 1);
 
 	/* pre-filled rows density */
-	label = gtk_label_new(_("Density of blocks in a pre-filled row:"));
+	label = gtk_label_new (_("Density of blocks in a pre-filled row:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 1, 2);
 
-	adj = gtk_adjustment_new(t->line_fill_prob,0,10,1,5,0);
-	t->fill_prob_spinner = gtk_spin_button_new(GTK_ADJUSTMENT(adj),10,0);
-	gtk_spin_button_set_update_policy(GTK_SPIN_BUTTON(t->fill_prob_spinner),
+	adj = gtk_adjustment_new (t->line_fill_prob, 0, 10, 1, 5, 0);
+	t->fill_prob_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 10, 0);
+	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (t->fill_prob_spinner),
 					  GTK_UPDATE_ALWAYS);
 	gtk_spin_button_set_snap_to_ticks
-		(GTK_SPIN_BUTTON(t->fill_prob_spinner), TRUE);
+		(GTK_SPIN_BUTTON (t->fill_prob_spinner), TRUE);
 	g_signal_connect (t->fill_prob_spinner, "value_changed",
 		          G_CALLBACK (lineFillProbChanged), t);
 	gtk_table_attach_defaults (GTK_TABLE (table), t->fill_prob_spinner, 1, 2, 1, 2);
 
 	/* starting level */
-	label = gtk_label_new(_("Starting Level:"));
+	label = gtk_label_new (_("Starting Level:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 2, 3);
 
-	adj = gtk_adjustment_new(t->startingLevel, 1, 10, 1, 5, 10);
-	t->sentry = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 10, 0);
-	gtk_spin_button_set_update_policy(GTK_SPIN_BUTTON(t->sentry),
-					  GTK_UPDATE_ALWAYS);
-	gtk_spin_button_set_snap_to_ticks(GTK_SPIN_BUTTON(t->sentry), TRUE);
+	adj = gtk_adjustment_new (t->startingLevel, 1, 10, 1, 5, 10);
+	t->sentry = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 10, 0);
+	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (t->sentry),
+					   GTK_UPDATE_ALWAYS);
+	gtk_spin_button_set_snap_to_ticks (GTK_SPIN_BUTTON (t->sentry), TRUE);
 	g_signal_connect (t->sentry, "value_changed",
 			  G_CALLBACK (startingLevelChanged), t);
 	gtk_table_attach_defaults (GTK_TABLE (table), t->sentry, 1, 2, 2, 3);
 
-	hbox = gtk_hbox_new (FALSE, FALSE);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
-	gtk_container_add (GTK_CONTAINER (frame), hbox);
-	space_label = gtk_label_new ("    ");
-	gtk_box_pack_start (GTK_BOX (hbox), space_label, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox), table, FALSE, FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (frame), table);
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (t->setupdialog)->vbox), frame, 
 			    FALSE, FALSE, 0);
 
-	markup = g_strdup_printf ("<span weight=\"bold\">%s</span>", _("Operation"));
-	frame = gtk_frame_new (markup);
-	g_free (markup);
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
-	gtk_label_set_use_markup
-		(GTK_LABEL (gtk_frame_get_label_widget (GTK_FRAME (frame))), TRUE);
-	gtk_misc_set_alignment
-		(GTK_MISC (gtk_frame_get_label_widget (GTK_FRAME (frame))), 0, 0.5);
+	frame = games_frame_new (_("Operation"));
 	fvbox = gtk_vbox_new (FALSE, FALSE);
 	gtk_box_set_spacing (GTK_BOX (fvbox), 6);
 
 	/* preview next block */
 	t->do_preview_toggle =
-		gtk_check_button_new_with_label(_("Preview next block"));
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(t->do_preview_toggle),
+		gtk_check_button_new_with_label (_("Preview next block"));
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (t->do_preview_toggle),
 				     do_preview);
 	g_signal_connect (t->do_preview_toggle, "clicked",
 			  G_CALLBACK (setSelectionPreview), d);
@@ -705,9 +689,9 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 
 	/* random blocks */
 	t->random_block_colors_toggle =
-		gtk_check_button_new_with_label(_("Random block colors"));
+		gtk_check_button_new_with_label(_("Use random block colors"));
 	gtk_toggle_button_set_active
-		(GTK_TOGGLE_BUTTON(t->random_block_colors_toggle),
+		(GTK_TOGGLE_BUTTON (t->random_block_colors_toggle),
 		 random_block_colors);
 	g_signal_connect (t->random_block_colors_toggle, "clicked",
 			  G_CALLBACK (setSelectionBlocks), d);
@@ -716,32 +700,20 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 
 	/* rotate counter clock wise */
  	t->rotate_counter_clock_wise_toggle =
-		gtk_check_button_new_with_label(_("Rotate counterclockwise"));
+		gtk_check_button_new_with_label (_("Rotate blocks counterclockwise"));
  	gtk_toggle_button_set_active
-		(GTK_TOGGLE_BUTTON(t->rotate_counter_clock_wise_toggle),
+		(GTK_TOGGLE_BUTTON (t->rotate_counter_clock_wise_toggle),
 		 rotateCounterClockWise);
 	g_signal_connect (t->rotate_counter_clock_wise_toggle, "clicked",
 			  G_CALLBACK (setRotateCounterClockWise), d);
  	gtk_box_pack_start (GTK_BOX (fvbox), t->rotate_counter_clock_wise_toggle,
 			    0, 0, 0);
 
-	hbox = gtk_hbox_new (FALSE, FALSE);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
-	gtk_container_add (GTK_CONTAINER (frame), hbox);
-	space_label = gtk_label_new ("    ");
-	gtk_box_pack_start (GTK_BOX (hbox), space_label, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox), fvbox, FALSE, FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (frame), fvbox);
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (t->setupdialog)->vbox), frame, 
 			    FALSE, FALSE, 0);
 
-	markup = g_strdup_printf ("<span weight=\"bold\">%s</span>", _("Theme"));
-	frame = gtk_frame_new (markup);
-	g_free (markup);
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
-	gtk_label_set_use_markup
-		(GTK_LABEL (gtk_frame_get_label_widget (GTK_FRAME (frame))), TRUE);
-	gtk_misc_set_alignment
-		(GTK_MISC (gtk_frame_get_label_widget (GTK_FRAME (frame))), 0, 0.5);
+	frame = games_frame_new (_("Theme"));
 	table = gtk_table_new (2, 2, FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 0);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
@@ -752,12 +724,12 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
 
-	GtkWidget *omenu = gtk_option_menu_new();
-	GtkWidget *menu = gtk_menu_new();
-	t->fillMenu(menu, t->blockPixmap, "gnometris",
-	            (GtkSignalFunc)setSelection);
+	GtkWidget *omenu = gtk_option_menu_new ();
+	GtkWidget *menu = gtk_menu_new ();
+	t->fillMenu (menu, t->blockPixmap, "gnometris",
+		     (GtkSignalFunc)setSelection);
 
-	gtk_option_menu_set_menu(GTK_OPTION_MENU(omenu), menu);
+	gtk_option_menu_set_menu(GTK_OPTION_MENU (omenu), menu);
 	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 0, 1);
 
 	/* background pixmap */
@@ -765,19 +737,14 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 1, 2);
 
-	omenu = gtk_option_menu_new();
-	menu = gtk_menu_new();
-	t->fillMenu(menu, t->bgPixmap, "gnometris/bg",
-		    (GtkSignalFunc)setBGSelection, true);
-	gtk_option_menu_set_menu(GTK_OPTION_MENU(omenu), menu);
+	omenu = gtk_option_menu_new ();
+	menu = gtk_menu_new ();
+	t->fillMenu (menu, t->bgPixmap, "gnometris/bg",
+		     (GtkSignalFunc)setBGSelection, true);
+	gtk_option_menu_set_menu(GTK_OPTION_MENU (omenu), menu);
 	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 1, 2);
 
-	hbox = gtk_hbox_new (FALSE, FALSE);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
-	gtk_container_add (GTK_CONTAINER (frame), hbox);
-	space_label = gtk_label_new ("    ");
-	gtk_box_pack_start (GTK_BOX (hbox), space_label, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox), table, FALSE, FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (frame), table);
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (t->setupdialog)->vbox), frame, 
 			    FALSE, FALSE, 0);
 	

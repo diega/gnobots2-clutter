@@ -1,3 +1,5 @@
+/* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
+
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *
@@ -20,36 +22,31 @@
 
 #include <config.h>
 #include <gnome.h>
+#include <games-frame.h>
+
 #include "scoreframe.h"
 
 ScoreFrame::ScoreFrame(int cmdlLevel)
 	: score(0), lines(0)
 {
-	gchar *markup;
-  startingLevel = cmdlLevel ? cmdlLevel : gnome_config_get_int_with_default("/gnometris/Properties/StartingLevel=1", 0);
+        startingLevel = cmdlLevel ? cmdlLevel
+          : gnome_config_get_int_with_default ("/gnometris/Properties/StartingLevel=1", 0);
 	level = startingLevel;
 	
-	markup = g_strdup_printf ("<span weight=\"bold\">%s</span>",
-                                  _("Game Status"));
-	w = gtk_frame_new(markup);
-        g_free (markup);
-	gtk_frame_set_shadow_type (GTK_FRAME (w), GTK_SHADOW_NONE);
-	gtk_label_set_use_markup
-          (GTK_LABEL (gtk_frame_get_label_widget (GTK_FRAME (w))), TRUE);
-	gtk_misc_set_alignment
-          (GTK_MISC (gtk_frame_get_label_widget (GTK_FRAME (w))), 0, 0.5);
+	w = games_frame_new (_("Game Status"));
+	games_frame_set (GAMES_FRAME (w), 0);
 
-	scoreLabel = gtk_label_new(_("Score: "));
+	scoreLabel = gtk_label_new (_("Score:"));
 	sprintf(b, "%7d", 0);
-	scorew = gtk_label_new(b);
+	scorew = gtk_label_new (b);
 
-	linesLabel = gtk_label_new(_("Lines: "));
+	linesLabel = gtk_label_new (_("Lines:"));
 	sprintf(b, "%7d", 0);
-	linesw = gtk_label_new(b);
+	linesw = gtk_label_new (b);
 
-	levelLabel = gtk_label_new(_("Level: "));
+	levelLabel = gtk_label_new (_("Level:"));
 	sprintf(b, "%7d", level);
-	levelw = gtk_label_new(b);
+	levelw = gtk_label_new (b);
 
 	vb = gtk_vbox_new(FALSE, 0);
 	hbScore = gtk_hbox_new(FALSE, 0);
@@ -76,17 +73,7 @@ ScoreFrame::ScoreFrame(int cmdlLevel)
 void
 ScoreFrame::show()
 {
-	gtk_widget_show(scoreLabel);
-	gtk_widget_show(linesLabel);
-	gtk_widget_show(levelLabel);
-	gtk_widget_show(scorew);
-	gtk_widget_show(linesw);
-	gtk_widget_show(levelw);
-	gtk_widget_show(hbScore);
-	gtk_widget_show(hbLines);
-	gtk_widget_show(hbLevel);
-	gtk_widget_show(vb);
-	gtk_widget_show(w);
+	gtk_widget_show_all (w);
 }
 
 void 

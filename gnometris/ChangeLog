@@ -1,3 +1,8 @@
+2003-06-10  William Jon McCann  <mccann@jhu.edu>
+
+	* tetris.cpp: 
+	* scoreframe.cpp: Replaced frames with GamesFrames.
+
 2003-06-09  William Jon McCann  <mccann@jhu.edu>
 
 	* tetris.cpp: Removed separator from dialogs as in HIG.
