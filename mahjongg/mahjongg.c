@@ -924,6 +924,13 @@ void hint_callback (GtkWidget *widget, gpointer data)
   /* Snarfed from check free
    * Tile Free is now _so_ much quicker, it is more elegant to do a
    * British Library search, and safer. */
+
+  if (selected_tile < MAX_TILES) {
+	  tiles[selected_tile].selected = 0;
+  }
+  redraw_tile(selected_tile);
+  selected_tile = MAX_TILES + 1;
+  
   for (i=0;i<MAX_TILES && !free;i++)
     if (tile_free(i))
       {
