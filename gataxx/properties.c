@@ -173,7 +173,7 @@ save_properties (void)
 static void
 black_level_select (GtkWidget *widget, gpointer data) {
 	if (GTK_TOGGLE_BUTTON (widget)->active) {
-		props->black_level = (guint)data;
+		props->black_level = GPOINTER_TO_INT(data);
 	}
 	save_properties ();
 	apply_changes ();
@@ -182,7 +182,7 @@ black_level_select (GtkWidget *widget, gpointer data) {
 static void
 white_level_select (GtkWidget *widget, gpointer data) {
 	if (GTK_TOGGLE_BUTTON (widget)->active) {
-		props->white_level = (guint)data;
+		props->white_level = GPOINTER_TO_INT(data);
 	}
 	save_properties ();
 	apply_changes ();
@@ -256,7 +256,8 @@ static GtkWidget * add_level(GtkWidget * container,
 	if (computer_level==level) {
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
 	}
-	g_signal_connect(G_OBJECT(button), "toggled", callback, (gpointer) level);
+	g_signal_connect(G_OBJECT(button), "toggled", callback,
+                         GINT_TO_POINTER(level));
 	gtk_box_pack_start(GTK_BOX(container), button, FALSE, FALSE, 0);
 	return button;
 }

@@ -1,3 +1,7 @@
+2004-05-26  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c: Fix compiler warnings.
+
 2004-04-26  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c (about_callback): Update credits to make it clear who

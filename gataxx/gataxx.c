@@ -93,7 +93,7 @@ gboolean move_possible_to(GtkWidget * gridboard, int x, int y, int turn) {
 /* after a move is done, a timeout is set on this function */
 gboolean computer_move_cb(gpointer turn) {
 	move cm;
-	cm=computer_move(gridboard, (int)turn);
+	cm=computer_move(gridboard, GPOINTER_TO_INT(turn));
 	do_move(cm);
 	return FALSE;
 }
@@ -122,7 +122,7 @@ void boxclicked_cb(GtkWidget * widget, int x, int y) {
 void do_move(move m) {
 	/* undo info */
 	if (props_is_human(turn)) {
-		gtk_gridboard_save_state(gridboard, (gpointer)turn);
+		gtk_gridboard_save_state(gridboard, GINT_TO_POINTER(turn));
 	}
 	if (gtk_gridboard_states_present(gridboard)) {
 		menu_undo_set_sensitive(TRUE);
@@ -141,12 +141,13 @@ void do_move(move m) {
 	appbar_set_turn (turn);
 
 	if (!move_possible(gridboard, turn)) {
-		g_timeout_add(timeout, end_game_cb,(gpointer)turn);
+		g_timeout_add(timeout, end_game_cb, GINT_TO_POINTER(turn));
 		return;
 	}
 
 	if (!props_is_human(turn)) {
-		g_timeout_add(timeout, computer_move_cb,(gpointer)turn);
+		g_timeout_add(timeout, computer_move_cb, 
+                              GINT_TO_POINTER(turn));
 	}
 
 }
@@ -299,7 +300,8 @@ static void new_game(void)
 	appbar_set_white(2);
 
 	if (!props_is_human(turn)) {
-		g_timeout_add(timeout, computer_move_cb,(gpointer)turn);
+		g_timeout_add(timeout, computer_move_cb,
+                              GINT_TO_POINTER(turn));
 	}
 }
 
@@ -313,7 +315,7 @@ void new_game_cb(GtkWidget * widget, gpointer data)
 /* menu: Game->Undo move */
 void undo_move_cb(GtkWidget * widget, gpointer data) {
 	if (gtk_gridboard_states_present(gridboard)) {
-		turn=(int)gtk_gridboard_revert_state(gridboard);
+		turn=GPOINTER_TO_INT(gtk_gridboard_revert_state(gridboard));
 	}
 	if (gtk_gridboard_states_present(gridboard)) {
 		menu_undo_set_sensitive(TRUE);
@@ -321,7 +323,7 @@ void undo_move_cb(GtkWidget * widget, gpointer data) {
 		menu_undo_set_sensitive(FALSE);
 	}
 	if (!props_is_human(turn)) {
-		g_timeout_add(timeout, computer_move_cb,(gpointer)turn);
+		g_timeout_add(timeout, computer_move_cb, GINT_TO_POINTER(turn));
 	}
 }
 

@@ -454,7 +454,7 @@ handle_other_motion_event (GtkWidget *widget, GdkEventMotion *event)
 
         hstack_type hstack;
         gint chipid;
-        bj_chip_stack_pressed (event->x, event->y, &hstack, &chipid);
+        bj_chip_stack_pressed ((gint)(event->x), (gint)(event->y), &hstack, &chipid);
         if (hstack) {
                 if (bj_chip_stack_is_source (hstack)) {
                         if (bj_hand_can_be_doubled ())

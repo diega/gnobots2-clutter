@@ -1756,11 +1756,11 @@ init_game (void)
 void
 confirm_action (GtkWidget *widget, gpointer data)
 {
-	switch ((gint)data) {
+	switch (GPOINTER_TO_INT(data)) {
 	case NEW_GAME:
 	case NEW_GAME_WITH_SEED:
 		ensure_pause_off ();
-		new_game ((gint)data == NEW_GAME);
+		new_game (GPOINTER_TO_INT(data) == NEW_GAME);
 		break;
 	case RESTART_GAME:
 		restart_game ();
