@@ -1,3 +1,7 @@
+2003-02-26  Ross Burton  <ross@burtonini.com>
+
+	* mahjongg.desktop.in: Remove the old Info key, as it is not used.
+
 2003-02-19  Alex Duggan  <aldug@astrolinux.com>
 
 	* help/C/mahjongg.xml: update old bug links from bugs.gnome.org to 
