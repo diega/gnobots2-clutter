@@ -367,18 +367,18 @@
 
     <listitem>
      <para>
-      <guilabel>Dark</guilabel> &mdash; Select the player who will
-      play the dark discs.  You may choose from a
-      <guilabel>Human</guilabel> player (i.e. you), or three levels of
-      computer ability (<guilabel>Level one</guilabel> (easy) through
-      <guilabel>Level three</guilabel> (difficult).
+      <guilabel>Light</guilabel> &mdash; Select the player who will
+      play the light discs.  You may choose from a
+      <guilabel>Human</guilabel> player (i.e. you), or five levels of
+      computer ability (<guilabel>Very Easy</guilabel> through
+      <guilabel>Very Hard</guilabel>.
      </para>
     </listitem>
 
     <listitem>
      <para>
-      <guilabel>Light</guilabel> &mdash; Select the player who will
-      play the light discs.  You have the same options.  If both
+      <guilabel>Dark</guilabel> &mdash; Select the player who will
+      play the dark discs.  You have the same options.  If both
       players are computerized, you can watch the game played for you.
      </para>
     </listitem>
@@ -394,29 +394,13 @@
   </para>
 
   <para>
-   The properties in the <guilabel>Animation</guilabel> tab are:
+   The properties in the <guilabel>Appearance</guilabel> tab are:
    <itemizedlist>
 
     <listitem>
      <para>
-      <guilabel>None</guilabel>&mdash; If this button is checked,
+      <guilabel>Animation</guilabel>&mdash; If this button is checked,
       there will be no animation when discs change hands.
-     </para>
-    </listitem>
-
-    <listitem>
-     <para>
-      <guilabel>Partial</guilabel>&mdash; If this button is checked,
-      there will be some animation when discs change hands. This is
-      only suitable for slow computers where using the
-      <guilabel>Complete</guilabel> setting takes too many resources.
-     </para>
-    </listitem>
-
-    <listitem>
-     <para>
-      <guilabel>Complete</guilabel>&mdash; Select this button if you
-      want to see the discs turn over as they are captured.
      </para>
     </listitem>
 
@@ -424,11 +408,17 @@
      <para>
       <guilabel>Flip final results</guilabel>&mdash; Click this button if you want to see
       the results of your game displayed in an attractive visual
-      format: all the dark pieces on the top and all the light ones on
+      format: all the white pieces on the top and all the dark ones on
       the bottom.
      </para>
     </listitem>
 
+    <listitem>
+     <para>
+      <guilabel>Show grid</guilabel>&mdash; This button 
+      enables or disables the grid of black lines.
+     </para>
+    </listitem>
 
     <listitem>
      <para>
@@ -469,9 +459,10 @@
   <title>Authors</title>
   <para>
    <application>Ataxx</application> was written by Chris Rogers
-   (<email>gandalf@darkcorner.net</email>). To find more information about
-   <application>Ataxx</application>, please visit the <ulink url="http://www.darkcorner.net/projects/gataxx/" type="http">Ataxx Web
-   page</ulink>.  Please send all comments, suggestions, and bug
+   (<email>gandalf@darkcorner.net</email>) and was later improved by
+   Sjoerd Langkemper (<email>sjoerd-gataxx@linuxonly.nl</email>).
+   Please send all comments, 
+   suggestions, and bug
    reports to the <ulink url="http://bugs.gnome.org" type="http">GNOME
    bug tracking database</ulink>. (Instructions for submitting bug
    reports can be found <ulink url="http://bugs.gnome.org/Reporting.html" type="http">
