@@ -235,7 +235,7 @@ show_preferences_dialog ()
       hbox = gtk_vbox_new (FALSE, GNOME_PAD_SMALL);
 			gtk_container_set_border_width (GTK_CONTAINER (hbox), 12);
       gtk_notebook_append_page ( GTK_NOTEBOOK (notebook), hbox, 
-                                 gtk_label_new (_("Game")) );
+                                 gtk_label_new_with_mnemonic (_("_Game")) );
       vbox = gtk_vbox_new (FALSE, 6);
       gtk_box_pack_start_defaults(GTK_BOX (hbox), vbox);
 
@@ -265,7 +265,7 @@ show_preferences_dialog ()
       // Rules Tab
       hbox = gtk_vbox_new (FALSE, GNOME_PAD_SMALL);
       gtk_notebook_append_page ( GTK_NOTEBOOK (notebook), hbox, 
-                                 gtk_label_new (_("Rules")) );
+                                 gtk_label_new_with_mnemonic (_("_Rules")) );
       vbox = gtk_vbox_new (FALSE, GNOME_PAD_SMALL);
       gtk_box_pack_start_defaults(GTK_BOX (hbox), vbox);
 
@@ -407,7 +407,8 @@ show_preferences_dialog ()
 
       // Cards Tab
       deck_edit = gtk_card_deck_options_edit_new ();
-      gtk_notebook_append_page (GTK_NOTEBOOK (notebook), deck_edit, gtk_label_new (_("Cards")));
+      gtk_notebook_append_page (GTK_NOTEBOOK (notebook), deck_edit,
+                                gtk_label_new_with_mnemonic (_("Card _Deck")));
 
       g_signal_connect (G_OBJECT (deck_edit), "changed",
                         G_CALLBACK (card_deck_options_changed), NULL);

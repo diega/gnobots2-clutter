@@ -1,3 +1,10 @@
+2003-06-16  William Jon McCann  <mccann@jhu.edu>
+
+	* src/blackjack.h: Fix typo.
+
+	* src/dialog.cpp (show_preferences_dialog): Use mnemonics
+	in preferences notebook tab labels.
+
 2003-06-13  William Jon McCann  <mccann@jhu.edu>
 
 	* src/dialog.cpp (select_rule_cb): Make dialog insensitive
