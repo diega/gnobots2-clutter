@@ -1,5 +1,7 @@
 2003-06-17  William Jon McCann  <mccann@jhu.edu>
 
+	* preferences.c: Removed gtk_object_set_user_data stuff.
+
 	* main.c (title_image_load): Updated optional
 	replacement title screen to use tile image.  Tile
 	image has not been added yet.

@@ -2,7 +2,7 @@
 
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <2003/06/17 15:13:48 mccannwj>
+ * Time-stamp: <2003/06/17 20:13:22 mccannwj>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -256,9 +256,12 @@ static void
 set_scroll_method (gchar *name)
 {
 
-  if (!strcmp (name,"atari_scroll"))  view_scroll_method=atari_scroll;
-  if (!strcmp (name,"smooth_scroll")) view_scroll_method=smooth_scroll;
-  if (!strcmp (name,"center_scroll")) view_scroll_method=center_scroll;
+  if (!strcmp (name,"atari_scroll"))
+    view_scroll_method = atari_scroll;
+  if (!strcmp (name,"smooth_scroll"))
+    view_scroll_method = smooth_scroll;
+  if (!strcmp (name,"center_scroll"))
+    view_scroll_method = center_scroll;
 
 }
 
@@ -314,10 +317,10 @@ gconf_set_joystick_switch_level (gfloat value)
 void 
 preferences_save (gboolean global)
 {
+#if 0
   gchar *devicename = NULL;
   GList *devices;
 
-#if 0
   for (devices = gdk_devices_list (); devices; devices = devices->next)
     {
       GdkDevice *info = devices->data;
@@ -328,11 +331,11 @@ preferences_save (gboolean global)
 	  break;
 	}
     }
-#endif  
   if (devicename) 
     gconf_set_joystick_device (devicename);
 
   gconf_set_joystick_switch_level (joystick_switch_level);
+#endif  
 
   gconf_set_scroll_method (scroll_method_name ());
 
@@ -382,13 +385,13 @@ pref_get_sound_enabled ()
 gboolean
 preferences_restore (void)
 {
-  gchar       *devicename;
   char        *filename;
   gboolean     def;
   guint        cave;
   gchar       *scroll_method;
-
 #if 0
+  gchar       *devicename;
+
   devicename= gnome_config_get_string ("Preferences/Joystick device=");
   if (devicename)
     {
@@ -516,17 +519,17 @@ game_selector_select_row (GtkTreeSelection * selection,
 }
 
 
+#if 0
 /* The joystick callbacks.  */
 
 static void
 preferences_set_joystick_device (GtkWidget *widget, gpointer data)
 {
-  guint32 deviceid= GPOINTER_TO_UINT (data);
-  PreferencesData *prdata  = 
+  guint32 deviceid = GPOINTER_TO_UINT (data);
     (PreferencesData *) gtk_object_get_user_data (GTK_OBJECT (widget));
 
   prdata->joystick_deviceid= deviceid;
-#if 0  
+
   if (deviceid == GDK_CORE_POINTER)
     {
       gtk_widget_set_sensitive (prdata->level_frame, FALSE);
@@ -535,18 +538,14 @@ preferences_set_joystick_device (GtkWidget *widget, gpointer data)
     {
       gtk_widget_set_sensitive (prdata->level_frame, TRUE);
     }
-#endif
-}
 
+}
+#endif
 
 static void
 preferences_set_joystick_switch_level (GtkAdjustment *adjust, gpointer data)
 {
-  PreferencesData *prdata  = 
-    (PreferencesData *) gtk_object_get_user_data (GTK_OBJECT (adjust));
-
-  prdata->joystick_switch_level= adjust->value;
-
+  /*gconf_set_joystick_switch_level (adjust->value);*/
 }
 
 
@@ -556,12 +555,7 @@ preferences_set_joystick_switch_level (GtkAdjustment *adjust, gpointer data)
 static void
 preferences_set_scroll_method (GtkWidget *widget, gpointer data)
 {
-
-  PreferencesData *prdata  = 
-    (PreferencesData *) gtk_object_get_user_data (GTK_OBJECT (widget));
-  
-  prdata->scroll_method_name = (gchar *)data;
-  set_scroll_method (prdata->scroll_method_name);
+  set_scroll_method ((gchar *)data);
   gconf_set_scroll_method (scroll_method_name ());
 }
 
@@ -733,8 +727,9 @@ preferences_dialog_new (void)
     GtkWidget *menuitem;
     GtkWidget *optionmenu;
     GtkWidget *device_menu;
+#if 0
     GList     *devices;
-
+#endif
     frame= games_frame_new (_("Device"));
     gtk_box_pack_start (GTK_BOX (box), frame, FALSE, FALSE, GNOME_PAD_SMALL);
 
@@ -751,7 +746,7 @@ preferences_dialog_new (void)
 
     /* We definatly have a "disable" entry.  */
     menuitem= gtk_menu_item_new_with_label (_("disabled"));
-    gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
+
 #if 0
     g_signal_connect (GTK_OBJECT (menuitem), "activate",
 			(GtkSignalFunc) preferences_set_joystick_device,
@@ -769,7 +764,6 @@ preferences_dialog_new (void)
 	  {
 	    menuitem= gtk_menu_item_new_with_label (info->name);
 
-	    gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
             g_signal_connect (GTK_OBJECT (menuitem), "activate",
                                 (GtkSignalFunc) preferences_set_joystick_device,
                                 GUINT_TO_POINTER (info->deviceid));
@@ -799,7 +793,7 @@ preferences_dialog_new (void)
 
     adjust= gtk_adjustment_new (prdata->joystick_switch_level,
 				0.0, 1.0, 0.02, 0.1, 0.0);
-    gtk_object_set_user_data (adjust, prdata);
+
     g_signal_connect (adjust, "value_changed",
 			(GtkSignalFunc) preferences_set_joystick_switch_level,
 			NULL);
@@ -889,7 +883,7 @@ preferences_dialog_new (void)
     prdata->scroll_method_name = scroll_method_name();
 
     menuitem= gtk_menu_item_new_with_label (_("Atari like scrolling"));
-    gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
+
     g_signal_connect (GTK_OBJECT (menuitem), "activate",
 			(GtkSignalFunc) preferences_set_scroll_method,
 			"atari_scroll");
@@ -902,7 +896,6 @@ preferences_dialog_new (void)
 
 
     menuitem= gtk_menu_item_new_with_label (_("Smooth scrolling"));
-    gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
     g_signal_connect (GTK_OBJECT (menuitem), "activate",
 			(GtkSignalFunc) preferences_set_scroll_method,
 			"smooth_scroll");
@@ -913,9 +906,7 @@ preferences_dialog_new (void)
     ++i;
 
 
-
     menuitem= gtk_menu_item_new_with_label (_("Always in the center"));
-    gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
     g_signal_connect (GTK_OBJECT (menuitem), "activate",
 			(GtkSignalFunc) preferences_set_scroll_method,
 			"center_scroll");
