@@ -1157,6 +1157,7 @@ about_callback (GtkWidget *widget, gpointer data)
 		"Heinz Hempe",
 		"Michael Meeks",
                 "Philippe Chavin",
+		"Callum McKenzie",
 		"",
 		N_("Tiles:"),
 		"Jonathan Buzzard",

@@ -2,9 +2,9 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY appversion "2.4">
-  <!ENTITY manrevision "2.4">
-  <!ENTITY date "March 2002">
+  <!ENTITY appversion "2.6">
+  <!ENTITY manrevision "2.6">
+  <!ENTITY date "October 2003">
   <!ENTITY app "<application>GNOME Mahjongg</application>">
   <!ENTITY appname "GNOME Mahjongg">
 ]>
@@ -624,6 +624,7 @@
     </para>
     
     <figure id="preferences-fig">
+<!-- FIXME: This dialog is the old one. -->
       <title>Preferences&hellip; Dialog</title>
       <screenshot>
 	 <mediaobject> 
@@ -649,21 +650,14 @@
       <itemizedlist mark="opencircle">
 	<listitem>
 	  <para>
-	    <guilabel>Select Tiles:</guilabel> &mdash; 
-	    This item changes the design on the face of each tile.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>
-	    <guilabel>Select Tile Background:</guilabel> &mdash; 
-	    This item changes the type of tile displayed, but not 
-	    the pattern on the face.
+	    <guilabel>Tile Set:</guilabel> &mdash; 
+	    Select the look of the tiles from this list.
 	  </para>
 	</listitem>
 	<listitem>
 	  <para>
 	    <guilabel>Select Map:</guilabel> &mdash; 
-	    This item changes the difficulty of the game by altering how 
+	    Change the difficulty of the game by altering how 
 	    the tiles are stacked.  The more spread out (easy) version 
 	    lets you see more of the tiles while the more compact (hard) 
 	    version does not let you see many tiles.
@@ -671,25 +665,27 @@
 	</listitem>
 	<listitem>
 	  <para>
-	    <guilabel>Background:</guilabel> &mdash; 
-	    This item lets you change the color of the background 
-	    by bringing up the <interface>
-	    color</interface> dialog to choose a custom color.
+	    <guilabel>Background Color:</guilabel> &mdash; 
+	    Change the color of the background 
+	    by bringing up a <interface>
+	    color picker</interface> to let you select a new color.
 	  </para>
 	</listitem>
 	<listitem>
 	  <para>
-	    <guilabel>Warn when tiles don't match</guilabel> &mdash; 
-	    This box toggles whether you see an <link linkend="info-fig2">
-	    <interface>Information</interface> dialog</link>, when 
-	    the two tiles you selected don't match.  If the box is depressed, 
-	    the <interface>Information</interface> dialog appears.  
-	    If the box is raised, a message appears in the lower left 
-	    corner of the <interface>Main Window</interface> saying, 
-	    <quote>Tiles don't match !</quote>
+	    <guilabel>Warn when tiles don't match</guilabel> &mdash;
+	    Select whether you see an <link
+	    linkend="info-fig2">dialog</link> when the two tiles you
+	    selected don't match.  If this option is not selected then
+	    the warning message will appear in the status bar in the
+	    lower left corner of the <interface>main
+	    window</interface>.
 	  </para>
 	</listitem>
       </itemizedlist>
+
+    <para>To alter the size of the tiles simply resize the window in
+    the normal way. The tiles will expand to fill it.</para>
 
   </sect1>
 

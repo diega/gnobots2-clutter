@@ -1,3 +1,10 @@
+2003-10-20  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/mahjongg.xml: Updated the documentation to reflect what
+	has changed recently.
+
+	* mahjongg.c: Just adding myself to the credits. 
+
 2003-10-18  Callum McKenzie  <callum@physics.otago.ac.nz>
 	
 	* mahjongg.c: 
