@@ -237,17 +237,25 @@ new_game_real_cb (gint reply, gpointer data)
   /*
   reversi_init_board (board_pixmaps);
   */
+
+  board->board[INDEX (3, 3)] = WHITE;
+  board->board[INDEX (4, 4)] = WHITE;
+  board->board[INDEX (3, 4)] = BLACK;
+  board->board[INDEX (4, 3)] = BLACK;
+
+  board_pixmaps[INDEX (3, 3)] = WHITE_TILE;
+  board_pixmaps[INDEX (4, 4)] = WHITE_TILE;
+  board_pixmaps[INDEX (3, 4)] = BLACK_TILE;
+  board_pixmaps[INDEX (4, 3)] = BLACK_TILE;
   
+  /*
   board_pixmaps[INDEX (3, 3)] = (board->board[INDEX (3, 3)] = WHITE_TILE) - 1;
   board_pixmaps[INDEX (4, 4)] = (board->board[INDEX (4, 4)] = WHITE_TILE) - 1;
   board_pixmaps[INDEX (3, 4)] = (board->board[INDEX (3, 4)] = BLACK_TILE) + 1;
   board_pixmaps[INDEX (4, 3)] = (board->board[INDEX (4, 3)] = BLACK_TILE) + 1;
-
-  whose_turn = BLACK_TILE;
-
-  /*
-  iagno2_board_changed ();
   */
+
+  whose_turn = BLACK;
 
   iagno2_force_board_redraw ();
 

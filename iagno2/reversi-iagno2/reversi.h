@@ -21,14 +21,22 @@
 #define _REVERSI_IAGNO2_H_
 
 #define BOARDSIZE 8
-#define INDEX(r,c) ((r << 3) + c)
-#define ROW(x)     (x >> 3)
-#define COL(x)     (x & 0x7)
+#define INDEX(r,c) (((r) << 3) + (c))
+#define ROW(i)     ((i) >> 3)
+#define COL(i)     ((i) & 0x7)
 
+#define EMPTY 0
+#define BLACK 1
+#define WHITE 2
+
+#define OPPONENT(player) (((player)==BLACK)?WHITE:BLACK)
+
+/*
 #define WHITE_TILE 31
 #define BLACK_TILE 1
 
 #define OTHER_TILE(x) (x-1)?BLACK_TILE:WHITE_TILE
+*/
 
 typedef struct {
   int index;

@@ -34,6 +34,7 @@ reversi_init_board ()
 {
   ReversiBoard *tmp = g_new (ReversiBoard, 1);
 
+  /* This depends on EMPTY being 0, so if something breaks, look here... */
   tmp->board = g_new0 (gchar, BOARDSIZE * BOARDSIZE);
 
   tmp->moves = g_new (ReversiMove, 60);
@@ -53,18 +54,6 @@ reversi_destroy_board (ReversiBoard *board)
   g_free (board);
 }
 
-/*
-gchar
-other_player (gchar player)
-{
-  gchar tmp_other_player;
-
-  tmp_other_player = (player == BLACK_TILE) ? WHITE_TILE : BLACK_TILE;
-
-  return (tmp_other_player);
-}
-*/
-
 static gboolean
 check_direction (ReversiBoard *board,
                  gchar index,
@@ -75,8 +64,6 @@ check_direction (ReversiBoard *board,
   gint i, j;
   gint dx, dy;
   gint possible;
-
-  not_me = OTHER_TILE (player);
 
   switch (direction) {
     case UP:
@@ -112,6 +99,8 @@ check_direction (ReversiBoard *board,
       dy = 1;
       break;
   }
+
+  not_me = OPPONENT (player);
   
   i = ROW(index) + dx;
   j = COL(index) + dy;
@@ -177,7 +166,7 @@ move_direction (ReversiBoard *board,
       break;
   }
 
-  not_me = OTHER_TILE (player);
+  not_me = OPPONENT (player);
 
   i = ROW(index) + dx;
   j = COL(index) + dy;
@@ -244,10 +233,6 @@ move (ReversiBoard *board, gchar index, gchar player)
   board->moves[board->move_count].index = index;
   board->moves[board->move_count].player = player;
   board->move_count++;
-
-  /*
-  player = other_player (player);
-  */
 }
 
 gboolean

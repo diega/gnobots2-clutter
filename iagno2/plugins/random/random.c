@@ -30,25 +30,31 @@
 GtkWidget *plugin_pref_dialog = NULL;
 */
 
-gchar busy_new[50];
+gchar busy_message[2][50];
+gchar *new_message[2] = { NULL, NULL };
 
 void
 plugin_init_player (gchar player)
 {
-  if (player == BLACK_TILE) {
-    /* I need to be prepared to play for black */
-  } else {
-    /* I need to be prepared to play for white */
-  }
+  gchar *pref_file;
+  gchar *tmp_message;
+
+  pref_file = g_strdup_printf ("/iagno2/Random/player%d_busy_message=Random Player is stalling for time...", player - 1);
+  tmp_message = gnome_config_get_string (pref_file);
+  g_free (pref_file);
+
+  g_snprintf (busy_message[player - 1], 50, "%s", tmp_message);
+  g_free (tmp_message);
+
+  printf ("%s\n", busy_message[player - 1]);
 }
 
 void
 plugin_deinit_player (gchar player)
 {
-  if (player == BLACK_TILE) {
-    /* I no longer have to play for black */
-  } else {
-    /* I no longer have to play for white */
+  if (new_message[player - 1]) {
+    g_free (new_message[player - 1]);
+    new_message[player - 1] = NULL;
   }
 }
 
@@ -93,16 +99,7 @@ plugin_name ()
 const gchar *
 plugin_busy_message (gchar player)
 {
-  gchar *busy;
-  //gchar busy_new[50];
-
-  busy = gnome_config_get_string ("/iagno2/Random/busy_message=Random player is stalling for time...");
-  g_snprintf (busy_new, 50, "%s", busy);
-  g_free (busy);
-  /*
-  return "Random player is stalling for time...";
-  */
-  return busy_new;
+  return (busy_message[player - 1]);
 }
 
 void
@@ -130,28 +127,28 @@ plugin_about_window (GtkWindow *parent, gchar player)
 }
 
 void
-plugin_preferences (GtkWidget *parent, gchar player)
+plugin_preferences_window (GtkWidget *parent, gchar player)
 {
   GtkWidget *dialog;
   GtkWidget *entry;
-
   gchar *message;
 
   gint save_string (GtkWidget *widget, gpointer data)
   {
-    gchar *new_message;
     GtkWidget *entry;
 
     entry = (GtkWidget *) data;
 
-    new_message = gtk_entry_get_text (GTK_ENTRY (entry));
+    if (new_message[player - 1]) {
+      g_free (new_message[player - 1]);
+    }
 
-    printf ("%s\n", new_message);
+    new_message[player - 1] = g_strdup (gtk_entry_get_text (GTK_ENTRY (entry)));
 
-    gnome_config_set_string ("/iagno2/Random/busy_message", new_message);
-
-    gnome_config_sync ();
+    gnome_property_box_changed (GNOME_PROPERTY_BOX (parent));
   }
+
+  printf ("%d\n", player);
 
   dialog = gnome_dialog_new (_("Random Player Configuration"),
                              GNOME_STOCK_BUTTON_OK,
@@ -160,12 +157,13 @@ plugin_preferences (GtkWidget *parent, gchar player)
 
   gnome_dialog_set_parent (GNOME_DIALOG (dialog), GTK_WINDOW (parent));
 
-  message = gnome_config_get_string ("/iagno2/Random/busy_message=Random player is stalling for time...");
-
   entry = gtk_entry_new_with_max_length (49);
-  gtk_entry_set_text (GTK_ENTRY (entry), message);
 
-  g_free (message);
+  if (new_message[player - 1]) {
+    gtk_entry_set_text (GTK_ENTRY (entry), new_message[player - 1]);
+  } else {
+    gtk_entry_set_text (GTK_ENTRY (entry), busy_message[player - 1]);
+  }
 
   gtk_box_pack_start (GTK_BOX (GNOME_DIALOG (dialog)->vbox),
                       entry,
@@ -180,4 +178,28 @@ plugin_preferences (GtkWidget *parent, gchar player)
                                (gpointer) entry);
 
   gnome_dialog_run_and_close (GNOME_DIALOG (dialog));
+}
+
+void
+plugin_preferences_save (gchar player)
+{
+  gchar *pref_file;
+
+  printf ("%d\n", player);
+  
+  if (new_message[player - 1] == NULL) {
+    return;
+  }
+
+  pref_file = g_strdup_printf ("/iagno2/Random/player%d_busy_message",
+                               player - 1);
+  gnome_config_set_string (pref_file, new_message[player - 1]);
+  g_free (pref_file);
+
+  g_snprintf (busy_message[player - 1], 50, "%s", new_message[player - 1]);
+
+  g_free (new_message[player - 1]);
+  new_message[player - 1] = NULL;
+
+  gnome_config_sync ();
 }

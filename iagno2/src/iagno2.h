@@ -20,13 +20,6 @@
 #ifndef _IAGNO2_H_
 #define _IAGNO2_H_
 
-/*
-typedef struct {
-  int index;
-  int player;
-} Iagno2Move;
-*/
-
 void iagno2_tileset_load ();
 
 void iagno2_draw_tile (int tile, int index);
@@ -56,9 +49,5 @@ void iagno2_setup_players ();
 gint iagno2_game_over ();
 
 void iagno2_render_buffer_to_screen ();
-
-/*
-Iagno2Move iagno2_get_move (int move);
-*/
 
 #endif

@@ -121,6 +121,14 @@ apply_cb (GtkWidget *widget, gint pagenum, gpointer data)
       tmp_players[1] = NULL;
     }
 
+    if (players[0]->plugin_preferences_save) {
+      players[0]->plugin_preferences_save (BLACK);
+    }
+
+    if (players[1]->plugin_preferences_save) {
+      players[1]->plugin_preferences_save (WHITE);
+    }
+
     iagno2_properties_destroy (old_properties);
   }
 }
@@ -163,7 +171,7 @@ player1_cb (GtkWidget *widget, gpointer data)
     g_free (tmp_properties->players[0]);
     tmp_properties->players[0] = g_strdup (data);
     iagno2_init_player (&tmp_players[0], tmp_properties->players[0],
-                        BLACK_TILE);
+                        BLACK);
     gnome_property_box_changed (GNOME_PROPERTY_BOX (preferences_dialog));
   }
 }
@@ -178,7 +186,7 @@ player2_cb (GtkWidget *widget, gpointer data)
     g_free (tmp_properties->players[1]);
     tmp_properties->players[1] = g_strdup (data);
     iagno2_init_player (&tmp_players[1], tmp_properties->players[1],
-                        WHITE_TILE);
+                        WHITE);
     gnome_property_box_changed (GNOME_PROPERTY_BOX (preferences_dialog));
   }
 }
@@ -186,10 +194,10 @@ player2_cb (GtkWidget *widget, gpointer data)
 static void
 configure_cb (GtkWidget *widget, gpointer data)
 {
-  if (tmp_players[(gint) data]) {
-    if (tmp_players[(gint) data]->plugin_preferences) {
-      tmp_players[(gint) data]->plugin_preferences (preferences_dialog,
-                                                    (gint) data);
+  if (tmp_players[(gint) data - 1]) {
+    if (tmp_players[(gint) data - 1]->plugin_preferences_window) {
+      tmp_players[(gint) data - 1]->plugin_preferences_window
+          (preferences_dialog, (gint) data);
     } else {
       gnome_ok_dialog_parented (_("This plugin has no configuration options."),
                                 GTK_WINDOW (preferences_dialog));
@@ -454,8 +462,8 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
 
   tmp_properties = iagno2_properties_copy (properties);
 
-  iagno2_init_player (&tmp_players[0], tmp_properties->players[0], BLACK_TILE);
-  iagno2_init_player (&tmp_players[1], tmp_properties->players[1], WHITE_TILE);
+  iagno2_init_player (&tmp_players[0], tmp_properties->players[0], BLACK);
+  iagno2_init_player (&tmp_players[1], tmp_properties->players[1], WHITE);
 
   preferences_dialog = gnome_property_box_new ();
   gnome_dialog_set_parent (GNOME_DIALOG (preferences_dialog), GTK_WINDOW (app));
@@ -495,7 +503,7 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
 
   button = gtk_button_new_with_label (_("Configure..."));
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
-                      GTK_SIGNAL_FUNC (configure_cb), (gpointer) 0);
+                      GTK_SIGNAL_FUNC (configure_cb), (gpointer) BLACK);
   gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
   if (game_in_progress) {
     gtk_widget_set_sensitive (button, FALSE);
@@ -532,7 +540,7 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
 
   button = gtk_button_new_with_label (_("Configure..."));
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
-                      GTK_SIGNAL_FUNC (configure_cb), (gpointer) 1);
+                      GTK_SIGNAL_FUNC (configure_cb), (gpointer) WHITE);
   gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
   if (game_in_progress) {
     gtk_widget_set_sensitive (button, FALSE);

@@ -57,7 +57,7 @@ GdkColor colors[2];
 
 gchar *board_pixmaps = NULL;
 
-gchar whose_turn = BLACK_TILE;
+gchar whose_turn = BLACK;
 
 gboolean iagno2_flipping_pixmaps;
 
@@ -68,9 +68,6 @@ gboolean interactive = 0;
 gint computer_timeout_id = 0;
 gint game_over_flip_id = 0;
 
-/*
-gint computer_return = 64;
-*/
 gint computer_thread = 0;
 
 GnomeAppBar *appbar;
@@ -102,15 +99,12 @@ void
 iagno2_render_tile (int tile, int index)
 {
   GdkGC *gc = drawing_area->style->fg_gc[GTK_WIDGET_STATE (drawing_area)];
-  int x = ROW (index);
-  int y = COL (index);
+  int y = ROW (index);
+  int x = COL (index);
 
   gdk_pixbuf_render_to_drawable (tileset_pixbuf,
                                  drawing_area->window, gc,
                                  tile * TILEWIDTH, 0,
-                                 /*
-                                 x * TILEWIDTH, y * TILEHEIGHT,
-                                 */
                                  x * (TILEWIDTH + GRIDWIDTH),
                                  y * (TILEHEIGHT + GRIDWIDTH),
                                  TILEWIDTH, TILEHEIGHT,
@@ -120,9 +114,6 @@ iagno2_render_tile (int tile, int index)
   gdk_pixbuf_render_to_drawable (tileset_pixbuf,
                                  buffer_pixmap, gc,
                                  tile * TILEWIDTH, 0,
-                                 /*
-                                 x * TILEWIDTH, y * TILEHEIGHT,
-                                 */
                                  x * (TILEWIDTH + GRIDWIDTH),
                                  y * (TILEHEIGHT + GRIDWIDTH),
                                  TILEWIDTH, TILEHEIGHT,
@@ -134,15 +125,12 @@ void
 iagno2_render_tile_to_buffer (int tile, int index)
 {
   GdkGC *gc = drawing_area->style->fg_gc[GTK_WIDGET_STATE (drawing_area)];
-  int x = ROW (index);
-  int y = COL (index);
+  int y = ROW (index);
+  int x = COL (index);
 
   gdk_pixbuf_render_to_drawable (tileset_pixbuf,
                                  buffer_pixmap, gc,
                                  tile * TILEWIDTH, 0,
-                                 /*
-                                 x * TILEWIDTH, y * TILEHEIGHT,
-                                 */
                                  x * (TILEWIDTH + GRIDWIDTH),
                                  y * (TILEHEIGHT + GRIDWIDTH),
                                  TILEWIDTH, TILEHEIGHT,
@@ -150,41 +138,9 @@ iagno2_render_tile_to_buffer (int tile, int index)
                                  0, 0);
 }
 
-/*
-static GdkColor
-iagno2_get_pixbuf_color (GdkPixbuf *pixbuf)
-{
-  GdkColor color;
-  guchar *pixels;
-  gint bits;
-
-  pixels = gdk_pixbuf_get_pixels (pixbuf);
-
-  color.red = pixels[0];
-  color.green = pixels[1];
-  color.blue = pixels[2];
-  bits = gdk_pixbuf_get_bits_per_sample (pixbuf);
-
-  color.pixel = color.red << (bits * 2) + color.green << (bits) + color.blue;
-
-  return (color);
-}
-
-static GdkColor
-iagno2_get_grid_color (GdkColor bg_color)
-{
-  GdkColor color;
-
-  color.pixel = 0xFFFFFF - bg_color.pixel;
-}
-*/
-
 void
 iagno2_set_bg_color ()
 {
-  /*
-  GdkColor color;
-  */
   guchar *pixels;
   GdkGC *grid_gc;
 
@@ -198,11 +154,6 @@ iagno2_set_bg_color ()
                             FALSE, TRUE);
 
   gdk_window_set_background (drawing_area->window, &colors[0]);
-
-  /*
-  gdk_gc_set_background (gc, &color);
-  gdk_gc_set_foreground (gc, &color);
-  */
 
   colors[1].red = 0xFFFF - colors[0].red;
   colors[1].green = 0xFFFF - colors[0].green;
@@ -227,10 +178,6 @@ iagno2_app_init ()
       "delete_event",
       GTK_SIGNAL_FUNC (delete_event_cb),
       NULL);
-
-  /*
-  iagno2_set_bg_color ();
-  */
 }
 
 void
@@ -242,18 +189,6 @@ iagno2_appbar_init ()
 
   gnome_appbar_set_status (GNOME_APPBAR (appbar), _(" Welcome to Iagno II!"));
 }
-
-/*
-void
-iagno2_set_bg_color ()
-{
-  bg_color = iagno2_get_pixbuf_color (tileset_pixbuf);
-
-  grid_color = iagno2_get_grid_color (bg_color);
-
-  gdk_window_set_background (drawing_area->window, &bg_color);
-}
-*/
 
 void
 iagno2_render_buffer_to_screen (int x, int y, int width, int height)
@@ -311,10 +246,6 @@ drawing_area_configure_event_cb (GtkWidget *widget, GdkEventConfigure *event)
   gint i;
 
   if (buffer_pixmap != NULL) {
-    /*
-    gdk_pixmap_unref (buffer_pixmap);
-    buffer_pixmap = NULL;
-    */
     return;
   }
 
@@ -342,8 +273,12 @@ drawing_area_button_press_event_cb (GtkWidget *widget, GdkEvent *event,
         x = event->button.x;
         y = event->button.y;
 
+        /*
         grid_row = x / (TILEWIDTH + GRIDWIDTH);
         grid_col = y / (TILEHEIGHT + GRIDWIDTH);
+        */
+        grid_col = x / (TILEWIDTH + GRIDWIDTH);
+        grid_row = y / (TILEHEIGHT + GRIDWIDTH);
 
         index = INDEX (grid_row, grid_col);
 
@@ -387,15 +322,6 @@ iagno2_drawing_area_init ()
                          GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK);
 
   gnome_app_set_contents (GNOME_APP (app), drawing_area);
-
-  /*
-  if (!gc) {
-    gc = gdk_gc_new (drawing_area->window);
-    gdk_gc_copy (gc, drawing_area->style->bg_gc[0]);
-  }
-
-  printf ("gc initialized\n");
-  */
 }
 
 void
@@ -404,7 +330,7 @@ iagno2_force_board_redraw ()
   gint i;
 
   for (i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
-    iagno2_render_tile_to_buffer (board->board[i], i);
+    iagno2_render_tile_to_buffer (TILE (board->board[i]), i);
   }
 
   iagno2_render_buffer_to_screen (0, 0, BOARDWIDTH, BOARDHEIGHT);
@@ -418,27 +344,27 @@ iagno2_flip_tiles ()
   gint delta;
 
   for (i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
-    if (board->board[i] == board_pixmaps[i]) {
+    if (TILE (board->board[i]) == board_pixmaps[i]) {
       continue;
     }
-    if (!board->board[i]) {
-      board_pixmaps[i] = board->board[i];
+    if (board->board[i] == EMPTY) {
+      board_pixmaps[i] = EMPTY_TILE;
       iagno2_render_tile (board_pixmaps[i], i);
       continue;
     }
-    if (!board_pixmaps[i]) {
-      board_pixmaps[i] = board->board[i];
+    if (board_pixmaps[i] == EMPTY_TILE) {
+      board_pixmaps[i] = TILE (board->board[i]);
       iagno2_render_tile (board_pixmaps[i], i);
       continue;
     }
-    if (board_pixmaps[i] < board->board[i]) {
+    if (board_pixmaps[i] < TILE (board->board[i])) {
       delta = 1;
     } else {
       delta = -1;
     }
     board_pixmaps[i] += delta;
     iagno2_render_tile (board_pixmaps[i], i);
-    if (board_pixmaps[i] != board->board[i]) {
+    if (board_pixmaps[i] != TILE (board->board[i])) {
       more_to_flip = 1;
     }
   }
@@ -458,19 +384,6 @@ iagno2_board_changed ()
     iagno2_flipping_pixmaps = 1;
   }
 }
-
-/*
-static gint
-iagno2_get_computer_move ()
-{
-  if (computer_return != 64) {
-    iagno2_move (computer_return);
-    return (FALSE);
-  }
-
-  return TRUE;
-}
-*/
 
 static gint
 iagno2_get_computer_move (int fd)
@@ -504,7 +417,6 @@ timeout_removed (gpointer data)
 static gint
 iagno2_computer_player_wrapper ()
 {
-  int player = PLAYER (whose_turn);
   int fd[2];
 
   pipe (fd);
@@ -527,7 +439,7 @@ iagno2_computer_player_wrapper ()
 
     close (fd[0]);
 
-    index = players[player]->plugin_move (board, whose_turn);
+    index = players[whose_turn - 1]->plugin_move (board, whose_turn);
 
     write (fd[1], &index, sizeof (int));
 
@@ -548,7 +460,6 @@ iagno2_computer_player_wrapper ()
 void
 iagno2_setup_current_player (gboolean pass)
 {
-  gchar player = PLAYER (whose_turn);
   gchar *sides[2];
   gchar *interactive_message;
   gchar *message;
@@ -558,7 +469,7 @@ iagno2_setup_current_player (gboolean pass)
   sides[1] = g_strdup (_("Light"));
 
   if (pass) {
-    pad = g_strconcat (" [", sides[(player)?0:1],
+    pad = g_strconcat (" [", sides[whose_turn - 1],
                        _(" was forced to pass] "), NULL);
   } else {
     pad = g_strdup (" ");
@@ -566,17 +477,17 @@ iagno2_setup_current_player (gboolean pass)
 
   computer_timeout_id = 0;
   
-  if (players[player] == NULL) {
+  if (players[whose_turn - 1] == NULL) {
     interactive = 1;
     message = g_strconcat (pad, _("Waiting for input from user... ["),
-                           sides[player], "]", NULL);
+                           sides[whose_turn - 1], "]", NULL);
   } else {
     interactive = 0;
     computer_timeout_id = gtk_timeout_add (1000,
                                            iagno2_computer_player_wrapper,
                                            NULL);
-    message = g_strconcat (pad, players[player]->plugin_busy_message (player),
-                           " [", sides[player], "]", NULL);
+    message = g_strconcat (pad, players[whose_turn - 1]->plugin_busy_message (whose_turn),
+                           " [", sides[whose_turn - 1], "]", NULL);
   }
 
   gnome_appbar_set_status (GNOME_APPBAR (appbar), message);
@@ -594,16 +505,16 @@ iagno2_post_move_check ()
   
   iagno2_board_changed ();
 
-  whose_turn = OTHER_TILE (whose_turn);
+  whose_turn = OPPONENT (whose_turn);
 
   if (!are_valid_moves (board, whose_turn)) {
-    if (!are_valid_moves (board, OTHER_TILE (whose_turn))) {
+    if (!are_valid_moves (board, OPPONENT (whose_turn))) {
       game_over_flip_id = gtk_timeout_add (3000,
           iagno2_game_over, NULL);
       gnome_appbar_set_status (GNOME_APPBAR (appbar), " Game over!");
       return;
     } else {
-      whose_turn = OTHER_TILE (whose_turn);
+      whose_turn = OPPONENT (whose_turn);
       pass = TRUE;
     }
   }
@@ -646,7 +557,7 @@ iagno2_init_player (Iagno2Plugin **plugin, const gchar *name, gchar player)
 
 void iagno2_initialize_players ()
 {
-  iagno2_init_player (&players[0], properties->players[0], BLACK_TILE);
+  iagno2_init_player (&players[0], properties->players[0], BLACK);
 
   if (!players[0] && strcmp (properties->players[0], "Human")) {
     g_free (properties->players[0]);
@@ -654,7 +565,7 @@ void iagno2_initialize_players ()
     iagno2_properties_sync (properties);
   }
 
-  iagno2_init_player (&players[1], properties->players[1], WHITE_TILE);
+  iagno2_init_player (&players[1], properties->players[1], WHITE);
 
   if (!players[1] && strcmp (properties->players[1], "Human")) {
     g_free (properties->players[1]);
@@ -663,75 +574,17 @@ void iagno2_initialize_players ()
   }
 }
 
-/*
-void
-iagno2_initialize_players (int which)
-{
-  gint i;
-  gchar *tmp_path;
-  gchar *filename;
-
-  if ((which == 0) || (which == 1)) {
-    if (players[0] != NULL) {
-      iagno2_plugin_close (players[0]);
-      players[0] = NULL;
-    }
-    if (!strcmp (properties->player1, "Human")) {
-      players[0] = NULL;
-    } else {
-      tmp_path = g_strconcat ("iagno2/",
-          properties->player1, NULL);
-      filename = gnome_unconditional_libdir_file (tmp_path);
-      g_free (tmp_path);
-      players[0] = iagno2_plugin_open (filename);
-      g_free (filename);
-      if (players[0] != NULL) {
-        players[0]->plugin_init ();
-      } else {
-        g_free (properties->player1);
-        properties->player1 = g_strdup ("Human");
-        iagno2_properties_sync (properties);
-      }
-    }
-  }
-
-  if ((which ==0) || (which == 2)) {
-    if (players[1] != NULL) {
-      iagno2_plugin_close (players[1]);
-      players[1] = NULL;
-    }
-    if (!strcmp (properties->player2, "Human")) {
-      players[1] = NULL;
-    } else {
-      tmp_path = g_strconcat ("iagno2/",
-          properties->player2, NULL);
-      filename = gnome_unconditional_libdir_file (tmp_path);
-      g_free (tmp_path);
-      players[1] = iagno2_plugin_open (filename);
-      g_free (filename);
-      if (players[1] != NULL) {
-        players[1]->plugin_init ();
-      } else {
-        g_free (properties->player2);
-        properties->player2 = g_strdup ("Human");
-        iagno2_properties_sync (properties);
-      }
-    }
-  }
-}
-*/
-
 void
 iagno2_setup_players ()
 {
   if (players[0]) {
     if (players[0]->plugin_setup) {
-      players[0]->plugin_setup (BLACK_TILE);
+      players[0]->plugin_setup (BLACK);
     }
   }
   if (players[1]) {
     if (players[1]->plugin_setup) {
-      players[1]->plugin_setup (BLACK_TILE);
+      players[1]->plugin_setup (WHITE);
     }
   }
 }
@@ -747,15 +600,15 @@ iagno2_game_over ()
   game_in_progress = FALSE;
 
   for (i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
-    if (board->board[i] == WHITE_TILE) {
+    if (board->board[i] == WHITE) {
       white_count++;
-    } else {
+    } else if (board->board[i] == BLACK) {
       black_count++;
     }
   }
 
   for (i = 0; i < black_count; i++) {
-    board->board[i] = BLACK_TILE;
+    board->board[i] = BLACK;
   }
 
   for (i = black_count; i < (64 - white_count); i++) {
@@ -763,7 +616,7 @@ iagno2_game_over ()
   }
 
   for (i = (64 - white_count); i < BOARDSIZE * BOARDSIZE; i++) {
-    board->board[i] = WHITE_TILE;
+    board->board[i] = WHITE;
   }
 
   iagno2_board_changed ();

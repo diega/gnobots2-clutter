@@ -1,5 +1,11 @@
 2000-04-12  Ian Peters  <itp@gnu.org>
 
+	* Seperated BLACK_TILE and WHITE_TILE into BLACK_TILE and BLACK, etc.
+	* Altered plugin interface to allow seperate configuration for each
+	  side.
+
+2000-04-12  Ian Peters  <itp@gnu.org>
+
 	* src/*.c, src/*.h: plugins are now kept in memory more, configuration
 	  is persistant from pref dialog to game play, better support in the
 	  interface to distinguish which side the plugin is playing.

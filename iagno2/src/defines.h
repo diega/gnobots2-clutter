@@ -22,29 +22,17 @@
 
 #define TILEWIDTH   60
 #define TILEHEIGHT  60
+
 #define GRIDWIDTH   1
-/*
-#define BOARDSIZE   8
-*/
+
 #define BOARDWIDTH  (TILEWIDTH + GRIDWIDTH) * BOARDSIZE - 1
 #define BOARDHEIGHT (TILEHEIGHT + GRIDWIDTH) * BOARDSIZE - 1
-/*
-#define BOARDWIDTH  TILEWIDTH * BOARDSIZE
-#define BOARDHEIGHT TILEHEIGHT * BOARDSIZE
-*/
 
-/*
-#define INDEX(r,c) ((r << 3) + c)
-#define ROW(x)     (x >> 3)
-#define COL(x)     (x & 0x7)
-*/
-
-#define PLAYER(x)  (x-1)?1:0
-
-/*
-#define WHITE_TILE 31
+#define EMPTY_TILE 0
 #define BLACK_TILE 1
-*/
+#define WHITE_TILE 31
+
+#define TILE(x) (((x)==BLACK)?BLACK_TILE:(((x)==WHITE)?WHITE_TILE:EMPTY_TILE))
 
 #define UP		-8
 #define UP_LEFT		-9

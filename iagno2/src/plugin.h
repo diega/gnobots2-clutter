@@ -58,7 +58,9 @@ typedef struct {
    * (using gnome_config, for example), as it is not guaranteed that this is the
    * same copy of the plugin that will be loaded in a given game.  This does not
    * have to be defined. */
-	void (*plugin_preferences)(GtkWidget *parent, gchar player);
+	void (*plugin_preferences_window)(GtkWidget *parent, gchar player);
+
+  void (*plugin_preferences_save)(gchar player);
 
   /* An about window (see the random plugin for an example), does not have to be
    * defined. */

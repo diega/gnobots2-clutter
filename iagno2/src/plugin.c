@@ -75,9 +75,13 @@ iagno2_plugin_open (const gchar *plugin_file)
     return NULL;
   }
 
-  tmp->plugin_preferences = NULL;
-  g_module_symbol (tmp->module, "plugin_preferences",
-                   ((gpointer)&(tmp->plugin_preferences)));
+  tmp->plugin_preferences_window = NULL;
+  g_module_symbol (tmp->module, "plugin_preferences_window",
+                   ((gpointer)&(tmp->plugin_preferences_window)));
+
+  tmp->plugin_preferences_save = NULL;
+  g_module_symbol (tmp->module, "plugin_preferences_save",
+                   ((gpointer)&(tmp->plugin_preferences_save)));
 
   if (!g_module_symbol (tmp->module, "plugin_about_window",
                         ((gpointer)&(tmp->plugin_about_window)))) {
