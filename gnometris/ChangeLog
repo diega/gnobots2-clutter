@@ -1,3 +1,26 @@
+1999-05-06  Janusz Marcin Gorycki  <mgo@spiderman.pl.olicom.com>
+
+	* tetris.h, tetris.cpp, field.h, field.cpp, blockops.h, blockops.cpp:
+	using canvas widget
+
+	* pix/7blocks-tig.png, pix/Makefile.am: added 7blocks-tig.png
+
+1999-04-17  mawarkus  <mawarkus@???>
+
+	* gnometris.desktop: More German l10n.
+
+1999-04-08  mjr  <mjr@???>
+
+	* gnometris.desktop:
+	Updated and completed finnish translations of messages and desktop files
+
+1999-04-06  kloczek  <kloczek@???>
+
+	* Makefile.am:
+	- fixed all Makefiles.am to allow use DESTDIR in "make install,
+	- fixed perm on gnometris.scores (must be 644 instead 666).
+
+
 1999-03-16  Janusz Marcin Gorycki  <mgo@spiderman.pl.olicom.com>
 
 	* tetris.h, tetris.cpp: patches from Ian applied
