@@ -21,7 +21,7 @@ mahjongg_LDADD = \
 	$(GNOMEUI_LIBS)	\
 	$(INTLLIBS)
 
-pixmap_DATA = default.xpm seta.xpm
+pixmap_DATA = default.png seta.png
 
 EXTRA_DIST = mahjongg.desktop $(pixmap_DATA)
 
