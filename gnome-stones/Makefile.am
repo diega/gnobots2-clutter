@@ -1,12 +1,14 @@
 SUBDIRS  = objects graphics sounds help
 
+schemadir   = @GCONF_SCHEMA_FILE_DIR@
+schema_in_files = gnome-stones.schemas.in
+schema_DATA = $(schema_in_files:.schemas.in=.schemas)
+@INTLTOOL_SCHEMAS_RULE@
+
 Gamesdir = $(datadir)/applications
-
-
 
 Pixmapdir= $(datadir)/pixmaps
 Cavesdir = $(datadir)/gnome-stones
-
 
 INCLUDES =						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
@@ -77,6 +79,7 @@ EXTRA_DIST    =					\
 	$(Games_in_files)			\
 	$(Caves_in_files)			\
 	$(gtkrc_DATA)				\
+	$(schema_in_files)			\
 	TODO					\
 	README					\
 	gnome-stones.keys.in			\
@@ -84,6 +87,9 @@ EXTRA_DIST    =					\
 	gnome-stones-file.png
 
 install-data-local:
+if GCONF_SCHEMAS_INSTALL
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
+endif
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
 	-touch $(DESTDIR)$(scoredir)/gnome-stones.scores
 	-chown $(scores_user).$(scores_group) $(DESTDIR)$(scoredir)/gnome-stones.scores

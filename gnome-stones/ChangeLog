@@ -1,5 +1,8 @@
 2003-06-16  William Jon McCann  <mccann@jhu.edu>
 
+	* gnome-stones.schemas.in:
+	* Makefile.am (schema_in_files): Added schemas.
+
 	* main.h: 
 	* main.c:
 	* view.c: Place defines in main.h and share with view.c.
