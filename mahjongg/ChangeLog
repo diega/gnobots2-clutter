@@ -1,3 +1,8 @@
+2004-01-19  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* Makefile.am (pixmap_DATA): Added new tile sets, smooth.png and
+	postmodern.svg.
+
 2004-01-10  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* drawing.c (board_click): Ignore double click and triple click
