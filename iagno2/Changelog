@@ -1,3 +1,7 @@
+2001-12-17  Seth Nickell <snickell@stanford.edu>
+
+	Install .desktop files into the correct location.
+
 2000-05-12  Andreas Hyden  <a.hyden@cyberpoint.se>
 
 	* iagno2.desktop: Added Swedish translation.

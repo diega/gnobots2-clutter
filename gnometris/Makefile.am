@@ -1,6 +1,6 @@
 SUBDIRS=pix
 scoredir=$(localstatedir)/games
-Gamesdir=$(datadir)/gnome/apps/Games
+Gamesdir=$(datadir)/applications
 
 INCLUDES=\
 	$(GNOME_GAMES_CFLAGS)		\
