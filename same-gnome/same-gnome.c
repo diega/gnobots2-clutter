@@ -4,6 +4,7 @@
  *
  * Author: Miguel de Icaza.
  *         Federico Mena.
+ *         Horacio Peña.
  *
  * The idea is originally from KDE's same game program.
  *
@@ -13,8 +14,12 @@
 #include <stdlib.h>
 #include <time.h>
 #include <dirent.h>
+#include <getopt.h>
+
 #include <config.h>
-#include "gnome.h"
+#include <gnome.h>
+#include <libgnome/gnome-i18n.h>
+#include <libgnomeui/gnome-session.h>
 
 #define STONE_SIZE 40
 #define STONE_COLS  15
@@ -34,13 +39,16 @@ int ball_timeout_id = -1;
 int old_x = -1, old_y = -1;
 int score;
 gchar *scenario;
+char *session_id;
+gint restarted;
+gint debugging;
 
 struct {
 	char *scenario;
 	int make_it_default;
 	} selected_scenario = {0,0};
 
-struct {
+struct ball {
 	int color;
 	int tag;
 	int frame;
@@ -244,13 +252,13 @@ set_score (int new_score)
 void
 show_scores ( gchar *title, guint pos )
 {
-	gnome_scores_display (_("The Same Gnome"), "samegnome", title, pos);
+	gnome_scores_display (title, "samegnome", NULL, pos);
 }
 
 void 
 game_top_ten_callback(GtkWidget *widget, gpointer data)
 {
-	show_scores(_("High Scores"), 0);
+	show_scores(_("The Same Gnome: High Scores"), 0);
 }
 
 void
@@ -258,7 +266,7 @@ end_of_game (char *title)
 {
 	int pos;
 
-	pos = gnome_score_log(score, scenario, TRUE);
+	pos = gnome_score_log(score, NULL, TRUE);
 	show_scores(title, pos);
 }
 
@@ -282,10 +290,10 @@ check_game_over (void)
 		}
 	if (cleared){
 		set_score (score+1000);
-		end_of_game (_("You win!"));
+		end_of_game (_("The Same Gnome: you win!"));
 	}
 	else
-		end_of_game(_("The Game Is Over"));
+		end_of_game(_("The Same Gnome: the Game Is Over"));
 }
 
 void
@@ -360,6 +368,7 @@ new_game (void)
 {
 	fill_board ();
 	set_score (0);
+	gtk_widget_draw (draw_area, NULL);
 }
 
 void
@@ -399,7 +408,6 @@ load_scenario (char *fname)
 	nstones = width / STONE_SIZE;
 /*	ncolors = height / STONE_SIZE; */
 	ncolors = 3;
-	new_game ();
 	gtk_widget_draw (draw_area, NULL);
 }
 
@@ -433,15 +441,12 @@ create_same_board (char *fname)
 			       STONE_COLS  * STONE_SIZE,
 			       STONE_LINES * STONE_SIZE);
 	gtk_signal_connect (GTK_OBJECT(draw_area), "event", (GtkSignalFunc) area_event, 0);
-
-	new_game ();
 }
 
 void
 game_new_callback (GtkWidget *widget, void *data)
 {
 	new_game ();
-	gtk_widget_draw (draw_area, NULL);
 }
 
 int
@@ -499,6 +504,7 @@ load_scenario_callback (GtkWidget *widget, void *data)
 {
 	if (selected_scenario.scenario) {
 		load_scenario (selected_scenario.scenario);
+		new_game ();
 		if (selected_scenario.make_it_default) {
 			gnome_config_set_string (
 				"/same-gnome/Preferences/Scenario", 
@@ -619,13 +625,196 @@ create_main_window ()
 	return app;
 }
 
+static int
+save_state (gpointer client_data, GnomeSaveStyle save_style,
+           int is_shutdown, GnomeInteractStyle interact_style,
+           int is_fast)
+{
+	gchar *sess;
+	gchar *buf;
+	gchar *buf2;
+	struct ball *f = (struct ball*) field;
+	int i;
+
+	gchar *argv[3];
+
+	if (debugging)
+		g_print ("Saving state\n");
+
+	sess = g_copy_strings ("Saved-Session-",
+				session_id,
+				NULL);
+
+	buf = g_copy_strings ("/same-gnome/",
+				sess, 
+				"/Score",
+				NULL);
+	gnome_config_set_int (buf, score);
+	g_free(buf);
+
+	buf = g_copy_strings ("/same-gnome/",
+				sess, 
+				"/nstones",
+				NULL);
+	gnome_config_set_int (buf, sync_stones ? 1 : nstones);
+	g_free(buf);
+
+	buf = g_copy_strings ("/same-gnome/",
+				sess, 
+				"/Field",
+				NULL);
+
+	buf2 = g_malloc(STONE_COLS*STONE_LINES+1);
+	for ( i=0 ; i < (STONE_COLS*STONE_LINES) ; i++ ) 
+		buf2[i]  =f[i].color + 'a';
+	buf2[STONE_COLS*STONE_LINES] = '\0';
+
+	gnome_config_set_string (buf, buf2);
+	g_free(buf);
+	g_free(buf2);
+
+	gnome_config_sync();
+	g_free(sess);
+
+	argv[0] = (char*) client_data;
+	argv[1] = "--session";
+	argv[2] = session_id;
+
+	gnome_session_set_restart_command (3, argv); /* probably it should
+		remember command-line parameters (--debug, ...) */
+	
+	return(1);
+}
+
+void
+restart (gchar *id)
+{
+	gchar *sess;
+	gchar *buf;
+	gchar *buf2;
+	struct ball *f = (struct ball*) field;
+	int i;
+
+	if (debugging)
+		g_print ("Retrieving state\n");
+
+	sess = g_copy_strings ("Saved-Session-",
+				id,
+				NULL);
+
+	buf = g_copy_strings ("/same-gnome/",
+				sess, 
+				"/Score",
+				NULL);
+	score = gnome_config_get_int_with_default (buf, 0);
+	g_free(buf);
+
+	buf = g_copy_strings ("/same-gnome/",
+				sess, 
+				"/nstones",
+				NULL);
+	nstones = gnome_config_get_int_with_default (buf, 0);
+	g_free(buf);
+
+	buf = g_copy_strings ("/same-gnome/",
+				sess, 
+				"/Field",
+				NULL);
+	buf2 = gnome_config_get_string_with_default (buf, NULL);
+
+	if (buf2)
+		for ( i=0 ; i < (STONE_COLS*STONE_LINES) ; i++ )
+		{
+		f[i].color = buf2[i] - 'a';
+		f[i].tag   = 0;
+		f[i].frame = nstones ? (rand () % nstones) : 0;
+		}
+	g_free(buf2);
+	g_free(buf);
+
+	if (debugging)
+		g_print ("Buh!\n");
+
+	g_free(sess);
+	return(1);
+}
+
+gchar *
+parse_args (int argc,char *argv[])
+{
+	gint ch;
+
+	struct option options[] = {
+		{ "debug",    	no_argument,		NULL,	'd'	},
+		{ "help",    	no_argument,		NULL,	'h'	},
+		{ "session", 	required_argument,	NULL,	'S'	},
+		{ "scenario", 	required_argument,	NULL,	's'	},
+		{ "version", 	no_argument,		NULL,	'v'	},
+		{ NULL, 0, NULL, 0 }
+		};
+
+	gchar *id = NULL;
+	gchar *fname = gnome_config_get_string ( "/same-gnome/Preferences/Scenario=stones.xpm" );
+	
+	debugging = 0;
+	restarted = 0;
+
+	score = 0;
+
+	/* initialize getopt */
+	optarg = NULL;
+	optind = 0;
+	optopt = 0;
+
+	while( (ch = getopt_long(argc, argv, "dhsv", options, NULL)) != EOF ) 
+	{
+		switch(ch) 
+		{
+			case 'd':
+				debugging = 1;
+				g_print ("Debugging mode\n");
+				break;
+			case 'h':
+				exit(0);
+				break;
+			case 'v':
+				g_print (_("Gnome Mines version 0.1\n"));
+				exit(0);
+				break;
+			case 'S':
+				id = g_strdup (optarg);
+				restart (id);
+				restarted = 1;
+				break;
+			case 's':
+				g_free (fname);
+				fname = g_strdup (optarg);
+				break;
+			case ':':
+			case '?':
+				g_print (_("Options error\n"));
+				exit(0);
+				break;
+		}
+	}
+
+	session_id = gnome_session_init (save_state, argv[0], NULL, NULL, id);
+	if (debugging)
+		g_print ("Session ID: %s\n", session_id);
+	gnome_session_set_program (argv[0]);
+	g_free(id);
+
+	return fname;
+}
+
 int
 main (int argc, char *argv [])
 {
 	GtkWidget *label, *hb;
-	char *fname;
-
-        gnome_init (&argc, &argv);
+	gchar *fname;
+	
+	gnome_init (&argc, &argv);
+	fname = parse_args(argc, argv);
 	textdomain (PACKAGE);
 
 	if (argc > 1)
@@ -644,12 +833,15 @@ main (int argc, char *argv [])
 	gnome_app_set_menus (GNOME_APP (app), GTK_MENU_BAR (mf->widget));
 	
 	label = gtk_label_new (_("Score: "));
-	scorew = gtk_label_new ("0");
+	scorew = gtk_label_new ("");
+	set_score (score);
 	gtk_box_pack_start_defaults (GTK_BOX(vb), hb);
 	gtk_box_pack_end   (GTK_BOX(hb), scorew, 0, 0, 10);
 	gtk_box_pack_end   (GTK_BOX(hb), label,  0, 0, 0);
 	
 	create_same_board (fname);
+	if (!restarted)
+		new_game ();
 	
 	free (fname);
 
