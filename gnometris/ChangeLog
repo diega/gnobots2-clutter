@@ -1,0 +1,14 @@
+1999-01-20  Marcin Gorycki  <mgo@olicom.dk>
+
+	* COPYING: initial rev.
+
+	* main.cpp, Makefile.am: added i18n support
+
+	* TODO: updated todos
+
+	* pix/5blocks-tim.png: initial rev.
+
+1999-01-19  Marcin Gorycki  <mgo@olicom.dk>
+
+	initial rev. under a name of gnometris
+
