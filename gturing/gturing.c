@@ -32,9 +32,16 @@
 
 #define SCROLL_WIDTH 10000
 
-#define TAPE_FONT "-bitstream-courier-bold-r-*-*-25-*-*-*-*-*-*-*"
-
 /* A few globals. */
+char *tape_font[] = 
+{
+	"-bitstream-courier-bold-r-*-*-25-*-*-*-*-*-*-*",
+	"-adobe-courier-bold-r-normal-*-24-*-*-*-m-*-iso8859-1",
+	"-adobe-courier-bold-r-normal-*-25-*-*-*-m-*-iso8859-1",
+	"fixed",
+	NULL
+};
+
 static char *progname;
 static char tape_string[1024] = "";
 static char states_fname[1024] = "";
@@ -496,15 +503,34 @@ GnomeUIInfo toolbar[] = {
 	GNOMEUIINFO_END
 };
 
+char *try_font (void)
+{
+	GdkFont *font;
+	int i;
+	
+	i = 0;
+	font = NULL;
+	while (tape_font[i] && !font)
+		font = gdk_font_load (tape_font[i]);
+	
+	return tape_font[i];
+}
+
 void create_machine(void)
 {
 	GtkWidget *frame;
+	GtkRcStyle *style;
 	
 	frame = rootw;
 	tapelabel = gtk_label_new((*tape_string != 0)? tape_string : _("Welcome to gTuring."));
-	headlabel = gtk_label_new("^                   ");
-	headlabel->style = tapelabel->style = gtk_style_copy(tapelabel->style);
-	tapelabel->style->font = gdk_font_load(TAPE_FONT);
+	/* This string is supposed to have the same length as the welcoming string. */
+	headlabel = gtk_label_new(_("^                   "));
+	
+	style = gtk_rc_style_new ();
+	style->font_name = try_font ();
+	gtk_widget_modify_style (GTK_WIDGET (tapelabel), style);
+	gtk_widget_modify_style (GTK_WIDGET (headlabel), style);
+	
 	gtk_box_pack_start(GTK_BOX(rootw), tapelabel, TRUE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(rootw), headlabel, TRUE, TRUE, 0);
 }
