@@ -1,12 +1,14 @@
 [Desktop Entry]
 Name=Metatris
 Name[es]=Metatris
+Name[fi]=Metatris
 Name[fr]=Metatris
 Name[no]=Metatris
 Name[pt]=Metatris
 Name[ru]=Метатрис
 Comment=Gnome's Metatris
 Comment[es]=Simple juego de tetris
+Comment[fi]=Tetris-klooni
 Comment[fr]=Simple jeu de tetris
 Comment[ru]=Игра Метатрис для Gnome
 TryExec=metatris

@@ -1,7 +1,9 @@
 [Desktop Entry]
 Icon=gataxx.png
 Name=gataxx
+Name[fi]=gataxx
 Comment=Gnome ataxx game
+Comment[fi]=Gnome-ataxx-peli
 Exec=gataxx
 Terminal=0
 Type=Application
