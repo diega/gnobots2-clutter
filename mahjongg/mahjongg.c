@@ -1519,7 +1519,9 @@ void exit_game_callback_query (GtkWidget *widget, gboolean *quit, gpointer data)
         if ( popup_config.confirm.popup 
              && game_over != GAME_WON 
              && game_over != GAME_DEAD
-	     && sequence_number > 1 ) {
+   	     /* What the hell is going on here?  If I change "0" to "1", we don't actually
+	        exit unless you move a tile.  Argh */	
+	     && sequence_number > 0 ) {
                 switch ((game_state)data) 
                         {
                         case RESTART_GAME : 
