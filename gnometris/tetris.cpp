@@ -261,6 +261,7 @@ Tetris::setupdialogDestroy(GtkWidget *widget, void *d)
 	if (t->setupdialog)
 		gtk_widget_destroy(t->setupdialog);
 	t->setupdialog = 0;
+	gtk_widget_set_sensitive(t->gameMenuPtr[0].widget, TRUE);
 }
 
 void
@@ -784,6 +785,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 			    FALSE, FALSE, 0);
 	
 	gtk_widget_show_all (t->setupdialog);
+	gtk_widget_set_sensitive(t->gameMenuPtr[0].widget, FALSE);
 	return TRUE;
 }
 

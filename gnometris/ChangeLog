@@ -1,3 +1,9 @@
+2004-01-29  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* tetris.cpp: Make sure New Game is disabled while the preferences
+	dialog is open (just as the preferences are disabled while the
+	game is in play). Patch from Richard Hoelscher, see bug #130654.
+
 2004-01-02  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gnometris.schemas.in: And make the new graphics the default.
