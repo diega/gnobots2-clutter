@@ -1,3 +1,7 @@
+Tue Apr  6 10:45:22 1999  ape@lrdpf.spacetec.no  (Asbjorn Pettersen)
+
+	* mahjongg.c: use g_strcasecmp instead of strcasecmp.
+
 1999-02-09  Tomas Ogren  <stric@ing.umu.se>
 
 	* mahjongg.c: Removed evil gtk_widget_realize call..

@@ -658,7 +658,7 @@ fill_map_menu (GtkWidget *menu)
 			  (GtkSignalFunc)set_map_selection, &maps[lp]); 
       gtk_signal_connect (GTK_OBJECT(item), "destroy",
 			   (GtkSignalFunc) free_str, str); 
-      if (!strcasecmp(mapset, maps[lp].name))
+      if (!g_strcasecmp(mapset, maps[lp].name))
 	  gtk_menu_set_active(GTK_MENU(menu), itemno); 
       itemno++ ;
     }
@@ -1300,7 +1300,7 @@ void load_map (void)
   tilepos *t;
 
   for (lp=0;lp<ELEMENTS(maps);lp++)
-    if (strcasecmp (maps[lp].name, name) == 0)
+    if (g_strcasecmp (maps[lp].name, name) == 0)
       {
 	pos = maps[lp].map ;
 
