@@ -50,7 +50,7 @@ game_parse_cave_section (GStonesGame *game, const gchar *name)
   
   /* FIXME: add error handling.  */
   
-  section= g_copy_strings (game->config_prefix, name, "/", NULL);
+  section= g_strconcat (game->config_prefix, name, "/", NULL);
   gnome_config_push_prefix (section);
 
   number= gnome_config_get_int ("Number=-1");
@@ -163,7 +163,7 @@ gstones_game_load (const gchar *name)
   g_return_val_if_fail (game != NULL, NULL);
   
   game->filename      = g_strdup (name);
-  game->config_prefix = g_copy_strings ("=", name, "=/", NULL);
+  game->config_prefix = g_strconcat ("=", name, "=/", NULL);
   
   gnome_config_push_prefix (game->config_prefix);
 
@@ -233,7 +233,7 @@ cave_load_object_options (GStonesCave *cave, GStonesObject *object)
       gchar    *optionstr;
 
       /* Build option string.  */
-      optionstr= g_copy_strings (fullname, ":", option->name, NULL);
+      optionstr= g_strconcat (fullname, ":", option->name, NULL);
 
       value    = gnome_config_get_string_with_default (optionstr, &def);
       
@@ -286,7 +286,7 @@ gstones_cave_load (GStonesGame *game, const gchar *cavename)
   g_return_val_if_fail (cave, NULL);
 
   cave->name         = g_strdup (cavename);
-  prefix= g_copy_strings (game->config_prefix, cavename, "/", NULL);
+  prefix= g_strconcat (game->config_prefix, cavename, "/", NULL);
 
   gnome_config_push_prefix (prefix);
 

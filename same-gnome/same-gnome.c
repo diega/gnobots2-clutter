@@ -387,7 +387,7 @@ load_scenario (char *fname)
         GdkColor bgcolor;
         GdkImage *tmpimage;
     
-	tmp = g_copy_strings ( "same-gnome/", fname, NULL);
+	tmp = g_strconcat ( "same-gnome/", fname, NULL);
 
 	fn = gnome_unconditional_pixmap_file ( tmp );
 	g_free( tmp );

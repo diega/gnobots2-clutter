@@ -111,7 +111,7 @@ add_game (const char *filename)
     {
       file->filename = g_strdup (filename);
 
-      prefix= g_copy_strings ("=", filename, "=/", NULL);
+      prefix= g_strconcat ("=", filename, "=/", NULL);
       gnome_config_push_prefix (prefix);
       
       file->gametitle= gnome_config_get_string ("General/Title");
@@ -139,7 +139,7 @@ game_directory_scan (const char *directory)
       
       while ((entry = readdir (dir)) != NULL)
 	{
-	  char *filename= g_copy_strings (directory, "/", entry->d_name, NULL);
+	  char *filename= g_strconcat (directory, "/", entry->d_name, NULL);
 	  struct stat sbuf;
 	  
 	  if ((stat (filename, &sbuf)== 0) && S_ISREG (sbuf.st_mode))

@@ -139,7 +139,7 @@ plugin_load_plugins_in_dir (const gchar *directory)
 	{
 	  char *objects_name;
 	  
-	  objects_name = g_copy_strings (directory, e->d_name, NULL);
+	  objects_name = g_strconcat (directory, e->d_name, NULL);
 	  plugin_load (objects_name);
 	  g_free (objects_name);
 	}
@@ -234,7 +234,7 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
   object->description= description;
   object->plugin     = plugin;
 
-  filename= g_copy_strings ("gnome-stones/", description->image_name, NULL);
+  filename= g_strconcat ("gnome-stones/", description->image_name, NULL);
   pathname= gnome_pixmap_file (filename);
   image   = gdk_imlib_load_image (pathname);
   g_free (pathname);
@@ -242,7 +242,7 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
   
   if (!image)
     {
-      char *error= g_copy_strings ("Error while loading image ", 
+      char *error= g_strconcat ("Error while loading image ", 
 				   description->image_name, 
 				   ": file not found!", NULL);
       g_warning (error);
@@ -257,7 +257,7 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
 
   if (num_x*num_y == 0)
     {
-      char *error= g_copy_strings ("Error while registering object ", 
+      char *error= g_strconcat ("Error while registering object ", 
 				   description->image_name, 
 				   ": image contains no data!", NULL);
       g_warning (error);
@@ -271,7 +271,7 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
   
   if (object->image == NULL)
     {
-      char *error= g_copy_strings ("Error while registering object ", 
+      char *error= g_strconcat ("Error while registering object ", 
 				   description->image_name, 
 				   ": out of memory!", NULL);
       g_warning (error);
@@ -284,7 +284,7 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
   
   if (object->image == NULL)
     {
-      char *error= g_copy_strings ("Error while registering object ", 
+      char *error= g_strconcat ("Error while registering object ", 
 				   description->image_name, 
 				   ": out of memory!", NULL);
       g_warning (error);
@@ -388,7 +388,7 @@ object_get_fullname (GStonesObject *object)
 {
   g_return_val_if_fail (object, NULL);
 
-  return g_copy_strings (object->plugin->title, ":", 
+  return g_strconcat (object->plugin->title, ":", 
 			 object->description->name, NULL);
 }
 
@@ -524,7 +524,7 @@ find_option_by_name (GStonesObjectDesc *desc, const gchar *name)
   if (!option)
     return NULL;
 
-  tmp_name= g_copy_strings (name, "=", NULL);
+  tmp_name= g_strconcat (name, "=", NULL);
 
   while (option->name)
     {

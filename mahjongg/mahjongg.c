@@ -1290,7 +1290,7 @@ void load_tiles (char *fname)
 	char *tmp, *fn;
 	int i;
 
-	tmp = g_copy_strings ("mahjongg/", fname, NULL);
+	tmp = g_strconcat ("mahjongg/", fname, NULL);
 
 	fn = gnome_unconditional_pixmap_file (tmp);
 	g_free (tmp);

@@ -583,7 +583,7 @@ static void load_bubble_pixmaps(
     char *fname;
     GdkImlibImage *image;
 
-    tmp = g_copy_strings("gnobots/", YAHOO_PIXMAP_NAME, NULL);
+    tmp = g_strconcat("gnobots/", YAHOO_PIXMAP_NAME, NULL);
     fname = gnome_unconditional_pixmap_file(tmp);
     g_free(tmp);
 
@@ -599,7 +599,7 @@ static void load_bubble_pixmaps(
     gdk_imlib_destroy_image(image);
     g_free(fname);
 
-    tmp = g_copy_strings("gnobots/", AIEEE_PIXMAP_NAME, NULL);
+    tmp = g_strconcat("gnobots/", AIEEE_PIXMAP_NAME, NULL);
     fname = gnome_unconditional_pixmap_file(tmp);
     g_free(tmp);
 
@@ -629,7 +629,7 @@ char *pmname
     GdkImage      *tmpimage;
     GdkVisual     *visual;
    
-    tmp = g_copy_strings("gnobots/", pmname, NULL);
+    tmp = g_strconcat("gnobots/", pmname, NULL);
     fname = gnome_unconditional_pixmap_file(tmp);
     g_free(tmp);
 
