@@ -59,35 +59,30 @@ Tetris::Tetris(int cmdlLevel)
 
 	GnomeUIInfo game_menu[] = 
 	{
-		{ GNOME_APP_UI_ITEM, N_("_New"), "_Start a new game", gameNew, this, NULL, 
-			GNOME_APP_PIXMAP_STOCK, (gpointer)GNOME_STOCK_MENU_NEW, 'n', GDK_CONTROL_MASK, NULL },
-		{ GNOME_APP_UI_ITEM, N_("_Properties..."), NULL, gameProperties, this, NULL,
-			GNOME_APP_PIXMAP_STOCK, (gpointer)GNOME_STOCK_MENU_PROP, 0, (GdkModifierType)0, NULL},
-		{ GNOME_APP_UI_ITEM, N_("_Scores"), NULL, gameTopTen, this, NULL,
-			GNOME_APP_PIXMAP_STOCK, (gpointer)GNOME_STOCK_MENU_SCORES, 0, (GdkModifierType)0, NULL},
-		{ GNOME_APP_UI_ITEM, N_("E_xit"), "E_xit Gnometris", gameQuit, this, NULL, 
-			GNOME_APP_PIXMAP_STOCK, (gpointer)GNOME_STOCK_MENU_EXIT, 'q', GDK_CONTROL_MASK, NULL },
+	        GNOMEUIINFO_MENU_NEW_GAME_ITEM(gameNew, this),
+		GNOMEUIINFO_MENU_PREFERENCES_ITEM(gameProperties, this),
+		GNOMEUIINFO_MENU_SCORES_ITEM(gameTopTen, this),
+		GNOMEUIINFO_MENU_EXIT_ITEM(gameQuit, this),
 		GNOMEUIINFO_END
 	};
 
 	GnomeUIInfo help_menu[] = 
 	{
-		{ GNOME_APP_UI_HELP, NULL, NULL, (gpointer)"gnometris", NULL, NULL, GNOME_APP_PIXMAP_NONE, NULL, 0, (GdkModifierType)0, NULL},
-		{ GNOME_APP_UI_ITEM, N_("_About Gnometris"), NULL, gameAbout, this, NULL, 
-			GNOME_APP_PIXMAP_STOCK, (gpointer)GNOME_STOCK_MENU_ABOUT, 0, (GdkModifierType)0, NULL },
+	        GNOMEUIINFO_HELP((gpointer)"gnometris"),
+	        GNOMEUIINFO_MENU_ABOUT_ITEM(gameAbout, this),
 		GNOMEUIINFO_END
 	};
 
 	GnomeUIInfo mainmenu[] = 
 	{
-		{ GNOME_APP_UI_SUBTREE, N_("_Game"), NULL, game_menu, NULL, NULL, GNOME_APP_PIXMAP_DATA, NULL, 0, (GdkModifierType)0, NULL },
-		{ GNOME_APP_UI_SUBTREE, N_("_Help"), NULL, help_menu, NULL, NULL, GNOME_APP_PIXMAP_DATA, NULL, 0, (GdkModifierType)0, NULL },
+	        GNOMEUIINFO_MENU_GAME_TREE(game_menu),
+		GNOMEUIINFO_MENU_HELP_TREE(help_menu),
 		GNOMEUIINFO_END
 	};
 
 	gnome_app_create_menus(GNOME_APP(w), mainmenu);
 
-  GtkWidget * hb = gtk_hbox_new(FALSE, 0);
+	GtkWidget * hb = gtk_hbox_new(FALSE, 0);
 	gnome_app_set_contents(GNOME_APP(w), hb);
 
 	ops = new BlockOps();
@@ -96,7 +91,7 @@ Tetris::Tetris(int cmdlLevel)
 	gtk_widget_set_events(w, gtk_widget_get_events(w) | GDK_KEY_PRESS_MASK);
 	
 	GtkWidget *vb1 = gtk_vbox_new(FALSE, 0);
-  gtk_container_border_width(GTK_CONTAINER(vb1), 10);
+	gtk_container_border_width(GTK_CONTAINER(vb1), 10);
 	gtk_box_pack_start_defaults(GTK_BOX(vb1), field->getWidget());
 	gtk_box_pack_start(GTK_BOX(hb), vb1, 0, 0, 0);
 	field->show();
@@ -104,7 +99,7 @@ Tetris::Tetris(int cmdlLevel)
 	gtk_signal_connect(GTK_OBJECT(w), "event", (GtkSignalFunc)eventHandler, this);
   
 	GtkWidget *vb2 = gtk_vbox_new(FALSE, 0);
-  gtk_container_border_width(GTK_CONTAINER(vb2), 10);
+	gtk_container_border_width(GTK_CONTAINER(vb2), 10);
 	gtk_box_pack_end(GTK_BOX(hb), vb2, 0, 0, 0);
 	
 	preview = new Preview();
@@ -145,7 +140,7 @@ Tetris::doSetup(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
 	t->cmdlineLevel = 0;
-  t->startingLevel = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(t->sentry));
+	t->startingLevel = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(t->sentry));
 	do_preview = t->doPreviewTmp;
 	random_block_colors = t->randomBlocksTmp;
 	
@@ -175,15 +170,15 @@ Tetris::setSelectionBlocks(GtkWidget *widget, void *d)
 int 
 Tetris::gameProperties(GtkWidget *widget, void *d)
 {
-  GtkWidget *allBoxes;
+        GtkWidget *allBoxes;
 	GtkWidget *box, *box2;
 	GtkWidget *button, *label;
 	GtkWidget *frame;
-  GtkObject *adj;
-
+	GtkObject *adj;
+        
 	Tetris *t = (Tetris*) d;
 	
-  if (t->setupdialog) 
+	if (t->setupdialog) 
 		return FALSE;
 
 	t->setupdialog = gtk_window_new(GTK_WINDOW_DIALOG);

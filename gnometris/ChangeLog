@@ -1,3 +1,9 @@
+1999-02-10  Sergey Panov <sipan@mit.edu>
+
+        * tetris.cpp
+        now it uses macros from gnome-libs to build its menues.
+        and have them automatically translated in to all lang. available in gnome-libs.
+
 1999-02-08  Janusz Marcin Gorycki  <mgo@spiderman.pl.olicom.com>
 
 	* tetris.cpp:
