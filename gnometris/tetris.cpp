@@ -28,8 +28,9 @@
 #include <config.h>
 #include <dirent.h>
 
-GdkImlibImage *image;
 GdkPixmap *pix;
+GdkPixmap *pixmask;
+GdkPixmap *bgpix;
 
 int LINES = 20;
 int COLUMNS = 11;
@@ -51,6 +52,7 @@ bool random_block_colors = false;
 bool do_preview = true;
 
 char *Tetris::blockPixmapTmp = NULL;
+char *Tetris::bgPixmapTmp = NULL;
 
 Tetris::Tetris(int cmdlLevel): 
 	paused(false), 
@@ -61,10 +63,13 @@ Tetris::Tetris(int cmdlLevel):
 	doPreviewTmp(do_preview), 
 	randomBlocksTmp(random_block_colors),
 	blockPixmap(NULL),
+	bgPixmap(NULL),
 	image(NULL),
+	bgimage(NULL),
 	scoreFrame(NULL),
 	field(NULL),
-	preview(NULL)
+	preview(NULL),
+	fastFall(false)
 {
 	w = gnome_app_new("gnometris", _("Gnometris"));
   gtk_window_set_policy(GTK_WINDOW(w), FALSE, FALSE, TRUE);
@@ -94,6 +99,8 @@ Tetris::Tetris(int cmdlLevel):
 	};
 
 	blockPixmap = strdup(gnome_config_get_string_with_default("/gnometris/Properties/BlockPixmap=7blocks.png", NULL));
+	bgPixmap = strdup(gnome_config_get_string_with_default("/gnometris/Properties/BackgroundPixmap=fishy-bg.png", NULL));
+
 	setupPixmap();
 
 	gnome_app_create_menus(GNOME_APP(w), mainmenu);
@@ -144,9 +151,13 @@ Tetris::~Tetris()
 
 	if (image)
 		gdk_imlib_destroy_image(image);
+	if (bgimage)
+		gdk_imlib_destroy_image(bgimage);
 
 	if (blockPixmap)
-		free(blockPixmap);
+		g_free(blockPixmap);
+	if (bgPixmap)
+		g_free(bgPixmap);
 }
 
 void 
@@ -178,9 +189,24 @@ Tetris::setupPixmap()
 	image = gdk_imlib_load_image(fullpixname);
 	gdk_imlib_render(image, image->rgb_width, image->rgb_height);
 	pix = gdk_imlib_move_image(image);
-
+	pixmask = gdk_imlib_move_mask(image);
+	
 	BLOCK_SIZE = image->rgb_height;
 	nr_of_colors = image->rgb_width / BLOCK_SIZE;
+
+	pixname = g_copy_strings("gnometris/bg/", bgPixmap, NULL);
+	fullpixname = gnome_unconditional_pixmap_file(pixname);
+	g_free(pixname);
+
+	if (!g_file_exists(fullpixname)) 
+		bgpix = NULL;
+
+	if(bgimage)
+		gdk_imlib_destroy_image(bgimage);
+
+	bgimage = gdk_imlib_load_image(fullpixname);
+	gdk_imlib_render(bgimage, BLOCK_SIZE * COLUMNS, BLOCK_SIZE * LINES);
+	bgpix = gdk_imlib_move_image(bgimage);
 
 	if (field)
 	{
@@ -218,12 +244,21 @@ Tetris::doSetup(GtkWidget *widget, void *d)
 	gnome_config_set_int("/gnometris/Properties/DoPreview", do_preview);
 	gnome_config_set_int("/gnometris/Properties/RandomBlockColors", random_block_colors);
 	
-	if (t->blockPixmap)
-		free(t->blockPixmap);
-	
-	t->blockPixmap = strdup(blockPixmapTmp);
+	if (blockPixmapTmp)
+	{
+		if (t->blockPixmap)
+			free(t->blockPixmap);
+		t->blockPixmap = strdup(blockPixmapTmp);
+	}
+	if (bgPixmapTmp)
+	{
+		if (t->bgPixmap)
+			free(t->bgPixmap);
+		t->bgPixmap = strdup(bgPixmapTmp);
+	}
 	
 	gnome_config_set_string("/gnometris/Properties/BlockPixmap", t->blockPixmap);
+	gnome_config_set_string("/gnometris/Properties/BackgroundPixmap", t->bgPixmap);
 	
 	gnome_config_sync();
 	
@@ -250,6 +285,14 @@ void
 Tetris::setSelection(GtkWidget *widget, void *data)
 {
 	blockPixmapTmp = (char*) data;
+	g_print("s:bl: %s\n", blockPixmapTmp);
+}
+
+void
+Tetris::setBGSelection(GtkWidget *widget, void *data)
+{
+	bgPixmapTmp = (char*) data;
+	g_print("s:bg: %s\n", bgPixmapTmp);
 }
 
 void
@@ -259,10 +302,10 @@ Tetris::freeStr(GtkWidget *widget, void *data)
 }
 
 void
-Tetris::fillMenu(GtkWidget *menu)
+Tetris::fillMenu(GtkWidget *menu, char *pixname, char *dirname, GtkSignalFunc selectFunc, bool addnone /*= false*/)
 {
 	struct dirent *e;
-	char *dname = gnome_unconditional_pixmap_file("gnometris");
+	char *dname = gnome_unconditional_pixmap_file(dirname);
 	DIR *dir;
   int itemno = 0;
 	
@@ -271,10 +314,12 @@ Tetris::fillMenu(GtkWidget *menu)
 	if (!dir)
 		return;
 	
+	GtkWidget *item;
+	char *s;
+	
 	while ((e = readdir (dir)) != NULL)
 	{
-		GtkWidget *item;
-		char *s = strdup(e->d_name);
+		s = strdup(e->d_name);
 
 		if (!strstr (e->d_name, ".png")) 
 		{
@@ -285,15 +330,26 @@ Tetris::fillMenu(GtkWidget *menu)
 		item = gtk_menu_item_new_with_label(s);
 		gtk_widget_show(item);
 		gtk_menu_append(GTK_MENU(menu), item);
-		gtk_signal_connect(GTK_OBJECT(item), "activate", (GtkSignalFunc) setSelection, s);
+		gtk_signal_connect(GTK_OBJECT(item), "activate", selectFunc, s);
 		gtk_signal_connect(GTK_OBJECT(item), "destroy", (GtkSignalFunc) freeStr, s);
 	  
-		if (!strcmp(blockPixmap, s))
+		if (!strcmp(pixname, s))
 		{
 		  gtk_menu_set_active(GTK_MENU(menu), itemno);
 		}
 		itemno++;
 	}
+	
+	if (addnone)
+	{
+		s = strdup("<none>");
+		item = gtk_menu_item_new_with_label(s);
+		gtk_widget_show(item);
+		gtk_menu_append(GTK_MENU(menu), item);
+		gtk_signal_connect(GTK_OBJECT(item), "activate", selectFunc, s);
+		gtk_signal_connect(GTK_OBJECT(item), "destroy", (GtkSignalFunc) freeStr, s);
+	}
+	
 	closedir(dir);
 }
 
@@ -369,6 +425,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_box_pack_start(GTK_BOX(box), cb, 0, 0, 0);
 	gtk_widget_show(cb);
 
+	blockPixmapTmp=NULL;
 	box2 = gtk_hbox_new(FALSE, 0);
   gtk_container_border_width(GTK_CONTAINER(box2), 10);
 	gtk_box_pack_start(GTK_BOX(box), box2, TRUE, TRUE, 0);
@@ -377,7 +434,23 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_widget_show(label);
 	GtkWidget *omenu = gtk_option_menu_new();
 	GtkWidget *menu = gtk_menu_new();
-	t->fillMenu(menu);
+	t->fillMenu(menu, t->blockPixmap, "gnometris", (GtkSignalFunc)setSelection);
+	gtk_widget_show(omenu);
+	gtk_option_menu_set_menu(GTK_OPTION_MENU(omenu), menu);
+	gtk_box_pack_end(GTK_BOX(box2), omenu, 0, 0, 0);
+	gtk_box_pack_start(GTK_BOX(box), box2, 0, 0, 0);
+	gtk_widget_show(box2);
+
+	bgPixmapTmp=NULL;
+	box2 = gtk_hbox_new(FALSE, 0);
+  gtk_container_border_width(GTK_CONTAINER(box2), 10);
+	gtk_box_pack_start(GTK_BOX(box), box2, TRUE, TRUE, 0);
+	label = gtk_label_new(_("Background Pixmap: "));
+	gtk_box_pack_start(GTK_BOX(box2), label, 0, 0, 0);
+	gtk_widget_show(label);
+	omenu = gtk_option_menu_new();
+	menu = gtk_menu_new();
+	t->fillMenu(menu, t->bgPixmap, "gnometris/bg", (GtkSignalFunc)setBGSelection, true);
 	gtk_widget_show(omenu);
 	gtk_option_menu_set_menu(GTK_OPTION_MENU(omenu), menu);
 	gtk_box_pack_end(GTK_BOX(box2), omenu, 0, 0, 0);
@@ -419,7 +492,7 @@ Tetris::manageFallen()
 	int levelBefore = scoreFrame->getLevel();
 	ops->checkFullLines(scoreFrame);
 	int levelAfter = scoreFrame->getLevel();
-	if (levelBefore != levelAfter)
+	if ((levelBefore != levelAfter) || fastFall)
 	{
 		gtk_timeout_remove(timeoutId);
 
@@ -453,7 +526,10 @@ Tetris::timeoutHandler(void *d)
 		gtk_widget_draw(t->field->getWidget(), NULL);
 
 		if (res)
+		{
 			t->manageFallen();
+			t->fastFall = false;
+		}
 	}
 
 	return 1;	
@@ -501,9 +577,13 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 			res = t->ops->rotateBlock();
 			break;
 		case GDK_Down:
-			t->ops->dropBlock();
-			res = true;
-			t->manageFallen();
+			if (!t->fastFall)
+			{
+				t->fastFall = true;
+				gtk_timeout_remove(t->timeoutId);
+				t->timeoutId = gtk_timeout_add(10, timeoutHandler, t);
+				res = true;
+			}
 			break;
 		default:
 			return FALSE;
@@ -566,6 +646,8 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 	if (t->timeoutId != -1)
 		return FALSE;
 
+	t->fastFall = false;
+	
   int level = t->cmdlineLevel ? t->cmdlineLevel :
 		gnome_config_get_int_with_default("/gnometris/Properties/StartingLevel=1", NULL);
 	t->scoreFrame->setLevel(level);

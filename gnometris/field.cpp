@@ -78,10 +78,18 @@ Field::drawBlock(GdkRectangle *area, int x, int y)
 	int xdest = x * BLOCK_SIZE;
 	int ydest = y * BLOCK_SIZE;
 
+	if (bgpix)
+		gdk_draw_pixmap(w->window, w->style->black_gc, bgpix, xdest, ydest, xdest, ydest, BLOCK_SIZE, BLOCK_SIZE);
+
 	if (o->getFieldAt(x, y)->what != EMPTY)	
+	{
+		gdk_gc_set_clip_origin(w->style->black_gc, xdest, ydest);
+		gdk_gc_set_clip_mask(w->style->black_gc, pixmask);
 		gdk_draw_pixmap(w->window, w->style->black_gc, 
 										pix, o->getFieldAt(x, y)->color * BLOCK_SIZE, 0, xdest, ydest, BLOCK_SIZE, BLOCK_SIZE);
-	else 
+		gdk_gc_set_clip_mask(w->style->black_gc, NULL);
+	}
+	else if (!bgpix)
 		gdk_window_clear_area(w->window, xdest, ydest, BLOCK_SIZE, BLOCK_SIZE);
 }
 

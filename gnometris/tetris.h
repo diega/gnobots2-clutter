@@ -24,7 +24,7 @@
 #include <config.h>
 #include <gnome.h>
 
-#define TETRIS_VERSION "0.3.0"
+#define TETRIS_VERSION "0.99.0"
 
 extern int LINES;
 extern int COLUMNS;
@@ -45,6 +45,8 @@ struct Block
 };
 
 extern GdkPixmap *pix;
+extern GdkPixmap *pixmask;
+extern GdkPixmap *bgpix;
 
 extern int color_next;
 extern int blocknr_next;
@@ -83,7 +85,10 @@ private:
 	GtkWidget * w;
 
 	char *blockPixmap;
+	char *bgPixmap;
+	
 	GdkImlibImage *image;
+	GdkImlibImage *bgimage;
 	
 	Field *field;
 	Preview *preview;
@@ -106,11 +111,14 @@ private:
 	static void setSelectionPreview(GtkWidget *widget, void *d);
 	static void setSelectionBlocks(GtkWidget *widget, void *d);
 	static void setSelection (GtkWidget *widget, void *data);
+	static void setBGSelection (GtkWidget *widget, void *data);
 	static void freeStr (GtkWidget *widget, void *data);
 	
 	static char *blockPixmapTmp;
+	static char *bgPixmapTmp;
 	
-	void fillMenu(GtkWidget *menu);
+//	void fillMenu(GtkWidget *menu);
+	void fillMenu(GtkWidget *menu, char *pixname, char *dirname, GtkSignalFunc selectFunc, bool addnone = false);
 	
 	GtkWidget *setupdialog;
 	GtkWidget *sentry;
@@ -121,6 +129,8 @@ private:
 	
 	void manageFallen();
 	void showScores(gchar *title, guint pos);
+
+	bool fastFall;
 };
 
 #endif // __tetris_h__
