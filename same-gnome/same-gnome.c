@@ -20,8 +20,6 @@
 #include <gdk_imlib.h>
 
 
-static error_t parse_an_arg (int key, char *arg, struct argp_state *state);
-
 #define STONE_SIZE 40
 #define STONE_COLS  15
 #define STONE_LINES 10
@@ -30,27 +28,6 @@ static error_t parse_an_arg (int key, char *arg, struct argp_state *state);
 		     GDK_ENTER_NOTIFY_MASK          |\
 		     GDK_LEAVE_NOTIFY_MASK          |\
 		     GDK_POINTER_MOTION_MASK)
-
-/* The command-line options we understand.  */
-static struct argp_option options[] =
-{
-  { "debug", 'd', NULL, 0, N_("Enable debugging"), 1 },
-  { "delete-sess", 'D', N_("ID"), OPTION_HIDDEN, NULL, 1 },
-  { "scenario", 's', N_("NAME"), 0, N_("Set game scenario"), 1 },
-  { NULL, 0, NULL, 0, NULL, 0 }
-};
-
-/* How to parse the command-line options.  */
-static struct argp parser =
-{
-  options,
-  parse_an_arg,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
-};
 
 static GtkWidget *pref_dialog, *scorew;
 static GtkWidget *app, *draw_area, *vb;
@@ -671,8 +648,8 @@ game_quit_callback (GtkWidget *widget, void *data)
 				     GNOME_STOCK_BUTTON_YES,
 				     GNOME_STOCK_BUTTON_NO,
 				     NULL);
-	gnome_dialog_set_default (GNOME_MESSAGE_BOX (box), 0);
-	gtk_window_set_modal (GNOME_MESSAGE_BOX (box), TRUE);
+	gnome_dialog_set_default (GNOME_DIALOG (box), 0);
+	gtk_window_set_modal (GTK_WINDOW (box), TRUE);
 	gtk_signal_connect (GTK_OBJECT (box), "clicked",
 			   (GtkSignalFunc)game_maybe_quit, NULL);
 	gtk_widget_show (box);
@@ -857,29 +834,14 @@ client_die (GnomeClient *client, gpointer client_data)
 	return FALSE;
 }
 
-static error_t
-parse_an_arg (int key, char *arg, struct argp_state *state)
-{
-	switch(key) {
-	case 'd':
-		debugging = 1;
-		g_print ("Debugging mode\n");
-		break;
-	case 'D':
-		delete_session (arg);
-		exit(0);
-		break;
-	case 's':
-		if (fname)
-			argp_usage (state);
-		fname = g_strdup (arg);
-		break;
-	default:
-		return ARGP_ERR_UNKNOWN;
-	}
+static char *session_id = NULL;
 
-	return 0;
-}
+static const struct poptOption options[] = {
+  {NULL, 'd', POPT_ARG_NONE, &debugging, 0, N_("Debugging mode"), NULL},
+  {"discard-session", 'D', POPT_ARG_STRING, &session_id, 0, N_("Discard session"), N_("ID")},
+  {"scenario", 's', POPT_ARG_STRING, &fname, 0, N_("Set game scenario"), N_("NAME")},
+  {NULL, '\0', 0, NULL, 0}
+};
 
 int
 main (int argc, char *argv [])
@@ -887,15 +849,16 @@ main (int argc, char *argv [])
 	GtkWidget *label, *hb;
 	GnomeClient *client;
 
-	argp_program_version = VERSION;
-
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
 
 	gnome_score_init("same-gnome");
 
-	gnome_init ("same-gnome", &parser, argc, argv, 0, NULL);
-	gdk_imlib_init ();
+	gnome_init_with_popt_table ("same-gnome", VERSION, argc, argv, options, 0, NULL);
+	if(session_id) {
+	  delete_session (session_id);
+	  exit(0);
+	}
 
 	client= gnome_master_client ();
 

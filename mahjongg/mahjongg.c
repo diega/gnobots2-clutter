@@ -329,8 +329,8 @@ static struct {
 static struct {
   GdkColor colour ;
   char *name ;
-  int set ;
-} backgnd = {0,0,0} ;
+  int set;
+} backgnd = {{0,0,0,0},NULL,0} ;
 
 struct _maps
 {
@@ -1458,12 +1458,10 @@ void new_game ()
 
 int main (int argc, char *argv [])
 {
-	argp_program_version = MAH_VERSION;
-
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
 
-	gnome_init ("mahjongg", NULL, argc, argv, 0, NULL);
+	gnome_init ("mahjongg", MAH_VERSION, argc, argv);
 
 	srand (time (NULL));
 	

@@ -3,7 +3,8 @@ Gamesdir = $(datadir)/apps/Games
 INCLUDES = 			\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	-I$(includedir)				 \
-	$(GNOME_INCLUDEDIR)
+	$(GNOME_INCLUDEDIR)			 \
+	-DVERSION=\""$(VERSION)"\"
 
 bin_PROGRAMS = gturing
 

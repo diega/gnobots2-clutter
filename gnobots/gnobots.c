@@ -62,8 +62,8 @@ int        delay_counter     = 0;
 int        wait_bonus        = 0;
 
 int        session_flag      = 0;
-int        session_xpos      = 0;
-int        session_ypos      = 0;
+int        session_xpos      = -1;
+int        session_ypos      = -1;
 int        session_position  = 0;
 
 /*
@@ -111,29 +111,14 @@ static gint    keyboard_cb(GtkWidget*, GdkEventKey*, gpointer);
 static void    update_score_label();
 static void    update_teleports_label();
 static void    update_level_label();
-static error_t parse_an_arg (int key, char *arg, struct argp_state *state);
 static void    show_teleport_message(int safe);
        void    show_rollover_message();
 
-/* The command-line options we understand.  */
-static struct argp_option options[] =
-{
-    { "scenario", 's', N_("NAME"), 0, N_("Set game scenario"), 1 },
-    { NULL, 'x', N_("X"), OPTION_HIDDEN, NULL, 1 },
-    { NULL, 'y', N_("Y"), OPTION_HIDDEN, NULL, 1 },    
-    { NULL, 0, NULL, 0, NULL, 0 }
-};
-
-/* How to parse the command-line options.  */
-static struct argp parser =
-{
-    options,
-    parse_an_arg,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    NULL
+static struct poptOption options[] = {
+  {"scenario", 's', POPT_ARG_STRING, &cmdline_scenario, 0, N_("Set game scenario"), N_("NAME")},
+  {NULL, 'x', POPT_ARG_INT, &session_xpos, 0, NULL, N_("X")},
+  {NULL, 'y', POPT_ARG_INT, &session_ypos, 0, NULL, N_("Y")},
+  {NULL, '\0', 0, NULL, 0}
 };
 
 /*
@@ -1213,36 +1198,6 @@ static void update_level_label(
 }
 
 /*
- * Command line parsing
- */
-static error_t parse_an_arg(
-int key, 
-char *arg, 
-struct argp_state *state
-){
-    switch(key) {
-        case 's':
-            cmdline_scenario = g_strdup(arg);
-            break;
-        case 'x':
-            session_flag |= 1;
-            session_xpos = atoi(arg);
-            break;
-        case 'y':
-            session_flag |= 2;
-            session_ypos = atoi(arg);
-            break;
-        case ARGP_KEY_SUCCESS:
-            if(session_flag == 3) session_position = 1;
-            break;
-        default:
-            return ARGP_ERR_UNKNOWN;
-    }
-
-    return 0;
-}
-
-/*
  * Show message when we cannot teleport
  */
 void show_teleport_message(
@@ -1297,15 +1252,13 @@ char *argv[]
     
     srandom(time(NULL));
     
-    argp_program_version = VERSION;
-
     bindtextdomain(PACKAGE, GNOMELOCALEDIR);
     textdomain(PACKAGE);
 
     gnome_score_init("gnobots");
 
     
-    gnome_init("gnobots", &parser, argc, argv, 0, NULL);
+    gnome_init_with_popt_table("gnobots", VERSION, argc, argv, options, 0, NULL);
 
     client = gnome_master_client();
 
@@ -1392,7 +1345,7 @@ char *argv[]
     }
 
     /* Set the window position if it was set by the session manager */
-    if(session_position){
+    if(session_xpos >= 0 && session_ypos >= 0){
         gtk_widget_set_uposition(app, session_xpos, session_ypos);
     }
     

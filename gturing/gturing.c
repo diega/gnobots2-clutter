@@ -600,7 +600,7 @@ void parse_args(int argc, char *argv[])
 int main (int argc, char *argv[])
 {
 	parse_args(argc, argv);
-	gnome_init("gnomecard", NULL, argc, argv, 0, NULL);
+	gnome_init("gnomecard", VERSION, argc, argv);
 	init_globals();
 	init_interface(argc, argv);
 	

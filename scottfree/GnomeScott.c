@@ -1574,7 +1574,7 @@ int main(int argc, char *argv[])
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
 
-	gnome_init("GnomeScott", NULL, 1, argv, 0, NULL);
+	gnome_init("GnomeScott", VERSION, argc, argv);
 	
 	while(argv[1])
 	{

@@ -1295,7 +1295,7 @@ main (int argc, char *argv[])
 
   gnome_score_init (APP_NAME);
 
-  gnome_init (APP_NAME, NULL, argc, argv, 0, NULL);
+  gnome_init (APP_NAME, VERSION, argc, argv);
 
   /* That's what a gnome application needs:  */
   app= gnome_app_new ("gnome-stones", _("Gnome-Stones"));
