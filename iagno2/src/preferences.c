@@ -243,6 +243,7 @@ fill_tileset_menu (GtkWidget *menu)
 
     item = gtk_menu_item_new_with_label (tileset);
     gtk_menu_append (GTK_MENU (menu), item);
+    gtk_widget_show (item);
     gtk_signal_connect (GTK_OBJECT (item), "activate",
                         GTK_SIGNAL_FUNC (tileset_cb), tileset);
     gtk_signal_connect (GTK_OBJECT (item), "destroy",
@@ -351,6 +352,7 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
   GtkWidget *vbox;
   GtkWidget *hbox2;
   GtkWidget *button;
+  GtkWidget *label2;
   
   if (preferences_dialog) {
     return;
@@ -435,6 +437,28 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
 
   gnome_property_box_append_page (GNOME_PROPERTY_BOX (preferences_dialog),
                                   hbox, label);
+
+  label = gtk_label_new (_("Graphics"));
+
+  vbox = gtk_vbox_new (FALSE, 0);
+
+  hbox = gtk_hbox_new (FALSE, GNOME_PAD_SMALL);
+  gtk_container_border_width (GTK_CONTAINER (hbox), GNOME_PAD_SMALL);
+
+  label2 = gtk_label_new (_("Tileset:"));
+  gtk_box_pack_start (GTK_BOX (hbox), label2, FALSE, FALSE, 0);
+
+  option_menu = gtk_option_menu_new ();
+  menu = gtk_menu_new ();
+  fill_tileset_menu (menu);
+  gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
+
+  gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
+
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+  gnome_property_box_append_page (GNOME_PROPERTY_BOX (preferences_dialog),
+                                  vbox, label);
 
   gtk_signal_connect (GTK_OBJECT (preferences_dialog), "apply",
                       GTK_SIGNAL_FUNC (apply_cb), NULL);
