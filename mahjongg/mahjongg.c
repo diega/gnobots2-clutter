@@ -1630,6 +1630,7 @@ void
 select_game (GtkWidget *widget, gpointer data)
 {
 	GtkWidget *dialog, *entry, *label;
+	GtkWidget *box;
 	gint response;
 
 	dialog = gtk_dialog_new_with_buttons (_("Select Game"),
@@ -1642,12 +1643,19 @@ select_game (GtkWidget *widget, gpointer data)
 						 NULL);
 	
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+	box = GTK_DIALOG (dialog)->vbox;
+
+	gtk_box_set_spacing (GTK_BOX (box), 8);
+	gtk_container_set_border_width (GTK_CONTAINER (dialog), 8);
 
 	label = gtk_label_new (_("Game Number:"));
-	gtk_box_pack_start_defaults (GTK_BOX(GTK_DIALOG(dialog)->vbox), label);
+	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_box_pack_start_defaults (GTK_BOX(box), label);
 	
 	entry = gtk_entry_new ();
-	gtk_box_pack_start_defaults (GTK_BOX(GTK_DIALOG(dialog)->vbox), entry);
+	gtk_box_pack_start_defaults (GTK_BOX(box), entry);
 	
 	gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
 	gtk_window_set_focus (GTK_WINDOW (dialog), entry);
@@ -1656,12 +1664,13 @@ select_game (GtkWidget *widget, gpointer data)
 	
 	response = gtk_dialog_run (GTK_DIALOG (dialog));
 	
-        if (response == GTK_RESPONSE_OK) {
+	if (response == GTK_RESPONSE_OK) {
 		next_seed = atoi (gtk_entry_get_text (GTK_ENTRY (entry)));
 		gtk_widget_destroy (dialog);
-                confirm_action (widget, (gpointer) NEW_GAME_WITH_SEED);
-        } else
+		confirm_action (widget, (gpointer) NEW_GAME_WITH_SEED);
+	} else {
               	gtk_widget_destroy (dialog);
+	}
 }
 
 void

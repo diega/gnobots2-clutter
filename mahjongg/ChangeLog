@@ -1,3 +1,8 @@
+2003-03-12  Ross Burton  <ross@burtonini.com>
+
+	* mahjongg.c (select_game): HIGify the Select Game dialog a
+	little.
+
 2003-03-10  Ross Burton  <ross@burtonini.com>
 
 	* mahjongg.c (properties_callback): Cool new Preferences dialog,
