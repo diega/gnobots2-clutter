@@ -70,6 +70,8 @@ static int Position=0;
 
 long BitFlags=0;	/* Might be >32 flags - I haven't seen >32 yet */
 
+static int PerformActions(int vb,int no);
+
 static void Fatal(char *type, char *x)
 {
 	GtkWidget *mb;
@@ -1523,7 +1525,7 @@ static GnomeMenuInfo menu[]={
 	{GNOME_APP_MENU_ENDOFINFO, NULL, NULL, NULL}
 };
 
-void main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	FILE *f;
 	int vb,no;
