@@ -1170,17 +1170,17 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
 
 	{
-	  int ur,ug,ub ;
+	  int ur, ug, ub;
 
-	  w  = gnome_color_picker_new();
-	  sscanf (backgnd.name, "#%02x%02x%02x", &ur,&ug,&ub);
-	  gnome_color_picker_set_i8 (GNOME_COLOR_PICKER(w), ur, ug, ub, 0);
-	  g_signal_connect (G_OBJECT(w), "color_set",
+	  w  = gnome_color_picker_new ();
+	  sscanf (backgnd.name, "#%02x%02x%02x", &ur, &ug, &ub);
+	  gnome_color_picker_set_i8 (GNOME_COLOR_PICKER (w), ur, ug, ub, 0);
+	  g_signal_connect (G_OBJECT (w), "color_set",
 			    G_CALLBACK (bg_colour_callback), &backgnd.name);
 	}
 	gtk_table_attach_defaults (GTK_TABLE (table), w, 1, 2, 0, 1);
 
-	gtk_container_add(GTK_CONTAINER (frame), table);
+	gtk_container_add (GTK_CONTAINER (frame), table);
 
 
 	frame = games_frame_new (_("Warnings"));
@@ -1708,12 +1708,14 @@ load_tiles (gchar *fname, gchar *bg_fname)
 
 	tmp = g_build_filename ("mahjongg", fname, NULL);
 	
-	fn = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, (tmp), FALSE, NULL);
+	fn = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
+					(tmp), FALSE, NULL);
 	g_free (tmp);
 
 	tmp = g_build_filename ("mahjongg", "bg", bg_fname, NULL);
 
-	bg_fn = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, (tmp), FALSE, NULL);
+	bg_fn = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
+					   (tmp), FALSE, NULL);
 	g_free (tmp);
 
 	if (!g_file_test ((fn), G_FILE_TEST_EXISTS)) {

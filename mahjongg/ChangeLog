@@ -1,3 +1,8 @@
+2003-06-20  William Jon McCann  <mccann@jhu.edu>
+
+	* gnome-canvas-pimage.h: 
+	* gnome-canvas-pimage.c: Converted to pixbufs.
+
 2003-06-17  William Jon McCann  <mccann@jhu.edu>
 
 	* gnome-canvas-pimage.c: 
