@@ -767,6 +767,8 @@ gpointer data
                              (const char **) authors,
                              _("Gnome Robots game"),
                              NULL);
+    gnome_dialog_set_parent(GNOME_DIALOG(about), GTK_WINDOW(app));
+    gtk_window_set_modal(GTK_WINDOW(about), TRUE);
     gtk_widget_show(about);
 }
 
