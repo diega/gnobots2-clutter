@@ -278,6 +278,9 @@ GtkWidget *colour_well = NULL;
 GtkWidget *pref_dialog = NULL;
 GtkWidget *about = NULL;
 
+/* Has the map been changed ? */
+gboolean new_map = TRUE;
+
 typedef enum {
 	NEW_GAME,
 	NEW_GAME_WITH_SEED,
@@ -595,6 +598,8 @@ mapset_changed_cb (GConfClient *client,
 		g_free (mapset);
 		mapset = mapset_tmp;
 	} 
+
+	new_map = TRUE;
 	
 	dialog = gtk_message_dialog_new (
 		GTK_WINDOW (window),
@@ -1448,10 +1453,10 @@ load_map (void)
 {
 	gchar* name = mapset;
 	gint lp ;
-	gint xmax = 0, ymax = 0;
-	tilepos *t;
 	gboolean found;
 
+	new_map = FALSE;
+		
 	found = FALSE;
 	for (lp=0;lp<G_N_ELEMENTS(maps);lp++)
 		if (g_ascii_strcasecmp (maps[lp].name, name) == 0) {
@@ -1469,14 +1474,9 @@ load_map (void)
 
 	pos = maps[lp].map ;
 
-	for (t = pos ; t < pos + MAX_TILES ; t++) {
-		if ( (*t).x  > xmax )
-			xmax = (*t).x;
-		if ( (*t).y  > ymax )
-			ymax = (*t).y;
-	}
-
-	generate_dependencies() ;
+	generate_dependencies ();
+	calculate_view_geometry ();
+	configure_pixmaps (); 
 }
 
 static void
@@ -1488,8 +1488,9 @@ do_game (void)
 	str = g_strdup_printf ("%s (%d)",_("Mahjongg"), current_seed);
 	gtk_window_set_title (GTK_WINDOW (window), str);
 	g_free (str);
-	
-	load_map (); /* assigns pos, and calculates dependencies */
+
+	if (new_map)
+		load_map ();
 	generate_game (current_seed); /* puts in the positions of the tiles */
 }
 

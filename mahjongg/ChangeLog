@@ -1,5 +1,12 @@
 2003-10-03  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* drawing.c:
+	* drawing.h:
+	* mahjongg.c (load_map): Split the geometry calculations so that
+	the bits which are not window-size dependent are separate and only
+	calculated once. Also made sure that the geometry is recalculated
+	when the map changes.
+
 	* drawing.c: Fixed the background colour problem.
 
 2003-10-02  Callum McKenzie  <callum@physics.otago.ac.nz>

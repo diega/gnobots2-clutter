@@ -3,7 +3,7 @@
  * Copyright (C) 2003 by Callum McKenzie
  *
  * Created: <2003-09-07 05:02:22 callum>
- * Time-stamp: <2003-10-03 06:44:11 callum>
+ * Time-stamp: <2003-10-03 09:04:34 callum>
  *
  */
 
@@ -21,8 +21,8 @@
 #include "drawing.h"
 
 typedef struct _view_geom_record {
-  guint x;
-  guint y;
+  gint x;
+  gint y;
   guint noverlaps;
   guchar overlaps[MAX_TILES-1];
 } view_geom_record;
@@ -40,14 +40,16 @@ GdkBitmap * tilemask = NULL;
 
 GdkGC * gc = NULL;
 
+gboolean nowindow = TRUE;
+
 GdkColor bgcolour;
 
 GdkPixbuf * tilepixbuf = NULL;
 
 guint windowwidth;
 guint windowheight;
-guint tilebasewidth;
-guint tilebaseheight;
+guint tilebasewidth = 0;
+guint tilebaseheight = 0;
 guint tileoffsetx;
 guint tileoffsety;
 guint tilewidth;
@@ -62,9 +64,23 @@ guint yoffset;
 #define MINHEIGHT 200
 
 /* These two are in units of tiles and do not include a half tile border. */
-/* FIXME: these should be derived from the geometry. */
-#define WIDTH 15
-#define HEIGHT 8
+gint gridwidth;
+gint gridheight;
+
+static void recalculate_sizes (gint width, gint height)
+{
+  /* This calculates four things: the size of the complete tile pixmap,
+   * the offsets from the edge of the window, the offset for the 3-D effect
+   * (i.e. the sides of the tile) and the size of the face of the tile. */
+  tilebasewidth = width / gridwidth;
+  tilebaseheight = height / gridheight;
+  xoffset = tilebasewidth/2;
+  yoffset = tilebaseheight/2;
+  tileoffsetx = tilebasewidth/7;
+  tileoffsety = tilebaseheight/10;
+  tilewidth = tilebasewidth + tileoffsetx;
+  tileheight = tilebaseheight + tileoffsety;
+}
 
 static void calculate_tile_positions (void)
 {
@@ -79,15 +95,33 @@ static void calculate_tile_positions (void)
   }
 }
 
-static void calculate_view_geometry (void)
+void calculate_view_geometry (void)
 {
-  int i,j;
+  gint i,j;
   view_geom_record * v, * v2;
 
+  gridwidth = 0;
+  gridheight = 0;
+  
+  if (tilebasewidth == 0) {
+    /* We may not yet have a valid window geometry, so supply some dummy
+     * data. */
+    tilewidth = 64;
+    tileheight = 88;
+    tileoffsetx = tileoffsety = 8;
+    tilebasewidth = tilewidth - tileoffsetx;
+    tilebaseheight = tileheight - tileoffsety;
+    xoffset = yoffset = 0;
+  }
+  
   calculate_tile_positions ();
 
   v = view_geometry;
   for (i=0; i<MAX_TILES; i++) {
+    if (pos[i].x > gridwidth)
+      gridwidth = pos[i].x;
+    if (pos[i].y > gridheight)
+      gridheight = pos[i].y;
     v->noverlaps = 0;
     v2 = view_geometry;
     for (j=0; j<MAX_TILES; j++) {
@@ -103,7 +137,13 @@ static void calculate_view_geometry (void)
       v2++;
     }
     v++;
-  }  
+  }
+  
+  /* The +2 allows for both a half-tile border and the fact that the
+   * position information is for the upper left corner. */
+  gridwidth = gridwidth/2 + 2;
+  gridheight = gridheight/2 + 2;
+  
 }
 
 static gint find_tile (guint x, guint y)
@@ -233,12 +273,35 @@ static void recreate_tile_images (void)
   
 }
 
-/* Here is where we create the backing pixmap and set up the tile pixmaps. */
-static void configure_board (GtkWidget *w, GdkEventConfigure *e, gpointer data)
+/* This is for when the geometry changes. It is called both from the
+ * normal configure event handler and from code which detects when
+ * the "internal" geometry (i.e. the layout) has changed. */
+void configure_pixmaps (void)
 {
+  if (nowindow)
+    return;
+
+  recalculate_sizes (windowwidth, windowheight);
+  calculate_tile_positions ();
+
   if (buffer != NULL) g_object_unref (buffer);
   if (tileimages != NULL) g_object_unref (tileimages);
   if (tilemask != NULL) g_object_unref (tilemask);
+  if (tilebuffer != NULL) g_object_unref (tilebuffer);
+
+  buffer = gdk_pixmap_new (board->window, windowwidth, windowheight, -1);
+  tileimages = gdk_pixmap_new (board->window, NUM_PATTERNS*tilewidth,
+                               2*tileheight, -1);
+  tilemask = gdk_pixmap_new (NULL, tilewidth, tileheight, 1);
+  tilebuffer = gdk_pixmap_new (board->window, tilewidth, tileheight, -1);
+
+  recreate_tile_images ();
+}
+
+/* Here is where we create the backing pixmap and set up the tile pixmaps. */
+static void configure_board (GtkWidget *w, GdkEventConfigure *e, gpointer data)
+{
+  nowindow = FALSE;
 
   if (gc == NULL) {
     gc = gdk_gc_new (w->window);
@@ -247,30 +310,11 @@ static void configure_board (GtkWidget *w, GdkEventConfigure *e, gpointer data)
     gdk_gc_set_foreground (gc, &bgcolour);
   }
   
-  buffer = gdk_pixmap_new (w->window, e->width, e->height, -1);
-
   windowwidth = e->width;
   windowheight = e->height;
 
-  /* This calculates four things: the size of the complete tile pixmap,
-   * the offsets from the edge of the window, the offset for the 3-D effect
-   * (i.e. the sides of the tile) and the size of the face of the tile. */
-  tilebasewidth = e->width / (WIDTH + 1);
-  tilebaseheight = e->height / (HEIGHT + 1);
-  xoffset = tilebasewidth/2;
-  yoffset = tilebaseheight/2;
-  tileoffsetx = tilebasewidth/7;
-  tileoffsety = tilebaseheight/10;
-  tilewidth = tilebasewidth + tileoffsetx;
-  tileheight = tilebaseheight + tileoffsety;
-
-  tileimages = gdk_pixmap_new (w->window, NUM_PATTERNS*tilewidth,
-                               2*tileheight, -1);
-  tilemask = gdk_pixmap_new (NULL, tilewidth, tileheight, 1);
-  tilebuffer = gdk_pixmap_new (w->window, tilewidth, tileheight, -1);
-
-  recreate_tile_images ();
-  calculate_view_geometry ();
+  configure_pixmaps ();
+  
   draw_all_tiles ();
 }
 
