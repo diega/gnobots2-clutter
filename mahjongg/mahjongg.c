@@ -27,6 +27,8 @@
 
 #include "button-images.h"
 
+#define HINT_BLINK_NUM 5
+
 typeinfo type_info [MAX_TILES+70] = {
   	{ 0, 0, {0, 0} },
 	{ 0, 0, {0, 0} },
@@ -336,7 +338,7 @@ struct _maps
 
 gint hint_tiles[2];
 guint timer;
-guint timeout_counter = 0;
+guint timeout_counter = HINT_BLINK_NUM + 1;
 
 void clear_undo_queue ();
 void you_won (void);
@@ -939,22 +941,22 @@ void properties_callback (GtkWidget *widget, gpointer data)
 
 gint hint_timeout (gpointer data)
 {
-  if (timeout_counter <= 4) {
-    if (tiles[hint_tiles[0]].selected == 17) {
-      tiles[hint_tiles[0]].selected = 0;
-      tiles[hint_tiles[1]].selected = 0;
-    }
-    else {
-      tiles[hint_tiles[0]].selected = 17;
-      tiles[hint_tiles[1]].selected = 17;
-    }
-    change_tile_image(&tiles[hint_tiles[0]]);
-    change_tile_image(&tiles[hint_tiles[1]]);
+  timeout_counter ++;
+  
+  if (timeout_counter > HINT_BLINK_NUM)
+    return 0;
+  
+  if (tiles[hint_tiles[0]].selected == 17) {
+    tiles[hint_tiles[0]].selected = 0;
+    tiles[hint_tiles[1]].selected = 0;
   }
   else {
-    gtk_timeout_remove (timer);
+    tiles[hint_tiles[0]].selected = 17;
+    tiles[hint_tiles[1]].selected = 17;
   }
-  timeout_counter ++;
+  change_tile_image(&tiles[hint_tiles[0]]);
+  change_tile_image(&tiles[hint_tiles[1]]);
+
   return 1;
 }
 
@@ -963,6 +965,10 @@ void hint_callback (GtkWidget *widget, gpointer data)
   int i, j, free=0, type ;
 
   if (hint_dialog)
+    return;
+  /* This prevents the flashing speeding up if the hint button is
+   * pressed multiple times. */
+  if (timeout_counter<=HINT_BLINK_NUM) 
     return;
 
   /* Snarfed from check free
@@ -1123,8 +1129,8 @@ void undo_tile_callback (GtkWidget *widget, gpointer data)
 static void
 input_callback (GtkWidget *widget, gpointer data)
 {
-	srand (atoi (GTK_ENTRY (data)->text));
-	new_game ();
+  srand (atoi ((char *)(GTK_ENTRY (data)->text)));
+  new_game ();
 }
 
 static void
@@ -1189,12 +1195,12 @@ void show_tb_callback (GtkWidget *widget, gpointer data)
     if((GTK_CHECK_MENU_ITEM(optionsmenu[0].widget))->active)
     {
         gnome_config_set_bool("gmahjongg/toolbar/show", TRUE);
-        gtk_widget_show(gdi);
+        gtk_widget_show(GTK_WIDGET(gdi));
     }
     else
     {
         gnome_config_set_bool("gmahjongg/toolbar/show", FALSE);
-        gtk_widget_hide(gdi);
+        gtk_widget_hide(GTK_WIDGET(gdi));
     }
 }
 
@@ -1407,7 +1413,7 @@ int main (int argc, char *argv [])
         if(gnome_config_get_bool("/gmahjongg/toolbar/show=TRUE"))
             gtk_check_menu_item_set_state(GTK_CHECK_MENU_ITEM(optionsmenu[0].widget), TRUE);
         else
-	    gtk_widget_hide(gdi);
+	    gtk_widget_hide(GTK_WIDGET(gdi));
 
         tiles_label = gtk_label_new(_("Tiles"));
         gtk_widget_show(tiles_label);
