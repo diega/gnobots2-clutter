@@ -46,6 +46,44 @@ using namespace std;
 #include "hand.h"
 #include "game.h"
 
+/* These have been lifted straight from eog. */
+  	 
+#define hand_closed_data_width 20
+#define hand_closed_data_height 20
+static char hand_closed_data_bits[] = {
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0x80, 0x3f, 0x00,
+        0x80, 0xff, 0x00, 0x80, 0xff, 0x00, 0xb0, 0xff, 0x00, 0xf0, 0xff, 0x00,
+        0xe0, 0xff, 0x00, 0xe0, 0x7f, 0x00, 0xc0, 0x7f, 0x00, 0x80, 0x3f, 0x00,
+        0x00, 0x3f, 0x00, 0x00, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+  	 
+#define hand_closed_mask_width 20
+#define hand_closed_mask_height 20
+static char hand_closed_mask_bits[] = {
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0x80, 0x3f, 0x00, 0xc0, 0xff, 0x00,
+        0xc0, 0xff, 0x01, 0xf0, 0xff, 0x01, 0xf8, 0xff, 0x01, 0xf8, 0xff, 0x01,
+        0xf0, 0xff, 0x01, 0xf0, 0xff, 0x00, 0xe0, 0xff, 0x00, 0xc0, 0x7f, 0x00,
+        0x80, 0x7f, 0x00, 0x80, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+  	 
+#define hand_open_data_width 20
+#define hand_open_data_height 20
+static char hand_open_data_bits[] = {
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00,
+        0x60, 0x36, 0x00, 0x60, 0x36, 0x00, 0xc0, 0x36, 0x01, 0xc0, 0xb6, 0x01,
+        0x80, 0xbf, 0x01, 0x98, 0xff, 0x01, 0xb8, 0xff, 0x00, 0xf0, 0xff, 0x00,
+        0xe0, 0xff, 0x00, 0xe0, 0x7f, 0x00, 0xc0, 0x7f, 0x00, 0x80, 0x3f, 0x00,
+        0x00, 0x3f, 0x00, 0x00, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+  	 
+#define hand_open_mask_width 20
+#define hand_open_mask_height 20
+static char hand_open_mask_bits[] = {
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0x60, 0x3f, 0x00,
+        0xf0, 0x7f, 0x00, 0xf0, 0x7f, 0x01, 0xe0, 0xff, 0x03, 0xe0, 0xff, 0x03,
+        0xd8, 0xff, 0x03, 0xfc, 0xff, 0x03, 0xfc, 0xff, 0x01, 0xf8, 0xff, 0x01,
+        0xf0, 0xff, 0x01, 0xf0, 0xff, 0x00, 0xe0, 0xff, 0x00, 0xc0, 0x7f, 0x00,
+        0x80, 0x7f, 0x00, 0x80, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
 hslot_type last_hslot = NULL;
 gint last_cardid = -1;
 
@@ -54,6 +92,45 @@ gint last_chipid = -1;
 
 GTimer *click_timer = NULL;
 gdouble dbl_click_time;
+
+GdkCursor * hand_closed_cursor = NULL;
+GdkCursor * hand_open_cursor = NULL;
+GdkCursor * default_cursor = NULL;
+  	 
+enum {
+        CURSOR_NONE = 0,
+        CURSOR_OPEN,
+        CURSOR_CLOSED
+};
+  	 
+static void
+set_cursor (int cursor)
+{
+        if (cursor == CURSOR_NONE)
+                gdk_window_set_cursor (playing_area->window, default_cursor);
+        if (cursor == CURSOR_OPEN)
+                gdk_window_set_cursor (playing_area->window, hand_open_cursor);
+        if (cursor == CURSOR_CLOSED)
+                gdk_window_set_cursor (playing_area->window, hand_closed_cursor);
+}
+  	 
+/* If we are over a slot, set the cursor to the given cursor,
+ * otherwise use the default cursor. */
+static void
+set_cursor_by_location (int cursor, int x, int y)
+{
+        hslot_type hslot;
+        gint cardid;
+        hstack_type hstack;
+        gint chipid; 
+
+        bj_slot_pressed (x, y, &hslot, &cardid);
+        bj_chip_stack_pressed (x, y, &hstack, &chipid);
+        if (hslot || hstack)
+                set_cursor (cursor);
+        else
+                set_cursor (CURSOR_NONE);
+}
 
 gboolean
 bj_event_key_press (GtkWidget *widget, GdkEventKey *event, void *d)
@@ -444,6 +521,9 @@ bj_event_button_release (GtkWidget *widget, GdkEventButton *event, void *d)
         case STATUS_NONE:
                 break;
         }
+
+        set_cursor_by_location (CURSOR_OPEN, (int)event->x, (int)event->y);
+
         return TRUE;
 }
 
@@ -527,6 +607,7 @@ handle_slot_motion_event (GtkWidget *widget, GdkEventMotion *event)
                                  (gint)event->x - press_data->xoffset,
                                  (gint)event->y - press_data->yoffset);
                 gdk_window_clear (press_data->moving_cards);
+                set_cursor (CURSOR_CLOSED);
                 return TRUE;
         }
         else if (press_data->status == STATUS_MAYBE_DRAG
@@ -535,7 +616,10 @@ handle_slot_motion_event (GtkWidget *widget, GdkEventMotion *event)
                 press_data->status = STATUS_IS_DRAG;
                 bj_press_data_generate ();
                 bj_draw_take_snapshot();
+                set_cursor (CURSOR_CLOSED);
                 return TRUE;
+        } else {
+                set_cursor_by_location (CURSOR_OPEN, (int)event->x, (int)event->y);
         }
   
         return FALSE;
@@ -549,6 +633,7 @@ handle_chip_stack_motion_event (GtkWidget *widget, GdkEventMotion *event)
                                  (gint)event->x - chip_stack_press_data->xoffset,
                                  (gint)event->y - chip_stack_press_data->yoffset);
                 gdk_window_clear (chip_stack_press_data->moving_chips);
+                set_cursor (CURSOR_CLOSED);
                 return TRUE;
         }
         else if (chip_stack_press_data->status == STATUS_MAYBE_DRAG
@@ -557,8 +642,12 @@ handle_chip_stack_motion_event (GtkWidget *widget, GdkEventMotion *event)
                 chip_stack_press_data->status = STATUS_IS_DRAG;
                 bj_chip_stack_press_data_generate ();
                 bj_draw_take_snapshot();
+                set_cursor (CURSOR_CLOSED);
                 return TRUE;
+        } else {
+                set_cursor_by_location (CURSOR_OPEN, (int)event->x, (int)event->y);
         }
+  
   
         return FALSE;
 }
@@ -589,11 +678,43 @@ bj_event_expose_callback (GtkWidget *widget, GdkEventExpose *event, void *d)
         return TRUE;
 }
 
+static GdkCursor *
+make_cursor (char * data, char * mask_data)
+{
+        GdkColor fg = {0, 65535, 65535, 65535};
+        GdkColor bg = {0, 0, 0, 0};
+        GdkPixmap * source;
+        GdkPixmap * mask;
+        GdkCursor * cursor;
+  	 
+        /* Yeah, hard-coded sizes are bad. */
+        source = gdk_bitmap_create_from_data (NULL, data, 20, 20);
+        mask = gdk_bitmap_create_from_data (NULL, mask_data, 20, 20);
+  	 
+        cursor = gdk_cursor_new_from_pixmap (source, mask, &fg, &bg, 10, 10);
+  	 
+        g_object_unref (source);
+        g_object_unref (mask);
+  	 
+        return cursor;
+}
+
 gint
 bj_event_playing_area_configure (GtkWidget *widget, GdkEventConfigure *event)
 {
         gint tmptime;
         GtkSettings *settings;
+
+        if (!default_cursor)
+                default_cursor = gdk_cursor_new(GDK_LEFT_PTR);
+  	 
+        if (!hand_closed_cursor)
+                hand_closed_cursor = make_cursor (hand_closed_data_bits,
+                                                  hand_closed_mask_bits);
+  	 
+        if (!hand_open_cursor)
+                hand_open_cursor = make_cursor (hand_open_data_bits,
+                                                hand_open_mask_bits);
 
         if (surface) {
                 if (window_width == event->width && window_height == event->height)

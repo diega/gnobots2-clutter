@@ -1,3 +1,11 @@
+2004-07-06  William Jon McCann  <mccann@jhu.edu>
+
+	* src/events.cpp (set_cursor, set_cursor_by_location) 
+	(bj_event_button_release, handle_slot_motion_event) 
+	(handle_chip_stack_motion_event, make_cursor) 
+	(bj_event_playing_area_configure): Use Callum's mouse
+	cursor work from Aisleriot.
+
 2004-06-08  William Jon McCann  <mccann@jhu.edu>
 
 	* src/events.cpp (handle_other_motion_event): 
