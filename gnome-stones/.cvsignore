@@ -4,3 +4,4 @@ Makefile
 Makefile.in
 _libs
 gnome-stones
+gnome-stones.keys

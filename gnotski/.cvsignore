@@ -1,6 +1,5 @@
-.deps
-Makefile
-Makefile.in
-mahjongg
 .libs
 .deps
+gnotski
+Makefile
+Makefile.in

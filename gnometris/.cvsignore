@@ -2,3 +2,4 @@ gnometris
 Makefile
 Makefile.in
 .deps
+.libs

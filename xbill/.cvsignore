@@ -5,3 +5,5 @@ Makefile.in
 CVS
 *.o
 *~
+.libs
+.deps
