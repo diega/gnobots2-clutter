@@ -416,7 +416,11 @@ fill_menu (GtkWidget *menu)
 		GtkWidget *item;
 		char *s = strdup (e->d_name);
 
-		if (!strstr (e->d_name, ".xpm")) {
+		if (!(strstr (e->d_name, ".xpm") ||
+		      strstr (e->d_name, ".gif") ||
+		      strstr (e->d_name, ".png") ||
+		      strstr (e->d_name, ".jpg") ||
+		      strstr (e->d_name, ".xbm"))){
 			free (s);
 			continue;
 		}
