@@ -339,10 +339,12 @@ gboolean mark_shifting_balls (void)
 
 static void game_over (void)
 {
-	gnome_score_log (score, scorenames[game_size - SMALL], TRUE);
+	gint place;
+
+	place = gnome_score_log (score, scorenames[game_size - SMALL], TRUE);
 
 	/* FIXME: High score stuff. */
-	game_over_dialog ();
+	game_over_dialog (place);
 }
 
 static void end_of_game_check (void)

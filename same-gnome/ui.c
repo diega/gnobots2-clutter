@@ -117,29 +117,93 @@ static void about_cb (GtkWidget *widget)
 			 NULL);
 }
 
-void game_over_dialog (void)
+static GtkWidget *generate_scores_dialog (void)
 {
-  GtkWidget *dialog;
-	gchar *message;
-  
-	message = g_strdup_printf ("<b>%s</b>", _("Game over!"));
-  dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (application),
-																							 GTK_DIALOG_DESTROY_WITH_PARENT,
-																							 GTK_MESSAGE_INFO,
-																							 GTK_BUTTONS_NONE,
-																							 message);
-	g_free (message);
-  
-	gtk_dialog_add_buttons (GTK_DIALOG (dialog), 
-													GTK_STOCK_QUIT, GTK_RESPONSE_CLOSE,
-													_("New Game"), GTK_RESPONSE_ACCEPT,
-													NULL);
-	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
+	GtkWidget *dialog;
+	int i;
 
-  /* FIXME: We should provide an indication of how good the score was. */
-  /* FIXME: Better text and formatting. */
-  
-  switch (gtk_dialog_run (GTK_DIALOG (dialog))) {
+	dialog = games_scores_dialog_new (APPNAME, _("Same GNOME Scores"));
+	for (i=0; i <= (LARGE - SMALL); i++) {
+		games_scores_dialog_add_category (GAMES_SCORES_DIALOG (dialog),
+																			scorenames[i],
+																			_(scorenames[i]));
+	}
+	games_scores_dialog_set_category (GAMES_SCORES_DIALOG (dialog), 
+																		scorenames[game_size - SMALL]);
+	
+	games_scores_dialog_set_category_description (GAMES_SCORES_DIALOG (dialog),
+																								_("Size:"));
+
+	return dialog;
+}
+
+void game_over_dialog (gint place)
+{
+  static GtkWidget *baddialog;
+  static GamesScoresDialog *gooddialog;
+	GtkDialog *dialog;
+  GtkWidget *congratulations;
+	gchar *message;
+
+	if (place == 0) { /* Case 1: It was not a top-ten score. */
+		if (baddialog) {
+			gtk_window_present (GTK_WINDOW (baddialog));
+		} else {
+			baddialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (application),
+																											GTK_DIALOG_DESTROY_WITH_PARENT,
+																											GTK_MESSAGE_INFO,
+																											GTK_BUTTONS_NONE,
+																											_("Game over!"));
+			gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (baddialog),
+																								_("Unfortunately your score did not make the top ten."));
+			gtk_dialog_add_buttons (GTK_DIALOG (baddialog), 
+															GTK_STOCK_QUIT, GTK_RESPONSE_CLOSE,
+															_("New Game"), GTK_RESPONSE_ACCEPT,
+															NULL);
+			gtk_dialog_set_default_response (GTK_DIALOG (baddialog), GTK_RESPONSE_ACCEPT);
+		}
+		dialog = GTK_DIALOG (baddialog);
+  } else { /* Case 2: It was a top ten score. */
+		if (gooddialog) {
+			gtk_window_present (GTK_WINDOW (gooddialog));
+		} else {
+			/* We build two, slightly different, high score dialogs. Once here and
+			 * once for the scores menu item. */
+			gooddialog = GAMES_SCORES_DIALOG (generate_scores_dialog ());
+			
+			/* This is a bit evil, the dialog doesn't quite suit, so
+			 * we take a machete to it. */
+			gtk_container_foreach (GTK_CONTAINER (GTK_DIALOG (gooddialog)->action_area),
+														 G_CALLBACK (gtk_widget_destroy), NULL);
+			gtk_dialog_add_buttons (GTK_DIALOG (gooddialog), 
+															GTK_STOCK_QUIT, GTK_RESPONSE_CLOSE,
+															_("New Game"), GTK_RESPONSE_ACCEPT,
+															NULL);
+			/* FIXME: This doesn't seem to do the right thing. */
+			gtk_dialog_set_default_response (GTK_DIALOG (gooddialog), 
+																			 GTK_RESPONSE_ACCEPT);
+
+			message = g_strdup_printf ("<b>%s</b>\n\n%s", _("Congratulations!"),
+																 _("Your score has made the top 10."));
+			congratulations = gtk_label_new (message);
+			g_free (message);
+			gtk_label_set_use_markup (GTK_LABEL (congratulations), TRUE);
+			gtk_label_set_justify (GTK_LABEL (congratulations), 
+														 GTK_JUSTIFY_CENTER);
+			gtk_box_pack_start (GTK_BOX (GTK_DIALOG (gooddialog)->vbox),
+													congratulations,
+													FALSE, FALSE, 5);
+			gtk_box_pack_start (GTK_BOX (GTK_DIALOG (gooddialog)->vbox),
+													gtk_hseparator_new (),
+													FALSE, FALSE, 5);
+
+			gtk_widget_show_all (GTK_WIDGET (gooddialog));
+		}
+		games_scores_dialog_set_hilight (gooddialog, place);
+		dialog = GTK_DIALOG (gooddialog);
+	}
+
+	switch (gtk_dialog_run (dialog)) {
 	case GTK_RESPONSE_CLOSE:
 		quit_cb ();
 		break;
@@ -148,8 +212,7 @@ void game_over_dialog (void)
 		new_game ();
 		break;
 	}
-  
-  gtk_widget_destroy (dialog);
+	gtk_widget_hide (GTK_WIDGET (dialog));
 }
 
 static void new_game_cb (void)
@@ -183,24 +246,16 @@ static void window_state_cb (GtkWidget *widget, GdkEventWindowState *event)
 
 static void scores_cb (void)
 {
-	GtkWidget *dialog;
-	gint i;
+	static GtkWidget *dialog = NULL;
 
-	dialog = games_scores_dialog_new (APPNAME, _("Same GNOME Scores"));
-	for (i=0; i <= (LARGE - SMALL); i++) {
-		games_scores_dialog_add_category (GAMES_SCORES_DIALOG (dialog),
-																			scorenames[i],
-																			_(scorenames[i]));
+	if (dialog) {
+		gtk_window_present (GTK_WINDOW (dialog));
+	} else {
+		dialog = generate_scores_dialog ();
 	}
-	games_scores_dialog_set_category (GAMES_SCORES_DIALOG (dialog), 
-																		scorenames[game_size - SMALL]);
-	
-	games_scores_dialog_set_category_description (GAMES_SCORES_DIALOG (dialog),
-																								_("Size:"));
 
 	gtk_dialog_run (GTK_DIALOG (dialog));
-
-	gtk_widget_destroy (dialog);
+	gtk_widget_hide (dialog);
 }
 
 static void undo_cb (void)

@@ -17,7 +17,7 @@ void show_score (gint score);
 void set_message (gint count);
 void set_message_destroyed (gint count);
 void set_message_general (gchar *message);
-void game_over_dialog (void);
+void game_over_dialog (gint place);
 void new_frame_ratio (gint board_width, gint board_height);
 void build_gui (void);
 void set_undoredo_sensitive (gboolean undo, gboolean redo);
