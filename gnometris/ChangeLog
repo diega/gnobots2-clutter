@@ -1,6 +1,7 @@
 2000-04-27  Marcin Gorycki  <Janusz.Gorycki@intel.com>
 
-	* 
+	* blockops.cpp, tetris.cpp: gtk warnings fixed
+
 
 2000-04-19  Ian Peters  <itp@gnu.org>
 
