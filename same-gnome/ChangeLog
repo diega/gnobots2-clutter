@@ -1,3 +1,7 @@
+2003-06-19  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* same-gnome.c: More compile cleanups from Steve Chaplin.
+
 2003-06-18  William Jon McCann  <mccann@jhu.edu>
 
 	* same-gnome.c: Include string.h.

@@ -327,10 +327,7 @@ kill_balls (int x, int y)
 	set_score (score + (tagged_count - 2) * (tagged_count - 2));
 	compress_y ();
 	compress_x ();
-	gtk_widget_queue_draw_area (GTK_WIDGET (draw_area),
-				    0, 0,
-				    STONE_COLS * STONE_SIZE,
-				    STONE_LINES * STONE_SIZE);
+	gtk_widget_queue_draw (GTK_WIDGET (draw_area));
 	check_game_over ();
 }
 
@@ -393,10 +390,7 @@ new_game (void)
 	game_over = FALSE;
 	fill_board ();
 	set_score (0);
-	gtk_widget_queue_draw_area (GTK_WIDGET (draw_area),
-				    0, 0,
-				    STONE_COLS * STONE_SIZE,
-				    STONE_LINES * STONE_SIZE);
+	gtk_widget_queue_draw (GTK_WIDGET (draw_area));
 }
 
 static void
@@ -449,7 +443,7 @@ load_scenario (char *fname)
 	configure_sync (fname);
 
 	if (image)
-		gdk_pixbuf_unref (image);
+		g_object_unref (image);
 
 	image = gdk_pixbuf_new_from_file (fn, NULL);
 
@@ -500,10 +494,7 @@ load_scenario (char *fname)
 	ncolors = 3;
 
 
-	gtk_widget_queue_draw_area (GTK_WIDGET (draw_area),
-				    0, 0,
-				    STONE_COLS * STONE_SIZE,
-				    STONE_LINES * STONE_SIZE);
+	gtk_widget_queue_draw (GTK_WIDGET (draw_area));
 }
 
 static void
@@ -687,7 +678,7 @@ game_preferences_callback (GtkWidget *widget, void *data)
         gtk_widget_show_all (pref_dialog);
 }
 
-static int
+static void
 game_about_callback (GtkWidget *widget, void *data)
 {
 	GdkPixbuf *pixbuf = NULL;
@@ -706,7 +697,7 @@ game_about_callback (GtkWidget *widget, void *data)
 
 	if (about) {
 		gtk_window_present (GTK_WINDOW (about));
-		return TRUE;
+		return;
 	}
 
 	{
@@ -731,15 +722,13 @@ game_about_callback (GtkWidget *widget, void *data)
 				 strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
                                  pixbuf);
 	if (pixbuf != NULL)
-		gdk_pixbuf_unref (pixbuf);
+		g_object_unref (pixbuf);
 	
 	gtk_window_set_transient_for (GTK_WINDOW (about), GTK_WINDOW (app));
 	gtk_widget_show (about);
 
 	g_signal_connect (G_OBJECT (about), "destroy",
 			  G_CALLBACK (gtk_widget_destroyed), &about);
-
-	return TRUE;
 }
 
 static int
