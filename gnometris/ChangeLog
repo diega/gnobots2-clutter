@@ -1,3 +1,7 @@
+1999-02-25  Marcin Gorycki  <mgo@olicom.dk>
+
+	* tetris.h, tetris.cpp: "variable gravity" down-arrow key
+
 1999-02-23  Marcin Gorycki  <mgo@olicom.dk>
 
 	* tetris.h, tetris.cpp, blockops.h, blockops.cpp: fast fall fixed
