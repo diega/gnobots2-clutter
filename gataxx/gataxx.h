@@ -40,6 +40,7 @@ struct _MoveHistory
   gint8 x;
   gint8 y;
   gint8 me;
+  struct _MoveHistory * prev;
 };
 
 typedef struct _MoveHistory MoveHistory;

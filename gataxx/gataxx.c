@@ -87,9 +87,7 @@ gint8 board[7][7] = {{0,0,0,0,0,0,0},
 		     {0,0,0,0,0,0,0}};
 
 
-MoveHistory game[500];
-
-gint8 move_count = 0;
+MoveHistory * game = NULL;
 
 extern guint flip_final_id;
 
@@ -303,8 +301,9 @@ void undo_move_cb(GtkWidget *widget, gpointer data) {
 
   gint8 which_computer;
   gint i, j;
+  MoveHistory * temp;
   
-  if((black_computer_level && white_computer_level) || !move_count)
+  if((black_computer_level && white_computer_level) || !game || !game->prev)
     return;
   
   if (flip_final_id) {
@@ -313,26 +312,28 @@ void undo_move_cb(GtkWidget *widget, gpointer data) {
   }
   
   game_in_progress = 1;
+
+  temp = game;
+  game = game->prev;
+  g_free (temp);
   
   if(black_computer_level || white_computer_level) {
     if(black_computer_level)
       which_computer = BLACK_TURN;
     else
       which_computer = WHITE_TURN;
-    move_count--;
-    while(game[move_count].me == which_computer && move_count > 0) {
-      pixmaps[game[move_count].x][game[move_count].y] = 100;
-      move_count--;
+    while(game->prev && game->me == which_computer) {
+      pixmaps[game->x][game->y] = 100;
+      temp = game;
+      game = game->prev;
+      g_free (temp);
     }
-    pixmaps[game[move_count].x][game[move_count].y] = 100;
-    memcpy(board, game[move_count].board, sizeof(gint8) * 7 * 7);
-  } else {
-    move_count--;
-    memcpy(board, game[move_count].board, sizeof(gint8) * 7 * 7);
-    pixmaps[game[move_count].x][game[move_count].y] = 100;
   }
+
+  pixmaps[game->x][game->y] = 100;  
+  memcpy(board, game->board, sizeof(gint8) * 7 * 7);
   
-  whose_turn = game[move_count].me;
+  whose_turn = game->me;
   
   if(whose_turn == WHITE_TURN)
     gui_message(_("Light's move"));
@@ -667,16 +668,22 @@ gint flip_pixmaps(gpointer data) {
 }
 
 void init_new_game() {
-  
   guint i, j;
-
+  MoveHistory * temp;
+  
   if (flip_final_id) {
     g_source_remove (flip_final_id);
     flip_final_id = 0;
   }
 
   game_in_progress = 1;
-  move_count = 0;
+  while (game) {
+    temp = game;
+    game = game->prev;
+    g_free (temp);
+  }
+  game = g_malloc (sizeof(MoveHistory));
+  game->prev = NULL;
   
   for(i = 0; i < 7; i++)
     for(j = 0; j < 7; j++)
@@ -693,7 +700,7 @@ void init_new_game() {
   gui_status();
   
   memcpy(pixmaps, board, sizeof(gint8) * 7 * 7);
-  memcpy(game[0].board, board, sizeof(gint8) * 7 * 7);
+  memcpy(game->board, board, sizeof(gint8) * 7 * 7);
 
   for(i = 0; i < 7; i++)
     for(j = 0; j < 7; j++)

@@ -1,3 +1,14 @@
+2003-06-02  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gataxx.c: 
+	* gataxx.h (struct _MoveHistory): 
+	* ataxx.c: Changed the save structure from a static array to a
+	linked list. This allows an infinite number of moves rather than
+	the fixed number used before (the buffer had room for a reasonable,
+	but exhaustible, 500 entries, but then used a signed 8-bit
+	counter. SO after 128 turns the program crashed trying to access
+	turn -128. Fixes bug #113770.
+
 2003-06-01  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* properties.c:

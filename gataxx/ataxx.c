@@ -41,9 +41,7 @@ extern guint game_in_progress;
 
 extern gint8 pixmaps[7][7];
 extern gint8 board[7][7];
-extern MoveHistory game[500]; /*since we can't make an acurate guess at a min, this should be a linked list*/
-
-extern gint8 move_count;
+extern MoveHistory * game;
 
 extern gint bcount;
 extern gint wcount;
@@ -114,6 +112,7 @@ gint move_board(gint8 board[7][7], guint x, guint y, guint selected_x, guint sel
   guint not_me;
   gint count = 1;
   gint take_count = 0;
+  MoveHistory * newentry;
   
   /* Stuff to do if this is a ``real'' move */
 
@@ -122,13 +121,14 @@ gint move_board(gint8 board[7][7], guint x, guint y, guint selected_x, guint sel
   if(real) {
     
     /* Copy the old board and move info to the undo buffer */
-    
-    memcpy(game[move_count].board, board, sizeof(gint8) * 7 * 7);
-    game[move_count].x = x;
-    game[move_count].y = y;
-    game[move_count].me = me;
-    
-    move_count++;
+
+    memcpy(game->board, board, sizeof(gint8) * 7 * 7);
+    game->x = x;
+    game->y = y;
+    game->me = me;
+    newentry = g_malloc(sizeof(MoveHistory));
+    newentry->prev = game;
+    game = newentry;
     
     if(whose_turn == WHITE_TURN) {
       whose_turn = BLACK_TURN;
