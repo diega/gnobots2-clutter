@@ -2033,9 +2033,7 @@ void shuffle_tiles_callback (GtkWidget *widget, gpointer data)
 
 int main (int argc, char *argv [])
 {
-#if 0
-        GnomeDockItem *gdi;
-#endif
+	BonoboDockItem *gdi;
 	GtkWidget *toolbar;
         gboolean show=TRUE;
 
@@ -2074,12 +2072,13 @@ int main (int argc, char *argv [])
 	gnome_app_install_menu_hints(GNOME_APP (window), mainmenu);
 
         gnome_app_create_toolbar (GNOME_APP (window), toolbar_uiinfo);
-#if 0
+
 	gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
-	toolbar = gnome_dock_item_get_child (gdi);
+	toolbar = bonobo_dock_item_get_child (gdi);
+#if 0
         gtk_toolbar_set_space_size(GTK_TOOLBAR (toolbar), 25);
 #endif
-        
+
         tiles_label = gtk_label_new(_("Tiles Left: "));
         gtk_widget_show(tiles_label);
 	gtk_toolbar_append_widget(GTK_TOOLBAR(toolbar), tiles_label,

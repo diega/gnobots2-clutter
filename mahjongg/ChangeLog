@@ -1,3 +1,7 @@
+2001-08-15  Juan Pablo Mendoza <jpablo@gnome.org>
+
+	* mahjongg.c: Now it don't crash on startup.
+
 2001-08-14  Kjartan Maraas  <kmraaas@gnome.org>
 
 	* help/*/*.sgml: Fix up the sgml. My italian is a bit rusty
