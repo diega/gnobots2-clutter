@@ -137,8 +137,12 @@ static gint gtk_gridboard_button_press(GtkWidget *widget,
    
    gridboard = GTK_GRIDBOARD (widget);
 
-   x = event->x/gridboard->tilewidth;
-   y = event->y/gridboard->tileheight;
+   x = event->x / gridboard->tilewidth;
+   y = event->y / gridboard->tileheight;
+
+   x = CLAMP (x, 0, gridboard->width - 1);
+   y = CLAMP (y, 0, gridboard->height - 1);
+
    g_signal_emit (G_OBJECT(gridboard), gridboard_signals[BOXCLICKED], 
 		  0, x, y);
 
