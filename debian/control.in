@@ -6,7 +6,7 @@ Standards-Version: 3.0.0
 
 Package: gnome-games@SUFFIX@
 Architecture: all
-Depends: gnome-core@SUFFIX@ (>= 1.0.0-0), gnome-card-games@SUFFIX@ (= ${Source-Version}), gnome-gnomine@SUFFIX@ (= ${Source-Version}), gnome-stones@SUFFIX@ (= ${Source-Version}), gnome-gturing@SUFFIX@ (= ${Source-Version}), gnome-mahjongg@SUFFIX@ (= ${Source-Version}), gnome-same-gnome@SUFFIX@ (= ${Source-Version}), gnome-gnibbles@SUFFIX@ (= ${Source-Version}), gnome-gnometris@SUFFIX@ (= ${Source-Version}), gnome-gnotravex@SUFFIX@ (= ${Source-Version}), gnome-metatris@SUFFIX@ (= ${Source-Version}), gnome-gyahtzee@SUFFIX@ (= ${Source-Version}), gnome-gnobots@SUFFIX@ (= ${Source-Version}), gnome-gnobots2@SUFFIX@ (= ${Source-Version}), gnome-gnothello@SUFFIX@  (= ${Source-Version})
+Depends: gnome-core@SUFFIX@ (>= 1.0.0-0), gnome-card-games@SUFFIX@ (= ${Source-Version}), gnome-gnomine@SUFFIX@ (= ${Source-Version}), gnome-stones@SUFFIX@ (= ${Source-Version}), gnome-gturing@SUFFIX@ (= ${Source-Version}), gnome-mahjongg@SUFFIX@ (= ${Source-Version}), gnome-same-gnome@SUFFIX@ (= ${Source-Version}), gnome-gnibbles@SUFFIX@ (= ${Source-Version}), gnome-gnometris@SUFFIX@ (= ${Source-Version}), gnome-gnotravex@SUFFIX@ (= ${Source-Version}), gnome-gtali@SUFFIX@ (= ${Source-Version}), gnome-gnobots2@SUFFIX@ (= ${Source-Version}), gnome-iagno@SUFFIX@  (= ${Source-Version}), gnome-glines@SUFFIX@  (= ${Source-Version}), gnome-gataxx@SUFFIX@  (= ${Source-Version}), gnome-xbill@SUFFIX@  (= ${Source-Version})
 Description: Empty package that requires the installation of all gnome-games packages.
  Gnome is the "GNU Network Object Model Environment"
  .
@@ -15,8 +15,8 @@ Description: Empty package that requires the installation of all gnome-games pac
 
 Package: gnome-games-locale
 Architecture: all
-Replaces: gnome-games (<< 1.0.1-4)
-Description: The locale databasese for the gnome-games packages.
+Replaces: gnome-games (<< 1.0.1-4), gnome-gnobots
+Description: The locale databases for the gnome-games packages.
  Gnome is the "GNU Network Object Model Environment"
  .
  It is a project to build a complete, user-friendly desktop based
@@ -44,6 +44,28 @@ Description: Classic find the mines in the minefield game (from Gnome)
  entirely on free software.
  .
  Classic find the mines in the minefield game.
+
+Package: gnome-gataxx@SUFFIX@
+Architecture: any
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
+Description: This is a game
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+
+Package: gnome-glines@SUFFIX@
+Architecture: any
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
+Description: This is a version of the color lines program
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+ .
+ This is GNOME's version of the color lines program, aka fiveormore.
+ The program is fully GPL-ed. It's written by Robert Szokovacs 
+ <szo@appaloosacorp.hu> in gtk, I added gnome support... Shooby Ban
 
 Package: gnome-stones@SUFFIX@
 Architecture: any
@@ -103,6 +125,8 @@ Description: A cute little game that has no description
 
 Package: gnome-gnometris@SUFFIX@
 Architecture: any
+Conflicts: gnome-metatris
+Replaces: gnome-metatris
 Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
 Description: A tetris clone.
  Gnome is the "GNU Network Object Model Environment"
@@ -127,29 +151,11 @@ Description: A game based on Tetravex.
  It's possible to choose different sizes on the board from 2x2 to
  6x6. 
 
-Package: gnome-metatris@SUFFIX@
+Package: gnome-gtali@SUFFIX@
 Architecture: any
 Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
-Description: A tetris clone with theme support.
- Gnome is the "GNU Network Object Model Environment"
- .
- It is a project to build a complete, user-friendly desktop based
- entirely on free software.
-
-Package: gnome-scottfree@SUFFIX@
-Architecture: ignore
-Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
-Description: A Scott Adams game player (from Gnome)
- Gnome is the "GNU Network Object Model Environment"
- .
- It is a project to build a complete, user-friendly desktop based
- entirely on free software.
- .
- A Scott Adams game player.
-
-Package: gnome-gyahtzee@SUFFIX@
-Architecture: any
-Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
+Conflicts: gnome-gyahtzee
+Replaces: gnome-gyahtzee
 Description: Gnome version of Yahtzee Dice Game
  Gnome is the "GNU Network Object Model Environment"
  .
@@ -158,24 +164,10 @@ Description: Gnome version of Yahtzee Dice Game
  .
  Yahtzee dice game.
 
-Package: gnome-gnobots@SUFFIX@
-Architecture: any
-Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
-Description: Gnome version of text based robots game for BSD games collection
- Gnome is the "GNU Network Object Model Environment"
- .
- It is a project to build a complete, user-friendly desktop based
- entirely on free software.
- .
- Gnome Robots is a version of the text based robots game which can be
- found on a number of UNIX systems, and comes with the BSD games
- package on Linux systems.
- This version allows you to select a number of animated graphics
- scenarios, as well as providing a safe teleport feature so you are not
- totally at the mercy of your computer's random number generator.
-
 Package: gnome-gnobots2@SUFFIX@
 Architecture: any
+Replaces: gnome-gnobots
+Conflicts: gnome-gnobots
 Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
 Description: Second Gnome version of robots game for BSD games collection
  Gnome is the "GNU Network Object Model Environment"
@@ -190,8 +182,10 @@ Description: Second Gnome version of robots game for BSD games collection
  scenarios, as well as providing a safe teleport feature so you are not
  totally at the mercy of your computer's random number generator.
 
-Package: gnome-gnothello@SUFFIX@
+Package: gnome-iagno@SUFFIX@
 Architecture: any
+Replaces: gnome-gnothello
+Conflicts: gnome-gnothello
 Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
 Description: Gnome version of Othello (Reversi) board game
  Gnome is the "GNU Network Object Model Environment"
@@ -200,3 +194,40 @@ Description: Gnome version of Othello (Reversi) board game
  entirely on free software.
  .
  Classic Othello (Reversi) board game.
+
+Package: gnome-scottfree@SUFFIX@
+Architecture: ignore
+Depends: gnome-games-locale@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Description: A Scott Adams game player (from Gnome)
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+ .
+ A Scott Adams game player.
+
+Package: gnome-xbill@SUFFIX@
+Architecture: any
+Depends: gnome-games-locale@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Description: Fight the infection.
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+ .
+ As the README puts it:
+ .
+ Ever get the feeling that nothing is going right?  You're a sysadmin,
+ and someone's trying to destroy your computers.  The little people
+ running around the screen are trying to infect your computers with
+ Wingdows [TM], a virus cleverly designed to resemble a popular
+ operating system. Your objective is to click the mouse on them,
+ ending their potential threat.  If one of the people reaches a
+ computer, it will attempt to replace your operating system with the
+ virus it carries. It will then attempt to run off the screen with
+ your vital software.  The game ends when only 0 or 1 of your
+ computers is being productive.  Additionally, some computers are
+ connected with network cables. When one computer on a network becomes
+ infected, a spark will be sent down the cable, and will infect the
+ computer on the other end when it reaches there.
+

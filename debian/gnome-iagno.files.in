@@ -1,5 +1,4 @@
 @PREFIX@/share/pixmaps/iagno*
-@PREFIX@/share/pixmaps/iagno/*
 @PREFIX@/share/sounds/iagno/*
 @BINDIR@/iagno
 etc/sound/events/iagno.*

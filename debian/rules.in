@@ -7,48 +7,61 @@ DH_VERBOSE=1
 
 doc_dir = usr/share/doc
 
-configure: configure.in
-	@echo "--- Making configure script and configuring"
-	#chmod +x autogen.sh
-	#./autogen.sh --prefix=/@PREFIX@ --with-gtk-prefix=/@GTKPREFIX@ --bindir=/@BINDIR@ --localstatedir=/@LOCALSTATEDIR@
-	autoconf
+#configure: configure.in
+#	@echo "--- Making configure script and configuring"
+#	#chmod +x autogen.sh
+#	#./autogen.sh --prefix=/@PREFIX@ --with-gtk-prefix=/@GTKPREFIX@ --bindir=/@BINDIR@ --localstatedir=/@LOCALSTATEDIR@
+#	autoconf
 
-Makefile: configure Makefile.in
-	@echo "--- Configuring"
-	chmod +x configure
-	./configure --prefix=/@PREFIX@ --with-gtk-prefix=/@GTKPREFIX@ --bindir=/@BINDIR@ --localstatedir=/@LOCALSTATEDIR@ --sysconfdir=/etc
+#Makefile: configure Makefile.in
+#	@echo "--- Configuring"
+#	chmod +x configure
+#	./configure --prefix=/@PREFIX@ --with-gtk-prefix=/@GTKPREFIX@ --bindir=/@BINDIR@ --localstatedir=/@LOCALSTATEDIR@ --sysconfdir=/etc
 
-Makefile.in: Makefile.am
-	aclocal -I macros
-	libtoolize -c
-	automake
+#Makefile.in: Makefile.am
+#	aclocal -I macros
+#	libtoolize -c
+#	automake
 
-build: configure Makefile build-debstamp
+build:  build-debstamp # configure Makefile
 build-debstamp:
 	@echo "--- Compiling"
 	dh_testdir
+	# I apologize for this, but had to modify iagno/Makefile.am,
+	# freecell/sr/Makefile.am and aisleriot/Makefile.am to get it
+	# to work making this neccessary.
+	aclocal -I macros
+	libtoolize -c
+	automake --include-deps
+	autoconf
+	./configure --prefix=/@PREFIX@ --with-gtk-prefix=/@GTKPREFIX@ --bindir=/@BINDIR@ --localstatedir=/@LOCALSTATEDIR@ --sysconfdir=/etc
 	$(MAKE) all
 	touch build-debstamp
 
-clean: configure Makefile
+clean: #configure Makefile
 	@echo "--- Cleaning"
 	dh_testdir
+	dh_clean
 	-rm -rf static shared
 	-rm -f build-debstamp install-debstamp
-	-make distclean
+	-$(MAKE) distclean
+	#-$(MAKE) clean
 	-rm -f `find . -name "*~"`
 	-rm -rf `find . -name "\.deps"`
 	-rm -rf `find . -name "\.libs"`
 	-rm -rf `find . -name "*\.rej"`
 	-rm -rf debian/tmp `find debian/* -type d ! -name CVS` debian/files* core
 	-rm -f debian/*substvars
+	-rm -rf gturing/help/C/gturing/*
+	-rm -rf gturing/help/C/gturing.junk
+	-rm -f gturing/help/C/index.html
 
 install: build install-debstamp
 install-debstamp:
 	@echo "--- Installing"
 	dh_testdir
 	dh_testroot
-	dh_clean
+	dh_clean -k
 	rm -rf $(b)
 	$(MAKE) install prefix=$(i)/@PREFIX@ exec_prefix=$(i)/@PREFIX@ bindir=$(i)/@BINDIR@ localstatedir=$(i)/@LOCALSTATEDIR@ sysconfdir=$(i)/etc
 	mv $(i)/@PREFIX@/games/freecell $(i)/@PREFIX@/games/gnome-freecell
@@ -80,15 +93,16 @@ binary-arch: build install \
 		gnome-gnomine@SUFFIX@ \
 		gnome-mahjongg@SUFFIX@ \
 		gnome-same-gnome@SUFFIX@ \
-		gnome-gyahtzee@SUFFIX@ \
-		gnome-gnobots@SUFFIX@ \
-		gnome-gnothello@SUFFIX@ \
+		gnome-gtali@SUFFIX@ \
+		gnome-iagno@SUFFIX@ \
 		gnome-stones@SUFFIX@ \
 		gnome-gturing@SUFFIX@ \
 		gnome-gnibbles@SUFFIX@ \
 		gnome-gnometris@SUFFIX@ \
+		gnome-glines@SUFFIX@ \
+		gnome-gataxx@SUFFIX@ \
+		gnome-xbill@SUFFIX@ \
 		gnome-gnotravex@SUFFIX@ \
-		gnome-metatris@SUFFIX@ \
 		gnome-gnobots2@SUFFIX@
 
 
@@ -208,6 +222,98 @@ gnome-gnomine@SUFFIX@: install
 	dh_builddeb          -p$@ -P$(b)/$@
 
 #
+# gnome-xbill
+#
+
+gnome-xbill@SUFFIX@: install
+	@echo "--- Building: $@"
+	dh_installdocs       -p$@ -P$(b)/$@ \
+					xbill/NEWS xbill/README \
+					xbill/README.Ports \
+					xbill/AUTHORS
+	dh_installchangelogs -p$@ -P$(b)/$@ 
+	dh_movefiles         -p$@ -P$(b)/$@
+	dh_strip             -p$@ -P$(b)/$@ 
+	dh_compress          -p$@ -P$(b)/$@ 
+	mkdir -p $(b)/$@/@LOCALSTATEDIR@/games
+	dh_fixperms          -p$@ -P$(b)/$@ 
+	chmod 2755 $(b)/$@/@PREFIX@/games/* 
+	chown root.games  $(b)/$@/@PREFIX@/games/*
+	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
+	dh_installmenu       -p$@ -P$(b)/$@
+	dh_installdeb        -p$@ -P$(b)/$@
+	dh_shlibdeps         -p$@ -P$(b)/$@
+	dh_gencontrol        -p$@ -P$(b)/$@
+	dh_makeshlibs        -p$@ -P$(b)/$@
+#	dh_undocumented      -p$@ -P$(b)/$@ \
+				xbill.1
+	#sh debian/fix-desktop-file xbill $(b)/$@
+	dh_md5sums           -p$@ -P$(b)/$@
+	dh_builddeb          -p$@ -P$(b)/$@
+
+#
+# gnome-glines
+#
+
+gnome-glines@SUFFIX@: install
+	@echo "--- Building: $@"
+	dh_installdocs       -p$@ -P$(b)/$@ \
+					glines/NEWS glines/README \
+					glines/AUTHORS glines/TODO
+	dh_installchangelogs -p$@ -P$(b)/$@ 
+	dh_movefiles         -p$@ -P$(b)/$@
+	dh_strip             -p$@ -P$(b)/$@ 
+	dh_compress          -p$@ -P$(b)/$@ 
+	mkdir -p $(b)/$@/@LOCALSTATEDIR@/games
+	dh_fixperms          -p$@ -P$(b)/$@ 
+	chmod 2755 $(b)/$@/@PREFIX@/games/* 
+	chown root.games  $(b)/$@/@PREFIX@/games/*
+	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
+	dh_installmenu       -p$@ -P$(b)/$@
+	dh_installdeb        -p$@ -P$(b)/$@
+	dh_shlibdeps         -p$@ -P$(b)/$@
+	dh_gencontrol        -p$@ -P$(b)/$@
+	dh_makeshlibs        -p$@ -P$(b)/$@
+#	dh_undocumented      -p$@ -P$(b)/$@ \
+				glines.1
+	#sh debian/fix-desktop-file glines $(b)/$@
+	dh_md5sums           -p$@ -P$(b)/$@
+	dh_builddeb          -p$@ -P$(b)/$@
+
+#
+# gnome-gataxx
+#
+
+gnome-gataxx@SUFFIX@: install
+	@echo "--- Building: $@"
+	dh_installdocs       -p$@ -P$(b)/$@ \
+					NEWS gataxx/TODO \
+					gataxx/AUTHORS
+	dh_installchangelogs -p$@ -P$(b)/$@ \
+					gataxx/ChangeLog
+	dh_movefiles         -p$@ -P$(b)/$@
+	dh_strip             -p$@ -P$(b)/$@ 
+	dh_compress          -p$@ -P$(b)/$@ 
+	mkdir -p $(b)/$@/@LOCALSTATEDIR@/games
+	dh_fixperms          -p$@ -P$(b)/$@ 
+	chmod 2755 $(b)/$@/@PREFIX@/games/* 
+	chown root.games  $(b)/$@/@PREFIX@/games/*
+	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
+	dh_installmenu       -p$@ -P$(b)/$@
+	dh_installdeb        -p$@ -P$(b)/$@
+	dh_shlibdeps         -p$@ -P$(b)/$@
+	dh_gencontrol        -p$@ -P$(b)/$@
+	dh_makeshlibs        -p$@ -P$(b)/$@
+#	dh_undocumented      -p$@ -P$(b)/$@ \
+				gataxx.1
+	#sh debian/fix-desktop-file gataxx $(b)/$@
+	dh_md5sums           -p$@ -P$(b)/$@
+	dh_builddeb          -p$@ -P$(b)/$@
+
+#
 # gnome-stones
 #
 
@@ -221,7 +327,7 @@ gnome-stones@SUFFIX@: install
 	dh_movefiles         -p$@ -P$(b)/$@
 	dh_strip             -p$@ -P$(b)/$@ 
 	dh_compress          -p$@ -P$(b)/$@ 
-	mkdir -p $(b)/$@/var/lib/games
+	mkdir -p $(b)/$@/@LOCALSTATEDIR@/games
 	dh_fixperms          -p$@ -P$(b)/$@ 
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
@@ -251,7 +357,7 @@ gnome-gturing: install
 	dh_movefiles         -p$@ -P$(b)/$@
 	dh_strip             -p$@ -P$(b)/$@ 
 	dh_compress          -p$@ -P$(b)/$@ 
-	mkdir -p $(b)/$@/var/lib/games
+	mkdir -p $(b)/$@/@LOCALSTATEDIR@/games
 	dh_fixperms          -p$@ -P$(b)/$@ 
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
@@ -267,36 +373,6 @@ gnome-gturing: install
 	dh_md5sums           -p$@ -P$(b)/$@
 	dh_builddeb          -p$@ -P$(b)/$@
 
-#
-# gnome-mahjongg
-#
-
-gnome-mahjongg@SUFFIX@: install
-	@echo "--- Building: $@"
-	dh_installdocs       -p$@ -P$(b)/$@ \
-					mahjongg/README mahjongg/NEWS \
-					mahjongg/TODO AUTHORS
-	dh_installchangelogs -p$@ -P$(b)/$@ \
-					mahjongg/ChangeLog
-	dh_movefiles         -p$@ -P$(b)/$@
-	dh_strip             -p$@ -P$(b)/$@ 
-	dh_compress          -p$@ -P$(b)/$@
-	mkdir -p $(b)/$@/@LOCALSTATEDIR@/games
-	dh_fixperms          -p$@ -P$(b)/$@ 
-	chmod 2755 $(b)/$@/@PREFIX@/games/* 
-	chown root.games  $(b)/$@/@PREFIX@/games/*
-	dh_suidregister	     -p$@ -P$(b)/$@
-	dh_fixperms          -p$@ -P$(b)/$@
-	dh_installmenu       -p$@ -P$(b)/$@
-	dh_installdeb        -p$@ -P$(b)/$@
-	dh_shlibdeps         -p$@ -P$(b)/$@
-	dh_gencontrol        -p$@ -P$(b)/$@
-	dh_makeshlibs        -p$@ -P$(b)/$@
-#	dh_undocumented      -p$@ -P$(b)/$@ \
-				mahjongg.1
-	#sh debian/fix-desktop-file mahjongg $(b)/$@
-	dh_md5sums           -p$@ -P$(b)/$@
-	dh_builddeb          -p$@ -P$(b)/$@
 
 #
 # gnome-same-gnome
@@ -357,16 +433,16 @@ gnome-scottfree@SUFFIX@: install
 	dh_builddeb          -p$@ -P$(b)/$@
 
 #
-# gnome-gyahtzee
+# gnome-gtali
 #
 
-gnome-gyahtzee@SUFFIX@: install
+gnome-gtali@SUFFIX@: install
 	@echo "--- Building: $@"
 	dh_installdocs       -p$@ -P$(b)/$@ \
-					gyahtzee/README \
-					gyahtzee/TODO gyahtzee/AUTHORS
+					gtali/README \
+					gtali/TODO gtali/AUTHORS
 	dh_installchangelogs -p$@ -P$(b)/$@ \
-					gyahtzee/ChangeLog
+					gtali/ChangeLog
 	dh_movefiles         -p$@ -P$(b)/$@
 	dh_strip             -p$@ -P$(b)/$@ 
 	dh_compress          -p$@ -P$(b)/$@
@@ -383,21 +459,21 @@ gnome-gyahtzee@SUFFIX@: install
 	dh_makeshlibs        -p$@ -P$(b)/$@
 #	dh_undocumented      -p$@ -P$(b)/$@ \
 					gtali.1 ctali.1
-	#sh debian/fix-desktop-file gyahtzee $(b)/$@
+	#sh debian/fix-desktop-file gtali $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
 	dh_builddeb          -p$@ -P$(b)/$@
 
 #
-# gnome-gnobots
+# gnome-mahjongg
 #
 
-gnome-gnobots@SUFFIX@: install
+gnome-mahjongg@SUFFIX@: install
 	@echo "--- Building: $@"
 	dh_installdocs       -p$@ -P$(b)/$@ \
-					gnobots/README \
-					gnobots/AUTHORS
+					mahjongg/README mahjongg/NEWS \
+					mahjongg/TODO AUTHORS
 	dh_installchangelogs -p$@ -P$(b)/$@ \
-					gnobots/ChangeLog
+					mahjongg/ChangeLog
 	dh_movefiles         -p$@ -P$(b)/$@
 	dh_strip             -p$@ -P$(b)/$@ 
 	dh_compress          -p$@ -P$(b)/$@
@@ -413,8 +489,8 @@ gnome-gnobots@SUFFIX@: install
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
 #	dh_undocumented      -p$@ -P$(b)/$@ \
-				gnobots.1
-	#sh debian/fix-desktop-file gnobots $(b)/$@
+				mahjongg.1
+	#sh debian/fix-desktop-file mahjongg $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
 	dh_builddeb          -p$@ -P$(b)/$@
 
@@ -509,7 +585,7 @@ gnome-gnometris@SUFFIX@: install
 	dh_builddeb          -p$@ -P$(b)/$@
 
 #
-# gnome-gnobots
+# gnome-gnotravex
 #
 
 gnome-gnotravex@SUFFIX@: install
@@ -539,46 +615,17 @@ gnome-gnotravex@SUFFIX@: install
 	dh_md5sums           -p$@ -P$(b)/$@
 	dh_builddeb          -p$@ -P$(b)/$@
 
+
 #
-# gnome-gnobots
+# gnome-iagno
 #
 
-gnome-metatris@SUFFIX@: install
+gnome-iagno@SUFFIX@: install
 	@echo "--- Building: $@"
 	dh_installdocs       -p$@ -P$(b)/$@ \
-					metatris/AUTHORS
+					iagno/AUTHORS
 	dh_installchangelogs -p$@ -P$(b)/$@ \
-					metatris/ChangeLog
-	dh_movefiles         -p$@ -P$(b)/$@
-	dh_strip             -p$@ -P$(b)/$@ 
-	dh_compress          -p$@ -P$(b)/$@
-	mkdir -p $(b)/$@/@LOCALSTATEDIR@/games
-	dh_fixperms          -p$@ -P$(b)/$@ 
-	chmod 2755 $(b)/$@/@PREFIX@/games/* 
-	chown root.games  $(b)/$@/@PREFIX@/games/*
-	dh_suidregister	     -p$@ -P$(b)/$@
-	dh_fixperms          -p$@ -P$(b)/$@
-	dh_installmenu       -p$@ -P$(b)/$@
-	dh_installdeb        -p$@ -P$(b)/$@
-	dh_shlibdeps         -p$@ -P$(b)/$@
-	dh_gencontrol        -p$@ -P$(b)/$@
-	dh_makeshlibs        -p$@ -P$(b)/$@
-#	dh_undocumented      -p$@ -P$(b)/$@ \
-				metatris.1
-	#sh debian/fix-desktop-file metatris $(b)/$@
-	dh_md5sums           -p$@ -P$(b)/$@
-	dh_builddeb          -p$@ -P$(b)/$@
-
-#
-# gnome-gnothello
-#
-
-gnome-gnothello@SUFFIX@: install
-	@echo "--- Building: $@"
-	dh_installdocs       -p$@ -P$(b)/$@ \
-					gnothello/AUTHORS
-	dh_installchangelogs -p$@ -P$(b)/$@ \
-					gnothello/ChangeLog
+					iagno/ChangeLog
 	dh_movefiles         -p$@ -P$(b)/$@
 	dh_strip             -p$@ -P$(b)/$@ 
 	dh_compress          -p$@ -P$(b)/$@

@@ -1,6 +1,6 @@
 #! /bin/sh
 
-for scorefile in metatris.scores ; do
+for scorefile in glines.scores ; do
 	if [ ! -f /@LOCALSTATEDIR@/games/$scorefile ]; then
 		touch /@LOCALSTATEDIR@/games/$scorefile
 	fi

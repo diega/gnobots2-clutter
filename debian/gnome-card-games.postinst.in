@@ -3,12 +3,4 @@
 set -e
 ldconfig
 
-for scorefile in iagno.b1.scores iagno.b2.scores iagno.b3.scores iagno.w1.scores iagno.w2.scores iagno.w3.scores  ; do
-	if [ ! -f /@LOCALSTATEDIR@/games/$scorefile ]; then
-		touch /@LOCALSTATEDIR@/games/$scorefile
-	fi
-	chown root.games /@LOCALSTATEDIR@/games/$scorefile
-	chmod 664 /@LOCALSTATEDIR@/games/$scorefile
-done
-
 #DEBHELPER#

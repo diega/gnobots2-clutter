@@ -1,3 +1,0 @@
-?package(gnome-gnothello@SUFFIX@):needs=X11 section=Games/Board\
-  title="Gnome Gnothello" command="/@BINDIR@/iagno"
-

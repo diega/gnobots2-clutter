@@ -1,2 +1,3 @@
 @BINDIR@/gturing
 @PREFIX@/share/gnome/help/gturing/*
+@PREFIX@/share/gnome/apps/Games/gturing.desktop

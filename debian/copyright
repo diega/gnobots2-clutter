@@ -4,18 +4,90 @@ The continued debianization has been done by James LewisMoss
 <dres@debian.org>.
 
 It was downloaded from
- ftp://ftp.gnome.org/pub/GNOME/sources/gnome-games-0.99.5.tar.gz
+ ftp://ftp.gnome.org/pub/GNOME/sources/gnome-games-1.0.51.tar.gz
 
 Copyright:
 
-The GNOME libraries (libgnome, libgnomeui, gtk-xmhtml and libgtktty) are
-released under the terms of the LGPL license, read the file COPYING.LIB
-for more information. 
+-gataxx is released under the GPL and has author:
+Chris Rogers - <gandalf@pobox.com>
 
-See /usr/doc/copyright/LGPL for the full license.
+-aisleriat (part of gnome-card-games)is released under the GPL
+and has authors:
+Jonathan Blandford (jrb@alum.mit.edu)
+Felix Bellaby (felix@pooh.u-net.com)
+Rosanna Yuen (rwsy@mit.edu)
 
-The rest of the code is released under the terms of the GPL license,
-read the file COPYING for more information. 
+-freecell is released under the GPL and has author:
+Ryu Changwoo <cwryu@eve.kaist.ac.kr>
 
-See /usr/doc/copyright/GPL for the full license.
+-glines is released under the GPL and has authors:
+Robert Szokovacs <szo@appaloosacorp.hu>
+Shooby Ban <bansz@szif.hu>
 
+-gnibbles is released under the GPL and has authors:
+Ian Peters <ipeters@acm.org>
+Sean MacIsaac <sjm@acm.org>
+
+-gnobots2 is released under the GPL and has authors:
+Mark Rae - <m.rae@inpharmatica.co.uk, Mark.Rae@ed.ac.uk>
+Cow & mice themes by Kirstie Opstad - <K.Opstad@ed.ac.uk>
+Super safe move option & docs added by ESR, Fri Apr 30 06:15:26 EDT 1999
+
+-gnome-stones is released under the GPL and the main.c file has the
+following copyright:
+Copyright (C) 1998 Carsten Schaar
+
+-gnometris is released under the GPL and has authors:
+J. Marcin Gorycki - <mgo@olicom.dk>
+
+-gnomine is released under the GPL and has AUTHORS file:
+Code: Pista <szekeres@cyberspace.mht.bme.hu> 
+Faces: tigert <tigert@gimp.org>
+
+-gnotravex is released under the GPL and has authors:
+Lars Rydlinge <Lars.Rydlinge@HiG.SE>
+
+-gtali is released under the GPL and has authors:
+Scott Heavner <sdh@po.cwru.edu>
+Orest Zborowski <don't bother him>
+
+-gturing is released under the GPL and has CREDITS file:
+Arturo Espinosa Aldama <arturo@nuclecu.unam.mx> - Main author.
+Cyrille Artho          <cartho@netlink.ch> - busy beaver, dashnumbers and typo 
+                                             corrections.
+-iagno is released under the GPL and has author:
+Ian Peters - <ipeters@acm.org>
+
+-mahjongg is released under the GPL and has the following comments in
+mahjongg.c:
+ * Gnome-Mahjongg
+ * (C) 1998-1999 the Free Software Foundation
+ *
+ *
+ * Author: Francisco Bustamante
+ *
+ *
+ * http://www.nuclecu.unam.mx/~pancho/
+ * pancho@nuclecu.unam.mx
+
+-same-gnome is released under the GPL and has the following comments
+in the same-gnome.c file:
+ * Same-Gnome: the game.
+ * (C) 1997 the Free Software Foundation
+ *
+ * Author: Miguel de Icaza.
+ *         Federico Mena.
+ *         Horacio Peña.
+ *
+ * The idea is originally from KDE's same game program.
+
+-scottfree is released under the GPL and has author:
+Alan Cox <alan@cymru.net>
+
+-xbill is released under the GPL and has authors:
+Brian Wellington <bwelling@tis.com>   (Main Programmer)
+Matias Duarte <matias@hyperimage.com> (Programming and Graphics)
+James Henstridge <james@daa.com.au>   (Porting to GTK widget set and GNOME)
+
+----------------------------------------------------------------------
+You can find a copy of the GPL on debian systems at /usr/doc/copyright/GPL.

@@ -5,3 +5,4 @@
 @PREFIX@/lib/gnome-stones/objects/*.so.[0-9]*
 @PREFIX@/lib/gnome-stones/objects/*.so
 @BINDIR@/gnome-stones
+@PREFIX@/share/mime-info/gnome-stones.*

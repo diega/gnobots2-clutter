@@ -1,0 +1,3 @@
+?package(gnome-xbill@SUFFIX@):needs=X11 section=Games/Arcade\
+  title="Gnome Xbill" command="/@BINDIR@/gnome-xbill"
+

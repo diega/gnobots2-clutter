@@ -1,4 +1,5 @@
 @PREFIX@/share/pixmaps/gnome-gtali.png
 @PREFIX@/share/gnome/apps/Games/gtali.desktop
+@PREFIX@/share/gnome/help/gtali/*
 @BINDIR@/gtali
 @BINDIR@/ctali

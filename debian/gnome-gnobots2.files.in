@@ -1,6 +1,7 @@
 etc/sound/events/gnobots2*
 @PREFIX@/share/gnobots2/*
 @PREFIX@/share/pixmaps/gnobots2/*
+@PREFIX@/share/pixmaps/gnome-gnobots2*
 @PREFIX@/share/sounds/gnobots2/*
 @PREFIX@/share/gnome/apps/Games/gnobots2.*
 @PREFIX@/share/gnome/help/gnobots2/*

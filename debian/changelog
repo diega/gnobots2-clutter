@@ -1,3 +1,28 @@
+gnome-games (1.0.51-2)  unstable; urgency=low
+
+  * Oops.  Had gnome-iagno's postinst as gnome-card-games's.  No idea
+    why.  Move it. Closes: 47429.
+
+ -- James LewisMoss <dres@debian.org>  Fri, 22 Oct 1999 20:05:01 -0400
+
+gnome-games (1.0.51-1)  unstable; urgency=low
+
+  * New upstream.
+  * Add in new games: xbill, glines, gataxx.
+  * Rename gothello -> iagno, and gyahtzee -> gtali.
+  * Fix typo in short descrip of gnome-games-locale.
+  * add some conflicts/provides to force removal of old package
+    gnome-gnobots. 
+  * Fix postinst.in's #DEBHELPER# -> ##DEBHELPER##.
+
+ -- James LewisMoss <dres@debian.org>  Fri, 22 Oct 1999 08:36:36 -0400
+
+gnome-games (1.0.42-1)  unstable; urgency=low
+
+  * New upstream.
+
+ -- James LewisMoss <dres@debian.org>  Tue, 28 Sep 1999 21:07:11 -0400
+
 gnome-games (1.0.2-9)  unstable; urgency=low
 
   * Add an ugly patch to gnotravex that fixes a configure_event loop

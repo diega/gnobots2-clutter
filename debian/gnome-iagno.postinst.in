@@ -1,6 +1,9 @@
 #! /bin/sh
 
-for scorefile in gnometris.scores ; do
+set -e
+ldconfig
+
+for scorefile in iagno.b1.scores iagno.b2.scores iagno.b3.scores iagno.w1.scores iagno.w2.scores iagno.w3.scores  ; do
 	if [ ! -f /var/lib/games/$scorefile ]; then
 		touch /var/lib/games/$scorefile
 	fi
@@ -9,5 +12,3 @@ for scorefile in gnometris.scores ; do
 done
 
 #DEBHELPER#
-
-

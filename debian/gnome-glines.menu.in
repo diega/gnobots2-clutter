@@ -1,0 +1,3 @@
+?package(gnome-glines@SUFFIX@):needs=X11 section=Games/Arcade\
+  title="Glines" command="/@BINDIR@/glines"
+

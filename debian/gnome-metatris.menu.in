@@ -1,3 +1,0 @@
-?package(gnome-metatris@SUFFIX@):needs=X11 section=Games/Tetris-like\
-  title="Metatris" command="/@BINDIR@/metatris"
-
