@@ -179,7 +179,7 @@ mark_balls (int x, int y)
 	if (tagged_count > 1) {
 		char *b;
 		ball_timeout_id = g_timeout_add (100, move_tagged_balls, 0);
-		b = g_strdup_printf (_("%d stones selected"), tagged_count);
+		b = g_strdup_printf (ngettext("%d stone selected", "%d stones selected", tagged_count), tagged_count);
                 gnome_appbar_set_status (GNOME_APPBAR(appbar), b);
 		g_free (b);
 	} else
