@@ -835,7 +835,8 @@ main (int argc, char *argv [])
 
 	if (!fname) {
 //		fname = g_strdup ("stones.png");
-		fname = gnome_config_get_string ("/same-gnome/Preferences/Scenario");
+		fname = gnome_config_get_string
+			("/same-gnome/Preferences/Scenario=stones.png");
 	}
 
 	create_same_board (fname);

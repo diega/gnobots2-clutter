@@ -1,5 +1,9 @@
 1999-02-13  Ian Peters  <ipeters@acm.org>
 
+	* same-gnome.c (main): Add a default value for config load
+
+1999-02-13  Ian Peters  <ipeters@acm.org>
+
 	* same-gnome.c (main): Instead of defaulting to marbles.png, actually
 	checks stored value for png file.
 
