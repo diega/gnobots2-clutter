@@ -1,6 +1,6 @@
 /* gnome-stones - object.h
  *
- * Time-stamp: <2002/05/02 16:59:46 dave>
+ * Time-stamp: <2002/10/31 08:24:27 ross>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -128,6 +128,9 @@ plugin_load (const gchar *filename)
 }
 
 
+#define SOEXT ("." G_MODULE_SUFFIX)
+#define SOEXT_LEN (strlen (SOEXT))
+
 void
 plugin_load_plugins_in_dir (const gchar *directory)
 {
@@ -139,8 +142,8 @@ plugin_load_plugins_in_dir (const gchar *directory)
   
   while ((e = readdir (d)) != NULL)
     {
-      if ((strlen (e->d_name) > 3) &&  
-	  (strncmp (e->d_name + strlen (e->d_name) - 3, ".so", 3) == 0))
+      if ((strlen (e->d_name) > SOEXT_LEN) &&  
+	  (strncmp (e->d_name + strlen (e->d_name) - SOEXT_LEN, SOEXT, SOEXT_LEN) == 0))
 	{
 	  char *objects_name;
 	  
