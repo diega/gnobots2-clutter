@@ -6,7 +6,11 @@ INCLUDES = 						\
 	-I$(GSTONES_SRC_DIR)				\
 	$(GNOME_GAMES_CFLAGS)				\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" 	\
+	-DG_DISABLE_DEPRECATED                          \
+	-DGTK_DISABLE_DEPRECATED 			\
 	-I$(includedir)					
+#       -DGDK_DISABLE_DEPRECATED 			\
+#       -DGNOME_DISABLE_DEPRECATED 			\
 	
 object_LTLIBRARIES = libgnome-stones.la libgnomekoban.la
 

@@ -6,9 +6,13 @@ Pixmapdir= $(datadir)/pixmaps
 Cavesdir = $(datadir)/gnome-stones
 
 
-INCLUDES =					\
+INCLUDES =						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	-DGNOMEPIXMAPDIR=\""$(datadir)/pixmaps"\"	\
+	-DG_DISABLE_DEPRECATED				\
+	-DGDK_DISABLE_DEPRECATED 			\
+	-DGTK_DISABLE_DEPRECATED 			\
+	-DGNOME_DISABLE_DEPRECATED			\
 	-DCAVESDIR=\""$(Cavesdir)"\"			\
 	$(GNOME_GAMES_CFLAGS)				\
 	-I$(includedir)					

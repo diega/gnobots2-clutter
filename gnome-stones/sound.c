@@ -1,6 +1,6 @@
 /* gnome-stones - sound.c
  *
- * Time-stamp: <2001/09/08 14:01:03 benes>
+ * Time-stamp: <2002/05/02 17:01:50 dave>
  *
  * Copyright (C) 2001 Michal Benes
  *
@@ -79,7 +79,8 @@ gint sound_register( char *name )
  if( numsamples>=MAX_SAMPLES-1 ) return -1;
 
  buf = g_strdup_printf( "gnome-stones/%s", name );
- fullname = gnome_sound_file( buf );
+ fullname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_SOUND,
+                                       buf, TRUE, NULL);
 
  sample_id = gnome_sound_sample_load( name, fullname );
 

@@ -1,6 +1,6 @@
 /* gnome-stones - status.c
  *
- * Time-stamp: <1998/10/15 20:35:32 carsten>
+ * Time-stamp: <2002/05/02 11:23:08 dave>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -178,7 +178,7 @@ void status_set_score (guint score)
       status_score= score;
       
       sprintf (buffer, "%d", status_score);
-      gtk_label_set (GTK_LABEL (status_score_label), buffer);
+      gtk_label_set_text (GTK_LABEL (status_score_label), buffer);
     }
 }
 
@@ -193,7 +193,7 @@ status_set_lives (guint lives)
       status_lives= lives;
       
       sprintf (buffer, "%d", status_lives);
-      gtk_label_set (GTK_LABEL (status_lives_label), buffer);
+      gtk_label_set_text (GTK_LABEL (status_lives_label), buffer);
     }
 }
 
@@ -204,14 +204,14 @@ status_set_diamonds (guint diamonds)
   gchar buffer[32];
 
   sprintf (buffer, "%d", diamonds);
-  gtk_label_set (GTK_LABEL (status_diamonds_label), buffer);
+  gtk_label_set_text (GTK_LABEL (status_diamonds_label), buffer);
 }
 
 
 void
 status_set_cave (char *cave)
 {
-  gtk_label_set (GTK_LABEL (status_cave_label), cave);
+  gtk_label_set_text (GTK_LABEL (status_cave_label), cave);
 }
 
 

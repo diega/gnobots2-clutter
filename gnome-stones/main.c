@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <2001/09/08 14:57:37 benes>
+ * Time-stamp: <2002/05/02 17:09:45 dave>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -134,7 +134,8 @@ load_image_from_path (const char *relative_name)
   gchar         *filename;
   GdkPixbuf *image= NULL;
 
-  filename= gnome_pixmap_file (relative_name);
+  filename= gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP, 
+                                       relative_name, TRUE, NULL);
   if (filename)
     image= gdk_pixbuf_new_from_file (filename, NULL);
 
@@ -149,11 +150,14 @@ load_image_from_path (const char *relative_name)
 		    "Please make sure, that Gnome-Stones is "
 		    "correctly installed!"), relative_name);
 					    
-      widget= gnome_error_dialog (buffer);
-      gtk_signal_connect (GTK_OBJECT (widget), "close",
-			  GTK_SIGNAL_FUNC (my_exit), NULL);
+      widget= gtk_message_dialog_new (GTK_WINDOW(app), 
+                                      GTK_DIALOG_DESTROY_WITH_PARENT,
+                                      GTK_MESSAGE_ERROR, 
+                                      GTK_BUTTONS_CLOSE, 
+                                      buffer);
+      gtk_dialog_run(GTK_DIALOG(widget));
 
-      gtk_main ();
+      gtk_widget_destroy(widget);
     }
   
   return image;
@@ -244,58 +248,63 @@ static void
 game_update_title (void)
 {
   /* Replace image with template.  */
-  gdk_draw_pixmap (title_image,
-		   gstones_view->style->black_gc, title_template,
-		   0, 0,
-		   0, 0, GAME_COLS*STONE_SIZE, GAME_ROWS*STONE_SIZE);
+  gdk_draw_drawable (title_image,
+                     gstones_view->style->black_gc, title_template,
+                     0, 0,
+                     0, 0, GAME_COLS*STONE_SIZE, GAME_ROWS*STONE_SIZE);
 
   if (game)
     {
       static char *gametitle= N_("Game title:");
       static char *cavename = N_("Start cave:");
 
-      guint    height;
-      GdkFont *font;
+      guint    width, height;
+      PangoLayout *layout;
+      PangoFontDescription *pfd;
       GList   *tmp= g_list_nth (game->start_caves, start_cave);
 
-#if 0
-      font = gdk_font_ref (gstones_view->style->font);
-
-      if (!font)
-#endif
-	font= gdk_font_load ("fixed");
-
-      height= font->ascent+font->descent;
-
-      gdk_draw_text   (title_image,
-		       font,
-		       gstones_view->style->black_gc,
-		       30, GAME_ROWS*STONE_SIZE-30-height*3-height/2,
-		       _(gametitle),
-		       strlen (_(gametitle)));
-
-      gdk_draw_text   (title_image,
-		       font,
-		       gstones_view->style->black_gc,
-		       30, GAME_ROWS*STONE_SIZE-30-height*2-height/2,
-		       game->title,
-		       strlen (_(game->title)));
+      layout = gtk_widget_create_pango_layout(gstones_view, _(gametitle));
+      pfd = pango_font_description_from_string("fixed");
+      pango_layout_set_font_description( layout, pfd);
       
-      gdk_draw_text   (title_image,
-		       font,
-		       gstones_view->style->black_gc,
-		       30, GAME_ROWS*STONE_SIZE-30-height,
-		       _(cavename),
-		       strlen (_(cavename)));
+      pango_layout_get_pixel_size (layout, &width, &height);
 
-      gdk_draw_text   (title_image,
-		       font,
+      gdk_draw_layout (title_image,
 		       gstones_view->style->black_gc,
-		       30, GAME_ROWS*STONE_SIZE-30,
-		       tmp->data,
-		       strlen (tmp->data));
+		       30, 
+                       GAME_ROWS*STONE_SIZE-30-height*3-height/2,
+                       layout);
 
-      gdk_font_unref (font);
+      pango_layout_set_text( layout, 
+                             game->title,
+                             strlen (_(game->title)));
+
+      gdk_draw_layout (title_image,
+		       gstones_view->style->black_gc,
+		       30, 
+                       GAME_ROWS*STONE_SIZE-30-height*2-height/2,
+                       layout);
+
+      pango_layout_set_text( layout, 
+                             _(cavename),
+                             strlen (_(cavename)));
+
+      gdk_draw_layout (title_image,
+		       gstones_view->style->black_gc,
+		       30, 
+                       GAME_ROWS*STONE_SIZE-30-height,
+                       layout);
+
+      pango_layout_set_text( layout, 
+                             tmp->data,
+                             strlen (tmp->data));
+
+      gdk_draw_layout (title_image,
+		       gstones_view->style->black_gc,
+		       30, 
+                       GAME_ROWS*STONE_SIZE-30,
+                       layout);
+
     }  
 
   /* Redraw the game widget.  */
@@ -741,10 +750,10 @@ joystick_set_widget (GtkWidget *widget)
   
   gtk_widget_set_events (widget, gtk_widget_get_events (widget) | 
 			 GDK_FOCUS_CHANGE);
-  gtk_signal_connect (GTK_OBJECT (widget), "focus_in_event",
-		      (GtkSignalFunc) joystick_focus_change_event, 0);
-  gtk_signal_connect (GTK_OBJECT (widget), "focus_out_event",
-		      (GtkSignalFunc) joystick_focus_change_event, 0);
+  g_signal_connect (GTK_OBJECT (widget), "focus_in_event",
+                    (GtkSignalFunc) joystick_focus_change_event, 0);
+  g_signal_connect (GTK_OBJECT (widget), "focus_out_event",
+                    (GtkSignalFunc) joystick_focus_change_event, 0);
 
   joystick_widget= widget;
 }
@@ -1087,7 +1096,8 @@ scan_private_game_directory (void)
 static gboolean
 scan_public_plugin_directory (void)
 {
-  char *dir= gnome_unconditional_libdir_file ("gnome-stones/objects/");
+  char *dir= gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_LIBDIR, 
+                                        "gnome-stones/objects/", FALSE, NULL);
 
   plugin_load_plugins_in_dir (dir);
 
@@ -1252,13 +1262,13 @@ main (int argc, char *argv[])
   
   gtk_widget_set_events (app, gtk_widget_get_events (app) | GAME_EVENTS);
 
-  gtk_signal_connect (GTK_OBJECT (app), "key_press_event",
+  g_signal_connect (GTK_OBJECT (app), "key_press_event",
 		      GTK_SIGNAL_FUNC (game_widget_key_press_callback), 0);
-  gtk_signal_connect (GTK_OBJECT (app), "key_release_event",
+  g_signal_connect (GTK_OBJECT (app), "key_release_event",
 		      GTK_SIGNAL_FUNC (game_widget_key_release_callback), 0);
-  gtk_signal_connect (GTK_OBJECT (app), "delete_event",
+  g_signal_connect (GTK_OBJECT (app), "delete_event",
 		      GTK_SIGNAL_FUNC (gtk_widget_destroy), 0);
-  gtk_signal_connect (GTK_OBJECT (app), "destroy",
+  g_signal_connect (GTK_OBJECT (app), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_main_quit), 0);
 
   joystick_set_widget (app);

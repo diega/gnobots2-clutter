@@ -103,26 +103,35 @@ view_init (GStonesView *view)
 }
 
 
-GtkType
+GType
 view_get_type (void)
 {
-  static GtkType view_type= 0;
+  static GType view_type= 0;
 
   if (!view_type)
     {
-      GtkTypeInfo view_info=
+      GTypeInfo view_info=
       {
-	"GStonesView",
-	sizeof (GStonesView),
 	sizeof (GStonesViewClass),
-	(GtkClassInitFunc) view_class_init,
-	(GtkObjectInitFunc) view_init,
-	NULL, /* reserved 1 */
-	NULL, /* reserved 2 */
-	(GtkClassInitFunc) NULL
+
+	(GBaseInitFunc) view_init,
+        NULL,
+
+	(GClassInitFunc) view_class_init,
+        NULL,
+        NULL,
+
+	sizeof (GStonesView),
+        0,
+	NULL,
+        
+	NULL
       };
       
-      view_type= gtk_type_unique (gtk_drawing_area_get_type (), &view_info);
+      view_type= g_type_register_static (gtk_drawing_area_get_type (), 
+                                         "GStonesView", 
+                                         &view_info,
+                                         0 );
     }
   
   return view_type;
@@ -146,9 +155,9 @@ view_new (GdkPixbuf *curtain_image)
 
   g_return_val_if_fail (curtain_image, NULL);
 
-  gtk_widget_push_colormap (gdk_rgb_get_cmap ());
+  gtk_widget_push_colormap (gdk_rgb_get_colormap ());
 
-  view= gtk_type_new (view_get_type ());
+  view= g_object_new (view_get_type (), NULL);
   
   gtk_widget_pop_colormap ();
 
@@ -172,7 +181,7 @@ view_new (GdkPixbuf *curtain_image)
 
 #else
 
-  gtk_widget_push_colormap (gdk_rgb_get_cmap ());
+  gtk_widget_push_colormap (gdk_rgb_get_colormap ());
 
   view->canvas= gtk_drawing_area_new ();
   canvas= gnome_canvas_new ();
@@ -292,38 +301,36 @@ view_expose (GtkWidget *widget, GdkEventExpose *event)
 	    if (image!=view->last_image[x][y])
 	      {
 		view->last_image[x][y]=image;
-		gdk_draw_pixmap (view->view_buffer,
-				 widget->style->black_gc, image,
-				 0, 0, 
-				 x*STONE_SIZE, 
-				 y*STONE_SIZE,
-				 STONE_SIZE, STONE_SIZE);
+		gdk_draw_drawable (view->view_buffer,
+                                   widget->style->black_gc, image,
+                                   0, 0, 
+                                   x*STONE_SIZE, 
+                                   y*STONE_SIZE,
+                                   STONE_SIZE, STONE_SIZE);
 	      }
 	  }
 	else
 	  {
 	    
 	    view->last_image[x][y]= view->image;
-	    gdk_draw_pixmap (view->view_buffer,
-			     widget->style->black_gc, view->image,
-			     x*STONE_SIZE-view->x_offset, 
-			     y*STONE_SIZE-view->y_offset, 
-			     x*STONE_SIZE, 
-			     y*STONE_SIZE,
-			     STONE_SIZE, STONE_SIZE);
+	    gdk_draw_drawable (view->view_buffer,
+                               widget->style->black_gc, view->image,
+                               x*STONE_SIZE-view->x_offset, 
+                               y*STONE_SIZE-view->y_offset, 
+                               x*STONE_SIZE, 
+                               y*STONE_SIZE,
+                               STONE_SIZE, STONE_SIZE);
 	  }
  
      }
 
-  gdk_draw_pixmap (widget->window,
-		   widget->style->black_gc, view->view_buffer,
-		   area->x+view->x_offset, 
-		   area->y+view->y_offset, 
-		   area->x, 
-		   area->y,
-		   area->width, area->height);
-  
-
+  gdk_draw_drawable (widget->window,
+                     widget->style->black_gc, view->view_buffer,
+                     area->x+view->x_offset, 
+                     area->y+view->y_offset, 
+                     area->x, 
+                     area->y,
+                     area->width, area->height);
 
   return TRUE;
 }
@@ -424,10 +431,10 @@ view_display_image (GStonesView *view, GdkPixmap *image)
   if (image)
     {
       if (view->image)
-	gdk_pixmap_unref (view->image);
+	gdk_drawable_unref (view->image);
       
       view->image= image;
-      gdk_pixmap_ref (view->image);
+      gdk_drawable_ref (view->image);
     }
 
   view->display_mode= DISPLAY_IMAGE;

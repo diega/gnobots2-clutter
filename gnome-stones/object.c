@@ -1,6 +1,6 @@
 /* gnome-stones - object.h
  *
- * Time-stamp: <1998/11/09 19:34:12 carsten>
+ * Time-stamp: <2002/05/02 16:59:46 dave>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -261,7 +261,8 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
   object->plugin     = plugin;
 
   filename= g_strconcat ("gnome-stones/", description->image_name, NULL);
-  pathname= gnome_pixmap_file (filename);
+  pathname=  gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP,  
+                                        filename, TRUE, NULL);
   image   = gdk_pixbuf_new_from_file (pathname, NULL);
   g_free (pathname);
   g_free (filename);

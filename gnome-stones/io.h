@@ -1,6 +1,6 @@
 /* gnome-stones - io.h
  *
- * Time-stamp: <1998/11/01 16:48:03 carsten>
+ * Time-stamp: <2002/05/02 14:49:58 dave>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -21,6 +21,7 @@
 #ifndef IO_H
 #define IO_H
 
+#include <string.h>
 #include "types.h"
 
 GStonesGame *gstones_game_load (const gchar *name);

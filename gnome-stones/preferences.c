@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <2001/09/08 20:19:56 benes>
+ * Time-stamp: <2002/05/02 17:26:51 dave>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -24,6 +24,7 @@
 #endif
 
 #include "preferences.h"
+#include "status.h"
 #include "main.h"
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -33,6 +34,15 @@
 
 /*****************************************************************************/
 /* Global Variables */
+
+/* Enum for preferences dialog */
+enum {
+     GAME_STRING,
+     CAVES_INT,
+     FILENAME_STRING,
+     INDEX_INT,
+     N_COLS
+};
 
 /* The default game, that should be loaded, if no client state is to
    be restored.  If this variables value is NULL, than 'default.cave'
@@ -412,9 +422,6 @@ typedef struct _PreferencesData PreferencesData;
 
 struct _PreferencesData
 {
-  /* General information.  */
-  GnomePropertyBox *property_box;
-  
   /* Page one.  */
   GtkWidget        *game_list;
   gint              selected_game;
@@ -435,33 +442,34 @@ struct _PreferencesData
 
 
 static void
-preferences_apply_cb (GtkWidget *w, gint page, gpointer data)
+preferences_response_cb (GtkWidget *w, gint response_id, gpointer data)
 {
   PreferencesData *prdata= (PreferencesData *) data;
 
   g_return_if_fail (prdata != NULL);
 
-  switch (page)
-    {
-    case 0:
-      /* FIXME: Add some checks and warnings here.  */
-      if (prdata->selected_game > -1)
-	load_game_by_number (prdata->selected_game);
-      break;
+  switch(response_id)
+  {
+  case GTK_RESPONSE_CLOSE:
+  case GTK_RESPONSE_ACCEPT:
+       /* FIXME: Add some checks and warnings here.  */
+       if (prdata->selected_game > -1)
+            load_game_by_number (prdata->selected_game);
+       
+       joystick_set_properties (prdata->joystick_deviceid,
+                                prdata->joystick_switch_level);
+       set_scroll_method (prdata->scroll_method_name);
+       /* After setting all needed values, we can save the programs
+          state to disc.  */
+       preferences_save_global ();
+       gtk_widget_destroy (preferences_dialog);
+       preferences_dialog = NULL;
+       break;
 
-    case 1:
-      joystick_set_properties (prdata->joystick_deviceid,
-			       prdata->joystick_switch_level);
-      break;
-    case 3:
-      set_scroll_method (prdata->scroll_method_name);
-      break;
-    default:
-      /* After setting all needed values, we can save the programs
-         state to disc.  */
-      preferences_save_global ();
-      break;
-    }
+  case GTK_RESPONSE_HELP:
+       break;
+  }
+
 }
 
 
@@ -483,22 +491,32 @@ preferences_changed_cb (GtkWidget *w, gpointer data)
   
   g_return_if_fail (prdata != NULL);
 
-  gnome_property_box_changed (prdata->property_box);
 }
 
 
 static void 
-game_selector_select_row (GtkCList * clist,
-			  gint row, gint column,
-			  GdkEvent * event, gpointer data)
+game_selector_select_row (GtkTreeSelection * selection,
+                          gpointer data)
 {
   PreferencesData *prdata= (PreferencesData *) data;
-  
+  GtkTreeView * view;
+  GtkTreeIter iter;
+  GtkTreeModel *model;
+
   g_return_if_fail (prdata != NULL);
 
-  preferences_changed_cb (GTK_WIDGET (clist), data);
+  view = gtk_tree_selection_get_tree_view(selection);
+  preferences_changed_cb (GTK_WIDGET(view), data);
 
-  prdata->selected_game= row;
+  if(gtk_tree_selection_get_selected(selection, &model, &iter))
+  {
+       int index;
+       gtk_tree_model_get(model, &iter, 
+                          INDEX_INT, &index,
+                          -1);
+       prdata->selected_game= index;
+  }
+
 }
 
 
@@ -522,7 +540,6 @@ preferences_set_joystick_device (GtkWidget *widget, gpointer data)
       gtk_widget_set_sensitive (prdata->level_frame, TRUE);
     }
 #endif
-  gnome_property_box_changed (prdata->property_box);
 }
 
 
@@ -534,7 +551,6 @@ preferences_set_joystick_switch_level (GtkAdjustment *adjust, gpointer data)
 
   prdata->joystick_switch_level= adjust->value;
 
-  gnome_property_box_changed (prdata->property_box);
 }
 
 
@@ -550,8 +566,6 @@ preferences_set_scroll_method (GtkWidget *widget, gpointer data)
 
   prdata->scroll_method_name= (gchar *)data;
 
-  gnome_property_box_changed (prdata->property_box);
-
 }
 
 
@@ -560,92 +574,144 @@ preferences_set_scroll_method (GtkWidget *widget, gpointer data)
 static GtkWidget *
 preferences_dialog_new (void)
 {
-  GtkWidget *propbox;
+  GtkWidget *properties;
   GtkWidget *box;
+  GtkWidget *notebook;
+  GtkWidget *list_view;
   GtkWidget *label;
-  GtkWidget *list;
   GtkWidget *scrolled;
-
+  GtkListStore *list;
+  GtkTreeIter iter;
+  GtkTreeSelection *selection;
+  GtkCellRenderer *renderer;
+  GtkTreeViewColumn *column;
+  
   PreferencesData *prdata;
-
+  
   prdata= g_malloc (sizeof (PreferencesData));
-
-  propbox= gnome_property_box_new ();
-  prdata->property_box= GNOME_PROPERTY_BOX (propbox);
   
-  gtk_window_set_title (GTK_WINDOW(&GNOME_PROPERTY_BOX(propbox)->dialog.window),
-			_("Gnome-Stones Preferences"));
-  gtk_window_set_wmclass (GTK_WINDOW(&GNOME_PROPERTY_BOX(propbox)->dialog.window),
-			  "gnome-stones", "preferences");
+  properties = gtk_dialog_new_with_buttons(_("Gnome-Stones Preferences"),
+                                           GTK_WINDOW(app),
+                                           /*GTK_DIALOG_MODAL |*/ GTK_DIALOG_DESTROY_WITH_PARENT,
+                                           GTK_STOCK_HELP, GTK_RESPONSE_HELP,
+                                           GTK_STOCK_CLOSE, GTK_RESPONSE_ACCEPT,
+                                           NULL);
+  g_signal_connect (GTK_OBJECT(properties), "destroy",
+                    GTK_SIGNAL_FUNC(gtk_widget_destroyed), &properties);
   
-
+  notebook = gtk_notebook_new();
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG(properties)->vbox), notebook, 
+                      TRUE, TRUE, 0);
+  gtk_widget_show (notebook);
+  
   /* The first page of our preferences dialog. */
   box= gtk_vbox_new (FALSE, GNOME_PAD);
   gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
 
   /* The list of game names.  */
-  list= gtk_clist_new (3);
-  prdata->game_list= list;
+  list= gtk_list_store_new (N_COLS, 
+                            G_TYPE_STRING, /* Game title */ 
+                            G_TYPE_INT, /* Number of caves */
+                            G_TYPE_STRING, /* Filename */
+                            G_TYPE_INT); /* Index - remains hidden */
 
-  gtk_clist_set_column_title (GTK_CLIST (list), 0, _("Game title"));
-  gtk_clist_set_column_width (GTK_CLIST (list), 0, 250);
-  gtk_clist_set_column_title (GTK_CLIST (list), 1, _("Caves"));
-  gtk_clist_set_column_width (GTK_CLIST (list), 1, 50);
-  gtk_clist_set_column_justification (GTK_CLIST (list), 1, GTK_JUSTIFY_RIGHT);
-  gtk_clist_set_column_title (GTK_CLIST (list), 2, _("Filename"));
-  gtk_clist_column_titles_passive (GTK_CLIST (list));
-  gtk_clist_column_titles_show (GTK_CLIST (list));
-  gtk_widget_set_usize (list, -2, 200);
+  /* Populate list */
+  {
+    GList *tmp= games;
+    int index = 0;
+
+    while (tmp)
+      {
+	char buffer[10];
+	GameFile *file= (GameFile *)tmp->data;
+	gint      row;
+	
+        gtk_list_store_append(list, &iter);
+        gtk_list_store_set (list, &iter,
+                            GAME_STRING, file->gametitle,
+                            CAVES_INT, file->caves,
+                            FILENAME_STRING, file->filename,
+                            INDEX_INT, index,
+                            -1);
+        index++;
+	tmp= tmp->next;
+      }
+  }
+
+  /* Create view */
+  list_view = gtk_tree_view_new_with_model(GTK_TREE_MODEL(list));
+
+  g_object_unref(list);
+
+  prdata->game_list= list_view;
+
+  renderer = gtk_cell_renderer_text_new();
+  column = gtk_tree_view_column_new_with_attributes(_("Game title"), 
+                                                 renderer, 
+                                                 "text", 0, 
+                                                 NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW(list_view), column);
   
-  gtk_clist_set_selection_mode (GTK_CLIST (list), GTK_SELECTION_SINGLE);
+  renderer = gtk_cell_renderer_text_new();
+  column = gtk_tree_view_column_new_with_attributes(_("Caves"), renderer, 
+                                                 "text", 1, 
+                                                 NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW(list_view), column);
+
+  renderer = gtk_cell_renderer_text_new();
+  column = gtk_tree_view_column_new_with_attributes(_("Filename"), renderer, 
+                                                 "text", 2, 
+                                                 NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW(list_view), column);
 
   scrolled = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
                                   GTK_POLICY_ALWAYS,
                                   GTK_POLICY_AUTOMATIC);
-  gtk_container_add (GTK_CONTAINER (scrolled), list);
-  gtk_box_pack_start (GTK_BOX (box), scrolled, FALSE, FALSE, GNOME_PAD_SMALL);
 
-  gtk_clist_freeze (GTK_CLIST (list));
-  prdata->selected_game= -1;
+  gtk_container_add (GTK_CONTAINER (scrolled), list_view);
+  gtk_box_pack_start (GTK_BOX (box), scrolled, TRUE, TRUE, GNOME_PAD_SMALL);
+
+  selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(list_view));
+  gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
+
   {
-    GList *tmp= games;
-    
-    while (tmp)
-      {
-	char buffer[10];
-	GameFile *file= (GameFile *)tmp->data;
-	char     *entry[3];
-	gint      row;
-	
-	entry[0]= file->gametitle;
-	sprintf (buffer, "%d", file->caves);
-	entry[1]= buffer;
-	entry[2]= g_basename (file->filename);
-	
-	row= gtk_clist_append (GTK_CLIST (list), entry);
-
-	if (game && strcmp (file->filename, game->filename) == 0)
-	  {
-	    gtk_clist_select_row (GTK_CLIST (list), row, 0);
-	    prdata->selected_game= row;
-	  }
-
-	tmp= tmp->next;
-      }
+       gboolean valid;
+       GtkTreeModel *model;
+       /* Get an iter associated with the view */
+  
+       model = gtk_tree_view_get_model(GTK_TREE_VIEW(list_view));
+       valid = gtk_tree_model_get_iter_first( model, &iter);
+  
+       while(valid)
+       {
+            /* Walk through list, testing each row */
+            gchar *filename;
+            int index;
+            gtk_tree_model_get(model, &iter,
+                               FILENAME_STRING, &filename,
+                               INDEX_INT, &index,
+                               -1 );
+            if (game && strcmp (filename, game->filename) == 0)
+            {
+                 gtk_tree_selection_select_iter (selection, &iter);
+                 prdata->selected_game= index;
+            }
+            valid = gtk_tree_model_iter_next (model, &iter);
+       }
   }
-  gtk_clist_thaw (GTK_CLIST (list));
-  gtk_signal_connect (GTK_OBJECT (list), "select_row", 
-		      GTK_SIGNAL_FUNC (game_selector_select_row),
-		      prdata);
 
-  gtk_widget_show (list);
+  g_signal_connect ( selection, 
+                     "changed", 
+                     GTK_SIGNAL_FUNC (game_selector_select_row),
+                     prdata);
+
+  gtk_widget_show (list_view);
   gtk_widget_show (scrolled);
   gtk_widget_show (box);
 
   label= gtk_label_new (_("Game"));
-  gtk_notebook_append_page (GTK_NOTEBOOK 
-			    (GNOME_PROPERTY_BOX (propbox)->notebook), 
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), 
 			    box, label);
 
   /* The second page of our preferences dialog. */
@@ -690,11 +756,11 @@ preferences_dialog_new (void)
     menuitem= gtk_menu_item_new_with_label (_("disabled"));
     gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
 #if 0
-    gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
+    g_signal_connect (GTK_OBJECT (menuitem), "activate",
 			(GtkSignalFunc) preferences_set_joystick_device,
 			GUINT_TO_POINTER (GDK_CORE_POINTER));
 #endif
-    gtk_menu_append (GTK_MENU (device_menu), menuitem);
+    gtk_menu_shell_append (GTK_MENU_SHELL (device_menu), menuitem);
     gtk_widget_show (menuitem);
 
 #if 0    
@@ -708,11 +774,11 @@ preferences_dialog_new (void)
 	    menuitem= gtk_menu_item_new_with_label (info->name);
 
 	    gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
-            gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
+            g_signal_connect (GTK_OBJECT (menuitem), "activate",
                                 (GtkSignalFunc) preferences_set_joystick_device,
                                 GUINT_TO_POINTER (info->deviceid));
 
-	    gtk_menu_append (GTK_MENU (device_menu), menuitem);
+	    gtk_menu_shell_append (GTK_MENU_SHELL (device_menu), menuitem);
 	    gtk_widget_show (menuitem);
 	  }
 
@@ -748,7 +814,7 @@ preferences_dialog_new (void)
     adjust= gtk_adjustment_new (prdata->joystick_switch_level,
 				0.0, 1.0, 0.02, 0.1, 0.0);
     gtk_object_set_user_data (adjust, prdata);
-    gtk_signal_connect (adjust, "value_changed",
+    g_signal_connect (adjust, "value_changed",
 			(GtkSignalFunc) preferences_set_joystick_switch_level,
 			NULL);
     
@@ -768,8 +834,7 @@ preferences_dialog_new (void)
   gtk_widget_show (box);
 
   label= gtk_label_new (_("Joystick"));
-  gtk_notebook_append_page (GTK_NOTEBOOK 
-			    (GNOME_PROPERTY_BOX (propbox)->notebook), 
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), 
 			    box, label);
 
   /* The third page of our preferences dialog. */
@@ -786,8 +851,7 @@ preferences_dialog_new (void)
   gtk_widget_show (box); 
 
   label= gtk_label_new (_("Sound"));
-  gtk_notebook_append_page (GTK_NOTEBOOK
-			    (GNOME_PROPERTY_BOX (propbox)->notebook),
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
 			    box, label);
 
 
@@ -833,10 +897,10 @@ preferences_dialog_new (void)
 
     menuitem= gtk_menu_item_new_with_label (_("Atari like scrolling"));
     gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
-    gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
+    g_signal_connect (GTK_OBJECT (menuitem), "activate",
 			(GtkSignalFunc) preferences_set_scroll_method,
 			"atari_scroll");
-    gtk_menu_append (GTK_MENU (scroll_method_menu), menuitem);
+    gtk_menu_shell_append (GTK_MENU_SHELL (scroll_method_menu), menuitem);
     gtk_widget_show (menuitem);
 
     if (!strcmp(prdata->scroll_method_name,"atari_scroll"))
@@ -848,10 +912,10 @@ preferences_dialog_new (void)
 
     menuitem= gtk_menu_item_new_with_label (_("Smooth scrolling"));
     gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
-    gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
+    g_signal_connect (GTK_OBJECT (menuitem), "activate",
 			(GtkSignalFunc) preferences_set_scroll_method,
 			"smooth_scroll");
-    gtk_menu_append (GTK_MENU (scroll_method_menu), menuitem);
+    gtk_menu_shell_append (GTK_MENU_SHELL (scroll_method_menu), menuitem);
     gtk_widget_show (menuitem);
 
     if (!strcmp(prdata->scroll_method_name,"smooth_scroll"))
@@ -862,10 +926,10 @@ preferences_dialog_new (void)
 
     menuitem= gtk_menu_item_new_with_label (_("Always in the center"));
     gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
-    gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
+    g_signal_connect (GTK_OBJECT (menuitem), "activate",
 			(GtkSignalFunc) preferences_set_scroll_method,
 			"center_scroll");
-    gtk_menu_append (GTK_MENU (scroll_method_menu), menuitem);
+    gtk_menu_shell_append (GTK_MENU_SHELL (scroll_method_menu), menuitem);
     gtk_widget_show (menuitem);
 
     if (!strcmp(prdata->scroll_method_name,"center_scroll"))
@@ -889,17 +953,16 @@ preferences_dialog_new (void)
   gtk_widget_show (box); 
 
   label= gtk_label_new (_("Misc."));
-  gtk_notebook_append_page (GTK_NOTEBOOK
-			    (GNOME_PROPERTY_BOX (propbox)->notebook),
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
 			    box, label);
 
 
-
-  gtk_signal_connect (GTK_OBJECT (propbox), "destroy",
+  g_signal_connect (GTK_OBJECT (properties), "response",
+		      GTK_SIGNAL_FUNC (preferences_response_cb), prdata);
+  g_signal_connect (GTK_OBJECT (properties), "close",
 		      GTK_SIGNAL_FUNC (preferences_destroy_cb), prdata);
-  gtk_signal_connect (GTK_OBJECT (propbox), "apply",
-		      GTK_SIGNAL_FUNC (preferences_apply_cb), prdata);
-  return propbox;
+
+  return properties;
 }
 
 
@@ -908,7 +971,7 @@ preferences_dialog_show (void)
 {
   if (!preferences_dialog)
     {
-      preferences_dialog= preferences_dialog_new ();
+      preferences_dialog = preferences_dialog_new ();
     }
   
   gtk_widget_show (preferences_dialog);
@@ -926,10 +989,10 @@ session_management_init (void)
 {
   GnomeClient *client= gnome_master_client ();
   
-  gtk_signal_connect (GTK_OBJECT (client), "save_yourself",
+  g_signal_connect (GTK_OBJECT (client), "save_yourself",
 		      GTK_SIGNAL_FUNC (preferences_save_local), 
 		      GINT_TO_POINTER (FALSE));
-  gtk_signal_connect (GTK_OBJECT (client), "die",
+  g_signal_connect (GTK_OBJECT (client), "die",
 		      GTK_SIGNAL_FUNC (gstones_exit), NULL);
 }
 

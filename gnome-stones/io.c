@@ -1,6 +1,6 @@
 /* gnome-stones - io.c
  *
- * Time-stamp: <1999/08/09 18:05:13 robert>
+ * Time-stamp: <2002/05/02 14:50:18 dave>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
