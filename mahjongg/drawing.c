@@ -403,6 +403,8 @@ gboolean load_images (gchar * file)
     }
   }
   
+  if (tilepixbuf != NULL) g_object_unref (tilepixbuf);
+
   tilepixbuf = gdk_pixbuf_new_from_file (filename, NULL);
   
   update_tileimages = TRUE;
