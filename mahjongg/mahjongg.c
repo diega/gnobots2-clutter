@@ -423,11 +423,11 @@ GnomeUIInfo mainmenu [] = {
 	{GNOME_APP_UI_ENDOFINFO}
 };
 
-GnomeUIInfo toolbar [] = {
+GnomeUIInfo toolbar_uiinfo [] = {
 	{GNOME_APP_UI_ITEM, N_("New"), NULL, new_game_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_NEW, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("New Seed"), NULL, select_game_callback, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("Seed"), NULL, select_game_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_NEW, 0, 0, NULL},
 
          {GNOME_APP_UI_ITEM, N_("Restart"), NULL, restart_game_callback, NULL, NULL,
@@ -445,7 +445,7 @@ GnomeUIInfo toolbar [] = {
          {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), NULL, sound_on_callback, NULL, NULL,
          GNOME_APP_PIXMAP_DATA, mini_sound_xpm, 0, 0, NULL},
 
-         {GNOME_APP_UI_ITEM, N_("Properties"), NULL, properties_callback, NULL, NULL,
+         {GNOME_APP_UI_ITEM, N_("Prop."), NULL, properties_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_PROPERTIES, 0, 0, NULL},
 
          {GNOME_APP_UI_SEPARATOR},
@@ -1176,15 +1176,21 @@ void select_game_callback (GtkWidget *widget, gpointer data)
 
 void show_tb_callback (GtkWidget *widget, gpointer data)
 {
+    GnomeDockItem *gdi;
+    GtkWidget *toolbar;
+
+    gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
+    toolbar = gnome_dock_item_get_child (gdi);
+
     if((GTK_CHECK_MENU_ITEM(optionsmenu[0].widget))->active)
     {
         gnome_config_set_bool("gmahjongg/toolbar/show", TRUE);
-        gtk_widget_show(GTK_WIDGET(GNOME_APP(window)->toolbar->parent));
+        gtk_widget_show(gdi);
     }
     else
     {
         gnome_config_set_bool("gmahjongg/toolbar/show", FALSE);
-        gtk_widget_hide(GTK_WIDGET(GNOME_APP(window)->toolbar->parent));
+        gtk_widget_hide(gdi);
     }
 }
 
@@ -1374,6 +1380,8 @@ void new_game ()
 
 int main (int argc, char *argv [])
 {
+        GnomeDockItem *gdi;
+	GtkWidget *toolbar;
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
 
@@ -1384,32 +1392,32 @@ int main (int argc, char *argv [])
 	generate_dependancies () ;
 
 	window = gnome_app_new ("gmahjongg", _("Gnome Mahjongg"));
-	gtk_widget_realize (window);
 	gtk_window_set_policy (GTK_WINDOW (window), FALSE, FALSE, TRUE);
 
 	gnome_app_create_menus (GNOME_APP (window), mainmenu);
-
-        gnome_app_create_toolbar (GNOME_APP (window), toolbar);
-        gtk_toolbar_set_space_size(GTK_TOOLBAR(GNOME_APP(window)->toolbar), 25);
+        gnome_app_create_toolbar (GNOME_APP (window), toolbar_uiinfo);
+	gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
+	toolbar = gnome_dock_item_get_child (gdi);
+        gtk_toolbar_set_space_size(GTK_TOOLBAR (toolbar), 25);
         
         if(gnome_config_get_bool("/gmahjongg/toolbar/show=TRUE"))
             gtk_check_menu_item_set_state(GTK_CHECK_MENU_ITEM(optionsmenu[0].widget), TRUE);
         else
-            gtk_widget_hide(GNOME_APP(window)->toolbar->parent);
+	    gtk_widget_hide(gdi);
 
-        tiles_label = gtk_label_new(_(" Tiles "));
+        tiles_label = gtk_label_new(_("Tiles"));
         gtk_widget_show(tiles_label);
-        gtk_toolbar_append_widget(GTK_TOOLBAR(GNOME_APP(window)->toolbar), tiles_label,
-                                  NULL, NULL);
-        tiles_label = gtk_label_new(_(" Remaining: "));
+	gtk_toolbar_append_widget(GTK_TOOLBAR(toolbar), tiles_label,
+				  NULL, NULL);
+        tiles_label = gtk_label_new(_(" Left: "));
         gtk_widget_show(tiles_label);
-        gtk_toolbar_append_widget(GTK_TOOLBAR(GNOME_APP(window)->toolbar), tiles_label,
-                                  NULL, NULL);
+	gtk_toolbar_append_widget(GTK_TOOLBAR(toolbar), tiles_label,
+				  NULL, NULL);
         tiles_label = gtk_label_new(MAX_TILES_STR);
         gtk_widget_show(tiles_label);
-        gtk_toolbar_append_widget(GTK_TOOLBAR(GNOME_APP(window)->toolbar), tiles_label,
-                                  NULL, NULL);
-        gtk_toolbar_append_space(GTK_TOOLBAR(GNOME_APP(window)->toolbar));
+	gtk_toolbar_append_widget(GTK_TOOLBAR(toolbar), tiles_label,
+				  NULL, NULL);
+	gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
 
 	gtk_signal_connect (GTK_OBJECT (window), "delete_event",
 			    GTK_SIGNAL_FUNC (quit_game_callback), NULL);
