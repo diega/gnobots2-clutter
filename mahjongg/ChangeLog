@@ -1,5 +1,11 @@
 2004-06-09  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* mahjongg.c: Remove the explicit shuffle controls and
+	only offer shuffle if the player has run out of moves.
+	The undo button is now also offered rather than an OK
+	button that leaves an unplayable board. Fixes bug
+	#139295.
+
 	* solubility.c: Fix the shuffle routine so that the same 
 	tiles are reused. Fixes bug #139294.
 

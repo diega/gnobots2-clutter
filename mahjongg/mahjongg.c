@@ -823,10 +823,6 @@ GnomeUIInfo gamemenu [] = {
 
 	 GNOMEUIINFO_MENU_HINT_ITEM(hint_callback, NULL),
 
-         {GNOME_APP_UI_ITEM, N_("Shu_ffle tiles"), N_("Shuffle tiles"),
-		 shuffle_tiles_callback, NULL, NULL, GNOME_APP_PIXMAP_STOCK,
-		 NULL, 0, 0, NULL},
-
 	 GNOMEUIINFO_SEPARATOR,
 
          GNOMEUIINFO_MENU_SCORES_ITEM(scores_callback, NULL),
@@ -887,10 +883,6 @@ GnomeUIInfo toolbar_uiinfo [] = {
 		NULL, NULL, GNOME_APP_PIXMAP_STOCK, GTK_STOCK_HELP, GDK_H,
 		GDK_CONTROL_MASK, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Shuffle"), N_("Shuffle tiles"),
-		shuffle_tiles_callback, NULL, NULL,
-		GNOME_APP_PIXMAP_STOCK, GTK_STOCK_EXECUTE, 0, 0, NULL},
-
 	{GNOME_APP_UI_ENDOFINFO}
 };
 
@@ -911,11 +903,6 @@ static void set_menus_sensitive (void)
 	/* Hint */
 	state = moves_left > 0;
 	gtk_widget_set_sensitive (gamemenu[7].widget, state);
-	gtk_widget_set_sensitive (toolbar_uiinfo[6].widget, state);
-
-	/* Shuffle */
-	state = game_over != GAME_WON;
-	gtk_widget_set_sensitive (gamemenu[5].widget, state);
 	gtk_widget_set_sensitive (toolbar_uiinfo[6].widget, state);
 
 	/* Restart */
@@ -1389,18 +1376,19 @@ check_free (void)
 						     GTK_BUTTONS_NONE,
 						     (_("There are no more moves.")));
 			gtk_dialog_add_buttons (GTK_DIALOG (mb),
-						_("Shuffle"),
+						GTK_STOCK_UNDO,
 						GTK_RESPONSE_REJECT,
-						GTK_STOCK_OK,
+						_("Shuffle"),
 						GTK_RESPONSE_ACCEPT,
 						NULL);
 			gtk_dialog_set_default_response (GTK_DIALOG (mb),
 							 GTK_RESPONSE_ACCEPT);
-			if (gtk_dialog_run (GTK_DIALOG (mb)) == GTK_RESPONSE_REJECT)
+			if (gtk_dialog_run (GTK_DIALOG (mb)) == GTK_RESPONSE_ACCEPT)
 				shuffle_tiles_callback (NULL, NULL);
+			else
+				undo_tile_callback (NULL, NULL);
 			gtk_widget_destroy (mb);
                 }
-                game_over = GAME_LOST;
  	} 
 }
 
