@@ -391,9 +391,10 @@ static void gtk_gridboard_load_pixmaps (GtkGridBoard * gridboard) {
         }
 
         /* what happens here ? */
-        gdk_pixbuf_render_pixmap_and_mask (image, 
-                        &(gridboard->tiles_pixmap), 
-                        NULL, 127);
+        gdk_pixbuf_render_pixmap_and_mask_for_colormap (image, 
+							gdk_colormap_get_system (),
+							&(gridboard->tiles_pixmap), 
+							NULL, 127);
   
         gdk_pixbuf_unref (image);
 }

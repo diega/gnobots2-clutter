@@ -438,7 +438,9 @@ dist_to_mask (GnomeCanvasPImage *image, int cx, int cy)
 
 	best = a.width * a.height; /* start with a "big" value */
 
-        gdk_pixbuf_render_pixmap_and_mask (image->im, NULL, &mask, 127);
+        gdk_pixbuf_render_pixmap_and_mask_for_colormap (image->im, 
+							gdk_colormap_get_system(),
+							NULL, &mask, 127);
         
         if (mask != NULL) {
 		gimage = gdk_image_get (mask, dest.x, dest.y,

@@ -190,7 +190,9 @@ view_new (GdkPixbuf *curtain_image)
   view->view_buffer = NULL;
 
   /* Initialize curtain stuff.  */
-  gdk_pixbuf_render_pixmap_and_mask (curtain_image, &view->curtain_image, NULL, 127);
+  gdk_pixbuf_render_pixmap_and_mask_for_colormap (curtain_image, 
+						  gdk_colormap_get_system (),
+						  &view->curtain_image, NULL, 127);
   
   view->curtain_display_mode= CURTAIN_DISPLAY_CLOSING;
   view->curtain             = 0;

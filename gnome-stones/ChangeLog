@@ -1,3 +1,10 @@
+2004-12-13  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* object.c:
+	* view.c:
+	* main.c: gdk_pixbuf_render_pixmap_and_mask -> 
+	gdk_pixbuf_render_pixmap_and_mask_for_colormap.
+
 2004-09-09  callum  <callum@spooky-possum.org>
 
 	* help/C/gnome-stones.xml: Updated for 2.8.

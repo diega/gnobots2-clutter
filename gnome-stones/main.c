@@ -184,7 +184,8 @@ title_image_load (void)
   image = load_image_from_path ("gnome-stones/title-tile.png");
   if (image != NULL) 
     {
-      gdk_pixbuf_render_pixmap_and_mask (image, &tile, NULL, 127);
+      gdk_pixbuf_render_pixmap_and_mask_for_colormap (image, gdk_colormap_get_system(),
+						      &tile, NULL, 127);
       gdk_pixbuf_unref (image);
     }
 

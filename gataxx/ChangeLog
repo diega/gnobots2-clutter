@@ -1,3 +1,7 @@
+2004-12-13  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gtkgridboard.c: gdk_pixbuf_render_pixmap_and_mask -> gdk_pixbuf_render_pixmap_and_mask_for_colormap.
+
 2004-11-27  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* properties.c: Patch from Paolo Borelli <pborelli@katamail.com>

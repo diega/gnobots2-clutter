@@ -335,7 +335,9 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
 	gdk_pixbuf_copy_area (image, x*STONE_SIZE, y*STONE_SIZE,
                                           STONE_SIZE, STONE_SIZE, object->pixbuf_image[idx], 0, 0);
 	
-	gdk_pixbuf_render_pixmap_and_mask (object->pixbuf_image[idx], &object->image[idx], NULL, 127);
+	gdk_pixbuf_render_pixmap_and_mask_for_colormap (object->pixbuf_image[idx], 
+							gdk_colormap_get_system(), 
+							&object->image[idx], NULL, 127);
       }
   
   /* Add object to the plugin's object table.  */
