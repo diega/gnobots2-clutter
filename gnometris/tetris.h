@@ -24,7 +24,7 @@
 #include <config.h>
 #include <gnome.h>
 
-#define TETRIS_VERSION "1.2.1"
+#define TETRIS_VERSION "1.2.2"
 
 extern int LINES;
 extern int COLUMNS;
@@ -109,6 +109,7 @@ private:
 	static int gameProperties(GtkWidget *widget, void *d);
 	static void setupdialogDestroy(GtkWidget *widget, void *d);
 	static void doSetup(GtkWidget *widget, void *d);
+ 	static void setRotateCounterClockWise(GtkWidget *widget, void *d);
 	static void setSelectionPreview(GtkWidget *widget, void *d);
 	static void setSelectionBlocks(GtkWidget *widget, void *d);
 	static void setSelection (GtkWidget *widget, void *data);
@@ -129,6 +130,7 @@ private:
 	int cmdlineLevel;
 	bool doPreviewTmp;
 	bool randomBlocksTmp;
+ 	bool rotateCounterClockWiseTmp;
 
 	GtkWidget * fill_height_spinner;
 	int line_fill_height;

@@ -138,14 +138,21 @@ BlockOps::moveBlockRight()
 }
 
 bool
-BlockOps::rotateBlock()
+BlockOps::rotateBlock(bool rotateCCW)
 {
 	bool moved = false;
 	
 	int r = rot;
-	if (++r >= 4)
-		r = 0;
 	
+	if ( rotateCCW )
+	{
+		if (--r < 0) r = 3;
+	}
+	else
+	{
+		if (++r >= 4) r = 0;
+	}
+		
 	if (blockOkHere(posx, posy, blocknr, r))
 	{
 		putBlockInField(true);

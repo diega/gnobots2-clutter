@@ -51,6 +51,7 @@ int color_next = -1;
 
 bool random_block_colors = false;
 bool do_preview = true;
+bool rotateCounterClockWise = true;
 
 char *Tetris::blockPixmapTmp = 0;
 char *Tetris::bgPixmapTmp = 0;
@@ -274,10 +275,12 @@ Tetris::doSetup(GtkWidget *widget, void *d)
 	t->line_fill_height = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(t->fill_height_spinner));
 	do_preview = t->doPreviewTmp;
 	random_block_colors = t->randomBlocksTmp;
+ 	rotateCounterClockWise = t->rotateCounterClockWiseTmp;
 	
 	gnome_config_set_int("/gnometris/Properties/StartingLevel", t->startingLevel);
 	gnome_config_set_int("/gnometris/Properties/DoPreview", do_preview);
 	gnome_config_set_int("/gnometris/Properties/RandomBlockColors", random_block_colors);
+ 	gnome_config_set_int("/gnometris/Properties/RotateCounterClockWise", rotateCounterClockWise);
 	gnome_config_set_int("/gnometris/Properties/LineFillHeight", t->line_fill_height);
 	gnome_config_set_int("/gnometris/Properties/LineFillProbability", t->line_fill_prob);
 	
@@ -316,6 +319,13 @@ Tetris::setSelectionBlocks(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
 	t->randomBlocksTmp = GTK_TOGGLE_BUTTON(widget)->active;
+}
+
+void 
+Tetris::setRotateCounterClockWise(GtkWidget *widget, void *d)
+{
+	Tetris *t = (Tetris*) d;
+	t->rotateCounterClockWiseTmp = GTK_TOGGLE_BUTTON(widget)->active;
 }
 
 void
@@ -483,6 +493,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
   t->startingLevel = gnome_config_get_int_with_default("/gnometris/Properties/StartingLevel=1", 0);
 	random_block_colors = gnome_config_get_int_with_default("/gnometris/Properties/RandomBlockColors=0", 0) != 0;
 	do_preview = gnome_config_get_int_with_default("/gnometris/Properties/DoPreview=0", 0) != 0;
+ 	rotateCounterClockWise = gnome_config_get_int_with_default("/gnometris/Properties/RotateCounterClockWise=0", NULL) != 0;
 
   adj = gtk_adjustment_new(t->startingLevel, 1, 10, 1, 5, 10);
 	t->sentry = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 10, 0);
@@ -510,6 +521,12 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_signal_connect(GTK_OBJECT(cb), "clicked", (GtkSignalFunc)setSelectionBlocks, d);
 	gtk_box_pack_start(GTK_BOX(box), cb, 0, 0, 0);
 	gtk_widget_show(cb);
+
+ 	cb = gtk_check_button_new_with_label(_("Rotate counterclockwise"));
+ 	gtk_toggle_button_set_state(GTK_TOGGLE_BUTTON(cb), rotateCounterClockWise);
+ 	gtk_signal_connect(GTK_OBJECT(cb), "clicked", (GtkSignalFunc)setRotateCounterClockWise, d);
+ 	gtk_box_pack_start(GTK_BOX(box), cb, 0, 0, 0);
+ 	gtk_widget_show(cb);
 
 	blockPixmapTmp=0;
 	box2 = gtk_hbox_new(FALSE, 0);
@@ -679,7 +696,7 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 			res = t->ops->moveBlockRight();
 			break;
 		case GDK_Up:
-			res = t->ops->rotateBlock();
+			res = t->ops->rotateBlock(rotateCounterClockWise);
 			break;
 		case GDK_Down:
 			if (!t->fastFall)
