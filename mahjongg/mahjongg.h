@@ -24,7 +24,9 @@
 #define TILE_HEIGHT 56
 #define HALF_WIDTH 18
 #define HALF_HEIGHT 26
-#define MAH_VERSION "0.5.0"
+#define MAH_VERSION "0.99.0"
+
+#include <gnome.h>
 
 extern int xpos_offset;
 extern int ypos_offset;
@@ -47,7 +49,7 @@ struct _tilepos {
 	int layer;
 };
 
-extern tilepos *pos ;
+extern tilepos *pos;
 
 struct _tile{
   int type;
@@ -58,6 +60,8 @@ struct _tile{
   int visible;
   int selected;
   int sequence;
+  int number;
+  GnomeCanvasItem *canvas_item;
 };
 
 extern tile tiles[MAX_TILES];

@@ -1,3 +1,12 @@
+1998-11-15  Francisco Bustamante <pancho@nuclecu.unam.mx>
+	* mahjongg.c: All the tile drawing is now done by
+	gnome-canvas. The code is somewhat cleaner, and the redraws are
+	definitely better. TODO: make changing map and changing tile
+	images work. When you use gnome_canvas_item_set to change the
+	image, do we need to destroy the old image? 
+	* default.png: Someone did something to the transparent parts of
+	the image, so I put them again. This is to make tiles nicer.
+	
 1998-11-01  Yo Ric Dude  <ricdude@ix.netcom.com>
 
 	* mahjongg.c: Calculate x and y offsets to place tiles in the

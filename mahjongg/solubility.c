@@ -336,7 +336,7 @@ void place_tile (int f, int t, int idx)
 
   tiles[f].type = type_info[t].type;
   tiles[f].image = type_info[t].image[idx] ;
-
+  
   assert (dep_tree[f].free) ;
   assert (!dep_tree[f].filled) ;
   dep_tree[f].filled = 1 ; /* Lord */
