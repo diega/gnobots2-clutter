@@ -318,7 +318,7 @@ int find_tile_in_layer (int x, int y, int layer)
 	
 int find_tile (int x, int y)
 {
-	int i, tile_num = MAX_TILES + 1, layer = 0, temp_tile;
+	int i, tile_num = MAX_TILES + 1, layer = 0;
 
 	for (i = 0; i < MAX_TILES; i++) {
 		if ((tiles[i].x < x) && ((tiles[i].x + TILE_WIDTH) > x) && (tiles[i].visible)) {
@@ -336,7 +336,7 @@ int find_tile (int x, int y)
 void draw_selected_tile (int i)
 {
 	redraw_area (tiles[i].x, tiles[i].y,
-		     tiles[i].x + TILE_WIDTH, tiles[i].y + TILE_HEIGHT,
+		     tiles[i].x + TILE_WIDTH - 1, tiles[i].y + TILE_HEIGHT - 1,
 		     tiles[i].layer);
 }
 
@@ -492,7 +492,8 @@ void about_callback (GtkWidget *widget, gpointer data)
 	about = gnome_about_new (_("Gnome Mahjongg"), MAH_VERSION,
 				 "(C) 1998 The Free Software Foundation",
 				 authors,
-				 _("Send comments and bug reports to: pancho@nuclecu.unam.mx\nTiles under the General Public License."),
+				 _("Send comments and bug reports to: pancho@nuclecu.unam.mx\n"
+				   "Tiles under the General Public License."),
 				 NULL);
 	gtk_widget_show (about);
 }
@@ -578,7 +579,7 @@ void select_game_callback (GtkWidget *widget, gpointer data)
 
 void new_game (void)
 {
-	int i, f, n, col = 0, row = 0;
+	int i, f, n;
 	
 	visible_tiles = 144;
 	for (f = 0; f < 144; f++) {
@@ -607,61 +608,67 @@ void new_game (void)
 
 void redraw_tile_in_area (int x1, int y1, int x2, int y2, int tile)
 {
-	int x_pos, y_pos, x_end, y_end, orig_x, orig_y, tile_width, tile_height;
+	GdkRectangle trect, arect, dest;
+	int orig_x, orig_y;
 
 	if (tile < MAX_TILES) {
-		if (tiles[tile].x <= x1) 
-			x_pos = x1;
-		else x_pos = tiles[tile].x;
-	
-		if ((tiles[tile].x + TILE_WIDTH) >= x2)
-			x_end = x2;
-		else x_end = tiles[tile].x + TILE_WIDTH;
+		trect.x = tiles[tile].x;
+		trect.y = tiles[tile].y;
+		trect.width = TILE_WIDTH;
+		trect.height = TILE_HEIGHT;
 
-		if (tiles[tile].y <= y1) 
-			y_pos = y1;
-		else y_pos = tiles[tile].y;
-		if ((tiles[tile].y + TILE_HEIGHT) >= y2)
-			y_end = y2;
-		else y_end = tiles[tile].y + TILE_HEIGHT;
-	
-		tile_width = x_end - x_pos;
-		tile_height = y_end - y_pos;
+		arect.x = x1;
+		arect.y = y1;
+		arect.width = x2 - x1 + 1;
+		arect.height = y2 - y1 + 1;
 
-		orig_x = ((tiles[tile].image % 21) * TILE_WIDTH) + x_pos - tiles[tile].x;
-		orig_y = ((tiles[tile].image / 21) * TILE_HEIGHT) + y_pos - tiles[tile].y;
-		if (tiles[tile].selected == 1) orig_y += 2 * TILE_HEIGHT;
+		if (gdk_rectangle_intersect (&trect, &arect, &dest)) {
+			/* 21 is the number of tiles in a row of the source image */
 
-		gdk_gc_set_clip_origin (my_gc, tiles[tile].x, tiles[tile].y);
+			orig_x = (tiles[tile].image % 21) * TILE_WIDTH + dest.x - trect.x;
+			orig_y = (tiles[tile].image / 21) * TILE_HEIGHT + dest.y - trect.y;
 
-		gdk_draw_pixmap (draw_area->window,
-				 my_gc, tiles_pix,
-				 orig_x, orig_y, x_pos, y_pos,
-				 tile_width, tile_height);
+			if (tiles[tile].selected)
+				orig_y += 2 * TILE_HEIGHT;
+
+			gdk_gc_set_clip_origin (my_gc, trect.x, trect.y);
+
+			gdk_draw_pixmap (draw_area->window,
+					 my_gc,
+					 tiles_pix,
+					 orig_x, orig_y,
+					 dest.x, dest.y,
+					 dest.width, dest.height);
+		}
 	}
-	
 }
 
 void redraw_area (int x1, int y1, int x2, int y2, int mlayer)
 {
 	int i;
+	GdkRectangle area, trect, dest;
+
+	area.x = x1;
+	area.y = y1;
+	area.width = x2 - x1 + 1;
+	area.height = y2 - y1 + 1;
 
 	for(i = 0; i < MAX_TILES; i ++) {
 		if ((tiles[i].visible) && (tiles[i].layer >= mlayer)) {
-			if (((tiles[i].x >= x1) && (tiles[i].x <= x2)) ||
-			    ((tiles[i].x + TILE_WIDTH >= x1) && (tiles[i].x + TILE_WIDTH <= x2)))
-				if (((tiles[i].y >= y1) && (tiles[i].y <= y2)) ||
-				    ((tiles[i].y + TILE_HEIGHT >= y1) && (tiles[i].y + TILE_HEIGHT <= y2)))
-					redraw_tile_in_area (x1, y1, x2, y2, i);
+			trect.x = tiles[i].x;
+			trect.y = tiles[i].y;
+			trect.width = TILE_WIDTH;
+			trect.height = TILE_HEIGHT;
+
+			if (gdk_rectangle_intersect (&area, &trect, &dest))
+				redraw_tile_in_area (x1, y1, x2, y2, i);
 		}
 	}
 }
 
 void refresh (GdkRectangle *area)
 {
-	int x1, y1, x2, y2, x, y, i;
-
-	redraw_area (area->x, area->y, area->x + area->width, area->y + area->height, 0);
+	redraw_area (area->x, area->y, area->x + area->width - 1, area->y + area->height - 1, 0);
 }
 
 void tile_gone (int i, int x, int y)
@@ -670,8 +677,8 @@ void tile_gone (int i, int x, int y)
 			       TILE_WIDTH, TILE_HEIGHT);
 	
 	redraw_area (tiles[i].x, tiles[i].y, 
-		     tiles[i].x + TILE_WIDTH,
-		     tiles[i].y + TILE_HEIGHT,
+		     tiles[i].x + TILE_WIDTH - 1,
+		     tiles[i].y + TILE_HEIGHT - 1,
 		     0);
 }
 
@@ -723,19 +730,22 @@ void button_pressed (int x, int y)
 gint area_event (GtkWidget *widget, GdkEvent *event, void *d)
 {
 	switch (event->type) {
-		case GDK_EXPOSE : {
-			GdkEventExpose *e = (GdkEventExpose *) event;
-			refresh (&e->area);
-			return TRUE;
-		}
+	case GDK_EXPOSE : {
+		GdkEventExpose *e = (GdkEventExpose *) event;
+		refresh (&e->area);
+		return TRUE;
+	}
 
-		case GDK_BUTTON_PRESS: {
-			int x, y;
+	case GDK_BUTTON_PRESS: {
+		int x, y;
 
-			gtk_widget_get_pointer (widget, &x, &y);
-			button_pressed (x, y);
-			return TRUE;
-		}
+		gtk_widget_get_pointer (widget, &x, &y);
+		button_pressed (x, y);
+		return TRUE;
+	}
+
+	default:
+		return FALSE;
 	}
 }
 
@@ -770,7 +780,14 @@ void create_mahjongg_board (void)
 {
  	GtkStyle *style;
 
+	gtk_widget_push_visual (gdk_imlib_get_visual ());
+	gtk_widget_push_colormap (gdk_imlib_get_colormap ());
+
 	draw_area = gtk_drawing_area_new ();
+
+	gtk_widget_pop_colormap ();
+	gtk_widget_pop_visual ();
+	
 	gtk_widget_set_events (draw_area, gtk_widget_get_events (draw_area) | GAME_EVENTS);
 
 	style = gtk_widget_get_style (draw_area);
@@ -824,19 +841,20 @@ int main (int argc, char *argv [])
 	mbox = gtk_vbox_new (FALSE, 0);
 
 	gnome_app_set_contents (GNOME_APP (window), mbox);
+	create_mahjongg_board ();
 
-	cc = gdk_color_context_new (gtk_widget_get_visual (window),
-				    gtk_widget_get_colormap (window));
+	cc = gdk_color_context_new (gtk_widget_get_visual (draw_area),
+				    gtk_widget_get_colormap (draw_area));
 	color.red = 0;
-	color.blue = 0;
-	color.green = 200;
+	color.green = 0x4040;
+	color.blue = 0x3030;
+	color.pixel = 0;
+	x = 0;
 	gdk_color_context_get_pixels (cc,
 				      &color.red,
 				      &color.green,
 				      &color.blue, 1,
 				      &color.pixel, &x);
-	create_mahjongg_board ();
-
 	gdk_window_set_background (draw_area->window, &color);
 	
 	gtk_widget_show (window);

@@ -1,3 +1,18 @@
+1998-04-24  Federico Mena Quintero  <federico@nuclecu.unam.mx>
+
+	* mahjongg.c (create_mahjongg_board): Make the drawing area use
+	the correct visual.
+	(refresh): Fixed off-by-one error.
+	(main): Made it use GdkColorContext correctly (remember to
+	initialize the pixel and used arrays!).  Also, color values are in
+	[0, 65535].
+	Fixed compiler warnings.
+	(tile_gone): Fixed off-by-one.
+	(draw_selected_tile): Fixed off-by-one.
+	(redraw_area): Made it use gdk_rectangle_intersect for correct behavior.
+	(redraw_tile_in_area): Made it use gdk_rectangle_intersect for
+	simpler code and correct behavior.
+
 Sat Mar 21 15:36:39 1998  Tom Tromey  <tromey@cygnus.com>
 
 	* mahjongg.c: Use gnome_message_box_*, not gnome_messagebox_*.
