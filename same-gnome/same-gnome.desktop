@@ -1,16 +1,20 @@
 [Desktop Entry]
 Name=Same Gnome
-Name[es]=Same Gnome
 Name[de]=Same Gnome
-Name[ko]=세임그놈
+Name[es]=Same Gnome
 Name[fr]=Same Gnome
+Name[ga]=An Gnome Cianna
+Name[ja]=ㅅㅱGnome
+Name[ko]=세임그놈
 Name[no]=Same Gnome
 Name[pt]=Same Gnome
 Comment=Gnome SameGame program
-Comment[es]=Juego Gnome SameGame
 Comment[de]=Gnome Variante des Spiels SameGame
-Comment[ko]=그놈 세임그놈 게임
+Comment[es]=Juego Gnome SameGame
 Comment[fr]=Clone Gnome du Jeu SameGame
+Comment[ga]=An Gnome Cianna
+Comment[ja]=ㅅㅱGnome
+Comment[ko]=그놈 세임그놈 게임
 Comment[no]=Gnome klone av SameGame
 Comment[pt]=Variante Gnome do jogo SameGame
 Exec=same-gnome
