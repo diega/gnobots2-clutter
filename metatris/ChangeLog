@@ -1,3 +1,10 @@
+1999-01-15  Chris Lahey  <clahey@umich.edu>
+
+	* metatris.c (create_metatris_window): Turned display of the score
+	back on.  Sped it up a bunch with a fix from Owen.
+	(add_piece): Put the timeout from 000 back to 1000 where it
+	belongs.
+
 1999-01-14  Chris Lahey  <clahey@umich.edu>
 
 	* metatris.c: Redesigned theming a bit.

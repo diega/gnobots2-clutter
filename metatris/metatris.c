@@ -29,7 +29,7 @@ gint window_count;
 #define PIECE_COUNT 7
 
 /* #define AA_METATRIS 1 */
-/* #define SHOW_SCORE 1 */
+#define SHOW_SCORE 1
 
 GdkImlibImage **metatris_images;
 GdkImlibImage *metatris_bg;
@@ -96,11 +96,8 @@ static GnomeUIInfo filemenu[] =
 static GnomeUIInfo gamemenu[] =
 {
   GNOMEUIINFO_MENU_NEW_GAME_ITEM(file_new_callback, NULL),
-  
-  { GNOME_APP_UI_ITEM_CONFIGURABLE, NULL, NULL,
-    game_scores_callback, NULL, NULL,
-    GNOME_APP_PIXMAP_NONE, NULL,
-    GNOME_APP_CONFIGURABLE_ITEM_SCORES, 0, NULL },
+
+  GNOMEUIINFO_MENU_SCORES_ITEM(game_scores_callback, NULL ),
   
   GNOMEUIINFO_END
 };
@@ -493,7 +490,7 @@ add_piece( MetatrisWindow *metatris )
       show_metatris_piece( metatris, piece );
       if ( metatris->timeout )
 	gtk_timeout_remove( metatris->timeout );
-      metatris->timeout = gtk_timeout_add( 000 / metatris->level, drop_piece_callback, metatris );
+      metatris->timeout = gtk_timeout_add( 1000 / metatris->level, drop_piece_callback, metatris );
     }
 }
 
@@ -874,6 +871,7 @@ create_metatris_window( void )
   GnomeApp *app;
   MetatrisWindow *metatris = g_new( MetatrisWindow, 1 );
   GtkWidget *main_vbox;
+  GtkWidget *score_hbox;
   GtkWidget *canvas;
   gint i;
 
@@ -950,8 +948,11 @@ create_metatris_window( void )
   gtk_box_pack_start( GTK_BOX( main_vbox ), canvas, TRUE, TRUE, 0 );
 
 #if SHOW_SCORE
+  score_hbox = gtk_hbox_new( FALSE, 0 );
+  gtk_box_pack_start( GTK_BOX( main_vbox ), score_hbox, FALSE, FALSE, 0 );
+  gtk_container_set_resize_mode ( GTK_CONTAINER( score_hbox ), GTK_RESIZE_QUEUE);
   metatris->score_label = gtk_label_new( "0" );
-  gtk_box_pack_start( GTK_BOX( main_vbox ), metatris->score_label, FALSE, FALSE, 0 );
+  gtk_box_pack_start( GTK_BOX( score_hbox ), metatris->score_label, TRUE, TRUE, 0 );
 #endif
 
   /* Add the main vbox to the window */
