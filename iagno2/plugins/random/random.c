@@ -39,22 +39,22 @@ plugin_init_player (gchar player)
   gchar *pref_file;
   gchar *tmp_message;
 
-  pref_file = g_strdup_printf ("/iagno2/Random/player%d_busy_message=Random Player is stalling for time...", player - 1);
+  pref_file = g_strdup_printf ("/iagno2/Random/player%d_busy_message=Random Player is stalling for time...", player);
   tmp_message = gnome_config_get_string (pref_file);
   g_free (pref_file);
 
-  g_snprintf (busy_message[player - 1], 50, "%s", tmp_message);
+  g_snprintf (busy_message[player], 50, "%s", tmp_message);
   g_free (tmp_message);
 
-  printf ("%s\n", busy_message[player - 1]);
+  printf ("%s\n", busy_message[player]);
 }
 
 void
 plugin_deinit_player (gchar player)
 {
-  if (new_message[player - 1]) {
-    g_free (new_message[player - 1]);
-    new_message[player - 1] = NULL;
+  if (new_message[player]) {
+    g_free (new_message[player]);
+    new_message[player] = NULL;
   }
 }
 
@@ -99,7 +99,7 @@ plugin_name ()
 const gchar *
 plugin_busy_message (gchar player)
 {
-  return (busy_message[player - 1]);
+  return (busy_message[player]);
 }
 
 void
@@ -139,11 +139,11 @@ plugin_preferences_window (GtkWidget *parent, gchar player)
 
     entry = (GtkWidget *) data;
 
-    if (new_message[player - 1]) {
-      g_free (new_message[player - 1]);
+    if (new_message[player]) {
+      g_free (new_message[player]);
     }
 
-    new_message[player - 1] = g_strdup (gtk_entry_get_text (GTK_ENTRY (entry)));
+    new_message[player] = g_strdup (gtk_entry_get_text (GTK_ENTRY (entry)));
 
     gnome_property_box_changed (GNOME_PROPERTY_BOX (parent));
   }
@@ -159,10 +159,10 @@ plugin_preferences_window (GtkWidget *parent, gchar player)
 
   entry = gtk_entry_new_with_max_length (49);
 
-  if (new_message[player - 1]) {
-    gtk_entry_set_text (GTK_ENTRY (entry), new_message[player - 1]);
+  if (new_message[player]) {
+    gtk_entry_set_text (GTK_ENTRY (entry), new_message[player]);
   } else {
-    gtk_entry_set_text (GTK_ENTRY (entry), busy_message[player - 1]);
+    gtk_entry_set_text (GTK_ENTRY (entry), busy_message[player]);
   }
 
   gtk_box_pack_start (GTK_BOX (GNOME_DIALOG (dialog)->vbox),
@@ -187,19 +187,19 @@ plugin_preferences_save (gchar player)
 
   printf ("%d\n", player);
   
-  if (new_message[player - 1] == NULL) {
+  if (new_message[player] == NULL) {
     return;
   }
 
   pref_file = g_strdup_printf ("/iagno2/Random/player%d_busy_message",
-                               player - 1);
-  gnome_config_set_string (pref_file, new_message[player - 1]);
+                               player);
+  gnome_config_set_string (pref_file, new_message[player]);
   g_free (pref_file);
 
-  g_snprintf (busy_message[player - 1], 50, "%s", new_message[player - 1]);
+  g_snprintf (busy_message[player], 50, "%s", new_message[player]);
 
-  g_free (new_message[player - 1]);
-  new_message[player - 1] = NULL;
+  g_free (new_message[player]);
+  new_message[player] = NULL;
 
   gnome_config_sync ();
 }

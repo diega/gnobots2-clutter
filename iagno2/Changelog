@@ -1,4 +1,8 @@
-2000-04-12  Ian Peters  <itp@gnu.org>
+2000-04-13  Ian Peters  <itp@gnu.org>
+
+	* BLACK and WHITE are 0 and 1, not 1 and 2
+
+2000-04-13  Ian Peters  <itp@gnu.org>
 
 	* Seperated BLACK_TILE and WHITE_TILE into BLACK_TILE and BLACK, etc.
 	* Altered plugin interface to allow seperate configuration for each

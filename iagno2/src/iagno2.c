@@ -266,6 +266,7 @@ drawing_area_button_press_event_cb (GtkWidget *widget, GdkEvent *event,
 {
   double x, y;
   gint grid_row, grid_col, index;
+  gint i, j;
 
   switch (event->type) {
     case GDK_BUTTON_PRESS:
@@ -281,10 +282,6 @@ drawing_area_button_press_event_cb (GtkWidget *widget, GdkEvent *event,
         grid_row = y / (TILEHEIGHT + GRIDWIDTH);
 
         index = INDEX (grid_row, grid_col);
-
-        if (board->board[index]) {
-          return;
-        }
 
         if (is_valid_move (board, index, whose_turn)) {
           iagno2_move (index);
@@ -439,7 +436,7 @@ iagno2_computer_player_wrapper ()
 
     close (fd[0]);
 
-    index = players[whose_turn - 1]->plugin_move (board, whose_turn);
+    index = players[whose_turn]->plugin_move (board, whose_turn);
 
     write (fd[1], &index, sizeof (int));
 
@@ -469,7 +466,7 @@ iagno2_setup_current_player (gboolean pass)
   sides[1] = g_strdup (_("Light"));
 
   if (pass) {
-    pad = g_strconcat (" [", sides[whose_turn - 1],
+    pad = g_strconcat (" [", sides[whose_turn],
                        _(" was forced to pass] "), NULL);
   } else {
     pad = g_strdup (" ");
@@ -477,17 +474,17 @@ iagno2_setup_current_player (gboolean pass)
 
   computer_timeout_id = 0;
   
-  if (players[whose_turn - 1] == NULL) {
+  if (players[whose_turn] == NULL) {
     interactive = 1;
     message = g_strconcat (pad, _("Waiting for input from user... ["),
-                           sides[whose_turn - 1], "]", NULL);
+                           sides[whose_turn], "]", NULL);
   } else {
     interactive = 0;
     computer_timeout_id = gtk_timeout_add (1000,
                                            iagno2_computer_player_wrapper,
                                            NULL);
-    message = g_strconcat (pad, players[whose_turn - 1]->plugin_busy_message (whose_turn),
-                           " [", sides[whose_turn - 1], "]", NULL);
+    message = g_strconcat (pad, players[whose_turn]->plugin_busy_message (whose_turn),
+                           " [", sides[whose_turn], "]", NULL);
   }
 
   gnome_appbar_set_status (GNOME_APPBAR (appbar), message);

@@ -25,18 +25,11 @@
 #define ROW(i)     ((i) >> 3)
 #define COL(i)     ((i) & 0x7)
 
-#define EMPTY 0
-#define BLACK 1
-#define WHITE 2
+#define EMPTY -1
+#define BLACK 0
+#define WHITE 1
 
 #define OPPONENT(player) (((player)==BLACK)?WHITE:BLACK)
-
-/*
-#define WHITE_TILE 31
-#define BLACK_TILE 1
-
-#define OTHER_TILE(x) (x-1)?BLACK_TILE:WHITE_TILE
-*/
 
 typedef struct {
   int index;

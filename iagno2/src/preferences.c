@@ -194,9 +194,9 @@ player2_cb (GtkWidget *widget, gpointer data)
 static void
 configure_cb (GtkWidget *widget, gpointer data)
 {
-  if (tmp_players[(gint) data - 1]) {
-    if (tmp_players[(gint) data - 1]->plugin_preferences_window) {
-      tmp_players[(gint) data - 1]->plugin_preferences_window
+  if (tmp_players[(gint) data]) {
+    if (tmp_players[(gint) data]->plugin_preferences_window) {
+      tmp_players[(gint) data]->plugin_preferences_window
           (preferences_dialog, (gint) data);
     } else {
       gnome_ok_dialog_parented (_("This plugin has no configuration options."),

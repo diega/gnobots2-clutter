@@ -32,10 +32,15 @@ ReversiMove game_history[60];
 ReversiBoard *
 reversi_init_board ()
 {
+  int i;
+
   ReversiBoard *tmp = g_new (ReversiBoard, 1);
 
-  /* This depends on EMPTY being 0, so if something breaks, look here... */
-  tmp->board = g_new0 (gchar, BOARDSIZE * BOARDSIZE);
+  tmp->board = g_new (gchar, BOARDSIZE * BOARDSIZE);
+
+  for (i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+    tmp->board[i] = -1;
+  }
 
   tmp->moves = g_new (ReversiMove, 60);
 
@@ -184,7 +189,7 @@ is_valid_move (ReversiBoard *board, gchar index, gchar player)
 {
   gboolean valid = FALSE;
 
-  if (board->board[index]) {
+  if (board->board[index] != EMPTY) {
     return FALSE;
   }
 
