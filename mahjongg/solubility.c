@@ -318,7 +318,6 @@ void validate_tile (int t)
 /* Place tile in map at position f, with pic & type from t */
 void place_tile (int f, int t, int idx)
 {
-  int xoff, yoff;
 #ifdef PLACE_DEBUG
   printf ("Placing at\n") ;
   dump_tile(f) ;

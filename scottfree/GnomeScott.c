@@ -1328,8 +1328,6 @@ static void Input_Complete(void)
 static void Key_Press(GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
 	int length = event->length;
-	int key_state  = event->state;
-	int char_code  = event->keyval;
 	int keyval     = event->keyval;
 
 	if(length==0 || file_selector)

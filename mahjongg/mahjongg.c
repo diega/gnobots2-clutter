@@ -25,8 +25,6 @@
 #include "mahjongg.h"
 #include "solubility.h"
 
-#include "button-images.h"
-
 #define HINT_BLINK_NUM 5
 
 typeinfo type_info [MAX_TILES+70] = {
@@ -466,6 +464,7 @@ pref_cancel (GtkWidget *widget, void *data)
 	pref_dialog = 0;
 }
 
+#ifdef NEED_UNUSED_CODE
 static void
 hint_cancel (GtkWidget *widget, void *data)
 {
@@ -480,6 +479,7 @@ hint_cancel (GtkWidget *widget, void *data)
   gtk_widget_destroy (hint_dialog);
   hint_dialog = 0;
 }
+#endif
 
 static void
 set_tile_selection (GtkWidget *widget, void *data)
@@ -1256,7 +1256,7 @@ void set_map (char *name)
 void create_canvas_items (void)
 {
   GdkImlibImage *image;
-  gint orig_x, orig_y, i, layer, max_x, tile_was_set = 0;
+  gint orig_x, orig_y, i, layer;
   
   for (layer = 0; layer < 7; layer ++) {
     for (i = MAX_TILES - 1; i >= 0; i --) {
@@ -1331,7 +1331,6 @@ void load_tiles (char *fname)
 
 void create_mahjongg_board (void)
 {
- 	GtkStyle *style;
 	gchar *buf;
 	
 	gtk_widget_push_visual (gdk_imlib_get_visual ());
