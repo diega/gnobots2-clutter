@@ -396,7 +396,12 @@ load_scenario (char *fname)
 	g_free( tmp );
 
 	if (!g_file_exists (fn)) {
-		printf (_("Could not find the \'%s\' theme for SameGnome\n"), fn);
+		char *message = g_strdup_printf (
+			_("Could not find the theme:\n%s\n\n"
+			"Please check you Same Gnome instalation"), fn);
+		GtkWidget *w = gnome_error_dialog (message);
+		gnome_dialog_run_and_close (GNOME_DIALOG(w));
+		g_free (message);
 		exit (1);
 	}
 
@@ -411,6 +416,17 @@ load_scenario (char *fname)
 		gdk_imlib_destroy_image (image);
 
 	image = gdk_imlib_load_image (fn);
+
+	if (image == NULL) {
+		char *message = g_strdup_printf (
+			_("Same Gnome can't load the image file:\n%s\n\n"
+			 "Please check you Same Gnome instalation"), fn);
+		GtkWidget *w = gnome_error_dialog (message);
+		gnome_dialog_run_and_close (GNOME_DIALOG(w));
+		g_free (message);
+		exit (1);
+	}
+
 	gdk_imlib_render (image, image->rgb_width, image->rgb_height);
 
 	stones = gdk_imlib_move_image (image);
@@ -434,7 +450,10 @@ load_scenario (char *fname)
 static void
 set_selection (GtkWidget *widget, void *data)
 {
-	selected_scenario.scenario = data;
+	if (selected_scenario.scenario)
+		free (selected_scenario.scenario);
+
+	selected_scenario.scenario = strdup (data);
 }
 
 static void

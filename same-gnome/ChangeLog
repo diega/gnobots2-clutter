@@ -1,3 +1,11 @@
+2001-05-28  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	* same-gnome.c (load_scenario): If we can't find the theme show a
+	  dialog instead of a printf, also show a dialog if
+	  gdk_imlib_load_image fails, provide useful information in bug #38798
+	  (set_selection): Copy the string since it can be freed later,
+	  fix bug #15842.
+
 2001-05-26  Juan Pablo Mendoza <pablo_juan@yahoo.com>
 
 	* same-gnome.c (fill_menu): Plug a memory leak.

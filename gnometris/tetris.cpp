@@ -211,7 +211,12 @@ Tetris::setupPixmap()
 
 	if (!g_file_exists(fullpixname)) 
 	{
-		printf(_("Could not find the \'%s\' theme for gnometris\n"), fullpixname);
+                char *message = g_strdup_printf (
+                        "Could not find the theme:\n%s\n\n"
+                        "Please check you Gnometris instalation", fullpixname);
+                GtkWidget *w = gnome_error_dialog (message);
+                gnome_dialog_run_and_close (GNOME_DIALOG(w));
+                g_free (message);
 		exit(1);
 	}
 
@@ -219,6 +224,16 @@ Tetris::setupPixmap()
 		gdk_imlib_destroy_image(image);
 
 	image = gdk_imlib_load_image(fullpixname);
+
+	if (image == NULL) {
+		char *message = g_strdup_printf (
+			"Same Gnome can't load the image file:\n%s\n\n"
+			"Please check you Gnometris instalation", fullpixname);
+		GtkWidget *w = gnome_error_dialog (message);
+		gnome_dialog_run_and_close (GNOME_DIALOG(w));
+		g_free (message);
+		exit (1);
+	}
 
 	gdk_imlib_render(image, image->rgb_width, image->rgb_height);
 	pix = gdk_imlib_move_image(image);
@@ -438,7 +453,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 
 	gtk_container_border_width(GTK_CONTAINER(t->setupdialog), 10);
 	GTK_WINDOW(t->setupdialog)->position = GTK_WIN_POS_MOUSE;
-	gtk_signal_connect(GTK_OBJECT(t->setupdialog), "delete_event",
+	gtk_signal_connect(GTK_OBJECT(t->setupdialog), "close",
 					   GTK_SIGNAL_FUNC(setupdialogDestroy), d);
 
 	allBoxes = gtk_vbox_new(FALSE, 5);

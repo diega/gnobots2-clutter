@@ -1,3 +1,12 @@
+2000-05-28  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	* tetris.cpp (Tetris::gameProperties): Connect the dialog to the
+	  close signal instead of delete_event.
+	  (Tetris::setupPixmap): I we can't find the theme show a
+	  dialog instead of a printf , also show a dialog if
+	  gdk_imlib_load_image fails.
+
+
 2000-12-03  James M. Frisby <the_gandhi_of_bowling@yahoo.com>
 
 	* scoreframe.cpp, scoreframe.h, tetris.cpp:
