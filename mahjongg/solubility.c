@@ -364,6 +364,15 @@ static gboolean walk_tree (gint depth)
     return FALSE;
   }
   
+  /* Get a list of free tiles remaining. This is a compacted version
+   * of freetiles. freetiles should have been constructed by the previous
+   * iteration. */
+  j = 0;
+  for (i=0; i<MAX_TILES; i++)
+    if (freetiles[depth][i]) {
+      freelist[depth][j++] = i;
+    }
+
   if (depth == MAX_TILES/2 - 1) { /* We have reached the end with
                                    * precisely two tiles to place. */
     place_tiles (freelist[depth][0], freelist[depth][1], depth);
@@ -373,15 +382,6 @@ static gboolean walk_tree (gint depth)
   /* If we aren't at the end we make an exhaustive search for a walk down
    * the tree of possible games. While in principle this could take a very
    * long time, it will in general only affect the very end of any walk. */
-
-  /* Get a list of free tiles remaining. This is a compacted version
-   * of freetiles. freetiles should have been constructed by the previous
-   * iteration. */
-  j = 0;
-  for (i=0; i<MAX_TILES; i++)
-    if (freetiles[depth][i]) {
-      freelist[depth][j++] = i;
-    }
   
   /* Scramble the freelist. */
   for (i = 0; i<numfree*2; i++) {
@@ -441,7 +441,7 @@ void generate_game (guint32 seed)
     memcpy (&type_info[0], &type_info[j], sizeof (typeinfo));
     memcpy (&type_info[j], &tile, sizeof (typeinfo));    
   }
-  
+
   /* Find which tiles are initially free. */
   numfree = 0;
   for (i=0; i<MAX_TILES; i++)
