@@ -1,3 +1,7 @@
+1998-11-29  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* gturing.c: Removed GNOMEUIINFO_JUSTIFY_RIGHT.
+
 1998-11-28  Herbert Valerio Riedel  <hvr@hvrlab.ml.org>
 
 	* gturing.c: added GPOINTER_TO_INT / GINT_TO_POINTER

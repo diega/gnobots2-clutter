@@ -457,7 +457,6 @@ GnomeUIInfo helpmenu[] = {
 GnomeUIInfo mainmenu[] = {
 	GNOMEUIINFO_SUBTREE(N_("File"), filemenu),
 	GNOMEUIINFO_SUBTREE(N_("Options"), optionmenu),
-	GNOMEUIINFO_JUSTIFY_RIGHT,
 	GNOMEUIINFO_SUBTREE(N_("Help"), helpmenu),
 	GNOMEUIINFO_END
 };
