@@ -2,9 +2,11 @@
 Name=Gnometris
 Name[es]=Gnometris
 Name[fr]=Gnometris
+Name[ru]=Гнометрис
 Comment=Gnome Tetris Game
 Comment[es]=El juego de Tetris de Gnome
 Comment[fr]=Le jeu Tetris de Gnome
+Comment[ru]=Тетрис для Gnome
 Icon=gnome-gtetris.png
 Exec=gnometris
 Terminal=0
