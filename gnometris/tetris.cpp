@@ -525,8 +525,10 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
         
 	Tetris *t = (Tetris*) d;
 	
-	if (t->setupdialog) 
+	if (t->setupdialog) {
+		gtk_window_present (GTK_WINDOW(t->setupdialog));
 		return FALSE;
+	}
 
 	/* create the dialog */
 	t->setupdialog =
@@ -921,7 +923,13 @@ Tetris::endOfGame()
 void
 Tetris::showScores(gchar *title, guint pos)
 {
-	gnome_scores_display(title, "gnometris", 0, pos);
+	GtkWidget *dialog;
+
+	dialog = gnome_scores_display(title, "gnometris", 0, pos);
+	if (dialog != NULL) {
+		gtk_window_set_transient_for (GTK_WINDOW(dialog), GTK_WINDOW(this->getWidget()));
+		gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
+	}
 }
 
 int
@@ -967,7 +975,7 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
 	GdkPixbuf *pixbuf = NULL;
-	GtkWidget *about;
+	static GtkWidget *about = NULL;
 
 	const gchar *authors[] = {"J. Marcin Gorycki", 0};
 
@@ -977,7 +985,11 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 
 	const gchar *translator_credits = _("translator_credits");
 
-	{
+	if (about != NULL) {
+		gtk_window_present (GTK_WINDOW(about));
+		return TRUE;
+	}
+        {
 		char *filename = NULL;
 
 		filename = gnome_program_locate_file (NULL,
@@ -1003,6 +1015,7 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 				pixbuf);
 
 	gtk_window_set_transient_for (GTK_WINDOW (about), GTK_WINDOW (t->getWidget()));
+	g_signal_connect (G_OBJECT (about), "destroy", G_CALLBACK (gtk_widget_destroyed), &about);
 	gtk_widget_show(about);
 
 	return TRUE;

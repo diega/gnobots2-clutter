@@ -260,7 +260,13 @@ set_score (int new_score)
 static void
 show_scores (guint pos)
 {
-	gnome_scores_display (_("The Same Gnome"), "same-gnome", NULL, pos);
+	GtkWidget *dialog;
+
+	dialog = gnome_scores_display (_("The Same Gnome"), "same-gnome", NULL, pos);
+	if (dialog != NULL) {
+		gtk_window_set_transient_for (GTK_WINDOW(dialog), GTK_WINDOW(app));
+		gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
+	}
 }
 
 static void

@@ -252,7 +252,13 @@ void UI::update_scorebox(int level, int score) {
 }
 
 void show_scores(int pos) {
-  gnome_scores_display(_("Gnome xBill Scores"), "gnome-xbill", NULL, pos);
+  GtkWidget *dialog;
+
+  dialog = gnome_scores_display(_("Gnome xBill Scores"), "gnome-xbill", NULL, pos);
+  if (dialog != NULL) {
+    gtk_window_set_transient_for (GTK_WINDOW(dialog), GTK_WINDOW(toplevel));
+    gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
+  }
 }
 
 static void display_scores() {

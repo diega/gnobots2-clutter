@@ -122,6 +122,9 @@ static void
 game_start_cb (GtkWidget *widget, gpointer data);
 
 
+static void
+show_scores_dialog (gint pos);
+
 
 /****************************************************************************/
 /* Image stuff  */
@@ -650,9 +653,8 @@ countdown_timeout_function (gpointer data)
 
 	update_score_state ();
 
-	  gnome_scores_display ("Gnome-Stones", APP_NAME, NULL, pos);
 	  gnome_app_flash (GNOME_APP (app), _("Congratulations, you win!"));
-
+          show_scores_dialog (pos);
 
 	}
       else
@@ -841,8 +843,8 @@ iteration_timeout_function (gpointer data)
 	      /* FIXME: somewhere is a bug, that makes this needed.  */
 	      if (pos > 10) pos= 0;
 	      
-	      gnome_scores_display ("Gnome-Stones", APP_NAME, NULL, pos);
 	      gnome_app_flash (GNOME_APP (app), _("Game over!"));
+              show_scores_dialog (pos);
 	      curtain_start (NULL);
 	    }
 	}
@@ -946,6 +948,18 @@ load_game (const gchar *filename, guint _start_cave)
 }
 
 
+static void
+show_scores_dialog (gint pos)
+{
+  GtkWidget *dialog;
+
+  dialog = gnome_scores_display ("Gnome-Stones", APP_NAME, NULL, pos);
+  if (dialog != NULL) {
+    gtk_window_set_transient_for (GTK_WINDOW(dialog), GTK_WINDOW(app));
+    gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
+  }
+}
+
 
 /*****************************************************************************/
 /* Menu callback functions */
@@ -1017,14 +1031,14 @@ quit_cb (GtkWidget *widget, gpointer data)
 static void
 show_scores_cb (GtkWidget *widget, gpointer data)
 {
-  gnome_scores_display ("Gnome-Stones", APP_NAME, NULL, GPOINTER_TO_INT (data));
+  show_scores_dialog (GPOINTER_TO_INT (data));
 }
 
 
 static void
 about_cb (GtkWidget *widget, gpointer data)
 {
-  GtkWidget *about= NULL;
+  static GtkWidget *about= NULL;
   GdkPixbuf *pixbuf = NULL;
   
   const gchar *authors[]= {
@@ -1037,6 +1051,10 @@ about_cb (GtkWidget *widget, gpointer data)
   /* Translator credits */
   gchar *translator_credits = _("translator_credits");
 
+  if (about != NULL) {
+    gtk_window_present (GTK_WINDOW(about));
+    return;
+  }
   {
 	  char *filename = NULL;
 
@@ -1057,6 +1075,7 @@ about_cb (GtkWidget *widget, gpointer data)
                           strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
 			  pixbuf);
   gtk_window_set_transient_for (GTK_WINDOW (about), GTK_WINDOW (app));
+  g_signal_connect (G_OBJECT (about), "destroy", G_CALLBACK (gtk_widget_destroyed), &about);
   gtk_widget_show (about);
 }
 
