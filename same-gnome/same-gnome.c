@@ -586,7 +586,9 @@ game_about_callback (GtkWidget *widget, void *data)
 			"(C) 1997-1998 the Free Software Foundation",
 			authors,
 			_("Original idea from KDE's same game program."),
-			"gnome-same-gnome.xpm");
+			/*"gnome-same-gnome.xpm"*/
+			NULL
+			);
 	gtk_widget_show (about);
 
 	return TRUE;
@@ -874,6 +876,7 @@ main (int argc, char *argv [])
 	vb = gtk_vbox_new (FALSE, 0);
 	hb = gtk_hbox_new (FALSE, 0);
 	gnome_app_set_contents (GNOME_APP (app), vb);
+
 	mf = create_menu ();
 	gnome_app_set_menus (GNOME_APP (app), GTK_MENU_BAR (mf->widget));
 	
