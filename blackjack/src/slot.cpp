@@ -20,6 +20,7 @@
  */
 
 #include <stdlib.h>
+#include <librsvg/rsvg.h>
 
 #include "blackjack.h"
 #include "slot.h"
@@ -31,7 +32,6 @@
 
 GList *slot_list = NULL;
 
-GdkPixbuf *slot_pixbuf = NULL;
 GdkPixbuf *slot_scaled_pixbuf = NULL;
 GdkPixmap *default_background_pixmap = NULL;
 
@@ -41,10 +41,30 @@ get_background_pixmap () {
         return default_background_pixmap;
 }
 
-GdkPixbuf *
-bj_slot_get_pixbuf ()
+void
+bj_slot_set_size (gint width,
+                  gint height)
 {
-        return slot_pixbuf;
+        gchar *name;
+        gchar *fullname;
+
+        name = g_build_filename ("cards", "slots", SLOT_FILENAME, NULL);
+        fullname = gnome_program_locate_file (NULL,
+                                              GNOME_FILE_DOMAIN_APP_PIXMAP,
+                                              name, TRUE, NULL);
+        g_free (name);
+
+        if (!fullname)
+                return;
+
+        if (slot_scaled_pixbuf)
+                g_object_unref (slot_scaled_pixbuf);
+
+        slot_scaled_pixbuf = rsvg_pixbuf_from_file_at_size (fullname,
+                                                            width,
+                                                            height,
+                                                            NULL);
+        g_free (fullname);
 }
 
 GdkPixbuf *
@@ -54,22 +74,10 @@ bj_slot_get_scaled_pixbuf ()
 }
 
 void
-bj_slot_set_scaled_pixbuf (GdkPixbuf *pixbuf)
-{
-        if (slot_scaled_pixbuf)
-                g_object_unref (slot_scaled_pixbuf);
-
-        slot_scaled_pixbuf = pixbuf;
-}
-
-void
 bj_slot_load_pixmaps (void)
 {
         gchar *buffer;
 
-        buffer = g_build_filename ("cards", "slots", SLOT_FILENAME, NULL);
-        slot_pixbuf = get_pixbuf (buffer);
-        g_free (buffer);
         buffer = g_build_filename ("blackjack", "baize.png", NULL);
         default_background_pixmap = get_pixmap (buffer);
         g_free (buffer);
@@ -78,9 +86,6 @@ bj_slot_load_pixmaps (void)
 void
 bj_slot_free_pixmaps (void)
 {
-        if (slot_pixbuf)
-                g_object_unref (slot_pixbuf);
-
         if (slot_scaled_pixbuf)
                 g_object_unref (slot_scaled_pixbuf);
 

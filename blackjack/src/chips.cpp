@@ -20,13 +20,18 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include <librsvg/rsvg.h>
 
 #include "blackjack.h"
 #include "chips.h"
 #include "draw.h"
 
-GdkPixbuf *chip_pixbuf[4];
-GdkPixbuf *chip_scaled_pixbuf[4];
+#define CHIP_FILENAME_100 "chip-100.svg"
+#define CHIP_FILENAME_25  "chip-25.svg"
+#define CHIP_FILENAME_5   "chip-5.svg"
+#define CHIP_FILENAME_1   "chip-1.svg"
+
+GdkPixbuf *chip_scaled_pixbuf[4] = { NULL, NULL, NULL, NULL };
 
 GList *chip_stack_list = NULL;
 
@@ -49,12 +54,37 @@ bj_chip_get_id (gfloat value)
         return id;
 }
 
-GdkPixbuf *
-bj_chip_get_pixbuf (gint chip)
+void
+bj_chip_set_size (gint width,
+                  gint height)
 {
-        if (chip < 0 || chip > 3)
-                return NULL;
-        return chip_pixbuf[chip];
+        gchar *names[4] = { CHIP_FILENAME_100,
+                            CHIP_FILENAME_25,
+                            CHIP_FILENAME_5,
+                            CHIP_FILENAME_1 };
+
+        for (gint i = 0; i < 4; i++) {
+                gchar *name;
+                gchar *fullname;
+
+                name = g_build_filename ("blackjack", names[i], NULL);
+                fullname = gnome_program_locate_file (NULL,
+                                                      GNOME_FILE_DOMAIN_APP_PIXMAP,
+                                                      name, TRUE, NULL);
+                g_free (name);
+
+                if (!fullname)
+                        continue;
+
+                if (chip_scaled_pixbuf[i])
+                        g_object_unref (chip_scaled_pixbuf[i]);
+
+                chip_scaled_pixbuf[i] = rsvg_pixbuf_from_file_at_size (fullname,
+                                                                       width,
+                                                                       height,
+                                                                       NULL);
+                g_free (fullname);
+        }
 }
 
 GdkPixbuf *
@@ -63,18 +93,6 @@ bj_chip_get_scaled_pixbuf (gint chip)
         if (chip < 0 || chip > 3)
                 return NULL;
         return chip_scaled_pixbuf[chip];
-}
-
-void
-bj_chip_set_scaled_pixbuf (gint chip, GdkPixbuf *pixbuf)
-{
-        if (chip < 0 || chip > 3)
-                return;
-
-        if (chip_scaled_pixbuf[chip])
-                g_object_unref (chip_scaled_pixbuf[chip]);
-
-        chip_scaled_pixbuf[chip] = pixbuf;
 }
 
 gdouble

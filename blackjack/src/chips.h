@@ -71,9 +71,12 @@ extern GdkPixbuf *chip_pixbuf[4];
 
 gint bj_chip_get_width (void);
 gint bj_chip_get_id (gfloat value);
-GdkPixbuf * bj_chip_get_pixbuf (gint);
+
+void bj_chip_set_size (gint width,
+                       gint height);
+
 GdkPixbuf * bj_chip_get_scaled_pixbuf (gint chip);
-void bj_chip_set_scaled_pixbuf (gint chip, GdkPixbuf *pixmap);
+
 gdouble bj_chip_get_value (gint);
 
 gfloat bj_chip_stack_get_chips_value (GList *chips);

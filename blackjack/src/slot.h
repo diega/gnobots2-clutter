@@ -67,9 +67,10 @@ extern GList *slot_list;
 void bj_slot_load_pixmaps (void);
 void bj_slot_free_pixmaps (void);
 
-GdkPixbuf* bj_slot_get_pixbuf (void);
 GdkPixbuf* bj_slot_get_scaled_pixbuf (void);
-void bj_slot_set_scaled_pixbuf (GdkPixbuf *pixmap);
+
+void bj_slot_set_size (gint width,
+                       gint height);
 
 void delete_surface ();
 GdkPixmap* get_background_pixmap (void);

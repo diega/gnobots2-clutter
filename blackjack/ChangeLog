@@ -1,3 +1,15 @@
+2004-07-17  William Jon McCann  <mccann@jhu.edu>
+
+	* src/slot.cpp (bj_slot_set_size): 
+	* src/chips.cpp (bj_chip_set_size): New functions to load pixbufs
+	directly from file using librsvg.
+
+	* src/card.cpp (bj_card_set_size): Don't scale stored pixbufs for
+	chips and slot image.  Call bj_chip_set_size and bj_slot_set_size.
+	* src/blackjack.cpp (bj_quit_app, main_prog):
+	* src/card.cpp (bj_card_load_pixmaps):
+	(bj_card_free_pixmaps): Removed.
+
 2004-07-16  William Jon McCann  <mccann@jhu.edu>
 
 	* pixmaps/chip-100.svg:

@@ -204,7 +204,6 @@ bj_quit_app (GtkMenuItem *menuitem)
 
         g_list_free (playerHands);
 
-        bj_card_free_pixmaps ();
         bj_slot_free_pixmaps ();
         g_object_unref (surface);
         g_object_unref (press_data->moving_cards);
@@ -300,9 +299,6 @@ main_prog (int argc, char *argv[])
 
         create_main_window ();
 
-        lcard_style = bj_get_card_style ();
-        bj_card_load_pixmaps (app, lcard_style);
-        g_free (lcard_style);
         bj_slot_load_pixmaps ();
  
         bj_create_board ();
