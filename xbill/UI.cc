@@ -114,23 +114,23 @@ void UI::make_windows() {
 
 	gdk_window_set_icon(toplevel->window, NULL, icon.pix, NULL);
 	/* XXXXX */
-	newgamebox = CreateDialog ("New Game", OK|CANCEL, NULL,
+	newgamebox = CreateDialog (_("New Game"), OK|CANCEL, NULL,
 		newgamestr, (char *)NULL, GTK_SIGNAL_FUNC(new_game_cb));
-	pausebox = CreateDialog ("Pause Game", OK, icon.pix,
-		pausestr, "Continue", NULL);
-	quitbox = CreateDialog ("Quit", OK|CANCEL, NULL,
+	pausebox = CreateDialog (_("Pause Game"), OK, icon.pix,
+		pausestr, _("Continue"), NULL);
+	quitbox = CreateDialog (_("Quit"), OK|CANCEL, NULL,
 		quitstr, (char *)NULL, GTK_SIGNAL_FUNC(quit_game_cb));
-	warpbox = CreateEnterText ("Warp To Level", warpstr,
+	warpbox = CreateEnterText (_("Warp To Level"), warpstr,
 		GTK_SIGNAL_FUNC(warp_apply));
 	about.load("about");
 
-	aboutbox = CreatePixmapBox("About", about.pix,
-		"Ported to GNOME by James Henstridge <james@daa.com.au>");
-	rulesbox = CreatePixmapBox("Rules", NULL, rulesstr);
-	storybox = CreatePixmapBox("Story", NULL, storystr);
+	aboutbox = CreatePixmapBox(_("About"), about.pix,
+		_("Ported to GNOME by James Henstridge <james@daa.com.au>"));
+	rulesbox = CreatePixmapBox(_("Rules"), NULL, rulesstr);
+	storybox = CreatePixmapBox(_("Story"), NULL, storystr);
 
-	scorebox = CreateDialog ("Score", OK, NULL, "", (char *)NULL, NULL);
-	endgamebox = CreateDialog ("Endgame", OK, NULL,
+	scorebox = CreateDialog (_("Score"), OK, NULL, "", (char *)NULL, NULL);
+	endgamebox = CreateDialog (_("Endgame"), OK, NULL,
 		endgamestr, "Nuts!", NULL);
 }
 

@@ -21,7 +21,7 @@ static GnomeUIInfo game_menu[] = {
   GNOMEUIINFO_MENU_NEW_GAME_ITEM((void *) popup, &newgamebox),
   GNOMEUIINFO_MENU_PAUSE_GAME_ITEM((void *) popup, &pausebox),
   GNOMEUIINFO_SEPARATOR,
-  GNOMEUIINFO_ITEM_STOCK_DATA("Warp to level...", NULL, (void *) popup, &warpbox,
+  GNOMEUIINFO_ITEM_STOCK_DATA(_("Warp to level..."), NULL, (void *) popup, &warpbox,
 			      GNOME_STOCK_MENU_FORWARD),
   GNOMEUIINFO_MENU_SCORES_ITEM((void *) display_scores, NULL),
   GNOMEUIINFO_SEPARATOR,
@@ -30,8 +30,8 @@ static GnomeUIInfo game_menu[] = {
 };
   
 static GnomeUIInfo help_menu[] = {
-  GNOMEUIINFO_ITEM_NONE_DATA("Story of xBill", NULL, (void *) popup, &storybox),
-  GNOMEUIINFO_ITEM_NONE_DATA("Rules", NULL, (void *) popup, &rulesbox),
+  GNOMEUIINFO_ITEM_NONE_DATA(_("Story of xBill"), NULL, (void *) popup, &storybox),
+  GNOMEUIINFO_ITEM_NONE_DATA(_("Rules"), NULL, (void *) popup, &rulesbox),
   GNOMEUIINFO_SEPARATOR,
   GNOMEUIINFO_MENU_ABOUT_ITEM((void *) popup, &aboutbox),
   GNOMEUIINFO_END
@@ -162,15 +162,16 @@ void UI::update_hsbox(char *str) {
 
 void UI::update_scorebox(int level, int score) {
         GtkLabel *label;
-	char str[40];
+	char *str;
 
 	label = GTK_LABEL(gtk_object_get_user_data(GTK_OBJECT(scorebox)));
-	sprintf (str, "After Level %d:     \nYour score: %d", level, score);
+	str = g_strdup_printf (_("After Level %d:     \nYour score: %d"), level, score);
 	gtk_label_set(label, str);
+	g_free (str);
 }
 
 void show_scores(int pos) {
-  gnome_scores_display("Gnome xBill Scores", "gnome-xbill", NULL, pos);
+  gnome_scores_display(_("Gnome xBill Scores"), "gnome-xbill", NULL, pos);
 }
 
 static void display_scores() {

@@ -2,7 +2,7 @@
 #define STRINGS_H
 
 #define storystr \
-"             The Story:\n\
+_("             The Story:\n\
 \n\
 Yet again, the fate of the world rests\n\
 in your hands!  An evil computer hacker,\n\
@@ -19,10 +19,10 @@ operating system.\n\
 \n\
 As System Administrator/Exterminator,\n\
 your job is to keep Bill from succeeding\n\
-at his task."
+at his task.")
 
 #define rulesstr \
-"             The Rules:\n\
+_("             The Rules:\n\
 \n\
 xBill has been painstakingly designed and\n\
 researched in order to make it as easy to use\n\
@@ -41,18 +41,18 @@ V.   Scoring is based on total uptime,\n\
      with bonuses for killing Bills.\n\
 \n\
 As for the rest, you can probably figure\n\
-it out.  We did, so it can't be too hard."
+it out.  We did, so it can't be too hard.")
 
 #define endgamestr \
-"Module xBill has caused a segmentation fault\n\
+_("Module xBill has caused a segmentation fault\n\
 at memory address 097E:F1A0.  Core dumped.\n\
 \n\
-    We apologize for the inconvenience."
+    We apologize for the inconvenience.")
 
-#define warpstr "Warp to level?"
-#define quitstr "Quit Game?"
-#define newgamestr "New Game?"
-#define pausestr "Game paused.  Press Continue to continue."
-#define enternamestr "You earned a high score.\nEnter your name:"
+#define warpstr _("Warp to level?")
+#define quitstr _("Quit Game?")
+#define newgamestr _("New Game?")
+#define pausestr _("Game paused.  Press Continue to continue.")
+#define enternamestr _("You earned a high score.\nEnter your name:")
 
 #endif

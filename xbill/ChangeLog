@@ -1,3 +1,14 @@
+2001-07-13  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	* Makefile.am: Fix local/locale confusion.
+	* Game.cc: Marked some strings for translation.
+	  (Game::update_info): Remove insecure sprintf call.
+	  (main): Init i18n stuff.
+	* MCursor.cc: Remove more sprintf calls.
+	* Strings.h: Marked strings for translation.
+	* UI.cc: Marked strings for translation.
+	* x11-gtk.cc: Marked strings for translation.
+
 2001-07-08  Juan Pablo Mendoza <pablo_juan@yahoo.com>
 
 	Patch from John Ericson <john@john.pp.se>

@@ -1,3 +1,4 @@
+#include <config.h>
 #include "objects.h"
 #include <glib.h>
 /* for argp */
@@ -57,12 +58,14 @@ void Game::quit() {
 }
 
 void Game::update_info() {
-	static char str[80];
-	sprintf (str, "Bill:%d/%d  System:%d/%d/%d  Level: %d Score:%d",
-		bill.on_screen, bill.off_screen, net.base, net.off,
-		net.win, level, score);
+	char *str;
+	str = g_strdup_printf (_("Bill:%d/%d  System:%d/%d/%d  Level: %d Score:%d"), 
+				bill.on_screen, bill.off_screen, net.base, net.off,
+				net.win, level, score);
+
 	ui.draw_str(str, 5, scrheight-5);
 	efficiency += ((100*net.base-10*net.win)/net.units);
+	g_free (str);
 }
   
 void Game::update_score (int action) {
@@ -190,7 +193,7 @@ void Game::update() {
 		ui.popup_dialog (SCORE);
 		state = PLAYING;
 		/* This is a bad kludge, but i don't think anybody can pass
-		   the 268435458 level (G_MAXINT/8+3 in a normal pcs). */
+		   the 268435458 level (G_MAXINT/8+3 in a normal pc). */
 		if (++level < G_MAXINT/8+3)
 			setup_level(level);
 		else
@@ -212,7 +215,7 @@ static const struct poptOption options[] = {
   { NULL, '\0', POPT_ARG_CALLBACK,
     (void *) &parseAnArg, 0, NULL },
   { "warp", 'l', POPT_ARG_STRING, NULL, -1,
-    "Start at a different level", "LEVEL" },
+    _("Start at a different level"), _("LEVEL") },
   POPT_AUTOHELP
   { NULL, '\0', 0, NULL, 0 }
 };
@@ -254,5 +257,9 @@ int main(int argc, char **argv) {
 	        printf("Couldn't set up score server\n");
 		exit(1);
 	}
+
+	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
+	textdomain (PACKAGE);
+
 	game.main(argc, argv);
 }
