@@ -1,0 +1,4 @@
+1999-04-05  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* gataxx.c: Use the imlib visual here.
+
