@@ -1,5 +1,10 @@
 2002-05-09  Bastien Nocera  <hadess@hadess.net>
 
+	* mahjongg.c: (main): changed back the string, use spaces as
+	separators for the statusbar items
+
+2002-05-09  Bastien Nocera  <hadess@hadess.net>
+
 	* mahjongg.c: (about_callback), (main): moved the "moves left" and
 	"tiles left" labels to the status bar (Closes: #80712), added icon in
 	the about box

@@ -1865,14 +1865,24 @@ int main (int argc, char *argv [])
 	gtk_widget_show(tiles_label);
 	gtk_box_pack_start (GTK_BOX(status_box), tiles_label, FALSE, FALSE, 0);
 
-	moves_label = gtk_label_new(_(" / Moves Left: "));
+	/* separator */
+	moves_label = gtk_label_new("     ");
+	gtk_widget_show(moves_label);
+	gtk_box_pack_start (GTK_BOX(status_box), moves_label, FALSE, FALSE, 0);
+
+	moves_label = gtk_label_new(_("Moves Left: "));
 	gtk_widget_show(moves_label);
 	gtk_box_pack_start (GTK_BOX(status_box), moves_label, FALSE, FALSE, 0);
 	moves_label = gtk_label_new(MAX_TILES_STR);
 	gtk_widget_show(moves_label);
 	gtk_box_pack_start (GTK_BOX(status_box), moves_label, FALSE, FALSE, 0);
 
-	chrono_label = gtk_label_new (_(" / Time : "));
+	/* again */
+	chrono_label = gtk_label_new("     ");
+	gtk_widget_show (chrono_label);
+	gtk_box_pack_start (GTK_BOX(status_box), chrono_label, FALSE, FALSE, 0);
+
+	chrono_label = gtk_label_new (_("Time : "));
 	gtk_widget_show (chrono_label);
 	gtk_box_pack_start (GTK_BOX(status_box), chrono_label, FALSE, FALSE, 0);
 	chrono = games_clock_new ();
