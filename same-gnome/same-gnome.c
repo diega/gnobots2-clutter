@@ -14,7 +14,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <dirent.h>
+#ifdef HAVE_GETOPT_LONG
 #include <getopt.h>
+#else
+#include <support/getopt.h>
+#endif
 
 #include <config.h>
 #include <gnome.h>

@@ -1,3 +1,8 @@
+1998-02-15  Raja R Harinath  <harinath@cs.umn.edu>
+
+	* same-gnome.c: Look for `getopt.h' in `support' too.
+	* Makefile.am (same_gnome_LDADD): Include `libsupport.a'.
+
 1998-02-14  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
 	* same-gnome.c (save_state): Changed to use new SM support.

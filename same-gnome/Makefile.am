@@ -2,7 +2,7 @@ scoredir=$(localstatedir)/games
 pixmapdir = $(datadir)/pixmaps/same-gnome
 Gamesdir = $(datadir)/apps/Games
 
-INCLUDES = 			\
+INCLUDES = -I.. -I$(srcdir)/..		\
 	-I$(includedir)
 
 bin_PROGRAMS = same-gnome
@@ -12,7 +12,8 @@ same_gnome_SOURCES = 	\
 
 same_gnome_LDADD = \
 	$(GNOMEUI_LIBS)	\
-	$(INTLLIBS)
+	$(INTLLIBS) \
+	$(top_builddir)/support/libsupport.a
 
 pixmap_DATA = planets.xpm blink-sync.xpm puyonew2-sync.xpm \
 	stones.xpm rotate.xpm
