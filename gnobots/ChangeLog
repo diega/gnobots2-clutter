@@ -1,3 +1,8 @@
+Tue Jul 28 17:19:54 BST 1998 Mark Rae <Mark.Rae@ed.ac.uk>
+
+        * gnobots.c  - Allowed 'Space' key to start a new game
+        * index.html - Changed instructions for space key change
+
 1998-07-24  Nuno Ferreira  <nmrf@rnl.ist.utl.pt>
 
 	* gnobots.desktop: Added Portuguese translation.

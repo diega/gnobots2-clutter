@@ -964,8 +964,16 @@ GdkEventKey *event,
 gpointer data
 ){
     int newx, newy;
-    
-    if(game_state != GAME_PLAYING) return FALSE;
+
+    /* allow 'Space' to start a new game if we are not already playing */
+    if(game_state != GAME_PLAYING){
+        if(event->keyval == GDK_space){
+            new_cb(widget, NULL);
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
     /* don't allow player to move until screen has been updated */
     if(layout_changed) return FALSE;
