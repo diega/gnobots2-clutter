@@ -1,4 +1,5 @@
-/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
+/* -*- Mode: C; indent-tabs-mode: t; tab-width: 8; c-basic-offset: 8 -*- */
+
 /*
  * GNOME-Mahjongg
  * (C) 1998-1999 the Free Software Foundation
@@ -1071,6 +1072,7 @@ properties_callback (GtkWidget *widget, gpointer data)
 	GtkWidget *menu, *omenu;
 	GtkWidget *vbox, *frame, *table, *w, *label;
 	GtkSizeGroup *group;
+	GtkWidget *top_table;
 
 	if (pref_dialog) {
 		gtk_window_present (GTK_WINDOW (pref_dialog));
@@ -1091,10 +1093,13 @@ properties_callback (GtkWidget *widget, gpointer data)
 
 	group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 
-	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
+	top_table = gtk_table_new (2, 2, FALSE);
+	gtk_container_set_border_width (GTK_CONTAINER (top_table), 0);
+	gtk_table_set_row_spacings (GTK_TABLE (top_table), 0);
+	gtk_table_set_col_spacings (GTK_TABLE (top_table), 0);
 
 	frame = games_frame_new (_("Tiles"));
+	gtk_table_attach_defaults (GTK_TABLE (top_table), frame, 0, 1, 0, 1);
 
 	table = gtk_table_new (2, 2, FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
@@ -1124,10 +1129,9 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 1, 2);
 
 	gtk_container_add(GTK_CONTAINER (frame), table);
-	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
-
 
 	frame = games_frame_new (_("Maps"));
+	gtk_table_attach_defaults (GTK_TABLE (top_table), frame, 0, 1, 1, 2);
 
 	table = gtk_table_new (1, 2, FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
@@ -1146,10 +1150,9 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 0, 1);
 
 	gtk_container_add(GTK_CONTAINER (frame), table);
-	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
-
 
 	frame = games_frame_new (_("Colors"));
+	gtk_table_attach_defaults (GTK_TABLE (top_table), frame, 1, 2, 0, 1);
 
 	table = gtk_table_new (1, 2, FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
@@ -1173,10 +1176,10 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_table_attach_defaults (GTK_TABLE (table), w, 1, 2, 0, 1);
 
 	gtk_container_add(GTK_CONTAINER (frame), table);
-	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
 
 	frame = games_frame_new (_("Warnings"));
+	gtk_table_attach_defaults (GTK_TABLE (top_table), frame, 1, 2, 1, 2);
 
 	table = gtk_vbox_new (FALSE, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
@@ -1187,9 +1190,8 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_box_pack_start_defaults (GTK_BOX (table), w);
 	
 	gtk_container_add(GTK_CONTAINER (frame), table);
-	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
-	gtk_box_pack_start_defaults (GTK_BOX (GTK_DIALOG (pref_dialog)->vbox), vbox);
+	gtk_box_pack_start_defaults (GTK_BOX (GTK_DIALOG (pref_dialog)->vbox), top_table);
 
 	g_object_unref (group);
 	gtk_widget_show_all (pref_dialog);
