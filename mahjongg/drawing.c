@@ -3,7 +3,7 @@
  * Copyright (C) 2003 by Callum McKenzie
  *
  * Created: <2003-09-07 05:02:22 callum>
- * Time-stamp: <2003-10-02 10:52:53 callum>
+ * Time-stamp: <2003-10-03 06:44:11 callum>
  *
  */
 
@@ -134,8 +134,8 @@ void set_background (gchar * colour)
   }
 
   if (gc) {
-    gdk_gc_set_background (gc, &bgcolour);
     gdk_colormap_alloc_color (gdk_colormap_get_system(), &bgcolour, FALSE, TRUE);
+    gdk_gc_set_foreground (gc, &bgcolour);
   }
 }
 
@@ -181,11 +181,11 @@ void draw_all_tiles (void)
   gint i;
   guint sx,sy;
   guint dx,dy;
-
+  
   gdk_gc_set_clip_mask (gc, NULL);
   gdk_draw_rectangle (buffer, gc, TRUE, 0, 0,
                       windowwidth, windowheight);
-  
+
   /* This works because of the way the tiles are sorted. We could
    * reverse them to make this look a little nicer, but when searching
    * for a tile we want it the other way around. */
@@ -244,7 +244,7 @@ static void configure_board (GtkWidget *w, GdkEventConfigure *e, gpointer data)
     gc = gdk_gc_new (w->window);
     gdk_gc_copy (gc, w->style->black_gc);
     gdk_colormap_alloc_color (gdk_colormap_get_system(), &bgcolour, FALSE, TRUE);
-    gdk_gc_set_background (gc, &bgcolour);
+    gdk_gc_set_foreground (gc, &bgcolour);
   }
   
   buffer = gdk_pixmap_new (w->window, e->width, e->height, -1);
