@@ -1,3 +1,7 @@
+2003-07-09  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gnometris.desktop.in: Update name to fit HIG (bug 116916).
+
 2003-06-22  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gnometris.schemas.in: Remove full-stop at the end of the short
