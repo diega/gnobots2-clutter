@@ -87,8 +87,8 @@ install-data-local:
 	-chgrp games $(DESTDIR)$(bindir)/gnome-stones && chmod 2555 $(DESTDIR)$(bindir)/gnome-stones
 
 gnome-stones.keys: gnome-stones.keys.in Makefile
-	sed -e 's^\@icondir\@^$(Pixmapdir)^g' < $(srcdir)/gnome-stones.keys.in > gnome-stones.keys.tmp \
-	&& mv gnome-stones.keys.tmp gnome-stones.keys 
+	sed -e 's^\@icondir\@^$(Pixmapdir)^g' < $(srcdir)/gnome-stones.keys.in > gnome-stones.keys
+
 
 
 
