@@ -9,11 +9,7 @@
 #include <gtk/gtkadjustment.h>
 #include <gtk/gtkwidget.h>
 
-/*
-#ifdef __cplusplus
-extern "C" {
-#endif
-*/
+G_BEGIN_DECLS
 
 /* macro's */
 
@@ -81,10 +77,8 @@ struct _GtkGridBoardClass {
 };
 
 /* prototypes */
-GtkWidget *     gtk_gridboard_new();
-GtkType         gtk_gridboard_get_type(void);
-
-GtkWidget * gtk_gridboard_new(gint width, gint height, char * tileset);
+GType gtk_gridboard_get_type(void);
+GtkWidget *gtk_gridboard_new(gint width, gint height, char * tileset);
 void g_cclosure_user_marshal_VOID__INT_INT (GClosure     *closure,
                                        GValue       *return_value,
                                        guint         n_param_values,
@@ -92,31 +86,27 @@ void g_cclosure_user_marshal_VOID__INT_INT (GClosure     *closure,
                                        gpointer      invocation_hint,
                                        gpointer      marshal_data); 
 
-void gtk_gridboard_set_animate(GtkWidget * gridboard, gboolean animate); 
-void gtk_gridboard_set_piece(GtkWidget * gridboard, int x, int y, int piece);
+void gtk_gridboard_set_animate(GtkGridBoard * gridboard, gboolean animate); 
+void gtk_gridboard_set_piece(GtkGridBoard * gridboard, int x, int y, int piece);
 void gtk_gridboard_set_selection (GtkGridBoard *widget, gint type, 
 				  gint x, gint y);
-int gtk_gridboard_count_pieces(GtkWidget * gridboard, int piece);
-int gtk_gridboard_get_piece(GtkWidget * gridboard, int x, int y);
-void gtk_gridboard_set_show_grid(GtkWidget * widget, gboolean showgrid);
-void gtk_gridboard_set_tileset(GtkWidget * widget, gchar * tileset);
-void gtk_gridboard_clear_selections(GtkWidget * widget);
-void gtk_gridboard_clear_pieces(GtkWidget * widget);
-void gtk_gridboard_clear_pixmaps(GtkWidget * widget);
-void gtk_gridboard_clear(GtkWidget * widget);
-void gtk_gridboard_save_state(GtkWidget * widget, gpointer data);
-gpointer gtk_gridboard_revert_state(GtkWidget * widget);
-void gtk_gridboard_clear_states(GtkWidget * widget);
-int gtk_gridboard_get_height(GtkWidget * widget);
-int gtk_gridboard_get_width(GtkWidget * widget);
+int gtk_gridboard_count_pieces(GtkGridBoard * gridboard, int piece);
+int gtk_gridboard_get_piece(GtkGridBoard * gridboard, int x, int y);
+void gtk_gridboard_set_show_grid(GtkGridBoard * widget, gboolean showgrid);
+void gtk_gridboard_set_tileset(GtkGridBoard * widget, gchar * tileset);
+void gtk_gridboard_clear_selections(GtkGridBoard * widget);
+void gtk_gridboard_clear_pieces(GtkGridBoard * widget);
+void gtk_gridboard_clear_pixmaps(GtkGridBoard * widget);
+void gtk_gridboard_clear(GtkGridBoard * widget);
+void gtk_gridboard_save_state(GtkGridBoard * widget, gpointer data);
+gpointer gtk_gridboard_revert_state(GtkGridBoard * widget);
+void gtk_gridboard_clear_states(GtkGridBoard * widget);
+int gtk_gridboard_get_height(GtkGridBoard * widget);
+int gtk_gridboard_get_width(GtkGridBoard * widget);
 void gtk_gridboard_paint(GtkGridBoard * gridboard); 
-int gtk_gridboard_states_present(GtkWidget * widget);
+int gtk_gridboard_states_present(GtkGridBoard * widget);
 
-/*      
-#ifdef __cplusplus
-}
-#endif
-*/
+G_END_DECLS
 
 #endif /* __GTKGRIDBOARD_H__ */
 

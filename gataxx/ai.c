@@ -25,14 +25,14 @@
 #include "ai.h"
 #include "properties.h"
 
-int alphabeta(GtkWidget * gridboard, int alpha, int beta, int mode, int me, int depth);
-move computer_move_easy(GtkWidget * gridboard, int turn);
-move computer_move_ab(GtkWidget * gridboard, int turn, int depth);
+static int alphabeta(GtkGridBoard * gridboard, int alpha, int beta, int mode, int me, int depth);
+move computer_move_easy(GtkGridBoard * gridboard, int turn);
+move computer_move_ab(GtkGridBoard * gridboard, int turn, int depth);
 
 static int steps;
 
 /* takes a random move */
-move computer_move_random(GtkWidget * gridboard, int turn) {
+move computer_move_random(GtkGridBoard * gridboard, int turn) {
 	move * pm;
 	move result;
 	int size, item;
@@ -52,7 +52,7 @@ move computer_move_random(GtkWidget * gridboard, int turn) {
 /* makes a move which is not completely dumb, but not as hard as the move with
  * the highest heuristic value
  */
-move computer_move_easy(GtkWidget * gridboard, int turn) {
+move computer_move_easy(GtkGridBoard * gridboard, int turn) {
 	move * pm;
 	move bm={ {0, 0, 0}, {0, 0, 0} };
 	int i, size, h, maxh=-100;
@@ -79,7 +79,7 @@ move computer_move_easy(GtkWidget * gridboard, int turn) {
  * @param depth the maximum search depth in the tree
  * @return the chosen move
  */
-move computer_move_ab(GtkWidget * gridboard, int turn, int depth) {
+move computer_move_ab(GtkGridBoard * gridboard, int turn, int depth) {
 	move * pm; 				/* possible moves */
 	move bm={ {0, 0, 0}, {0, 0, 0} }; 	/* best move */
 	move * gm; 				/* good moves */
@@ -113,7 +113,7 @@ move computer_move_ab(GtkWidget * gridboard, int turn, int depth) {
 }
 
 /* alphabeta search the possible moves */
-int alphabeta(GtkWidget * gridboard, int alpha, int beta, int mode, int me, int depth) {
+static int alphabeta(GtkGridBoard * gridboard, int alpha, int beta, int mode, int me, int depth) {
 	move * pm;
 	int size, i, h;
 	int notme=(me==WHITE ? BLACK : WHITE);
@@ -122,9 +122,9 @@ int alphabeta(GtkWidget * gridboard, int alpha, int beta, int mode, int me, int 
 	steps++;
 
 	if (depth==0) {
-		mec=gtk_gridboard_count_pieces(gridboard, me);
+		mec=gtk_gridboard_count_pieces(GTK_GRIDBOARD (gridboard), me);
 		if (mec==0) return -50;
-		notmec=gtk_gridboard_count_pieces(gridboard, notme);
+		notmec=gtk_gridboard_count_pieces(GTK_GRIDBOARD (gridboard), notme);
 		if (notmec==0) return 50;
 		return mec; /* -notmec; */
 	}
@@ -132,11 +132,11 @@ int alphabeta(GtkWidget * gridboard, int alpha, int beta, int mode, int me, int 
 		pm=get_possible_moves(gridboard, me);
 		size=get_possible_moves_size(pm);
 		for (i=0; i<size; i++) {
-			gtk_gridboard_save_state(gridboard, NULL);
+			gtk_gridboard_save_state(GTK_GRIDBOARD (gridboard), NULL);
 			gridboard_move(gridboard, pm[i]);
 			h=alphabeta(gridboard, alpha, beta, !mode, me, depth-1);
 			if (h>alpha) alpha=h;
-			gtk_gridboard_revert_state(gridboard);
+			gtk_gridboard_revert_state(GTK_GRIDBOARD (gridboard));
 			if (alpha>beta) break; 
 		}
 		free_possible_moves(pm);
@@ -145,11 +145,11 @@ int alphabeta(GtkWidget * gridboard, int alpha, int beta, int mode, int me, int 
 		pm=get_possible_moves(gridboard, notme);
 		size=get_possible_moves_size(pm);
 		for (i=0; i<size; i++) {
-			gtk_gridboard_save_state(gridboard, NULL);
+			gtk_gridboard_save_state(GTK_GRIDBOARD (gridboard), NULL);
 			gridboard_move(gridboard, pm[i]);
 			h=alphabeta(gridboard, alpha, beta, !mode, me, depth-1);
 			if (h<beta) beta=h;
-			gtk_gridboard_revert_state(gridboard);
+			gtk_gridboard_revert_state(GTK_GRIDBOARD (gridboard));
 			if (alpha>beta) break; 
 		}
 		free_possible_moves(pm);
@@ -159,7 +159,7 @@ int alphabeta(GtkWidget * gridboard, int alpha, int beta, int mode, int me, int 
 
 
 /* this function gets called from gataxx */
-move computer_move(GtkWidget * gridboard, int turn) {
+move computer_move(GtkGridBoard * gridboard, int turn) {
 	int level=props_get_level(turn);
 
 	if (level==1) {
@@ -175,7 +175,7 @@ move computer_move(GtkWidget * gridboard, int turn) {
  * The less moves this returns, the faster the search algorithm will work.
  * Therefore, this does not really return _all_ possible moves.
  */
-move * get_possible_moves(GtkWidget * gridboard, int turn) {
+move * get_possible_moves(GtkGridBoard * gridboard, int turn) {
 	int x, y, i=0;
 	move * pm;
 	move bm;
@@ -202,7 +202,7 @@ void free_possible_moves(move * pm) {
 /* only thing to make sure the returned move is the "best" move is to
  * prioritize normal moves over jumps
  */
-move get_best_move_to(GtkWidget * gridboard, int x, int y, int me) {
+move get_best_move_to(GtkGridBoard * gridboard, int x, int y, int me) {
 	move bm;
 	int _x, _y, piece;
 	

@@ -62,7 +62,7 @@ static void settextdomain() {
 }
 
 /* returns true if at least one move is possible for player /turn/ */
-gboolean move_possible(GtkWidget * gridboard, int turn) {
+gboolean move_possible(GtkGridBoard * gridboard, int turn) {
 	int x, y;
 	gboolean mov;
 
@@ -78,9 +78,10 @@ gboolean move_possible(GtkWidget * gridboard, int turn) {
 }
 
 /* returns true if a move is possible to (x, y) */
-gboolean move_possible_to(GtkWidget * gridboard, int x, int y, int turn) {
+gboolean move_possible_to(GtkGridBoard * gridboard, int x, int y, int turn) {
 	int piece, _x, _y;
-	if (gtk_gridboard_get_piece(gridboard, x, y)!=EMPTY) return FALSE;
+	if (gtk_gridboard_get_piece(gridboard, x, y)!=EMPTY) 
+	  return FALSE;
 	for (_x=MAX(0, x-2); _x<MIN(BWIDTH, x+3); _x++) {
 		for (_y=MAX(0, y-2); _y<MIN(BHEIGHT, y+3); _y++) {
 			piece=gtk_gridboard_get_piece(gridboard, _x, _y);
@@ -93,6 +94,7 @@ gboolean move_possible_to(GtkWidget * gridboard, int x, int y, int turn) {
 /* after a move is done, a timeout is set on this function */
 gboolean computer_move_cb(gpointer turn) {
 	move cm;
+
 	cm=computer_move(gridboard, GPOINTER_TO_INT(turn));
 	do_move(cm);
 	return FALSE;
@@ -131,11 +133,11 @@ void do_move(move m) {
 	}
 		
 	
-	gtk_gridboard_clear_selections(gridboard);
+	gtk_gridboard_clear_selections(GTK_GRIDBOARD (gridboard));
 	gridboard_move(gridboard, m);
 
-	appbar_set_white(gtk_gridboard_count_pieces(gridboard, WHITE));
-	appbar_set_black(gtk_gridboard_count_pieces(gridboard, BLACK));
+	appbar_set_white(gtk_gridboard_count_pieces(GTK_GRIDBOARD (gridboard), WHITE));
+	appbar_set_black(gtk_gridboard_count_pieces(GTK_GRIDBOARD (gridboard), BLACK));
 
 	turn = turn == BLACK ? WHITE : BLACK;
 	appbar_set_turn (turn);
@@ -173,7 +175,7 @@ gboolean end_game_cb(gpointer data) {
 }
 
 /* makes an overview of all the pieces on the board at the end of the game */
-void flip_final(GtkWidget * gridboard, int wc, int bc) {
+void flip_final(GtkGridBoard * gridboard, int wc, int bc) {
 	int x, y, piece=EMPTY;
 	int ec=BWIDTH*BHEIGHT-wc-bc;
 
@@ -195,7 +197,7 @@ void flip_final(GtkWidget * gridboard, int wc, int bc) {
 }
 
 /* changes the pieces on the board */
-void gridboard_move(GtkWidget * gridboard, move m) {
+void gridboard_move(GtkGridBoard * gridboard, move m) {
 	int dist;
 	int piece=gtk_gridboard_get_piece(gridboard, m.from.x, m.from.y);
 	dist=MAX(ABS(m.from.x-m.to.x), ABS(m.from.y-m.to.y));
@@ -212,7 +214,7 @@ void gridboard_move(GtkWidget * gridboard, move m) {
 }
 
 /* turn all surrounding pieces */
-void turn_pieces(GtkWidget * gridboard, int x, int y) {
+void turn_pieces(GtkGridBoard * gridboard, int x, int y) {
 	int me, _x, _y, piece;
 	me=gtk_gridboard_get_piece(gridboard, x, y);
 	for (_x=MAX(0, x-1); _x<MIN(BWIDTH, x+2); _x++) {
@@ -483,10 +485,10 @@ static void create_window() {
 
 	props_init(GTK_WINDOW(window), "gataxx");
 	tileset=props_get_tile_set();
-	gridboard=gtk_gridboard_new(BWIDTH, BHEIGHT, get_tileset_path(tileset));
-	gnome_app_set_contents(GNOME_APP(window), gridboard);
-	gtk_widget_show(gridboard);
-	g_signal_connect(GTK_WIDGET(gridboard), "boxclicked",
+	gridboard = GTK_GRIDBOARD (gtk_gridboard_new(BWIDTH, BHEIGHT, get_tileset_path(tileset)));
+	gnome_app_set_contents(GNOME_APP(window), GTK_WIDGET (gridboard));
+	gtk_widget_show(GTK_WIDGET (gridboard));
+	g_signal_connect(G_OBJECT (gridboard), "boxclicked",
 			G_CALLBACK(boxclicked_cb), NULL);
 	gtk_widget_show(window);
 	apply_changes();

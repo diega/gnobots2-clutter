@@ -28,7 +28,7 @@ static guint gridboard_signals[LAST_SIGNAL] = { 0 };
 /* prototypes for private functions */
 static gint ** make_array(int width, int height); 
 static void gtk_gridboard_draw_box(GtkGridBoard *widget, gint x, gint y); 
-static void gtk_gridboard_draw_box_with_gc(GtkWidget * widget, GdkGC * gc, gint x, gint y);
+static void gtk_gridboard_draw_box_with_gc(GtkGridBoard * widget, GdkGC * gc, gint x, gint y);
 static void gtk_gridboard_load_pixmaps (GtkGridBoard * gridboard);
 static gint get_pixmap_num(int piece);
 static gint gtk_gridboard_button_press(GtkWidget *widget, GdkEventButton *event) ;
@@ -40,7 +40,7 @@ static void gtk_gridboard_realize(GtkWidget * widget);
 static void gtk_gridboard_size_allocate(GtkWidget * widget, GtkAllocation * allocation);
 static void gtk_gridboard_size_request(GtkWidget * widget, GtkRequisition * req);
 static void gtk_gridboard_draw_pixmap(GtkGridBoard * gridboard, gint which, gint x, gint y);
-gint gtk_gridboard_flip_pixmaps(gpointer data);
+static gint gtk_gridboard_flip_pixmaps(gpointer data);
 
 /* init functions */
 
@@ -94,7 +94,7 @@ GtkWidget * gtk_gridboard_new(gint width, gint height, char * tileset) {
         gridboard->selected=make_array(width, height);
 
         gtk_gridboard_load_pixmaps(gridboard);
-        gtk_gridboard_set_animate(GTK_WIDGET(gridboard), TRUE); 
+        gtk_gridboard_set_animate(gridboard, TRUE); 
         
         return GTK_WIDGET(gridboard);
         
@@ -124,55 +124,51 @@ GtkType gtk_gridboard_get_type() {
         }
         return gridboard_type;
 }
-/* event handlers */
-static gint gtk_gridboard_button_press(GtkWidget *widget, GdkEventButton *event)
- {
-        GtkGridBoard * gridboard;
-        
-        g_return_val_if_fail (widget != NULL, FALSE);
-        g_return_val_if_fail (GTK_IS_GRIDBOARD(widget), FALSE);
-        g_return_val_if_fail (event != NULL, FALSE);
 
-        gridboard=GTK_GRIDBOARD(widget);
-        
-        int x=event->x/gridboard->tilewidth;
-        int y=event->y/gridboard->tileheight;
-        g_signal_emit (G_OBJECT(widget), 
-                gridboard_signals[BOXCLICKED], 0, x, y);
-        return TRUE;
+/* event handlers */
+
+static gint gtk_gridboard_button_press(GtkWidget *widget,
+				       GdkEventButton *event)
+ {
+   GtkGridBoard *gridboard;
+   int x, y;
+
+   g_return_val_if_fail (GTK_IS_GRIDBOARD(widget), FALSE);
+   
+   gridboard = GTK_GRIDBOARD (widget);
+
+   x = event->x/gridboard->tilewidth;
+   y = event->y/gridboard->tileheight;
+   g_signal_emit (G_OBJECT(gridboard), gridboard_signals[BOXCLICKED], 
+		  0, x, y);
+
+   return TRUE;
 }
 
-static gboolean gtk_gridboard_expose(GtkWidget * widget, GdkEventExpose * event)
+static gboolean gtk_gridboard_expose(GtkWidget *widget,
+				     GdkEventExpose * event)
  {
-        GtkGridBoard * gridboard;
-
-        g_return_val_if_fail (widget != NULL, FALSE);
         g_return_val_if_fail (GTK_IS_GRIDBOARD(widget), FALSE);
-        g_return_val_if_fail (event != NULL, FALSE);
-
-        gridboard=GTK_GRIDBOARD(widget);
 
         /* multiple exposures, do only the last one */
         if (event->count>0) return FALSE;
 
 	/* FIXME: We should only redraw the bit we need to. */
 
-        gtk_gridboard_paint(gridboard);
+        gtk_gridboard_paint(GTK_GRIDBOARD (widget));
 
         return FALSE;
 }
 
-static void gtk_gridboard_realize(GtkWidget * widget) {
-        GtkGridBoard *gridboard;
+static void gtk_gridboard_realize(GtkWidget * widget) 
+{
         GdkWindowAttr attributes;
         gint attributes_mask;
 
-        g_return_if_fail (widget != NULL);
-        g_return_if_fail (GTK_IS_GRIDBOARD (widget));
+        g_return_if_fail (GTK_IS_WIDGET (widget));
 
         GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
-        gridboard = GTK_GRIDBOARD (widget);
-
+	
         attributes.x = widget->allocation.x;
         attributes.y = widget->allocation.y;
         attributes.width = widget->allocation.width;
@@ -214,18 +210,26 @@ static void gtk_gridboard_finalize(GObject * object) {
 
 static void gtk_gridboard_size_request(GtkWidget * widget, GtkRequisition * req)
  {
-        GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+        GtkGridBoard *gridboard;
+
+	g_return_if_fail (GTK_IS_GRIDBOARD (widget));
+	gridboard = GTK_GRIDBOARD (widget);
 
         req->width=gridboard->width*gridboard->tilewidth + 1;
         req->height=gridboard->height*gridboard->tileheight + 1;
 }
 
 /* this isn't really used because the window is not resizable */
-static void gtk_gridboard_size_allocate(GtkWidget * widget, GtkAllocation * allocation) {
-        g_return_if_fail(widget != NULL);
+static void gtk_gridboard_size_allocate(GtkWidget *widget,
+					GtkAllocation * allocation) 
+{
+        GtkGridBoard *gridboard; 
+
         g_return_if_fail(GTK_IS_GRIDBOARD(widget));
   
-        widget->allocation = *allocation;
+	gridboard = GTK_GRIDBOARD (widget);
+
+	widget->allocation = *allocation;
 
         if (GTK_WIDGET_REALIZED (widget)) {
                 gdk_window_move_resize (widget->window,
@@ -314,18 +318,23 @@ static void gtk_gridboard_draw_box(GtkGridBoard *gridboard, gint x, gint y) {
         } else {
 		return;
 	}
-        gtk_gridboard_draw_box_with_gc(widget, gc, x, y);
+        gtk_gridboard_draw_box_with_gc(gridboard, gc, x, y);
 }
 
-static void gtk_gridboard_draw_box_with_gc(GtkWidget * widget, GdkGC * gc, gint x, gint y) {
-        GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+static void gtk_gridboard_draw_box_with_gc(GtkGridBoard * gridboard, 
+					   GdkGC * gc, gint x, gint y) 
+{
+        GtkWidget * widget;
+
+	widget = GTK_WIDGET (gridboard);
 
         gdk_draw_rectangle(widget->window, gc, FALSE,
                 x*gridboard->tilewidth, y*gridboard->tileheight,
                 gridboard->tilewidth, gridboard->tileheight);
 }
 
-gint gtk_gridboard_flip_pixmaps(gpointer data) {
+static gint gtk_gridboard_flip_pixmaps(gpointer data) 
+{
         GtkGridBoard * gridboard=(GtkGridBoard *) data;
 
         gint x, y;
@@ -408,15 +417,11 @@ static gint ** make_array(int width, int height) {
         return result;
 }
 
-int gtk_gridboard_count_pieces(GtkWidget * widget, int piece) {
+int gtk_gridboard_count_pieces(GtkGridBoard * gridboard, int piece) {
         int x, y;
         int count=0;
-	GtkGridBoard * gridboard;
 	
-        g_return_val_if_fail(widget != NULL, FALSE);
-        g_return_val_if_fail(GTK_IS_GRIDBOARD (widget), FALSE);
-
-	gridboard=GTK_GRIDBOARD(widget);
+        g_return_val_if_fail(GTK_IS_GRIDBOARD (gridboard), 0);
 
         for (x=0; x<gridboard->width; x++) 
                 for (y=0; y<gridboard->height; y++) 
@@ -463,14 +468,16 @@ void g_cclosure_user_marshal_VOID__INT_INT (GClosure     *closure,
 
 /* option setting functions */
 
-void gtk_gridboard_set_show_grid(GtkWidget * widget, gboolean showgrid) {
-	GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+void gtk_gridboard_set_show_grid(GtkGridBoard *gridboard, gboolean showgrid) {
+        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
+
         gridboard->showgrid=showgrid;
         gtk_gridboard_paint(gridboard);
 }
         
-void gtk_gridboard_set_animate(GtkWidget * widget, gboolean animate) {
-	GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+void gtk_gridboard_set_animate(GtkGridBoard *gridboard, gboolean animate) {
+        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
+
         gridboard->animate=animate;
         if (animate) { 
                 g_timeout_add(PIXMAP_FLIP_DELAY, 
@@ -478,16 +485,21 @@ void gtk_gridboard_set_animate(GtkWidget * widget, gboolean animate) {
                                 (gpointer) gridboard);
         }
 }
-void gtk_gridboard_set_tileset(GtkWidget * widget, gchar * tileset) {
-	GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+
+void gtk_gridboard_set_tileset(GtkGridBoard *gridboard, gchar * tileset) {
+        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
+
         gridboard->tileset=tileset;
         gtk_gridboard_load_pixmaps(gridboard);
         gtk_gridboard_paint(gridboard);
 }
         
 /* board altering functions */
-void gtk_gridboard_set_piece(GtkWidget * widget, int x, int y, int piece) {
-	GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+void gtk_gridboard_set_piece(GtkGridBoard *gridboard, int x, int y, 
+			     int piece) 
+{
+        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
+
         gridboard->board[x][y]=piece;
         /* draw updated piece */
         if (!gridboard->animate) {
@@ -496,14 +508,19 @@ void gtk_gridboard_set_piece(GtkWidget * widget, int x, int y, int piece) {
         }
 }
 
-int gtk_gridboard_get_piece(GtkWidget * widget, int x, int y) {
-	GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+int gtk_gridboard_get_piece(GtkGridBoard *gridboard, int x, int y) 
+{
+        g_return_val_if_fail (GTK_IS_GRIDBOARD (gridboard), 0);
+
         return gridboard->board[x][y];
 }
 
-void gtk_gridboard_clear_selections(GtkWidget * widget) {
+void gtk_gridboard_clear_selections(GtkGridBoard *gridboard) 
+{
 	int x, y;
-	GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+
+        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
+
 	for (x=0; x<gridboard->width; x++) {
 		for (y=0; y<gridboard->height; y++) {
 			gridboard->selected[x][y]=SELECTED_NONE;
@@ -512,9 +529,12 @@ void gtk_gridboard_clear_selections(GtkWidget * widget) {
 	gtk_gridboard_paint(gridboard);
 }
 
-void gtk_gridboard_clear_pieces(GtkWidget * widget) {
-	GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+void gtk_gridboard_clear_pieces(GtkGridBoard *gridboard) 
+{
 	int x, y;
+
+        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
+
 	for (x=0; x<gridboard->width; x++) {
 		for (y=0; y<gridboard->height; y++) {
 			gridboard->board[x][y]=EMPTY;
@@ -523,9 +543,12 @@ void gtk_gridboard_clear_pieces(GtkWidget * widget) {
 	gtk_gridboard_paint(gridboard);
 }
 
-void gtk_gridboard_clear_pixmaps(GtkWidget * widget) {
-	GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+void gtk_gridboard_clear_pixmaps(GtkGridBoard *gridboard) 
+{
 	int x, y;
+
+        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
+
 	for (x=0; x<gridboard->width; x++) {
 		for (y=0; y<gridboard->height; y++) {
 			gridboard->pixmaps[x][y]=get_pixmap_num(EMPTY);
@@ -534,23 +557,30 @@ void gtk_gridboard_clear_pixmaps(GtkWidget * widget) {
 	gtk_gridboard_paint(gridboard);
 }
 
-void gtk_gridboard_clear(GtkWidget * widget) {
-	gtk_gridboard_clear_selections(widget);
-	gtk_gridboard_clear_pieces(widget);
-	gtk_gridboard_clear_pixmaps(widget);
-	gtk_gridboard_clear_states(widget);
+void gtk_gridboard_clear(GtkGridBoard *gridboard) 
+{
+        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
+
+	gtk_gridboard_clear_selections(gridboard);
+	gtk_gridboard_clear_pieces(gridboard);
+	gtk_gridboard_clear_pixmaps(gridboard);
+	gtk_gridboard_clear_states(gridboard);
 }
 
-int gtk_gridboard_states_present(GtkWidget * widget) {
-	GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+int gtk_gridboard_states_present(GtkGridBoard *gridboard) 
+{
+        g_return_val_if_fail (GTK_IS_GRIDBOARD (gridboard), FALSE);
+
 	return (gridboard->statelist)!=NULL;
 }
 
 /* saves the current board on a stack */
-void gtk_gridboard_save_state(GtkWidget * widget, gpointer data) {
-	GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+void gtk_gridboard_save_state(GtkGridBoard *gridboard, gpointer data) 
+{
 	StateList * newstate;
 	int x, y;
+
+        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
 
 	newstate = g_malloc(sizeof(StateList));
 
@@ -563,16 +593,17 @@ void gtk_gridboard_save_state(GtkWidget * widget, gpointer data) {
 
 	newstate->prev=gridboard->statelist;
 	newstate->data=data;
-	gridboard->statelist=newstate;
-	
+	gridboard->statelist=newstate;	
 }
 
 /* reverts to the last state on the stack and deletes it */
-gpointer gtk_gridboard_revert_state(GtkWidget * widget) {
-	GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+gpointer gtk_gridboard_revert_state(GtkGridBoard *gridboard) 
+{
 	StateList * thisstate, * prevstate;
 	gpointer data;
 	int x, y;
+
+        g_return_val_if_fail (GTK_IS_GRIDBOARD (gridboard), NULL);
 
 	thisstate=gridboard->statelist;
 	if (thisstate==NULL) return NULL;
@@ -595,10 +626,12 @@ gpointer gtk_gridboard_revert_state(GtkWidget * widget) {
 	return data;
 }
 
-void gtk_gridboard_clear_states(GtkWidget * widget) {
-	GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+void gtk_gridboard_clear_states(GtkGridBoard *gridboard) 
+{
 	StateList * curstate;
 	StateList * prevstate;
+
+        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
 
 	curstate=gridboard->statelist;
 
@@ -611,10 +644,16 @@ void gtk_gridboard_clear_states(GtkWidget * widget) {
 	gridboard->statelist=NULL;
 }
 		
-int gtk_gridboard_get_height(GtkWidget * widget) {
-	return GTK_GRIDBOARD(widget)->height;
+int gtk_gridboard_get_height(GtkGridBoard *gridboard) 
+{
+        g_return_val_if_fail (GTK_IS_GRIDBOARD (gridboard), 0);
+
+	return gridboard->height;
 }
 		
-int gtk_gridboard_get_width(GtkWidget * widget) {
-	return GTK_GRIDBOARD(widget)->width;
+int gtk_gridboard_get_width(GtkGridBoard *gridboard) 
+{
+        g_return_val_if_fail (GTK_IS_GRIDBOARD (gridboard), 0);
+
+	return gridboard->width;
 }

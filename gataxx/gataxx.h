@@ -54,14 +54,14 @@ char * get_tileset_path(char * tileset);
 gboolean computer_move_cb(gpointer turn);
 void do_move(move m);
 void do_select(int x, int y);
-void gridboard_move(GtkWidget * gridboard, move m);
-void turn_pieces(GtkWidget * gridboard, int x, int y);
+void gridboard_move(GtkGridBoard * gridboard, move m);
+void turn_pieces(GtkGridBoard * gridboard, int x, int y);
 void apply_changes(void);
 GConfClient * get_gconf_client(void);
 void menu_undo_set_sensitive(gboolean sens);
-gboolean move_possible(GtkWidget * gridboard, int turn);
-gboolean move_possible_to(GtkWidget * gridboard, int x, int y, int turn);
+gboolean move_possible(GtkGridBoard * gridboard, int turn);
+gboolean move_possible_to(GtkGridBoard * gridboard, int x, int y, int turn);
 gboolean end_game_cb(gpointer data);
-void flip_final(GtkWidget * gridboard, int wc, int bc);
+void flip_final(GtkGridBoard * gridboard, int wc, int bc);
 
 #endif /* GATAXX_H */

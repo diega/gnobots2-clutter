@@ -1,3 +1,14 @@
+2004-10-29  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gataxx.h: 
+	* gataxx.c:
+	* ai.h:
+	* ai.c:
+	* gtkgridboard.h:	
+	* gtkgridboard.c: Massive cleanups. GtkWidget -> GtkGridBoard to
+	assist type safety. More checks on input values for public
+	functions.
+
 2004-10-28  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gtkgridboard.c: Clear the selection when we undo a move. Fixes
