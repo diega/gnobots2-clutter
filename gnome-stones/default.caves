@@ -1,5 +1,8 @@
 [General]
 Title=Default caves
+Title[de]=Standardhöhlen
+Title[es]=Cavernas por omisión
+Title[ko]=±âº» µ¿±¼
 Object size=1
 Plugins=default:gnome-stones
 

@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1999/03/02 18:53:16 carsten>
+ * Time-stamp: <1999/03/03 18:17:52 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -93,16 +93,6 @@ struct _GameFile
   guint  caves;
 };
 
-/* this is just a place holder so xgettext can find the strings to translate
- * (they are GameFile->gametitle for the standard game files) 
- */
-#if 0
-  char *just_a_place_holder[]={
-	N_("Tutorial caves"),
-	N_("Default caves"),
-	N_("Gnomekoban")
-  }
-#endif
 
 GList *games= NULL;
 
@@ -136,8 +126,8 @@ add_game (const char *filename)
       prefix= g_strconcat ("=", filename, "=/", NULL);
       gnome_config_push_prefix (prefix);
       
-      file->gametitle= gnome_config_get_string ("General/Title");
-      file->caves    = gnome_config_get_int    ("Caves/Number");
+      file->gametitle= gnome_config_get_translated_string ("General/Title");
+      file->caves    = gnome_config_get_int               ("Caves/Number");
 
       gnome_config_pop_prefix ();
       g_free (prefix);
@@ -540,7 +530,7 @@ preferences_dialog_new (void)
 	char     *entry[3];
 	gint      row;
 	
-	entry[0]= _(file->gametitle);
+	entry[0]= file->gametitle;
 	sprintf (buffer, "%d", file->caves);
 	entry[1]= buffer;
 	entry[2]= g_basename (file->filename);

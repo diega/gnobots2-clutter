@@ -1,3 +1,11 @@
+1999-03-03  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* io.c:
+	* preferences.c:
+	* main.c:
+	* *.caves: The translated cave names are now written into 
+        the cave files.
+
 1999-03-02  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
 	* Makefile.am: Added installation of mime-type information.

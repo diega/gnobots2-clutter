@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <1999/03/02 18:47:40 carsten>
+ * Time-stamp: <1999/03/03 18:09:58 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -263,7 +263,7 @@ game_update_title (void)
 		       font,
 		       gstones_view->style->black_gc,
 		       30, GAME_ROWS*STONE_SIZE-30-height*2-height/2,
-		       _(game->title),
+		       game->title,
 		       strlen (_(game->title)));
       
       gdk_draw_text   (title_image,

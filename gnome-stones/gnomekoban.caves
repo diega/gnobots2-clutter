@@ -1,5 +1,8 @@
 [General]
 Title=Gnomekoban
+Title[de]=Gnomekoban
+Title[es]=Gnomekoban
+Title[ko]=±×³ð°í¹Ý
 New life score=500
 Lives=1
 Frame rate=0.125

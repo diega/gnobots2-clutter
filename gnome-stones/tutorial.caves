@@ -1,6 +1,8 @@
 [General]
 Title=Tutorial caves
-Title[de]=Anleitungshöhlen
+Title[de]=Trainingshöhlen
+Title[es]=Cavernas de entrenamiento
+Title[ko]=¿¬½À¿ë µ¿±¼
 New life score=500
 Lives=1
 Frame rate=0.125
