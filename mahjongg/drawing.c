@@ -275,19 +275,22 @@ static void recreate_tile_images (void)
     fg = games_preimage_render (tilepreimage, tilewidth*NUM_PATTERNS,
                                 tileheight*2, NULL);
     
-    /* If the preimage was bad, we'll want to get rid of it. */
-    if (fg == NULL){
+    /* If the preimage was bad, remove it. */
+    if (fg == NULL) {
       g_object_unref (tilepreimage);
       tilepreimage = NULL;
     }  
   
   }
   
-  /* If there's no theme pixbuf, provide a blank one. */
-  if (fg == NULL){
+  /* If there's no theme pixbuf, provide a blank one and warn. */
+  if (fg == NULL) {
     fg = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, 
                          tilewidth*NUM_PATTERNS, tileheight*2);
     gdk_pixbuf_fill (fg, 0x00000000);
+
+    mahjongg_theme_warning (_("The selected image may be corrupt. Please choose another tile set."));
+
   }
 
   gdk_pixbuf_render_threshold_alpha (fg, tilemask, 0, 0, 0, 0,
@@ -400,6 +403,7 @@ void load_images (gchar * file)
 {
   gchar * filename;
   gchar * temp;
+  gchar * warning_message;
 
   temp = g_strconcat ("mahjongg/", file, NULL);
   
@@ -409,18 +413,9 @@ void load_images (gchar * file)
   g_free (temp);
 
   if (filename == NULL) {
-    file = "mahjongg/postmodern.svg";
-    filename = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
-                                          file, TRUE, NULL);
-  }
-
-  if (filename == NULL) {
-      /* FIXME: Put a warning dialog in here. */
-    g_warning ("Unable to load file %s\n", file);
-#if 0
-    error = g_error_new (G_FILE_ERROR, G_FILE_ERROR_NOENT,
-                         _("Unable to locate theme file: %s"), file);
-#endif
+    warning_message = g_strdup_printf (_("Unable to locate file '%s'. Please choose another tile set."), file);
+    mahjongg_theme_warning (warning_message);
+    g_free (warning_message);
   } else {
     if (tilepreimage) g_object_unref (tilepreimage);
     tilepreimage = games_preimage_new_from_uri (filename, NULL);

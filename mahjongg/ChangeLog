@@ -1,3 +1,12 @@
+2004-11-17  Richard Hoelscher  <rah@rahga.com>
+
+	* mahjongg.h
+	* mahjongg.c (mahjongg_theme_warning): Display a warning dialog
+	when images fail to load. After the warning, display prefs if not
+	already shown.
+	(tileset_changed_cb): Reset the image warning dialog.
+	* drawing.c (recreate_tile_images, load_images): Warning support.
+
 2004-12-18  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* maps.c (compare_tiles): Fix the tile sorting routines.

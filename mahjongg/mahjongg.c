@@ -50,6 +50,7 @@ tile tiles[MAX_TILES];
 
 GtkWidget *window, *appbar;
 GtkWidget *tiles_label;
+GtkWidget *image_warning_dialog = NULL;
 gint selected_tile, visible_tiles;
 gint sequence_number;
 
@@ -196,6 +197,25 @@ GnomeUIInfo toolbar_uiinfo [] = {
 #define PAUSE_BUTTON GTK_TOGGLE_BUTTON(toolbar_uiinfo[2].widget)
 #define HIGHSCORE_WIDGET gamemenu[8].widget
 
+void mahjongg_theme_warning (gchar *message)
+{
+	/* Limit warnings to one per theme. */
+	if (image_warning_dialog != NULL) return;
+
+	image_warning_dialog = gtk_message_dialog_new (GTK_WINDOW (window),
+						       GTK_DIALOG_DESTROY_WITH_PARENT,
+						       GTK_MESSAGE_WARNING,
+						       GTK_BUTTONS_OK,
+						       _("Could not load tile set"));
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (image_warning_dialog), message);
+
+	g_signal_connect (image_warning_dialog, "response",
+			  G_CALLBACK (properties_callback), NULL);
+	gtk_dialog_run (GTK_DIALOG (image_warning_dialog));
+	gtk_widget_destroy (image_warning_dialog);
+}
+
+
 /* At the end of the game, hint, shuffle and pause all become unavailable. */
 /* Undo and Redo are handled elsewhere. */
 static void set_menus_sensitive (void)
@@ -256,6 +276,7 @@ tileset_changed_cb (GConfClient *client,
 		if (strcmp (tile_tmp, selected_tileset) != 0) {
 			g_free (selected_tileset);
 			selected_tileset = tile_tmp;
+			image_warning_dialog = NULL;
 			load_images (selected_tileset);
 			draw_all_tiles ();
 		} else {
@@ -1430,9 +1451,11 @@ main (int argc, char *argv [])
 	if (!games_gconf_sanity_check_string (conf_client, "/apps/mahjongg/tileset")) {
 		return 1;
 	}
-	load_preferences ();
 	
 	window = gnome_app_new (APPNAME, _(APPNAME_LONG));
+
+        load_preferences ();
+        
 	gtk_window_set_default_size (GTK_WINDOW (window), windowwidth,
 				     windowheight);
 	gtk_window_set_title (GTK_WINDOW (window), _("Mahjongg"));
