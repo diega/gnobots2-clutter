@@ -1,6 +1,6 @@
 scoredir=$(localstatedir)/games
 pixmapdir = $(datadir)/pixmaps/same-gnome
-Gamesdir = $(datadir)/gnome/apps/Games
+Gamesdir = $(datadir)/applications
 
 SUBDIRS = help
 
