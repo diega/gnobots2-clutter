@@ -1,3 +1,9 @@
+2003-06-04  William Jon McCann  <mccannwj@acs25>
+
+	* data/Vegas_Strip.rules: Change to allow double after split,
+	surrender, and resplitting aces.  This should not affect the
+	cached rules file.
+
 2003-06-03  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* src/Makefile.am: 
