@@ -543,14 +543,16 @@ gui_draw_selected (gint x, gint y, gint on)
                             TILEWIDTH, TILEHEIGHT);
     }
   }
-	if (on) 
-          gdk_draw_rectangle (drawing_area->window, sgc, FALSE,
-                              x * TILEWIDTH, y * TILEHEIGHT,
-                              TILEWIDTH, TILEHEIGHT);
-	else 
-          gdk_draw_rectangle (drawing_area->window, gc, FALSE,
-                              x * TILEWIDTH, y * TILEHEIGHT,
-                              TILEWIDTH, TILEHEIGHT);
+  if (on) 
+    gdk_draw_rectangle (drawing_area->window, sgc, FALSE,
+                        x * TILEWIDTH, y * TILEHEIGHT,
+                        TILEWIDTH, TILEHEIGHT);
+  else 
+    gdk_draw_rectangle (drawing_area->window, gc, FALSE,
+                        x * TILEWIDTH, y * TILEHEIGHT,
+                        TILEWIDTH, TILEHEIGHT);
+  
+  g_object_unref (sgc);
 }
 
 void

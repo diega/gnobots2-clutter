@@ -1,3 +1,9 @@
+2003-09-13  Steve Chaplin
+
+       * properties.c (fill_menu): g_free() unused memory.
+       * gataxx.c (gui_draw_selected): g_object_unref() object we have
+       finished using.
+
 Tue Aug  5 10:24:33 2003  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* properties.c (clamp_int): Suppress a compiler warning.
