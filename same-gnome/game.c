@@ -259,7 +259,6 @@ void destroy_balls (void)
 
 	score += calculate_score (count);
 	show_score (score);
-	set_message_destroyed (count);
 
 	count = 0;
 

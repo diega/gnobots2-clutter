@@ -1,5 +1,11 @@
 2005-04-03  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* ui.c: 
+	* ui.h:
+	* game.c: Remove the ball count message and just use the points
+	message. This solves the criticism in bug #172359 via a different
+	route.
+	
 	* help/C/same-gnome.xml: 
 	* drawing.h: 
 	* same-gnome.h: 

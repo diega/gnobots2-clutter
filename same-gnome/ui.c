@@ -55,37 +55,20 @@ static void quit_cb (void)
 void set_message (gint count)
 {
 	gchar *message;
-	gchar *part1;
-	gchar *part2;
 	gint s;
 
-	if (count > 1) {
-		s = calculate_score (count);
-		part1 = g_strdup_printf (ngettext ("%d object selected", 
-																			 "%d objects selected", count), count);
-		part2 = g_strdup_printf (ngettext ("%d point", "%d points", s), s);
-		/* Translators: the previous messages get merged into this 
-		 * format string. */
-		message = g_strdup_printf (_("%s (%s)"), part1, part2);
-		gtk_label_set_text (GTK_LABEL (messagewidget), message);
-		g_free (message);
-	} else {
-		gtk_label_set_text (GTK_LABEL (messagewidget), _("No objects selected"));
+	if (count < 2) {
+		gtk_label_set_text (GTK_LABEL (messagewidget), "");
+		return;
 	}
-}
 
-void set_message_destroyed (gint count)
-{
-	gchar *message;
-	gint s;
-
-	if (count < 3) {
+	if (count == 2) {
 		gtk_label_set_text (GTK_LABEL (messagewidget), _("No points"));
 		return;
 	}
 
 	s = calculate_score (count);
-	message = g_strdup_printf (ngettext ("%d point!", "%d points!", s), s);
+	message = g_strdup_printf (ngettext ("%d point", "%d points", s), s);
 	gtk_label_set_text (GTK_LABEL (messagewidget), message);
 	g_free (message);
 } 
