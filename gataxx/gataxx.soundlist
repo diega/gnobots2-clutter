@@ -13,6 +13,7 @@ description[gl]=Xogo rematado
 description[lt]=Þaidimas baigtas
 description[no]=Spillet over
 description[pl]=Koniec gry
+description[sk]=Koniec hry
 
 [flip-piece]
 file=gataxx/flip-piece.wav
@@ -26,3 +27,4 @@ description[gl]=Cambio das pezas
 description[lt]=Ðaðkës apsiverèia
 description[no]=Vending av brikke
 description[pl]=Obrót elementu
+description[sk]=Obrátenie kameòa
