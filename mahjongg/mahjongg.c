@@ -1562,7 +1562,10 @@ static void
 stop_hints (void)
 {
 	timeout_counter = HINT_BLINK_NUM;
-	hint_timeout (NULL);
+	tiles[hint_tiles[0]].selected &= ~HINT_FLAG;
+	tiles[hint_tiles[1]].selected &= ~HINT_FLAG;
+	draw_tile (hint_tiles[0]);
+	draw_tile (hint_tiles[1]);
 }
 
 void
