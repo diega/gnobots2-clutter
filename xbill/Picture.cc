@@ -17,7 +17,7 @@ void Picture::load(const char *name, int index) {
 		sprintf (file, "xbill/pixmaps/%s_%d.xpm", name, index);
 	else
 	        sprintf(file, "xbill/pixmaps/%s.xpm", name);
-	logo = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_DATADIR, file,
+	logo = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_DATADIR, file,
 			TRUE, NULL);
 	pix = gdk_pixmap_colormap_create_from_xpm(ui.display, ui.colormap,
 						  &mask, &ui.white, logo);

@@ -3,7 +3,7 @@
 
 void MCursor::load(const char *name, int masked) {
 	static char *dir = gnome_program_locate_file (NULL,
-			GNOME_FILE_DOMAIN_DATADIR, "xbill/cursors",
+			GNOME_FILE_DOMAIN_APP_DATADIR, "xbill/cursors",
 			FALSE, NULL);
 	GdkPixmap *pixmap, *bitmap, *mask;
 	int width, height;
