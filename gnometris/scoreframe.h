@@ -28,7 +28,7 @@ public:
 	
 	void show();
 	void resetLines();	
-	void incLines();	
+	void incLines(int newlines);	
 	void checkLevel();
 	void setLevel(int l);
 		
@@ -38,6 +38,8 @@ public:
 	
 	GtkWidget * getWidget()	{return w;}
 	
+	void incScore(int score);
+
 private:
 	GtkWidget *w;
 	GtkWidget *scorew;

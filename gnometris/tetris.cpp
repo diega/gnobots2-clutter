@@ -666,8 +666,13 @@ Tetris::timeoutHandler(void *d)
 		if (res)
 		{
 			t->manageFallen();
-			t->fastFall = false;
+			if(t->fastFall)
+				t->scoreFrame->incScore(t->fastFallPoints);
+			else
+				t->fastFall = false;
 		}
+		else if(t->fastFall)
+			++t->fastFallPoints;
 	}
 
 	return 1;	
@@ -718,6 +723,7 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 			if (!t->fastFall)
 			{
 				t->fastFall = true;
+				t->fastFallPoints = 0;
 				gtk_timeout_remove(t->timeoutId);
 				t->timeoutId = gtk_timeout_add(10, timeoutHandler, t);
 				res = true;
@@ -854,11 +860,11 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 
 	const gchar *authors[] = {"J. Marcin Gorycki", 0};
 
-	about = gnome_about_new("Gnometris", TETRIS_VERSION, "(C) 1999 J. Marcin Gorycki", 
+	about = gnome_about_new("Gnometris", TETRIS_VERSION, "(C) 2000 J. Marcin Gorycki", 
 							(const char **)authors,
 							_("Written for my wife, Matylda\n"
 							  "Send comments and bug reports to: "
-							  "marcin.gorycki@intel.com"), 0);
+							  "janusz.gorycki@intel.com"), 0);
 	gnome_dialog_set_parent(GNOME_DIALOG(about), GTK_WINDOW(t->w));
 	gtk_window_set_modal(GTK_WINDOW(about), TRUE);
 

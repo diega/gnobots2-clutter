@@ -202,6 +202,7 @@ void
 BlockOps::checkFullLines(ScoreFrame *s)
 {
 	bool found;
+	int numFullLines = 0;
 	
 	do
 	{
@@ -220,7 +221,7 @@ BlockOps::checkFullLines(ScoreFrame *s)
 			}
 			if (f)
 			{
-				s->incLines();
+				++numFullLines;
 				s->checkLevel();
 				
 				found = true;
@@ -247,6 +248,8 @@ BlockOps::checkFullLines(ScoreFrame *s)
 		}
 	}
 	while (found);
+	if(numFullLines > 0)
+		s->incLines(numFullLines);
 }
 
 bool

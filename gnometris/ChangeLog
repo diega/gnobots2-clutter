@@ -1,5 +1,11 @@
 2000-04-27  Marcin Gorycki  <Janusz.Gorycki@intel.com>
 
+	* blockops.cpp, scoreframe.cpp, scoreframe.h, tetris.h:
+	scoring updated (variable scores depending on number of lines
+	filled and other things)
+	
+2000-04-27  Marcin Gorycki  <Janusz.Gorycki@intel.com>
+
 	* blockops.cpp, tetris.cpp: gtk warnings fixed
 
 

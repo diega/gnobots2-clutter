@@ -24,7 +24,7 @@
 #include <config.h>
 #include <gnome.h>
 
-#define TETRIS_VERSION "1.2.2"
+#define TETRIS_VERSION "1.2.3"
 
 extern int LINES;
 extern int COLUMNS;
@@ -144,6 +144,7 @@ private:
 	void showScores(gchar *title, guint pos);
 
 	bool fastFall;
+	int fastFallPoints;
 };
 
 #endif // __tetris_h__

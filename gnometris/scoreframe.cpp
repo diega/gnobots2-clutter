@@ -90,6 +90,15 @@ ScoreFrame::setScore(int s)
 }
 
 void
+ScoreFrame::incScore(int s)
+{
+	score += s;
+	
+	sprintf(b, "%7d", score);
+	gtk_label_set(GTK_LABEL(scorew), b);
+}
+
+void
 ScoreFrame::resetLines()
 {
 	lines = 0;
@@ -100,10 +109,27 @@ ScoreFrame::resetLines()
 }
 
 void 
-ScoreFrame::incLines()
+ScoreFrame::incLines(int newlines)
 {
-	++lines;
-	setScore(lines * (100 + 10 * level));
+	int linescore = 0;
+
+	lines += newlines;
+	switch(newlines)
+	{
+		case 1:
+			linescore = 40;
+			break;
+		case 2:
+			linescore = 100;
+			break;
+		case 3:
+			linescore = 300;
+			break;
+		case 4:
+			linescore = 1200;
+			break;
+	}
+	incScore(linescore * level);
 	sprintf(b, "%7d", lines);
 	gtk_label_set(GTK_LABEL(linesw), b);
 }
