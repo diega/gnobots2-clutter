@@ -1261,10 +1261,10 @@ main(int argc, char *argv[])
     
     srandom(time(NULL));
     
+    gnome_score_init("gnobots");
+
     bindtextdomain(PACKAGE, GNOMELOCALEDIR);
     textdomain(PACKAGE);
-
-    gnome_score_init("gnobots");
 
     gnome_init_with_popt_table("gnobots", VERSION, argc, argv, options, 0, NULL);
 

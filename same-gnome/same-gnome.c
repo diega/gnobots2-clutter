@@ -791,10 +791,10 @@ main (int argc, char *argv [])
 	GtkWidget *label;
 	GnomeClient *client;
 
+	gnome_score_init("same-gnome");
+
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
-
-	gnome_score_init("same-gnome");
 
 	gnome_init_with_popt_table ("same-gnome", VERSION, argc, argv, options, 0, NULL);
 

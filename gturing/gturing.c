@@ -630,10 +630,10 @@ void parse_args(int argc, char *argv[])
 /* The main. */
 int main (int argc, char *argv[])
 {
+	gnome_score_init("gnomecard");
+
         bindtextdomain(PACKAGE, GNOMELOCALEDIR);
         textdomain(PACKAGE);
-
-	gnome_score_init("gnomecard");
 
 	parse_args(argc, argv);
 	gnome_init("gnomecard", VERSION, argc, argv);

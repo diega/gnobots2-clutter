@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <1999/03/03 18:09:58 carsten>
+ * Time-stamp: <2000/05/09 18:20:21 martin>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -1113,10 +1113,10 @@ main (int argc, char *argv[])
   GtkWidget *vbox = NULL;
   GtkWidget *table= NULL;
   
+  gnome_score_init (APP_NAME);
+
   bindtextdomain (PACKAGE, GNOMELOCALEDIR);
   textdomain (PACKAGE);
-
-  gnome_score_init (APP_NAME);
 
   gnome_init_with_popt_table (APP_NAME, VERSION, argc, argv, options, 0, NULL);
   gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-stones.png");

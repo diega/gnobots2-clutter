@@ -1536,10 +1536,10 @@ int main(int argc, char *argv[])
 	GtkObject *adj;
 	GtkWidget *scrollbar;
 		
+	gnome_score_init ("GnomeScott");
+
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
-
-	gnome_score_init ("GnomeScott");
 
 	gnome_init("GnomeScott", VERSION, argc, argv);
 	
