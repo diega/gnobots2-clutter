@@ -1,5 +1,14 @@
 2000-04-17  Ian Peters  <itp@gnu.org>
 
+	* src/iagno2.c: Added motion_notify_event to possibly show valid moves
+	* src/preferences.c: Added toggle to show valid moves
+	* src/properties.c, src/properties.h: Added support to toggle show valid
+	  moves
+	* tiles/classic.png, tiles/metal2.png: Added new frame to show valid
+	  moves
+
+2000-04-17  Ian Peters  <itp@gnu.org>
+
 	* src/iagno2.c: Fix end game display flip -- 0 != EMPTY anymore
 
 2000-04-17  Ian Peters  <itp@gnu.org>

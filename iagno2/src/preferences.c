@@ -153,6 +153,21 @@ draw_grid_cb (GtkWidget *widget, gpointer data)
 }
 
 static void
+show_valid_moves_cb (GtkWidget *widget, gpointer data)
+{
+  if (!preferences_dialog)
+    return;
+
+  if (GTK_TOGGLE_BUTTON (widget)->active) {
+    tmp_properties->show_valid_moves = 1;
+  } else {
+    tmp_properties->show_valid_moves = 0;
+  }
+
+  gnome_property_box_changed (GNOME_PROPERTY_BOX (preferences_dialog));
+}
+
+static void
 tileset_cb (GtkWidget *widget, gpointer data)
 {
   if (!preferences_dialog)
@@ -593,130 +608,16 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
 
   gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 
+  button = gtk_check_button_new_with_label (_("Show valid moves"));
+  if (properties->show_valid_moves)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+  gtk_signal_connect (GTK_OBJECT (button), "toggled",
+                      GTK_SIGNAL_FUNC (show_valid_moves_cb), NULL);
+
+  gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+
   gnome_property_box_append_page (GNOME_PROPERTY_BOX (preferences_dialog),
                                   vbox, label);
 
   gtk_widget_show_all (preferences_dialog);
-
-
-  /*
-  GtkWidget *label;
-  GtkWidget *table;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  GtkWidget *label2;
-  GtkWidget *option_menu;
-  GtkWidget *menu;
-  GtkWidget *frame;
-  GtkWidget *vbox;
-  GtkWidget *box;
-
-  if (preferences_dialog)
-    return;
-
-  tmp_properties = iagno2_properties_copy (properties);
-
-  preferences_dialog = gnome_property_box_new ();
-  gnome_dialog_set_parent (GNOME_DIALOG (preferences_dialog),
-                           GTK_WINDOW (app));
-  gtk_window_set_title (GTK_WINDOW (preferences_dialog),
-                        _("Iagno2 Preferences"));
-  gtk_signal_connect (GTK_OBJECT (preferences_dialog), "destroy",
-                      GTK_SIGNAL_FUNC (gtk_widget_destroyed),
-                      &preferences_dialog);
-  gtk_signal_connect (GTK_OBJECT (preferences_dialog), "destroy",
-                      GTK_SIGNAL_FUNC (destroy_cb), NULL);
-
-  // First page of properties
-
-  label = gtk_label_new (_("Graphics"));
-
-  table = gtk_table_new (1, 2, TRUE);
-  gtk_table_set_row_spacings (GTK_TABLE (table), GNOME_PAD);
-  gtk_table_set_col_spacings (GTK_TABLE (table), GNOME_PAD);
-  gtk_container_border_width (GTK_CONTAINER (table), GNOME_PAD);
-  
-  button = gtk_check_button_new_with_label (_("Draw grid lines"));
-  if (properties->draw_grid)
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
-  gtk_signal_connect (GTK_OBJECT (button), "toggled",
-                      GTK_SIGNAL_FUNC (draw_grid_cb), NULL);
-
-  gtk_table_attach (GTK_TABLE (table), button,
-                    0, 1,
-                    0, 1,
-                    GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
-                    0, 0);
-
-  hbox = gtk_hbox_new (FALSE, GNOME_PAD);
-
-  label2 = gtk_label_new (_("Tileset: "));
-
-  gtk_box_pack_start (GTK_BOX (hbox), label2, FALSE, FALSE, 0);
-
-  option_menu = gtk_option_menu_new ();
-  menu = gtk_menu_new ();
-  fill_tileset_menu (menu);
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
-
-  gtk_box_pack_start (GTK_BOX (hbox), option_menu, TRUE, TRUE, 0);
-
-  gtk_table_attach (GTK_TABLE (table), hbox,
-                    1, 2,
-                    0, 1,
-                    GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
-                    0, 0);
-
-  gnome_property_box_append_page (GNOME_PROPERTY_BOX (preferences_dialog),
-                                  table, label);
-
-  // Second page of properties
-
-  label = gtk_label_new (_("Players"));
-
-  table = gtk_table_new (1, 2, TRUE);
-  gtk_table_set_row_spacings (GTK_TABLE (table), GNOME_PAD);
-  gtk_table_set_col_spacings (GTK_TABLE (table), GNOME_PAD);
-  gtk_container_border_width (GTK_CONTAINER (table), GNOME_PAD);
-
-  frame = gtk_frame_new (_("Player 1"));
-  gtk_container_border_width (GTK_CONTAINER (frame), 0);
-
-  vbox = gtk_vbox_new (TRUE, GNOME_PAD);
-  gtk_container_border_width (GTK_CONTAINER (vbox), GNOME_PAD);
-
-  option_menu = gtk_option_menu_new ();
-  menu = gtk_menu_new ();
-  fill_tileset_menu (menu);
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
-  
-  gtk_box_pack_start (GTK_BOX (vbox), option_menu, TRUE, TRUE, 0);
-
-  gtk_container_add (GTK_CONTAINER (frame), vbox);
-
-  gtk_table_attach (GTK_TABLE (table), frame,
-                    0, 1,
-                    0, 1,
-                    GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
-                    0, 0);
-
-  frame = gtk_frame_new (_("Player 2"));
-  gtk_container_border_width (GTK_CONTAINER (frame), 0);
-
-  gtk_table_attach (GTK_TABLE (table), frame,
-                    1, 2,
-                    0, 1,
-                    GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
-                    0, 0);
-
-  gnome_property_box_append_page (GNOME_PROPERTY_BOX (preferences_dialog),
-                                  table, label);
-
-  // Set it all up
-
-  gtk_signal_connect (GTK_OBJECT (preferences_dialog), "apply",
-                      GTK_SIGNAL_FUNC (apply_cb), NULL);
-
-  gtk_widget_show_all (preferences_dialog);
-  */
 }

@@ -22,6 +22,7 @@
 
 typedef struct {
 	gboolean draw_grid;
+  gboolean show_valid_moves;
 	gchar *tileset;
 	gchar *players[2];
 } Iagno2Properties;

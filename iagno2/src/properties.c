@@ -29,6 +29,8 @@ Iagno2Properties *iagno2_properties_new ()
 
   tmp->draw_grid = gnome_config_get_bool
       ("/iagno2/Preferences/draw_grid=true");
+  tmp->show_valid_moves = gnome_config_get_bool
+      ("/iagno2/Preferences/show_valid_moves=true");
   tmp->tileset = gnome_config_get_string
       ("/iagno2/Preferences/tileset=classic.png");
 
@@ -58,6 +60,7 @@ iagno2_properties_copy (Iagno2Properties *properties)
   tmp = (Iagno2Properties *) g_malloc (sizeof (Iagno2Properties));
 
   tmp->draw_grid = properties->draw_grid;
+  tmp->show_valid_moves = properties->show_valid_moves;
   tmp->tileset = g_strdup (properties->tileset);
   tmp->players[0] = g_strdup (properties->players[0]);
   tmp->players[1] = g_strdup (properties->players[1]);
@@ -70,6 +73,8 @@ iagno2_properties_sync (Iagno2Properties *properties)
 {
   gnome_config_set_bool ("/iagno2/Preferences/draw_grid",
                          properties->draw_grid);
+  gnome_config_set_bool ("/iagno2/Preferences/show_valid_moves",
+                         properties->show_valid_moves);
   gnome_config_set_string ("/iagno2/Preferences/tileset",
                            properties->tileset);
   gnome_config_set_string ("/iagno2/Preferences/player1",

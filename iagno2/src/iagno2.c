@@ -288,6 +288,32 @@ drawing_area_button_press_event_cb (GtkWidget *widget, GdkEvent *event,
   return;
 }
 
+static void
+motion_notify_event_cb (GtkWidget *widget, GdkEventMotion *event, gpointer data)
+{
+  double x, y;
+  static gint grid_row, grid_col, index;
+  gint new_grid_row, new_grid_col;
+
+  if (!game_in_progress || !interactive || !properties->show_valid_moves) {
+    return;
+  }
+
+  new_grid_row = event->y / (TILEHEIGHT + GRIDWIDTH);
+  new_grid_col = event->x / (TILEWIDTH + GRIDWIDTH);
+
+  if ((new_grid_row != grid_row) || (new_grid_col != grid_col)) {
+    if (board->board[INDEX (grid_row, grid_col)] == EMPTY) {
+      iagno2_render_tile (0, INDEX (grid_row, grid_col));
+    }
+    grid_row = new_grid_row;
+    grid_col = new_grid_col;
+    if (is_valid_move (board, INDEX (grid_row, grid_col), whose_turn)) {
+      iagno2_render_tile (32, INDEX (grid_row, grid_col));
+    }
+  }
+}
+
 void
 iagno2_drawing_area_init ()
 {
@@ -307,8 +333,11 @@ iagno2_drawing_area_init ()
   gtk_signal_connect (GTK_OBJECT (drawing_area), "button_press_event",
                       GTK_SIGNAL_FUNC (drawing_area_button_press_event_cb),
                       NULL);
+  gtk_signal_connect (GTK_OBJECT (drawing_area), "motion_notify_event",
+                      GTK_SIGNAL_FUNC (motion_notify_event_cb), NULL);
   gtk_widget_set_events (drawing_area,
-                         GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK);
+                         GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK |
+                         GDK_POINTER_MOTION_MASK);
 
   gnome_app_set_contents (GNOME_APP (app), drawing_area);
 }
