@@ -895,7 +895,7 @@ main (int argc, char *argv [])
 
 	gnome_score_init("same-gnome");
 	
-	gnome_init (&argc, &argv);
+	gnome_init ("same-gnome", &argc, &argv);
 	gdk_imlib_init ();
 	fname = parse_args(argc, argv);
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);

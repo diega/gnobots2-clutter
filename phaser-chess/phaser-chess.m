@@ -5,7 +5,8 @@
 
 @implementation phaser_chess_app
 
-- initApp:(int *)argcp
+- initApp:(char *)app_id
+	 :(int *)argcp
 	 :(char ***)argvp
 {
   Game_Finder *gf;
@@ -16,7 +17,7 @@
 
   int listen_port = 6000 + (getpid () % 23000);
 
-  self = [super initApp:argcp :argvp];
+  self = [super initApp:app_id :argcp :argvp];
 
   /*  local game...
   lb = [[Logical_Board alloc] init_logical_board];
@@ -73,7 +74,7 @@ int main(int argc, char *argv[])
 
   srandom (time (0));
 
-  myApp = [[phaser_chess_app alloc] initApp:&argc :&argv];
+  myApp = [[phaser_chess_app alloc] initApp:"phaser-chess" :&argc :&argv];
 
   gdk_input_add (0, GDK_INPUT_READ, stdinInputFunction, NULL);
 

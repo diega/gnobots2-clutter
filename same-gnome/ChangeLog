@@ -1,3 +1,7 @@
+1998-02-19  Federico Mena Quintero  <federico@nuclecu.unam.mx>
+
+	* same-gnome.c (main): Added app_id "same-gnome".
+
 1998-02-18  Federico Mena Quintero  <federico@nuclecu.unam.mx>
 
 	* same-gnome.c: Wheeee!  Same-gnome is now imlib-ified.  I still

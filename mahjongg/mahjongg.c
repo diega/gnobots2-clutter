@@ -1020,7 +1020,7 @@ int main (int argc, char *argv [])
 	int x;
 	
 	gtk_init (&argc, &argv);
-	gnome_init (&argc, &argv);
+	gnome_init ("mahjongg", &argc, &argv);
 
 	textdomain (PACKAGE);
 	srand (time (NULL));

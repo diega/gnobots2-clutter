@@ -1,3 +1,7 @@
+1998-02-19  Federico Mena Quintero  <federico@nuclecu.unam.mx>
+
+	* GnomeScott.c (main): Added app_id "GnomeScott".
+
 Sat Feb 14 09:45:08 1998  Tom Tromey  <tromey@cygnus.com>
 
 	* Makefile.am (GnomeScott_LDADD): Added INTLLIBS.

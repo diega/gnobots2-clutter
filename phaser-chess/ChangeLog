@@ -1,3 +1,8 @@
+1998-02-19  Federico Mena Quintero  <federico@nuclecu.unam.mx>
+
+	* phaser-chess.m ([phaser_chess_app -initApp:::]): Added app_id parameter.
+	(main): Added app_id "phaser-chess".
+
 1998-02-15  Raja R Harinath  <harinath@cs.umn.edu>
 
 	* Makefile.am (phaser_chess_LDADD): Use $(OBJC_LIBS).

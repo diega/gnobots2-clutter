@@ -1,3 +1,7 @@
+1998-02-19  Federico Mena Quintero  <federico@nuclecu.unam.mx>
+
+	* mahjongg.c (main): Added app_id "mahjongg".
+
 Mon Feb 16 22:32:02 1998  Tom Tromey  <tromey@cygnus.com>
 
 	* mahjongg/mahjongg.c (MAH_VERSION): Renamed from VERSION to avoid

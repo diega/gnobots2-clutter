@@ -1557,7 +1557,7 @@ int main(int argc, char *argv[])
 	GtkObject *adj;
 	GtkWidget *scrollbar;
 		
-	gnome_init(&argc, &argv);
+	gnome_init("GnomeScott", &argc, &argv);
 	
 	while(argv[1])
 	{
