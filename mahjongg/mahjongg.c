@@ -348,6 +348,8 @@ GnomeUIInfo gamemenu [] = {
 
 	 GNOMEUIINFO_MENU_RESTART_GAME_ITEM(confirm_action, RESTART_GAME),
 
+	 GNOMEUIINFO_MENU_PAUSE_GAME_ITEM (pause_callback, NULL),
+	 
 	 GNOMEUIINFO_SEPARATOR,
 
 	 GNOMEUIINFO_MENU_UNDO_MOVE_ITEM(undo_tile_callback, NULL),
@@ -408,26 +410,27 @@ GnomeUIInfo toolbar_uiinfo [] = {
 		(gpointer)RESTART_GAME, NULL,
 		GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REFRESH, 0, 0, NULL},
 
-        {GNOME_APP_UI_ITEM, N_("Hint"), N_("Get a hint"), hint_callback,
-		NULL, NULL, GNOME_APP_PIXMAP_STOCK, GTK_STOCK_HELP, GDK_H,
-		GDK_CONTROL_MASK, NULL},
+        /* If you change the place for this button, change the index in
+           the definition of PAUSE_BUTTON below */
+        {GNOME_APP_UI_TOGGLEITEM, N_("Pause"), N_("Pause game"),
+		pause_callback, NULL, NULL,
+		GNOME_APP_PIXMAP_STOCK, GTK_STOCK_STOP, 0, 0, NULL},
 
+	GNOMEUIINFO_SEPARATOR,
+	
         {GNOME_APP_UI_ITEM, N_("Undo"), N_("Undo previous move"),
 		undo_tile_callback, NULL, NULL,
 		GNOME_APP_PIXMAP_STOCK, GTK_STOCK_UNDO, 0, 0, NULL},
 
         {GNOME_APP_UI_ITEM, N_("Redo"), N_("Redo"), redo_tile_callback,
 		NULL, NULL, GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REDO, 0, 0, NULL},
+        {GNOME_APP_UI_ITEM, N_("Hint"), N_("Get a hint"), hint_callback,
+		NULL, NULL, GNOME_APP_PIXMAP_STOCK, GTK_STOCK_HELP, GDK_H,
+		GDK_CONTROL_MASK, NULL},
 
 	{GNOME_APP_UI_ITEM, N_("Shuffle"), N_("Shuffle tiles"),
 		shuffle_tiles_callback, NULL, NULL,
 		GNOME_APP_PIXMAP_STOCK, GTK_STOCK_EXECUTE, 0, 0, NULL},
-
-        /* If you change the place for this button, change the index in
-           the definition of PAUSE_BUTTON below */
-        {GNOME_APP_UI_TOGGLEITEM, N_("Pause"), N_("Pause game"),
-		pause_callback, NULL, NULL,
-		GNOME_APP_PIXMAP_STOCK, GTK_STOCK_STOP, 0, 0, NULL},
 
 #ifdef SOUND_SUPPORT_FINISHED
         {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), N_("Toggle sound"),
@@ -438,27 +441,43 @@ GnomeUIInfo toolbar_uiinfo [] = {
 	{GNOME_APP_UI_ENDOFINFO}
 };
 
-#define PAUSE_BUTTON GTK_TOGGLE_BUTTON(toolbar_uiinfo[6].widget)
-#define HIGHSCORE_WIDGET gamemenu[9].widget
+#define PAUSE_BUTTON GTK_TOGGLE_BUTTON(toolbar_uiinfo[2].widget)
+#define HIGHSCORE_WIDGET gamemenu[10].widget
 
 /* At the end of the game, hint, shuffle and pause all become unavailable. */
 /* Undo and Redo are handled elsewhere. */
-static void set_menus_sensitive (gboolean state)
+static void set_menus_sensitive (void)
 {
-	gtk_widget_set_sensitive (gamemenu[6].widget, state);
-	gtk_widget_set_sensitive (gamemenu[7].widget, state);
+	gboolean state;
+	
+	/* Pause */
+	state = game_over != GAME_WON;
+	gtk_widget_set_sensitive (gamemenu[3].widget, state);
 	gtk_widget_set_sensitive (toolbar_uiinfo[2].widget, state);
-	gtk_widget_set_sensitive (toolbar_uiinfo[5].widget, state);
+
+	/* Hint */
+	state = moves_left > 0;
+	gtk_widget_set_sensitive (gamemenu[7].widget, state);
 	gtk_widget_set_sensitive (toolbar_uiinfo[6].widget, state);
+
+	/* Shuffle */
+	state = game_over != GAME_WON;
+	gtk_widget_set_sensitive (gamemenu[5].widget, state);
+	gtk_widget_set_sensitive (toolbar_uiinfo[6].widget, state);
+
+	/* Restart */
+	state = sequence_number != 1;
+	gtk_widget_set_sensitive (gamemenu[2].widget, state);
+	gtk_widget_set_sensitive (toolbar_uiinfo[1].widget, state);
 }
 
 /* Undo and redo sensitivity functionality. */
 static void set_undoredo_sensitive (gboolean undo, gboolean redo)
 {
-	gtk_widget_set_sensitive(gamemenu[4].widget, undo);
-	gtk_widget_set_sensitive(toolbar_uiinfo[3].widget, undo);
-	gtk_widget_set_sensitive(gamemenu[5].widget, redo);
-	gtk_widget_set_sensitive(toolbar_uiinfo[4].widget, redo);
+	gtk_widget_set_sensitive(gamemenu[5].widget, undo);
+	gtk_widget_set_sensitive(toolbar_uiinfo[4].widget, undo);
+	gtk_widget_set_sensitive(gamemenu[6].widget, redo);
+	gtk_widget_set_sensitive(toolbar_uiinfo[5].widget, redo);
 }
 
 static void
@@ -874,7 +893,6 @@ tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
 							gnome_canvas_item_hide (tiles[selected_tile].canvas_item);
 							gnome_canvas_item_hide (tile_inf->canvas_item);
 							clear_undo_queue ();
-							set_undoredo_sensitive (TRUE, FALSE);
 							tiles[selected_tile].sequence = tile_inf->sequence = sequence_number;
 							sequence_number ++;
 							selected_tile = MAX_TILES + 1;
@@ -882,6 +900,8 @@ tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
 							tmpstr = g_strdup_printf("%3d", visible_tiles);
 							gtk_label_set_text (GTK_LABEL(tiles_label), tmpstr);
 							update_moves_left ();
+							set_undoredo_sensitive (TRUE, FALSE);
+							set_menus_sensitive ();
 
 							if (visible_tiles <= 0) {
 								games_clock_stop(GAMES_CLOCK(chrono));
@@ -1037,7 +1057,7 @@ check_free (void)
  	if ((moves_left == 0) && (visible_tiles>0)) { 
                 GtkWidget *mb;
 
-		set_menus_sensitive (FALSE);
+		set_menus_sensitive ();
                 if (!game_over) {
 			mb = gtk_message_dialog_new (GTK_WINDOW (window),
 						     GTK_DIALOG_MODAL
@@ -1067,7 +1087,7 @@ you_won (void)
 
         score = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
 	pos = gnome_score_log (score, score_current_mapset, FALSE);
-	set_menus_sensitive (FALSE);
+	set_menus_sensitive ();
         if (pos) {
                 dialog = gnome_scores_display (_(APPNAME_LONG), APPNAME,
 					       score_current_mapset, pos);
@@ -1365,10 +1385,6 @@ void
 pause_callback (void)
 {
         gint i;
-        if (game_over) {
-                gtk_toggle_button_set_active (PAUSE_BUTTON, FALSE);
-                return;
-        }
         paused = !paused;
         if (paused) {
                 games_clock_stop (GAMES_CLOCK (chrono));
@@ -1423,6 +1439,8 @@ init_game (void)
         visible_tiles = MAX_TILES;
         selected_tile = MAX_TILES + 1;
         gnome_canvas_update_now(GNOME_CANVAS(canvas));
+	set_undoredo_sensitive (FALSE, FALSE);
+	set_menus_sensitive ();
 
         chrono_start();
 }
@@ -1549,7 +1567,7 @@ undo_tile_callback (GtkWidget *widget, gpointer data)
         gtk_label_set_text (GTK_LABEL(tiles_label), tmpstr);
         gnome_canvas_update_now (GNOME_CANVAS (canvas));
 
-	set_menus_sensitive (TRUE);
+	set_menus_sensitive ();
 	set_undoredo_sensitive (sequence_number>1, TRUE);
         update_moves_left ();
 }
@@ -1806,7 +1824,6 @@ do_game (void)
 	
 	load_map (); /* assigns pos, and calculates dependencies */
 	generate_game (current_seed); /* puts in the positions of the tiles */
-	set_undoredo_sensitive (FALSE, FALSE);	
 }
 
 static void
@@ -1887,7 +1904,6 @@ new_game (gboolean re_seed)
 
 	score_current_mapset = strdup (mapset);
 	update_score_state ();
-	set_menus_sensitive (TRUE);
 }
 
 void
@@ -1950,6 +1966,8 @@ shuffle_tiles_callback (GtkWidget *widget, gpointer data)
                 games_clock_set_seconds(GAMES_CLOCK(chrono), (gint) (seconds+60));
                 games_clock_start (GAMES_CLOCK(chrono));
         }
+	
+	set_menus_sensitive ();
 }
 
 int

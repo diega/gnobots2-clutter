@@ -2,7 +2,8 @@
 
 	* mahjongg.c: Moved the seed to the title bar to be consistent
 	with other games (bug #114996). Also made the menu items
-	(esp. undo redo) context sensitive.
+	(esp. undo redo) context sensitive. The menu and the toolbar now
+	also match each other.
 
 	* bg4.png: Darkened up the border when highlighted so that there
 	is a distinct difference between selected and unselected.
