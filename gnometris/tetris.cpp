@@ -535,7 +535,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 		gtk_dialog_new_with_buttons(_("Gnometris preferences"), 
 					    GTK_WINDOW (t->w),
 					    (GtkDialogFlags)0,
-					    GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+					    GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 					    NULL);
 
 	gtk_container_set_border_width(GTK_CONTAINER(t->setupdialog), 10);
