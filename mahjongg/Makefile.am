@@ -10,7 +10,8 @@ INCLUDES = -I.. -I$(srcdir)/..		\
 bin_PROGRAMS = mahjongg
 
 mahjongg_SOURCES = 	\
-	mahjongg.c
+	mahjongg.c	\
+	button-images.h
 
 mahjongg_LDADD = \
 	$(GNOME_LIBDIR) \
