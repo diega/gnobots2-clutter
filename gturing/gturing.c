@@ -381,6 +381,13 @@ void view_states_call(GtkWidget *widget, gpointer data)
 	gnome_dialog_button_connect_object(GNOME_DIALOG(w),	0,
 																		 GTK_SIGNAL_FUNC(states_view_close_callback),
 																		 GTK_OBJECT(w));
+
+#ifdef ENABLE_NLS
+	{
+		int i=0;
+		for (i=0;i<5;i++) text[i]=_(text[i]);
+	}
+#endif
 	
 	state_clist = gtk_clist_new_with_titles(5, text);
 	gtk_clist_set_selection_mode(GTK_CLIST(state_clist), GTK_SELECTION_SINGLE);

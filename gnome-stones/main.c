@@ -262,8 +262,8 @@ game_update_title (void)
 		       font,
 		       gstones_view->style->black_gc,
 		       30, GAME_ROWS*STONE_SIZE-30-height*2-height/2,
-		       game->title,
-		       strlen (game->title));
+		       _(game->title),
+		       strlen (_(game->title)));
       
       gdk_draw_text   (title_image,
 		       font,

@@ -87,6 +87,17 @@ struct _GameFile
   guint  caves;
 };
 
+/* this is just a place holder so xgettext can find the strings to translate
+ * (they are GameFile->gametitle for the standard game files) 
+ */
+#if 0
+  char *just_a_place_holder[]={
+	N_("Tutorial caves"),
+	N_("Default caves"),
+	N_("Gnomekoban")
+  }
+#endif
+
 GList *games= NULL;
 
 
@@ -518,7 +529,7 @@ preferences_dialog_new (void)
 	char     *entry[3];
 	gint      row;
 	
-	entry[0]= file->gametitle;
+	entry[0]= _(file->gametitle);
 	sprintf (buffer, "%d", file->caves);
 	entry[1]= buffer;
 	entry[2]= g_basename (file->filename);
