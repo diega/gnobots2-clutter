@@ -8,6 +8,7 @@ description[ca]=Fi del joc
 description[es]=Fin del juego
 description[fr]=Fin du jeu
 description[no]=Spillet over
+description[pl]=Koniec gry
 
 [flip-piece]
 file=gataxx/flip-piece.wav
@@ -16,3 +17,4 @@ description[ca]=Canvi de les peces
 description[es]=Cambio de las piezas
 description[fr]=Changement des pièces
 description[no]=Vending av brikke
+description[pl]=Obrót elementu
