@@ -1,3 +1,7 @@
+Tue Aug  5 10:24:33 2003  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* properties.c (clamp_int): Suppress a compiler warning.
+
 2003-08-04  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* properties.c: Clean up the gataxx_gconf_get_* code to use the
