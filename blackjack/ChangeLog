@@ -1,3 +1,12 @@
+2004-02-22  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* src/events.cpp: 	
+	* src/blackjack.cpp: Move the intialisation of draw_gc to the
+	configure callback and remove the explicit call to
+	gtk_widget_realize. This avoids the (erratic) warnings when the
+	expose event (from the explicit realize) gets called before the
+	configure event.
+
 2004-02-21  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* src/menu.cpp: Removed warning about unused function by removing

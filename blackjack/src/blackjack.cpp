@@ -52,7 +52,7 @@ using namespace std;
 GtkWidget        *app;
 GtkWidget        *playing_area;
 GtkWidget        *option_dialog = NULL;
-GdkGC            *draw_gc;
+GdkGC            *draw_gc = NULL;
 GdkPixmap        *surface;
 
 GObject          *card_deck;
@@ -177,13 +177,6 @@ bj_create_board ()
 
   gnome_app_set_contents (GNOME_APP (app), playing_area);
 
-  gtk_widget_realize (playing_area);
-
-  draw_gc = gdk_gc_new (playing_area->window);
-  if (get_background_pixmap ())
-    gdk_gc_set_tile (draw_gc, get_background_pixmap());
-  gdk_gc_set_fill (draw_gc, GDK_TILED);
-  
   GTK_WIDGET_SET_FLAGS (playing_area, GTK_CAN_FOCUS);
   gtk_widget_grab_focus (playing_area);
 

@@ -643,9 +643,13 @@ bj_event_configure (GtkWidget *widget, GdkEventConfigure *event)
         return TRUE;
       g_object_unref (surface);
     }
-  else
-    {
-    }
+  
+  if (!draw_gc) {
+    draw_gc = gdk_gc_new (playing_area->window);
+    if (get_background_pixmap ())
+      gdk_gc_set_tile (draw_gc, get_background_pixmap());
+    gdk_gc_set_fill (draw_gc, GDK_TILED);
+  }
 
   surface = gdk_pixmap_new
     (playing_area->window, event->width, event->height,
