@@ -1,5 +1,7 @@
 2002-12-11  Ross Burton  <ross@burtonini.com>
 
+	* help/C/mahjongg-C.omf, help/C/mahjongg.xml: s/Gnome/GNOME.
+
 	* mahjongg.c (new_game): Ensure that the current map is known when
 	a game starts. Patch from Jeremy Browne
 	<gnome-bugzilla@synonymous.ca>, fixing #99164.

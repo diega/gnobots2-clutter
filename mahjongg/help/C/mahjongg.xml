@@ -5,8 +5,8 @@
   <!ENTITY appversion "2.0">
   <!ENTITY manrevision "2.0">
   <!ENTITY date "March 2002">
-  <!ENTITY app "<application>Gnome Mahjongg</application>">
-  <!ENTITY appname "Gnome Mahjongg">
+  <!ENTITY app "<application>GNOME Mahjongg</application>">
+  <!ENTITY appname "GNOME Mahjongg">
 ]>
 
 <!-- 
@@ -104,7 +104,7 @@
   </articleinfo>
 
   <indexterm zone="index"> 
-    <primary>Gnome Mahjongg</primary> 
+    <primary>GNOME Mahjongg</primary> 
   </indexterm>
 
 <!-- ============= Document Body ============================= -->
@@ -113,7 +113,7 @@
     <title>Introduction</title>
 
     <para>
-      <application>Gnome Mahjongg</application>, or Mahjongg for short,
+      <application>GNOME Mahjongg</application>, or Mahjongg for short,
       is a solitaire (one player) version of the classic Eastern tile game, 
       Mahjongg.  It has all the functionality you expect from a tile or 
       card game.  You can change the type of tiles, the background, and 
@@ -192,7 +192,7 @@
       covered up by the tiles on top.  The harder the level you set in the 
       <link linkend="prefs"><interface>Preferences&hellip;</interface> dialog</link>, 
       the more tiles are covered when the game starts.  The object of 
-      <application>Gnome Mahjongg</application> is to remove all the tiles 
+      <application>GNOME Mahjongg</application> is to remove all the tiles 
       from the game.  To remove tiles you have to find matching pairs which 
       look alike.  A matching tile will usually have the same number of buttons 
       or markings on it or will look similar to each other.
@@ -228,7 +228,7 @@
     </figure>
 
     <para>
-      <application>Gnome Mahongg</application> is played by pointing and 
+      <application>GNOME Mahongg</application> is played by pointing and 
       clicking on the two tiles you want matched and then they are 
       removed from the game.  If the two tiles don't match, a dialog 
       appears telling you this.
@@ -286,7 +286,7 @@
 	on the <interface>desktop</interface> you wish.  The 
 	<interface>toolbar</interface> also snaps into place 
 	at the top and left side of the <interface>Main Window
-	</interface> in <application>Gnome Mahjongg</application>, 
+	</interface> in <application>GNOME Mahjongg</application>, 
 	but the default place the toolbar is located, and the best 
 	in my opinion, is under the <interface>menubar</interface>.
       </para>
@@ -596,7 +596,7 @@
 		      <guimenuitem>About&hellip;</guimenuitem>
 		    </menuchoice> &mdash; 
 		    This item gives you some basic information about 
-		    <application>Gnome Mahjongg</application>, such as 
+		    <application>GNOME Mahjongg</application>, such as 
 		    the author's names and the application version number.
 		  </para>
 		</listitem>
@@ -645,7 +645,7 @@
     <para>
       The box labeled <guilabel>Make it the default</guilabel> can be toggled to 
       make the option above it the default.  This will make your customized settings appear 
-      everytime you start <application>Gnome Mahjongg</application>.  If the 
+      everytime you start <application>GNOME Mahjongg</application>.  If the 
       box is depressed and you click the <guibutton>OK</guibutton> button, the 
       option will become the default setting.  When you enter the <interface>
       Preferences&hellip;</interface> dialog again, the box will be raised.  
@@ -722,7 +722,7 @@
 	    <interface>Confirmation</interface> dialog</link>, when you 
 	    try to quit the game.  If the box is depressed, the <interface>
 	    Confirmation</interface> dialog appears asking you, 
-	    <quote>Really exit Gnome Mahjongg?</quote>  If the box is raised, 
+	    <quote>Really exit GNOME Mahjongg?</quote>  If the box is raised, 
 	    you exit the game automatically when you click the 
 	    <link linkend="quit"><guimenuitem>Exit</guimenuitem> menu 
 	    item</link>.
@@ -757,14 +757,14 @@
 
  <sect1 id="authors">
   <title>Authors</title>
-    <!--FIXME: Find the Gnome Mahjongg website, if it exists.-->
+    <!--FIXME: Find the GNOME Mahjongg website, if it exists.-->
   <para>
-   <application>Gnome Mahjongg</application> was written by Francisco 
+   <application>GNOME Mahjongg</application> was written by Francisco 
    Bustamante (<email>pancho@nuclecu.unam.mx</email>), Michael Meeks 
    (<email>mmeeks@gnu.org</email>), Max Watson, Heinz Hempe, and 
-   Philippe Chavin.  Tiles for <application>Gnome Mahjongg</application>
+   Philippe Chavin.  Tiles for <application>GNOME Mahjongg</application>
    were made by Jonathan Buzzard and Max Watson.  <!--To find more information about
-   <application>Gnome Mahjongg</application>, please visit the <ulink
+   <application>GNOME Mahjongg</application>, please visit the <ulink
    url="http://www.my-gnome-app.org" type="http">MY-GNOME-APP Web
    page</ulink>.-->  Please send all comments, suggestions, and bug
    reports to the <ulink url="http://bugs.gnome.org" type="http">GNOME
