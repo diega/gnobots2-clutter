@@ -1,3 +1,4 @@
+scoredir=$(localstatedir)/games
 pixmapdir = $(datadir)/pixmaps/samegnome
 Gamesdir = $(datadir)/apps/Games
 
@@ -24,4 +25,6 @@ EXTRA_DIST = same-gnome.desktop $(pixmap_DATA)
 install-data-local:
 	$(mkinstalldirs) $(Gamesdir)
 	$(INSTALL_DATA) $(srcdir)/same-gnome.desktop $(Gamesdir)/"Same Gnome.desktop"
+	touch $(scoredir)/samegnome.scores
+	chown games.games $(scoredir)/samegnome.scores
 
