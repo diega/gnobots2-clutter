@@ -414,7 +414,12 @@ load_scenario (char *fname)
 		gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (box));
 		gtk_widget_destroy (box);
-		exit (1);
+                /* We may not have called gtk_main yet, but if we do we want
+                 * to exit nicely. */
+                if (gtk_main_level() > 0)
+                  gtk_main_quit ();
+                else
+                  exit (1);
 	}
 
 	g_free (scenario);
@@ -438,7 +443,12 @@ load_scenario (char *fname)
 		gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (box));
 		gtk_widget_destroy (box);
-		gtk_main_quit ();
+                /* We may not have called gtk_main yet, but if we do we want
+                 * to exit nicely. */
+                if (gtk_main_level() > 0)
+                  gtk_main_quit ();
+                else
+                  exit(1);
 	}
 
 	gdk_pixbuf_render_pixmap_and_mask (image, &stones, &mask, 127);

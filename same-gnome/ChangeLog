@@ -1,3 +1,9 @@
+2003-05-02  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* same-gnome.c (load_scenario): Corrected the error checking code
+	so that it doesn't crash anyway once the message has been
+	given. (Note: gtk_main_quit returns if gtk_main hasn't been called).
+
 2003-03-07  Ross Burton  <ross@burtonini.com>
 
 	* Makefile.am: Link to the shared games library.
