@@ -34,7 +34,7 @@ public:
 	bool moveBlockRight();
 	bool moveBlockDown();
 	bool rotateBlock(bool);
-	void dropBlock();
+	int dropBlock();
 	void fallingToLaying();
 	void checkFullLines(ScoreFrame *s);
 	bool generateFallingBlock();

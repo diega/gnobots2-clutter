@@ -1,5 +1,13 @@
 2003-06-01  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* tetris.cpp (eventHandler, eventHandler): Fix scoring
+	inconsistency and stop the block moving sideways after a drop. 
+
+	* blockops.cpp (dropBlock): Fix scoring inconsistency between
+	fastfall and drop modes.
+
+	* tetris.cpp (Tetris): Fix space bar handling bug.
+
 	* gnometris.schemas.in: Default background has gone from a .png to
 	a .jpg.
 

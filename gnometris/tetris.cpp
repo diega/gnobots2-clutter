@@ -70,7 +70,8 @@ Tetris::Tetris(int cmdlLevel):
 	bgimage(0),
 	setupdialog(0), 
 	cmdlineLevel(cmdlLevel), 
-	fastFall(false)
+	fastFall(false),
+        dropBlock(false)
 {
 	pic = new GdkPixbuf*[tableSize];
 	for (int i = 0; i < tableSize; ++i)
@@ -806,7 +807,8 @@ gint
 Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 {
 	Tetris *t = (Tetris*) d;
-	
+        int bonus;
+        
 	if (t->timeoutId == -1)
 		return FALSE;
 	
@@ -862,7 +864,9 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
                         if (!t->dropBlock)
                         {
                                 t->dropBlock = true;
-                                t->ops->dropBlock();
+                                bonus = t->ops->dropBlock();
+                                t->scoreFrame->incScore(bonus);
+                                t->manageFallen();
                                 res = TRUE;
                         }        
 			break;

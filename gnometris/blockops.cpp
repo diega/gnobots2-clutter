@@ -182,11 +182,15 @@ BlockOps::moveBlockDown()
 	return fallen;
 }
 
-void
+int
 BlockOps::dropBlock()
 {
+        int count = 0;
+  
 	while (!moveBlockDown())
-		;
+		count++;
+
+        return count;
 }
 
 void
