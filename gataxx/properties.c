@@ -61,7 +61,7 @@ gchar * gataxx_gconf_get_string (gchar *key);
 gint gataxx_gconf_get_int (gchar *key, gint default_int);
 gboolean gataxx_gconf_get_bool (gchar *key, gint default_bool);
 
-GList * theme_list;
+GList * theme_list = NULL;
 
 static gint clamp_int (gint input, gint low, gint high)
 {
