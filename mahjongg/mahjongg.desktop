@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Mahjongg
 Name[fr]=Mahjongg
+Name[de]=Mahjongg
 Comment=Gnome Mahjongg program
 Comment[fr]=Jeu de Mahjongg Gnome
+Comment[de]=Gnome Mahjongg 
 Exec=mahjongg
 Icon=gnome-mahjongg.xpm
 Info=Gnome Mahjongg program
