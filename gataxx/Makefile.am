@@ -45,4 +45,4 @@ EXTRA_DIST = AUTHORS \
 soundlistdir = $(sysconfdir)/sound/events
 soundlist_DATA = gataxx.soundlist
 
-SUBDIRS=sounds
+SUBDIRS = sounds help

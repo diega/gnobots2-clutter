@@ -1,3 +1,8 @@
+2000-06-18  Chris Rogers <gandalf@darkcorner.net>
+
+	* added help files from Aaron Weber <aaron@helixcode.com>
+	  borrowed glade's setup to get it all working.
+
 2000-05-12  Andreas Hyden  <a.hyden@cyberpoint.se>
 
 	* ataxx.desktop: Added Swedish translation.
