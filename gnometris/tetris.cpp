@@ -1004,7 +1004,7 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 	}
 
 	about = gnome_about_new("Gnometris", 
-				TETRIS_VERSION, 
+				VERSION, 
 				"(C) 2000 J. Marcin Gorycki",
 				_("Written for my wife, Matylda\n"
 				  "Send comments and bug reports to: "

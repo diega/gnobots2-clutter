@@ -26,8 +26,6 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gconf/gconf-client.h>
 
-#define TETRIS_VERSION "1.2.5"
-
 extern int LINES;
 extern int COLUMNS;
 
