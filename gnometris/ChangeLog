@@ -1,3 +1,9 @@
+1999-02-19  Janusz Marcin Gorycki  <mgo@olicom.dk>
+
+	* tetris.h, tetris.cpp, field.cpp: smooth fast fall, backgrounds
+
+	* pix/Makefile.am, pix/*-bg.png: added background pixmaps
+
 1999-02-19  Tuomas Kuosmanen  <tigert@gimp.org>
 
 	* pix/5blocks-tig.png: Added a new tileset - if you like it, make it
