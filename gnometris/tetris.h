@@ -24,7 +24,7 @@
 #include <config.h>
 #include <gnome.h>
 
-#define TETRIS_VERSION "0.99.1"
+#define TETRIS_VERSION "0.99.2"
 
 extern int LINES;
 extern int COLUMNS;

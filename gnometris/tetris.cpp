@@ -111,7 +111,7 @@ Tetris::Tetris(int cmdlLevel):
 	ops = new BlockOps();
 	field = new Field(ops);
 
-	gtk_widget_set_events(w, gtk_widget_get_events(w) | GDK_KEY_PRESS_MASK);
+	gtk_widget_set_events(w, gtk_widget_get_events(w) | GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 	
 	GtkWidget *vb1 = gtk_vbox_new(FALSE, 0);
 	gtk_container_border_width(GTK_CONTAINER(vb1), 10);
@@ -528,12 +528,12 @@ Tetris::timeoutHandler(void *d)
 		bool res = t->ops->moveBlockDown();
 		gtk_widget_draw(t->field->getWidget(), NULL);
 
-		if (t->fastFall)
-		{
-			int l = t->ops->getLinesToBottom();
-			if (l <= 2)
-				t->generateTimer(t->scoreFrame->getLevel());
-		}
+//  		if (t->fastFall)
+//  		{
+//  			int l = t->ops->getLinesToBottom();
+//  			if (l <= 2)
+//  				t->generateTimer(t->scoreFrame->getLevel());
+//  		}
 		
 
 		if (res)
@@ -598,6 +598,20 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 			break;
 		default:
 			return FALSE;
+		}
+		break;
+	}
+	case GDK_KEY_RELEASE:
+	{
+		GdkEventKey *e = (GdkEventKey*)event;
+		if (e->keyval == GDK_Down)
+		{
+			keyEvent = true;
+			if (t->fastFall)
+			{
+				t->fastFall = false;
+ 				t->generateTimer(t->scoreFrame->getLevel());
+			}
 		}
 		break;
 	}
