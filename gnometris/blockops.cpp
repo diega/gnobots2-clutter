@@ -46,6 +46,7 @@ BlockOps::BlockOps(Field *f)
 	for (int i = 0; i < COLUMNS; ++i)
 		field[i] = new Block[LINES];
 
+	field_initialized = false;
 	emptyField();
 }
 
@@ -271,11 +272,11 @@ BlockOps::emptyField(int filled_lines, int fill_prob)
 		blank = rand() % COLUMNS; // Allow for at least one blank per line
 		for (int x = 0; x < COLUMNS; ++x)
 		{
-			if (field[x][y].item != 0)
+			if (field_initialized && field[x][y].item != 0)
 			{
 				gtk_object_destroy(GTK_OBJECT(field[x][y].item));
-				field[x][y].item = 0;
 			}
+			field[x][y].item = 0;
 			field[x][y].what = EMPTY;
 			if ((y>=(LINES - filled_lines)) && (x != blank) &&
 			    ((rand() % 10) < fill_prob)) { 
@@ -292,6 +293,7 @@ BlockOps::emptyField(int filled_lines, int fill_prob)
 			}
 		}
 	}
+	field_initialized = true;
 }
 
 void

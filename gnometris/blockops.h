@@ -48,8 +48,8 @@ public:
 
 private:
 	bool blockOkHere(int x, int y, int b, int r);
-	
 	Block **field;
+	bool field_initialized;
 	Field *fieldDisplay;
 };
 

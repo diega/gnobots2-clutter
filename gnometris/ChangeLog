@@ -1,3 +1,10 @@
+1999-12-07  Mitchell Perilstein  <mitch@enetis.net>
+
+	* blockops.h, blockops.cpp: Fixed crash in emptyField() wherein it
+	received trash in the blocks newly created by BlockOps::BlockOps()
+	because they were created with new(), which does not zero arrays
+	automatically.
+	
 1999-10-23  Callum McKenzie  <callum@localhost>
 
 	* blockops.h, blockops.cpp, tetris.h, tetris.cpp, TODO : 
