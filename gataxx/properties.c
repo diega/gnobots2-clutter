@@ -276,9 +276,9 @@ void fill_menu(GtkWidget *menu)
                 gtk_widget_show(item);
                 gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
                 g_signal_connect(G_OBJECT(item), "activate",
-				(GtkSignalFunc)set_selection, s);
+				 G_CALLBACK (set_selection), s);
                 g_signal_connect(G_OBJECT(item), "destroy",
-				(GtkSignalFunc)free_str, s);
+				 G_CALLBACK (free_str), s);
 
                 if (!strcmp(tile_set, s)) {
                         gtk_menu_set_active(GTK_MENU(menu), itemno);

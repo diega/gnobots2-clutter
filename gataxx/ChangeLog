@@ -1,3 +1,8 @@
+2002-01-02  Josh Barrow  <drleary@mac.com>
+
+	* properties.c: (fill_menu):
+	Change use of GtkSignalFunc to G_CALLBACK
+
 2001-12-31  Josh Barrow  <drleary@mac.com>
 
 	* gataxx.c: (set_bg_color): 
