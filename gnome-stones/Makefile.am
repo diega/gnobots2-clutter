@@ -84,7 +84,7 @@ install-data-local:
 	-touch $(DESTDIR)$(scoredir)/gnome-stones.scores
 	-chown games.games $(DESTDIR)$(scoredir)/gnome-stones.scores
 	-chmod 664 $(DESTDIR)$(scoredir)/gnome-stones.scores	
-	-chgrp games $(DESTDIR)$(bindir)/gnome-stones && chmod 2111 $(DESTDIR)$(bindir)/gnome-stones
+	-chgrp games $(DESTDIR)$(bindir)/gnome-stones && chmod 2555 $(DESTDIR)$(bindir)/gnome-stones
 
 gnome-stones.keys: gnome-stones.keys.in Makefile
 	sed -e 's^\@icondir\@^$(Pixmapdir)^g' < $(srcdir)/gnome-stones.keys.in > gnome-stones.keys.tmp \

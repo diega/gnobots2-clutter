@@ -35,5 +35,5 @@ install-data-local:
 	-touch $(DESTDIR)$(scoredir)/gnome-xbill.scores
 	-chown games.games $(DESTDIR)$(scoredir)/gnome-xbill.scores
 	-chmod 664 $(DESTDIR)$(scoredir)/gnome-xbill.scores
-	-chgrp games $(DESTDIR)$(bindir)/gnome-xbill && chmod 2111 $(DESTDIR)$(bindir)/gnome-xbill
+	-chgrp games $(DESTDIR)$(bindir)/gnome-xbill && chmod 2555 $(DESTDIR)$(bindir)/gnome-xbill
 

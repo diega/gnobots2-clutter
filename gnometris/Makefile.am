@@ -52,5 +52,5 @@ install-data-local:
 	touch $(DESTDIR)$(scoredir)/gnometris.scores
 	-chown games.games $(DESTDIR)$(scoredir)/gnometris.scores
 	-chmod 664 $(DESTDIR)$(scoredir)/gnometris.scores
-	-chgrp games $(DESTDIR)$(bindir)/gnometris && chmod 2111 $(DESTDIR)$(bindir)/gnometris
+	-chgrp games $(DESTDIR)$(bindir)/gnometris && chmod 2555 $(DESTDIR)$(bindir)/gnometris
 

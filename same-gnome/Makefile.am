@@ -40,4 +40,4 @@ install-data-local:
 	touch $(DESTDIR)$(scoredir)/same-gnome.scores
 	-chown games.games $(DESTDIR)$(scoredir)/same-gnome.scores
 	-chmod 664 $(DESTDIR)$(scoredir)/same-gnome.scores
-	-chgrp games $(DESTDIR)$(bindir)/same-gnome && chmod 2111 $(DESTDIR)$(bindir)/same-gnome
+	-chgrp games $(DESTDIR)$(bindir)/same-gnome && chmod 2555 $(DESTDIR)$(bindir)/same-gnome
