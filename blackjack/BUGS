@@ -2,7 +2,5 @@
 KNOWN BUGS
 ~~~~~~~~~~
 
-GdkCard preferences can't be set on demand due to a segfault when 
-handling the changed signal.
+Computation of rules takes too long.
 
-...
