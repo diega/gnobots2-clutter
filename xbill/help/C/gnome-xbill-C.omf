@@ -2,13 +2,13 @@
 <omf>
   <resource>
     <title>
-      The Aisleriot Manual
+      Glines Manual
     </title>
     <subject>
       <category>GNOME|Games</category>
     </subject>
     <format mime="text/sgml"/>
-    <identifier url="aisleriot.sgml"/>
+    <identifier url="glines.sgml"/>
     <language code="C"/>
   </resource>
 </omf>

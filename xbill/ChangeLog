@@ -2,6 +2,13 @@
 
 	* Game.cc, gtk-X11.cc: Ongoing i18n crusade...
 	
+2002-02-14  Chris Lyttle    <chris@wilddev.net>
+
+	* help/C/gnome-xbill.xml : move to XML.
+	* help/C/gnome-xbill-C.omf : move to XML.
+	* help/C/gnome-xbill-doc.sgml : deleted, move to XML.
+	* help/C/Makefile.am : move to XML.
+
 2002-01-10  Juan Pablo Mendoza <jpablo@gnome.org>
 
 	* UI.cc:

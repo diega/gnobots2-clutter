@@ -6,7 +6,7 @@ figs = \
 docname = gnome-stones
 lang = C
 omffile = gnome-stones-C.omf
-sgml_ents = 
-include $(top_srcdir)/sgmldocs.make
+entities = 
+include $(top_srcdir)/xmldocs.make
 dist-hook: app-dist-hook
 

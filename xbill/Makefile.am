@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in.
 
-SUBDIRS = pixmaps cursors
+SUBDIRS = pixmaps cursors help
 
 # This is where the high score file goes ...
 scoredir = $(localstatedir)/games

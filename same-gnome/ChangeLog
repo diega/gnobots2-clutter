@@ -1,3 +1,13 @@
+2002-02-14  Chris Lyttle    <chris@wilddev.net>
+
+	* help/C/same-gnome.xml : move to XML.
+
+	* help/C/same-gnome-C.omf : move to XML.
+
+	* help/C/same-gnome.sgml : deleted, move to XML.
+
+	* help/C/Makefile.am : move to XML.
+
 2002-02-02  Zbigniew Chyla  <cyba@gnome.pl>
 
 	* same-gnome.c (game_about_callback): Don't try to translate empty string.

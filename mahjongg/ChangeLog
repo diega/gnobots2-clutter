@@ -2,6 +2,13 @@
 
 	* mahjongg.c: Mark a string for translation.
 	
+2002-02-14  Chris Lyttle    <chris@wilddev.net>
+
+	* help/C/mahjongg.xml : move to XML.
+	* help/C/mahjongg-C.omf : move to XML.
+	* help/C/mahjongg.sgml : deleted, move to XML.
+	* help/C/Makefile.am : move to XML.
+
 2002-02-09  Gediminas Paulauskas <menesis@delfi.lt>
 
 	* mahjongg.c: name it simply.... "Mahjongg". Removed "Prefs" from
