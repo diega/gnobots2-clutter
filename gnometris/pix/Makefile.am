@@ -1,5 +1,4 @@
 pixmapdir= $(datadir)/pixmaps/gnometris
-bgdir=$(datadir)/pixmaps/gnometris/bg
 appicondir=$(datadir)/pixmaps
 
 pixmap_DATA=\
@@ -14,23 +13,6 @@ pixmap_DATA=\
 
 appicon_DATA=gnome-gtetris.png
 
-bg_DATA=\
-	fishy-bg.jpg \
-	greyprint-bg.jpg \
-	leaves-bg.jpg \
-	sweet-bg.jpg \
-	watery-bg.jpg \
-	weirdo-bg.jpg \
-	vortex-bg.jpg \
-	dog-bg.jpg \
-	geschier-bg.jpg \
-	gitter-bg.jpg \
-	gnometris-bg.jpg \
-	rhinoceros-bg.jpg \
-	scrcow-bg.jpg \
-	trees-bg.jpg \
-	gnome2-foot.png
-
-EXTRA_DIST=$(pixmap_DATA) $(appicon_DATA) $(bg_DATA)
+EXTRA_DIST=$(pixmap_DATA) $(appicon_DATA)
 
 
