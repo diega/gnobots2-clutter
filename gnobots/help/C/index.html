@@ -1,0 +1,168 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="Keywords" CONTENT="Robots, Gnobots">
+   <META NAME="Author" CONTENT="Mark.Rae@ed.ac.uk">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.05 [en] (X11; I; Linux 2.0.34 i586) [Netscape]">
+   <TITLE>GNOME Robots Documentation</TITLE>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#FF0000">
+
+<H1>
+GNOME Robots Documentation</H1>
+Copyright (C) 1998, Mark Rae
+
+<P>This program and the documentation are free software; you can redistribute
+it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version. This program is distributed in the
+hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.&nbsp;
+See the GNU General Public License for more details.
+
+<P>You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place, Suite 330, Boston, MA&nbsp; 02111-1307&nbsp; USA
+
+<P>For more details see the file COPYING.
+<BR>&nbsp;
+<H2>
+1. Introduction</H2>
+Gnome Robots is a version of the text based robots game which can be found
+on a number of UNIX systems, and comes with the BSD games package on Linux
+systems.
+<BR>This version allows you to select a number of animated graphics scenarios,
+as well as providing a safe teleport feature so you are not totally at
+the mercy of your computer's random number generator.
+<BR>&nbsp;
+<H2>
+2. Playing</H2>
+When you start the game you will find yourself surrounded by a number of
+robots, or some other strange but equally hostile adversaries if you have
+chosen a scenario other than the default.
+<BR>As you move about, using the keys listed below, the robots will move
+directly towards you with one goal in mind - killing you.
+<BR>Luckily you have two ways to avoid this unfortunate outcome.
+
+<P>Firstly, the robots have not been blessed with a great deal of intelligence,
+and will be destroyed if they crash into each other, or any other debris
+which has been left around from previous collisions.
+<BR>Secondly, if you do find yourself in a tight spot, you have the ability
+to teleport randomly to another spot on the screen.
+
+<P>Unfortunately, randomly teleporting means that there is a chance that
+you might end up being right next to a robot so they can kill you when
+they make their move. All is not lost however, as you can have a number of
+safe teleports which will place you out of immediate danger. You can earn
+more free teleports as you go along, getting one for each robot that is
+destroyed while you are 'waiting', up to a maximum of 10. If you don't
+want to waste your saved up safe teleports you can choose to randomly
+teleport if you think it's safe enough.<BR>
+You can switch the safe teleport option off to make the game behave
+like the classic robots.
+
+<P>If you press the 'Wait' key (see below) you will no longer be able to
+move until either all of the robots, which still move towards you, are
+gone or you are killed. Doing this will earn you extra safe teleports
+as described above.
+
+<P>If you manage to reach the point where more than half of the screen is
+occupied by robots, the number of robots will be reset to the starting amount,
+allowing you to continue.
+
+<H2>
+3. Keys</H2>
+There are three sets of keys for controlling your player -
+<H3>
+Standard</H3>
+These are the standard keys for playing robots, with the exception that
+'Enter' is now the key to wait for the end of the game, as 'W' is now used
+by one of the other keyboard layouts.
+<BR>
+
+<pre>
+  Up Left: Y           Up: K              Up Right: U
+     Left: H  Stand Still: . or Space        Right: L
+Down Left: B         Down: J            Down Right: N
+
+         Teleport: T
+Randomly Teleport: R
+             Wait: Enter
+</pre>
+
+<H3>
+Main Keyboard</H3>
+These keys are laid out on the main part of the keyboard in star shaped
+pattern for people who don't like the HJKL layout.
+<BR>
+
+<pre>
+  Up Left: Q           Up: W    Up Right: E
+     Left: A  Stand Still: S       Right: D
+Down Left: Z         Down: X  Down Right: C
+
+         Teleport: T
+Randomly Teleport: R
+             Wait: Enter
+</pre>
+
+<H3>
+Numeric Keypad</H3>
+These should work regardless of the Num Lock state
+<BR>
+
+<pre>
+  Up Left: 7           Up: 8    Up Right: 9
+     Left: 4  Stand Still: 5       Right: 6
+Down Left: 1         Down: 2  Down Right: 3
+
+         Teleport: +
+Randomly Teleport: -
+             Wait: Enter
+</pre>
+In addition, the 'Space' key will start a new game if one is not already 
+in progress.
+
+<H2>
+4. Properties</H2>
+The properties dialog allows you modify the behaviour and appearance of
+the game.
+
+<P>You can select which game graphics you want to use from those available
+in the drop-down list box.
+<BR>This selection will remain in effect until the next time you start
+the game unless you select the 'make default' check-box.
+
+<P>If the game is in safe mode and you try to make a move which would cause
+you to be killed you are prevented from doing so. This only takes effect
+if there is another safe move which you could have made, otherwise you
+are allowed to proceed to your death.
+<BR>If you don't select safe mode, then you don't get any protection at
+all.
+
+<P>If the save teleports option is selected then you can earn safe teleports
+as you play they game. These will allow you to teleport without the risk of
+appearing right next to a robot.
+
+<P>The sound option allows you to switch off the beep when you get killed
+or make a invalid move.
+
+<H2>
+5. Misc</H2>
+You can design your own graphics for the game if you want. The graphics
+files are found in
+<BR>$PREFIX/share/pixmaps/gnobots, where $PREFIX depends on where Gnome
+was installed, usually either '/usr' or '/usr/local'
+<BR>Each character is 16x16 pixels and there are 10 of them arranged in
+a PNG file which is 160x16 pixels in size. You can look at the existing
+files to see the order in which they must be arranged to produce the correct
+animated sequences.
+<BR>Any graphics files which are placed in the directory are auto-detected
+so you don't need to alter any configuration files.
+
+<P>If you have any suggestions or discover any BUGS you can e-mail the
+author at <A HREF="mailto:Mark.Rae@ed.ac.uk">Mark.Rae@ed.ac.uk</A>
+
+<BR>&nbsp;
+</BODY>
+</HTML>
