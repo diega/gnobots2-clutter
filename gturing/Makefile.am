@@ -1,3 +1,5 @@
+SUBDIRS = help
+
 Gamesdir = $(datadir)/apps/Games
 examplesdir = $(datadir)/gturing/examples
 

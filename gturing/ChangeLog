@@ -1,3 +1,9 @@
+1999-02-03  Arturo Espinosa <arturo@nuclecu.unam.mx>
+
+	* Makefile.am: SUBDIRS = help
+	* added help, help/C subirs and Makefile.am, gturing.sgml and 
+	  topics.dat files.
+	
 1999-01-31  Arturo Espinosa <arturo@nuclecu.unam.mx>
 
 	* turing.c: (turing_fread_comments) New function that returns all the 
