@@ -1,3 +1,18 @@
+2002-05-12  Bastien Nocera  <hadess@hadess.net>
+
+	* mahjongg.c: (tileset_callback), (tileset_changed_cb),
+	(bg_callback), (bg_changed_cb), (popup_warn_callback),
+	(popup_warn_changed_cb), (popup_confirm_callback),
+	(popup_confirm_changed_cb), (change_tile_image), (pref_cancel),
+	(fill_tile_menu), (no_match), (check_free), (you_won),
+	(pref_dialog_response), (properties_callback), (about_callback),
+	(confirm_action), (show_toolbar_changed_cb), (show_tb_callback),
+	(bg_colour_changed_cb), (bg_colour_callback), (mapset_changed_cb),
+	(set_map_selection), (create_canvas_items),
+	(create_mahjongg_board), (main): ouch, big one, refactoring of the
+	prefs to use gconf and be instant-apply, needs more cleaning up, and
+	some finishing touches
+
 2002-05-11  Bastien Nocera  <hadess@hadess.net>
 
 	* mahjongg.c: (update_moves_left), (tile_event),
