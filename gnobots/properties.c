@@ -189,7 +189,7 @@ gpointer  data
     propdlg = gtk_window_new(GTK_WINDOW_DIALOG);
     gtk_widget_realize(propdlg);
     
-    gtk_container_border_width(GTK_CONTAINER(propdlg), 10);
+    gtk_container_set_border_width(GTK_CONTAINER(propdlg), 10);
     GTK_WINDOW(propdlg)->position = GTK_WIN_POS_MOUSE;
     gtk_window_set_title(GTK_WINDOW(propdlg), _("Properties"));
     gtk_signal_connect(GTK_OBJECT(propdlg), "delete_event",
