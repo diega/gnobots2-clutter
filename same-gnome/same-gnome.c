@@ -624,8 +624,9 @@ main (int argc, char *argv [])
 {
 	GtkWidget *label, *hb;
 	char *fname;
-	
-	gnome_init (&argc, &argv);
+
+        gnome_init (&argc, &argv);
+	textdomain (PACKAGE);
 
 	if (argc > 1)
 		fname = strdup (argv [1]);
