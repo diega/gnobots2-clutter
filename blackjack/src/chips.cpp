@@ -20,7 +20,7 @@
 
 #include <stdlib.h>
 #include <math.h>
-#include <librsvg/rsvg.h>
+#include <games-preimage.h>
 
 #include "blackjack.h"
 #include "chips.h"
@@ -31,6 +31,7 @@
 #define CHIP_FILENAME_5   "chip-5.svg"
 #define CHIP_FILENAME_1   "chip-1.svg"
 
+GamesPreimage *chip_preimage[4] = { NULL, NULL, NULL, NULL };
 GdkPixbuf *chip_scaled_pixbuf[4] = { NULL, NULL, NULL, NULL };
 
 GList *chip_stack_list = NULL;
@@ -76,13 +77,17 @@ bj_chip_set_size (gint width,
                 if (!fullname)
                         continue;
 
+		if (!chip_preimage[i])
+			chip_preimage[i] = games_preimage_new_from_uri (fullname,
+									NULL);
+
                 if (chip_scaled_pixbuf[i])
                         g_object_unref (chip_scaled_pixbuf[i]);
 
-                chip_scaled_pixbuf[i] = rsvg_pixbuf_from_file_at_size (fullname,
-                                                                       width,
-                                                                       height,
-                                                                       NULL);
+                chip_scaled_pixbuf[i] = games_preimage_render (chip_preimage[i],
+                                                               width,
+                                                               height,
+                                                               NULL);
                 g_free (fullname);
         }
 }

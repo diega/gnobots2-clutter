@@ -20,7 +20,7 @@
  */
 
 #include <stdlib.h>
-#include <librsvg/rsvg.h>
+#include <games-preimage.h>
 
 #include "blackjack.h"
 #include "slot.h"
@@ -32,6 +32,7 @@
 
 GList *slot_list = NULL;
 
+GamesPreimage *slot_preimage = NULL;
 GdkPixbuf *slot_scaled_pixbuf = NULL;
 GdkPixmap *default_background_pixmap = NULL;
 
@@ -57,13 +58,17 @@ bj_slot_set_size (gint width,
         if (!fullname)
                 return;
 
+        if (!slot_preimage)
+                slot_preimage = games_preimage_new_from_uri (fullname,
+                                                             NULL);
+
         if (slot_scaled_pixbuf)
                 g_object_unref (slot_scaled_pixbuf);
 
-        slot_scaled_pixbuf = rsvg_pixbuf_from_file_at_size (fullname,
-                                                            width,
-                                                            height,
-                                                            NULL);
+        slot_scaled_pixbuf = games_preimage_render (slot_preimage,
+                                                    width,
+                                                    height,
+                                                    NULL);
         g_free (fullname);
 }
 
