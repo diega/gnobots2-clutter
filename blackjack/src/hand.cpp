@@ -263,6 +263,8 @@ bj_hand_new5 (gpointer data)
         bj_adjust_balance (player->wager);
       bj_game_set_active (false);
       bj_hand_finish ();
+      deal_timeout_id = 0;
+      return FALSE;
     }
 
   // Dealer does not have blackjack; collect insurance and check for player
@@ -290,6 +292,8 @@ bj_hand_new5 (gpointer data)
   if (player->getCount () == 21)
     {
       bj_hand_finish ();
+      deal_timeout_id = 0;
+      return FALSE;
     }
   else
     {

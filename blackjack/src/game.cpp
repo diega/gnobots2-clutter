@@ -418,8 +418,7 @@ bj_game_new (gchar* file, guint *seedp )
 {
   gint min_w, min_h;
 
-  if (bj_game_is_active ())
-    bj_game_cancel ();
+  bj_game_cancel ();
 
   first_hand = true;
 
