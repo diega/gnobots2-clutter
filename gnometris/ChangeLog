@@ -1,5 +1,7 @@
 2004-02-23  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* tetris.cpp (Tetris): Add the help file to the help menu.
+
 	* help/*: Added a help file.
 
 	* tetris.cpp: Changed the <invalid> value for timeoutID from -1 to

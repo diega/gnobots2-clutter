@@ -121,7 +121,7 @@ Tetris::Tetris(int cmdlLevel):
 	
 	GnomeUIInfo help_menu[] = 
 	{
-		/* FIXME GNOMEUIINFO_HELP((gpointer)"gnometris"), */
+		GNOMEUIINFO_HELP((gpointer)"gnometris"),
 		GNOMEUIINFO_MENU_ABOUT_ITEM(gameAbout, this),
 		GNOMEUIINFO_END
 	};
