@@ -586,6 +586,8 @@ gpointer gtk_gridboard_revert_state(GtkWidget * widget) {
 	}
 	if (!gridboard->animate) gtk_gridboard_paint(gridboard);
 
+	gtk_gridboard_clear_selections (gridboard);
+
 	data=thisstate->data;
 	gridboard->statelist=prevstate;
 	g_free(thisstate->board);
