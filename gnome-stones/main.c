@@ -913,6 +913,7 @@ load_game (const gchar *filename, guint _start_cave)
   gchar *basename;
   char buffer[256];
   GStonesGame *newgame;
+  gint lastcave;
 
   if (!filename)
     return FALSE;
@@ -924,7 +925,7 @@ load_game (const gchar *filename, guint _start_cave)
   basename = g_path_get_basename (filename);
 
   /* We don't need to load a game twice.  */
-  if (game && (strcmp (game->filename, filename) == 0))
+  if (game && (g_utf8_collate (game->filename, filename) == 0))
     return TRUE;
 
   /* Load game.  */
@@ -955,7 +956,9 @@ load_game (const gchar *filename, guint _start_cave)
          automatically, when starting a game.  */
       cave      = NULL;
       game      = newgame;
-      start_cave= _start_cave;
+
+      lastcave = g_list_length (game->start_caves) - 1;
+      start_cave= CLAMP (_start_cave, 0, lastcave);
 
       /* Update the title image.  */
       game_update_title ();
@@ -1047,13 +1050,13 @@ preferences_cb (GtkWidget *widget, gpointer data)
 }
 
 
-static void
+void
 quit_cb (GtkWidget *widget, gpointer data)
 {
   preferences_save_global ();
   sound_close();
 
-  exit (0);
+  gtk_main_quit ();
 }
 
 
@@ -1285,21 +1288,6 @@ static gint startup_function (gpointer data)
   return (index != max);
 }
 
-
-/************************************************************************/
-/* exit function */
-
-/* FIXME: too many different exit/quit functions */
-
-
-void
-gstones_exit (GnomeClient *client, gpointer client_data)
-{
-  sound_close (); 
-  exit (0);
-}
-
-
 
 /*****************************************************************************/
 /* Main function.  */
@@ -1386,10 +1374,8 @@ main (int argc, char *argv[])
 		      GTK_SIGNAL_FUNC (game_widget_key_press_callback), 0);
   g_signal_connect (GTK_OBJECT (app), "key_release_event",
 		      GTK_SIGNAL_FUNC (game_widget_key_release_callback), 0);
-  g_signal_connect (GTK_OBJECT (app), "delete_event",
-		      GTK_SIGNAL_FUNC (gstones_exit), 0);
   g_signal_connect (GTK_OBJECT (app), "destroy_event",
-		      GTK_SIGNAL_FUNC (gtk_main_quit), 0);
+		      GTK_SIGNAL_FUNC (quit_cb), 0);
 
   joystick_set_widget (app);
 

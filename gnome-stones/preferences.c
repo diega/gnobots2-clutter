@@ -447,6 +447,7 @@ preferences_restore (void)
 
   cave = gconf_client_get_int (get_gconf_client (),
                                KEY_START_CAVE, NULL);
+
   if (!default_game || !load_game_by_name (default_game, 0))
     {
       if (def || !load_game_by_name (filename, cave))
@@ -963,10 +964,10 @@ session_management_init (void)
   GnomeClient *client= gnome_master_client ();
   
   g_signal_connect (GTK_OBJECT (client), "save_yourself",
-		      GTK_SIGNAL_FUNC (preferences_save_local), 
-		      GINT_TO_POINTER (FALSE));
+		    GTK_SIGNAL_FUNC (preferences_save_local), 
+		    GINT_TO_POINTER (FALSE));
   g_signal_connect (GTK_OBJECT (client), "die",
-		      GTK_SIGNAL_FUNC (gstones_exit), NULL);
+		    GTK_SIGNAL_FUNC (quit_cb), NULL);
 }
 
 

@@ -55,7 +55,7 @@
 #endif
 
 
-void gstones_exit (GnomeClient *client, gpointer client_data);
+void quit_cb (GtkWidget *widget, gpointer data);
 GConfClient *get_gconf_client (void);
 
 void joystick_set_properties (guint32 deviceid, gfloat switch_level);
