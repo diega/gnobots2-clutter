@@ -133,18 +133,6 @@ gnome_canvas_pimage_init (GnomeCanvasPImage *image)
 static void
 free_pixmap_and_mask (GnomeCanvasPImage *image)
 {
-	if (image->pixmap)
-		gdk_pixmap_unref (image->pixmap);
-#if 1 /* FIXME */
-	/* When you tell imlib to free a pixmap, it will also free its
-	 * associated mask.  Now is that broken, or what?
-	 */
-	if (image->mask)
-		gdk_bitmap_unref (image->mask);
-#endif
-
-	image->pixmap = NULL;
-	image->mask = NULL;
 	image->cwidth = 0;
 	image->cheight = 0;
 }
@@ -412,13 +400,6 @@ recalc_if_needed (GnomeCanvasPImage *image)
 
 	get_bounds (image, &image->item.x1, &image->item.y1, &image->item.x2, &image->item.y2);
 
-	if (image->im && image->cwidth != 0 && image->cheight != 0) {
-		gdk_pixbuf_render_pixmap_and_mask (image->im, &image->pixmap, &image->mask, 127);
-
-		if (image->gc)
-			gdk_gc_set_clip_mask (image->gc, image->mask);
-	}
-
 	image->need_recalc = FALSE;
 }
 
@@ -435,18 +416,16 @@ gnome_canvas_pimage_draw (GnomeCanvasItem *item, GdkDrawable *drawable,
 
 	recalc_if_needed (image);
 
-	if (image->mask)
-		gdk_gc_set_clip_origin (image->gc, image->cx - x, image->cy - y);
-
-	if (image->pixmap)
-		gdk_draw_pixmap (drawable,
+	if (image->im)
+		gdk_draw_pixbuf (drawable,
 				 image->gc,
-				 image->pixmap,
+				 image->im,
 				 0, 0,
 				 image->cx - x,
 				 image->cy - y,
 				 image->cwidth,
-				 image->cheight);
+				 image->cheight,
+                                 GDK_RGB_DITHER_NORMAL, 0, 0);
 }
 
 static double
@@ -462,8 +441,10 @@ dist_to_mask (GnomeCanvasPImage *image, int cx, int cy)
 
 	/* Trivial case:  if there is no mask, we are inside */
 
+#if 0
 	if (!image->mask)
 		return 0.0;
+#endif
 
 	/* Rectangle that we need */
 
@@ -485,11 +466,12 @@ dist_to_mask (GnomeCanvasPImage *image, int cx, int cy)
 	if (!gdk_rectangle_intersect (&a, &b, &dest))
 		return a.width * a.height; /* "big" value */
 
-	gimage = gdk_image_get (image->mask, dest.x, dest.y, dest.width, dest.height);
-
 	/* Find the closest pixel */
 
 	best = a.width * a.height; /* start with a "big" value */
+#if 0
+	gimage = gdk_image_get (image->mask, dest.x, dest.y, dest.width, dest.height);
+
 
 	for (y = 0; y < dest.height; y++)
 		for (x = 0; x < dest.width; x++)
@@ -503,6 +485,7 @@ dist_to_mask (GnomeCanvasPImage *image, int cx, int cy)
 			}
 
 	gdk_image_destroy (gimage);
+#endif
 	return best;
 }
 

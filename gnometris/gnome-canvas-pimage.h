@@ -47,8 +47,6 @@ struct _GnomeCanvasPImage {
 	GnomeCanvasItem item;
 
 	GdkPixbuf *im;			/* The image to paint */
-	GdkPixmap *pixmap;		/* Pixmap rendered from the image */
-	GdkBitmap *mask;		/* Mask rendered from the image */
 
 	double x, y;			/* Position at anchor, item relative */
 	double width, height;		/* Size of image, item relative */

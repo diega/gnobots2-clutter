@@ -1,3 +1,16 @@
+2003-06-20  William Jon McCann  <mccann@jhu.edu>
+
+	* gnome-canvas-pimage.c (gnome_canvas_pimage_draw): Convert to
+	pixbufs.  This will allow us to support block images with an
+	alpha layer.
+
+	* tetris.cpp (setupPixmap): Removed unused pix pixmap.
+
+	* preview.cpp (paint): Use pixbuf for preview.
+
+	* tetris.cpp (setupPixmap): Argh, fixed my typo.
+	(setupPixmap): Don't leak fullpixname.
+
 2003-06-19  William Jon McCann  <mccann@jhu.edu>
 
 	* tetris.cpp: #define all the gconf keys for convenience.

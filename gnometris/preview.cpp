@@ -1,3 +1,5 @@
+/* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
+
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *
@@ -92,9 +94,12 @@ Preview::paint(GdkRectangle *area)
 				for (int y = 0; y < 4; ++y)
 				{
 					if (blockTable[blocknr_next][rot_next][x][y])	
-						gdk_draw_pixmap(w->window, w->style->black_gc, 
-														pix, color_next * BLOCK_SIZE, 0, 
-														x * BLOCK_SIZE + xoffs, y * BLOCK_SIZE + yoffs, BLOCK_SIZE, BLOCK_SIZE);
+						gdk_draw_pixbuf (w->window, w->style->black_gc, pic[color_next],
+								 0, 0, 
+								 x * BLOCK_SIZE + xoffs, y * BLOCK_SIZE + yoffs,
+								 BLOCK_SIZE, BLOCK_SIZE,
+								 GDK_RGB_DITHER_NORMAL, 0, 0);
+
 				}
 			}
 		}

@@ -35,8 +35,6 @@
 #include <dirent.h>
 #include <string.h>
 
-GdkPixmap *pix;
-
 GdkPixbuf **pic;
 
 int LINES = 20;
@@ -275,10 +273,10 @@ Tetris::setupdialogResponse (GtkWidget *dialog, gint response_id, void *d)
 void
 Tetris::setupPixmap()
 {
-	char *pixname, *fullpixname;
+	gchar *pixname, *fullpixname;
         gchar * s;
 	
-	pixname = g_build_filename ("gnometris", blockPixmap);
+	pixname = g_build_filename ("gnometris", blockPixmap, NULL);
 	fullpixname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, pixname, FALSE, NULL);
 	g_free (pixname);
 
@@ -309,9 +307,8 @@ Tetris::setupPixmap()
 		gtk_dialog_run (GTK_DIALOG (w));
 		exit (1);
 	}
+	g_free (fullpixname);
 
-	gdk_pixbuf_render_pixmap_and_mask(image, &pix, NULL, 127);
-	
 	BLOCK_SIZE = gdk_pixbuf_get_height(image);
 	nr_of_colors = gdk_pixbuf_get_width(image) / BLOCK_SIZE;
 
@@ -350,6 +347,7 @@ Tetris::setupPixmap()
                 } else
                         bgimage = 0;
         }
+	g_free (fullpixname);
 
 	if (field)
 	{
@@ -389,7 +387,7 @@ Tetris::initOptions ()
 	GError *error = NULL;
 
 	if (blockPixmap)
-		free (blockPixmap);
+		g_free (blockPixmap);
 
 	blockPixmap = gconf_client_get_string (gconf_client, KEY_BLOCK_PIXMAP, &error);
 	if (error) {
@@ -401,7 +399,7 @@ Tetris::initOptions ()
           blockPixmap = g_strdup ("7blocks-tig.png");
 
 	if (bgPixmap)
-		free (bgPixmap);
+		g_free (bgPixmap);
 
 	bgPixmap = gconf_client_get_string (gconf_client, KEY_BACKGROUND_PIXMAP, &error);
 	if (error) {
