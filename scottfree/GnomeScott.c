@@ -79,9 +79,9 @@ static void Fatal(char *type, char *x)
 	GtkWidget *mb;
 	if(DisplayUp)
 	{
-		mb=gnome_messagebox_new(x, type, "OK", NULL, NULL);
-		gnome_messagebox_set_modal(GNOME_MESSAGEBOX(mb));
-		gnome_messagebox_set_default(GNOME_MESSAGEBOX(mb),0);
+		mb=gnome_message_box_new(x, type, "OK", NULL, NULL);
+		gnome_message_box_set_modal(GNOME_MESSAGE_BOX(mb));
+		gnome_message_box_set_default(GNOME_MESSAGE_BOX(mb),0);
 		gtk_widget_show(GTK_WIDGET(mb));
 	}
 	else
@@ -91,7 +91,7 @@ static void Fatal(char *type, char *x)
 
 static void Aborted()
 {
-	Fatal(GNOME_MESSAGEBOX_GENERIC, "User exit");
+	Fatal(GNOME_MESSAGE_BOX_GENERIC, "User exit");
 }
 
 static void ClearScreen(void)
@@ -106,7 +106,7 @@ static void *MemAlloc(int size)
 {
 	void *t=(void *)malloc(size);
 	if(t==NULL)
-		Fatal(GNOME_MESSAGEBOX_ERROR, "Out of memory");
+		Fatal(GNOME_MESSAGE_BOX_ERROR, "Out of memory");
 	return(t);
 }
 
@@ -182,13 +182,13 @@ static char *ReadString(FILE *f)
 	while(c!=EOF && isspace(c));
 	if(c!='"')
 	{
-		Fatal(GNOME_MESSAGEBOX_WARNING, "Initial quote expected");
+		Fatal(GNOME_MESSAGE_BOX_WARNING, "Initial quote expected");
 	}
 	do
 	{
 		c=fgetc(f);
 		if(c==EOF)
-			Fatal(GNOME_MESSAGEBOX_WARNING, "EOF in string");
+			Fatal(GNOME_MESSAGE_BOX_WARNING, "EOF in string");
 		if(c=='"')
 		{
 			nc=fgetc(f);
@@ -221,7 +221,7 @@ void LoadDatabase(FILE *f, int loud)
 	
 	if(fscanf(f,"%*d %d %d %d %d %d %d %d %d %d %d %d",
 		  &ni, &na,&nw,&nr,&mc,&pr,&tr,&wl,&lt,&mn,&trm,&ct)<10)
-		Fatal(GNOME_MESSAGEBOX_ERROR, "Invalid database(bad header)");
+		Fatal(GNOME_MESSAGE_BOX_ERROR, "Invalid database(bad header)");
 	GameHeader.NumItems=ni;
 	Items=(Item *)MemAlloc(sizeof(Item)*(ni+1));
 	GameHeader.NumActions=na;
@@ -1478,12 +1478,13 @@ static void NewGame(GtkWidget *w, gpointer *spare)
 
 static void AboutScottFree(GtkWidget *w, gpointer *spare)
 {
-	GtkWidget *mb=gnome_messagebox_new(
-		"ScottFree v1.15, (c) 1997 Alan Cox",
-		GNOME_MESSAGEBOX_INFO, N_("OK"), NULL, NULL);
-	gnome_messagebox_set_modal(GNOME_MESSAGEBOX(mb));
-	gnome_messagebox_set_default(GNOME_MESSAGEBOX(mb),0);
-	gtk_widget_show(mb);
+	GtkWidget *about;
+	gchar *authors[] = { "Alan Cox" };
+
+	about = gnome_about_new("ScottFree", "1.15",
+				_("Copyright (C) 1997 Alan Cox"),
+				authors, NULL, NULL);
+	gtk_widget_show(about);
 }
 
 static GnomeUIInfo toolbar[]=
