@@ -1,19 +1,21 @@
 [Desktop Entry]
 Name=Gnome-Stones
+Name[de]=Gnome-Stones
+Name[et]=Gnome koopad
 Name[fi]=Gnome-luolat
 Name[fr]=Gnome-Stones
 Name[ja]=GNOME Stones
 Name[no]=Gnome-steiner
 Name[ru]=Gnome-À¡ÕŒ…
-Name[de]=Gnome-Stones
 Comment=Gnome Stones game
+Comment[de]=Das Spiel Gnome-Stones
 Comment[es]=Juego Gnome Stones
+Comment[et]=Boulderdashi kloon GNOME-le
 Comment[fi]=Boulderdash-klooni
 Comment[fr]=Jeu Gnome Stones
 Comment[ja]=GNOME»«Stone•≤°º•‡
 Comment[no]=Gnome-steiner spill
 Comment[ru]=È«“¡ Gnome-À¡ÕŒ…
-Comment[de]=Das Spiel Gnome-Stones
 Exec=gnome-stones
 Icon=gnome-stones.png
 Terminal=0

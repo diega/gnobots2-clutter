@@ -1,12 +1,17 @@
 [Desktop Entry]
 Name=Gnome xBill
+Name[et]=Gnome Bill
 Name[fi]=xBill
 Name[ja]=GNOME X¥Ó¥ë
 Name[no]=Gnome xBill
 Comment=Gnome version of the popular xBill game
+Comment[es]=Salve el planeta de Bill
+Comment[et]=xBilli GNOME variant
 Comment[fi]=GNOME-versio suositusta xBill-pelistä
+Comment[fr]=Sauvez le Monde de Bill
 Comment[ja]=¤«¤ÎÍ­Ì¾¤ÊxBill¤ÎGNOMEÈÇ
 Comment[no]=Gnome versjon av det populære xBill spillet
+Comment[wa]=Ni leyîz nén ki Bill mete si sistinme dvins les coputreces
 Icon=xbill.png
 Exec=gnome-xbill
 Terminal=0

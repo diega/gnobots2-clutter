@@ -2,6 +2,7 @@
 Name=Same Gnome
 Name[de]=Same Gnome
 Name[es]=Same Gnome
+Name[et]=Same Gnome
 Name[fi]=Same Gnome
 Name[fr]=Same Gnome
 Name[ga]=An Gnome Cianna
@@ -13,6 +14,7 @@ Name[ru]=Тот же Gnome
 Comment=Gnome SameGame program
 Comment[de]=Gnome-Variante des Spiels SameGame
 Comment[es]=Juego Gnome SameGame
+Comment[et]=SameGame GNOME variant
 Comment[fi]=Gnomeversio SameGamesta
 Comment[fr]=Clone GNOME du Jeu SameGame
 Comment[ga]=An Gnome Cianna

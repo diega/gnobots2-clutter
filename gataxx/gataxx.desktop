@@ -2,11 +2,14 @@
 Icon=gataxx.png
 Name=gataxx
 Name[de]=gataxx
+Name[et]=gataxx
 Name[fi]=gataxx
 Name[ja]=gataxx
 Name[no]=gataxx
 Comment=Gnome ataxx game
 Comment=Ataxx-Spiel für Gnome
+Comment[de]=Ataxx-Spiel für Gnome
+Comment[et]=ataxx mäng GNOME-le
 Comment[fi]=Gnome-ataxx-peli
 Comment[ja]=GNOMEÈÇataxx¥²¡¼¥à
 Comment[no]=Gnome ataxx spill
