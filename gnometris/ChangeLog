@@ -1,3 +1,21 @@
+1999-10-04  Marcin Gorycki  <mgo@olicom.dk>
+
+	* pix/Makefile.am, vortex-bg.png: added vortex-bg.png 
+	  by Jon Abbott jca8929@garnet.acns.fsu.edu
+	 
+1999-09-10  pablo  <pablo@???>
+
+	* gnometris.desktop: added estonian descriptions
+
+1999-09-08  nakai  <nakai@???>
+
+	* gnometris.desktop: ja Update from ITANI Eiichoro
+
+1999-07-09  kmaraas  <kmaraas@???>
+
+	* gnometris.desktop: Added Norwegian translation.
+
+
 1999-05-06  Janusz Marcin Gorycki  <mgo@spiderman.pl.olicom.com>
 
 	* tetris.h, tetris.cpp, field.h, field.cpp, blockops.h, blockops.cpp:
