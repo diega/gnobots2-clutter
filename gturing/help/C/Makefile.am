@@ -5,7 +5,7 @@ gturing_help_DATA = 	\
 	index.html		\
 	topic.dat
 
-EXTRA_DIST = topic.dat
+EXTRA_DIST = $(gturing_help_DATA)
 
 all: index.html
 
