@@ -1,3 +1,7 @@
+2000-05-12  Andreas Hyden  <a.hyden@cyberpoint.se>
+
+	* same-gnome.desktop: Added Swedish translation.
+
 1999-05-05  Miguel de Icaza  <miguel@nuclecu.unam.mx>
 
 	* same-gnome.c (area_event): Fix from Winston I. Brybin
