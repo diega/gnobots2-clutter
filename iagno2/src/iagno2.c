@@ -726,8 +726,6 @@ iagno2_initialize_players (int which)
   gchar *tmp_path;
   gchar *filename;
 
-  printf ("In initialize_players\n");
-  
   if ((which == 0) || (which == 1)) {
     if (players[0] != NULL) {
       iagno2_plugin_close (players[0]);
@@ -775,7 +773,6 @@ iagno2_initialize_players (int which)
       players[1]->plugin_init ();
     }
   }
-  printf ("Out initialize_players\n");
 }
 
 /*
