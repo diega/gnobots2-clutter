@@ -1,3 +1,7 @@
+2003-12-18  William Jon McCann  <mccann@jhu.edu>
+
+	* src/game.cpp (bj_game_new): Fix leaks.
+
 2003-12-12  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* src/strategy.cpp: Removed the #include of <iostream> since it
