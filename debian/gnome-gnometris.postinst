@@ -1,0 +1,13 @@
+#! /bin/sh
+
+for scorefile in gnometris.scores ; do
+	if [ ! -f /var/lib/games/$scorefile ]; then
+		touch /var/lib/games/$scorefile
+	fi
+	chown root.games /var/lib/games/$scorefile
+	chmod 664 /var/lib/games/$scorefile
+done
+
+#DEBHELPER#
+
+

@@ -1,0 +1,13 @@
+#! /bin/sh
+
+for scorefile in gnotravex.2x2.scores gnotravex.3x3.scores gnotravex.4x4.scores gnotravex.5x5.scores gnotravex.6x6.scores  ; do
+	if [ ! -f /@LOCALSTATEDIR@/games/$scorefile ]; then
+		touch /@LOCALSTATEDIR@/games/$scorefile
+	fi
+	chown root.games /@LOCALSTATEDIR@/games/$scorefile
+	chmod 664 /@LOCALSTATEDIR@/games/$scorefile
+done
+
+#DEBHELPER#
+
+

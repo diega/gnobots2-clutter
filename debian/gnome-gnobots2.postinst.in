@@ -1,0 +1,13 @@
+#! /bin/sh
+
+for scorefile in gnobots2.classic_robots-safe.scores gnobots2.classic_robots.scores gnobots2.nightmare-safe.scores gnobots2.nightmare.scores gnobots2.robots2-safe.scores gnobots2.robots2.scores gnobots2.robots2_easy-safe.scores gnobots2.robots2_easy.scores gnobots2.robots_with_safe_teleport-safe.scores gnobots2.robots_with_safe_teleport.scores; do
+	if [ ! -f /@LOCALSTATEDIR@/games/$scorefile ]; then
+		touch /@LOCALSTATEDIR@/games/$scorefile
+	fi
+	chown root.games /@LOCALSTATEDIR@/games/$scorefile
+	chmod 664 /@LOCALSTATEDIR@/games/$scorefile
+done
+
+#DEBHELPER#
+
+

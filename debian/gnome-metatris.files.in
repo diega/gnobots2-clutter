@@ -1,0 +1,4 @@
+@PREFIX@/share/metatris/*
+@PREFIX@/share/pixmaps/gnome-metatris.*
+@PREFIX@/share/gnome/apps/Games/metatris.desktop
+@BINDIR@/metatris

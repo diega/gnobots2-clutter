@@ -1,0 +1,3 @@
+@PREFIX@/share/pixmaps/gnotravex/*
+@PREFIX@/share/gnome/apps/Games/gnotravex.desktop
+@BINDIR@/gnotravex
