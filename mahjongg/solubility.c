@@ -382,7 +382,7 @@ static gboolean walk_tree (gint depth)
    * long time, it will in general only affect the very end of any walk. */
   
   /* Scramble the freelist. */
-  for (i = 0; i<numfree*2; i++) {
+  for (i = 0; i<numfree; i++) {
     j = g_rand_int_range (generator, i, numfree);
     swap = freelist[depth][i];
     freelist[depth][i] = freelist[depth][j];
