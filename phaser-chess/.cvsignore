@@ -1,0 +1,5 @@
+.deps
+Makefile
+Makefile.in
+_libs
+phaser_chess

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Exec=samegnome
+Icon=gnome-samegnome.xpm
+Info=Gnome SameGame program
+Terminal=0
+Type=Application
