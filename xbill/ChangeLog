@@ -1,3 +1,8 @@
+1999-09-18  James Cape  <jcape@jcinteractive.com>
+
+	* Changed pixmaps for Apple, BSD, Sun, SGI, and Linux to better
+	  looking ones.
+
 1999-08-09  Robert Brady  <rwb197@ecs.soton.ac.uk>
 
 	* Cable.h: removed implicit int.
