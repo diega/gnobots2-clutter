@@ -694,6 +694,7 @@ gpointer  data
                                      GNOME_STOCK_BUTTON_YES,
                                      GNOME_STOCK_BUTTON_NO,
                                      NULL);
+	gnome_dialog_set_parent (GNOME_DIALOG(box), GTK_WINDOW(app));
         gnome_dialog_set_default (GNOME_DIALOG(box), 0);
         gtk_window_set_modal (GTK_WINDOW(box), TRUE);
         gtk_signal_connect (GTK_OBJECT(box), "clicked",
@@ -719,6 +720,7 @@ gpointer  data
                                      GNOME_STOCK_BUTTON_YES,
                                      GNOME_STOCK_BUTTON_NO,
                                      NULL);
+	gnome_dialog_set_parent (GNOME_DIALOG(box), GTK_WINDOW(app));
         gnome_dialog_set_default (GNOME_DIALOG(box), 0);
         gtk_window_set_modal (GTK_WINDOW(box), TRUE);
         gtk_signal_connect (GTK_OBJECT(box), "clicked",
