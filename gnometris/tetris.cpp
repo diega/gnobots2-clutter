@@ -167,13 +167,11 @@ Tetris::Tetris(int cmdlLevel):
 	
 	preview = new Preview();
 	
-	gtk_box_pack_start(GTK_BOX(vb2), preview->getWidget(), 0, 0, 0);
+	gtk_box_pack_start(GTK_BOX(vb2), preview->getWidget(), FALSE, FALSE, 0);
 	
-	preview->show();
-
 	scoreFrame = new ScoreFrame(cmdlineLevel);
 	
-	gtk_box_pack_end(GTK_BOX(vb2), scoreFrame->getWidget(), 0, 0, 0);
+	gtk_box_pack_end(GTK_BOX(vb2), scoreFrame->getWidget(), TRUE, FALSE, 0);
 
 	setOptions ();
         setupScoreState ();
@@ -1027,8 +1025,6 @@ Tetris::endOfGame()
         gnome_canvas_item_show (gameoverMessage);
         gnome_canvas_item_raise_to_top (gameoverMessage);
 
-	preview->clear ();
-	
 	if (scoreFrame->getScore() > 0) 
 	{
 		int pos = gnome_score_log(scoreFrame->getScore(), 0, TRUE);

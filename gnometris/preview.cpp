@@ -27,86 +27,68 @@ Preview::	Preview()
 {
 	w = gtk_drawing_area_new();
 
-	gtk_widget_set_events(w, gtk_widget_get_events(w) | GDK_EXPOSURE_MASK);
-	g_signal_connect (w, "event", G_CALLBACK (eventHandler), this);
-}
+	g_signal_connect (w, "expose_event", G_CALLBACK (expose), this);
+	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
 
-void 
-Preview::show()
-{
-	gtk_widget_realize(w);
-
-	GdkColor c;
-	c.pixel = 0;
-	gdk_window_set_background(w->window, &c);
-
-	gtk_widget_show(w);
-	updateSize();
+	gtk_widget_show (w);
 }
 
 void
 Preview::updateSize()
 {
-	gtk_widget_set_size_request (w, PREVIEW_SIZE * BLOCK_SIZE, PREVIEW_SIZE * BLOCK_SIZE);
+	gtk_widget_set_size_request (w, PREVIEW_SIZE * BLOCK_SIZE, 
+				     PREVIEW_SIZE * BLOCK_SIZE);
 }
 
-gint 
-Preview::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
+gint
+Preview::configure(GtkWidget * widget, GdkEventConfigure * event, Preview * preview)
 {
-	switch (event->type)
-	{
-	case GDK_EXPOSE: 
-	{
-		GdkEventExpose *e = (GdkEventExpose*)event;
-		((Preview*)d)->paint(&e->area);
-		return TRUE;
-	}
-	default:
-		return FALSE;
-	}
+	preview->width = event->width;
+	preview->height = event->height;
+
+	return TRUE;
 }
 
-void
-Preview::clear ()
+gint
+Preview::expose(GtkWidget * widget, GdkEventExpose * event, Preview * preview)
 {
-	gdk_window_clear_area (w->window, 0, 0,
-			       BLOCK_SIZE * PREVIEW_SIZE,
-			       BLOCK_SIZE * PREVIEW_SIZE);
-}
+	GdkRectangle *area = &(event->area);
 
-void
-Preview::paint(GdkRectangle *area)
-{
-	clear ();
+	gdk_draw_rectangle (widget->window, widget->style->black_gc, TRUE,
+			    area->x, area->y, area->width, area->height);
 
-	int xoffs = (PREVIEW_SIZE - sizeTable[blocknr_next][rot_next][1]) * BLOCK_SIZE / 2;
-	int yoffs = (PREVIEW_SIZE - sizeTable[blocknr_next][rot_next][0]) * BLOCK_SIZE / 2;
+	int xoffs = (preview->width 
+		     - sizeTable[blocknr_next][rot_next][1] * BLOCK_SIZE) / 2;
+	int yoffs = (preview->height 
+		     - sizeTable[blocknr_next][rot_next][0] * BLOCK_SIZE) / 2;
 
 	xoffs -= offsetTable[blocknr_next][rot_next][1] * BLOCK_SIZE;
 	yoffs -= offsetTable[blocknr_next][rot_next][0] * BLOCK_SIZE;
 
 	if (do_preview)
 	{
-		if (blocknr_next != -1)
-		{
-			for (int x = 0; x < 4; ++x)
-			{
-				for (int y = 0; y < 4; ++y)
-				{
-					if (blockTable[blocknr_next][rot_next][x][y])	
-						gdk_draw_pixbuf (w->window, w->style->black_gc, pic[color_next],
-								 0, 0, 
-								 x * BLOCK_SIZE + xoffs, y * BLOCK_SIZE + yoffs,
-								 BLOCK_SIZE, BLOCK_SIZE,
-								 GDK_RGB_DITHER_NORMAL, 0, 0);
+		if (blocknr_next == -1)
+			return TRUE;
 
-				}
+		for (int x = 0; x < 4; ++x) {
+			for (int y = 0; y < 4; ++y) {
+				if (blockTable[blocknr_next][rot_next][x][y])	
+					gdk_draw_pixbuf (widget->window, widget->style->black_gc, pic[color_next],
+							 0, 0, 
+							 x * BLOCK_SIZE + xoffs, y * BLOCK_SIZE + yoffs,
+							 BLOCK_SIZE, BLOCK_SIZE,
+							 GDK_RGB_DITHER_NORMAL, 0, 0);
+				
 			}
 		}
 	}
 	else
 	{
-		gdk_draw_line(w->window, w->style->white_gc, 0, 0, PREVIEW_SIZE * BLOCK_SIZE, PREVIEW_SIZE * BLOCK_SIZE);
-		gdk_draw_line(w->window, w->style->white_gc, 0, PREVIEW_SIZE * BLOCK_SIZE, PREVIEW_SIZE * BLOCK_SIZE, 0);
+		gdk_draw_line(widget->window, widget->style->white_gc, 0, 0, 
+			      preview->width, preview->height);
+		gdk_draw_line(widget->window, widget->style->white_gc, 0, 
+			      preview->height, preview->width, 0);
 	}
+
+	return TRUE;
 }

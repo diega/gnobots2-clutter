@@ -52,41 +52,39 @@ ScoreFrame::ScoreFrame(int cmdlLevel)
 
 	level = startingLevel;
 	
-	w = games_frame_new (_("Game Status"));
-	games_frame_set (GAMES_FRAME (w), 0);
+	w = gtk_table_new (3, 2, FALSE);
 
 	scoreLabel = gtk_label_new (_("Score:"));
+	gtk_misc_set_alignment (GTK_MISC (scoreLabel), 0.0, 0.5);
+	gtk_table_attach_defaults (GTK_TABLE (w), scoreLabel,
+				   0, 1, 0, 1);
 	sprintf(b, "%7d", 0);
 	scorew = gtk_label_new (b);
+	gtk_misc_set_alignment (GTK_MISC (scorew), 1.0, 0.5);
+	gtk_table_attach_defaults (GTK_TABLE (w), scorew,
+				   1, 2, 0, 1);
 
 	linesLabel = gtk_label_new (_("Lines:"));
+	gtk_misc_set_alignment (GTK_MISC (linesLabel), 0.0, 0.5);
+	gtk_table_attach_defaults (GTK_TABLE (w), linesLabel,
+				   0, 1, 1, 2);
 	sprintf(b, "%7d", 0);
 	linesw = gtk_label_new (b);
+	gtk_misc_set_alignment (GTK_MISC (linesw), 1.0, 0.5);
+	gtk_table_attach_defaults (GTK_TABLE (w), linesw,
+				   1, 2, 1, 2);
+
 
 	levelLabel = gtk_label_new (_("Level:"));
+	gtk_misc_set_alignment (GTK_MISC (levelLabel), 0.0, 0.5);
+	gtk_table_attach_defaults (GTK_TABLE (w), levelLabel,
+				   0, 1, 2, 3);
 	sprintf(b, "%7d", level);
 	levelw = gtk_label_new (b);
+	gtk_misc_set_alignment (GTK_MISC (levelw), 1.0, 0.5);
+	gtk_table_attach_defaults (GTK_TABLE (w), levelw,
+				   1, 2, 2, 3);
 
-	vb = gtk_vbox_new(FALSE, 0);
-	hbScore = gtk_hbox_new(FALSE, 0);
-	hbLines = gtk_hbox_new(FALSE, 0);
-	hbLevel = gtk_hbox_new(FALSE, 0);
-
-	gtk_container_add(GTK_CONTAINER(w), vb);
-	gtk_container_set_border_width(GTK_CONTAINER(vb), 10);
-
-	gtk_box_pack_start(GTK_BOX(vb), hbScore, 0, 0, 0);
-	gtk_box_pack_start(GTK_BOX(vb), hbLines, 0, 0, 0);
-	gtk_box_pack_start(GTK_BOX(vb), hbLevel, 0, 0, 0);
-
-	gtk_box_pack_start(GTK_BOX(hbScore), scoreLabel,  0, 0, 0);
-	gtk_box_pack_end(GTK_BOX(hbScore), scorew, 0, 0, 0);
-
-	gtk_box_pack_start(GTK_BOX(hbLines), linesLabel,  0, 0, 0);
-	gtk_box_pack_end(GTK_BOX(hbLines), linesw, 0, 0, 0);
-
-	gtk_box_pack_start(GTK_BOX(hbLevel), levelLabel,  0, 0, 0);
-	gtk_box_pack_end(GTK_BOX(hbLevel), levelw, 0, 0, 0);
 }
 
 void

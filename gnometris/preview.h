@@ -31,18 +31,17 @@ class Preview
 public:
 	Preview();
 	
-	void show();
 	void updateSize();
-	void clear();
 	
 	GtkWidget * getWidget()	{return w;}
 	
 private:
 	GtkWidget * w;
+	gint width;
+	gint height;
 
-	void paint(GdkRectangle *area);
-
-	static gint eventHandler(GtkWidget *widget, GdkEvent *event, void *d);
+	static gint configure(GtkWidget * widget, GdkEventConfigure * event, Preview * preview);
+	static gint expose(GtkWidget *widget, GdkEventExpose *event, Preview * preview);
 };
 
 #endif //__preview_h__
