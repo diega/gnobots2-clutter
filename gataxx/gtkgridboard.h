@@ -19,8 +19,9 @@ G_BEGIN_DECLS
 
 #define g_marshal_value_peek_int(v)      (v)->data[0].v_int
 
+extern guint timeoutid;
+
 /* definitions */
-guint timeoutid;
 #define EMPTY 0
 #define WHITE 1
 #define BLACK 2

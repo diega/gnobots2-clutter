@@ -1,3 +1,15 @@
+2005-02-07  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gtkgridboard.h:
+	* gtkgridboard.c:	
+	* gataxx.c: Actually fix bug #162892. Two issues: Firstly
+	Richard's patch didn't do the extern thing properly and there were
+	two definitions of timeoutid. Secondly there were two calls to
+	gtk_gridboard_set_animate but onlly one timer was being
+	killed. The definition of timeoutid is now fixed and
+	gtk_gridboard_set_animate now aborts if there is already a timeout
+	defined.
+
 2005-01-25  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gataxx.h: 

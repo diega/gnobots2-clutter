@@ -25,6 +25,9 @@
 static GtkWidgetClass *parent_class=NULL;
 static guint gridboard_signals[LAST_SIGNAL] = { 0 };
 
+/* Save the flip pixmaps timeout so we can kill it at the games end. */
+guint timeoutid = 0;
+
 /* prototypes for private functions */
 static gint ** make_array(int width, int height); 
 static void gtk_gridboard_draw_box(GtkGridBoard *widget, gint x, gint y); 
@@ -492,7 +495,9 @@ void gtk_gridboard_set_animate(GtkGridBoard *gridboard, gboolean animate) {
         g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
 
         gridboard->animate=animate;
-        if (animate) { 
+        if (animate) {
+	  if (timeoutid)
+	    return;
 	  timeoutid = g_timeout_add(PIXMAP_FLIP_DELAY, 
 				    gtk_gridboard_flip_pixmaps,
 				    (gpointer) gridboard);
