@@ -1,3 +1,11 @@
+1999-02-23  Changwoo Ryu  <cwryu@adam.kaist.ac.kr>
+
+	* main.c (game_update_title): Load the font by gtkrc.  This fix
+	made the Korean translation visible.
+
+	* gnome-stonesrc, gnome-stonesrc.ko: New files, gnome-stone
+	specific gtkrc files.
+
 1999-02-07  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
 	* main.c: Moved to game-widget stuff to the new files view.c and

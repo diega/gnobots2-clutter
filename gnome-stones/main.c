@@ -244,8 +244,8 @@ game_update_title (void)
       guint    height;
       GdkFont *font;
       GList   *tmp= g_list_nth (game->start_caves, start_cave);
-      
-      font= gdk_font_load ("-adobe-helvetica-bold-r-normal--24-240-75-75-p-138-iso8859-1");
+
+      font = gdk_font_ref (gstones_view->style->font);
       if (!font)
 	font= gdk_font_load ("fixed");
 
