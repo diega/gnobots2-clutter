@@ -1,10 +1,11 @@
 same_gnome_helpdir = $(datadir)/gnome/help/samegnome/ru
 
 same_gnome_help_DATA = 	\
+	same-gnome.sgml		\
 	index.html		\
 	topic.dat
 
-EXTRA_DIST = same-gnome.sgml $(same_gnome_help_DATA)
+EXTRA_DIST = $(same_gnome_help_DATA)
 
 all: index.html
 

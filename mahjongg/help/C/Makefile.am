@@ -12,10 +12,11 @@ figs = \
 	toolbar.png
 
 mahjongg_help_DATA = 	\
+	mahjongg.sgml		\
 	index.html		\
 	topic.dat
 
-EXTRA_DIST = mahjongg.sgml $(mahjongg_help_DATA) $(figs)
+EXTRA_DIST = $(mahjongg_help_DATA) $(figs)
 
 all: index.html
 

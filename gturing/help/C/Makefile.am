@@ -1,10 +1,11 @@
 gturing_helpdir = $(datadir)/gnome/help/gturing/C
 
 gturing_help_DATA = 	\
+	gturing.sgml		\
 	index.html		\
 	topic.dat
 
-EXTRA_DIST = gturing.sgml topic.dat
+EXTRA_DIST = topic.dat
 
 all: index.html
 
