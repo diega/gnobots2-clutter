@@ -2,12 +2,12 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY appversion "2.0">
-  <!ENTITY manrevision "2.0">
+  <!ENTITY appversion "2.4">
+  <!ENTITY manrevision "2.4">
   <!ENTITY date "March 2002">
   <!ENTITY app "<application>GNOME Stones</application>">
   <!ENTITY appname "GNOME Stones">
-  <!ENTITY version "1.2.0">
+  <!ENTITY version "2.4.0">
 ]>
 
 <!-- 
@@ -212,25 +212,53 @@
     <sect3 id="gametypes">
      <title>Game Types</title>
      <para>
-       There are two basic game types:
+       A set of levels to play can be selected from the
+       <guimenuitem>Game</guimenuitem> tab in the <link
+       linkend="prefs"><interface>Preferences</interface></link>
+       dialog.  There are two basic game modes: <link
+       linkend="gnomekoban">Sokoban</link>, the block sliding game, or
+       the <link linkend="cavegame">Cave Escape</link> game. Each
+       level set is played in one of these modes.
 
      <variablelist>
-      <varlistentry>
-       <term>Gnomekoban</term> 
-       <listitem> 
-        <para> 
-          This is the block sliding game. See 
-          <link linkend="gnomekoban">Gnomekoban</link>
-        </para> 
-       </listitem>
-      </varlistentry> 
-
       <varlistentry>
        <term>Default caves</term> 
        <listitem> 
         <para>
-          This is the escape from cave game type. See 
-          <link linkend="cavegame">Escape from cave game</link> 
+          This is the basic <link linkend="cavegame">escape from the
+          cave</link> game type. There are only a few levels here at
+          the moment.
+        </para>
+       </listitem> 
+      </varlistentry>
+      <varlistentry>
+       <term>Tutorial caves</term> 
+       <listitem> 
+        <para>
+          This is another <link linkend="cavegame">cave escape
+          </link> level set. These are designed to get you used to
+          playing the game and let you discover the various features
+          of the caves.
+        </para>
+       </listitem> 
+      </varlistentry>
+      <varlistentry>
+       <term>Gnomekoban</term> 
+       <listitem> 
+        <para> 
+          This is a set of <link linkend="gnomekoban">sokoban</link>
+       block sliding games. The first level is trivial to let you get
+       the hang of the puzzle, the remainder become difficult quickly.
+        </para> 
+       </listitem>
+      </varlistentry> 
+      <varlistentry>
+       <term>Original Atari caves</term> 
+       <listitem> 
+        <para>
+         Yet another set of <link linkend="cavegame">cave escape
+          </link> levels. These ones resemble those found in an old
+          Atari video game.
         </para>
        </listitem> 
       </varlistentry>
@@ -243,8 +271,8 @@
     <title>Controls</title> 
     <para> 
       The controls for the game are the up, down, left, and right arrow keys or      you can control your character with a joystick. To setup a
-      joystick see the the <link linkend="prefs"><interface>Preferences
-      Dialog</interface></link> help.
+      joystick see the <link linkend="prefs"><interface>Preferences
+      dialog</interface></link> documentation.
     </para>
 
    </sect3>
@@ -252,7 +280,7 @@
    <sect3 id="scores">
    <title>High scores</title>
    <para>
-   To start playing the game to view your high scores for the game do: 
+   To view your high scores for the game select 
        <menuchoice>
         <guisubmenu>Game</guisubmenu> 
         <guimenuitem>Scores</guimenuitem>
@@ -269,49 +297,51 @@
   <sect2 id="cavegame"> 
    <title>Cave game</title> 
    <para> 
-     This game has simple gravity physics, if you dig underneath a rock (or 
-     diamond) then the object will fall down and if a rock squash you. But if 
-     you do not linger underneath the rock then you are 
-     unlikely to be squashed, but sometimes gravity can cause a chain 
-     reaction in which a large number of rocks fall down and squash you. 
-     If you get squashed you die and have to begin the level at the 
-     beginning again.  You can push rocks out of the way if there is room 
-     on the other side of them. To push a rock out of the way just walk 
-     up to the rock and continue moving in the desired direction. The rock 
-     will move if possible. If two rocks are next to each other horizontally 
-     you can't move either of them. You are up against the clock in this 
-     game. You can only find the exit (blinking square) after you have collecte     d enough diamonds, the number of diamonds you have not yet collected is sh     own in the statusbar as Diamond: (number of diamonds left)
+     You are in a cave full of rocks, diamonds and dirt. Your goal is
+   to dig through the dirt and collect enough diamonds to open a
+   hidden exit from the cave. In your way are the boulders. You can
+   push a single boulder, if there is nothing behind it. You can also
+   dig under a boulder, but beware, if there is nothing to support a
+   boulder it will fall and could squash you. Being squashed by a
+   boulder is invariably fatal..
    </para>
-   <para>On some levels there are monsters that can freely move about the leve.         If these make contact with you, you die and you must restart.
-   </para> 
-   <sect3 id="playingcavegame">
-    <title>Playing The Cave Game</title>
-    <para>
-      This is the default game, to choose this game look at the 
-      <link linkend="prefs">Customization Section</link> for
-      details.
-    </para>
-   </sect3> 
+   <para>
+   To dig through the dirt, just move through it. Similarly if you
+   want to push a rock move up to it and keep moving against it. To
+   pick up a diamond move over it. If you want to be killed by one of
+   the creatures that also roam the caves, just run into it (or let it
+   run into you). You get the idea.
+</para>
+      <para>
+   Once you have collected enough diamonds there will be a flash and a
+   flashing doorway will appear somewhere on the level, find it and
+   get out of the cave before time runs out. The quicker you finish
+   the level, the higher your score.
+   </para>
+   <para>
+   It is obviously a good idea not to die. You only have a small
+   number of lives and once you use them all up the game is
+   over. Also, if you die you must restart the level. There are many
+   ways to die, the most common one is to be under a falling object
+   when it lands. You will undoubtedly discover the others. Be warned
+   that the using the <guimenuitem>Restart level</guimenuitem> menu
+   item costs you a life.
+   </para>
   </sect2> 
 
   <sect2 id="gnomekoban">
    <title>Gnomekoban</title> 
+
    <para> 
-     In this version of the game your task is to move strategically placed 
-     crates or blocks into holes (hollow red squares), you move the crates
-     in a similar way to rocks except there is no gravity acting in this 
-     environment. Once you have slided all your blocks into the required 
-     positions you move onto the next level. You are up against the clock 
-     in this game. This game type is based on xsokoban and sokoban
+   In this version of the game your task is to move strategically
+   placed crates or blocks into holes (hollow red squares), you move
+   the crates in a similar way to rocks except there is no gravity
+   acting in this environment. Once you have slid all your blocks into
+   the required positions you move onto the next level. Nothing will
+   fall on you or try and hunt you down in this game, but you are up
+   against the clock in this game.
    </para>
-   <sect3 id="playinggnomekoban">
-    <title>Playing Gnomekoban</title>
-    <para>
-      This is <emphasis>not</emphasis> the default game, so you must 
-      choose this game, look at the <link linkend="prefs">Customization 
-      Section</link> for details.
-    </para>
-   </sect3> 
+
   </sect2>
  </sect1>
 	
@@ -323,8 +353,7 @@
      <guimenu>Settings</guimenu> 
      <guimenuitem>Preferences...</guimenuitem>
     </menuchoice>.  
-    This opens the <interface>Preferences</interface> dialog, shown 
-    in <xref linkend="preferences-fig"/>.
+    This opens the <interface>Preferences</interface> dialog.
   </para>
 
   <figure id="preferences-fig">
@@ -343,39 +372,21 @@
 
   <para> 
     The <guilabel>Game</guilabel> tab allows you choose which type of
-    game you wish to play. The most common game types are: 
-   <variablelist>
-    <varlistentry> 
-     <term>Gnomekoban</term> 
-     <listitem> 
-      <para> 
-        This is the block sliding game. See 
-        <link linkend="gnomekoban">Gnomekoban</link>
-      </para> 
-     </listitem>
-    </varlistentry> 
-    <varlistentry>
-     <term>Default caves</term> 
-     <listitem> 
-      <para> 
-        This is the escape from cave game type. See 
-        <link linkend="cavegame">Escape from cave game</link> 
-      </para> 
-     </listitem> 
-    </varlistentry>
-   </variablelist> 
+    game you wish to play. These have been described in the <link linkend="gametypes">Game
+    Types</link> section.
   </para>
+
   <para> 
-    The properties in the <guilabel>Joystick</guilabel> (shown in <xref linkend="joystick-preferences-fig"/> preferences tab are:
+    The properties in the <guilabel>Joystick</guilabel> (shown in <xref linkend="joystick-preferences-fig"/>) preferences tab are:
   </para>
    <variablelist>
     <varlistentry> 
      <term>Joystick device</term>
      <listitem>
       <para> 
-        Here you can choose your joystick device (if you have
-        one). If you do not have a joystick or do not wish to use one,
-        select disable (default) 
+        Choose your joystick device, if you have
+        one. If you do not have a joystick or do not wish to use one,
+        select disable (default).
       </para>
      </listitem>
     </varlistentry>
@@ -383,7 +394,7 @@
      <term>Digital joystick emulation</term> 
      <listitem> 
       <para> 
-        You can configure the switch level of your digital joystick here 
+        You can configure the switching level of your digital joystick here 
       </para>
      </listitem> 
     </varlistentry>
@@ -404,32 +415,45 @@
    </screenshot>
   </figure>
   <para>
-    The properties in the <guilabel>Sound</guilabel> tab are:
-   <variablelist> 
-    <varlistentry> 
-     <term>Not implemented yet!</term>
-     <listitem> 
-      <para> 
-        Here you will able to configure the sounds for
-        <application>GNOME Stones</application> when implemented. 
-      </para> 
-     </listitem> 
-    </varlistentry> 
-   </variablelist> 
+    The <guilabel>Sound</guilabel> tab contains only one option: to
+   enable or disable sound in the game.
   </para>
   <para>
-    After you have made all the changes you want, click on
-    <guibutton>OK</guibutton> to apply the changes and close the
-    <interface>Properties</interface> dialog. To cancel the changes and
-    return to previous values, click the <guibutton>Close</guibutton>
-    button. You may also click <guibutton>Apply</guibutton> to apply the change    s, <emphasis>applied changes cannot be cancelled.</emphasis>
+   The <guilabel>Misc.</guilabel> tab also has a single option: the
+   style of scrolling you would like to use. 
+   <variablelist>
+   <varlistentry>
+   <listitem><para>
+   <guimenuitem>Atari like scrolling</guimenuitem>&mdash; only
+   scroll the screen when near the edge.
+   </para></listitem>
+   <listitem><para>
+   <guimenuitem>Smooth scrolling</guimenuitem>&mdash; smoothly
+   scroll the screen to keep the player in the center. This may make
+   you sea-sick.
+   </para></listitem>
+   <listitem><para>
+   <guimenuitem>Atari in the center</guimenuitem>&mdash; always keep
+   the player in the center of the screen.
+   </para></listitem>
+   </varlistentry>
+   </variablelist>
+
+  </para>
+  <para>
+   All preferences are applied and saved instantly and
+   automatically. Be warned that if you change the game type, your
+   current game will end.
   </para>
  </sect1>
 
  <sect1 id="bugs">
   <title>Known Bugs and Limitations</title> 
   <para> 
-    The sound section of the preferences dialog is not implemented yet.
+   Nothing we'd like to talk about. You can report any bugs you find
+  using the <command>Bug Reporting Tool</command> or via the <ulink
+  url="http://bugs.gnome.org" type="http">GNOME bug tracking
+  database</ulink>.
   </para> 
  </sect1>
 
