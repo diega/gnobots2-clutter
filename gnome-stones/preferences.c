@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1998/11/28 09:11:56 carsten>
+ * Time-stamp: <1998/11/29 10:14:55 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -443,7 +443,7 @@ preferences_dialog_new (void)
 
   /* The first page of our preferences dialog. */
   box= gtk_vbox_new (FALSE, GNOME_PAD);
-  gtk_container_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
+  gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
 
   /* The list of game names.  */
   list= gtk_clist_new (3);
@@ -516,7 +516,7 @@ preferences_dialog_new (void)
   prdata->joystick_switch_level= joystick_switch_level;
 
   box= gtk_vbox_new (FALSE, GNOME_PAD);
-  gtk_container_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
+  gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
   
   {
     guint      i;
@@ -633,7 +633,7 @@ preferences_dialog_new (void)
 
   /* The third page of our preferences dialog. */
   box= gtk_vbox_new (FALSE, GNOME_PAD);
-  gtk_container_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
+  gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
 
   label= gtk_label_new (_("Not yet implemented!"));
   gtk_box_pack_start (GTK_BOX (box), label, TRUE, FALSE, GNOME_PAD_SMALL);

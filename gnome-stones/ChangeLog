@@ -1,3 +1,9 @@
+1998-11-29  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* preferences.c (preferences_dialog_new): Replaced
+ 	'gtk_container_border_width' with
+ 	'gtk_container_set_border_width'.
+
 1998-11-28  Herbert Valerio Riedel  <hvr@hvrlab.ml.org>
 
 	* main.c (show_scores_cb): added GPOINTER_TO_INT 
