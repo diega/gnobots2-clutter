@@ -1,3 +1,10 @@
+2000-04-12  Ian Peters  <itp@gnu.org>
+
+	* src/*.c, src/*.h: plugins are now kept in memory more, configuration
+	  is persistant from pref dialog to game play, better support in the
+	  interface to distinguish which side the plugin is playing.
+	* plugins/*/*.c: updated to new interface.
+
 2000-04-11  Ian Peters  <itp@gnu.org>
 
 	* src/iagno2.c: only create the buffer pixmap on a configure event if it

@@ -167,6 +167,14 @@ clean_up (gboolean full)
     buffer_pixmap = NULL;
   }
 
+  if (players[0]) {
+    iagno2_plugin_close (players[0]);
+  }
+
+  if (players[1]) {
+    iagno2_plugin_close (players[1]);
+  }
+
   gdk_colormap_free_colors (gdk_colormap_get_system (), colors, 2);
 }
 
@@ -261,7 +269,7 @@ main (int argc, char **argv)
 
   iagno2_tileset_load ();
 
-  iagno2_initialize_players (0);
+  iagno2_initialize_players ();
 
   iagno2_app_init ();
   iagno2_appbar_init ();

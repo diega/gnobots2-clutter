@@ -1,7 +1,7 @@
 plugindir = $(libdir)/iagno2
 plugin_LTLIBRARIES = libiagno2-swedishchef.la
 
-plugin_interface = 1
+plugin_interface = 2
 
 INCLUDES = \
 	-I../../src \

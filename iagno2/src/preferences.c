@@ -36,10 +36,22 @@ extern GtkWidget *app;
 extern gchar whose_turn;
 extern gboolean game_in_progress;
 
+extern Iagno2Plugin *players[2];
+static Iagno2Plugin *tmp_players[2];
+
 static void
 destroy_cb (GtkWidget *widget, gpointer data)
 {
   iagno2_properties_destroy (tmp_properties);
+
+  if (tmp_players[0]) {
+    iagno2_plugin_close (tmp_players[0]);
+    tmp_players[0] = NULL;
+  }
+  if (tmp_players[1]) {
+    iagno2_plugin_close (tmp_players[1]);
+    tmp_players[1] = NULL;
+  }
 }
 
 static void
@@ -75,18 +87,38 @@ apply_cb (GtkWidget *widget, gint pagenum, gpointer data)
       iagno2_draw_grid ();
     }
 
-    if (strcmp (old_properties->player1, properties->player1)) {
+    if (strcmp (old_properties->players[0], properties->players[0])) {
+      /*
+      iagno2_init_player (&players[0], properties->players[0]);
+      */
+      /*
       iagno2_initialize_players (1);
+      */
+      /*  I don't support this anymore
       if ((whose_turn == BLACK_TILE) && game_in_progress) {
         iagno2_setup_current_player (FALSE);
       }
+      */
+      iagno2_plugin_close (players[0]);
+      players[0] = tmp_players[0];
+      tmp_players[0] = NULL;
     }
 
-    if (strcmp (old_properties->player2, properties->player2)) {
+    if (strcmp (old_properties->players[1], properties->players[1])) {
+      /*
+      iagno2_init_player (&players[1], properties->players[1]);
+      */
+      /*
       iagno2_initialize_players (2);
+      */
+      /*  I don't support this anymore
       if ((whose_turn == WHITE_TILE) && game_in_progress) {
         iagno2_setup_current_player (FALSE);
       }
+      */
+      iagno2_plugin_close (players[1]);
+      players[1] = tmp_players[1];
+      tmp_players[1] = NULL;
     }
 
     iagno2_properties_destroy (old_properties);
@@ -127,9 +159,11 @@ player1_cb (GtkWidget *widget, gpointer data)
   if (!preferences_dialog)
     return;
 
-  if (strcmp ((gchar *)data, tmp_properties->player1)) {
-    g_free (tmp_properties->player1);
-    tmp_properties->player1 = g_strdup (data);
+  if (strcmp ((gchar *)data, tmp_properties->players[0])) {
+    g_free (tmp_properties->players[0]);
+    tmp_properties->players[0] = g_strdup (data);
+    iagno2_init_player (&tmp_players[0], tmp_properties->players[0],
+                        BLACK_TILE);
     gnome_property_box_changed (GNOME_PROPERTY_BOX (preferences_dialog));
   }
 }
@@ -140,13 +174,49 @@ player2_cb (GtkWidget *widget, gpointer data)
   if (!preferences_dialog)
     return;
 
-  if (strcmp ((gchar *)data, tmp_properties->player2)) {
-    g_free (tmp_properties->player2);
-    tmp_properties->player2 = g_strdup (data);
+  if (strcmp ((gchar *)data, tmp_properties->players[1])) {
+    g_free (tmp_properties->players[1]);
+    tmp_properties->players[1] = g_strdup (data);
+    iagno2_init_player (&tmp_players[1], tmp_properties->players[1],
+                        WHITE_TILE);
     gnome_property_box_changed (GNOME_PROPERTY_BOX (preferences_dialog));
   }
 }
 
+static void
+configure_cb (GtkWidget *widget, gpointer data)
+{
+  if (tmp_players[(gint) data]) {
+    if (tmp_players[(gint) data]->plugin_preferences) {
+      tmp_players[(gint) data]->plugin_preferences (preferences_dialog,
+                                                    (gint) data);
+    } else {
+      gnome_ok_dialog_parented (_("This plugin has no configuration options."),
+                                GTK_WINDOW (preferences_dialog));
+    }
+  } else {
+    gnome_ok_dialog_parented (_("What does configuring yourself mean?"),
+                              GTK_WINDOW (preferences_dialog));
+  }
+}
+
+static void
+about_cb (GtkWidget *widget, gpointer data)
+{
+  if (tmp_players[(gint) data]) {
+    if (tmp_players[(gint) data]->plugin_about_window) {
+      tmp_players[(gint) data]->plugin_about_window (preferences_dialog);
+    } else {
+      gnome_ok_dialog_parented (_("This plugin has no about information."),
+                                GTK_WINDOW (preferences_dialog));
+    }
+  } else {
+    gnome_ok_dialog_parented (_("Why don't you tell me about yourself?"),
+                              GTK_WINDOW (preferences_dialog));
+  }
+}
+
+/*
 static void
 configure_cb (GtkWidget *widget, gpointer data)
 {
@@ -189,7 +259,9 @@ configure_cb (GtkWidget *widget, gpointer data)
   g_free (filename);
   g_free (name);
 }
+*/
 
+/*
 static void
 about_cb (GtkWidget *widget, gpointer data)
 {
@@ -198,19 +270,19 @@ about_cb (GtkWidget *widget, gpointer data)
   Iagno2Plugin *plugin;
   
   if ((gint) data == 1) {
-    if (!strcmp ("Human", tmp_properties->player1)) {
+    if (!strcmp ("Human", tmp_properties->players[0])) {
       gnome_ok_dialog_parented (_("Why don't you tell me about yourself?"),
                                 GTK_WINDOW (preferences_dialog));
       return;
     }
-    name = g_strconcat ("iagno2/", tmp_properties->player1, NULL);
+    name = g_strconcat ("iagno2/", tmp_properties->players[0], NULL);
   } else {
-    if (!strcmp ("Human", tmp_properties->player2)) {
+    if (!strcmp ("Human", tmp_properties->players[1])) {
       gnome_ok_dialog_parented (_("Why don't you tell me about yourself?"),
                                 GTK_WINDOW (preferences_dialog));
       return;
     }
-    name = g_strconcat ("iagno2/", tmp_properties->player2, NULL);
+    name = g_strconcat ("iagno2/", tmp_properties->players[1], NULL);
   }
 
   filename = gnome_unconditional_libdir_file (name);
@@ -232,6 +304,7 @@ about_cb (GtkWidget *widget, gpointer data)
   g_free (filename);
   g_free (name);
 }
+*/
 
 static void
 free_str (GtkWidget *widget, gpointer data)
@@ -303,13 +376,13 @@ fill_plugin_menu (GtkWidget *menu, int player)
   if (player == 1) {
     gtk_signal_connect (GTK_OBJECT (item), "activate",
                         GTK_SIGNAL_FUNC (player1_cb), "Human");
-    if (!strcmp (properties->player1, "Human")) {
+    if (!strcmp (properties->players[0], "Human")) {
       gtk_menu_set_active (GTK_MENU (menu), 0);
     }
   } else {
     gtk_signal_connect (GTK_OBJECT (item), "activate",
                         GTK_SIGNAL_FUNC (player2_cb), "Human");
-    if (!strcmp (properties->player2, "Human")) {
+    if (!strcmp (properties->players[1], "Human")) {
       gtk_menu_set_active (GTK_MENU (menu), 0);
     }
   }
@@ -342,13 +415,13 @@ fill_plugin_menu (GtkWidget *menu, int player)
     if (player == 1) {
       gtk_signal_connect (GTK_OBJECT (item), "activate",
                           GTK_SIGNAL_FUNC (player1_cb), plugin_file_name);
-      if (!strcmp(properties->player1, plugin_file_name)) {
+      if (!strcmp(properties->players[0], plugin_file_name)) {
         gtk_menu_set_active (GTK_MENU (menu), itemno);
       }
     } else {
       gtk_signal_connect (GTK_OBJECT (item), "activate",
                           GTK_SIGNAL_FUNC (player2_cb), plugin_file_name);
-      if (!strcmp(properties->player2, plugin_file_name)) {
+      if (!strcmp(properties->players[1], plugin_file_name)) {
         gtk_menu_set_active (GTK_MENU (menu), itemno);
       }
     }
@@ -381,15 +454,20 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
 
   tmp_properties = iagno2_properties_copy (properties);
 
+  iagno2_init_player (&tmp_players[0], tmp_properties->players[0], BLACK_TILE);
+  iagno2_init_player (&tmp_players[1], tmp_properties->players[1], WHITE_TILE);
+
   preferences_dialog = gnome_property_box_new ();
   gnome_dialog_set_parent (GNOME_DIALOG (preferences_dialog), GTK_WINDOW (app));
   gtk_window_set_title (GTK_WINDOW (preferences_dialog),
                         _("Iagno II Preferences"));
+  gtk_signal_connect (GTK_OBJECT (preferences_dialog), "apply",
+                      GTK_SIGNAL_FUNC (apply_cb), NULL);
+  gtk_signal_connect (GTK_OBJECT (preferences_dialog), "destroy",
+                      GTK_SIGNAL_FUNC (destroy_cb), NULL);
   gtk_signal_connect (GTK_OBJECT (preferences_dialog), "destroy",
                       GTK_SIGNAL_FUNC (gtk_widget_destroyed),
                       &preferences_dialog);
-  gtk_signal_connect (GTK_OBJECT (preferences_dialog), "destroy",
-                      GTK_SIGNAL_FUNC (destroy_cb), NULL);
 
   label = gtk_label_new (_("Players"));
 
@@ -417,14 +495,14 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
 
   button = gtk_button_new_with_label (_("Configure..."));
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
-                      GTK_SIGNAL_FUNC (configure_cb), (gpointer) 1);
+                      GTK_SIGNAL_FUNC (configure_cb), (gpointer) 0);
   gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
   if (game_in_progress) {
     gtk_widget_set_sensitive (button, FALSE);
   }
   button = gtk_button_new_with_label (_("About..."));
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
-                      GTK_SIGNAL_FUNC (about_cb), (gpointer) 1);
+                      GTK_SIGNAL_FUNC (about_cb), (gpointer) 0);
   gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox2, TRUE, TRUE, 0);
@@ -454,14 +532,14 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
 
   button = gtk_button_new_with_label (_("Configure..."));
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
-                      GTK_SIGNAL_FUNC (configure_cb), (gpointer) 2);
+                      GTK_SIGNAL_FUNC (configure_cb), (gpointer) 1);
   gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
   if (game_in_progress) {
     gtk_widget_set_sensitive (button, FALSE);
   }
   button = gtk_button_new_with_label (_("About..."));
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
-                      GTK_SIGNAL_FUNC (about_cb), (gpointer) 2);
+                      GTK_SIGNAL_FUNC (about_cb), (gpointer) 1);
   gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox2, TRUE, TRUE, 0);
@@ -505,9 +583,6 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
 
   gnome_property_box_append_page (GNOME_PROPERTY_BOX (preferences_dialog),
                                   vbox, label);
-
-  gtk_signal_connect (GTK_OBJECT (preferences_dialog), "apply",
-                      GTK_SIGNAL_FUNC (apply_cb), NULL);
 
   gtk_widget_show_all (preferences_dialog);
 

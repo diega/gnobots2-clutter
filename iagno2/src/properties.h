@@ -23,8 +23,7 @@
 typedef struct {
 	gboolean draw_grid;
 	gchar *tileset;
-	gchar *player1;
-	gchar *player2;
+	gchar *players[2];
 } Iagno2Properties;
 
 Iagno2Properties *iagno2_properties_new ();

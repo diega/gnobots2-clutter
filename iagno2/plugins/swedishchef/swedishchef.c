@@ -61,7 +61,27 @@ static gdouble thinking_time;
 /* ------------------------------------------------------------ */
 
 void
-plugin_init ()
+plugin_init_player (gchar player)
+{
+  if (player == BLACK_TILE) {
+    /* I need to play black */
+  } else {
+    /* I need to play white */
+  }
+}
+
+void
+plugin_deinit_player (gchar player)
+{
+  if (player == BLACK_TILE) {
+    /* I don't play black */
+  } else {
+    /* I don't play white */
+  }
+}
+
+void
+plugin_setup (gchar player)
 {
   struct timeval tv;
   gchar *timestr;
@@ -92,7 +112,7 @@ color_convert (char iagno_color)
 }
 
 gint
-plugin_move (ReversiBoard *board, gint move)
+plugin_move (ReversiBoard *board, gchar player)
 {
   gint x, y;
   BoardType myboard;
@@ -100,7 +120,7 @@ plugin_move (ReversiBoard *board, gint move)
 
 #ifdef DEBUG
   gint i;
-  printf ("\nturn:%d\n", move);
+  printf ("\nturn:%d\n", board->move_num);
   for (i = 0; i < 64; i++) {
     printf ("%2d ", board->board[i]);
     if (((i + 1) % 8) == 0) {
@@ -116,7 +136,7 @@ plugin_move (ReversiBoard *board, gint move)
     }
   }
 
-  findMove (myboard, &xx, &yy, color_convert (move));
+  findMove (myboard, &xx, &yy, color_convert (player));
 
 #ifdef DEBUG
     printf ("xx:%d yy:%d\n\n", xx, yy);

@@ -37,8 +37,22 @@ iagno2_plugin_open (const gchar *plugin_file)
     return NULL;
   }
 
-  g_module_symbol (tmp->module, "plugin_init",
-      ((gpointer)&(tmp->plugin_init)));
+  if (!g_module_symbol (tmp->module, "plugin_init_player",
+                        ((gpointer)&tmp->plugin_init_player))) {
+    g_module_close (tmp->module);
+    printf ("Loading plugin %s failed.\n", plugin_file);
+    return NULL;
+  }
+
+  if (!g_module_symbol (tmp->module, "plugin_deinit_player",
+                        ((gpointer)&tmp->plugin_deinit_player))) {
+    g_module_close (tmp->module);
+    printf ("Loading plugin %s failed.\n", plugin_file);
+    return NULL;
+  }
+
+  g_module_symbol (tmp->module, "plugin_setup",
+      ((gpointer)&(tmp->plugin_setup)));
 
   if (!g_module_symbol (tmp->module, "plugin_move",
                         ((gpointer)&tmp->plugin_move))) {

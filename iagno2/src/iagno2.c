@@ -575,7 +575,7 @@ iagno2_setup_current_player (gboolean pass)
     computer_timeout_id = gtk_timeout_add (1000,
                                            iagno2_computer_player_wrapper,
                                            NULL);
-    message = g_strconcat (pad, players[player]->plugin_busy_message (),
+    message = g_strconcat (pad, players[player]->plugin_busy_message (player),
                            " [", sides[player], "]", NULL);
   }
 
@@ -619,6 +619,51 @@ iagno2_move (gchar index)
   iagno2_post_move_check ();
 }
 
+void
+iagno2_init_player (Iagno2Plugin **plugin, const gchar *name, gchar player)
+{
+  gchar *tmp_path;
+  gchar *filename;
+  
+  if ((*plugin) != NULL) {
+    iagno2_plugin_close (*plugin);
+    (*plugin) = NULL;
+  }
+
+  if (!strcmp (name, "Human")) {
+    (*plugin) = NULL;
+  } else {
+    tmp_path = g_strconcat ("iagno2/", name, NULL);
+    filename = gnome_unconditional_libdir_file (tmp_path);
+    g_free (tmp_path);
+    (*plugin) = iagno2_plugin_open (filename);
+    g_free (filename);
+    if ((*plugin) != NULL) {
+      (*plugin)->plugin_init_player (player);
+    }
+  }
+}
+
+void iagno2_initialize_players ()
+{
+  iagno2_init_player (&players[0], properties->players[0], BLACK_TILE);
+
+  if (!players[0] && strcmp (properties->players[0], "Human")) {
+    g_free (properties->players[0]);
+    properties->players[0] = g_strdup ("Human");
+    iagno2_properties_sync (properties);
+  }
+
+  iagno2_init_player (&players[1], properties->players[1], WHITE_TILE);
+
+  if (!players[1] && strcmp (properties->players[1], "Human")) {
+    g_free (properties->players[1]);
+    properties->players[1] = g_strdup ("Human");
+    iagno2_properties_sync (properties);
+  }
+}
+
+/*
 void
 iagno2_initialize_players (int which)
 {
@@ -674,6 +719,7 @@ iagno2_initialize_players (int which)
     }
   }
 }
+*/
 
 gint
 iagno2_game_over ()

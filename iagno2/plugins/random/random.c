@@ -26,12 +26,34 @@
 
 #define VERSION "0.1"
 
+/*
+GtkWidget *plugin_pref_dialog = NULL;
+*/
+
 gchar busy_new[50];
 
-GtkWidget *plugin_pref_dialog = NULL;
+void
+plugin_init_player (gchar player)
+{
+  if (player == BLACK_TILE) {
+    /* I need to be prepared to play for black */
+  } else {
+    /* I need to be prepared to play for white */
+  }
+}
 
 void
-plugin_init ()
+plugin_deinit_player (gchar player)
+{
+  if (player == BLACK_TILE) {
+    /* I no longer have to play for black */
+  } else {
+    /* I no longer have to play for white */
+  }
+}
+
+void
+plugin_setup (gchar player)
 {
   struct timeval tv;
 
@@ -40,7 +62,7 @@ plugin_init ()
 }
 
 gint
-plugin_move (ReversiBoard *board, gint player, gint move)
+plugin_move (ReversiBoard *board, gchar player)
 {
   gint i;
   gint moves[32];
@@ -69,10 +91,10 @@ plugin_name ()
 }
 
 const gchar *
-plugin_busy_message ()
+plugin_busy_message (gchar player)
 {
   gchar *busy;
-//  gchar busy_new[50];
+  //gchar busy_new[50];
 
   busy = gnome_config_get_string ("/iagno2/Random/busy_message=Random player is stalling for time...");
   g_snprintf (busy_new, 50, "%s", busy);
@@ -84,7 +106,7 @@ plugin_busy_message ()
 }
 
 void
-plugin_about_window (GtkWindow *parent)
+plugin_about_window (GtkWindow *parent, gchar player)
 {
   GtkWidget *about;
   const gchar *authors[] = {
@@ -108,7 +130,7 @@ plugin_about_window (GtkWindow *parent)
 }
 
 void
-plugin_preferences (GtkWidget *parent)
+plugin_preferences (GtkWidget *parent, gchar player)
 {
   GtkWidget *dialog;
   GtkWidget *entry;
