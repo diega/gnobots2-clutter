@@ -1,3 +1,8 @@
+2005-01-19  Richard Hoelscher  <rah@rahga.com>
+
+	* tetris.cpp (timeoutHandler): Don't award fast fall points on a
+	piece that ends the game. Bug #164640.
+
 2004-12-14  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* tetris.cpp: Fall back to a default theme if the selected one is

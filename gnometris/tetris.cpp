@@ -1012,7 +1012,7 @@ Tetris::timeoutHandler(void *d)
 		if (res)
 		{
 			t->manageFallen();
-			if(t->fastFall) {
+			if(t->fastFall && t->inPlay) {
 				t->scoreFrame->incScore(t->fastFallPoints);
 				t->fastFall = false;
 			}
