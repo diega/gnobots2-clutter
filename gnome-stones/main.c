@@ -536,9 +536,7 @@ game_widget_create (void)
 
 #ifdef USE_GNOME_CANVAS
   /* Now for some experimantal gnome canvas stuff.  */
-  gnome_canvas_set_size (GNOME_CANVAS (canvas), 
-			 GAME_COLS*STONE_SIZE,
-			 GAME_ROWS*STONE_SIZE);
+  gtk_widget_set_usize (canvas, GAME_COLS*STONE_SIZE, GAME_ROWS*STONE_SIZE);
   gnome_canvas_set_scroll_region (GNOME_CANVAS (canvas),
 				  0, 0,
 				  GAME_COLS*STONE_SIZE,
