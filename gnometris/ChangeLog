@@ -1,3 +1,7 @@
+2002-06-03  Bastien Nocera  <hadess@hadess.net>
+
+	* tetris.cpp: disable help menu item
+
 2002-05-31  Bastien Nocera  <hadess@hadess.net>
 
 	* tetris.cpp: /me silently corrects a 1 letter typo and
