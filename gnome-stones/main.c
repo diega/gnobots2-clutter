@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <2002/05/02 17:09:45 dave>
+ * Time-stamp: <2002/06/03 16:02:27 ross>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -134,7 +134,7 @@ load_image_from_path (const char *relative_name)
   gchar         *filename;
   GdkPixbuf *image= NULL;
 
-  filename= gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP, 
+  filename= gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
                                        relative_name, TRUE, NULL);
   if (filename)
     image= gdk_pixbuf_new_from_file (filename, NULL);
@@ -539,6 +539,7 @@ curtain_ready (ViewCurtainMode mode)
       
       break;
       default:
+      break;
     }
 }
 
@@ -1011,7 +1012,7 @@ about_cb (GtkWidget *widget, gpointer data)
 	  char *filename = NULL;
 
 	  filename = gnome_program_locate_file (NULL,
-			  GNOME_FILE_DOMAIN_PIXMAP,  ("gnome-stones.png"),
+			  GNOME_FILE_DOMAIN_APP_PIXMAP,  ("gnome-stones.png"),
 			  TRUE, NULL);
 	  if (filename != NULL)
 	  {
@@ -1026,6 +1027,7 @@ about_cb (GtkWidget *widget, gpointer data)
                           (const char **)documenters,
                           strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
 			  pixbuf);
+  gtk_window_set_transient_for (GTK_WINDOW (about), GTK_WINDOW (app));
   gtk_widget_show (about);
 }
 
@@ -1096,7 +1098,7 @@ scan_private_game_directory (void)
 static gboolean
 scan_public_plugin_directory (void)
 {
-  char *dir= gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_LIBDIR, 
+  char *dir= gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_LIBDIR, 
                                         "gnome-stones/objects/", FALSE, NULL);
 
   plugin_load_plugins_in_dir (dir);
@@ -1226,14 +1228,15 @@ main (int argc, char *argv[])
       		      LIBGNOMEUI_MODULE, 
        		      argc, argv,
        		      GNOME_PARAM_POPT_TABLE, options,
-       		      GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
+       		      GNOME_PARAM_APP_DATADIR, DATADIR,
+		      GNOME_PARAM_APP_LIBDIR, LIBDIR, NULL);
   gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-stones.png");
   /* That's what a gnome application needs:  */
   app= gnome_app_new ("gnome-stones", _("Gnome-Stones"));
   gtk_window_set_policy  (GTK_WINDOW (app), FALSE, FALSE, TRUE);
 
   /* ... a menu line, ... */
-  gnome_app_create_menus   (GNOME_APP (app), main_menu);
+  gnome_app_create_menus (GNOME_APP (app), main_menu);
 
   /* ... a toolbar, ... */
   /*  gnome_app_create_toolbar (GNOME_APP (app), toolbar); */

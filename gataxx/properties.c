@@ -258,7 +258,7 @@ void free_str(GtkWidget *widget, void *data)
 void fill_menu(GtkWidget *menu)
 {
         struct dirent *e;
-	char *dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP, ("gataxx"), FALSE, NULL);
+	char *dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, ("gataxx"), FALSE, NULL);
         DIR *dir;
         int itemno = 0;
 

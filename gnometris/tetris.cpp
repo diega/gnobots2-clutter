@@ -215,7 +215,7 @@ Tetris::setupPixmap()
 	char *pixname, *fullpixname;
 	
 	pixname = g_strdup_printf("gnometris/%s", blockPixmap);
-	fullpixname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP, pixname, FALSE, NULL);
+	fullpixname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, pixname, FALSE, NULL);
 	g_free(pixname);
 
 	if (!g_file_test (fullpixname, G_FILE_TEST_EXISTS))
@@ -262,7 +262,7 @@ Tetris::setupPixmap()
 	}
 
 	pixname = g_strdup_printf("gnometris/bg/%s", bgPixmap);
-	fullpixname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP, pixname, FALSE, NULL);
+	fullpixname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, pixname, FALSE, NULL);
 	g_free(pixname);
 
 	if(bgimage)
@@ -464,7 +464,7 @@ Tetris::fillMenu(GtkWidget *menu, char *pixname, char *dirname,
 		 GtkSignalFunc selectFunc, bool addnone /*= false*/)
 {
 	struct dirent *e;
-	char *dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP, dirname, FALSE, NULL);
+	char *dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, dirname, FALSE, NULL);
 	DIR *dir;
 	int itemno = 0;
 	
@@ -537,7 +537,6 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 					    NULL);
 
 	gtk_container_set_border_width(GTK_CONTAINER(t->setupdialog), 10);
-	GTK_WINDOW(t->setupdialog)->position = GTK_WIN_POS_MOUSE;
 	g_signal_connect (t->setupdialog, "close",
 			  G_CALLBACK (setupdialogDestroy), d);
 	g_signal_connect (t->setupdialog, "response",
@@ -982,7 +981,7 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 		char *filename = NULL;
 
 		filename = gnome_program_locate_file (NULL,
-				GNOME_FILE_DOMAIN_PIXMAP, 
+				GNOME_FILE_DOMAIN_APP_PIXMAP, 
 				"gnome-gtetris.png",
 				TRUE, NULL);
 		if (filename != NULL)
@@ -1003,6 +1002,7 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 				strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
 				pixbuf);
 
+	gtk_window_set_transient_for (GTK_WINDOW (about), GTK_WINDOW (t->getWidget()));
 	gtk_widget_show(about);
 
 	return TRUE;

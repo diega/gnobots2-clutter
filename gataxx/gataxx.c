@@ -412,7 +412,7 @@ void about_cb(GtkWidget *widget, gpointer data) {
 	  char *filename = NULL;
 
 	  filename = gnome_program_locate_file (NULL,
-			  GNOME_FILE_DOMAIN_PIXMAP,  ("gataxx.png"),
+			  GNOME_FILE_DOMAIN_APP_PIXMAP,  ("gataxx.png"),
 			  TRUE, NULL);
 	  if (filename != NULL)
 	  {
@@ -554,7 +554,7 @@ void load_pixmaps() {
   GdkPixbuf *image;
   
   tmp = g_strconcat("gataxx/", tile_set, NULL);
-  fname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP, (tmp), FALSE, NULL);
+  fname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, (tmp), FALSE, NULL);
   g_free(tmp);
   
   if(!g_file_test (fname, G_FILE_TEST_EXISTS)) {

@@ -8,7 +8,8 @@ Cavesdir = $(datadir)/gnome-stones
 
 INCLUDES =						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
-	-DDATADIR=\""$(datadir)"\"		   \
+	-DDATADIR=\""$(datadir)"\"		   	\
+	-DLIBDIR=\""$(libdir)"\"			\
 	-DGNOMEPIXMAPDIR=\""$(datadir)/pixmaps"\"	\
 	-DG_DISABLE_DEPRECATED				\
 	-DGDK_DISABLE_DEPRECATED 			\
@@ -16,8 +17,7 @@ INCLUDES =						\
 	-DGNOME_DISABLE_DEPRECATED			\
 	-DCAVESDIR=\""$(Cavesdir)"\"			\
 	$(GNOME_GAMES_CFLAGS)				\
-	$(ESD_CFLAGS)					\
-	-I$(includedir)					
+	$(ESD_CFLAGS)
 
 
 bin_PROGRAMS = gnome-stones

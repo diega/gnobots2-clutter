@@ -1,3 +1,10 @@
+2002-06-02  Ross Burton  <ross@burtonini.com>
+
+	* tetris.cpp: Make the about dialog a transient for the main
+	window. Also don't position the Preferences window under the
+	cursor explicitly. If the user wants that, they can tell the WM to
+	do it.
+
 2002-06-03  Bastien Nocera  <hadess@hadess.net>
 
 	* tetris.cpp: disable help menu item

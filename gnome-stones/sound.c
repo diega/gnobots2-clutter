@@ -79,7 +79,7 @@ gint sound_register( char *name )
  if( numsamples>=MAX_SAMPLES-1 ) return -1;
 
  buf = g_strdup_printf( "gnome-stones/%s", name );
- fullname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_SOUND,
+ fullname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_SOUND,
                                        buf, TRUE, NULL);
 
  sample_id = gnome_sound_sample_load( name, fullname );

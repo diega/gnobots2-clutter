@@ -909,7 +909,7 @@ fill_tile_menu (GtkWidget *menu, gchar *sdir, gint is_tile)
         gint itemno = 0;
 	gchar *dname = NULL;
 
-	dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP,
+	dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
 			(sdir), FALSE, NULL);
 	dir = opendir (dname);
 
@@ -1345,7 +1345,7 @@ about_callback (GtkWidget *widget, gpointer data)
 		char *filename = NULL;
 
 		filename = gnome_program_locate_file (NULL,
-				GNOME_FILE_DOMAIN_PIXMAP, 
+				GNOME_FILE_DOMAIN_APP_PIXMAP, 
 				"gnome-mahjongg.png",
 				TRUE, NULL);
 		if (filename != NULL) {
@@ -1365,7 +1365,7 @@ about_callback (GtkWidget *widget, gpointer data)
 				 (const gchar **)documenters,
 				 strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
 				pixbuf);
-
+	gtk_window_set_transient_for (GTK_WINDOW (about), GTK_WINDOW (window));
 	gtk_widget_show (about);
 }
 
@@ -1755,12 +1755,12 @@ load_tiles (gchar *fname, gchar *bg_fname)
 
 	tmp = g_strconcat ("mahjongg/", fname, NULL);
 	
-	fn = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP, (tmp), FALSE, NULL);
+	fn = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, (tmp), FALSE, NULL);
 	g_free (tmp);
 
 	tmp = g_strconcat ("mahjongg/bg/", bg_fname, NULL);
 
-	bg_fn = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP, (tmp), FALSE, NULL);
+	bg_fn = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, (tmp), FALSE, NULL);
 	g_free (tmp);
 
 	if (!g_file_test ((fn), G_FILE_TEST_EXISTS)) {

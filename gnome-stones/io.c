@@ -103,7 +103,7 @@ game_parse_object_section (GStonesGame *game)
      In this case, every object will be indexed by two or more
      characters (like in the xpm file format).  */
 
-  key_size= gnome_config_get_int_with_default ("General/Object Size",
+  key_size= gnome_config_get_int_with_default ("General/Object Size=1",
 					       &is_default);
   if (is_default)
     {
