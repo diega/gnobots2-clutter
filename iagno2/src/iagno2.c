@@ -721,6 +721,21 @@ iagno2_initialize_players (int which)
 }
 */
 
+void
+iagno2_setup_players ()
+{
+  if (players[0]) {
+    if (players[0]->plugin_setup) {
+      players[0]->plugin_setup (BLACK_TILE);
+    }
+  }
+  if (players[1]) {
+    if (players[1]->plugin_setup) {
+      players[1]->plugin_setup (BLACK_TILE);
+    }
+  }
+}
+
 gint
 iagno2_game_over ()
 {

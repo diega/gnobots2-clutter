@@ -51,6 +51,8 @@ void iagno2_initialize_players ();
 
 void iagno2_draw_grid ();
 
+void iagno2_setup_players ();
+
 gint iagno2_game_over ();
 
 void iagno2_render_buffer_to_screen ();

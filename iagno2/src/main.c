@@ -251,6 +251,8 @@ new_game_real_cb (gint reply, gpointer data)
 
   iagno2_force_board_redraw ();
 
+  iagno2_setup_players ();
+
   iagno2_setup_current_player (FALSE);
 }
 
