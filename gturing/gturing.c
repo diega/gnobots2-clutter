@@ -385,6 +385,7 @@ void view_states_call(GtkWidget *widget, gpointer data)
 		return;
 	
 	w = gnome_dialog_new(_("Machine's states"), GNOME_STOCK_BUTTON_CLOSE, NULL);
+	gtk_window_set_policy (GTK_WINDOW (w), TRUE, TRUE, FALSE);
 	gnome_dialog_button_connect_object(GNOME_DIALOG(w),	0,
 																		 GTK_SIGNAL_FUNC(states_view_close_callback),
 																		 GTK_OBJECT(w));
@@ -414,7 +415,7 @@ void view_states_call(GtkWidget *widget, gpointer data)
 					GTK_POLICY_AUTOMATIC);
 	gtk_container_add (GTK_CONTAINER (scrolled), state_clist);
 
-	gtk_box_pack_start(GTK_BOX(GNOME_DIALOG(w)->vbox), scrolled, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(GNOME_DIALOG(w)->vbox), scrolled, TRUE, TRUE, 0);
   gtk_widget_show_all(GNOME_DIALOG(w)->vbox);
 	gtk_widget_show(w);
 }
