@@ -1,3 +1,8 @@
+2000-11-03  Alexander Kirillov  <kirillov@math.sunysb.edu>
+
+	* help/C/gturing.sgml: updated docs to conform to GNOME style;
+	added description of Turing machine and a screenshot. 
+
 2000-10-21  Dan Mueth <d-mueth@uchicago.edu>
 
 	* help/C/Makefile.am: Slight fix so 'make dist' works
