@@ -79,6 +79,8 @@ help_about_callback ()
 	  NULL
   };
 
+  const gchar *translator_credits = _("translator-credits");
+
 	char *filename = NULL;
 
 	filename = gnome_program_locate_file (NULL,
@@ -107,7 +109,7 @@ help_about_callback ()
                               "blackjack card game."),
                             (const char **)authors,
                             (const char **)documenters,
-                            NULL,
+                            strcmp (translator_credits, "translator-credits") != 0? translator_credits :  NULL,
                             pixbuf);
 	
 	if (pixbuf != NULL)

@@ -1636,7 +1636,7 @@ about_callback (GtkWidget *widget, gpointer data)
                 NULL
         };
         /* Translator credits */
-        gchar *translator_credits = _("translator_credits");
+        gchar *translator_credits = _("translator-credits");
 
 	{
 		char *filename = NULL;
@@ -1663,7 +1663,7 @@ about_callback (GtkWidget *widget, gpointer data)
 				   "Mahjongg."),
 				 (const gchar **)authors,
 				 (const gchar **)documenters,
-				 strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
+				 strcmp (translator_credits, "translator-credits") != 0 ? translator_credits : NULL,
 				pixbuf);
 
 	g_signal_connect (G_OBJECT (about), "destroy",

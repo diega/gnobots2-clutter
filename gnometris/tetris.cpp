@@ -1132,7 +1132,7 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 		NULL
 	};
 
-	const gchar *translator_credits = _("translator_credits");
+	const gchar *translator_credits = _("translator-credits");
 
 	if (about != NULL) {
 		gtk_window_present (GTK_WINDOW(about));
@@ -1160,7 +1160,7 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 				  "janusz.gorycki@intel.com"),
 				(const char **)authors,
 				(const char **)documenters,
-				strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
+				strcmp (translator_credits, "translator-credits") != 0 ? translator_credits : NULL,
 				pixbuf);
 	
 	if (pixbuf != NULL)

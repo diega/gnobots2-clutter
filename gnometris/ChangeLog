@@ -1,3 +1,8 @@
+2004-02-11  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* tetris.cpp (gameAbout): translator_credits ->
+	translator-credits.
+
 2004-02-03  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* tetris.cpp (Tetris): Added an awful hack to get around

@@ -706,7 +706,7 @@ game_about_callback (GtkWidget *widget, void *data)
                 NULL
         };
         /* Translator credits */
-        gchar *translator_credits = _("translator_credits");
+        gchar *translator_credits = _("translator-credits");
 
 	if (about) {
 		gtk_window_present (GTK_WINDOW (about));
@@ -732,7 +732,7 @@ game_about_callback (GtkWidget *widget, void *data)
 				 _("Original idea from KDE's same game "
 				   "program."),				 (const char **)authors,
 				 (const char **)documenters,
-				 strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
+				 strcmp (translator_credits, "translator-credits") != 0 ? translator_credits : NULL,
                                  pixbuf);
 	if (pixbuf != NULL)
 		g_object_unref (pixbuf);

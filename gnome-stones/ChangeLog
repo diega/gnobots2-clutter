@@ -1,3 +1,8 @@
+2004-02-11  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* main.c (about_cb): translator_credits ->
+	translator-credits.
+
 2004-01-23  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* main.c (main): "destroy_event" should be "delete_event". Bug

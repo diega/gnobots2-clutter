@@ -1,3 +1,7 @@
+2004-02-11  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* src/menu.cpp (help_about_callback): Add translator credits.
+
 2004-02-04  William Jon McCann  <mccann@jhu.edu>
 
 	* src/player.cpp (reset): Load new XML cache file.
