@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Same Gnome
+Name[es]=Same Gnome
 Comment=Gnome SameGame program
+Comment[es]=Juego Gnome SameGame
 Exec=samegnome
 Icon=gnome-samegnome.xpm
 Terminal=0
