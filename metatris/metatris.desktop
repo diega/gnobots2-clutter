@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Metatris
+Name[da]=Metatris
 Name[de]=Metatris
 Name[es]=Metatris
 Name[et]=Metatris
@@ -10,6 +11,7 @@ Name[no]=Metatris
 Name[pt]=Metatris
 Name[ru]=Метатрис
 Comment=Gnome's Metatris
+Comment[da]=Gnome Metatris
 Comment[de]=Gnome Metatris
 Comment[es]=Simple juego de tetris
 Comment[et]=Tetris, veel Эks variant GNOME-le

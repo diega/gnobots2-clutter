@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Gnobots
+Name[da]=Gnobots
 Name[de]=Gnobots
 Name[es]=Gnobots
 Name[et]=Gnobots
@@ -9,6 +10,7 @@ Name[ja]=Gnobots
 Name[pt]=Gnobots
 Name[ru]=Гноботс
 Comment=Gnome Robots game
+Comment[da]=Robots spil for Gnome
 Comment[de]=robots(6) fЭr Gnome
 Comment[es]=Trate de escapar a los robots que le asedian
 Comment[et]=GNOME robotid

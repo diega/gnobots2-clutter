@@ -1,6 +1,7 @@
 [Desktop Entry]
 Icon=iagno2.png
 Name=Iagno2
+Name[da]=Iagno2
 Name[de]=Iagno2
 Name[es]=Iagno2
 Name[et]=Iagno2
@@ -12,6 +13,7 @@ Name[no]=Iagno2
 Name[pt]=Iagno2
 Name[ru]=Iagno2
 Comment=Gnome Reversi game
+Comment[da]=Reversi spil for GNOME
 Comment[de]=Gnome-Reversi-Spiel
 Comment[es]=Juego Gnome Reversi
 Comment[et]=Reversi variant GNOME-le

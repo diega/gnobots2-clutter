@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Mahjongg
+Name[da]=Mahjongg
 Name[de]=Mahjongg
 Name[es]=Mahjongg
 Name[et]=Mahjongg
@@ -12,6 +13,7 @@ Name[pt]=Mahjongg
 Name[ru]=Маджонг
 Comment=Gnome Mahjongg program
 Comment[pt_BR]=Programa Mahjongg Gnome
+Comment[da]=Spillet Mahjongg
 Comment[de]=Gnome Mahjongg
 Comment[es]=Juego de Mahjongg
 Comment[et]=Mahjongg GNOME jaoks

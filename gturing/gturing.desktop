@@ -1,11 +1,13 @@
 [Desktop Entry]
 Name=gTuring
+Name[da]=gTuring
 Name[de]=gTuring
 Name[et]=gTuring
 Name[fi]=gTuring
 Name[ja]=Gチューリング
 Name[no]=gTuring
 Comment=Waste time with a simulated Turing machine
+Comment[da]=Spild tiden med en simuleret Turing maskine
 Comment[de]=Nette Zeitverschwendung mittels einer simulierten Turingmaschine
 Comment[et]=Turingi masinate ehitaja
 Comment[fi]=GNOME-versio Turingin koneesta

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Gnometris
+Name[da]=Gnometris
 Name[de]=Gnometris
 Name[es]=Gnometris
 Name[et]=Gnometris
@@ -9,6 +10,7 @@ Name[ja]=GNOME•»•Í•π
 Name[no]=Gnometris
 Name[ru]=ÁŒœÕ≈‘“…”
 Comment=Gnome Tetris Game
+Comment[da]=Gnome Tetris spil
 Comment[de]=Gnome-Tetris-Spiel
 Comment[es]=El juego de Tetris de Gnome
 Comment[et]=Tetris, sedapuhku GNOME-le
