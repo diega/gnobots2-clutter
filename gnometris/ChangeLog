@@ -1,3 +1,8 @@
+2003-06-22  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gnometris.schemas.in: Remove full-stop at the end of the short
+	description and add descriptions for line_fill_* .
+
 2003-06-20  William Jon McCann  <mccann@jhu.edu>
 
 	* gnome-canvas-pimage.c (gnome_canvas_pimage_draw): Convert to
