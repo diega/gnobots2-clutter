@@ -1,11 +1,14 @@
 gturing_helpdir = $(datadir)/gnome/help/gturing/it
 
+figs = \
+        mainwin.png
+
 gturing_help_DATA = 	\
 	gturing.sgml		\
 	index.html		\
 	topic.dat
 
-EXTRA_DIST = $(gturing_help_DATA)
+EXTRA_DIST = $(gturing_help_DATA) $(figs)
 
 all: index.html
 

@@ -1,3 +1,9 @@
+2000-11-09  Dan Mueth <d-mueth@uchicago.edu>
+
+	* help/it/mainwin.png: Added screenshot to make rpm building
+	happy. (Makefile wants to install the screenshot.)
+	* help/it/Makefile.am: Added screenshot.
+
 2000-11-03  Alexander Kirillov  <kirillov@math.sunysb.edu>
 
 	* help/C/gturing.sgml: updated docs to conform to GNOME style;
