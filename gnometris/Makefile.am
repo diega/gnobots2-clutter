@@ -44,7 +44,7 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 
 EXTRA_DIST = AUTHORS \
              gnometris.desktop.in	\
-             $(schema_DATA)
+             $(schema_in_files)
 
 install-data-local:
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)

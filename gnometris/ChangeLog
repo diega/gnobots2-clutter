@@ -1,3 +1,8 @@
+2002-11-29  Ross Burton  <ross@burtonini.com>
+
+	* Makefile.am (SUBDIRS): Put the source of the schemas in the
+	dist, not the generated files.
+
 2002-11-22  Tim Musson  <trmusson@ihug.co.nz>
 
 	* tetris.cpp: (gameAbout), (showScores): No more multiple About
