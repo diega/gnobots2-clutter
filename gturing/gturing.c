@@ -21,6 +21,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <config.h>
 #include <gnome.h>
 #include "turing.h"
 
@@ -609,6 +610,10 @@ int main (int argc, char *argv[])
 {
 	parse_args(argc, argv);
 	gnome_init("gnomecard", VERSION, argc, argv);
+
+        bindtextdomain(PACKAGE, GNOMELOCALEDIR);
+        textdomain(PACKAGE);
+
 	init_globals();
 	init_interface(argc, argv);
 	
