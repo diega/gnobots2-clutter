@@ -58,4 +58,4 @@ endif
 	-chmod 664 $(DESTDIR)$(scoredir)/gnometris.scores
 	-if test "x$(setgid)" = "xtrue"; then chgrp $(scores_group) $(DESTDIR)$(bindir)/gnometris && chmod 2555 $(DESTDIR)$(bindir)/gnometris ; fi
 
-CLEANFILES = $(Games_DATA) $(schema_DATA)
+DISTCLEANFILES = $(Games_DATA) $(schema_DATA)

@@ -48,4 +48,4 @@ endif
 	-chmod 664 $(DESTDIR)$(scoredir)/same-gnome.scores
 	-if test "x$(setgid)" = "xtrue"; then chgrp $(scores_group) $(DESTDIR)$(bindir)/same-gnome && chmod 2555 $(DESTDIR)$(bindir)/same-gnome ; fi
 
-CLEANFILES = $(Games_DATA) $(schema_DATA)
+DISTCLEANFILES = $(Games_DATA) $(schema_DATA)

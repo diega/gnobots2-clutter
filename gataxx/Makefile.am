@@ -44,7 +44,7 @@ EXTRA_DIST = AUTHORS \
 
 SUBDIRS = help
 
-CLEANFILES = $(Games_DATA) $(schema_DATA) $(soundlist_DATA)
+DISTCLEANFILES = $(Games_DATA) $(schema_DATA) $(soundlist_DATA)
 
 install-data-local:
 if GCONF_SCHEMAS_INSTALL

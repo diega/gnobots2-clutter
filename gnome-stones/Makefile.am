@@ -95,4 +95,4 @@ endif
 gnome-stones.keys: gnome-stones.keys.in Makefile
 	sed -e 's^\@icondir\@^$(Pixmapdir)^g' < $(srcdir)/gnome-stones.keys.in > gnome-stones.keys
 
-CLEANFILES = $(Games_DATA) $(Caves_DATA) $(schema_DATA) gnome-stones.keys
+DISTCLEANFILES = $(Games_DATA) $(Caves_DATA) $(schema_DATA) gnome-stones.keys

@@ -59,4 +59,4 @@ endif
 	-if test "x$(setgid)" = "xtrue"; then chgrp $(scores_group) $(DESTDIR)$(bindir)/mahjongg && chmod 2555 $(DESTDIR)$(bindir)/mahjongg ; fi
 	$(mkinstalldirs) $(DESTDIR)$(Gamesdir)
 
-CLEANFILES = $(Games_DATA) $(schema_DATA)
+DISTCLEANFILES = $(Games_DATA) $(schema_DATA)
