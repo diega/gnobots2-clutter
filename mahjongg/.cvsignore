@@ -4,3 +4,4 @@ Makefile.in
 mahjongg
 .libs
 .deps
+mahjongg.desktop

@@ -16,13 +16,15 @@ gnome_xbill_SOURCES = Bucket.cc Bucket.h Cable.cc Cable.h Computer.cc \
 
 gnome_xbill_LDADD = $(GNOME_GAMES_LIBS)
 
-EXTRA_DIST = README.Ports xbill.png xbill.desktop
+EXTRA_DIST = README.Ports xbill.png xbill.desktop.in
 
 pixmapdir = $(datadir)/pixmaps
 pixmap_DATA = xbill.png
 
 Gamesdir=$(datadir)/applications
-Games_DATA = xbill.desktop
+Games_in_files = xbill.desktop.in
+Games_DATA = $(Games_in_files:.desktop.in=.desktop)
+@INTLTOOL_DESKTOP_RULE@
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(scoredir)

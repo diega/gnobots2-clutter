@@ -34,9 +34,11 @@ bg_DATA = bg1.png bg2.png bg3.png bg4.png
 
 appicon_DATA = gnome-mahjongg.png
 
-EXTRA_DIST = mahjongg.desktop $(pixmap_DATA) $(appicon_DATA) $(bg_DATA)
+EXTRA_DIST = mahjongg.desktop.in $(pixmap_DATA) $(appicon_DATA) $(bg_DATA)
 
-Games_DATA = mahjongg.desktop
+Games_in_files = mahjongg.desktop.in
+Games_DATA = $(Games_in_files:.desktop.in=.desktop)
+@INTLTOOL_DESKTOP_RULE@
 
 SUBDIRS = help
 

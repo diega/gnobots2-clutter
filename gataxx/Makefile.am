@@ -35,15 +35,19 @@ pixmap_DATA = \
 
 appicon_DATA = gataxx.png
 
-Games_DATA = gataxx.desktop
+Games_in_files = gataxx.desktop.in
+Games_DATA = $(Games_in_files:.desktop.in=.desktop)
+@INTLTOOL_DESKTOP_RULE@
 
 EXTRA_DIST = AUTHORS \
-             gataxx.desktop 	\
-	     gataxx.soundlist \
+             gataxx.desktop.in 	\
+	     gataxx.soundlist.in \
              $(pixmap_DATA)	\
 	     $(appicon_DATA)
 
 soundlistdir = $(sysconfdir)/sound/events
-soundlist_DATA = gataxx.soundlist
+soundlist_in_files = gataxx.soundlist.in
+soundlist_DATA = $(soundlist_in_files:.soundlist.in=.soundlist)
+@INTLTOOL_SOUNDLIST_RULE@
 
 SUBDIRS = sounds help

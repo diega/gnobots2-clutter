@@ -4,3 +4,5 @@ Makefile.in
 .libs
 .deps
 gataxx
+gataxx.soundlist
+gataxx.desktop

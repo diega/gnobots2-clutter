@@ -21,9 +21,11 @@ same_gnome_LDADD =		\
 
 pixmap_DATA = planets.png blink-sync.png marbles.png \
 	stones.png rotate.png glass.png
-EXTRA_DIST = same-gnome.desktop $(pixmap_DATA)
+EXTRA_DIST = same-gnome.desktop.in $(pixmap_DATA)
 
-Games_DATA = same-gnome.desktop
+Games_in_files = same-gnome.desktop.in
+Games_DATA = $(Games_in_files:.desktop.in=.desktop)
+@INTLTOOL_DESKTOP_RULE@
 
 install-data-local:
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)

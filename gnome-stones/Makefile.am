@@ -42,9 +42,14 @@ gnome_stones_LDADD =				\
 	$(INTLLIBS)
 
 
-Pixmap_DATA= gnome-stones.png gnome-stones-file.png
-Games_DATA = gnome-stones.desktop
-Caves_DATA = default.caves tutorial.caves gnomekoban.caves
+Pixmap_DATA = gnome-stones.png gnome-stones-file.png
+Games_in_files = gnome-stones.desktop.in
+Games_DATA = $(Games_in_files:.desktop.in=.desktop)
+@INTLTOOL_DESKTOP_RULE@
+
+Caves_in_files = default.caves.in tutorial.caves.in gnomekoban.caves.in
+Caves_DATA = $(Caves_in_files:.caves.in=.caves)
+@INTLTOOL_CAVES_RULE@
 
 gtkrcdir = $(datadir)
 gtkrc_DATA = gnome-stonesrc gnome-stonesrc.ko

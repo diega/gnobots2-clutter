@@ -31,10 +31,12 @@ gnometris_LDADD=\
 	$(INTLLIBS)
 
 
-Games_DATA = gnometris.desktop
+Games_in_files = gnometris.desktop.in
+Games_DATA = $(Games_in_files:.desktop.in=.desktop)
+@INTLTOOL_DESKTOP_RULE@
 
 EXTRA_DIST = AUTHORS \
-             gnometris.desktop 	
+             gnometris.desktop.in 	
 
 install-data-local:
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
