@@ -50,6 +50,7 @@ char *tape_font[] =
 };
 
 static char *progname;
+static char *prog_message = NULL;
 static char tape_string[1024] = "";
 static char states_fname[1024] = "";
 
@@ -71,10 +72,22 @@ static GtkWidget *step;
 static GtkWidget *statusline;
 static GtkWidget *helpline;
 
+static GtkWidget *save;
+static GtkWidget *edit_save = NULL;
+
 void power_do (void);
 void power_callback(GtkWidget *power_button, gpointer data);
 void state_clist_load_states(void);
 void state_clist_select_state(turing *t);
+void save_call(GtkWidget *w, gpointer data);
+
+void set_save_sens(gboolean saves)
+{
+	gtk_widget_set_sensitive (save, saves);
+	
+	if (edit_save)
+		gtk_widget_set_sensitive (edit_save, saves);
+}
 
 void set_toolbar_sens(gboolean powers, gboolean stops,
 											gboolean plays, gboolean steps)
@@ -107,13 +120,25 @@ void set_tape(char *str)
 	free(tmp);
 }
 
+void view_comment (void)
+{
+	GtkWidget *w;
+	char *mess;
+	
+	if (prog_message && *prog_message && *prog_message != '\n')
+		mess = prog_message;
+	else
+		mess = _("No comment for this program.");
+	
+	w = gnome_message_box_new(mess, GNOME_MESSAGE_BOX_INFO,
+														GNOME_STOCK_BUTTON_OK, NULL);
+	GTK_WINDOW(w)->position = GTK_WIN_POS_MOUSE;
+	gtk_widget_show(w);
+}
+
 void set_states_fname(char *str)
 {
 	char *c;
-	
-	strncpy(states_fname, str, 1024);
-	if (turing_fread_states(tm, states_fname))
-		*states_fname = 0;
 	
 	if ((*states_fname != 0) && (*tape_string != 0))
 		power_callback(power, NULL);
@@ -140,24 +165,51 @@ void states_fname_examples_callback (GtkWidget *ok_button, gpointer data)
 
 void states_fname_callback(GtkWidget *ok_button, gpointer data)
 {
-	char *fname, *message;
-	GtkWidget *w;
+	gboolean action_save;
+	char *fname, *comment;
+	GtkWidget *w, *text;
 	
 	fname = g_strdup(gtk_file_selection_get_filename(GTK_FILE_SELECTION(dialog)));
-	gtk_widget_destroy(dialog);
-	dialog = NULL;
+	
+	action_save = (gboolean) data;
+	if (action_save)
+	{
+		text = gtk_object_get_data (GTK_OBJECT (dialog), "text");
+		comment = gtk_editable_get_chars (GTK_EDITABLE (text), 0, -1);
+		if (turing_fwrite_states (tm->statehead, fname, comment))
+			*states_fname = 0; /*error*/
+		else
+			strncpy(states_fname, fname, 1024);
+		
+		if (prog_message)
+			free (prog_message);
+		
+		prog_message = strdup (comment);
+	}
+	else
+	{
+		if (turing_fread_states(tm, fname))
+			*states_fname = 0; /*error*/
+		else
+		{
+			strncpy(states_fname, fname, 1024);
+		
+			if (prog_message)
+				free(prog_message);
+			
+			prog_message = turing_fread_comments(fname);
+			view_comment ();
+			
+			set_save_sens (TRUE);
+		}
+	}
 	
 	set_states_fname(fname);
-	message = turing_fread_comments(fname);
-	w = gnome_message_box_new(message, GNOME_MESSAGE_BOX_INFO,
-														GNOME_STOCK_BUTTON_OK, NULL);
-	GTK_WINDOW(w)->position = GTK_WIN_POS_MOUSE;
-	gtk_widget_show(w);
-	
-	free(message);
 	g_free(fname);
 
 	gnome_config_set_string("/gTuring/Options/program", states_fname);
+	gtk_widget_destroy(dialog);
+	dialog = NULL;
 }
 
 void tape_string_callback(GtkWidget *ok_button, gpointer data)
@@ -169,7 +221,7 @@ void tape_string_callback(GtkWidget *ok_button, gpointer data)
 	gtk_widget_destroy(dialog);
 	dialog = NULL;
 	
-	if ((*states_fname != 0) && (*tape_string != 0))
+	if (tm->statehead && (*tape_string != 0))
 		power_callback(power, NULL);
 	else
 		set_toolbar_sens(FALSE, FALSE, FALSE, FALSE);
@@ -251,6 +303,8 @@ void states_view_edit_set_clicked_callback (GtkWidget *widget, gpointer data)
 
 	if (tm->tapehead)
 		power_do ();
+
+	set_save_sens (TRUE);
 	
 	gtk_widget_grab_focus (entries[0]);
 }
@@ -289,16 +343,28 @@ void states_view_edit_callback (GtkWidget *widget, gpointer data)
 	entries = g_new (GtkWidget *, ENTRIES_MAX);
 	gtk_object_set_data (GTK_OBJECT (state_clist), "entries", entries);
 	
-	frame = gtk_frame_new (_("Edit Current Row"));
-	table = gtk_table_new (2, 2 * ENTRIES_MAX + 1, FALSE);
+	frame = gtk_frame_new (_("Edit Or Create Row"));
+	gtk_box_pack_start(GTK_BOX(GNOME_DIALOG(w)->vbox), frame, FALSE, FALSE, 0);
+	table = gtk_table_new (2, 2 * ENTRIES_MAX + 2, FALSE);
 	gtk_container_add (GTK_CONTAINER (frame), table);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 8);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 4);
 	gtk_table_set_col_spacings (GTK_TABLE (table), 8);
+
+	edit_save = button = gnome_pixmap_button (gnome_stock_pixmap_widget (w, GNOME_STOCK_PIXMAP_SAVE_AS),
+																						_("Save"));
+	gtk_signal_connect (GTK_OBJECT (button), "clicked", 
+											save_call, NULL);
+	gtk_widget_set_sensitive (edit_save, GTK_WIDGET_IS_SENSITIVE (save));
+	gtk_table_attach (GTK_TABLE (table), button, ENTRIES_MAX * 2 + 1, ENTRIES_MAX * 2 + 2, 1, 2, 0, 
+										GTK_FILL | GTK_EXPAND, 0, 0);
 	
-	button = gtk_button_new_with_label (_("  Set  "));
+
+	button = gnome_pixmap_button (gnome_stock_pixmap_widget (w, GNOME_STOCK_PIXMAP_ADD),
+																_("Set"));
 	gtk_object_set_data (GTK_OBJECT (button), "entries", entries);
-	gtk_table_attach (GTK_TABLE (table), button, ENTRIES_MAX * 2, ENTRIES_MAX * 2 + 1, 1, 2, 0, 0, 0, 0);
+	gtk_table_attach (GTK_TABLE (table), button, ENTRIES_MAX * 2, ENTRIES_MAX * 2 + 1, 1, 2, 0, 
+										GTK_FILL | GTK_EXPAND, 0, 0);
 	
 	for (i = 0; labels[i]; i++)
 	{
@@ -330,8 +396,6 @@ void states_view_edit_callback (GtkWidget *widget, gpointer data)
 											states_view_edit_set_clicked_callback, NULL);
 
 	gtk_widget_show_all (frame);
-	
-	gtk_box_pack_start(GTK_BOX(GNOME_DIALOG(w)->vbox), frame, TRUE, TRUE, 0);
 }
 
 void states_view_close_callback(GtkWidget *w, gpointer data)
@@ -343,6 +407,7 @@ void states_view_close_callback(GtkWidget *w, gpointer data)
 		g_free (entries);
 	
 	state_clist = NULL;
+	edit_save = NULL;
 	
 	gtk_widget_destroy(w);
 }
@@ -484,6 +549,43 @@ void prompt(char *title, char *msg, GtkSignalFunc callback, char *def)
 	gtk_widget_show(dialog);
 }
 
+void save_call(GtkWidget *w, gpointer data) 
+{
+	GtkWidget *fsel;
+	GtkWidget *frame, *frame2, *scrolled, *text;
+	int i = 0;
+	char *txt;
+	
+	dialog = fsel = gtk_file_selection_new(_("Save gTuring Program File"));
+	
+	frame2 = gtk_frame_new (_("Comment"));
+	gtk_box_pack_start (GTK_BOX (GTK_FILE_SELECTION (fsel)->main_vbox), frame2, TRUE, TRUE, 0);
+	frame = gtk_frame_new (NULL);
+	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
+	gtk_container_set_border_width (GTK_CONTAINER (frame), 8);
+	gtk_container_add (GTK_CONTAINER (frame2), frame);
+	scrolled = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled), 
+																	GTK_POLICY_AUTOMATIC,
+																	GTK_POLICY_AUTOMATIC);
+	gtk_container_add (GTK_CONTAINER (frame), scrolled);
+	text = gtk_text_new (NULL, NULL);
+	gtk_text_set_editable (GTK_TEXT (text), TRUE);
+	if (prog_message)
+		gtk_editable_insert_text (GTK_EDITABLE (text), prog_message, strlen (prog_message), &i);
+	gtk_container_add (GTK_CONTAINER (scrolled), text);
+	
+	gtk_widget_show_all (frame2);
+
+	gtk_file_selection_set_filename (GTK_FILE_SELECTION(fsel), states_fname);
+	gtk_object_set_data (GTK_OBJECT (fsel), "text", text);
+	gtk_signal_connect (GTK_OBJECT(GTK_FILE_SELECTION(fsel)->ok_button), "clicked",
+											GTK_SIGNAL_FUNC(states_fname_callback), (gpointer) TRUE);
+	gtk_signal_connect (GTK_OBJECT(GTK_FILE_SELECTION(fsel)->cancel_button), "clicked", 
+											GTK_SIGNAL_FUNC(cancel_callback), NULL);
+	gtk_widget_show(fsel);
+}
+
 void open_call(GtkWidget *w, gpointer data) 
 {
 	GtkWidget *fsel;
@@ -495,11 +597,10 @@ void open_call(GtkWidget *w, gpointer data)
 	gtk_container_add (GTK_CONTAINER (GTK_FILE_SELECTION (fsel)->button_area), button);
 	gtk_widget_show (button);
 	
-/*	gtk_file_selection_hide_fileop_buttons(GTK_FILE_SELECTION(fsel));*/
 	gtk_signal_connect (GTK_OBJECT(button), "clicked", 
 											GTK_SIGNAL_FUNC(states_fname_examples_callback), fsel);
 	gtk_signal_connect (GTK_OBJECT(GTK_FILE_SELECTION(fsel)->ok_button), "clicked",
-											GTK_SIGNAL_FUNC(states_fname_callback), NULL);
+											GTK_SIGNAL_FUNC(states_fname_callback), (gpointer) FALSE);
 	gtk_signal_connect (GTK_OBJECT(GTK_FILE_SELECTION(fsel)->cancel_button), "clicked", 
 											GTK_SIGNAL_FUNC(cancel_callback), NULL);
 	gtk_widget_show(fsel);
@@ -614,6 +715,11 @@ void view_states_call(GtkWidget *widget, gpointer data)
 	gtk_widget_show(w);
 }
 
+void view_comment_call(GtkWidget *w, gpointer data)
+{
+	view_comment ();
+}
+
 void exit_call(GtkWidget *w, gpointer data)
 {
 	gtk_main_quit();
@@ -652,12 +758,23 @@ void about_call(GtkWidget *w, gpointer data)
 
 GnomeUIInfo filemenu[] = {
 
-        GNOMEUIINFO_MENU_OPEN_ITEM(open_call, NULL),
+	GNOMEUIINFO_MENU_OPEN_ITEM(open_call, NULL),
+	GNOMEUIINFO_MENU_SAVE_AS_ITEM(save_call, NULL),
 
 	GNOMEUIINFO_SEPARATOR,
 
 	GNOMEUIINFO_MENU_EXIT_ITEM(exit_call, NULL),
 
+	GNOMEUIINFO_END
+};
+
+GnomeUIInfo viewmenu[] = {
+  
+	GNOMEUIINFO_ITEM_NONE(N_("_Comment..."), N_("View the program's comment."),
+			      view_comment_call),
+	GNOMEUIINFO_ITEM_NONE(N_("_States..."),
+			      N_("Open a table with the machine's states."),
+			      view_states_call),
 	GNOMEUIINFO_END
 };
 
@@ -667,9 +784,6 @@ GnomeUIInfo settingsmenu[] = {
 			      playspeed_call),
 	GNOMEUIINFO_ITEM_NONE(N_("_Tape..."), N_("Set the machine's tape."),
 			      tape_call),
-	GNOMEUIINFO_ITEM_NONE(N_("_View States"),
-			      N_("Open a table with the machine's states."),
-			      view_states_call),
 	GNOMEUIINFO_END
 };
 
@@ -682,6 +796,7 @@ GnomeUIInfo helpmenu[] = {
 GnomeUIInfo mainmenu[] = {
         GNOMEUIINFO_MENU_FILE_TREE(filemenu),
 	GNOMEUIINFO_MENU_SETTINGS_TREE(settingsmenu),
+	GNOMEUIINFO_MENU_VIEW_TREE(viewmenu),
 	GNOMEUIINFO_MENU_HELP_TREE(helpmenu),
 	GNOMEUIINFO_END
 };
@@ -796,11 +911,14 @@ void init_interface(int argc, char *argv[])
 	gnome_app_create_menus(GNOME_APP(app), mainmenu);
 	gnome_app_create_toolbar(GNOME_APP(app), toolbar);
 
+	save = filemenu[1].widget;
+	
 	power = toolbar[0].widget;
 	stop = toolbar[1].widget;
 	play = toolbar[2].widget;
 	step = toolbar[3].widget;
 
+	set_save_sens (FALSE);
 	set_toolbar_sens(FALSE, FALSE, FALSE, FALSE);
 	
 	create_machine();

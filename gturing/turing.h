@@ -56,7 +56,9 @@ extern char states_fname[1024];
 extern char tape_string[1024];
 
 extern turing *turing_new(void);
+extern char *turing_states_to_string(turing_state *state);
 extern int turing_fread_states(turing *machine, char *filename);
+extern int turing_fwrite_states(turing_state *state, char *filename, char *comment);
 extern char *turing_fread_comments(char *filename);
 extern int turing_run_state(turing *machine);
 extern void turing_set_state(turing *machine, turing_state state);

@@ -233,6 +233,73 @@ int turing_fread_states(turing *machine, char *filename)
 	return 0;
 }
 
+static char *str_copy_str (char *str, char *str2)
+{
+	char *c;
+	int len, len2;
+	
+	len = strlen (str);
+	len2 = strlen (str2);
+	
+	str = realloc (str, len + len2 + 1);
+	c = str + len;
+	
+	while (*(c++) = *(str2++))
+		;
+	
+	return str;
+}
+
+extern char *turing_states_to_string(turing_state *state)
+{
+	turing_state *s;
+	char *ret, buff[1024];
+	
+	ret = calloc (1, 1);
+	
+	for (s = state; s; s = s->next)
+	{
+		snprintf (buff, 1024, "%d %c %c %c %d\n", s->no, s->read, s->write, s->move, s->new);
+		ret = str_copy_str (ret, buff);
+	}
+	
+	return ret;
+}
+
+extern int turing_fwrite_states(turing_state *state, char *filename, char *comment)
+{
+	FILE *fd;
+	char *str, *c, *c2, *comment2;
+	
+	if ((fd = fopen (filename, "w")) == NULL)
+		return -1;
+	
+	if (comment)
+	{
+		c2 = comment2 = strdup (comment);
+		
+		while ((c = strchr (c2, '\n')))
+		{
+			*c = 0;
+			fprintf (fd, "#%s\n", c2);
+			c2 = c + 1;
+		}
+		
+		if (*c2)
+			fprintf (fd, "#%s\n", c2);
+		
+		free (comment2);
+	}
+	
+	str = turing_states_to_string (state);
+	fprintf (fd, str);
+	free (str);
+	
+	fclose (fd);
+	
+	return 0;
+}
+
 char *turing_fread_comments(char *filename) {
 	int c;
 	int size;
@@ -371,4 +438,6 @@ extern void turing_set_state(turing *machine, turing_state state)
 	
 	return;
 }
+
+
 
