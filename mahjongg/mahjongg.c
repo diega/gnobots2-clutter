@@ -601,7 +601,7 @@ void new_game_callback (GtkWidget *widget, gpointer data)
 void new_game (void)
 {
 	int i, f, n, col = 0, row = 0;
-
+	
 	visible_tiles = 144;
 	for (f = 0; f < 144; f++) {
 		tiles[f].visible = 0;
@@ -611,14 +611,14 @@ void new_game (void)
 		n = default_types[i].num_tiles;
 		while (n > 0) {
 			n --;
-			f = (int) (145 * rand () / RAND_MAX) - 1;
+			f = (int) (145.0 * rand () / RAND_MAX) - 1;
 			while (tiles[f].visible != 0)
-				f = (int) (144.0 * rand () / RAND_MAX);
+				f = (int) (145.0 * rand () / RAND_MAX) - 1;
 			tiles[f].visible = 1;
 			tiles[f].selected = 0;
 			tiles[f].x = default_pos[f].x * HALF_WIDTH + 80 + (5 * default_pos[f].layer);
 			tiles[f].y = default_pos[f].y * HALF_HEIGHT + 60 - (4 * default_pos[f].layer);
-			tiles[f].layer = default_pos[i].layer;
+			tiles[f].layer = default_pos[f].layer;
 			tiles[f].type = default_types[i].type;
 			tiles[f].image = default_types[i].image;
 		}
