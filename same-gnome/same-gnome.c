@@ -674,7 +674,7 @@ game_quit_callback (GtkWidget *widget, void *data)
 	gnome_message_box_set_default (GNOME_MESSAGE_BOX (box), 0);
 	gnome_message_box_set_modal (GNOME_MESSAGE_BOX (box));
 	gtk_signal_connect (GTK_OBJECT (box), "clicked",
-			    game_maybe_quit, NULL);
+			   (GtkSignalFunc)game_maybe_quit, NULL);
 	gtk_widget_show (box);
 
 	return TRUE;

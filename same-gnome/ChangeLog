@@ -1,3 +1,7 @@
+Wed May 06 10:04:03 1998  Kjartan Maraas  <kmaraas@fib.hl.no>
+
+	* same-gnome.c: removed a compiler warning.
+	
 Thu Apr  2 01:50:44 1998  Tom Tromey  <tromey@cygnus.com>
 
 	* same-gnome.c (game_quit_callback): Use stock buttons.  Show the
