@@ -13,6 +13,7 @@
 #include "drawing.h"
 #include "game.h"
 #include "input.h"
+#include "ui.h"
 
 /* Record offsets for the moving tiles to avoid any possibility of
  * error due to rounding effects and havint to do cut and paste math

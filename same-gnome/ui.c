@@ -27,6 +27,7 @@
 #define ngettext(one,lots,n) gettext(lots)
 #endif
 
+/* A collection of widgets we need to reference repeatedly. */
 GtkWidget *application;
 GtkWidget *messagewidget;
 GtkWidget *scorewidget;
@@ -35,13 +36,12 @@ GtkToggleAction *fullscreenaction;
 GtkWidget *undo_widget;
 GtkWidget *redo_widget;
 
+/* All quit events must go through here to ensure consistant behaviour. */
 static void quit_cb (void)
 {
   gtk_main_quit ();
 }
 
-/* FIXME: We should also do a general version of this for Game Over, 
- * "n points" (during a destruction event) and the like. */
 void set_message (gint count)
 {
 	gchar *message;
@@ -119,23 +119,36 @@ static void about_cb (GtkWidget *widget)
 void game_over_dialog (void)
 {
   GtkWidget *dialog;
+	gchar *message;
   
-  dialog = gtk_message_dialog_new (GTK_WINDOW (application),
-				   GTK_DIALOG_DESTROY_WITH_PARENT,
-				   GTK_MESSAGE_INFO,
-				   GTK_BUTTONS_OK,
-				   _("Game over"));
+	message = g_strdup_printf ("<b>%s</b>", _("Game over!"));
+  dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (application),
+																							 GTK_DIALOG_DESTROY_WITH_PARENT,
+																							 GTK_MESSAGE_INFO,
+																							 GTK_BUTTONS_NONE,
+																							 message);
+	g_free (message);
   
-  /* FIXME: Should we do the undo/quit thing like aisleriot ? */
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog), 
+													GTK_STOCK_QUIT, GTK_RESPONSE_CLOSE,
+													_("New Game"), GTK_RESPONSE_ACCEPT,
+													NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
+
   /* FIXME: We should provide an indication of how good the score was. */
-  /* FIXME: Formatting. */
-  /* FIXME: Give feedback about the bonus. */
+  /* FIXME: Better text and formatting. */
   
-  gtk_dialog_run (GTK_DIALOG (dialog));
+  switch (gtk_dialog_run (GTK_DIALOG (dialog))) {
+	case GTK_RESPONSE_CLOSE:
+		quit_cb ();
+		break;
+	case GTK_RESPONSE_ACCEPT:
+	default:
+		new_game ();
+		break;
+	}
   
   gtk_widget_destroy (dialog);
-  
-  new_game ();
 }
 
 static void new_game_cb (void)
@@ -377,7 +390,6 @@ void build_gui (void)
 
 	messagewidget = gtk_label_new ("");
 	gtk_box_pack_start (GTK_BOX (hbox), messagewidget, TRUE, FALSE, 0);
-	clear_message ();
 
   scorewidget = gtk_label_new ("");
   gtk_box_pack_start (GTK_BOX (hbox), scorewidget, TRUE, FALSE, 0);

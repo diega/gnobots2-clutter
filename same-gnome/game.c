@@ -345,7 +345,9 @@ static void end_of_game_check (void)
 	if (p->colour == NONE) {
 		score += 1000;
 		show_score (score);
-		set_message_general (_("1000 point bonus !"));
+		/* FIXME: This is long enough to resize the window upwards when
+		 * the game finishes. */
+		set_message_general (_("1000 point bonus for clearing the board!"));
 		game_over ();
 		return;
 	}
@@ -440,6 +442,7 @@ void new_game (void)
 	record_game_state ();
 
 	set_undoredo_sensitive (FALSE, FALSE);
+	clear_message ();
 	
 	redraw ();
 }
