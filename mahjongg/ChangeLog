@@ -1,3 +1,8 @@
+2002-05-15  Bastien Nocera  <hadess@hadess.net>
+
+	* mahjongg.c: (set_backgnd_colour): work around NULL background
+	colour, works around broken schemas install
+
 2002-05-12  Bastien Nocera  <hadess@hadess.net>
 
 	* mahjongg.c: (show_toolbar_changed_cb), (show_tb_callback),

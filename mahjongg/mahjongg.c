@@ -753,6 +753,8 @@ void set_backgnd_colour (gchar *str)
   GdkColormap *colourmap ;
   GtkStyle *widget_style, *temp_style;
 
+  g_return_if_fail (str != NULL);
+
   if (str != backgnd.name)
     {
       if (backgnd.name)
