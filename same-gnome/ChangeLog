@@ -1,3 +1,16 @@
+1998-02-18  Federico Mena Quintero  <federico@nuclecu.unam.mx>
+
+	* same-gnome.c: Wheeee!  Same-gnome is now imlib-ified.  I still
+	have to figure a way to handle the clip masks in a proper way.
+	Hmmm.  Maybe we should define an extra configuration option for a
+	window background?
+
+	* same-gnome.c (client_connect): Changed name from connect to
+	client_connect to avoid collision with connect(2).
+
+	* Makefile.am (same_gnome_LDADD): Added -lgdk_imlib to the list of
+	libraries.
+
 Mon Feb 16 19:59:47 KST 1998  Changwoo Ryu  <cwryu@adam.kaist.ac.kr>
 
 	* Makefile.am (INCLUDES): Define GNOMELOCALEDIR.

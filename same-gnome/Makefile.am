@@ -11,9 +11,10 @@ bin_PROGRAMS = same-gnome
 same_gnome_SOURCES = 	\
 	same-gnome.c
 
-same_gnome_LDADD = \
-	$(GNOMEUI_LIBS)	\
-	$(INTLLIBS) \
+same_gnome_LDADD =		\
+	-lgdk_imlib		\
+	$(GNOMEUI_LIBS)		\
+	$(INTLLIBS)		\
 	$(top_builddir)/support/libsupport.a
 
 pixmap_DATA = planets.xpm blink-sync.xpm puyonew2-sync.xpm \

@@ -22,6 +22,7 @@
 
 #include <config.h>
 #include <gnome.h>
+#include <gdk_imlib.h>
 
 #define STONE_SIZE 40
 #define STONE_COLS  15
@@ -32,37 +33,38 @@
 		     GDK_LEAVE_NOTIFY_MASK          |\
 		     GDK_POINTER_MOTION_MASK)
 	
-GtkWidget *pref_dialog, *scorew;
-GtkWidget *app, *draw_area, *vb;
-GtkMenuFactory *mf;
-GdkPixmap *stones, *mask;
-int tagged_count = 0;
-int ball_timeout_id = -1;
-int old_x = -1, old_y = -1;
-int score;
-gchar *scenario;
-gint restarted;
-gint debugging;
+static GtkWidget *pref_dialog, *scorew;
+static GtkWidget *app, *draw_area, *vb;
+static GtkMenuFactory *mf;
+static GdkImlibImage *image;
+static GdkPixmap *stones, *mask;
+static int tagged_count = 0;
+static int ball_timeout_id = -1;
+static int old_x = -1, old_y = -1;
+static int score;
+static gchar *scenario;
+static gint restarted;
+static gint debugging;
 
-struct {
+static struct {
 	char *scenario;
 	int make_it_default;
-	} selected_scenario = {0,0};
+} selected_scenario = {0,0};
 
-struct ball {
+static struct ball {
 	int color;
 	int tag;
 	int frame;
 } field [STONE_COLS][STONE_LINES];
 
-int nstones;
-int ncolors;
-int sync_stones = 0;
+static int nstones;
+static int ncolors;
+static int sync_stones = 0;
 
 #define mapx(x) (x)
 #define mapy(y) (STONE_LINES-1-(y))
 
-void
+static void
 draw_ball (int x, int y)
 {
 	int bx, by;
@@ -81,7 +83,7 @@ draw_ball (int x, int y)
 	}
 }
 
-void
+static void
 paint (GdkRectangle *area)
 {
 	int x1, y1, x2, y2, x, y;
@@ -98,7 +100,7 @@ paint (GdkRectangle *area)
 	}
 }
 
-void
+static void
 untag_all ()
 {
 	int x, y;
@@ -113,7 +115,7 @@ untag_all ()
 		}
 }
 
-int
+static int
 flood_fill (int x, int y, int color)
 {
 	int c = 0;
@@ -138,7 +140,7 @@ flood_fill (int x, int y, int color)
 	return c;
 }
 
-int
+static int
 move_tagged_balls (void *data)
 {
 	int x, y;
@@ -154,7 +156,7 @@ move_tagged_balls (void *data)
 	return 1;
 }
 
-void
+static void
 disable_timeout ()
 {
 	if (ball_timeout_id != -1){
@@ -163,7 +165,7 @@ disable_timeout ()
 	}
 }
 
-void
+static void
 mark_balls (int x, int y)
 {
 	if (x == old_x && y == old_y)
@@ -182,7 +184,7 @@ mark_balls (int x, int y)
 		ball_timeout_id = gtk_timeout_add (100, move_tagged_balls, 0);
 }
 
-void
+static void
 compress_column (int x)
 {
 	int y, ym;
@@ -197,7 +199,7 @@ compress_column (int x)
 	}
 }
 
-void
+static void
 compress_y ()
 {
 	int x;
@@ -206,7 +208,7 @@ compress_y ()
 		compress_column (x);
 }
 
-void
+static void
 copy_col (int dest, int src)
 {
 	int y;
@@ -215,7 +217,7 @@ copy_col (int dest, int src)
 		field [mapx(dest)][mapy(y)] = field [mapx(src)][mapy(y)];
 }
 
-void
+static void
 clean_last_col ()
 {
 	int y;
@@ -226,7 +228,7 @@ clean_last_col ()
 	}
 }
 
-void
+static void
 compress_x ()
 {
 	int x, xm, l;
@@ -240,7 +242,7 @@ compress_x ()
 	}
 }
 
-void
+static void
 set_score (int new_score)
 {
 	char b [20];
@@ -250,19 +252,19 @@ set_score (int new_score)
 	gtk_label_set (GTK_LABEL(scorew), b);
 }
 
-void
+static void
 show_scores ( gchar *title, guint pos )
 {
 	gnome_scores_display (title, "same-gnome", NULL, pos);
 }
 
-void 
+static void
 game_top_ten_callback(GtkWidget *widget, gpointer data)
 {
 	show_scores(_("The Same Gnome"), 0);
 }
 
-void
+static void
 end_of_game (char *title)
 {
 	int pos;
@@ -271,7 +273,7 @@ end_of_game (char *title)
 	show_scores(title, pos);
 }
 
-void
+static void
 check_game_over (void)
 {
 	int cleared=1;
@@ -297,7 +299,7 @@ check_game_over (void)
 		end_of_game(_("The Game Is Over"));
 }
 
-void
+static void
 kill_balls (int x, int y)
 {
 	if (!field [x][y].color)
@@ -313,7 +315,7 @@ kill_balls (int x, int y)
 	check_game_over ();
 }
 
-gint
+static gint
 area_event (GtkWidget *widget, GdkEvent *event, void *d)
 {
 	switch (event->type){
@@ -351,7 +353,7 @@ area_event (GtkWidget *widget, GdkEvent *event, void *d)
 	}
 }
 
-void
+static void
 fill_board (void)
 {
 	int x, y;
@@ -364,7 +366,7 @@ fill_board (void)
 		}
 }
 
-void
+static void
 new_game (void)
 {
 	fill_board ();
@@ -372,7 +374,7 @@ new_game (void)
 	gtk_widget_draw (draw_area, NULL);
 }
 
-void
+static void
 configure_sync (char *fname)
 {
 	if (strstr (fname, "-sync.xpm"))
@@ -381,53 +383,68 @@ configure_sync (char *fname)
 		sync_stones = 0;
 }
 
-void
+static void
 load_scenario (char *fname)
 {
-	GtkStyle  *style;
-	int width, height;
-	char *tmp, *fn; 
+	char *tmp, *fn;
 
 	tmp = g_copy_strings ( "same-gnome/", fname, NULL);
 
-	fn = gnome_unconditional_pixmap_file ( tmp ); 
+	fn = gnome_unconditional_pixmap_file ( tmp );
 	g_free( tmp );
 
-	if (!g_file_exists (fn)){
-			printf (_("Could not find the \'%s\' theme for SameGnome\n"), fn);
-			exit (1);
-		}
+	if (!g_file_exists (fn)) {
+		printf (_("Could not find the \'%s\' theme for SameGnome\n"), fn);
+		exit (1);
+	}
 
-	if(scenario) free(scenario);
+	if (scenario)
+		free (scenario);
+
 	scenario = strdup(fname);
 
-	style = gtk_widget_get_style (draw_area);
 	configure_sync (fname);
-	stones = gdk_pixmap_create_from_xpm (app->window, &mask, &style->bg [GTK_STATE_NORMAL], fn);
+
+	if (image)
+		gdk_imlib_destroy_image (image);
+
+	image = gdk_imlib_load_image (fn);
+	gdk_imlib_render (image, image->rgb_width, image->rgb_height);
+
+	stones = gdk_imlib_move_image (image);
+	mask = gdk_imlib_move_mask (image);
+
 	g_free( fn );
-	gdk_window_get_size (stones, &width, &height);
-	nstones = width / STONE_SIZE;
-/*	ncolors = height / STONE_SIZE; */
+
+	nstones = image->rgb_width / STONE_SIZE;
+/*	ncolors = image->rgb_height / STONE_SIZE; */
 	ncolors = 3;
 	gtk_widget_draw (draw_area, NULL);
 }
 
-void
+static void
 set_selection (GtkWidget *widget, void *data)
 {
 	selected_scenario.scenario = data;
 }
 
-void
+static void
 set_selection_def (GtkWidget *widget, gpointer *data)
 {
 	selected_scenario.make_it_default = GTK_TOGGLE_BUTTON (widget)->active;
 }
 
-void
+static void
 create_same_board (char *fname)
 {
+	gtk_widget_push_visual (gdk_imlib_get_visual ());
+	gtk_widget_push_colormap (gdk_imlib_get_colormap ());
+
 	draw_area = gtk_drawing_area_new ();
+
+	gtk_widget_pop_colormap ();
+	gtk_widget_pop_visual ();
+
 	gtk_widget_set_events (draw_area, gtk_widget_get_events (draw_area) | GAME_EVENTS);
 
 	gtk_box_pack_start_defaults (GTK_BOX(vb), draw_area);
@@ -444,26 +461,26 @@ create_same_board (char *fname)
 	gtk_signal_connect (GTK_OBJECT(draw_area), "event", (GtkSignalFunc) area_event, 0);
 }
 
-void
+static void
 game_new_callback (GtkWidget *widget, void *data)
 {
 	new_game ();
 }
 
-int
+static int
 yes (GtkWidget *widget, void *data)
 {
 	selected_scenario.scenario = 0;
 	return TRUE;
 }
 
-void
+static void
 free_str (GtkWidget *widget, void *data)
 {
 	free (data);
 }
 
-void
+static void
 fill_menu (GtkWidget *menu)
 {
 	struct dirent *e;
@@ -482,7 +499,7 @@ fill_menu (GtkWidget *menu)
 		if (!strstr (e->d_name, ".xpm")) {
 			free (s);
 			continue;
-			}
+		}
 			
 		item = gtk_menu_item_new_with_label (s);
 		gtk_widget_show (item);
@@ -493,14 +510,14 @@ fill_menu (GtkWidget *menu)
 	closedir (dir);
 }
 
-void
+static void
 cancel (GtkWidget *widget, void *data)
 {
 	gtk_widget_destroy (pref_dialog);
 	pref_dialog = 0;
 }
 
-void
+static void
 load_scenario_callback (GtkWidget *widget, void *data)
 {
 	if (selected_scenario.scenario) {
@@ -511,17 +528,17 @@ load_scenario_callback (GtkWidget *widget, void *data)
 				"/same-gnome/Preferences/Scenario", 
 				selected_scenario.scenario);
 			gnome_config_sync();
-			}
 		}
+	}
 	cancel (0,0);
 }
 
-GnomeActionAreaItem sel_actions [] = {
+static GnomeActionAreaItem sel_actions [] = {
 	{ NULL, load_scenario_callback },
 	{ NULL, cancel }
 };
 
-void
+static void
 game_preferences_callback (GtkWidget *widget, void *data)
 {
 	GtkWidget *menu, *omenu, *l, *hb, *cb, *f, *fv;
@@ -574,30 +591,29 @@ game_preferences_callback (GtkWidget *widget, void *data)
 	gtk_widget_show (pref_dialog);
 }
 
-int
+static int
 game_about_callback (GtkWidget *widget, void *data)
 {
 	GtkWidget *about;
 	gchar *authors[] = {
-			"Miguel de Icaza.",
-			"Federico Mena.",
-			"Horacio J. Peña.",
-			NULL
-			};
+		"Miguel de Icaza.",
+		"Federico Mena.",
+		"Horacio J. Peña.",
+		NULL
+	};
 
 	about = gnome_about_new (_("The Same Gnome"), VERSION,
-			"(C) 1997-1998 the Free Software Foundation",
-			authors,
-			_("Original idea from KDE's same game program."),
-			/*"gnome-same-gnome.xpm"*/
-			NULL
-			);
+				 "(C) 1997-1998 the Free Software Foundation",
+				 authors,
+				 _("Original idea from KDE's same game program."),
+				 /*"gnome-same-gnome.xpm"*/
+				 NULL);
 	gtk_widget_show (about);
 
 	return TRUE;
 }
 
-int
+static int
 game_quit_callback (GtkWidget *widget, void *data)
 {
 	GtkWidget *box;
@@ -613,23 +629,18 @@ game_quit_callback (GtkWidget *widget, void *data)
 	return TRUE;
 }
 
-GtkMenuEntry same_menu [] = {
-	{ N_("Game/New"),	  N_("<control>N"), 
-			(GtkMenuCallback) game_new_callback, NULL },
-	{ N_("Game/Scenario..."), N_("<control>S"),
-			(GtkMenuCallback) game_preferences_callback, NULL },
-	{ N_("Game/Top Ten..."),  N_("<control>T"),
-			(GtkMenuCallback) game_top_ten_callback, NULL },
+static GtkMenuEntry same_menu [] = {
+	{ N_("Game/New"),	  N_("<control>N"), (GtkMenuCallback) game_new_callback, NULL },
+	{ N_("Game/Scenario..."), N_("<control>S"), (GtkMenuCallback) game_preferences_callback, NULL },
+	{ N_("Game/Top Ten..."),  N_("<control>T"), (GtkMenuCallback) game_top_ten_callback, NULL },
 	{ N_("Game/<separator>"), NULL, NULL, NULL },
-	{ N_("Game/Exit"),        N_("<control>E"),
-			(GtkMenuCallback) game_quit_callback, NULL }, 
-	{ N_("Help/About..."),    N_("<control>A"),
-			(GtkMenuCallback) game_about_callback, NULL }, 
+	{ N_("Game/Exit"),        N_("<control>E"), (GtkMenuCallback) game_quit_callback, NULL }, 
+	{ N_("Help/About..."),    N_("<control>A"), (GtkMenuCallback) game_about_callback, NULL }, 
 };
 
 #define ELEMENTS(x) (sizeof (x) / sizeof (x [0]))
 
-GtkMenuFactory *
+static GtkMenuFactory *
 create_menu ()
 {
 	GtkMenuFactory *subfactory;
@@ -644,7 +655,7 @@ create_menu ()
 	return subfactory;
 }
 
-GtkWidget *
+static GtkWidget *
 create_main_window ()
 {
 	app = gnome_app_new ("same-gnome", "Same Gnome");
@@ -676,27 +687,27 @@ save_state (GnomeClient *client,
 		g_print ("Saving state\n");
 
 	sess = g_copy_strings ("Saved-Session-",
-			        gnome_client_get_id (client),
-			        NULL);
+			       gnome_client_get_id (client),
+			       NULL);
 
 	buf = g_copy_strings ("/same-gnome/",
-				sess, 
-				"/Score",
-				NULL);
+			      sess, 
+			      "/Score",
+			      NULL);
 	gnome_config_set_int (buf, score);
 	g_free(buf);
 
 	buf = g_copy_strings ("/same-gnome/",
-				sess, 
-				"/nstones",
-				NULL);
+			      sess, 
+			      "/nstones",
+			      NULL);
 	gnome_config_set_int (buf, sync_stones ? 1 : nstones);
 	g_free(buf);
 
 	buf = g_copy_strings ("/same-gnome/",
-				sess, 
-				"/Field",
-				NULL);
+			      sess, 
+			      "/Field",
+			      NULL);
 
 	buf2 = g_malloc(STONE_COLS*STONE_LINES+1);
 	for ( i=0 ; i < (STONE_COLS*STONE_LINES) ; i++ ) 
@@ -718,7 +729,7 @@ save_state (GnomeClient *client,
 	return TRUE;
 }
 
-void
+static void
 delete_session (gchar *id)
 {
 	gchar *sess;
@@ -727,8 +738,8 @@ delete_session (gchar *id)
 		g_print ("Deleting info from session %s\n", id);
 
 	sess = g_copy_strings ("/same-gnome/Saved-Session-",
-				id,
-				NULL);
+			       id,
+			       NULL);
 
 	gnome_config_clean_section (sess);
 	gnome_config_sync ();
@@ -737,7 +748,7 @@ delete_session (gchar *id)
 	return;
 }
 
-void
+static void
 restart (gchar *id)
 {
 	gchar *sess;
@@ -750,35 +761,34 @@ restart (gchar *id)
 		g_print ("Retrieving state\n");
 
 	sess = g_copy_strings ("Saved-Session-",
-				id,
-				NULL);
+			       id,
+			       NULL);
 
 	buf = g_copy_strings ("/same-gnome/",
-				sess, 
-				"/Score",
-				NULL);
+			      sess, 
+			      "/Score",
+			      NULL);
 	score = gnome_config_get_int_with_default (buf, 0);
 	g_free(buf);
 
 	buf = g_copy_strings ("/same-gnome/",
-				sess, 
-				"/nstones",
-				NULL);
+			      sess, 
+			      "/nstones",
+			      NULL);
 	nstones = gnome_config_get_int_with_default (buf, 0);
 	g_free(buf);
 
 	buf = g_copy_strings ("/same-gnome/",
-				sess, 
-				"/Field",
-				NULL);
+			      sess, 
+			      "/Field",
+			      NULL);
 	buf2 = gnome_config_get_string_with_default (buf, NULL);
 
 	if (buf2)
-		for ( i=0 ; i < (STONE_COLS*STONE_LINES) ; i++ )
-		{
-		f[i].color = buf2[i] - 'a';
-		f[i].tag   = 0;
-		f[i].frame = nstones ? (rand () % nstones) : 0;
+		for ( i=0 ; i < (STONE_COLS*STONE_LINES) ; i++ ) {
+			f[i].color = buf2[i] - 'a';
+			f[i].tag   = 0;
+			f[i].frame = nstones ? (rand () % nstones) : 0;
 		}
 	g_free(buf2);
 	g_free(buf);
@@ -787,30 +797,29 @@ restart (gchar *id)
 }
 
 static void
-connect (GnomeClient *client, gint was_restarted)
+client_connect (GnomeClient *client, gint was_restarted)
 {
-  if (was_restarted)
-    {
-      restarted = 1;
-      restart (gnome_client_get_id (client));
-    }
+	if (was_restarted) {
+		restarted = 1;
+		restart (gnome_client_get_id (client));
+	}
 }
 
-gchar *
+static gchar *
 parse_args (int argc,char *argv[])
 {
         GnomeClient *client = NULL;
 	gint ch;
 
 	struct option options[] = {
-		{ "debug",        no_argument,       NULL, 'd'	},
-		{ "help",         no_argument,	     NULL, 'h'	},
-		{ "sm-client-id", required_argument, NULL, 'S'	},
-		{ "delete-sess",  required_argument, NULL, 'D'	},
-		{ "scenario", 	  required_argument, NULL, 's'	},
-		{ "version", 	  no_argument,	     NULL, 'v'	},
+		{ "debug",        no_argument,       NULL, 'd' },
+		{ "help",         no_argument,	     NULL, 'h' },
+		{ "sm-client-id", required_argument, NULL, 'S' },
+		{ "delete-sess",  required_argument, NULL, 'D' },
+		{ "scenario", 	  required_argument, NULL, 's' },
+		{ "version", 	  no_argument,	     NULL, 'v' },
 		{ NULL, 0, NULL, 0 }
-		};
+	};
 
 	gchar *id = NULL;
 	gchar *fname = gnome_config_get_string ( "/same-gnome/Preferences/Scenario=stones.xpm" );
@@ -825,41 +834,39 @@ parse_args (int argc,char *argv[])
 	optind = 0;
 	optopt = 0;
 
-	while( (ch = getopt_long(argc, argv, "dhsv", options, NULL)) != EOF ) 
-	{
-		switch(ch) 
-		{
-			case 'd':
-				debugging = 1;
-				g_print ("Debugging mode\n");
-				break;
-			case 'h':
-				exit(0);
-				break;
-			case 'v':
-				g_print (_("Same Gnome %s.\n"), 
-								VERSION);
-				exit(0);
-				break;
-			case 'S':
-				id = g_strdup (optarg);
-				restart (id);
-				restarted = 1;
-				break;
-			case 'D':
-				id = g_strdup (optarg);
-				delete_session (id);
-				exit(0);
-				break;
-			case 's':
-				g_free (fname);
-				fname = g_strdup (optarg);
-				break;
-			case ':':
-			case '?':
-				g_print (_("Options error\n"));
-				exit(0);
-				break;
+	while( (ch = getopt_long(argc, argv, "dhsv", options, NULL)) != EOF ) {
+		switch(ch) {
+		case 'd':
+			debugging = 1;
+			g_print ("Debugging mode\n");
+			break;
+		case 'h':
+			exit(0);
+			break;
+		case 'v':
+			g_print (_("Same Gnome %s.\n"), 
+				 VERSION);
+			exit(0);
+			break;
+		case 'S':
+			id = g_strdup (optarg);
+			restart (id);
+			restarted = 1;
+			break;
+		case 'D':
+			id = g_strdup (optarg);
+			delete_session (id);
+			exit(0);
+			break;
+		case 's':
+			g_free (fname);
+			fname = g_strdup (optarg);
+			break;
+		case ':':
+		case '?':
+			g_print (_("Options error\n"));
+			exit(0);
+			break;
 		}
 	}
 
@@ -869,7 +876,7 @@ parse_args (int argc,char *argv[])
 			    GTK_SIGNAL_FUNC (save_state), argv[0]);
 	
 	gtk_signal_connect (GTK_OBJECT (client), "connect",
-			    GTK_SIGNAL_FUNC (connect), NULL);
+			    GTK_SIGNAL_FUNC (client_connect), NULL);
 
 	gnome_client_connect (client);
 	
@@ -889,6 +896,7 @@ main (int argc, char *argv [])
 	gnome_score_init("same-gnome");
 	
 	gnome_init (&argc, &argv);
+	gdk_imlib_init ();
 	fname = parse_args(argc, argv);
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
