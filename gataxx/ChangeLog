@@ -1,3 +1,11 @@
+2002-02-13  Aaron Weber  <aaron@ximian.com>
+
+	* help/C/gataxx-C.omf: move to XML.
+
+	* help/C/gataxx.xml: New file. Move to XML.
+
+	* help/C/gataxx.sgml: Deleted, to move to XML.
+	
 2002-02-02  Zbigniew Chyla  <cyba@gnome.pl>
 
 	* gataxx.c (about_cb): Don't try to translate empty string.
