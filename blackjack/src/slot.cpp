@@ -52,7 +52,7 @@ bj_slot_load_pixmaps (void)
   slot_pixbuf = get_pixbuf (buffer);
   g_free (buffer);
   buffer = g_build_filename ("blackjack", "baize.png", NULL);
-  default_background_pixmap = get_pixmap ("blackjack/baize.png");
+  default_background_pixmap = get_pixmap (buffer);
   g_free (buffer);
 }
 
