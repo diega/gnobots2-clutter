@@ -30,7 +30,7 @@
 		     GDK_LEAVE_NOTIFY_MASK          |\
 		     GDK_POINTER_MOTION_MASK)
 
-static GtkWidget *pref_dialog, *scorew;
+static GtkWidget *pref_dialog, *scorew, *markedw;
 static GtkWidget *app, *draw_area, *vb, *appbar;
 static GdkImlibImage *image;
 static GdkPixmap *stones, *mask;
@@ -179,8 +179,13 @@ mark_balls (int x, int y)
 	
 	tagged_count = flood_fill (x, y, field [x][y].color);
 	
-	if (tagged_count > 1)
+	if (tagged_count > 1) {
+		char b[3];
 		ball_timeout_id = gtk_timeout_add (100, move_tagged_balls, 0);
+		sprintf (b, "%.2d", tagged_count);
+		gtk_label_set (GTK_LABEL(markedw), b);
+	} else
+		gtk_label_set (GTK_LABEL(markedw), "00");
 }
 
 static void
@@ -803,7 +808,7 @@ static const struct poptOption options[] = {
 int
 main (int argc, char *argv [])
 {
-	GtkWidget *label;
+	GtkWidget *label, *separator;
 	GnomeClient *client;
 
 	gnome_score_init("same-gnome");
@@ -858,6 +863,14 @@ main (int argc, char *argv [])
 
 	create_same_board (fname);
 
+	separator = gtk_vseparator_new ();
+	label = gtk_label_new (_("Marked: "));
+	markedw = gtk_label_new ("00");
+
+	gtk_box_pack_start(GTK_BOX(appbar), label, FALSE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(appbar), markedw, FALSE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(appbar), separator, FALSE, TRUE, 5);
+	
 	label = gtk_label_new (_("Score: "));
 	scorew = gtk_label_new ("");
 	set_score (score);
@@ -870,10 +883,7 @@ main (int argc, char *argv [])
 	
 	g_free (fname);
 
-	gtk_widget_show (vb);
-	gtk_widget_show (GTK_WIDGET(label));
-	gtk_widget_show (GTK_WIDGET(scorew));
-        gtk_widget_show (app);
+        gtk_widget_show_all (app);
 
 	gtk_main ();
 	return 0;

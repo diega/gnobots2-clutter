@@ -1,3 +1,8 @@
+2001-06-22  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	* same-gnome.c (move_tagged_balls), (main): Add the number of
+	  marked stones in the statusbar (feature taken from ksame).
+
 2001-06-20  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* help/C/same-gnome.sgml: Changed samegnome by samegame as
