@@ -625,7 +625,7 @@ game_about_callback (GtkWidget *widget, void *data)
 		char *filename = NULL;
 
 		filename = gnome_program_locate_file (NULL,
-				GNOME_FILE_DOMAIN_PIXMAP,  ("gnome-gsame.png"),
+				GNOME_FILE_DOMAIN_APP_PIXMAP,  ("gnome-gsame.png"),
 				TRUE, NULL);
 		if (filename != NULL)
 		{
