@@ -32,7 +32,7 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 pixmap_DATA = planets.png blink-sync.png marbles.png \
 	stones.png rotate.png glass.png
 sharedpixmap_DATA = gnome-gsame.png
-EXTRA_DIST = same-gnome.desktop.in $(pixmap_DATA) $(schema_in_files)
+EXTRA_DIST = same-gnome.desktop.in $(pixmap_DATA) $(sharedpixmap_DATA) $(schema_in_files)
 
 Games_in_files = same-gnome.desktop.in
 Games_DATA = $(Games_in_files:.desktop.in=.desktop)
