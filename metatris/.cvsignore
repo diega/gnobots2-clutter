@@ -1,0 +1,8 @@
+*.lo
+*.la
+*.flc
+.deps
+.libs
+Makefile
+Makefile.in
+tetris-g
