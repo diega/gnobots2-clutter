@@ -379,13 +379,14 @@ bj_game_eval_installed_file (gchar *file)
                 gchar *message = g_strdup_printf ("%s\n %s", _("Blackjack can't load the requested file"),
                                                   installed_filename);
                 gchar *message2 = _("Please check your Blackjack installation");
-                GtkWidget *w = gtk_message_dialog_new (GTK_WINDOW (app),
-                                                       GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                       GTK_MESSAGE_ERROR,
-                                                       GTK_BUTTONS_CLOSE,
-                                                       "<span weight=\"bold\" size=\"larger\">%s</span>\n\n%s",
-                                                       message, message2);
-                gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (w)->label), TRUE);
+                GtkWidget *w = gtk_message_dialog_new_with_markup (GTK_WINDOW (app),
+                                                                   GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                                   GTK_MESSAGE_ERROR,
+                                                                   GTK_BUTTONS_CLOSE,
+                                                                   "<span weight=\"bold\" size=\"larger\">%s</span>\n\n%s",
+                                                                   message, message2);
+                gtk_container_set_border_width (GTK_CONTAINER (w), 6);
+
                 gtk_dialog_run (GTK_DIALOG (w));
                 gtk_widget_destroy (w);
                 g_free (message);

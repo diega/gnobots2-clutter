@@ -50,15 +50,14 @@ get_insurance_choice ()
 
         message = _("Would you like insurance?");
 
-        dialog = gtk_message_dialog_new (GTK_WINDOW (app),
-                                         GTK_DIALOG_MODAL,
-                                         GTK_MESSAGE_QUESTION,
-                                         GTK_BUTTONS_YES_NO,
-                                         "<span weight=\"bold\" size=\"larger\">%s</span>",
-                                         message);
+        dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (app),
+                                                     GTK_DIALOG_MODAL,
+                                                     GTK_MESSAGE_QUESTION,
+                                                     GTK_BUTTONS_YES_NO,
+                                                     "<span weight=\"bold\" size=\"larger\">%s</span>",
+                                                     message);
+        gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
 
-        gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (dialog)->label),
-                                  TRUE);
         gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_NO);
 
         /* add a stock icon? */ 
@@ -96,14 +95,13 @@ show_hint_dialog ()
         if (hint_dlg)
                 gtk_widget_destroy (GTK_WIDGET (hint_dlg));
 
-        hint_dlg = gtk_message_dialog_new (GTK_WINDOW (app),
-	                                   GTK_DIALOG_DESTROY_WITH_PARENT,
-	                                   GTK_MESSAGE_INFO,
-	                                   GTK_BUTTONS_OK,
-                                           "<span weight=\"bold\" size=\"larger\">%s</span>",
-	                                   gmessage);
-
-        gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (hint_dlg)->label), TRUE);
+        hint_dlg = gtk_message_dialog_new_with_markup (GTK_WINDOW (app),
+                                                       GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                       GTK_MESSAGE_INFO,
+                                                       GTK_BUTTONS_OK,
+                                                       "<span weight=\"bold\" size=\"larger\">%s</span>",
+                                                       gmessage);
+        gtk_container_set_border_width (GTK_CONTAINER (hint_dlg), 6);
 
         if (hint_dlg)
                 g_signal_connect (hint_dlg,
