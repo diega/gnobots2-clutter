@@ -87,7 +87,7 @@ extern double           y_expanded_offset;
 extern gboolean         events_pending;
 
 gboolean                bj_quit_app (GtkMenuItem*);
-void                    bj_make_window_title (gchar *game_name, gint seed);
+void                    bj_make_window_title (gchar *game_name);
 
 void                    bj_show_balance (gfloat);
 void                    bj_show_shoe_cards (gfloat);

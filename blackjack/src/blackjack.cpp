@@ -27,7 +27,6 @@
 #include <sys/types.h>
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
 #include <dirent.h>
 #include <ctype.h>
 #include <gnome.h>
@@ -87,11 +86,11 @@ gchar *game_variation = NULL;
 #define DEFAULT_VARIATION      "Vegas_Strip.rules"
 
 void
-bj_make_window_title (gchar *game_name, gint lseed) 
+bj_make_window_title (gchar *game_name) 
 {
         char *title;
 
-        title = g_strdup_printf (_("Blackjack: %s (%d)"), game_name, lseed);
+        title = g_strdup_printf (_("Blackjack: %s"), game_name);
 
         gtk_window_set_title (GTK_WINDOW (app), title); 
 
@@ -294,9 +293,6 @@ main_prog (int argc, char *argv[])
         gchar *label_string;
         guint context_id;
 
-        seed = time (NULL);
-        g_random_set_seed (seed);
-
         create_main_window ();
 
         bj_slot_load_pixmaps ();
@@ -352,7 +348,7 @@ main_prog (int argc, char *argv[])
 
         bj_menu_install_hints (GNOME_APP (app));
 
-        bj_game_new (bj_get_game_variation (), &seed);
+        bj_game_new (bj_get_game_variation (), NULL);
 
         gtk_widget_show (app);
 

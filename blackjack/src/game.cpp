@@ -462,7 +462,7 @@ bj_game_new (gchar* file, guint *seedp )
 
         bj_clear_table ();
 
-        bj_make_window_title (game_name, seed);
+        bj_make_window_title (game_name);
 }
 
 void

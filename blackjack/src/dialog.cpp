@@ -169,7 +169,7 @@ select_rule_cb (GtkTreeSelection *select, gpointer data)
                 if (g_ascii_strcasecmp (filename, bj_game_get_rules_file ())) {
                         if (data != NULL)
                                 gtk_widget_set_sensitive (GTK_WIDGET (data), FALSE);
-                        bj_game_new (filename, &seed);
+                        bj_game_new (filename, NULL);
                         if (data != NULL)
                                 gtk_widget_set_sensitive (GTK_WIDGET (data), TRUE);
                 }

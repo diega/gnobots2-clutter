@@ -1,3 +1,11 @@
+2004-10-13  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* src/blackjack.h:
+	* src/dialog.cpp:
+	* src/game.cpp:
+	* src/blackjack.cpp: Remove the seed form the title bar and clean
+	up the seed setting code.
+
 2004-08-25  Richard Hoelscher  <rah@rahga.com>
 
 	* pixmaps/chip-100.svg: SVG cleanup and font tracing.
