@@ -1,3 +1,6 @@
+Mon May 11 04:08:04 EDT 1998  Jonathan Blandford  <jrb@mit.edu>
+	* default.xpm:  Changed green dragon to face the correct direction.
+	
 1998-04-24  Federico Mena Quintero  <federico@nuclecu.unam.mx>
 
 	* mahjongg.c (create_mahjongg_board): Make the drawing area use
