@@ -2,7 +2,6 @@ SUBDIRS=pix
 scoredir=$(localstatedir)/games
 Gamesdir=$(datadir)/gnome/apps/Games
 
-CPPFLAGS = -pedantic -Wall
 INCLUDES=\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	$(GNOME_INCLUDEDIR)
