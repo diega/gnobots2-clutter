@@ -14,7 +14,14 @@
   </copyright>
 
 <legalnotice id="legalnotice"> 
-<para>Permission is granted to copy, distribute and/or modify this document under the terms of the <ulink type="help" url="gnome-help:fdl"><citetitle>GNU Free Documentation License</citetitle></ulink>, Version 1.1 or any later version published by the Free Software Foundation with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A copy of the license can be found <ulink type="help" url="gnome-help:fdl">here</ulink>./para> <para>Many of the names used by companies to distinguish their products and services are claimed as trademarks. Where those names appear in any GNOME documentation, and those trademarks are made aware to the members of the GNOME Documentation Project, the names have been printed in caps or initial caps.</para> 
+<para>
+Permission is granted to copy, distribute and/or modify this document under the terms of the <ulink type="help" url="gnome-help:fdl"><citetitle>GNU Free Documentation License</citetitle></ulink>, Version 1.1 or any later version published by the Free Software Foundation with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A copy of the license can be found <ulink type="help" url="gnome-help:fdl">here</ulink>.
+</para> 
+
+<para>
+ Many of the names used by companies to distinguish their products and services are claimed as trademarks. Where those names appear in any GNOME documentation, and those trademarks are made aware to the members of the GNOME Documentation Project, the names have been printed in caps or initial caps.
+</para> 
+
 </legalnotice>
 
   <releaseinfo>This is version 1.0 of GNOME Stones manual.  </releaseinfo>
@@ -88,7 +95,7 @@
       <title>GNOME Stones Main Window</title> 
       <screenshot>
        <screeninfo>GNOME Stones Main Window</screeninfo> 
-       <graphic fileref="main-start" format="png" srccredit="ME"></graphic>
+       <graphic fileref="figures/main-start" format="png" srccredit="ME"></graphic>
       </screenshot> 
      </figure>
 
@@ -104,7 +111,7 @@
        <title>A GNOME Stones Game</title> 
        <screenshot> 
         <screeninfo>A GNOME Stones Game</screeninfo> 
-        <graphic fileref="main-game.png" format="png" srccredit="ME"></graphic> 
+        <graphic fileref="figures/main-game" format="png" srccredit="ME"></graphic> 
        </screenshot>
       </figure>
 
@@ -151,14 +158,14 @@
 
    </sect3>
 
-   <sect 3 id="scores">
+   <sect3 id="scores">
    <title>High scores</title>
+   <para>
    To start playing the game to view your high scores for the game do: 
        <menuchoice>
         <guisubmenu>Game</guisubmenu> 
         <guimenuitem>Scores</guimenuitem>
        </menuchoice>
-   <para>
    </para>
    </sect3>
 
@@ -233,7 +240,7 @@
    <title>Preferences Dialog</title>
    <screenshot>
     <screeninfo>Preferences Dialog</screeninfo> 
-    <graphic fileref="preferences-main" format="png" srccredit="ME"> 
+    <graphic fileref="figures/preferences-main" format="png" srccredit="ME"> 
     </graphic>
    </screenshot>
   </figure>
@@ -290,7 +297,7 @@
    <title>Joystick Preferences</title>
    <screenshot>
     <screeninfo>Joystick Preferences</screeninfo> 
-    <graphic fileref="preferences-joystick" format="png" srccredit="ME"> 
+    <graphic fileref="figures/preferences-joystick" format="png" srccredit="ME"> 
     </graphic>
    </screenshot>
   </figure>
