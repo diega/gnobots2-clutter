@@ -2,7 +2,7 @@
 
 /* gnome-stones - object.c
  *
- * Time-stamp: <2003/06/19 16:06:22 mccannwj>
+ * Time-stamp: <2003/06/19 21:12:50 mccannwj>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -139,7 +139,7 @@ plugin_load_plugins_in_dir (const gchar *directory)
   GDir *d;
   G_CONST_RETURN gchar *e;
   
-  if ((d = g_dir_open (directory)) == NULL)
+  if ((d = g_dir_open (directory, 0, NULL)) == NULL)
     return;
   
   while ((e = g_dir_read_name (d)) != NULL)
