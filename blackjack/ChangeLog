@@ -1,3 +1,8 @@
+2003-06-06  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* data/.cvsignore: Oops, should be blackjack.desktop, not
+	blackjack.desktop.in .
+
 2003-06-04  William Jon McCann  <mccann@jhu.edu>
 
 	* src/dialog.cpp: Added all rule fields to tree view in pref
