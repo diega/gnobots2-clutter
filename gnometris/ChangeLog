@@ -1,3 +1,8 @@
+2004-08-05  William Jon McCann  <mccann@jhu.edu>
+
+	* tetris.cpp (keyPressHandler): Only play sound if action
+	occurs sucessfully.
+
 2004-07-25  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gnometris.schemas.in: Typo in the usebgimage schema (bug

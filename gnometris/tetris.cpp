@@ -1039,16 +1039,19 @@ Tetris::keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 		return FALSE;
 
 	if (keyval == t->moveLeft) {
-		sound->playSound (SOUND_SLIDE);
 		res = t->ops->moveBlockLeft();
+		if (res)
+			sound->playSound (SOUND_SLIDE);
 		t->onePause = false;
 	} else if (keyval == t->moveRight) {
-		sound->playSound (SOUND_SLIDE);
 		res = t->ops->moveBlockRight();
+		if (res)
+			sound->playSound (SOUND_SLIDE);
 		t->onePause = false;
 	} else if (keyval == t->moveRotate) {
-		sound->playSound (SOUND_TURN);
 		res = t->ops->rotateBlock(rotateCounterClockWise);
+		if (res)
+			sound->playSound (SOUND_TURN);
 		t->onePause = false;
 	} else if (keyval == t->moveDown) {
 		if (!t->fastFall && !t->onePause) {
