@@ -27,22 +27,18 @@
 class Field
 {
 public:
-	Field(BlockOps *ops);
+	Field();
 	
 	void show();
-	void updateSize();
-	
+	void updateSize(GdkImlibImage * bgImage);
+
 	GtkWidget * getWidget()	{return w;}
 	
 private:
 	GtkWidget * w;
-
-	void paint(GdkRectangle *area);
-	void drawBlock(GdkRectangle *area, int x, int y);
-	
-	static gint eventHandler(GtkWidget *widget, GdkEvent *event, void *d);
-
-	BlockOps *o;	
+	GnomeCanvasItem *bg;
 };
 
 #endif //__field_h__
+
+

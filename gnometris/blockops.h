@@ -27,7 +27,7 @@
 class BlockOps
 {
 public:
-	BlockOps();
+	BlockOps(Field *f);
 	~BlockOps();
 	
 	bool moveBlockLeft();
@@ -41,13 +41,15 @@ public:
 	void emptyField();
 	void putBlockInField(bool erase);
 	int getLinesToBottom();
-	
+	GnomeCanvasItem *generateItem(int x, int y, int color);
+
 	const Block * const getFieldAt(int x, int y) {return &(field[x][y]);}
 
 private:
 	bool blockOkHere(int x, int y, int b, int r);
 	
 	Block **field;
+	Field *fieldDisplay;
 };
 
 #endif //__blockops_h__

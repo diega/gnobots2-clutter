@@ -24,7 +24,7 @@
 #include <config.h>
 #include <gnome.h>
 
-#define TETRIS_VERSION "0.99.4"
+#define TETRIS_VERSION "1.1.0"
 
 extern int LINES;
 extern int COLUMNS;
@@ -41,12 +41,12 @@ enum SlotType
 struct Block
 {
 	SlotType what;
-	int color;	
+	int color;
+	GnomeCanvasItem* item;
 };
 
 extern GdkPixmap *pix;
-extern GdkPixmap *pixmask;
-extern GdkPixmap *bgpix;
+extern GdkImlibImage **pic;
 
 extern int color_next;
 extern int blocknr_next;
@@ -87,9 +87,6 @@ private:
 	char *blockPixmap;
 	char *bgPixmap;
 	
-	GdkImlibImage *image;
-	GdkImlibImage *bgimage;
-	
 	Field *field;
 	Preview *preview;
 	BlockOps *ops;
@@ -120,8 +117,10 @@ private:
 	
 	static char *blockPixmapTmp;
 	static char *bgPixmapTmp;
-	
-//	void fillMenu(GtkWidget *menu);
+
+	GdkImlibImage *image;
+	GdkImlibImage *bgimage;
+
 	void fillMenu(GtkWidget *menu, char *pixname, char *dirname, GtkSignalFunc selectFunc, bool addnone = false);
 	
 	GtkWidget *setupdialog;
@@ -132,6 +131,7 @@ private:
 	bool randomBlocksTmp;
 	
 	GnomeUIInfo *gameMenuPtr; 
+	GnomeUIInfo *gameSettingsPtr; 
 
 	void manageFallen();
 	void showScores(gchar *title, guint pos);

@@ -21,20 +21,10 @@
 #include "field.h"
 #include "blocks.h"
 
-Field::	Field(BlockOps *ops)
+Field::	Field()
 {
-	o = ops;
-	
-	gtk_widget_push_visual(gdk_imlib_get_visual());
-	gtk_widget_push_colormap(gdk_imlib_get_colormap());
-
-	w = gtk_drawing_area_new();
-
-	gtk_widget_pop_colormap();
-	gtk_widget_pop_visual();
-
-	gtk_widget_set_events(w, gtk_widget_get_events(w) | GDK_EXPOSURE_MASK);
-	gtk_signal_connect(GTK_OBJECT(w), "event", (GtkSignalFunc)eventHandler, this);
+	bg = NULL;
+	w = gnome_canvas_new();
 }
 
 void 
@@ -42,68 +32,40 @@ Field::show()
 {
 	gtk_widget_realize(w);
 
-	GdkColor c;
-	c.pixel = 0;
-	gdk_window_set_background(w->window, &c);
-
 	gtk_widget_show(w);
-	updateSize();
+	updateSize(NULL);
 }
 
 void
-Field::updateSize()
+Field::updateSize(GdkImlibImage * bgImage)
 {
-	gtk_drawing_area_size(GTK_DRAWING_AREA(w), COLUMNS * BLOCK_SIZE, LINES * BLOCK_SIZE);
+	gtk_widget_set_usize(w, COLUMNS * BLOCK_SIZE, LINES * BLOCK_SIZE);
+	gnome_canvas_set_scroll_region(GNOME_CANVAS(w), 0.0, 0.0, COLUMNS * BLOCK_SIZE, LINES * BLOCK_SIZE);
+
+	if (bg)
+		gtk_object_destroy(GTK_OBJECT(bg));
+	
+  	if (bgImage)
+  		bg = gnome_canvas_item_new(
+  			gnome_canvas_root(GNOME_CANVAS(w)),
+  			gnome_canvas_image_get_type(),
+  			"image", bgImage,
+  			"x", (double) 0,
+  			"y", (double) 0,
+  			"width", (double) COLUMNS * BLOCK_SIZE,
+  			"height", (double) LINES * BLOCK_SIZE,
+  			"anchor", GTK_ANCHOR_NW,
+  			NULL);
+		else
+			bg = gnome_canvas_item_new(
+  			gnome_canvas_root(GNOME_CANVAS(w)),
+				gnome_canvas_rect_get_type(),
+  			"x1", (double) 0,
+  			"y1", (double) 0,
+  			"x2", (double) COLUMNS * BLOCK_SIZE,
+  			"y2", (double) LINES * BLOCK_SIZE,
+				"fill_color", "black",
+				"outline_color", "black",
+				"width_units", 1.0,
+  			NULL);
 }
-
-gint 
-Field::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
-{
-	switch (event->type)
-	{
-	case GDK_EXPOSE: 
-	{
-		GdkEventExpose *e = (GdkEventExpose*)event;
-		((Field*)d)->paint(&e->area);
-		return TRUE;
-	}
-	default:
-		return FALSE;
-	}
-}
-
-void
-Field::drawBlock(GdkRectangle *area, int x, int y)
-{
-	int xdest = x * BLOCK_SIZE;
-	int ydest = y * BLOCK_SIZE;
-
-	if (bgpix)
-		gdk_draw_pixmap(w->window, w->style->black_gc, bgpix, xdest, ydest, xdest, ydest, BLOCK_SIZE, BLOCK_SIZE);
-
-	if (o->getFieldAt(x, y)->what != EMPTY)	
-	{
-		gdk_gc_set_clip_origin(w->style->black_gc, xdest, ydest);
-		gdk_gc_set_clip_mask(w->style->black_gc, pixmask);
-		gdk_draw_pixmap(w->window, w->style->black_gc, 
-										pix, o->getFieldAt(x, y)->color * BLOCK_SIZE, 0, xdest, ydest, BLOCK_SIZE, BLOCK_SIZE);
-		gdk_gc_set_clip_mask(w->style->black_gc, NULL);
-	}
-	else if (!bgpix)
-		gdk_window_clear_area(w->window, xdest, ydest, BLOCK_SIZE, BLOCK_SIZE);
-}
-
-void
-Field::paint(GdkRectangle *area)
-{
-	for (int x = 0; x < COLUMNS; ++x)
-	{
-		for (int y = 0; y < LINES; ++y)
-		{
-			drawBlock(area, x, y);
-		}
-	}
-}
-
-
-

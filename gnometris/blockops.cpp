@@ -20,10 +20,28 @@
 
 #include "blockops.h"
 #include "blocks.h"
+#include "field.h"
 
-BlockOps::BlockOps()
+GnomeCanvasItem *BlockOps::generateItem(int x, int y, int color)
+{
+	GnomeCanvasItem *	it = gnome_canvas_item_new(
+  			gnome_canvas_root(GNOME_CANVAS(fieldDisplay->getWidget())),
+  			gnome_canvas_image_get_type(),
+  			"image", pic[color],
+  			"x", (double) x * BLOCK_SIZE,
+  			"y", (double) y * BLOCK_SIZE,
+  			"width", (double) BLOCK_SIZE,
+  			"height", (double) BLOCK_SIZE,
+  			"anchor", GTK_ANCHOR_NW,
+  			NULL);
+
+	return it;
+}
+
+BlockOps::BlockOps(Field *f)
 {
 	field = new Block*[COLUMNS];
+	fieldDisplay = f;
 	
 	for (int i = 0; i < COLUMNS; ++i)
 		field[i] = new Block[LINES];
@@ -198,12 +216,21 @@ BlockOps::checkFullLines(ScoreFrame *s)
 				s->checkLevel();
 				
 				found = true;
-				for (int y1 = y - 1; y1 >= 0; --y1)
+				for (int y1 = y; y1 >= 0; --y1)
 				{
 					for (int x = 0; x < COLUMNS; ++x)
 					{
-						field[x][y1 + 1] = field[x][y1];
+						if (y1 < y)
+							field[x][y1 + 1] = field[x][y1];
 						field[x][y1].what = EMPTY;
+						if (field[x][y1].item)
+						{
+							gtk_object_destroy(GTK_OBJECT(field[x][y1].item));
+							field[x][y1].item = NULL;
+							if (y1 < y)
+								field[x][y1 + 1].item = generateItem(x, y1 + 1, field[x][y1 + 1].color);
+						}
+						
 					}
 				}
 				break;
@@ -240,7 +267,14 @@ BlockOps::emptyField()
 	for (int y = 0; y < LINES; ++y)
 	{
 		for (int x = 0; x < COLUMNS; ++x)
+		{
+			if (field[x][y].item != NULL)
+			{
+				gtk_object_destroy(GTK_OBJECT(field[x][y].item));
+				field[x][y].item = NULL;
+			}
 			field[x][y].what = EMPTY;
+		}
 	}
 }
 
@@ -252,7 +286,17 @@ BlockOps::putBlockInField(bool erase)
 			if (blockTable[blocknr][rot][x][y])
 			{
 				field[posx - 2 + x][y + posy].what = erase ? EMPTY : FALLING;
-				field[posx - 2 + x][y + posy].color = color;
+				if (erase)
+				{
+					gtk_object_destroy(GTK_OBJECT(field[posx - 2 + x][y + posy].item));
+					field[posx - 2 + x][y + posy].item = NULL;
+				}
+				else
+				{
+					field[posx - 2 + x][y + posy].color = color;
+					field[posx - 2 + x][y + posy].item = generateItem(posx - 2 + x, y + posy, 
+																														field[posx - 2 + x][y + posy].color);
+				}
 			}
 }
 
