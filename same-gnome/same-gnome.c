@@ -42,7 +42,6 @@
 #define KEY_DIR "/apps/same-gnome"
 #define KEY_TILESET "/apps/same-gnome/tileset"
 #define KEY_SCORE "/apps/same-gnome/score"
-#define KEY_NSTONES "/apps/same-gnome/nstones"
 #define KEY_FIELD "/apps/same-gnome/field"
 
 static GtkWidget *pref_dialog, *scorew;
