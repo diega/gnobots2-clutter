@@ -38,14 +38,14 @@ typedef enum
 {
   VIEW_CURTAIN_OPEN,
   VIEW_CURTAIN_ANIMATE,
-  VIEW_CURTAIN_CLOSED,
+  VIEW_CURTAIN_CLOSED
 } ViewCurtainMode;
 
 
 typedef enum
 {
   DISPLAY_IMAGE,
-  DISPLAY_CAVE,
+  DISPLAY_CAVE
 } ViewDisplayMode;
 
 

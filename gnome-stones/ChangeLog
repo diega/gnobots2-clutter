@@ -1,3 +1,10 @@
+2002-09-20  Ross Burton  <ross@burtonini.com>
+
+	* view.h:
+	* types.h:
+	* preferences.h: Remove useless trailing comma in enum
+	declarations. Fixes #91503.
+
 2002-09-19  Ross Burton  <ross@burtonini.com>
 
 	* gnome-stones.keys.in: Replace the hard-coded path with a marker

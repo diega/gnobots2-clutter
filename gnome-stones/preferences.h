@@ -79,7 +79,7 @@ typedef enum
   STATE_CURTAIN,
   STATE_WAITING_TO_START,
   STATE_RUNNING,
-  STATE_COUNTDOWN,
+  STATE_COUNTDOWN
 } GameState;
 
 extern GameState state;
