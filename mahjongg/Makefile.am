@@ -4,7 +4,8 @@ Gamesdir = $(datadir)/apps/Games
 
 INCLUDES = -I.. -I$(srcdir)/..		\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
-	-I$(includedir)
+	-I$(includedir)			\
+	$(GNOME_INCLUDEDIR)
 
 bin_PROGRAMS = mahjongg
 

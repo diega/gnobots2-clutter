@@ -1,3 +1,11 @@
+Sun Mar  8 20:44:15 1998  Tom Tromey  <tromey@cygnus.com>
+
+	* Makefile.am (INCLUDES): Added GNOME_INCLUDEDIR.
+
+Sat Mar  7 22:49:06 1998  Tom Tromey  <tromey@cygnus.com>
+
+	* mahjongg.c (main): Use new gnome_init.
+
 1998-02-19  Federico Mena Quintero  <federico@nuclecu.unam.mx>
 
 	* mahjongg.c (main): Added app_id "mahjongg".

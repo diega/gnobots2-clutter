@@ -1051,11 +1051,13 @@ int main (int argc, char *argv [])
 	GdkColorContext *cc;
 	int x;
 	
-	gtk_init (&argc, &argv);
-	gnome_init ("mahjongg", &argc, &argv);
+	argp_program_version = MAH_VERSION;
 
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
+
+	gnome_init ("mahjongg", NULL, argc, argv, 0, NULL);
+
 	srand (time (NULL));
 	
 	window = gnome_app_new ("gmahjongg", _("Gnome Mahjongg"));
