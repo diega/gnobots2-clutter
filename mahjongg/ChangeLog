@@ -1,3 +1,8 @@
+1999-01-26  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* mahjongg.c (load_tiles): Warn the user in the GUI, not with a printf.
+	Kill file menu too.
+
 1999-01-10  Nat Friedman  <nat@nat.org>
 
 	* mahjongg.c (main): Added an AppBar.  Added a friendly welcome

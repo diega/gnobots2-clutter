@@ -374,11 +374,14 @@ GnomeUIInfo gamemenu [] = {
 
 	 GNOMEUIINFO_MENU_HINT_ITEM(hint_callback, NULL),
 
+	 GNOMEUIINFO_SEPARATOR,
+
+         GNOMEUIINFO_MENU_EXIT_ITEM(quit_game_callback, NULL),
+
 	 GNOMEUIINFO_END
 };
 
 GnomeUIInfo filemenu [] = {
-         GNOMEUIINFO_MENU_EXIT_ITEM(quit_game_callback, NULL),
 	 GNOMEUIINFO_END
 };
 
@@ -406,7 +409,6 @@ GnomeUIInfo helpmenu[] = {
 };
 
 GnomeUIInfo mainmenu [] = {
-        GNOMEUIINFO_MENU_FILE_TREE(filemenu),
 	GNOMEUIINFO_MENU_GAME_TREE(gamemenu),
 	GNOMEUIINFO_MENU_SETTINGS_TREE(settingsmenu),
 	GNOMEUIINFO_MENU_HELP_TREE(helpmenu),
@@ -1283,7 +1285,11 @@ void load_tiles (char *fname)
 	g_free (tmp);
 
 	if (!g_file_exists (fn)) {
-		printf ("Could not find file \'%s\'\n", fn);
+		char *s = g_strdup_printf (_("Could not find file %s"), fn);
+		GtkWidget *box;
+		
+		box = gnome_message_box_new (s, GNOME_MESSAGE_BOX_ERROR, GNOME_STOCK_BUTTON_OK, NULL);
+		gnome_dialog_run (GNOME_DIALOG (box));
 		exit (1);
 	}
 
