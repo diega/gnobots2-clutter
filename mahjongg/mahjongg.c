@@ -249,7 +249,6 @@ tile tiles[MAX_TILES];
 GtkWidget *window, *appbar;
 GtkWidget *canvas;
 GtkWidget *tiles_label;
-GtkWidget *seed_label;
 gint selected_tile, visible_tiles;
 gint sequence_number;
 
@@ -441,6 +440,26 @@ GnomeUIInfo toolbar_uiinfo [] = {
 
 #define PAUSE_BUTTON GTK_TOGGLE_BUTTON(toolbar_uiinfo[6].widget)
 #define HIGHSCORE_WIDGET gamemenu[9].widget
+
+/* At the end of the game, hint, shuffle and pause all become unavailable. */
+/* Undo and Redo are handled elsewhere. */
+static void set_menus_sensitive (gboolean state)
+{
+	gtk_widget_set_sensitive (gamemenu[6].widget, state);
+	gtk_widget_set_sensitive (gamemenu[7].widget, state);
+	gtk_widget_set_sensitive (toolbar_uiinfo[2].widget, state);
+	gtk_widget_set_sensitive (toolbar_uiinfo[5].widget, state);
+	gtk_widget_set_sensitive (toolbar_uiinfo[6].widget, state);
+}
+
+/* Undo and redo sensitivity functionality. */
+static void set_undoredo_sensitive (gboolean undo, gboolean redo)
+{
+	gtk_widget_set_sensitive(gamemenu[4].widget, undo);
+	gtk_widget_set_sensitive(toolbar_uiinfo[3].widget, undo);
+	gtk_widget_set_sensitive(gamemenu[5].widget, redo);
+	gtk_widget_set_sensitive(toolbar_uiinfo[4].widget, redo);
+}
 
 static void
 tileset_callback (GtkWidget *widget, void *data)
@@ -855,6 +874,7 @@ tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
 							gnome_canvas_item_hide (tiles[selected_tile].canvas_item);
 							gnome_canvas_item_hide (tile_inf->canvas_item);
 							clear_undo_queue ();
+							set_undoredo_sensitive (TRUE, FALSE);
 							tiles[selected_tile].sequence = tile_inf->sequence = sequence_number;
 							sequence_number ++;
 							selected_tile = MAX_TILES + 1;
@@ -1017,6 +1037,7 @@ check_free (void)
  	if ((moves_left == 0) && (visible_tiles>0)) { 
                 GtkWidget *mb;
 
+		set_menus_sensitive (FALSE);
                 if (!game_over) {
 			mb = gtk_message_dialog_new (GTK_WINDOW (window),
 						     GTK_DIALOG_MODAL
@@ -1046,6 +1067,7 @@ you_won (void)
 
         score = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
 	pos = gnome_score_log (score, score_current_mapset, FALSE);
+	set_menus_sensitive (FALSE);
         if (pos) {
                 dialog = gnome_scores_display (_(APPNAME_LONG), APPNAME,
 					       score_current_mapset, pos);
@@ -1483,7 +1505,13 @@ redo_tile_callback (GtkWidget *widget, gpointer data)
                   	gnome_app_flash (GNOME_APP (window), "No more redo!");
         tmpstr = g_strdup_printf ("%3d",visible_tiles);
         gtk_label_set_text(GTK_LABEL (tiles_label), tmpstr);
-        
+
+        set_undoredo_sensitive (TRUE, FALSE);
+	for (i=0; i<MAX_TILES; i++) {
+		if (tiles[i].sequence == sequence_number)
+			set_undoredo_sensitive (TRUE, TRUE);
+	}
+	
         update_moves_left ();
         gnome_canvas_update_now (GNOME_CANVAS (canvas));
 }
@@ -1521,6 +1549,8 @@ undo_tile_callback (GtkWidget *widget, gpointer data)
         gtk_label_set_text (GTK_LABEL(tiles_label), tmpstr);
         gnome_canvas_update_now (GNOME_CANVAS (canvas));
 
+	set_menus_sensitive (TRUE);
+	set_undoredo_sensitive (sequence_number>1, TRUE);
         update_moves_left ();
 }
 
@@ -1770,12 +1800,13 @@ do_game (void)
 	char *str;
 
 	current_seed = next_seed;
-	str = g_strdup_printf ("%d", current_seed);
-	gtk_label_set_text (GTK_LABEL (seed_label), str);
+	str = g_strdup_printf ("%s (%d)",_("Mahjongg"), current_seed);
+	gtk_window_set_title (GTK_WINDOW (window), str);
 	g_free (str);
 	
 	load_map (); /* assigns pos, and calculates dependencies */
 	generate_game (current_seed); /* puts in the positions of the tiles */
+	set_undoredo_sensitive (FALSE, FALSE);	
 }
 
 static void
@@ -1856,6 +1887,7 @@ new_game (gboolean re_seed)
 
 	score_current_mapset = strdup (mapset);
 	update_score_state ();
+	set_menus_sensitive (TRUE);
 }
 
 void
@@ -1982,15 +2014,6 @@ main (int argc, char *argv [])
 	gtk_box_pack_start (GTK_BOX (group_box), spacer, FALSE, FALSE, 0);
 	chrono = games_clock_new ();
 	gtk_box_pack_start (GTK_BOX (group_box), chrono, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
-
-	group_box = gtk_hbox_new (FALSE, 0);
-	seed_label = gtk_label_new (_("Seed:"));
-	gtk_box_pack_start (GTK_BOX (group_box), seed_label, FALSE, FALSE, 0);
-	spacer = gtk_label_new (" ");
-	gtk_box_pack_start (GTK_BOX (group_box), spacer, FALSE, FALSE, 0);
-	seed_label = gtk_label_new ("");
-	gtk_box_pack_start (GTK_BOX (group_box), seed_label, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
 
 	/* show the status bar items */

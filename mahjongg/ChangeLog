@@ -1,3 +1,12 @@
+2003-06-28  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c: Moved the seed to the title bar to be consistent
+	with other games (bug #114996). Also made the menu items
+	(esp. undo redo) context sensitive.
+
+	* bg4.png: Darkened up the border when highlighted so that there
+	is a distinct difference between selected and unselected.
+
 2003-06-26  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* solubility.c: More work on the new code. Everything is
