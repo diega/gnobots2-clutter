@@ -1,3 +1,8 @@
+2000-09-13  Eric Baudais  <baudais@okstate.edu>
+
+	* help/C/*: Added documentation to mahjongg.  It is not currently linked 
+	into the program.
+
 2000-05-12  Andreas Hyden  <a.hyden@cyberpoint.se>
 
 	* mahjongg.desktop: Added Swedish translation.
