@@ -1305,12 +1305,14 @@ char *argv[]
     gnome_score_init("gnobots");
 
     
-    client = gnome_client_new_default();
+    gnome_init("gnobots", &parser, argc, argv, 0, NULL);
+
+    client = gnome_master_client();
 
     getcwd(buf, sizeof(buf));
 
     /* This doesn't seem to work properly ?? */
-    /* gnome_client_set_current_directory(client, buf); */
+    gnome_client_set_current_directory(client, buf);
 
     gtk_object_ref(GTK_OBJECT(client));
     gtk_object_sink(GTK_OBJECT(client));
@@ -1321,8 +1323,6 @@ char *argv[]
                        GTK_SIGNAL_FUNC (session_die), argv[0]);
 
     
-    gnome_init("gnobots", &parser, argc, argv, 0, NULL);
-
     app = gnome_app_new("gnobots", _("Gnome Robots") );
     /* no resize allowed */
     gtk_window_set_policy(GTK_WINDOW(app), FALSE, FALSE, TRUE);
