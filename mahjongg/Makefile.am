@@ -20,7 +20,7 @@ mahjongg_LDADD = \
 pixmap_DATA = default.xpm
 inline_pixmaps = hborder.xpm vborder.xpm
 
-EXTRA_DIST = mahjongg.desktop $(pixmap_DATA)
+EXTRA_DIST = mahjongg.desktop $(pixmap_DATA) $(inline_pixmaps)
 
 Games_DATA = mahjongg.desktop
 
