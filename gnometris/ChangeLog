@@ -1,3 +1,9 @@
+2004-05-04  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* tetris.cpp: 
+	* tetris.h: Added Drag and Drop support so we can do backgrounds
+	this way. The data is received, but nothing much happens yet.
+
 2004-03-06  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* help/C/.cvsignore: Ignore the correct files not the gtali ones

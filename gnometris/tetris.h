@@ -106,6 +106,9 @@ private:
 	void generateTimer(int level);
 	
 	static gint eventHandler(GtkWidget *widget, GdkEvent *event, void *d);
+	static void dragDrop(GtkWidget *widget, GdkDragContext *context,
+			     gint x, gint y, GtkSelectionData *data, 
+			     guint info, guint time, gpointer userdata);
 	static int timeoutHandler(void *d);
 	static int gameQuit(GtkWidget *widget, void *d);
 	static int gameNew(GtkWidget *widget, void *d);

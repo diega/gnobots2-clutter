@@ -88,6 +88,9 @@ Tetris::Tetris(int cmdlLevel):
 	double x1, y1, x2, y2;
 	double width;
 	double pts;
+	GtkTargetEntry targets[] = {{"text/uri-list", 0, 0}, 
+				    {"text/plain", 0, 1},
+				    {"STRING", 0, 2}};
 
 	pic = new GdkPixbuf*[tableSize];
 	for (int i = 0; i < tableSize; ++i)
@@ -96,6 +99,10 @@ Tetris::Tetris(int cmdlLevel):
 	w = gnome_app_new("gnometris", _("Gnometris"));
 	g_signal_connect (w, "delete_event", G_CALLBACK (gameQuit), this);
 	gtk_window_set_resizable (GTK_WINDOW (w), FALSE);
+	gtk_drag_dest_set (w, GTK_DEST_DEFAULT_ALL, targets, 
+			   G_N_ELEMENTS(targets), GDK_ACTION_COPY);
+	g_signal_connect (G_OBJECT (w), "drag_data_received", 
+			  G_CALLBACK (dragDrop), NULL);
 
 	static GnomeUIInfo game_menu[] = 
 	{
@@ -998,6 +1005,24 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 		gtk_widget_queue_draw(t->field->getWidget());
 
 	return (keyEvent == true);
+}
+
+void
+Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
+		 gint x, gint y, GtkSelectionData *data, guint info, 
+		 guint time, gpointer userdata)
+{
+	
+	if (data->length < 0) {
+		gtk_drag_finish (context, FALSE, FALSE, time);
+		return;
+	}
+
+	gtk_drag_finish (context, TRUE, FALSE, time);
+	g_print ("Dropped: ");
+	g_print ("%s", data->data);
+
+	return;
 }
 
 void
