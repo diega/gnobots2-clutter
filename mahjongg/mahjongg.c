@@ -1917,6 +1917,7 @@ int main (int argc, char *argv [])
 	gnome_program_init (APPNAME, VERSION,
 			    LIBGNOMEUI_MODULE,
 			    argc, argv,
+			    GNOME_PARAM_APP_DATADIR, DATADIR,
 			    NULL);
 
         gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-mahjongg.png");

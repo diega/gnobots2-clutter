@@ -47,7 +47,7 @@ void UI::initialize(int argc, char **argv, const struct poptOption *options) {
 			LIBGNOMEUI_MODULE,
 			argc, argv,
 			GNOME_PARAM_POPT_TABLE, options,
-			NULL);
+			GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
 	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/xbill.png");
 	toplevel = gnome_app_new("gnome-xbill", "Gnome xBill");
 	g_signal_connect(GTK_OBJECT(toplevel), "destroy",

@@ -6,6 +6,7 @@ appicondir=$(datadir)/pixmaps
 INCLUDES = 			\
 	-I$(top_srcdir)/libgames-support \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
+	-DDATADIR=\""$(datadir)"\"		   \
 	$(GNOME_GAMES_CFLAGS) \
 	-DG_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED \
 	-DGDK_DISABLE_DEPRECATED -DGNOME_DISABLE_DEPRECATED

@@ -4,6 +4,7 @@ Gamesdir=$(datadir)/applications
 
 INCLUDES=\
 	$(GNOME_GAMES_CFLAGS)				\
+	-DDATADIR=\""$(datadir)"\"		   \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	-DG_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED	\
 	-DGNOME_DISABLE_DEPRECATED

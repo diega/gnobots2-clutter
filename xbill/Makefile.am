@@ -7,6 +7,7 @@ scoredir = $(localstatedir)/games
 
 INCLUDES = $(GNOME_GAMES_CFLAGS)			\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
+	-DDATADIR=\""$(datadir)"\"		   \
 	-DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED	\
 	-DGTK_DISABLE_DEPRECATED -DGNOME_DISABLE_DEPRECATED
 bin_PROGRAMS = gnome-xbill

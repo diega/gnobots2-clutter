@@ -879,7 +879,11 @@ int main(int argc, char **argv) {
     CORBA_exception_init (&ev);
     orb = gnome_CORBA_init_with_popt_table ("gataxx", VERSION, &argc, argv, options, 0, NULL, GNORBA_INIT_SERVER_FUNC|GNORBA_INIT_DISABLE_COOKIES, &ev);
 #else
-    gnome_init_with_popt_table("gataxx", VERSION, argc, argv, options, 0, NULL);
+    gnome_program_init ("gataxx", VERSION,
+       		      LIBGNOMEUI_MODULE, 
+       		      argc, argv,
+       		      GNOME_PARAM_POPT_TABLE, options,
+       		      GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
 #endif
 
     gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gataxx.png");

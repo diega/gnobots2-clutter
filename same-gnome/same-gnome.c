@@ -684,7 +684,7 @@ GnomeUIInfo settingsmenu[] = {
 };
 
 GnomeUIInfo helpmenu[] = {
-        GNOMEUIINFO_HELP("samegnome"),
+        GNOMEUIINFO_HELP("same-gnome"),
 
 	GNOMEUIINFO_MENU_ABOUT_ITEM(game_about_callback, NULL),
 
@@ -790,7 +790,11 @@ main (int argc, char *argv [])
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
-	gnome_init_with_popt_table ("same-gnome", VERSION, argc, argv, options, 0, NULL);
+        gnome_program_init ("same-gnome", VERSION,
+                             LIBGNOMEUI_MODULE,
+                             argc, argv,
+                             GNOME_PARAM_POPT_TABLE, options,
+                             GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
 
 	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-gsame.png");
 	client= gnome_master_client ();

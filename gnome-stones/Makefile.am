@@ -8,6 +8,7 @@ Cavesdir = $(datadir)/gnome-stones
 
 INCLUDES =						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
+	-DDATADIR=\""$(datadir)"\"		   \
 	-DGNOMEPIXMAPDIR=\""$(datadir)/pixmaps"\"	\
 	-DG_DISABLE_DEPRECATED				\
 	-DGDK_DISABLE_DEPRECATED 			\
