@@ -5,7 +5,7 @@
   <!ENTITY appversion "1.90.2">
   <!ENTITY manrevision "2.0">
   <!ENTITY date "27 April 2002">
-  <!ENTITY app "<application>Same-Gnome</application>">
+  <!ENTITY app "<application>Same GNOME</application>">
   <!-- Information about the entities
        The legal.xml file contains legal information, there is no need to
        edit the file. 
@@ -255,7 +255,7 @@
 <!-- ================ Usage ================================ -->
 
   <sect1 id="playing-same-gnome"> 
-    <title>Playing Same Gnome</title> 
+    <title>Playing Same GNOME</title> 
     
     <para>
       A new game is started when you start &app;.  To start a new game

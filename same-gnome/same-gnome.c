@@ -262,7 +262,7 @@ show_scores (guint pos)
 {
 	GtkWidget *dialog;
 
-	dialog = gnome_scores_display (_("The Same Gnome"), "same-gnome", NULL, pos);
+	dialog = gnome_scores_display (_("The Same GNOME"), "same-gnome", NULL, pos);
 	if (dialog != NULL) {
 		gtk_window_set_transient_for (GTK_WINDOW(dialog), GTK_WINDOW(app));
 		gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
@@ -431,8 +431,8 @@ load_scenario (char *fname)
 			GTK_DIALOG_DESTROY_WITH_PARENT,
 			GTK_MESSAGE_ERROR,
 			GTK_BUTTONS_OK,
-			_("Same Gnome can't load the image file:\n%s\n\n"
-			 "Please check your Same Gnome installation"), fn);
+			_("Same GNOME can't load the image file:\n%s\n\n"
+			 "Please check your Same GNOME installation"), fn);
 
 		gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (box));
@@ -622,7 +622,7 @@ game_about_callback (GtkWidget *widget, void *data)
 		}
 	}
 	
-	about = gnome_about_new (_("The Same Gnome"), VERSION,
+	about = gnome_about_new (_("The Same GNOME"), VERSION,
 				 "(C) 1997-1998 the Free Software Foundation",
 				 _("Original idea from KDE's same game program."),
 				 (const char **)authors,
@@ -649,7 +649,7 @@ game_quit_callback (GtkWidget *widget, void *data)
 				GTK_DIALOG_DESTROY_WITH_PARENT,
 				GTK_MESSAGE_QUESTION,
 				GTK_BUTTONS_NONE,
-				_("Are you sure you want to quit Same Gnome?"));
+				_("Are you sure you want to quit Same GNOME?"));
 
 		gtk_dialog_add_buttons (GTK_DIALOG (box),
 						GTK_STOCK_CANCEL,
@@ -839,7 +839,7 @@ main (int argc, char *argv [])
 
 	srand (time (NULL));
 
-	app = gnome_app_new("same-gnome", _("Same Gnome"));
+	app = gnome_app_new("same-gnome", _("Same GNOME"));
 
         gtk_window_set_policy(GTK_WINDOW(app), FALSE, FALSE, TRUE);
 	g_signal_connect (G_OBJECT (app), "delete_event",
@@ -849,7 +849,7 @@ main (int argc, char *argv [])
 	gnome_app_set_statusbar(GNOME_APP (app), GTK_WIDGET(appbar));
 
 	gnome_appbar_set_status(GNOME_APPBAR (appbar),
-				_("Welcome to Same Gnome!"));
+				_("Welcome to Same GNOME!"));
 
 	gnome_app_create_menus(GNOME_APP(app), mainmenu);
 

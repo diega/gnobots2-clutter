@@ -1,3 +1,8 @@
+2002-12-11  Ross Burton  <ross@burtonini.com>
+
+	* same-gnome.c:
+	* help/C/same-gnome.xml: Rename game to "Same GNOME".
+
 2002-11-29  Ross Burton  <ross@burtonini.com>
 
 	* Makefile.am (EXTRA_DIST): Put the source of the schemas in the
