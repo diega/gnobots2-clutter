@@ -574,6 +574,27 @@ game_preferences_callback (GtkWidget *widget, void *data)
 }
 
 int
+game_about_callback (GtkWidget *widget, void *data)
+{
+	GtkWidget *about;
+	gchar *authors[] = {
+			"Miguel de Icaza.",
+			"Federico Mena.",
+			"Horacio J. Peña.",
+			NULL
+			};
+
+	about = gnome_about_new (_("The Same Gnome"), VERSION,
+			"(C) 1997-1998 the Free Software Foundation",
+			authors,
+			_("Original idea from KDE's same game program."),
+			NULL);
+	gtk_widget_show (about);
+
+	return TRUE;
+}
+
+int
 game_quit_callback (GtkWidget *widget, void *data)
 {
 	GtkWidget *box;
@@ -590,11 +611,17 @@ game_quit_callback (GtkWidget *widget, void *data)
 }
 
 GtkMenuEntry same_menu [] = {
-	{ N_("Game/New"),        "<control>N", game_new_callback, NULL },
-	{ N_("Game/Scenario"),   "<control>S", game_preferences_callback, NULL },
-	{ N_("Game/Top Ten"),    "<control>T", game_top_ten_callback, NULL },
+	{ N_("Game/New"),	  N_("<control>N"), 
+			(GtkMenuCallback) game_new_callback, NULL },
+	{ N_("Game/Scenario..."), N_("<control>S"),
+			(GtkMenuCallback) game_preferences_callback, NULL },
+	{ N_("Game/Top Ten..."),  N_("<control>T"),
+			(GtkMenuCallback) game_top_ten_callback, NULL },
 	{ N_("Game/<separator>"), NULL, NULL, NULL },
-	{ N_("Game/Exit"),       "<control>E", (GtkMenuCallback) game_quit_callback, NULL }, 
+	{ N_("Game/Exit"),        N_("<control>E"),
+			(GtkMenuCallback) game_quit_callback, NULL }, 
+	{ N_("Help/About..."),    N_("<control>A"),
+			(GtkMenuCallback) game_about_callback, NULL }, 
 };
 
 #define ELEMENTS(x) (sizeof (x) / sizeof (x [0]))
@@ -682,8 +709,29 @@ save_state (gpointer client_data, GnomeSaveStyle save_style,
 
 	gnome_session_set_restart_command (3, argv); /* probably it should
 		remember command-line parameters (--debug, ...) */
+	argv[1] = "--delete-sess";
+	gnome_session_set_discard_command (3, argv);
 	
 	return(1);
+}
+
+void
+delete_session (gchar *id)
+{
+	gchar *sess;
+
+	if (debugging)
+		g_print ("Deleting info from session %s\n", id);
+
+	sess = g_copy_strings ("/same-gnome/Saved-Session-",
+				id,
+				NULL);
+
+	gnome_config_clean_section (sess);
+	gnome_config_sync ();
+
+	g_free (sess);
+	return;
 }
 
 void
@@ -732,9 +780,6 @@ restart (gchar *id)
 	g_free(buf2);
 	g_free(buf);
 
-	if (debugging)
-		g_print ("Buh!\n");
-
 	g_free(sess);
 	return(1);
 }
@@ -748,6 +793,7 @@ parse_args (int argc,char *argv[])
 		{ "debug",    	no_argument,		NULL,	'd'	},
 		{ "help",    	no_argument,		NULL,	'h'	},
 		{ "session", 	required_argument,	NULL,	'S'	},
+		{ "delete-sess",required_argument,	NULL,	'D'	},
 		{ "scenario", 	required_argument,	NULL,	's'	},
 		{ "version", 	no_argument,		NULL,	'v'	},
 		{ NULL, 0, NULL, 0 }
@@ -778,13 +824,19 @@ parse_args (int argc,char *argv[])
 				exit(0);
 				break;
 			case 'v':
-				g_print (_("Gnome Mines version 0.1\n"));
+				g_print (_("Same Gnome version %s.\n"), 
+								VERSION);
 				exit(0);
 				break;
 			case 'S':
 				id = g_strdup (optarg);
 				restart (id);
 				restarted = 1;
+				break;
+			case 'D':
+				id = g_strdup (optarg);
+				delete_session (id);
+				exit(0);
 				break;
 			case 's':
 				g_free (fname);
@@ -816,12 +868,6 @@ main (int argc, char *argv [])
 	gnome_init (&argc, &argv);
 	fname = parse_args(argc, argv);
 	textdomain (PACKAGE);
-
-	if (argc > 1)
-		fname = strdup (argv [1]);
-	else {
-		fname = gnome_config_get_string ( "/same-gnome/Preferences/Scenario=stones.xpm" );
-	}
 
 	srand (time (NULL));
 

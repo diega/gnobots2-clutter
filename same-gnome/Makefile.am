@@ -27,4 +27,5 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/same-gnome.desktop $(Gamesdir)/"Same Gnome.desktop"
 	touch $(scoredir)/samegnome.scores
 	chown games.games $(scoredir)/samegnome.scores
+	chmod 664 $(scoredir)/samegnome.scores
 
