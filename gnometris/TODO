@@ -1,9 +1,11 @@
 ASAP:
+* change "fall like a rock" to "just fall quicker" on down-arrow
 * Clean up the code - remove global variables, smaller, more specialize classes, 
    less static methods etc.
 
 Next:
 * changeable field background
+* random pieces at the bottom in various difficulty levels
 * configurable field size
 * major redesign: tetris, jewel and trojka in one shell (Sergey's (sipan@mit.edu) idea)
 
