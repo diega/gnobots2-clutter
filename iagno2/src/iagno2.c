@@ -53,6 +53,8 @@ gboolean interactive = 0;
 gint computer_timeout_id = 0;
 gint game_over_flip_id = 0;
 
+gint computer_return = 64;
+
 GnomeAppBar *appbar;
 
 void
@@ -568,11 +570,20 @@ iagno2_board_changed ()
 }
 
 static gint
+/*
 iagno2_get_computer_move (int *index)
+*/
+iagno2_get_computer_move ()
 {
+  /*
   if (*index != 64) {
+  */
+  if (computer_return != 64) {
+    iagno2_move (computer_return);
+    /*
     iagno2_move (*index);
     free (index);
+    */
     return (FALSE);
   }
 
@@ -580,11 +591,18 @@ iagno2_get_computer_move (int *index)
 }
 
 static void
+/*
 iagno2_computer_thread (int *index)
+*/
+iagno2_computer_thread ()
 {
   int player = PLAYER (whose_turn);
   
+  /*
   *index = players[player]->plugin_move (board);
+  */
+
+  computer_return = players[player]->plugin_move (board);
 
   _exit (0);
 }
@@ -593,13 +611,25 @@ static gint
 iagno2_computer_player_wrapper ()
 {
   pthread_t tid;
+  /*
   int *index = (int *) malloc (sizeof (int));
+  */
 
+  /*
   *index = 64;
+  */
 
+  computer_return = 64;
+
+  /*
   pthread_create (&tid, NULL, iagno2_computer_thread, index);
+  */
+  pthread_create (&tid, NULL, (void *)iagno2_computer_thread, NULL);
 
+  /*
   computer_timeout_id = gtk_timeout_add (500, iagno2_get_computer_move, index);
+  */
+  computer_timeout_id = gtk_timeout_add (500, iagno2_get_computer_move, NULL);
 
   return FALSE;
 }
@@ -682,46 +712,58 @@ iagno2_move (gchar index)
 }
 
 void
-iagno2_initialize_players ()
+iagno2_initialize_players (int which)
 {
   gint i;
   gchar *tmp_path;
   gchar *filename;
 
-  if (players[0] != NULL) {
-    iagno2_plugin_close (players[0]);
-    players[0] = NULL;
-  }
-  if (!strcmp (properties->player1, "Human")) {
-    players[0] = NULL;
-    printf ("Player 1 is \"Human\"\n");
-  } else {
-    tmp_path = g_strconcat ("iagno2/",
-        properties->player1, NULL);
-    filename = gnome_unconditional_libdir_file (tmp_path);
-    g_free (tmp_path);
-    players[0] = iagno2_plugin_open (filename);
-    g_free (filename);
-    printf ("Player 1 is \"%s\"\n", players[0]->plugin_name ());
-    players[0]->plugin_init ();
+  if ((which == 0) || (which == 1)) {
+    if (players[0] != NULL) {
+      iagno2_plugin_close (players[0]);
+      players[0] = NULL;
+    }
+    if (!strcmp (properties->player1, "Human")) {
+      players[0] = NULL;
+      /*
+      printf ("Player 1 is \"Human\"\n");
+      */
+    } else {
+      tmp_path = g_strconcat ("iagno2/",
+          properties->player1, NULL);
+      filename = gnome_unconditional_libdir_file (tmp_path);
+      g_free (tmp_path);
+      players[0] = iagno2_plugin_open (filename);
+      g_free (filename);
+      /*
+      printf ("Player 1 is \"%s\"\n", players[0]->plugin_name ());
+      */
+      players[0]->plugin_init ();
+    }
   }
 
-  if (players[1] != NULL) {
-    iagno2_plugin_close (players[1]);
-    players[1] = NULL;
-  }
-  if (!strcmp (properties->player2, "Human")) {
-    players[1] = NULL;
-    printf ("Player 2 is \"Human\"\n");
-  } else {
-    tmp_path = g_strconcat ("iagno2/",
-        properties->player2, NULL);
-    filename = gnome_unconditional_libdir_file (tmp_path);
-    g_free (tmp_path);
-    players[1] = iagno2_plugin_open (filename);
-    g_free (filename);
-    printf ("Player 2 is \"%s\"\n", players[1]->plugin_name ());
-    players[1]->plugin_init ();
+  if ((which ==0) || (which == 2)) {
+    if (players[1] != NULL) {
+      iagno2_plugin_close (players[1]);
+      players[1] = NULL;
+    }
+    if (!strcmp (properties->player2, "Human")) {
+      players[1] = NULL;
+      /*
+      printf ("Player 2 is \"Human\"\n");
+      */
+    } else {
+      tmp_path = g_strconcat ("iagno2/",
+          properties->player2, NULL);
+      filename = gnome_unconditional_libdir_file (tmp_path);
+      g_free (tmp_path);
+      players[1] = iagno2_plugin_open (filename);
+      g_free (filename);
+      /*
+      printf ("Player 2 is \"%s\"\n", players[1]->plugin_name ());
+      */
+      players[1]->plugin_init ();
+    }
   }
 }
 

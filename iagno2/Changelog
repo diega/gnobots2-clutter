@@ -1,3 +1,12 @@
+2000-04-09  Ian Peters  <itp@gnu.org>
+
+	* src/preferences.c: Now you can choose which plugins play what player.
+	* src/plugin.c, src/plugin.h: Tweaked the interface
+	* plugins/random/random.c: Filled out more functions to demonstrate the
+	  interface better.
+	* src/main.c: slight change to prototype of iagno2_initialize_players
+	  required update
+
 2000-04-08  Ian Peters  <itp@gnu.org>
 
 	* src/plugin.c, src/plugin.h: Added a function to the plugin spec to

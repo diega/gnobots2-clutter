@@ -132,7 +132,7 @@ main (int argc, char **argv)
 
   iagno2_tileset_load ();
 
-  iagno2_initialize_players ();
+  iagno2_initialize_players (0);
 
   iagno2_app_init ();
   iagno2_appbar_init ();
