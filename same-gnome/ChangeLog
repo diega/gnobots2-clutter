@@ -1,3 +1,10 @@
+2001-12-11  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* same-gnome.c: Ask if quit only if game is not finished.
+	According to HIG, make preferences dialog instant-apply, reverse
+	buttons. Remove "Make it default" option. Preferences and about
+	dialogs are unique. No more deprecated stuff.
+
 2001-07-27  Abel Cheung  <maddog@linux.org.hk>
 
 	* same-gnome.desktop: Added traditional Chinese translation.

@@ -16,6 +16,9 @@
 #include <dirent.h>
 
 #include <config.h>
+#define GNOME_DISABLE_DEPRECATED
+#define GTK_DISABLE_DEPRECATED
+#define G_DISABLE_DEPRECATED
 #include <gnome.h>
 #include <libgnomeui/gnome-window-icon.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
@@ -40,12 +43,9 @@ static int old_x = -1, old_y = -1;
 static int score;
 static gchar *scenario;
 static gint restarted;
-static gint debugging;
+static gboolean game_over = FALSE;
 
-static struct {
-	char *scenario;
-	int make_it_default;
-} selected_scenario = {0,0};
+char *selected_scenario = NULL;
 
 static struct ball {
 	int color;
@@ -183,9 +183,9 @@ mark_balls (int x, int y)
 		char b[3];
 		ball_timeout_id = gtk_timeout_add (100, move_tagged_balls, 0);
 		sprintf (b, "%.2d", tagged_count);
-		gtk_label_set (GTK_LABEL(markedw), b);
+		gtk_label_set_text (GTK_LABEL(markedw), b);
 	} else
-		gtk_label_set (GTK_LABEL(markedw), "00");
+		gtk_label_set_text (GTK_LABEL(markedw), "00");
 }
 
 static void
@@ -253,28 +253,19 @@ set_score (int new_score)
 	
 	score = new_score;
 	sprintf (b, "%.5d", score);
-	gtk_label_set (GTK_LABEL(scorew), b);
+	gtk_label_set_text (GTK_LABEL(scorew), b);
 }
 
 static void
-show_scores ( gchar *title, guint pos )
+show_scores (guint pos)
 {
-	gnome_scores_display (title, "same-gnome", NULL, pos);
+	gnome_scores_display (_("The Same Gnome"), "same-gnome", NULL, pos);
 }
 
 static void
 game_top_ten_callback(GtkWidget *widget, gpointer data)
 {
-	show_scores(_("The Same Gnome"), 0);
-}
-
-static void
-end_of_game (char *title)
-{
-	int pos;
-
-	pos = gnome_score_log(score, NULL, TRUE);
-	show_scores(title, pos);
+	show_scores(0);
 }
 
 static void
@@ -282,6 +273,7 @@ check_game_over (void)
 {
 	int cleared=1;
 	int x,y;
+	int pos;
 	
 	for(x = 0; x < STONE_COLS; x++)
 		for(y = 0 ; y < STONE_LINES; y++) {
@@ -295,12 +287,13 @@ check_game_over (void)
 				if(field[x][y].color == field[x][y+1].color)
 					return;
 		}
-	if (cleared){
+
+	if (cleared)
 		set_score (score+1000);
-		end_of_game (_("The Same Gnome"));
-	}
-	else
-		end_of_game(_("The Same Gnome"));
+
+	pos = gnome_score_log(score, NULL, TRUE);
+	show_scores(pos);
+	game_over = TRUE;
 }
 
 static void
@@ -374,6 +367,7 @@ fill_board (void)
 static void
 new_game (void)
 {
+	game_over = FALSE;
 	fill_board ();
 	set_score (0);
 	gtk_widget_draw (draw_area, NULL);
@@ -395,24 +389,25 @@ load_scenario (char *fname)
         GdkColor bgcolor;
         GdkImage *tmpimage;
     
-	tmp = g_strconcat ( "same-gnome/", fname, NULL);
+	g_return_if_fail (fname != NULL);
 
-	fn = gnome_unconditional_pixmap_file ( tmp );
-	g_free( tmp );
+	fn = g_strconcat ( PIXMAPDIR, "/", fname, NULL);
 
-	if (!g_file_exists (fn)) {
-		char *message = g_strdup_printf (
+	if (!g_file_test (fn, G_FILE_TEST_EXISTS)) {
+		GtkWidget *box = gtk_message_dialog_new (GTK_WINDOW (app),
+			GTK_DIALOG_DESTROY_WITH_PARENT,
+			GTK_MESSAGE_ERROR,
+			GTK_BUTTONS_OK,
 			_("Could not find the theme:\n%s\n\n"
 			"Please check you Same Gnome instalation"), fn);
-		GtkWidget *w = gnome_error_dialog (message);
-		gnome_dialog_run_and_close (GNOME_DIALOG(w));
-		g_free (message);
+
+		gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_OK);
+		gtk_dialog_run (GTK_DIALOG (box));
+		gtk_widget_destroy (box);
 		exit (1);
 	}
 
-	if (scenario)
-		g_free (scenario);
-
+	g_free (scenario);
 	scenario = g_strdup(fname);
 
 	configure_sync (fname);
@@ -423,12 +418,16 @@ load_scenario (char *fname)
 	image = gdk_pixbuf_new_from_file (fn, NULL);
 
 	if (image == NULL) {
-		char *message = g_strdup_printf (
+		GtkWidget *box = gtk_message_dialog_new (GTK_WINDOW (app),
+			GTK_DIALOG_DESTROY_WITH_PARENT,
+			GTK_MESSAGE_ERROR,
+			GTK_BUTTONS_OK,
 			_("Same Gnome can't load the image file:\n%s\n\n"
 			 "Please check your Same Gnome installation"), fn);
-		GtkWidget *w = gnome_error_dialog (message);
-		gnome_dialog_run_and_close (GNOME_DIALOG(w));
-		g_free (message);
+
+		gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_OK);
+		gtk_dialog_run (GTK_DIALOG (box));
+		gtk_widget_destroy (box);
 		exit (1);
 	}
 
@@ -450,30 +449,13 @@ load_scenario (char *fname)
 }
 
 static void
-set_selection (GtkWidget *widget, void *data)
-{
-	if (selected_scenario.scenario)
-		free (selected_scenario.scenario);
-
-	selected_scenario.scenario = strdup (data);
-}
-
-static void
-set_selection_def (GtkWidget *widget, gpointer *data)
-{
-	selected_scenario.make_it_default = GTK_TOGGLE_BUTTON (widget)->active;
-}
-
-static void
 create_same_board (char *fname)
 {
-	gtk_widget_push_visual (gdk_rgb_get_visual ());
 	gtk_widget_push_colormap (gdk_rgb_get_cmap ());
 
 	draw_area = gtk_drawing_area_new ();
 
         gtk_widget_pop_colormap ();
-	gtk_widget_pop_visual ();
 
 	gtk_widget_set_events (draw_area, gtk_widget_get_events (draw_area) | GAME_EVENTS);
 
@@ -486,7 +468,8 @@ create_same_board (char *fname)
 	gtk_drawing_area_size (GTK_DRAWING_AREA (draw_area),
 			       STONE_COLS  * STONE_SIZE,
 			       STONE_LINES * STONE_SIZE);
-	gtk_signal_connect (GTK_OBJECT(draw_area), "event", (GtkSignalFunc) area_event, 0);
+	g_signal_connect (G_OBJECT (draw_area), "event",
+			  G_CALLBACK( area_event), 0);
 }
 
 static void
@@ -496,20 +479,21 @@ game_new_callback (GtkWidget *widget, void *data)
 }
 
 static void
-free_str (GtkWidget *widget, void *data)
+set_selection (GtkWidget *widget, void *data)
 {
-	free (data);
+	load_scenario (data);
+	gnome_config_set_string ("/same-gnome/Preferences/Scenario", data);
+	gnome_config_sync();
 }
 
 static void
 fill_menu (GtkWidget *menu)
 {
 	struct dirent *e;
-	char *dname = gnome_unconditional_pixmap_file ("same-gnome");
 	DIR *dir;
         int itemno = 0;
 	
-	dir = opendir (dname);
+	dir = opendir (PIXMAPDIR);
 
 	if (!dir)
 		return;
@@ -525,60 +509,61 @@ fill_menu (GtkWidget *menu)
 			
 		item = gtk_menu_item_new_with_label (s);
 		gtk_widget_show (item);
-		gtk_menu_append (GTK_MENU(menu), item);
-		gtk_signal_connect (GTK_OBJECT(item), "activate",
-				    GTK_SIGNAL_FUNC (set_selection), s);
-		gtk_signal_connect (GTK_OBJECT(item), "destroy",
-				    GTK_SIGNAL_FUNC (free_str), s);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+		g_signal_connect (G_OBJECT (item), "activate",
+				  G_CALLBACK (set_selection), s);
 	  
 	        if (!strcmp(scenario, s))
-	        {
-		  gtk_menu_set_active(GTK_MENU(menu), itemno);
-		}
+			gtk_menu_set_active(GTK_MENU(menu), itemno);
 	  
 	        itemno++;
 	}
 	closedir (dir);
-	g_free (dname);
 }
 
 static void
-cancel (GtkWidget *widget, void *data)
+pref_dialog_response (GtkDialog *dialog, gint response, gpointer data)
 {
-	gtk_widget_destroy (pref_dialog);
-	pref_dialog = 0;
-}
-
-static void
-load_scenario_callback (GtkWidget *widget, void *data)
-{
-	if (selected_scenario.scenario) {
-		load_scenario (selected_scenario.scenario);
-		if (selected_scenario.make_it_default) {
-			gnome_config_set_string (
-				"/same-gnome/Preferences/Scenario", 
-				selected_scenario.scenario);
-			gnome_config_sync();
-		}
+	if (response == GTK_RESPONSE_OK)
+	{
+		g_free (selected_scenario);
+		selected_scenario = gnome_config_get_string ("/same-gnome/Preferences/Scenario");
+	} else {
+		/* Restore previous scenario */
+		load_scenario (selected_scenario);
+		gnome_config_set_string ("/same-gnome/Preferences/Scenario", 
+			selected_scenario);
+		gnome_config_sync();
 	}
-	cancel (0,0);
+
+	gtk_widget_destroy (pref_dialog);
+	pref_dialog = NULL;
 }
 
 static void
 game_preferences_callback (GtkWidget *widget, void *data)
 {
-	GtkWidget *menu, *omenu, *l, *hb, *cb, *f, *fv;
+	GtkWidget *menu, *omenu, *l, *hb, *f;
 	GtkWidget *button;
 
-	if (pref_dialog)
+	if (pref_dialog) {
+		gtk_window_present (GTK_WINDOW (pref_dialog));
 		return;
+	}
 	
-	pref_dialog = gnome_dialog_new (_("Preferences"),
-			GNOME_STOCK_BUTTON_OK, GNOME_STOCK_BUTTON_CANCEL,
+	pref_dialog = gtk_dialog_new_with_buttons (_("Preferences"),
+			GTK_WINDOW (app),
+			GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR
+
+,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_OK, GTK_RESPONSE_OK,
 			NULL);
-	gnome_dialog_set_parent (GNOME_DIALOG (pref_dialog), GTK_WINDOW (app));
-	gtk_signal_connect (GTK_OBJECT(pref_dialog), "close",
-			    GTK_SIGNAL_FUNC (cancel), NULL);
+
+	gtk_dialog_set_default_response (GTK_DIALOG (pref_dialog),
+					 GTK_RESPONSE_OK);
+	g_signal_connect (G_OBJECT (pref_dialog), "response",
+			  G_CALLBACK(pref_dialog_response), NULL);
 
 	omenu = gtk_option_menu_new ();
 	menu = gtk_menu_new ();
@@ -586,49 +571,35 @@ game_preferences_callback (GtkWidget *widget, void *data)
 	gtk_widget_show (omenu);
 	gtk_option_menu_set_menu (GTK_OPTION_MENU(omenu), menu);
 
-	f = gtk_frame_new (_ ("Scenario"));
-	gtk_container_border_width (GTK_CONTAINER (f), 5);
+	f = gtk_frame_new (_("Scenario"));
+	gtk_container_set_border_width (GTK_CONTAINER (f), 4);
 
 	hb = gtk_hbox_new (FALSE, FALSE);
+	gtk_container_set_border_width (GTK_CONTAINER (hb), 4);
 	gtk_widget_show (hb);
 	
 	l = gtk_label_new (_("Select scenario:"));
 	gtk_widget_show (l);
 	    
-	gtk_box_pack_start_defaults (GTK_BOX(hb), l);
+	gtk_box_pack_start (GTK_BOX(hb), l, TRUE, FALSE, 4);
 	gtk_box_pack_start_defaults (GTK_BOX(hb), omenu);
 
-	cb = gtk_check_button_new_with_label ( _("Make it the default scenario") );
-	gtk_signal_connect (GTK_OBJECT(cb), "clicked", (GtkSignalFunc)set_selection_def, NULL);
-	gtk_widget_show (cb);
-
-	fv = gtk_vbox_new (0, 5);
-	gtk_container_border_width (GTK_CONTAINER (fv), 5);
-	gtk_widget_show (fv);
+	gtk_container_add (GTK_CONTAINER (f), hb);
 	
-	gtk_box_pack_start_defaults (GTK_BOX(fv), hb);
-	gtk_box_pack_start_defaults (GTK_BOX(fv), cb);
-	gtk_box_pack_start_defaults (GTK_BOX(GNOME_DIALOG(pref_dialog)->vbox), f);
-	gtk_container_add (GTK_CONTAINER (f), fv);
-	
+	gtk_box_pack_start_defaults (GTK_BOX(GTK_DIALOG(pref_dialog)->vbox), f);
 	gtk_widget_show (f);
 	
-	gnome_dialog_button_connect (GNOME_DIALOG (pref_dialog), 0,
-			GTK_SIGNAL_FUNC (load_scenario_callback), NULL);
-	gnome_dialog_button_connect (GNOME_DIALOG (pref_dialog), 1,
-			GTK_SIGNAL_FUNC (cancel), (gpointer)1);
-
         gtk_widget_show (pref_dialog);
 }
 
 static int
 game_about_callback (GtkWidget *widget, void *data)
 {
-	GtkWidget *about;
+	static GtkWidget *about = NULL;
 	const gchar *authors[] = {
 		"Miguel de Icaza.",
 		"Federico Mena.",
-		"Horacio J. Peña.",
+		"Horacio J. PeÃ±a.",
 		NULL
 	};
 	gchar *documenters[] = {
@@ -637,6 +608,11 @@ game_about_callback (GtkWidget *widget, void *data)
         /* Translator credits */
         gchar *translator_credits = _("");
 
+	if (about) {
+		gtk_window_present (GTK_WINDOW (about));
+		return;
+	}
+	
 	about = gnome_about_new (_("The Same Gnome"), VERSION,
 				 "(C) 1997-1998 the Free Software Foundation",
 				 _("Original idea from KDE's same game program."),
@@ -644,8 +620,11 @@ game_about_callback (GtkWidget *widget, void *data)
 				 (const char **)documenters,
                                  (const char *)translator_credits,
                                  NULL);
-	gnome_dialog_set_parent(GNOME_DIALOG(about), GTK_WINDOW(app));
+	gtk_window_set_transient_for (GTK_WINDOW (about), GTK_WINDOW (app));
 	gtk_widget_show (about);
+
+	g_signal_connect (G_OBJECT (about), "destroy",
+			  G_CALLBACK (gtk_widget_destroyed), &about);
 
 	return TRUE;
 }
@@ -653,23 +632,25 @@ game_about_callback (GtkWidget *widget, void *data)
 static int
 game_quit_callback (GtkWidget *widget, void *data)
 {
-	GtkWidget *box;
-	gint response;
-	
-	box = gtk_message_dialog_new (GTK_WINDOW (app),
-				     GTK_DIALOG_DESTROY_WITH_PARENT,
-				     GTK_MESSAGE_QUESTION,
-				     GTK_BUTTONS_YES_NO,
-				     _("Do you really want to quit?"));
+	if (!game_over) {
+		GtkWidget *box;
+		gint response;
+		
+		box = gtk_message_dialog_new (GTK_WINDOW (app),
+					     GTK_DIALOG_DESTROY_WITH_PARENT,
+					     GTK_MESSAGE_QUESTION,
+					     GTK_BUTTONS_YES_NO,
+					     _("Do you really want to quit?"));
 
-	gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_YES);
-	response = gtk_dialog_run (GTK_DIALOG (box));
-	gtk_widget_destroy (box);
+		gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_YES);
+		response = gtk_dialog_run (GTK_DIALOG (box));
+		gtk_widget_destroy (box);
 
-	if (response == GTK_RESPONSE_YES)
-		gtk_main_quit ();
-
-	return TRUE;
+		if (response != GTK_RESPONSE_YES)
+			return TRUE;
+	}
+	gtk_main_quit ();
+	return FALSE;
 }
 
 GnomeUIInfo gamemenu[] = {
@@ -708,9 +689,6 @@ GnomeUIInfo mainmenu[] = {
 	GNOMEUIINFO_END
 };
 
-#define ELEMENTS(x) (sizeof (x) / sizeof (x [0]))
-
-
 static int
 save_state (GnomeClient *client,
 	    gint phase,
@@ -720,14 +698,11 @@ save_state (GnomeClient *client,
 	    gint fast,
 	    gpointer client_data)
 {
-	gchar *prefix = gnome_client_get_config_prefix (client);
+	const gchar *prefix = gnome_client_get_config_prefix (client);
 	gchar *argv []= { "rm", "-r", NULL };
 	gchar *buf;
 	struct ball *f = (struct ball*) field;
 	int i;  
-	
-	if (debugging)
-		g_print ("Saving state\n");
 	
 	gnome_config_push_prefix (prefix);
 	
@@ -760,9 +735,6 @@ restart (void)
 	struct ball *f = (struct ball*) field;
 	int i;
 	
-	if (debugging)
-		g_print ("Retrieving state\n");
-	
 	score = gnome_config_get_int_with_default ("Game/Score", 0);
 	nstones = gnome_config_get_int_with_default ("Game/NStones", 0);
 	
@@ -782,13 +754,12 @@ restart (void)
 static gint
 client_die (GnomeClient *client, gpointer client_data)
 {
-        gtk_exit (0);
+        gtk_main_quit ();
 
 	return FALSE;
 }
 
 static const struct poptOption options[] = {
-	{ NULL, 'd', POPT_ARG_NONE, &debugging, 0, N_("Debugging mode"), NULL },
 	{ "scenario", 's', POPT_ARG_STRING, &fname, 0, N_("Set game scenario"), N_("NAME") },
 	{ NULL, '\0', 0, NULL, 0 }
 };
@@ -818,10 +789,10 @@ main (int argc, char *argv [])
 	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-gsame.png");
 	client= gnome_master_client ();
 
-	gtk_signal_connect (GTK_OBJECT (client), "save_yourself",
-			    GTK_SIGNAL_FUNC (save_state), argv[0]);
-	gtk_signal_connect (GTK_OBJECT (client), "die",
-			    GTK_SIGNAL_FUNC (client_die), NULL);
+	g_signal_connect (G_OBJECT (client), "save_yourself",
+			  G_CALLBACK (save_state), argv[0]);
+	g_signal_connect (G_OBJECT (client), "die",
+			  G_CALLBACK (client_die), NULL);
 
 	if (GNOME_CLIENT_RESTARTED (client)){
 		gnome_config_push_prefix (gnome_client_get_config_prefix (client));
@@ -837,8 +808,8 @@ main (int argc, char *argv [])
 	app = gnome_app_new("same-gnome", _("Same Gnome"));
 
         gtk_window_set_policy(GTK_WINDOW(app), FALSE, FALSE, TRUE);
-	gtk_signal_connect (GTK_OBJECT(app), "delete_event",
-			    (GtkSignalFunc)game_quit_callback, NULL);
+	g_signal_connect (G_OBJECT (app), "delete_event",
+			  G_CALLBACK(game_quit_callback), NULL);
 
 	appbar = gnome_appbar_new(FALSE, TRUE, GNOME_PREFERENCES_USER);
 	gnome_app_set_statusbar(GNOME_APP (app), GTK_WIDGET(appbar));
@@ -859,6 +830,7 @@ main (int argc, char *argv [])
 	}
 
 	create_same_board (fname);
+	selected_scenario = g_strdup (fname);
 
 	separator = gtk_vseparator_new ();
 	label = gtk_label_new (_("Marked: "));
