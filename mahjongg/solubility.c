@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: nil; tab-width: 8; c-basic-offset: 2 -*- */
+
 /*
  * Gnome-Mahjonggg-solubility algorithem
  * (C) 1998 the Free Software Foundation
@@ -205,7 +207,8 @@ void keyPress()
 #endif
 
 /* Takes the last tile places, and avoids its dependancies. */
-int random_free (int lt)
+static int
+random_free (int lt)
 {
   int t, lp, catch ;
   int goodplace ;
@@ -243,7 +246,8 @@ int random_free (int lt)
 }
 
 /* Finds a random block on a layer */
-int random_on_layer (int l)
+static int 
+random_on_layer (int l)
 {
   int t, cnt = 0 ;
   do
@@ -263,7 +267,8 @@ int random_on_layer (int l)
    it returns -1 if there is no tile at that position.
    N.B. Each tile occupies 2x2 positions.
  */
-int tile_at (int layer, int x, int y)
+static int
+tile_at (int layer, int x, int y)
 {
   int lp ;
 
@@ -276,7 +281,8 @@ int tile_at (int layer, int x, int y)
 }
 
 /* This determines whether it is OK to mark this tile as free */
-int ok_free_validate_line (int t)
+static int 
+ok_free_validate_line (int t)
 {
   int i, li, w ;
   int in, out ;
@@ -338,7 +344,8 @@ int ok_free_validate_line (int t)
 /* This simply examines whether the tile should be free or not.
    It does this by examining its dependancies to see if they are
    filled */
-void validate_tile (int t)
+static void
+validate_tile (int t)
 {
   int lfilled, rfilled, lp, free, i, valid ;
 
@@ -401,7 +408,8 @@ void validate_tile (int t)
     dep_tree[t].free = 1 ;
 }
 /* Place tile in map at position f, with pic & type from t */
-void place_tile (int f, int t, int idx)
+static void
+place_tile (int f, int t, int idx)
 {
 #ifdef PLACE_DEBUG
   printf ("Placing at\n") ;
@@ -481,7 +489,8 @@ int tile_free (int tile_num)
   else return 0 ;
 }
 
-int random_tile_type ()
+static int
+random_tile_type (void)
 {
   int o ;
   do
@@ -491,7 +500,8 @@ int random_tile_type ()
 }
 
 /* Remove duplicate entries */
-void unique (int *a, int l)
+static void
+unique (int *a, int l)
 {
   int lp, sc ;
   if (l==2)
@@ -515,7 +525,8 @@ void unique (int *a, int l)
 
 /* Generate a single tiles dependancy tree entries */
 /* N.B. Layer increases as you go up tiles BRC is x,y x+right y+down*/
-void tile_deps (int tn)
+static void
+tile_deps (int tn)
 {
   int lp, layer, x, y, lpx, lpy, d ;
 

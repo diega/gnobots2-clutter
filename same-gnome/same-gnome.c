@@ -50,7 +50,7 @@ static gchar *scenario;
 static gint restarted;
 static gboolean game_over = FALSE;
 
-void update_score_state ();
+static void update_score_state (void);
 
 /* Prefs */
 GConfClient *conf_client = NULL;
@@ -185,13 +185,14 @@ mark_balls (int x, int y)
 	tagged_count = flood_fill (x, y, field [x][y].color);
 	
 	if (tagged_count > 1) {
-		char *b;
+		gchar *b;
 		ball_timeout_id = g_timeout_add (100, move_tagged_balls, 0);
-		b = g_strdup_printf (ngettext("%d stone selected", "%d stones selected", tagged_count), tagged_count);
-                gnome_appbar_set_status (GNOME_APPBAR(appbar), b);
+		b = g_strdup_printf (ngettext ("%d stone selected", "%d stones selected", tagged_count), tagged_count);
+                gnome_appbar_set_status (GNOME_APPBAR (appbar), b);
 		g_free (b);
 	} else
-                gnome_appbar_set_status (GNOME_APPBAR(appbar), _("No stones selected"));
+                gnome_appbar_set_status (GNOME_APPBAR (appbar),
+					 _("No stones selected"));
 }
 
 static void
@@ -200,12 +201,13 @@ compress_column (int x)
 	int y, ym;
 	
 	for (y = STONE_LINES - 1; y >= 0; y--) {
-		if (!field [mapx(x)][mapy(y)].tag)
+		if (!field [mapx (x)][mapy (y)].tag)
 			continue;
 		for (ym = y; ym < STONE_LINES - 1; ym++)
-			field [mapx(x)][mapy(ym)] = field [mapx(x)][mapy(ym+1)];
-		field [mapx(x)][mapy(ym)].color = 0;
-		field [mapx(x)][mapy(ym)].tag   = 0;
+			field [mapx (x)][mapy (ym)] 
+				= field [mapx (x)][mapy (ym+1)];
+		field [mapx (x)][mapy (ym)].color = 0;
+		field [mapx (x)][mapy (ym)].tag   = 0;
 	}
 }
 
@@ -224,7 +226,7 @@ copy_col (int dest, int src)
 	int y;
 	
 	for (y = 0; y < STONE_LINES; y++)
-		field [mapx(dest)][mapy(y)] = field [mapx(src)][mapy(y)];
+		field [mapx (dest)][mapy (y)] = field [mapx (src)][mapy (y)];
 }
 
 static void
@@ -233,8 +235,8 @@ clean_last_col ()
 	int y;
 
 	for (y = 0; y < STONE_LINES; y++) {
-		field [mapx(STONE_COLS-1)][mapy(y)].color = 0;
-		field [mapx(STONE_COLS-1)][mapy(y)].tag   = 0;
+		field [mapx (STONE_COLS-1)][mapy (y)].color = 0;
+		field [mapx (STONE_COLS-1)][mapy (y)].tag   = 0;
 	}
 }
 
@@ -259,7 +261,7 @@ set_score (int new_score)
 	
 	score = new_score;
 	b = g_strdup_printf ("%.5d", score);
-	gtk_label_set_text (GTK_LABEL(scorew), b);
+	gtk_label_set_text (GTK_LABEL (scorew), b);
 	g_free (b);
 }
 
@@ -268,17 +270,19 @@ show_scores (guint pos)
 {
 	GtkWidget *dialog;
 
-	dialog = gnome_scores_display (_("The Same GNOME"), "same-gnome", NULL, pos);
+	dialog = gnome_scores_display (_("The Same GNOME"),
+				       "same-gnome", NULL, pos);
 	if (dialog != NULL) {
-		gtk_window_set_transient_for (GTK_WINDOW(dialog), GTK_WINDOW(app));
-		gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
+		gtk_window_set_transient_for (GTK_WINDOW (dialog),
+					      GTK_WINDOW (app));
+		gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 	}
 }
 
 static void
-game_top_ten_callback(GtkWidget *widget, gpointer data)
+game_top_ten_callback (GtkWidget *widget, gpointer data)
 {
-	show_scores(0);
+	show_scores (0);
 }
 
 static void
@@ -288,32 +292,32 @@ check_game_over (void)
 	int x,y;
 	int pos;
 	
-	for(x = 0; x < STONE_COLS; x++)
-		for(y = 0 ; y < STONE_LINES; y++) {
+	for (x = 0; x < STONE_COLS; x++)
+		for (y = 0 ; y < STONE_LINES; y++) {
 			if (!field [x][y].color)
 				continue;
 			cleared = 0;
-			if(x+1 < STONE_COLS) 
+			if (x+1 < STONE_COLS) 
 				if(field[x][y].color == field[x+1][y].color)
 					return;
-			if(y+1 < STONE_LINES) 
-				if(field[x][y].color == field[x][y+1].color)
+			if (y+1 < STONE_LINES) 
+				if (field[x][y].color == field[x][y+1].color)
 					return;
 		}
 
 	if (cleared)
 		set_score (score+1000);
 
-	pos = gnome_score_log(score, NULL, TRUE);
+	pos = gnome_score_log (score, NULL, TRUE);
 	update_score_state ();
-	show_scores(pos);
+	show_scores (pos);
 	game_over = TRUE;
 }
 
 static void
 kill_balls (int x, int y)
 {
-	if (!field [x][y].color)
+	if (! field [x][y].color)
 		return;
 	
 	if (tagged_count < 2)
@@ -322,7 +326,10 @@ kill_balls (int x, int y)
 	set_score (score + (tagged_count - 2) * (tagged_count - 2));
 	compress_y ();
 	compress_x ();
-	gtk_widget_draw (draw_area, NULL);
+	gtk_widget_queue_draw_area (GTK_WIDGET (draw_area),
+				    0, 0,
+				    STONE_COLS * STONE_SIZE,
+				    STONE_LINES * STONE_SIZE);
 	check_game_over ();
 }
 
@@ -385,13 +392,16 @@ new_game (void)
 	game_over = FALSE;
 	fill_board ();
 	set_score (0);
-	gtk_widget_draw (draw_area, NULL);
+	gtk_widget_queue_draw_area (GTK_WIDGET (draw_area),
+				    0, 0,
+				    STONE_COLS * STONE_SIZE,
+				    STONE_LINES * STONE_SIZE);
 }
 
 static void
 configure_sync (char *fname)
 {
-	if (strstr (fname, "-sync.png"))
+	if (g_strrstr (fname, "-sync.png"))
 		sync_stones = 1;
 	else
 		sync_stones = 0;
@@ -400,7 +410,7 @@ configure_sync (char *fname)
 static void
 load_scenario (char *fname)
 {
-	gchar *tmp, *fn;
+	gchar *fn;
         GdkColor bgcolor;
         GdkImage *tmpimage;
 	gint i, j;
@@ -443,14 +453,16 @@ load_scenario (char *fname)
 	image = gdk_pixbuf_new_from_file (fn, NULL);
 
 	if (image == NULL) {
-		GtkWidget *box = gtk_message_dialog_new (GTK_WINDOW (app),
-			GTK_DIALOG_DESTROY_WITH_PARENT,
-			GTK_MESSAGE_ERROR,
-			GTK_BUTTONS_OK,
-			_("Same GNOME can't load the image file:\n%s\n\n"
-			 "Please check your Same GNOME installation"), fn);
-
-		gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_OK);
+		GtkWidget *box = gtk_message_dialog_new 
+			(GTK_WINDOW (app),
+			 GTK_DIALOG_DESTROY_WITH_PARENT,
+			 GTK_MESSAGE_ERROR,
+			 GTK_BUTTONS_OK,
+			 _("Same GNOME can't load the image file:\n%s\n\n"
+			   "Please check your Same GNOME installation"), fn);
+		
+		gtk_dialog_set_default_response (GTK_DIALOG (box),
+						 GTK_RESPONSE_OK);
                 gtk_dialog_set_has_separator (GTK_DIALOG (box), FALSE);
 		gtk_dialog_run (GTK_DIALOG (box));
 		gtk_widget_destroy (box);
@@ -465,9 +477,9 @@ load_scenario (char *fname)
 	gdk_pixbuf_render_pixmap_and_mask (image, &stones, &mask, 127);
 
         tmpimage = gdk_drawable_get_image (stones, 0, 0, 1, 1);
-        bgcolor.pixel = gdk_image_get_pixel(tmpimage, 0, 0);
+        bgcolor.pixel = gdk_image_get_pixel (tmpimage, 0, 0);
         gdk_window_set_background (draw_area->window, &bgcolor);
-	gdk_image_unref (tmpimage);
+	g_object_unref (tmpimage);
   
 	g_free( fn );
 
@@ -487,7 +499,10 @@ load_scenario (char *fname)
 	ncolors = 3;
 
 
-	gtk_widget_draw (draw_area, NULL);
+	gtk_widget_queue_draw_area (GTK_WIDGET (draw_area),
+				    0, 0,
+				    STONE_COLS * STONE_SIZE,
+				    STONE_LINES * STONE_SIZE);
 }
 
 static void
@@ -497,17 +512,17 @@ create_same_board (char *fname)
 
 	gtk_widget_set_events (draw_area, gtk_widget_get_events (draw_area) | GAME_EVENTS);
 
-	gtk_box_pack_start_defaults (GTK_BOX(vb), draw_area);
+	gtk_box_pack_start_defaults (GTK_BOX (vb), draw_area);
 	gtk_widget_realize (draw_area);
   
 	gtk_widget_show (draw_area);
 
 	load_scenario (fname);
-	gtk_drawing_area_size (GTK_DRAWING_AREA (draw_area),
-			       STONE_COLS  * STONE_SIZE,
-			       STONE_LINES * STONE_SIZE);
+	gtk_widget_set_size_request (GTK_WIDGET (draw_area),
+				     STONE_COLS  * STONE_SIZE,
+				     STONE_LINES * STONE_SIZE);
 	g_signal_connect (G_OBJECT (draw_area), "event",
-			  G_CALLBACK(area_event), 0);
+			  G_CALLBACK (area_event), 0);
 }
 
 static void
@@ -583,7 +598,7 @@ static void
 game_preferences_callback (GtkWidget *widget, void *data)
 {
 	GtkWidget *listview, *frame;
-	GtkWidget *button, *scroll;
+	GtkWidget *scroll;
         GtkTreeViewColumn *column;
         GtkTreeSelection * select;
         GtkListStore *list;
@@ -660,13 +675,12 @@ game_preferences_callback (GtkWidget *widget, void *data)
         gtk_widget_set_size_request (scroll, 250, 200);
         gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroll),
                                              GTK_SHADOW_ETCHED_IN);
-        gtk_container_add (GTK_CONTAINER(scroll), listview);
-        gtk_widget_set (scroll, "border-width", GNOME_PAD, NULL);
+        gtk_container_add (GTK_CONTAINER (scroll), listview);
         
         frame = games_frame_new (_("Theme"));
         gtk_container_add (GTK_CONTAINER (frame), scroll);
 
-        gtk_box_pack_start (GTK_BOX (GTK_DIALOG(pref_dialog)->vbox),
+        gtk_box_pack_start (GTK_BOX (GTK_DIALOG (pref_dialog)->vbox),
                             frame, TRUE, TRUE, GNOME_PAD_SMALL);
 
         gtk_widget_show_all (pref_dialog);
@@ -691,7 +705,7 @@ game_about_callback (GtkWidget *widget, void *data)
 
 	if (about) {
 		gtk_window_present (GTK_WINDOW (about));
-		return;
+		return TRUE;
 	}
 
 	{
@@ -770,7 +784,8 @@ GnomeUIInfo mainmenu[] = {
 	GNOMEUIINFO_END
 };
 
-void update_score_state ()
+static void 
+update_score_state (void)
 {
         gchar **names = NULL;
         gfloat *scores = NULL;
@@ -797,7 +812,6 @@ save_state (GnomeClient *client,
 	    gint fast,
 	    gpointer client_data)
 {
-	gchar *argv []= { "rm", "-r", NULL };
 	gchar *buf;
 	struct ball *f = (struct ball*) field;
 	int i;  
@@ -814,12 +828,6 @@ save_state (GnomeClient *client,
 	gconf_client_set_string (conf_client, "/apps/same-gnome/field", buf, NULL);
 	g_free(buf);
 
-	/* FIXME if anybody knows what this does...
-	argv[2]= gnome_config_get_real_path (prefix);
-	gnome_client_set_discard_command (client, 3, argv);
-	gnome_client_set_discard_command (client, 2, argv);
-	*/
-	
 	return TRUE;
 }
 
@@ -909,7 +917,7 @@ main (int argc, char *argv [])
 
 	app = gnome_app_new ("same-gnome", _("Same GNOME"));
 
-        gtk_window_set_policy (GTK_WINDOW (app), FALSE, FALSE, TRUE);
+        gtk_window_set_resizable (GTK_WINDOW (app), FALSE);
 	g_signal_connect (G_OBJECT (app), "delete_event",
 			  G_CALLBACK (game_quit_callback), NULL);
 

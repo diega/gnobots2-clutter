@@ -1,3 +1,9 @@
+2003-06-17  William Jon McCann  <mccann@jhu.edu>
+
+	* gnome-canvas-pimage.c: 
+	* solubility.c: 
+	* mahjongg.c: Fixed compiler warnings.
+
 2003-06-13  William Jon McCann  <mccann@jhu.edu>
 
 	* mahjongg.c (properties_callback): Changed preferences dialog
