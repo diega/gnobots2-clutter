@@ -1,3 +1,8 @@
+2004-09-09  callum  <callum@spooky-possum.org>
+
+	* help/C/figures/*.png:
+	* help/C/mahjongg.xml: Update for 2.8.
+
 2004-08-26  callum  <callum@spooky-possum.org>
 
 	* mahjongg.c: Be explicit about the game_over enumeration starting

@@ -2,9 +2,9 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY appversion "2.6">
-  <!ENTITY manrevision "2.6">
-  <!ENTITY date "October 2003">
+  <!ENTITY appversion "2.8">
+  <!ENTITY manrevision "2.8">
+  <!ENTITY date "September 2004">
   <!ENTITY app "<application>GNOME Mahjongg</application>">
   <!ENTITY appname "GNOME Mahjongg">
 ]>
@@ -200,14 +200,13 @@
 
     <para>
       As an example, the highlighted tile, in the <link linkend="mahjongg-fig">
-      figure below</link>, has five buttons.  The matching tile is the one which 
-      also has five buttons.  The tile is third from the right on the
-      same row as the hilighted tile.  
-      If you wanted to match the tile on the top level, you need to look for the 
+      figure below</link>, has six buttons.  The matching tile is the one which 
+      also has six buttons.  The tile is on the right-hand end of the third row from the bottom and there is another near the top of the fourth row from the bottom.
+      If you want to match the tile on the top level, you need to look for the 
       tile with the same green bamboo symbols.  Do you see a matching tile yet?  
-      There are two tiles, which are visible, that match the tile on the top 
-      level.  One is to the left and the other on the right. You can't
-      remove the tile on the left yet because the tile isn't 
+      There are three tiles, which are visible, that match the tile on the top 
+      level.  Two are to the left and the lower right. The thrid one is on the top row, but you can't
+      remove that tile yet because the tile isn't 
       on the outside of the stack of tiles.  Later I'll explain more fully which 
       tiles can be removed and which tiles can't be removed even though they match.
       I'll let you find the other two matching tiles, which are visible, on your own.
@@ -260,7 +259,7 @@
 
     <para>
       If you can't match any more tiles, a 
-      dialog will appear telling you no more tiles can be matched.
+      dialog will appear telling you no more tiles can be matched and giving you the option of shuffling the tiles or undoing your last move (although you may have to undo many more moves to find your mistake).
     </para>
 
     <figure id="info-fig1">
@@ -347,16 +346,6 @@
 	  <listitem>
 	    <para>
 	      This button gives you a pair of matching tiles to remove.
-	    </para>
-	  </listitem>
-	</varlistentry>
-	<varlistentry>
-	  <term><guibutton>Shuffle</guibutton></term>
-	  <listitem>
-	    <para>
-	      This button sorts the tiles randomly.  It does not restart the game.  
-	      You remain at the same point in the game with the same tiles removed, 
-	      but the tiles are just resorted.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -504,16 +493,6 @@
 		      <guimenuitem>Hint</guimenuitem>
 		    </menuchoice> &mdash; 
 		    This item gives you a pair of matching tiles to remove.
-		  </para>
-		</listitem>
-		<listitem>
-		  <para>
-		    <menuchoice>
-		      <guimenuitem>Shuffle tiles</guimenuitem>
-		    </menuchoice> &mdash; 
-		    This item sorts the tiles randomly.  It does not restart the game.  
-		    You remain at the same point in the game with the same tiles removed, 
-		    but the tiles are just resorted.
 		  </para>
 		</listitem>
 		<listitem>
