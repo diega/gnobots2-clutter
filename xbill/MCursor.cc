@@ -10,7 +10,7 @@ void MCursor::load(const char *name, int masked) {
 	file = g_strdup_printf ("%s/%s.xpm", dir, name);
 
 	pixmap = gdk_pixmap_colormap_create_from_xpm(ui.display, ui.colormap,
-						     &bitmap, NULL, file);
+						     &bitmap, (GdkColor*)NULL, file);
 	if (pixmap == NULL) {
 		printf ("cannot open %s\n", file);
 		exit(1);
@@ -21,7 +21,7 @@ void MCursor::load(const char *name, int masked) {
 	  file = g_strdup_printf ("%s/%s_mask.xpm", dir, name);
 
 	  pixmap = gdk_pixmap_colormap_create_from_xpm(ui.display, ui.colormap,
-						       &mask, NULL, file);
+						       &mask, (GdkColor*)NULL, file);
 	  if (pixmap == NULL) {
 	    printf("cannot open %s\n", file);
 	    exit(1);

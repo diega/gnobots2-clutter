@@ -70,10 +70,10 @@ void Game::update_info() {
 }
   
 void Game::update_score (int action) {
-	switch (action){
-		case ENDLEVEL: score+=(level*efficiency/iteration); break;
-		default: score+=(action*action*BILLPOINTS);
-	}
+	if (action == ENDLEVEL)
+		score+=(level*efficiency/iteration);
+	else
+		score+=(action*action*BILLPOINTS);
 }
 
 void Game::warp_to_level (int lev) {

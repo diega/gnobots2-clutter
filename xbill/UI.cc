@@ -136,10 +136,10 @@ void UI::make_windows() {
 
 void UI::popup_dialog (int dialog) {
 	GtkWidget *w;
-	switch (dialog) {
-		case game.SCORE: w = scorebox; break;
-		case game.ENDGAME: w = endgamebox; break;
-	}
+	if (dialog == game.SCORE)
+		w = scorebox;
+	else if (dialog == game.ENDGAME)
+		w = endgamebox;
 	popup (NULL, &w);
 }
 
@@ -148,16 +148,14 @@ void UI::popup_dialog (int dialog) {
 /*********************/
 
 void UI::set_cursor(int cursor) {
-	switch (cursor) {
-	case game.BUCKETC:
-	        gdk_window_set_cursor(window, bucket.cursor.cursor); break;
-	case game.DOWNC:
-		gdk_window_set_cursor(window, downcursor.cursor); break;
-	case game.DEFAULTC:
-		gdk_window_set_cursor(window, defaultcursor.cursor); break;
-	default:
-		gdk_window_set_cursor(window, OS.cursor[cursor].cursor);
-	}
+	if (cursor == game.BUCKETC)
+	        gdk_window_set_cursor(window, bucket.cursor.cursor);
+	else if (cursor == game.DOWNC)
+		gdk_window_set_cursor(window, downcursor.cursor);
+	else if (cursor == game.DEFAULTC)
+		gdk_window_set_cursor(window, defaultcursor.cursor);
+	else
+ 		gdk_window_set_cursor(window, OS.cursor[cursor].cursor);
 }
 
 void UI::load_cursors() {
