@@ -1,6 +1,6 @@
 SUBDIRS=pix
 scoredir=$(localstatedir)/games
-Gamesdir=$(datadir)/apps/Games
+Gamesdir=$(datadir)/gnome/apps/Games
 
 INCLUDES=\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \

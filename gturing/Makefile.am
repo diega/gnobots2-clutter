@@ -1,6 +1,6 @@
 SUBDIRS = help
 
-Gamesdir = $(datadir)/apps/Games
+Gamesdir = $(datadir)/gnome/apps/Games
 examplesdir = $(datadir)/gturing/examples
 
 INCLUDES = 			\

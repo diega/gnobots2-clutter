@@ -6,7 +6,7 @@ INCLUDES = $(GTK_CFLAGS) -Wall -ansi	\
 appicondir=$(datadir)/pixmaps
 appicon_DATA = gnome-metatris.png
 
-sysdir   = $(datadir)/apps/Games
+sysdir   = $(datadir)/gnome/apps/Games
 sys_DATA = metatris.desktop
 
 mydatadir = $(datadir)/metatris/default-theme
