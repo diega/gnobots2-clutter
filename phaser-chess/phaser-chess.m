@@ -5,9 +5,9 @@
 
 @implementation phaser_chess_app
 
-- initApp:(char *)app_id
-	 :(int *)argcp
-	 :(char ***)argvp
+- initPhaserChessApp:(char *)app_id
+	 :(int )argcp
+	 :(char **)argvp
 {
   Game_Finder *gf;
   Board_View_PS *bvps;
@@ -17,7 +17,7 @@
 
   int listen_port = 6000 + (getpid () % 23000);
 
-  self = [super initApp:app_id :argcp :argvp];
+  self = [super initApp:app_id :NULL :argcp :argvp :0 :NULL];
 
   /*  local game...
   lb = [[Logical_Board alloc] init_logical_board];
@@ -27,7 +27,7 @@
   [lb load_file : "startup.pcs"];
   */
 
-  bv = [[Board_View alloc] init_board : *argcp : *argvp];
+  bv = [[Board_View alloc] init_board : argcp : argvp];
   bvps = [[Board_View_PS alloc] init_ps : listen_port : bv];
 
   if (bvps == NULL)
@@ -37,7 +37,7 @@
     }
 
   gf = [[Game_Finder alloc] init_gf
-			    : *argcp : *argvp
+			    : argcp : argvp
 			    : bv : bvps
 			    : server_machine
 			    : server_port
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 
   srandom (time (0));
 
-  myApp = [[phaser_chess_app alloc] initApp:"phaser-chess" :&argc :&argv];
+  myApp = [[phaser_chess_app alloc] initPhaserChessApp:"phaser-chess" :argc :argv];
 
   gdk_input_add (0, GDK_INPUT_READ, stdinInputFunction, NULL);
 

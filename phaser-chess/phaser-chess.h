@@ -7,6 +7,7 @@
   Board_View *bv;
   Logical_Board *lb;
 }
+- initPhaserChessApp:(char *) app_id :(int) argc :(char **) argv;
 @end
 
 #define GRID_SZ 32
