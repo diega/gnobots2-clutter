@@ -1,0 +1,8 @@
+[Desktop Entry]
+_Name=Gnome-Stones
+_Comment=Gnome Stones game
+Exec=gnome-stones
+Icon=gnome-stones.png
+Terminal=0
+Type=Application
+Categories=Application;Game;

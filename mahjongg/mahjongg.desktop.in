@@ -1,0 +1,9 @@
+[Desktop Entry]
+_Name=Mahjongg
+_Comment=Gnome Mahjongg program
+Exec=mahjongg
+Icon=gnome-mahjongg.png
+Info=Gnome Mahjongg program
+Terminal=0
+Type=Application
+Categories=Application;Game;BoardGame;

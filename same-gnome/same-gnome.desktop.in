@@ -1,0 +1,8 @@
+[Desktop Entry]
+_Name=Same Gnome
+_Comment=Gnome SameGame program
+Exec=same-gnome
+Icon=gnome-gsame.png
+Terminal=0
+Type=Application
+Categories=Application;Game;

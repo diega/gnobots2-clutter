@@ -1,0 +1,8 @@
+[Desktop Entry]
+_Name=Gnometris
+_Comment=Gnome Tetris Game
+Icon=gnome-gtetris.png
+Exec=gnometris
+Terminal=0
+Type=Application
+Categories=Application;Game;
