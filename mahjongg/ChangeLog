@@ -1,3 +1,9 @@
+2002-02-09  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* mahjongg.c: name it simply.... "Mahjongg". Removed "Prefs" from
+	toolbar, added "Help" to preferences dialog, pack tile and tile
+	background into one frame.
+
 2002-02-02  Zbigniew Chyla  <cyba@gnome.pl>
 
 	* mahjongg.c (about_callback): Don't try to translate empty string.

@@ -30,7 +30,7 @@
 #include "gnome-canvas-pimage.h"
 
 #define APPNAME "mahjongg"
-#define APPNAME_LONG "GNOME Mahjongg"
+#define APPNAME_LONG "Mahjongg"
 /*
 #define MAH_VERSION "0.99.2+"
 */
@@ -411,8 +411,6 @@ GnomeUIInfo toolbar_uiinfo [] = {
          GNOME_APP_PIXMAP_DATA, mini_sound_xpm, 0, 0, NULL},
 #endif
 
-        {GNOME_APP_UI_ITEM, N_("Prefs"), NULL, properties_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GTK_STOCK_PREFERENCES, 0, 0, NULL},
 
         {GNOME_APP_UI_SEPARATOR},
 
@@ -949,6 +947,11 @@ pref_dialog_response (GtkDialog *dialog, gint response, gpointer data)
 	{
 		apply_preferences();
 	}
+	else if (response == GTK_RESPONSE_HELP)
+	{
+		gnome_help_display("prefs.html", NULL, NULL);
+		return;
+	}
 	
 	gtk_widget_destroy (pref_dialog);
 	pref_dialog = NULL;
@@ -967,9 +970,11 @@ void properties_callback (GtkWidget *widget, gpointer data)
 		return;
 	}
 
-	pref_dialog = gtk_dialog_new_with_buttons (_("Preferences"),
+	pref_dialog = gtk_dialog_new_with_buttons (_("Mahjongg - Preferences"),
 						      GTK_WINDOW (window),
 						      GTK_DIALOG_DESTROY_WITH_PARENT,
+						      GTK_STOCK_HELP,
+						      GTK_RESPONSE_HELP,
 						      GTK_STOCK_CANCEL,
 						      GTK_RESPONSE_CANCEL,
 						      GTK_STOCK_OK,
@@ -987,28 +992,28 @@ void properties_callback (GtkWidget *widget, gpointer data)
         col1 = gtk_vbox_new (FALSE, FALSE);
         col2 = gtk_vbox_new (FALSE, FALSE);
 
+	f = gtk_frame_new (_ ("Tiles"));
+	gtk_container_set_border_width (GTK_CONTAINER (f), 5);
+	gtk_box_pack_start_defaults (GTK_BOX(col1), f);
+
+	fv = gtk_vbox_new (0, 5);
+	gtk_container_set_border_width (GTK_CONTAINER (fv), 5);
+	gtk_container_add (GTK_CONTAINER (f), fv);
+
 	/* The Tile sub-menu */
 	otmenu = gtk_option_menu_new ();
 	tmenu = gtk_menu_new ();
 	fill_tile_menu (tmenu, "mahjongg", 1);
 	gtk_option_menu_set_menu (GTK_OPTION_MENU(otmenu), tmenu);
 
-	f = gtk_frame_new (_ ("Tiles"));
-	gtk_container_set_border_width (GTK_CONTAINER (f), 5);
-
 	hb = gtk_hbox_new (FALSE, FALSE);
 	
-	l = gtk_label_new (_("Select Tiles:"));
+	l = gtk_label_new (_("Tile set:"));
 	    
 	gtk_box_pack_start_defaults (GTK_BOX(hb), l);
 	gtk_box_pack_start_defaults (GTK_BOX(hb), otmenu);
 
-	fv = gtk_vbox_new (0, 5);
-	gtk_container_set_border_width (GTK_CONTAINER (fv), 5);
-	
 	gtk_box_pack_start_defaults (GTK_BOX(fv), hb);
-	gtk_box_pack_start_defaults (GTK_BOX(col1), f);
-	gtk_container_add (GTK_CONTAINER (f), fv);
 
 	/* The Tile Background sub-menu */
 	otmenu = gtk_option_menu_new ();
@@ -1016,22 +1021,14 @@ void properties_callback (GtkWidget *widget, gpointer data)
 	fill_tile_menu (tmenu, "mahjongg/bg", 0);
 	gtk_option_menu_set_menu (GTK_OPTION_MENU(otmenu), tmenu);
 
-	f = gtk_frame_new (_ ("Tile Background"));
-	gtk_container_set_border_width (GTK_CONTAINER (f), 5);
-
 	hb = gtk_hbox_new (FALSE, FALSE);
 	
-	l = gtk_label_new (_("Select Tile Background:"));
+	l = gtk_label_new (_("Tile background:"));
 	    
 	gtk_box_pack_start_defaults (GTK_BOX(hb), l);
 	gtk_box_pack_start_defaults (GTK_BOX(hb), otmenu);
 
-	fv = gtk_vbox_new (0, 5);
-	gtk_container_set_border_width (GTK_CONTAINER (fv), 5);
-	
 	gtk_box_pack_start_defaults (GTK_BOX(fv), hb);
-	gtk_box_pack_start_defaults (GTK_BOX(col1), f);
-	gtk_container_add (GTK_CONTAINER (f), fv);
 
 	/* The Map sub-menu */
 	ommenu = gtk_option_menu_new ();
@@ -1448,6 +1445,9 @@ void select_game (GtkWidget *widget, gpointer data)
 	
 	entry = gtk_entry_new ();
 	gtk_box_pack_start_defaults (GTK_BOX(GTK_DIALOG(dialog)->vbox), entry);
+	
+	gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
+	gtk_window_set_focus (GTK_WINDOW (dialog), entry);
 
 	gtk_widget_show_all (dialog);
 	
@@ -1472,12 +1472,12 @@ void show_tb_callback (GtkWidget *widget, gpointer data)
 
     if((GTK_CHECK_MENU_ITEM(settingsmenu[0].widget))->active)
     {
-        gnome_config_set_bool("gmahjongg/toolbar/show", TRUE);
+        gnome_config_set_bool("/gmahjongg/toolbar/show", TRUE);
         gtk_widget_show(GTK_WIDGET(gdi));
     }
     else
     {
-        gnome_config_set_bool("gmahjongg/toolbar/show", FALSE);
+        gnome_config_set_bool("/gmahjongg/toolbar/show", FALSE);
         gtk_widget_hide(GTK_WIDGET(gdi));
 	gtk_widget_queue_resize (window);
     }
@@ -1868,10 +1868,7 @@ int main (int argc, char *argv [])
             gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), TRUE);
         else {
                 gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), FALSE);
-#if 0
-                gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
                 gtk_widget_hide(GTK_WIDGET(gdi)) ;
-#endif
                 gtk_widget_queue_resize (window);
         }
 
