@@ -331,24 +331,24 @@ int turing_run_state(turing *machine)
 }
 
 /* add or modify a state to the list. 
-   Returns the position where the state was added and -position where the state was set. */
-extern int turing_set_state(turing *machine, turing_state state)
+ * Returns the position where the state was added/modified. 
+ * flag is true if an insertion was made. */
+extern void turing_set_state(turing *machine, turing_state state)
 {
 	turing_state *temp, *node, *last;
-	int i, pos;
 	
-	last = node = NULL;
-	for (i = 0, temp = machine->statehead; temp; i++, last = temp, temp = temp->next)
+	node = last = NULL;
+	for (temp = machine->statehead; temp; last = temp, temp = temp->next)
 		if (temp->no == state.no)
 	  {
-			pos = i;
-			node = temp;
+			if (!node) 
+				node = last;
 			
-			if (temp->new == state.new)
+			if (temp->read == state.read)
 			 {
-				 temp->read = state.read;
 				 temp->write = state.write;
 				 temp->move = state.move;
+				 temp->new = state.new;
 				 break;
 			 }
 		}
@@ -360,23 +360,15 @@ extern int turing_set_state(turing *machine, turing_state state)
 		*temp = state;
 		if (!node) /* A completly new state number. Add at the bottom. */
 		{
-			temp->next = NULL;
-			
-			if (!last) /* No bottom: the states list is empty. */
-			{
-				machine->statehead = temp;
-			  return 0;
-			}
-			
-			last->next = temp;
-			return i + 1;
+			temp->next = machine->statehead;
+			machine->statehead = temp;
+			return;
 		}
 		
 		temp->next = node->next;
 		node->next = temp;
-		return pos + 1;
 	}
 	
-	return - (pos + 1);
+	return;
 }
 

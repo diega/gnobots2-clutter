@@ -59,7 +59,7 @@ extern turing *turing_new(void);
 extern int turing_fread_states(turing *machine, char *filename);
 extern char *turing_fread_comments(char *filename);
 extern int turing_run_state(turing *machine);
-extern int turing_set_state(turing *machine, turing_state state);
+extern void turing_set_state(turing *machine, turing_state state);
 
 extern void turing_set_tape(turing *machine, char *ptr);
 extern char *turing_get_tape(turing *machine);

@@ -71,8 +71,10 @@ static GtkWidget *step;
 static GtkWidget *statusline;
 static GtkWidget *helpline;
 
+void power_do (void);
 void power_callback(GtkWidget *power_button, gpointer data);
 void state_clist_load_states(void);
+void state_clist_select_state(turing *t);
 
 void set_toolbar_sens(gboolean powers, gboolean stops,
 											gboolean plays, gboolean steps)
@@ -124,6 +126,7 @@ void set_states_fname(char *str)
 		c = states_fname;
 
 	state_clist_load_states();
+	state_clist_select_state(tm);
   gtk_label_set(GTK_LABEL(helpline), c);
 }
 
@@ -197,10 +200,10 @@ void cancel_callback(GtkWidget *widget, gpointer data)
 
 void states_view_edit_set_clicked_callback (GtkWidget *widget, gpointer data)
 {
-	GtkWidget **entries;
+	GtkWidget **entries, *message;
 	gchar *c[ENTRIES_MAX];
-	turing_state state;
-	int i, pos;
+	turing_state state, *s;
+	int i;
 	
 	entries = gtk_object_get_data (GTK_OBJECT (widget), "entries");
 	
@@ -208,12 +211,16 @@ void states_view_edit_set_clicked_callback (GtkWidget *widget, gpointer data)
 		c[i] = gtk_entry_get_text (GTK_ENTRY (entries[i]));
 
 	/* FIXME: states should be able to be greater than 9. */
-	if ((*c[STATE] < '0' && *c[STATE] > '9') ||
+	if (!(*c[STATE] >= '0' && *c[STATE] <= '9') ||
 			(*c[MOVE] != 'l' && *c[MOVE] != 'r') ||
-			(*c[NEW_STATE] < '0' && *c[NEW_STATE] > '9'))
+			!(*c[NEW_STATE] >= '0' && *c[NEW_STATE] <= '9'))
 	{
-		/* FIXME: Show big error message */
-		g_warning ("Set state: Bad data entered.");
+		gtk_widget_grab_focus (entries[0]);
+		message = gnome_message_box_new (_("States must be numbers. Move can only be 'r' or 'l'."),
+																		 GNOME_MESSAGE_BOX_ERROR,
+																		 GNOME_STOCK_BUTTON_OK,
+																		 NULL);
+		gtk_widget_show (message);
 		return;
 	}
 	
@@ -224,23 +231,40 @@ void states_view_edit_set_clicked_callback (GtkWidget *widget, gpointer data)
 	state.new = atoi (c[NEW_STATE]);
 	state.next = NULL;
 	
-	pos = turing_set_state (tm, state);
+	turing_set_state (tm, state);
 	
-	if (pos < 0) /* State was modified. */
-	{
-		pos = -pos;
-		for (i = 0; i < ENTRIES_MAX; i++)
-			gtk_clist_set_text (GTK_CLIST (state_clist), pos, i, c[i]);
-	} 
-	else
-		gtk_clist_insert (GTK_CLIST (state_clist), pos, c);
+	gtk_clist_freeze (GTK_CLIST (state_clist));
+	state_clist_load_states ();
+	gtk_clist_thaw (GTK_CLIST (state_clist));
 	
-	gtk_clist_select_row(GTK_CLIST(state_clist), pos, 0);
-	/* FIXME: scroll clist to the selected row. */
+	for (s = tm->statehead; s; s = s->next)
+		if ((s->no == state.no) && (s->read == state.read))
+			break;
+	
+	if (s)
+		for (i = 0; ; i++)
+			if (gtk_clist_get_row_data (GTK_CLIST(state_clist), i) == s)
+	    {
+				gtk_clist_select_row(GTK_CLIST(state_clist), i, 0);
+				break;
+			}
+
+	if (tm->tapehead)
+		power_do ();
+	
+	gtk_widget_grab_focus (entries[0]);
 }
 
 void states_view_entry_grab_focus_callback (GtkWidget *widget, gpointer data)
 {
+	GtkWidget **entries;
+	int i;
+	
+	entries = gtk_object_get_data (GTK_OBJECT (widget), "entries");
+	
+	for (i = 0; i < ENTRIES_MAX; i++)
+		gtk_editable_select_region (GTK_EDITABLE (entries[i]), 0, 0);
+	
 	gtk_editable_select_region (GTK_EDITABLE (widget), 0, -1);
 }
 
@@ -263,9 +287,10 @@ void states_view_edit_callback (GtkWidget *widget, gpointer data)
 	
 	w = GTK_WIDGET (data);
 	entries = g_new (GtkWidget *, ENTRIES_MAX);
+	gtk_object_set_data (GTK_OBJECT (state_clist), "entries", entries);
 	
 	frame = gtk_frame_new (_("Edit Current Row"));
-	table = gtk_table_new (2, ENTRIES_MAX + 1, FALSE);
+	table = gtk_table_new (2, 2 * ENTRIES_MAX + 1, FALSE);
 	gtk_container_add (GTK_CONTAINER (frame), table);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 8);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 4);
@@ -273,7 +298,7 @@ void states_view_edit_callback (GtkWidget *widget, gpointer data)
 	
 	button = gtk_button_new_with_label (_("  Set  "));
 	gtk_object_set_data (GTK_OBJECT (button), "entries", entries);
-	gtk_table_attach (GTK_TABLE (table), button, ENTRIES_MAX, ENTRIES_MAX + 1, 1, 2, 0, 0, 0, 0);
+	gtk_table_attach (GTK_TABLE (table), button, ENTRIES_MAX * 2, ENTRIES_MAX * 2 + 1, 1, 2, 0, 0, 0, 0);
 	
 	for (i = 0; labels[i]; i++)
 	{
@@ -283,6 +308,7 @@ void states_view_edit_callback (GtkWidget *widget, gpointer data)
 		label = gtk_label_new (labels[i]);
 #endif
 		entries[i] = gtk_entry_new_with_max_length (1);
+		gtk_object_set_data (GTK_OBJECT (entries[i]), "entries", entries);
 		gtk_widget_set_usize (entries[i], 20, 0);
 
 		gtk_signal_connect (GTK_OBJECT (entries[i]), "grab_focus", 
@@ -291,8 +317,10 @@ void states_view_edit_callback (GtkWidget *widget, gpointer data)
 			gtk_signal_connect_object (GTK_OBJECT (entries[i - 1]), "activate", 
 																 gtk_widget_grab_focus, GTK_OBJECT (entries[i]));
 																			 
-		gtk_table_attach (GTK_TABLE (table), label, i, i + 1, 0, 1, 0, 0, 0, 0);
-		gtk_table_attach (GTK_TABLE (table), entries[i], i, i + 1, 1, 2, 0, 0, 0, 0);
+		gtk_table_attach (GTK_TABLE (table), label, i * 2, i * 2 + 1, 0, 1, 0, 0, 0, 0);
+		gtk_table_attach (GTK_TABLE (table), entries[i], i * 2, i * 2 + 1, 1, 2, 0, 0, 0, 0);
+		gtk_table_attach (GTK_TABLE (table), gtk_vseparator_new (), 
+											i * 2 + 1, i * 2 + 2, 0, 2, 0, GTK_FILL | GTK_EXPAND, 0, 0);
 	}
 	gtk_signal_connect_object (GTK_OBJECT (entries[i - 1]), "activate", 
 														 gtk_widget_grab_focus, GTK_OBJECT (button));
@@ -308,6 +336,12 @@ void states_view_edit_callback (GtkWidget *widget, gpointer data)
 
 void states_view_close_callback(GtkWidget *w, gpointer data)
 {
+	GtkWidget **entries;
+	
+	entries = gtk_object_get_data (GTK_OBJECT (w), "entries");
+	if (entries)
+		g_free (entries);
+	
 	state_clist = NULL;
 	
 	gtk_widget_destroy(w);
@@ -317,6 +351,7 @@ void state_clist_select_state(turing *t)
 {
 	gint i, tmp;
 	char buff[20];
+	GtkWidget **entries;
 
 	if (t->actualstate) {
 		snprintf(buff, 20, _("State: %d"), t->actualstate->no);
@@ -336,6 +371,7 @@ void state_clist_select_state(turing *t)
 			/* bug: moveto corrupts the clist if all the rows appear in the list */
 /*			if (tmp > 11)*/
 				gtk_clist_moveto(GTK_CLIST(state_clist), (i - 5 < 5)? 0 : i - 5, 0, 0, 0);
+			
 		}
 	}
 }
@@ -350,7 +386,7 @@ int next_state(turing *t)
 	return ret;
 }
 
-void power_callback(GtkWidget *power_button, gpointer data)
+void power_do (void)
 {
 	stop_flag = 1;
 	tm->state = 0;
@@ -361,6 +397,11 @@ void power_callback(GtkWidget *power_button, gpointer data)
 
 	next_state(tm);
 	set_toolbar_sens(FALSE, FALSE, TRUE, TRUE);
+}
+
+void power_callback(GtkWidget *power_button, gpointer data)
+{
+	power_do ();
 }
 
 gint do_play(gpointer data)
@@ -500,8 +541,25 @@ void state_clist_load_states(void)
 		
 		for (i = 0; i < 5; i++)
 			free(text[i]);
-		
-		state_clist_select_state(tm);
+	}
+}
+
+void state_clist_select_row_callback (GtkCList *clist, gint row, gint column, GdkEventButton *event,
+																			gpointer user_data)
+{
+	GtkWidget **entries;
+	
+	entries = gtk_object_get_data (GTK_OBJECT (clist), "entries");
+	if (entries)
+	{
+		int i;
+		gchar *txt;
+				
+		for (i = 0; i < ENTRIES_MAX; i++)
+		{
+			gtk_clist_get_text (GTK_CLIST (state_clist), row, i, &txt);
+			gtk_entry_set_text (GTK_ENTRY (entries[i]), txt);
+		}
 	}
 }
 
@@ -541,6 +599,9 @@ void view_states_call(GtkWidget *widget, gpointer data)
 	gtk_widget_set_usize(state_clist, 360, 200);
 	
 	state_clist_load_states();
+	state_clist_select_state(tm);
+	
+	gtk_signal_connect (GTK_OBJECT (state_clist), "select_row", state_clist_select_row_callback, NULL);
 
 	scrolled = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled), 
