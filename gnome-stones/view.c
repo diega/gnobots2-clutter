@@ -114,7 +114,7 @@ view_get_type (void)
       {
 	sizeof (GStonesViewClass),
 
-	(GBaseInitFunc) view_init,
+        NULL,
         NULL,
 
 	(GClassInitFunc) view_class_init,
@@ -123,7 +123,7 @@ view_get_type (void)
 
 	sizeof (GStonesView),
         0,
-	NULL,
+	(GInstanceInitFunc) view_init,
         
 	NULL
       };
