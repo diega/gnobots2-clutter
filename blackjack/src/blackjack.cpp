@@ -32,7 +32,6 @@
 #include <dirent.h>
 #include <ctype.h>
 #include <glib/gi18n.h>
-#include <librsvg/rsvg.h>
 
 #include "blackjack.h"
 
@@ -674,7 +673,6 @@ main (int argc, char *argv [])
 
         gtk_init_with_args (&argc, &argv, NULL, NULL, NULL, &error);
 
-        rsvg_init ();
         gconf_init (argc, argv, NULL);
         gconf_client_add_dir (bj_gconf_client (), GCONF_KEY_DIR,
                               GCONF_CLIENT_PRELOAD_NONE, NULL);

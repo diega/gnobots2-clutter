@@ -1,3 +1,7 @@
+2004-11-29  Richard Hoelscher  <rah@rahga.com>
+
+	* src/blackjack.cpp (main): remove rsvg_init(), bug #159811.
+
 2004-11-12  William Jon McCann  <mccann@jhu.edu>
 
 	* src/press_data.cpp (bj_press_data_free)
