@@ -650,31 +650,24 @@ game_about_callback (GtkWidget *widget, void *data)
 	return TRUE;
 }
 
-static void
-game_maybe_quit (GtkWidget *widget, int button)
-{
-	if (button == 0) {
-		gtk_widget_destroy (app);
-		gtk_main_quit ();
-	}
-}
-
 static int
 game_quit_callback (GtkWidget *widget, void *data)
 {
 	GtkWidget *box;
+	gint response;
 	
-	box = gnome_message_box_new (_("Do you really want to quit?"),
-				     GNOME_MESSAGE_BOX_QUESTION,
-				     GNOME_STOCK_BUTTON_YES,
-				     GNOME_STOCK_BUTTON_NO,
-				     NULL);
-	gnome_dialog_set_parent (GNOME_DIALOG(box), GTK_WINDOW(app));
-	gnome_dialog_set_default (GNOME_DIALOG (box), 0);
-	gtk_window_set_modal (GTK_WINDOW (box), TRUE);
-	gtk_signal_connect (GTK_OBJECT (box), "clicked",
-			   (GtkSignalFunc)game_maybe_quit, NULL);
-	gtk_widget_show (box);
+	box = gtk_message_dialog_new (GTK_WINDOW (app),
+				     GTK_DIALOG_DESTROY_WITH_PARENT,
+				     GTK_MESSAGE_QUESTION,
+				     GTK_BUTTONS_YES_NO,
+				     _("Do you really want to quit?"));
+
+	gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_YES);
+	response = gtk_dialog_run (GTK_DIALOG (box));
+	gtk_widget_destroy (box);
+
+	if (response == GTK_RESPONSE_YES)
+		gtk_main_quit ();
 
 	return TRUE;
 }
