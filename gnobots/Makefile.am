@@ -2,7 +2,8 @@ scoredir=$(localstatedir)/games
 pixmapdir=$(datadir)/pixmaps/gnobots
 appicondir=$(datadir)/pixmaps
 Gamesdir = $(datadir)/apps/Games
-helpdir = $(datadir)/gnome/help/gnobots/C
+
+SUBDIRS = help
 
 INCLUDES = 			\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
@@ -41,8 +42,6 @@ Games_DATA = gnobots.desktop
 EXTRA_DIST = README \
              AUTHORS \
              gnobots.desktop \
-             index.html \
-             gnobots-topic.dat \
              $(appicon_DATA) \
              $(pixmap_DATA)
 
@@ -55,6 +54,4 @@ install-data-local:
 	-chown games.games $(scoredir)/gnobots.safe.scores
 	-chmod 664 $(scoredir)/gnobots.safe.scores
 	-chgrp games $(bindir)/gnobots && chmod 2111 $(bindir)/gnobots
-	-$(mkinstalldirs) $(helpdir)
-	-$(INSTALL_DATA) $(srcdir)/index.html $(helpdir)
-	-$(INSTALL_DATA) $(srcdir)/gnobots-topic.dat $(helpdir)/topic.dat
+
