@@ -9,27 +9,41 @@ EXTRA_DIST = $(gturing_help_DATA)
 
 all: index.html
 
+# No-op if db2html failed
 index.html: gturing/index.html
-	-cp gturing/index.html .
+	-cd $(srcdir) && cp gturing/index.html index.html
 
 gturing/index.html: gturing.sgml
-	-db2html gturing.sgml
-
+	-cd $(srcdir) && db2html gturing.sgml
 
 dist-hook:
-	-$(mkinstalldirs) $(distdir)/gturing
-	-cp gturing/*.html $(distdir)/gturing
-	-cp gturing/*.css $(distdir)/gturing
+	-mkdir $(distdir)/gturing
+	-mkdir $(distdir)/gturing/stylesheet-images
+	cp $(srcdir)/gturing/*.html $(distdir)/gturing
+	cp -R $(srcdir)/gturing/stylesheet-images/*.gif $(distdir)/gturing/stylesheet-images
+	cp $(srcdir)/gturing/*.css $(distdir)/gturing
 
+# No-op if db2html failed
 install-data-local: index.html
 	-$(mkinstalldirs) $(DESTDIR)$(gturing_helpdir)
-	-for file in gturing/*.html gturing/*.css; do \
-	  basefile=`echo $$file | sed -e 's,^.*/,,'`; \
-	  $(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(gturing_helpdir)/$$basefile; \
-	done
+	files=`echo $(srcdir)/gturing/*.html $(srcdir)/gturing/*.css $(srcdir)/*.png`; \
+	if test "$$files" != '$(srcdir)/gturing/*.html $(srcdir)/gturing/*.css $(srcdir)/*.png'; then \
+	  for file in $$files; do \
+	    basefile=`echo $$file | sed -e 's,^.*/,,'`; \
+	    $(INSTALL_DATA) $$file $(DESTDIR)$(gturing_helpdir)/$$basefile; \
+	  done; \
+	fi
+	-$(mkinstalldirs) $(DESTDIR)$(gturing_helpdir)/stylesheet-images
+	files=`echo $(srcdir)/gturing/stylesheet-images/*.gif`; \
+	if test "$$files" != '$(srcdir)/gturing/stylesheet-images/*.gif'; then \
+	  for file in $$files; do \
+	    basefile=`echo $$file | sed -e 's,^.*/,,'`; \
+	    $(INSTALL_DATA) $$file $(DESTDIR)$(gturing_helpdir)/stylesheet-images/$$basefile; \
+	  done; \
+	fi
 
 gturing.ps: gturing.sgml
-	-db2ps $<
+	db2ps $<
 
 gturing.rtf: gturing.sgml
-	-db2rtf $<
+	db2rtf $<
