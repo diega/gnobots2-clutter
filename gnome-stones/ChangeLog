@@ -1,3 +1,11 @@
+2001-12-19  Seth Nickell  <snickell@stanford.edu>
+
+	* Makefile.am:
+	* gnome-stones.desktop:
+
+	Install into the correct directory and add a Categories
+	field.
+	
 2001-12-04  Duarte Loreto <happyguy_pt@hotmail.com>
         
         * gnome-stones.desktop, default.caves, gnomekoban.caves and tutorial.caves : Added Portuguese (pt) translation.

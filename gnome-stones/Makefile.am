@@ -1,6 +1,6 @@
 SUBDIRS  = objects graphics help
 
-Gamesdir = $(datadir)/gnome/apps/Games
+Gamesdir = $(datadir)/applications
 scoredir =$(localstatedir)/games
 Pixmapdir= $(datadir)/pixmaps
 Cavesdir = $(datadir)/gnome-stones
