@@ -313,7 +313,7 @@ void show_properties_dialog ()
 		return;
 	}
 
-        propbox = gtk_dialog_new_with_buttons (_("Properties"),
+        propbox = gtk_dialog_new_with_buttons (_("Gataxx Preferences"),
 					       GTK_WINDOW (window),
 					       GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
 					       GTK_STOCK_CLOSE,
