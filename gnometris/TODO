@@ -2,7 +2,10 @@ ASAP:
 2. Clean up the code - remove global variables
 
 Next:
-1. user preferences - show next block etc.
+1. user preferences:
+	- show next block
+	- colors of pieces of the same kind can be always the same, or random
+	- configurable field size
 
 Would be Nice:
-1. configurable block shapes and colors
+1. configurable block shapes and block pictures
