@@ -418,7 +418,7 @@ void load_images (gchar * file)
     g_free (warning_message);
   } else {
     if (tilepreimage) g_object_unref (tilepreimage);
-    tilepreimage = games_preimage_new_from_uri (filename, NULL);
+    tilepreimage = games_preimage_new_from_file (filename, NULL);
   }
   
   update_tileimages = TRUE;

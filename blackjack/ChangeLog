@@ -1,3 +1,8 @@
+2005-01-03  Richard Hoelscher  <rah@rahga.com>
+
+	* src/slot.cpp (bj_slot_set_size): 
+	* src/chips.cpp (bj_chip_set_size): Preimage API update, uri -> file. 
+
 2004-11-29  Richard Hoelscher  <rah@rahga.com>
 
 	* src/blackjack.cpp (main): remove rsvg_init(), bug #159811.

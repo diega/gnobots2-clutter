@@ -75,8 +75,8 @@ bj_chip_set_size (gint width,
                         continue;
 
 		if (!chip_preimage[i])
-			chip_preimage[i] = games_preimage_new_from_uri (fullname,
-									NULL);
+			chip_preimage[i] = games_preimage_new_from_file (fullname,
+									 NULL);
 
                 if (chip_scaled_pixbuf[i])
                         g_object_unref (chip_scaled_pixbuf[i]);

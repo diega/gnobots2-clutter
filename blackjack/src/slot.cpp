@@ -56,8 +56,7 @@ bj_slot_set_size (gint width,
                 return;
 
         if (!slot_preimage)
-                slot_preimage = games_preimage_new_from_uri (name,
-                                                             NULL);
+                slot_preimage = games_preimage_new_from_file (name, NULL);
 
         if (slot_scaled_pixbuf)
                 g_object_unref (slot_scaled_pixbuf);
