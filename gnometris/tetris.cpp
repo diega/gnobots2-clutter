@@ -70,6 +70,8 @@ bool rotateCounterClockWise = true;
 #define KEY_LINE_FILL_HEIGHT "/apps/gnometris/options/line_fill_height"
 #define KEY_LINE_FILL_PROBABILITY "/apps/gnometris/options/line_fill_probability"
 
+#define TILE_THRESHOLD 65
+
 #define URI_LIST 0
 #define TEXT_PLAIN 1
 
@@ -93,6 +95,7 @@ Tetris::Tetris(int cmdlLevel):
 	double pts;
 	gchar * outdir;
 	GtkTargetEntry targets[] = {{"text/uri-list", 0, URI_LIST}, 
+				    {"property/bgimage", 0, URI_LIST},
 				    {"text/plain", 0, TEXT_PLAIN},
 				    {"STRING", 0, TEXT_PLAIN}};
 
@@ -375,6 +378,49 @@ Tetris::setupPixmap()
 		bgimage = gdk_pixbuf_new_from_file (bgPixmap, NULL);
 	else 
 		bgimage = NULL;
+
+	/* A nasty hack to tile the image if it looks tileable (i.e. it
+	 * is small enough. */
+	if (bgimage) {
+		int width, height;
+		int bgwidth, bgheight;
+			
+		bgwidth = COLUMNS*BLOCK_SIZE;
+		bgheight = LINES*BLOCK_SIZE;
+
+		width = gdk_pixbuf_get_width (bgimage);
+		height = gdk_pixbuf_get_height (bgimage);
+
+		/* The heuristic is, anything less than 65 pixels on a side,
+		 * or is square and smaller than the playing field. */
+		/* Note that this heuristic fails for the standard nautilus
+		 * background burlap.jpg because it is 97x91 */
+		if ((width < TILE_THRESHOLD) || (height < TILE_THRESHOLD) ||
+		    ((width == height) && (width < bgwidth))) {
+			GdkPixbuf * temp;
+			int i, j;
+			
+			temp = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, 
+					       bgwidth, bgheight); 
+		
+			for (i=0; i<=bgwidth/width; i++) {
+				for (j=0; j<=bgheight/height; j++) {
+					int x, y, w, h;
+
+					x = i*width;
+					y = j*height;
+					w = MIN (width, bgwidth - x);
+					h = MIN (height, bgheight - y);
+
+					gdk_pixbuf_copy_area (bgimage, 0, 0,
+							      w, h, temp,
+							      x, y);
+				}
+			}
+			g_object_unref (bgimage);
+			bgimage = temp;
+		}
+	}
 
 	if (field)
 	{
@@ -983,7 +1029,7 @@ Tetris::decodeDropData(gchar * data, gint type)
 
 		/* Now extract the first URI. */
 		end = start;
-		while ((*end != '\0') && (*end != '\r'))
+		while ((*end != '\0') && (*end != '\r') && (*end != '\n'))
 			end++;
 		*end = '\0';
 
@@ -1009,21 +1055,29 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	GdkPixbuf * pixbuf;
 	guchar * buffer;
 
+
+	g_print ("%d\n", info);
 	/* Accept a dropped filename and try and load it as the
 	   background image. In the event of any kind of failure we
 	   silently ignore it. */
 	
 	/* FIXME: We should also handle dropped colours so we get a
-	   solid background (dropped gimp gradients too ?). */
+	   solid background (dropped gimp gradients too ?).
+	   application/x-color. */
 
-	/* FIXME: We don't accept nautlus bgs/colours either. */
+	/* FIXME: Drag and drop from konqueror don't either. */
 
-	/* Drag and drop from eog isn't working either. */
+	/* FIXME: Dropped URLs from mozilla don't work. */
+
+	/* FIXME: How about x-special/gnome-reset-background (from
+	 * nautilus) to reset the background. */
 
 	if (data->length < 0) {
 		gtk_drag_finish (context, FALSE, FALSE, time);
 		return;
 	}
+
+	g_print ("A\n");
 
 	gtk_drag_finish (context, TRUE, FALSE, time);
 
@@ -1031,6 +1085,8 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	/* Silently ignore bad data. */
 	if (fileuri == NULL)
 		goto error_exit;
+
+	g_print ("B (%s)\n", fileuri);
 
 	/* Now that we have a URI we load it and test it to see if it is 
 	 * an image file. */
@@ -1042,13 +1098,21 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	if (result != GNOME_VFS_OK)
 		goto error_exit;
 
+	g_print ("C\n");
+
 	result = gnome_vfs_get_file_info_from_handle (inhandle, &fileinfo,
 						      GNOME_VFS_FILE_INFO_FOLLOW_LINKS);
 	if (result != GNOME_VFS_OK)
 		goto error_exit_handle;
 
+	g_print ("D\n");
+
+	/* This is where Drag and Drop of URLs from mozilla fails. */
+
 	if (!(fileinfo.valid_fields & GNOME_VFS_FILE_INFO_FIELDS_SIZE))
 		goto error_exit_handle;
+
+	g_print ("E\n");
 
 	filesize = fileinfo.size;
 
@@ -1056,21 +1120,29 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	if (buffer == NULL)
 		goto error_exit_handle;
 	
+	g_print ("F\n");
+
 	result = gnome_vfs_read (inhandle, buffer, filesize, &bytesread);
 	/* FIXME: We should reread if not enough was read. */
 	if ((result != GNOME_VFS_OK) || (bytesread != filesize))
 		goto error_exit_buffer;
+
+	g_print ("G\n");
 
 	loader = gdk_pixbuf_loader_new ();
 
 	if (!gdk_pixbuf_loader_write (loader, buffer, filesize, NULL))
 		goto error_exit_loader;
 
+	g_print ("H\n");
+
 	gdk_pixbuf_loader_close (loader, NULL);
 
 	pixbuf = gdk_pixbuf_loader_get_pixbuf (loader);
 	if (pixbuf == NULL)
 		goto error_exit_loader;
+
+	g_print ("I\n");
 
 	g_object_ref (pixbuf);
 
@@ -1083,9 +1155,13 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	if (result != GNOME_VFS_OK)
 		goto error_exit_loader;
 
+	g_print ("J\n");
+
 	result = gnome_vfs_write (outhandle, buffer, filesize, &bytesread);
 	if ((result != GNOME_VFS_OK) || (bytesread != filesize))
 	    goto error_exit_saver;
+
+	g_print ("K\n");
 
 	t->setupPixmap ();
 

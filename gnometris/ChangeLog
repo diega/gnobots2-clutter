@@ -1,3 +1,10 @@
+2004-07-13  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* tetris.cpp: Fix support for eog uri-lists. Add support for
+	nautilus background types (really just a uri-list). Add a
+	heuristic to decide if the image should be tiled and tile it if it
+	looks like it should.
+
 2004-07-06  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* help/C/gnometris.xml: New help file from Angela Boyle. Slightly
