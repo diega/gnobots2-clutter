@@ -1126,6 +1126,7 @@ properties_callback (GtkWidget *widget, gpointer data)
 	GtkWidget *menu, *omenu;
 	GtkWidget *vbox, *frame, *table, *w, *label;
 	GtkSizeGroup *group;
+	gchar *markup;
 
 	if (pref_dialog) {
 		gtk_window_present (GTK_WINDOW (pref_dialog));
@@ -1149,7 +1150,8 @@ properties_callback (GtkWidget *widget, gpointer data)
 	vbox = gtk_vbox_new (FALSE, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 8);
 
-	frame = gtk_frame_new(_("<b>Tiles</b>"));
+	markup = g_strdup_printf("<b>%s</b>", _("Tiles"));
+	frame = gtk_frame_new(markup);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 	gtk_label_set_use_markup (GTK_LABEL (gtk_frame_get_label_widget(GTK_FRAME(frame))), TRUE);
 
@@ -1184,7 +1186,8 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
 
-	frame = gtk_frame_new(_("<b>Maps</b>"));
+	markup = g_strdup_printf("<b>%s</b>", _("Maps"));
+	frame = gtk_frame_new(markup);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 	gtk_label_set_use_markup (GTK_LABEL (gtk_frame_get_label_widget(GTK_FRAME(frame))), TRUE);
 
@@ -1208,7 +1211,8 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
 
-	frame = gtk_frame_new(_("<b>Colours</b>"));
+	markup = g_strdup_printf("<b>%s</b>", _("Maps"));
+	frame = gtk_frame_new(markup);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 	gtk_label_set_use_markup (GTK_LABEL (gtk_frame_get_label_widget(GTK_FRAME(frame))), TRUE);
 
@@ -1237,7 +1241,8 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
 
-	frame = gtk_frame_new(_("<b>Warnings</b>"));
+	markup = g_strdup_printf("<b>%s</b>", _("Warnings"));
+	frame = gtk_frame_new(markup);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 	gtk_label_set_use_markup (GTK_LABEL (gtk_frame_get_label_widget(GTK_FRAME(frame))), TRUE);
 
@@ -1261,6 +1266,8 @@ properties_callback (GtkWidget *widget, gpointer data)
 
 	g_object_unref (group);
 	gtk_widget_show_all (pref_dialog);
+
+	g_free(markup);
 }
 
 gint
