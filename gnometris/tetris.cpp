@@ -859,7 +859,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 					  KEY_MOVE_PAUSE,
 					  NULL);
 
-	gtk_box_pack_start (GTK_BOX (fvbox), controls_list, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (fvbox), controls_list, TRUE, TRUE, 0);
 
 	gtk_container_add (GTK_CONTAINER (vbox), frame);
 	
