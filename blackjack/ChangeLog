@@ -1,5 +1,8 @@
 2003-06-19  William Jon McCann  <mccann@jhu.edu>
 
+	* src/card.cpp (bj_card_load_pixmaps): 
+	* src/slot.cpp (bj_slot_load_pixmaps): Use g_build_filename to make paths.
+
 	* src/blackjack.cpp (main): g_build_filename needs to be NULL terminated.
 
 2003-06-18  William Jon McCann  <mccann@jhu.edu>

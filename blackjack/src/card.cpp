@@ -142,13 +142,23 @@ get_pixmap (const char* filename)
 void
 bj_card_load_pixmaps (GtkWidget* app, GdkCardDeckOptions deck_options) 
 {
+  gchar *buffer;
+
   card_deck = (GObject*) gdk_card_deck_new (app->window, deck_options);
   mask = gdk_card_deck_mask (GDK_CARD_DECK (card_deck)); 
 
-  chip_pixbuf[CHIP_100] = get_pixbuf ("blackjack/chip-100.png");
-  chip_pixbuf[CHIP_25] = get_pixbuf ("blackjack/chip-25.png");
-  chip_pixbuf[CHIP_5] = get_pixbuf ("blackjack/chip-5.png");
-  chip_pixbuf[CHIP_1] = get_pixbuf ("blackjack/chip-1.png");
+  buffer = g_build_filename ("blackjack", "chip-100.png", NULL);
+  chip_pixbuf[CHIP_100] = get_pixbuf (buffer);
+  g_free (buffer);
+  buffer = g_build_filename ("blackjack", "chip-25.png", NULL);
+  chip_pixbuf[CHIP_25] = get_pixbuf (buffer);
+  g_free (buffer);
+  buffer = g_build_filename ("blackjack", "chip-5.png", NULL);
+  chip_pixbuf[CHIP_5] = get_pixbuf (buffer);
+  g_free (buffer);
+  buffer = g_build_filename ("blackjack", "chip-1.png", NULL);
+  chip_pixbuf[CHIP_1] = get_pixbuf (buffer);
+  g_free (buffer);
 }
 
 void

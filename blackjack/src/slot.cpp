@@ -46,8 +46,14 @@ bj_slot_get_pixbuf ()
 void
 bj_slot_load_pixmaps (void)
 {
-  slot_pixbuf = get_pixbuf ("cards/slots/white-outline.png");
+  gchar *buffer;
+
+  buffer = g_build_filename ("cards", "slots", "white-outline.png", NULL);
+  slot_pixbuf = get_pixbuf (buffer);
+  g_free (buffer);
+  buffer = g_build_filename ("blackjack", "baize.png", NULL);
   default_background_pixmap = get_pixmap ("blackjack/baize.png");
+  g_free (buffer);
 }
 
 void
