@@ -6,6 +6,6 @@ Comment=Gnome SameGame program
 Comment[es]=Juego Gnome SameGame
 Comment[de]=Gnome Variante des Spiels SameGame
 Exec=samegnome
-Icon=gnome-samegnome.xpm
+Icon=gnome-same-gnome.xpm
 Terminal=0
 Type=Application

@@ -1,5 +1,5 @@
 scoredir=$(localstatedir)/games
-pixmapdir = $(datadir)/pixmaps/samegnome
+pixmapdir = $(datadir)/pixmaps/same-gnome
 Gamesdir = $(datadir)/apps/Games
 
 INCLUDES = 			\
@@ -8,12 +8,12 @@ INCLUDES = 			\
 	-I$(includedir)		\
 	$(X_CFLAGS)
 
-bin_PROGRAMS = samegnome
+bin_PROGRAMS = same-gnome
 
-samegnome_SOURCES = 	\
+same_gnome_SOURCES = 	\
 	same-gnome.c
 
-samegnome_LDADD = \
+same_gnome_LDADD = \
 	$(top_builddir)/libgnomeui/libgnomeui.la 	\
 	$(top_builddir)/libgnome/libgnome.la		\
 	$(top_builddir)/support/libsupport.a		\
@@ -27,7 +27,7 @@ install-data-local:
 	-$(mkinstalldirs) $(Gamesdir)
 	$(INSTALL_DATA) $(srcdir)/same-gnome.desktop $(Gamesdir)/same-gnome.desktop
 	-$(mkinstalldirs) $(scoredir)
-	touch $(scoredir)/samegnome.scores
-	-chown games.games $(scoredir)/samegnome.scores
-	-chmod 664 $(scoredir)/samegnome.scores
+	touch $(scoredir)/same-gnome.scores
+	-chown games.games $(scoredir)/same-gnome.scores
+	-chmod 664 $(scoredir)/same-gnome.scores
 

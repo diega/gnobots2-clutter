@@ -18,8 +18,6 @@
 
 #include <config.h>
 #include <gnome.h>
-#include <libgnome/gnome-i18n.h>
-#include <libgnomeui/gnome-session.h>
 
 #define STONE_SIZE 40
 #define STONE_COLS  15
@@ -252,7 +250,7 @@ set_score (int new_score)
 void
 show_scores ( gchar *title, guint pos )
 {
-	gnome_scores_display (title, "samegnome", NULL, pos);
+	gnome_scores_display (title, "same-gnome", NULL, pos);
 }
 
 void 
@@ -387,7 +385,7 @@ load_scenario (char *fname)
 	int width, height;
 	char *tmp, *fn; 
 
-	tmp = g_copy_strings ( "samegnome/", fname, NULL);
+	tmp = g_copy_strings ( "same-gnome/", fname, NULL);
 
 	fn = gnome_unconditional_pixmap_file ( tmp ); 
 	g_free( tmp );
@@ -466,7 +464,7 @@ void
 fill_menu (GtkWidget *menu)
 {
 	struct dirent *e;
-	char *dname = gnome_unconditional_pixmap_file ("samegnome");
+	char *dname = gnome_unconditional_pixmap_file ("same-gnome");
 	DIR *dir;
 	
 	dir = opendir (dname);
@@ -634,7 +632,7 @@ create_menu ()
 	
 	for (i = 0; i < ELEMENTS(same_menu); i++)
 		same_menu[i].path = _(same_menu[i].path);
-	
+
 	subfactory = gtk_menu_factory_new  (GTK_MENU_FACTORY_MENU_BAR);
 	gtk_menu_factory_add_entries (subfactory, same_menu, ELEMENTS(same_menu));
 
@@ -644,7 +642,7 @@ create_menu ()
 GtkWidget *
 create_main_window ()
 {
-	app = gnome_app_new ("samegnome", "Same Gnome");
+	app = gnome_app_new ("same-gnome", "Same Gnome");
 	gtk_widget_realize (app);
 	
 	gtk_signal_connect (GTK_OBJECT(app), "delete_event", GTK_SIGNAL_FUNC(game_quit_callback), NULL);

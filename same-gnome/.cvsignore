@@ -2,5 +2,5 @@ Makefile
 .deps
 _libs
 .libs
-samegnome
+same-gnome
 Makefile.in
