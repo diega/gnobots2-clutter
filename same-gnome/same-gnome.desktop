@@ -10,6 +10,6 @@ Comment[de]=Gnome Variante des Spiels SameGame
 Comment[ko]=±×³ð ¼¼ÀÓ±×³ð °ÔÀÓ
 Comment[fr]=Clone Gnome du Jeu SameGame
 Exec=same-gnome
-Icon=gnome-same-gnome.xpm
+Icon=gnome-gsame.png
 Terminal=0
 Type=Application
