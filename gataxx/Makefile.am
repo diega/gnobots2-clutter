@@ -61,5 +61,6 @@ SUBDIRS = sounds help
 CLEANFILES = $(Games_DATA) $(schema_DATA) $(soundlist_DATA)
 
 install-data-local:
+if GCONF_SCHEMAS_INSTALL
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
-
+endif
