@@ -436,15 +436,14 @@ dist_to_mask (GnomeCanvasPImage *image, int cx, int cy)
 	GdkRectangle a, b, dest;
 	int x, y, tx, ty;
 	double dist, best;
+        GdkBitmap *mask;
 
 	item = GNOME_CANVAS_ITEM (image);
 
 	/* Trivial case:  if there is no mask, we are inside */
 
-#if 0
-	if (!image->mask)
+	if (!image->im)
 		return 0.0;
-#endif
 
 	/* Rectangle that we need */
 
@@ -469,9 +468,11 @@ dist_to_mask (GnomeCanvasPImage *image, int cx, int cy)
 	/* Find the closest pixel */
 
 	best = a.width * a.height; /* start with a "big" value */
-#if 0
-	gimage = gdk_image_get (image->mask, dest.x, dest.y, dest.width, dest.height);
 
+        gdk_pixbuf_render_pixmap_and_mask (image->im, NULL, &mask, 127);
+        
+	gimage = gdk_image_get (mask, dest.x, dest.y, dest.width, dest.height);
+        g_object_unref (mask);
 
 	for (y = 0; y < dest.height; y++)
 		for (x = 0; x < dest.width; x++)
@@ -485,7 +486,7 @@ dist_to_mask (GnomeCanvasPImage *image, int cx, int cy)
 			}
 
 	gdk_image_destroy (gimage);
-#endif
+
 	return best;
 }
 
