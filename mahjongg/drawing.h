@@ -3,7 +3,7 @@
  * Copyright (C) 2003 by Callum McKenzie
  *
  * Created: <2003-09-07 10:40:24 callum>
- * Time-stamp: <2003-09-28 02:40:21 callum>
+ * Time-stamp: <2003-10-02 10:29:23 callum>
  *
  */
 
@@ -11,7 +11,7 @@
 #define DRAWING_H
 
 GtkWidget * create_mahjongg_board (void);
-gboolean load_images (gchar * file);     
+gboolean load_images (gchar * file);
 void set_background (gchar * colour);
 void draw_tile (gint tileno);
 void draw_all_tiles (void);

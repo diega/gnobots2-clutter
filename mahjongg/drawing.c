@@ -3,7 +3,7 @@
  * Copyright (C) 2003 by Callum McKenzie
  *
  * Created: <2003-09-07 05:02:22 callum>
- * Time-stamp: <2003-10-02 09:49:45 callum>
+ * Time-stamp: <2003-10-02 10:52:53 callum>
  *
  */
 
@@ -32,7 +32,7 @@ view_geom_record view_geometry[MAX_TILES];
 /* The number of different tile patterns plus a blank tile at the end. */
 #define NUM_PATTERNS 43
 
-GtkWidget * board;
+GtkWidget * board = NULL;
 GdkPixmap * buffer = NULL;
 GdkPixmap * tileimages = NULL;
 GdkPixmap * tilebuffer = NULL;
@@ -125,42 +125,6 @@ static gint find_tile (guint x, guint y)
   }
 
   return -1;
-}
-
-/* Load the selected images. We return TRUE on success. */
-/* Note that we may not have any windows at this point so we don't
- * do the actual pixmap creation yet. That should all happen at
- * the time of the configure event. */
-gboolean load_images (gchar * file)
-{
-  gchar * filename;
-  gchar * temp;
-
-  temp = g_strconcat ("mahjongg/", file, NULL);
-  
-  filename = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
-                                        temp, TRUE, NULL);
-
-  g_free (temp);
-
-  if (filename == NULL) {
-    file = "mahjongg/default.svg";
-    filename = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
-                                          file, TRUE, NULL);
-    if (filename == NULL) {
-      /* FIXME: Put a warning dialog in here. */
-      g_warning ("Unable to load file %s\n", file);
-    }
-  }
-  
-  tilepixbuf = gdk_pixbuf_new_from_file (filename, NULL);
-  
-  if (tileset)
-    g_free (tileset);
-  tileset = g_strdup (file);
-  g_free (filename);
-  
-  return TRUE;
 }
 
 void set_background (gchar * colour)
@@ -308,7 +272,6 @@ static void configure_board (GtkWidget *w, GdkEventConfigure *e, gpointer data)
   recreate_tile_images ();
   calculate_view_geometry ();
   draw_all_tiles ();
-  save_size (windowwidth, windowheight);
 }
 
 /* Handle exposes by dumping out the backing pixmap. */
@@ -347,6 +310,45 @@ GtkWidget * create_mahjongg_board (void)
                     G_CALLBACK (board_click), NULL);
   
   return board;
+}
+
+/* Load the selected images. We return TRUE on success. */
+gboolean load_images (gchar * file)
+{
+  gchar * filename;
+  gchar * temp;
+
+  temp = g_strconcat ("mahjongg/", file, NULL);
+  
+  filename = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
+                                        temp, TRUE, NULL);
+
+  g_free (temp);
+
+  if (filename == NULL) {
+    file = "mahjongg/default.svg";
+    filename = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
+                                          file, TRUE, NULL);
+    if (filename == NULL) {
+      /* FIXME: Put a warning dialog in here. */
+      g_warning ("Unable to load file %s\n", file);
+    }
+  }
+  
+  tilepixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+  
+  if (tileset)
+    g_free (tileset);
+  tileset = g_strdup (file);
+  g_free (filename);
+
+  /* We may be called before the window is created, in which case we let
+   * the configure callback handle this. But if this is a change of tileset
+   * we need to do this. */
+  if (buffer)
+    recreate_tile_images ();
+  
+  return TRUE;
 }
 
 /* EOF */

@@ -468,11 +468,11 @@ tileset_changed_cb (GConfClient *client,
 			g_free (selected_tileset);
 			selected_tileset = tile_tmp;
 			load_images (selected_tileset);
+			draw_all_tiles ();
 		} else {
 			g_free (tile_tmp);
 		}
 	}
-	draw_all_tiles ();
 }
 
 static void
@@ -561,6 +561,7 @@ bg_colour_changed_cb (GConfClient *client,
 		gnome_color_picker_set_i8 (GNOME_COLOR_PICKER(colour_well),
 				bgcolour.red, bgcolour.green, bgcolour.blue, 0);
 	}
+	draw_all_tiles ();	
 }
 
 static void
@@ -811,8 +812,6 @@ fill_tile_menu (GtkWidget *menu, gchar *sdir)
 			continue;
 		}
 
-		g_print ("%s\n",s);
-		
 		item = gtk_menu_item_new_with_label (s);
 		gtk_widget_show (item);
 		gtk_menu_shell_append (GTK_MENU_SHELL(menu), item);
@@ -1494,12 +1493,16 @@ do_game (void)
 	generate_game (current_seed); /* puts in the positions of the tiles */
 }
 
-void save_size (guint width, guint height)
+/* Record any changes to our window size. */
+static gboolean window_configure_cb (GtkWidget *w, GdkEventConfigure *e,
+				 gpointer data)
 {
 	gconf_client_set_int (conf_client, "/apps/mahjongg/width",
-			      width, NULL);
+			      e->width, NULL);
 	gconf_client_set_int (conf_client, "/apps/mahjongg/height",
-			      height, NULL);
+			      e->height, NULL);
+
+	return FALSE;
 }
 
 static void
@@ -1660,6 +1663,8 @@ main (int argc, char *argv [])
 	window = gnome_app_new (APPNAME, _(APPNAME_LONG));
 	gtk_window_set_default_size (GTK_WINDOW (window), windowwidth,
 				     windowheight);
+	g_signal_connect (G_OBJECT (window), "configure_event",
+			  G_CALLBACK (window_configure_cb), NULL);
 	
 	/* Statusbar for a chrono, Tiles left and Moves left */
 	status_box = gtk_hbox_new (FALSE, 10);
