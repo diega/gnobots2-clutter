@@ -1,3 +1,10 @@
+2005-03-08  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* same-gnome.schemas.in: Fix typo in the schema file (bug
+	#167273).
+
+	* ui.c: Fix typos (bugs #166551 and #167276).
+
 2005-03-03  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* help/C/same-gnome.xml: Yet more updates. I actually

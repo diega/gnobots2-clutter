@@ -82,7 +82,7 @@ void set_message_destroyed (gint count)
 	}
 
 	s = calculate_score (count);
-	message = g_strdup_printf (ngettext ("%d point !", "%d points !", s), s);
+	message = g_strdup_printf (ngettext ("%d point!", "%d points!", s), s);
 	gtk_label_set_text (GTK_LABEL (messagewidget), message);
 	g_free (message);
 } 
@@ -192,7 +192,7 @@ void game_over_dialog (gint place)
 																			 GTK_RESPONSE_ACCEPT);
 
 			message = g_strdup_printf ("<b>%s</b>\n\n%s", _("Congratulations!"),
-																 _("Your score has made the top 10."));
+																 _("Your score has made the top ten."));
 			congratulations = gtk_label_new (message);
 			g_free (message);
 			gtk_label_set_use_markup (GTK_LABEL (congratulations), TRUE);
