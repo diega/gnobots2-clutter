@@ -120,6 +120,14 @@ void set_states_fname(char *str)
   gtk_label_set(GTK_LABEL(helpline), c);
 }
 
+void states_fname_examples_callback (GtkWidget *ok_button, gpointer data)
+{
+	GtkFileSelection *fsel;
+	
+	fsel = GTK_FILE_SELECTION (data);
+	gtk_file_selection_set_filename (fsel, GTURING_EXAMPLES_DIR);
+}
+
 void states_fname_callback(GtkWidget *ok_button, gpointer data)
 {
 	char *fname, *message;
@@ -320,15 +328,21 @@ void prompt(char *title, char *msg, GtkSignalFunc callback, char *def)
 void open_call(GtkWidget *w, gpointer data) 
 {
 	GtkWidget *fsel;
+	GtkWidget *button;
 	        
 	dialog = fsel = gtk_file_selection_new(_("Open gTuring Program File"));
-	gtk_file_selection_hide_fileop_buttons(GTK_FILE_SELECTION(fsel));
-	gtk_signal_connect_object(GTK_OBJECT(GTK_FILE_SELECTION(fsel)->ok_button),
-														"clicked", GTK_SIGNAL_FUNC(states_fname_callback),
-														GTK_OBJECT(fsel));
-	gtk_signal_connect_object(GTK_OBJECT(GTK_FILE_SELECTION(fsel)->cancel_button),
-														"clicked", GTK_SIGNAL_FUNC(cancel_callback),
-														GTK_OBJECT(fsel));
+	
+	button = gtk_button_new_with_label ("Examples");
+	gtk_container_add (GTK_CONTAINER (GTK_FILE_SELECTION (fsel)->button_area), button);
+	gtk_widget_show (button);
+	
+/*	gtk_file_selection_hide_fileop_buttons(GTK_FILE_SELECTION(fsel));*/
+	gtk_signal_connect (GTK_OBJECT(button), "clicked", 
+											GTK_SIGNAL_FUNC(states_fname_examples_callback), fsel);
+	gtk_signal_connect (GTK_OBJECT(GTK_FILE_SELECTION(fsel)->ok_button), "clicked",
+											GTK_SIGNAL_FUNC(states_fname_callback), NULL);
+	gtk_signal_connect (GTK_OBJECT(GTK_FILE_SELECTION(fsel)->cancel_button), "clicked", 
+											GTK_SIGNAL_FUNC(cancel_callback), NULL);
 	gtk_widget_show(fsel);
 }
 
@@ -665,8 +679,6 @@ int main (int argc, char *argv[])
 	parse_args(argc, argv);
 	gnome_init("gnomecard", VERSION, argc, argv);
 
-		chdir(GTURING_EXAMPLES_DIR);
-		
 	init_globals();
 	init_interface(argc, argv);
 	
