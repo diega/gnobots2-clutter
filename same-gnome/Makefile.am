@@ -44,8 +44,8 @@ install-data-local:
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
 	touch $(DESTDIR)$(scoredir)/same-gnome.scores
-	-chown games.games $(DESTDIR)$(scoredir)/same-gnome.scores
+	-chown $(scores_user).$(scores_group) $(DESTDIR)$(scoredir)/same-gnome.scores
 	-chmod 664 $(DESTDIR)$(scoredir)/same-gnome.scores
-	-chgrp games $(DESTDIR)$(bindir)/same-gnome && chmod 2555 $(DESTDIR)$(bindir)/same-gnome
+	-if test "x$(setgid)" = "xtrue"; then chgrp $(scores_group) $(DESTDIR)$(bindir)/same-gnome && chmod 2555 $(DESTDIR)$(bindir)/same-gnome ; fi
 
 CLEANFILES = $(Games_DATA) $(schema_DATA)

@@ -54,8 +54,8 @@ install-data-local:
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
 	touch $(DESTDIR)$(scoredir)/gnometris.scores
-	-chown games.games $(DESTDIR)$(scoredir)/gnometris.scores
+	-chown $(scores_user).$(scores_group) $(DESTDIR)$(scoredir)/gnometris.scores
 	-chmod 664 $(DESTDIR)$(scoredir)/gnometris.scores
-	-chgrp games $(DESTDIR)$(bindir)/gnometris && chmod 2555 $(DESTDIR)$(bindir)/gnometris
+	-if test "x$(setgid)" = "xtrue"; then chgrp $(scores_group) $(DESTDIR)$(bindir)/gnometris && chmod 2555 $(DESTDIR)$(bindir)/gnometris ; fi
 
 CLEANFILES = $(Games_DATA) $(schema_DATA)

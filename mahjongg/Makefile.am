@@ -57,9 +57,9 @@ install-data-local:
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
 	$(mkinstalldirs) $(DESTDIR)$(bgdir)
 	touch $(DESTDIR)$(scoredir)/mahjongg.{easy,difficult}.scores
-	-chown games.games $(DESTDIR)$(scoredir)/mahjongg.{easy,difficult}.scores
+	-chown $(scores_user).$(scores_group) $(DESTDIR)$(scoredir)/mahjongg.{easy,difficult}.scores
 	-chmod 664 $(DESTDIR)$(scoredir)/mahjongg.{easy,difficult}.scores
-	-chgrp games $(DESTDIR)$(bindir)/mahjongg && chmod 2555 $(DESTDIR)$(bindir)/mahjongg
+	-if test "x$(setgid)" = "xtrue"; then chgrp $(scores_group) $(DESTDIR)$(bindir)/mahjongg && chmod 2555 $(DESTDIR)$(bindir)/mahjongg ; fi
 	$(mkinstalldirs) $(DESTDIR)$(Gamesdir)
 
 CLEANFILES = $(Games_DATA) $(schema_DATA)

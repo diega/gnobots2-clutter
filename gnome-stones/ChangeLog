@@ -1,3 +1,8 @@
+2003-05-31  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* Makefile.am (install-data-local): Implement setgid modifications
+	(see gnome-games/ChangeLog).
+
 2003-05-30  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* objects/Makefile.am: Don't give the libraries version info.

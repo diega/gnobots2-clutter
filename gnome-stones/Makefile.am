@@ -1,7 +1,9 @@
 SUBDIRS  = objects graphics sounds help
 
 Gamesdir = $(datadir)/applications
-scoredir =$(localstatedir)/games
+# This is awful but the scores directory is actually kept by libgnome
+# and it may not have the same prefix as us.
+scoredir=`pkg-config libgnome-2.0 --variable=prefix`/var/games
 Pixmapdir= $(datadir)/pixmaps
 Cavesdir = $(datadir)/gnome-stones
 
@@ -82,9 +84,9 @@ EXTRA_DIST    =					\
 install-data-local:
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
 	-touch $(DESTDIR)$(scoredir)/gnome-stones.scores
-	-chown games.games $(DESTDIR)$(scoredir)/gnome-stones.scores
-	-chmod 664 $(DESTDIR)$(scoredir)/gnome-stones.scores	
-	-chgrp games $(DESTDIR)$(bindir)/gnome-stones && chmod 2555 $(DESTDIR)$(bindir)/gnome-stones
+	-chown $(scores_user).$(scores_group) $(DESTDIR)$(scoredir)/gnome-stones.scores
+	-chmod 664 $(DESTDIR)$(scoredir)/gnome-stones.scores
+	-if test "x$(setgid)" = "xtrue"; then chgrp $(scores_group) $(DESTDIR)$(bindir)/gnome-stones && chmod 2555 $(DESTDIR)$(bindir)/gnome-stones ; fi
 
 gnome-stones.keys: gnome-stones.keys.in Makefile
 	sed -e 's^\@icondir\@^$(Pixmapdir)^g' < $(srcdir)/gnome-stones.keys.in > gnome-stones.keys
