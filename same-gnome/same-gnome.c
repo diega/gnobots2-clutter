@@ -624,6 +624,7 @@ game_about_callback (GtkWidget *widget, void *data)
 				 _("Original idea from KDE's same game program."),
 				 /*"gnome-same-gnome.xpm"*/
 				 NULL);
+	gnome_dialog_set_parent(GNOME_DIALOG(about), GTK_WINDOW(app));
 	gtk_widget_show (about);
 
 	return TRUE;
@@ -648,6 +649,7 @@ game_quit_callback (GtkWidget *widget, void *data)
 				     GNOME_STOCK_BUTTON_YES,
 				     GNOME_STOCK_BUTTON_NO,
 				     NULL);
+	gnome_dialog_set_parent (GNOME_DIALOG(box), GTK_WINDOW(app));
 	gnome_dialog_set_default (GNOME_DIALOG (box), 0);
 	gtk_window_set_modal (GTK_WINDOW (box), TRUE);
 	gtk_signal_connect (GTK_OBJECT (box), "clicked",
