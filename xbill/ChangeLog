@@ -1,3 +1,19 @@
+2000-04-30  James Cape  <jcape@jcinteractive.com>
+
+	* pixmaps/*.xpm: Updated all remaining pixmaps to look better.
+	* pixmaps: Added debian.xpm, beos.xpm, turbolinux.xpm, suse.xpm, and
+	  caldera.xpm
+
+	* cursors/*.xpm: Updated all cursors to match pixmaps.
+	* cursors: Added debian.xpm, beos.xpm, turbolinux.xpm, suse.xpm, and
+	  caldera.xpm.
+
+	* Library.cc, Library.h: Added new pixmaps so they are used by
+	  the game.
+
+	* pixmaps/Makefile.in, cursors/Makefile.in: Added in new pixmaps and
+	  cursors so they are installed.
+
 1999-09-19  James Cape  <jcape@jcinteractive.com>
 
 	* Added cursors for Apple, BSD, Sun, SGI, Linux, and RedHat to match
