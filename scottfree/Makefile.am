@@ -8,7 +8,7 @@ GnomeScott_SOURCES = \
 	Scott.h
 
 GnomeScott_LDADD = \
-	-lgemvt $(GNOMEUI_LIBS)
+	-lgemvt $(GNOMEUI_LIBS) $(INTLLIBS)
 
 EXTRA_DIST = 	\
 	down.xpm	\

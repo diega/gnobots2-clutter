@@ -1,3 +1,7 @@
+Sat Feb 14 09:45:08 1998  Tom Tromey  <tromey@cygnus.com>
+
+	* Makefile.am (GnomeScott_LDADD): Added INTLLIBS.
+
 1998-02-01  Raja R Harinath  <harinath@cs.umn.edu>
 
 	* programs/scottfree/GnomeScott.c (main): Return `int', not `void'.
