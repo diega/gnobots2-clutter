@@ -1390,7 +1390,7 @@ void about_callback (GtkWidget *widget, gpointer data)
 				 (const char **)authors,
 				 _("Send comments and bug reports to:\n"
 				   "        pancho@nuclecu.unam.mx or\n"
-				   "        michael@imaginator.com\n\n"
+				   "        mmeeks@gnu.org\n\n"
 				   "Tiles under the General Public License."),
 				 NULL);
 
