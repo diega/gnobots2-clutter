@@ -1,3 +1,8 @@
+1998-03-29  Raja R Harinath  <harinath@cs.umn.edu>
+
+	* same-gnome.c (main): Use `stones.png' as default scenario when
+	no scenario has been specified on the command line.
+
 Sat Mar 21 10:54:57 1998  Tom Tromey  <tromey@cygnus.com>
 
 	* same-gnome.c: Use gnome_message_box_*, not gnome_messagebox_*.

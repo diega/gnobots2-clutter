@@ -421,9 +421,9 @@ load_scenario (char *fname)
 	}
 
 	if (scenario)
-		free (scenario);
+		g_free (scenario);
 
-	scenario = strdup(fname);
+	scenario = g_strdup(fname);
 
 	configure_sync (fname);
 
@@ -905,7 +905,8 @@ main (int argc, char *argv [])
 
 	app = gnome_app_new("same-gnome", _("Same Gnome"));
         gtk_window_set_policy(GTK_WINDOW(app), FALSE, FALSE, TRUE);
-	gtk_signal_connect (GTK_OBJECT(app), "delete_event", (GtkSignalFunc)game_quit_callback, NULL);
+	gtk_signal_connect (GTK_OBJECT(app), "delete_event",
+			    (GtkSignalFunc)game_quit_callback, NULL);
 	gnome_app_create_menus(GNOME_APP(app), mainmenu);
         gtk_menu_item_right_justify(GTK_MENU_ITEM(mainmenu[1].widget));
   
@@ -913,19 +914,21 @@ main (int argc, char *argv [])
 	hb = gtk_hbox_new (FALSE, 0);
 	gnome_app_set_contents (GNOME_APP (app), vb);
 
+	if (!fname)
+		fname = g_strdup ("stones.png");
 	create_same_board (fname);
 
 	label = gtk_label_new (_("Score: "));
 	scorew = gtk_label_new ("");
 	set_score (score);
 	gtk_box_pack_start_defaults (GTK_BOX(vb), hb);
-	gtk_box_pack_end   (GTK_BOX(hb), scorew, 0, 0, 10);
-	gtk_box_pack_end   (GTK_BOX(hb), label,  0, 0, 0);
+	gtk_box_pack_end (GTK_BOX(hb), scorew, 0, 0, 10);
+	gtk_box_pack_end (GTK_BOX(hb), label,  0, 0, 0);
 	
 	if (!restarted)
 		new_game ();
 	
-	free (fname);
+	g_free (fname);
 
         gtk_widget_show (app);
 	gtk_widget_show (hb);
