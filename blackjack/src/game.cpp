@@ -353,6 +353,12 @@ bj_game_eval_installed_file (gchar *file)
         if (!use_cache)
         strategy->save (cache_filename);
       */
+      /* 
+         The new way, using XML cache files:
+         strategy->saveXML ("/tmp/foo.xml.gz");
+         strategy->loadXML ("/tmp/foo.xml.gz");
+      */
+
       if (! use_cache)
         splash_destroy ();
 

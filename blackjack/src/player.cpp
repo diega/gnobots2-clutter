@@ -32,6 +32,9 @@
 #include <dirent.h>
 #include <ctype.h>
 
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+
 #include "blackjack.h"
 #include "events.h"
 #include "draw.h"
@@ -488,66 +491,23 @@ LoadablePlayer::LoadablePlayer (int numDecks, BJRules *rules, BJStrategy & strat
                                 Progress & progress, const char *filename = NULL)
   : Player (allTens, rules, strategy, progress)
 {
+  gint ret = FALSE;
+
   if (filename != NULL)
-    reset (filename);
-  else
+    ret = reset (filename);
+
+  if (!ret)
     BJPlayer::reset (BJShoe(numDecks), *rules, strategy, progress);
 }
 
-void
+gint
 LoadablePlayer::reset (const char *filename)
 {
+  gint ret = FALSE;
+
   if (filename)
-    {
-      load (filename);
-    }
-}
-
-void
-LoadablePlayer::writeFile (const char *filename)
-{
-  gzFile fp;
-
-  fp = gzopen (filename, "wb9");
-  if (! fp) 
-    {
-      cerr << "Could not open required file " << filename << endl;
-      return;
-    }
-
-  gzwrite (fp, &playerHands, sizeof (playerHands));
-  gzwrite (fp, &playerHandCount, sizeof (playerHandCount));
-  gzwrite (fp, &valueSplit, sizeof (valueSplit));
-  gzwrite (fp, &resplit, sizeof (resplit));
-  gzwrite (fp, &overallValues, sizeof (overallValues));
-  gzwrite (fp, &overallValue, sizeof (overallValue));
-
-  gzclose (fp);
-}
-
-void
-LoadablePlayer::readFile (const char *filename)
-{
-  // load from file:
-  //   playerHandCount[][], playerHands[], valueSplit[][]
-  //   (and preferably resplit[], overallValues[], and overallValue)
-  gzFile fp;
-
-  fp = gzopen (filename, "rb");
-  if (! fp) 
-    {
-      cerr << "Could not open required file " << filename << endl;
-      return;
-    }
-
-  gzread (fp, &playerHands, sizeof (playerHands));
-  gzread (fp, &playerHandCount, sizeof (playerHandCount));
-  gzread (fp, &valueSplit, sizeof (valueSplit));
-  gzread (fp, &resplit, sizeof (resplit));
-  gzread (fp, &overallValues, sizeof (overallValues));
-  gzread (fp, &overallValue, sizeof (overallValue));
-
-  gzclose (fp);
+    ret = load (filename);
+  return ret;
 }
 
 void
@@ -564,12 +524,132 @@ LoadablePlayer::saveHand (int i)
 }
 
 void
+LoadablePlayer::saveHandXML (int i)
+{
+  // cache playerHands[i] as well as index i
+
+  gzprintf (fp, "    <Hand n=\"%d\">\n", i);
+
+  gzprintf (fp, "      <Cards d=\"");
+  for (int j = 0; j < 10; j++)
+    gzprintf (fp, "%d%s", playerHands[i].cards[j], (j < 9) ? "," : "");
+  gzprintf (fp, "\"/>\n");
+
+  gzprintf (fp, "      <Hit d=\"");
+  for (int j = 0; j < 10; j++)
+    gzprintf (fp, "%d%s", playerHands[i].hitHand[j], (j < 9) ? "," : "");
+  gzprintf (fp, "\"/>\n");
+
+  gzprintf (fp, "      <Next d=\"%d\"/>\n", playerHands[i].nextHand);
+
+  gzprintf (fp, "      <ValueStand split=\"false\" d=\"");
+  for (int j = 0; j < 10; j++)
+    gzprintf (fp, "%f%s", playerHands[i].valueStand[0][j], (j < 9) ? "," : "");
+  gzprintf (fp, "\"/>\n");
+
+  gzprintf (fp, "      <ValueHit split=\"false\" d=\"");
+  for (int j = 0; j < 10; j++)
+    gzprintf (fp, "%f%s", playerHands[i].valueHit[0][j], (j < 9) ? "," : "");
+  gzprintf (fp, "\"/>\n");
+  
+  gzprintf (fp, "      <ValueDouble split=\"false\" d=\"");
+  for (int j = 0; j < 10; j++)
+    gzprintf (fp, "%f%s", playerHands[i].valueDoubleDown[0][j], (j < 9) ? "," : "");
+  gzprintf (fp, "\"/>\n");
+  
+  gzprintf (fp, "    </Hand>\n");
+}
+
+void
 LoadablePlayer::saveCount (int count, bool soft)
 {
   for (int i=playerHandCount[count][soft]; i; i=playerHands[i].nextHand)
     {
       saveHand (i);
     }
+}
+
+void
+LoadablePlayer::saveCountXML (int count, bool soft)
+{
+  for (int i=playerHandCount[count][soft]; i; i=playerHands[i].nextHand)
+    {
+      saveHandXML (i);
+    }
+}
+
+void
+LoadablePlayer::savePlayerHandCountXML ()
+{
+  gzprintf (fp, "  <PlayerHandCount>\n");
+  for (int i = 0; i < 22; i++)
+    {
+      gzprintf (fp, "    <Count n=\"%d\" hard=\"%d\" soft=\"%d\"/>\n",
+                i, playerHandCount[i][0], playerHandCount[i][1]);
+    }
+  gzprintf (fp, "  </PlayerHandCount>\n");
+}
+
+void
+LoadablePlayer::saveValueSplitXML ()
+{
+  gzprintf (fp, "  <ValueSplit>\n");
+  for (int i = 0; i < 10; i++)
+    for (int j = 0; j < 10; j++)
+      {
+        gzprintf (fp, "    <Split pair=\"%d\" up=\"%d\" d=\"%.20f\"/>\n",
+                  i, j, valueSplit[i][j]);
+      }
+  gzprintf (fp, "  </ValueSplit>\n");
+}
+
+void
+LoadablePlayer::saveResplitXML ()
+{
+  gzprintf (fp, "  <Resplit d=\"");
+  for (int i = 0; i < 10; i++)
+    gzprintf (fp, "%d%s", resplit[i], (i < 9) ? "," : "");
+  gzprintf (fp, "\"/>\n");
+}
+
+void
+LoadablePlayer::saveOverallValuesXML ()
+{
+  gzprintf (fp, "  <OverallValues d=\"");
+  for (int i = 0; i < 10; i++)
+    gzprintf (fp, "%.20f%s", overallValues[i], (i < 9) ? "," : "");
+  gzprintf (fp, "\"/>\n");
+}
+
+void
+LoadablePlayer::saveOverallValueXML ()
+{
+  gzprintf (fp, "  <OverallValue d=\"");
+  gzprintf (fp, "%.20f", overallValue);
+  gzprintf (fp, "\"/>\n");
+}
+
+void
+LoadablePlayer::savePlayerHandsXML ()
+{
+  int card, count;
+
+  gzprintf (fp, "  <PlayerHands>\n");
+
+  saveHandXML (0);
+  for (card = 1; card <= 10; card++)
+    saveHandXML (playerHands[0].hitHand[card - 1]);
+
+  for (count = 21; count >= 11; count--)
+    saveCountXML (count, false);
+  
+  for (count = 21; count >= 12; count--)
+    saveCountXML (count, true);
+  
+  for (count = 10; count >= 4; count--)
+    saveCountXML (count, false);
+
+  gzprintf (fp, "  </PlayerHands>\n");
 }
 
 void
@@ -580,7 +660,7 @@ LoadablePlayer::save (const char *filename)
   fp = gzopen (filename, "wb9");
   if (! fp) 
     {
-      cerr << "Could not open required file " << filename << endl;
+      cerr << "Could not open required file: " << filename << endl;
       return;
     }
 
@@ -591,25 +671,48 @@ LoadablePlayer::save (const char *filename)
   gzwrite (fp, &overallValue, sizeof (overallValue));
 
   saveHand (0);
+
   for (card = 1; card <= 10; card++)
     saveHand (playerHands[0].hitHand[card - 1]);
 
   for (count = 21; count >= 11; count--)
     saveCount (count, false);
-  
-  for (count = 21; count >= 12; count--)
-    saveCount (count, true);
-  
-  for (count = 10; count >= 4; count--)
-    saveCount (count, false);
+
+   for (count = 21; count >= 12; count--)
+     saveCount (count, true);
+
+   for (count = 10; count >= 4; count--)
+     saveCount (count, false);
+}
+
+void
+LoadablePlayer::saveXML (const char *filename)
+{
+
+  fp = gzopen (filename, "wb9");
+  if (! fp) 
+    {
+      cerr << "Could not open required file: " << filename << endl;
+      return;
+    }
+
+  gzprintf (fp, "<?xml version=\"1.0\"?>\n<BlackjackRule>\n");
+  savePlayerHandCountXML ();
+  saveValueSplitXML ();
+  saveResplitXML ();
+  saveOverallValuesXML ();
+  saveOverallValueXML ();
+
+  savePlayerHandsXML ();
+  gzprintf (fp, "</BlackjackRule>\n");
 
   gzclose (fp);
 }
 
-void
+gint
 LoadablePlayer::load (const char *filename)
 {
-  int i;
+  gint i;
   // load numHands, playerHandCount, etc.
   // now load the playerHands array
 
@@ -618,8 +721,8 @@ LoadablePlayer::load (const char *filename)
   fp = gzopen (filename, "rb");
   if (! fp) 
     {
-      cerr << "Could not open required file " << filename << endl;
-      return;
+      cerr << "Could not open required file: " << filename << endl;
+      return FALSE;
     }
 
   gzread (fp, &playerHandCount, sizeof (playerHandCount));
@@ -641,4 +744,354 @@ LoadablePlayer::load (const char *filename)
     }
 
   gzclose (fp);
+  return TRUE;
+}
+
+gint
+LoadablePlayer::load_array_from_string (int *arr, const char *string, int n)
+{
+  gchar **strings;
+
+  strings = g_strsplit (string, ",", n);
+
+  for (int i = 0; strings[i] != NULL; i++)
+    {
+      long number;
+      number = atoi (strings[i]);
+      arr[i] = number;
+    }
+  g_strfreev (strings);
+  return TRUE;
+}
+
+gint
+LoadablePlayer::load_array_from_string (float *arr, const char *string, int n)
+{
+  gchar **strings;
+
+  strings = g_strsplit (string, ",", n);
+
+  for (int i = 0; strings[i] != NULL; i++)
+    {
+      double number;
+      number = strtod (strings[i], NULL);
+      arr[i] = (float) number;
+    }
+  g_strfreev (strings);
+  return TRUE;
+}
+
+gint
+LoadablePlayer::load_array_from_string (double *arr,
+                                        const char *string,
+                                        int n)
+{
+  gchar **strings;
+
+  strings = g_strsplit (string, ",", n);
+
+  for (int i = 0; strings[i] != NULL; i++)
+    {
+      double number;
+      number = strtod (strings[i], NULL);
+      arr[i] = number;
+    }
+  g_strfreev (strings);
+  return TRUE;
+}
+
+gint
+LoadablePlayer::parse_hand (xmlNodePtr node)
+{
+  xmlChar *text;
+  xmlNodePtr cur;
+  int index;
+
+  text = xmlGetProp (node, (const xmlChar *) "n");
+  index = atoi ((const char *)text);
+  xmlFree (text);
+
+  cur = node->children;
+  while (cur != NULL)
+    {
+      if (!xmlStrcmp (cur->name, (const xmlChar *) "Cards"))
+        {
+          text = xmlGetProp (cur, (const xmlChar *) "d");
+          if (!text) {
+            cerr << "Error reading file: invalid hand cards" << endl;
+            return FALSE;
+          }
+          load_array_from_string (playerHands[index].cards,
+                                  (const char *)text, 10);
+          xmlFree (text);
+        }
+      else if (!xmlStrcmp (cur->name, (const xmlChar *) "Hit"))
+        {
+          text = xmlGetProp (cur, (const xmlChar *) "d");
+          if (!text) {
+            cerr << "Error reading file: invalid hand hit index" << endl;
+            return FALSE;
+          }
+          load_array_from_string (playerHands[index].hitHand,
+                                  (const char *)text, 10);
+          xmlFree (text);
+        }
+      else if (!xmlStrcmp (cur->name, (const xmlChar *) "Next"))
+        {
+          text = xmlGetProp (cur, (const xmlChar *) "d");
+          if (!text) {
+            cerr << "Error reading file: invalid hand next value" << endl;
+            return FALSE;
+          }
+          playerHands[index].nextHand = atoi ((const char *)text);
+          xmlFree (text);
+        }
+      else if (!xmlStrcmp (cur->name, (const xmlChar *) "ValueStand"))
+        {
+          text = xmlGetProp (cur, (const xmlChar *) "d");
+          if (!text) {
+            cerr << "Error reading file: invalid hand stand value" << endl;
+            return FALSE;
+          }
+          load_array_from_string (playerHands[index].valueStand[0],
+                                  (const char *)text, 10);
+          xmlFree (text);
+        }
+      else if (!xmlStrcmp (cur->name, (const xmlChar *) "ValueHit"))
+        {
+          text = xmlGetProp (cur, (const xmlChar *) "d");
+          if (!text) {
+            cerr << "Error reading file: invalid hand hit value" << endl;
+            return FALSE;
+          }
+          load_array_from_string (playerHands[index].valueHit[0],
+                                  (const char *)text, 10);
+          xmlFree (text);
+        }
+      else if (!xmlStrcmp (cur->name, (const xmlChar *) "ValueDouble"))
+        {
+          text = xmlGetProp (cur, (const xmlChar *) "d");
+          if (!text) {
+            cerr << "Error reading file: invalid hand double value" << endl;
+            return FALSE;
+          }
+          load_array_from_string (playerHands[index].valueDoubleDown[0],
+                                  (const char *)text, 10);
+          xmlFree (text);
+        }
+
+      cur = cur->next;
+    }
+  return TRUE;
+}
+
+gint
+LoadablePlayer::parse_hands (xmlNodePtr node)
+{
+  xmlNodePtr cur;
+
+  cur = node->children;
+  while (cur != NULL)
+    {
+      if (!xmlStrcmp (cur->name, (const xmlChar *) "Hand"))
+        parse_hand (cur);
+      cur = cur->next;
+    }
+  return TRUE;
+}
+
+gint
+LoadablePlayer::parse_hand_count (xmlNodePtr node)
+{
+  xmlNodePtr cur;
+  xmlChar *text;
+  int index, hard, soft;
+
+  cur = node->children;
+  while (cur != NULL)
+    {
+      if (!xmlStrcmp (cur->name, (const xmlChar *) "Count"))
+        {
+          text = xmlGetProp (cur, (const xmlChar *) "n");
+          if (!text) {
+            cerr << "Error reading file: invalid count index" << endl;
+            return FALSE;
+          }
+          index = atoi ((const char *)text);
+          xmlFree (text);
+
+          text = xmlGetProp (cur, (const xmlChar *) "hard");
+          if (!text) {
+            cerr << "Error reading file: invalid hard count" << endl;
+            return FALSE;
+          }
+          hard = atoi ((const char *)text);
+          xmlFree (text);
+          
+          text = xmlGetProp (cur, (const xmlChar *) "soft");
+          if (!text) {
+            cerr << "Error reading file: invalid soft count" << endl;
+            return FALSE;
+          }
+          soft = atoi ((const char *)text);
+          xmlFree (text);
+          playerHandCount[index][0] = hard;
+          playerHandCount[index][1] = soft;
+        }
+      cur = cur->next;
+    }
+  return TRUE;
+}
+
+gint
+LoadablePlayer::parse_value_split (xmlNodePtr node)
+{
+  xmlNodePtr cur;
+  xmlChar *text;
+  int pair, up;
+  double value;
+  
+  cur = node->children;
+  while (cur != NULL)
+    {
+      if (!xmlStrcmp (cur->name, (const xmlChar *) "Split"))
+        {
+          text = xmlGetProp (cur, (const xmlChar *) "pair");
+          if (!text) {
+            cerr << "Error reading file: invalid split pair index" << endl;
+            return FALSE;
+          }
+          pair = atoi ((const char *)text);
+          xmlFree (text);
+
+          text = xmlGetProp (cur, (const xmlChar *) "up");
+          if (!text) {
+            cerr << "Error reading file: invalid split up index" << endl;
+            return FALSE;
+          }
+          up = atoi ((const char *)text);
+          xmlFree (text);
+          
+          text = xmlGetProp (cur, (const xmlChar *) "d");
+          if (!text) {
+            cerr << "Error reading file: invalid split value" << endl;
+            return FALSE;
+          }
+          value = strtod ((const char *)text, NULL);
+          xmlFree (text);
+
+          valueSplit[pair][up] = value;
+        }
+      cur = cur->next;
+    }
+  return TRUE;
+}
+
+gint
+LoadablePlayer::parse_resplit (xmlNodePtr node)
+{
+  xmlChar *text;
+
+  if (!xmlStrcmp (node->name, (const xmlChar *) "Replit"))
+    {
+      text = xmlGetProp (node, (const xmlChar *) "d");
+      if (!text) {
+        cerr << "Error reading file: invalid resplit value" << endl;
+        return FALSE;
+      }
+      load_array_from_string (resplit, (const char *)text, 10);
+      xmlFree (text);
+    }
+  return TRUE;
+}
+
+gint
+LoadablePlayer::parse_overall_values (xmlNodePtr node)
+{
+  xmlChar *text;
+
+  if (!xmlStrcmp (node->name, (const xmlChar *) "OverallValues"))
+    {
+      text = xmlGetProp (node, (const xmlChar *) "d");
+      if (!text) {
+        cerr << "Error reading file: invalid overall values" << endl;
+        return FALSE;
+      }
+      load_array_from_string (overallValues, (const char *)text, 10);
+      xmlFree (text);
+    }
+  return TRUE;
+}
+
+gint
+LoadablePlayer::parse_overall_value (xmlNodePtr node)
+{
+  xmlChar *text;
+
+  if (!xmlStrcmp (node->name, (const xmlChar *) "OverallValue"))
+    {
+      text = xmlGetProp (node, (const xmlChar *) "d");
+      if (!text) {
+        cerr << "Error reading file: invalid overall value" << endl;
+        return FALSE;
+      }
+      overallValue = strtod ((const char *)text, NULL);
+      xmlFree (text);
+    }
+  return TRUE;
+}
+
+gint
+LoadablePlayer::parse_document (xmlDocPtr doc)
+{
+  xmlNodePtr node;
+  gint ret;
+
+  node = xmlDocGetRootElement (doc);
+  node = node->children;
+  while (node != NULL)
+    {
+      ret = TRUE;
+      if (!xmlStrcmp (node->name, (const xmlChar *) "PlayerHands"))
+        ret = parse_hands (node);
+      else if (!xmlStrcmp (node->name, (const xmlChar *) "PlayerHandCount"))
+        ret = parse_hand_count (node);
+      else if (!xmlStrcmp (node->name, (const xmlChar *) "ValueSplit"))
+        ret = parse_value_split (node);
+      else if (!xmlStrcmp (node->name, (const xmlChar *) "Resplit"))
+        ret = parse_resplit (node);
+      else if (!xmlStrcmp (node->name, (const xmlChar *) "OverallValues"))
+        ret = parse_overall_values (node);
+      else if (!xmlStrcmp (node->name, (const xmlChar *) "OverallValue"))
+        ret = parse_overall_value (node);
+      if (!ret)
+        return ret;
+      node = node->next;
+    }
+  return TRUE;
+}
+
+gint
+LoadablePlayer::loadXML (const char *filename)
+{
+  xmlDocPtr doc;
+  gint ret;
+
+  doc = xmlParseFile (filename);
+  if (doc == NULL) 
+    {
+      cerr << "Could not read required file: " << filename << endl;
+      return FALSE;
+    }
+
+  if (!doc || !doc->children || !doc->children->name)
+    {
+      cerr << "Error reading required file: " << filename << endl;
+      return FALSE;
+    }
+
+  ret = parse_document (doc);
+    
+  xmlFreeDoc (doc);
+  return ret;
 }

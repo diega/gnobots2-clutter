@@ -21,6 +21,8 @@
 #define BJ_PLAYER_H
 
 #include <zlib.h>
+#include <libxml/tree.h>
+#include <libxml/parser.h>
 
 // Implement BJProgress interface.
 
@@ -133,15 +135,34 @@ class LoadablePlayer : public Player
 public:
   LoadablePlayer (int numDecks, BJRules *rules, BJStrategy & strategy,
                   Progress & progress, const char *filename);
-  void reset (const char *filename);
-  void readFile (const char *filename);
-  void writeFile (const char *filename);
-  void load (const char *filename);
+  gint reset (const char *filename);
+  gint load (const char *filename);
+  gint loadXML (const char *filename);
   void save (const char *filename);
+  void saveXML (const char *filename);
 private:
   gzFile fp;
   void saveHand (int i);
   void saveCount (int count, bool soft);
+  void savePlayerHandCountXML (void);
+  void savePlayerHandsXML (void);
+  void saveValueSplitXML (void);
+  void saveResplitXML (void);
+  void saveOverallValuesXML (void);
+  void saveOverallValueXML (void);
+  void saveHandXML (int i);
+  void saveCountXML (int count, bool soft);
+  gint parse_document (xmlDocPtr doc);
+  gint parse_hand (xmlNodePtr node);
+  gint parse_hands (xmlNodePtr node);
+  gint parse_hand_count (xmlNodePtr node);
+  gint parse_value_split (xmlNodePtr node);
+  gint parse_resplit (xmlNodePtr node);
+  gint parse_overall_values (xmlNodePtr node);
+  gint parse_overall_value (xmlNodePtr node);
+  gint load_array_from_string (int *arr, const char *string, int n);
+  gint load_array_from_string (float *arr, const char *string, int n);
+  gint load_array_from_string (double *arr, const char *string, int n);
 };
 
 

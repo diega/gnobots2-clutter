@@ -1,3 +1,20 @@
+2004-02-03  William Jon McCann  <mccann@jhu.edu>
+
+	* src/player.cpp (LoadablePlayer, reset):
+	Use and check return value.
+	(saveHandXML, savePlayerHandCountXML, saveCountXML) 
+	(saveValueSplitXML, saveResplitXML, saveOverallValuesXML) 
+	(saveOverallValueXML, savePlayerHandsXML, saveXML) 
+	(load_array_from_string, parse_hand, parse_hands) 
+	(parse_hand_count, parse_value_split, parse_resplit) 
+	(parse_overall_values, parse_overall_value, parse_document) 
+	(loadXML): New functions to support saving and loading XML
+	cache files.
+
+	* src/hand.cpp (bj_hand_show_options) 
+	(bj_hand_get_best_option_string, bj_hand_new5): Add some checks
+	for NULL strategy.
+
 2004-01-12  William Jon McCann  <mccann@jhu.edu>
 
 	* src/card.cpp (bj_card_load_pixmaps): Added error checking and

@@ -56,7 +56,8 @@ bj_hand_get_slot ()
 void
 bj_hand_show_options ()
 {
-  if ((player->getCards () > 1) 
+  if (strategy != NULL
+      && (player->getCards () > 1) 
       && (dealer->getCards () > 1) )
     strategy->showOptions (player,
                            dealer->cards[0].value(), 
@@ -76,6 +77,9 @@ bj_hand_get_best_option_string ()
 {
   gchar *option_str = NULL;
   gint bestOption;
+
+  if (strategy == NULL)
+    return NULL;
 
   bestOption = strategy->getBestOption (player, 
                                         dealer->cards[0].value (),
@@ -260,9 +264,10 @@ bj_hand_new5 (gpointer data)
     }
   else
     {
-      strategy->showOptions (player,
-                             dealer->cards[0].value (), 
-                             numHands);
+      if (strategy != NULL)
+        strategy->showOptions (player,
+                               dealer->cards[0].value (), 
+                               numHands);
       events_pending = false;
     }
 
