@@ -31,6 +31,7 @@ public:
 	void incLines(int newlines);	
 	void checkLevel();
 	void setLevel(int l);
+	void setStartingLevel(int l);
 		
 	int getScore() {return score;}
 	int getLines() {return lines;}

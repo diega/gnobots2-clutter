@@ -154,7 +154,11 @@ ScoreFrame::setLevel(int l)
 	gtk_label_set(GTK_LABEL(levelw), b);
 }
 
-
+void
+ScoreFrame::setStartingLevel(int l)
+{
+	startingLevel = l;
+}
 
 
 

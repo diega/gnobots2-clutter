@@ -310,6 +310,7 @@ Tetris::doSetup(GtkWidget *widget, void *d)
 	gnome_config_sync();
 	
 	t->scoreFrame->setLevel(t->startingLevel);
+	t->scoreFrame->setStartingLevel(t->startingLevel);
 	setupdialogDestroy(widget, d);
 	t->setupPixmap();
 }
@@ -825,6 +826,7 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 	int level = t->cmdlineLevel ? t->cmdlineLevel :
 		gnome_config_get_int_with_default("/gnometris/Properties/StartingLevel=1", 0);
 	t->scoreFrame->setLevel(level);
+	t->scoreFrame->setStartingLevel(level);
 	random_block_colors = gnome_config_get_int_with_default(
 		"/gnometris/Properties/RandomBlockColors=0", 0) != 0;
 	do_preview = gnome_config_get_int_with_default(
