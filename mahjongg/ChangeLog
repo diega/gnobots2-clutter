@@ -1,5 +1,10 @@
 2001-12-28  Josh Barrow  <drleary@mac.com>
 
+	* mahjongg.c: (about_callback), (main):
+	GNOME is an *ACRONYM*, damnit!
+
+2001-12-28  Josh Barrow  <drleary@mac.com>
+
 	* mahjongg.c: (hint_cancel), (update_moves_left),
 	(set_backgnd_colour), (change_tiles), (tile_event),
 	(apply_preferences), (fill_tile_menu), (fill_map_menu),

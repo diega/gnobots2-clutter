@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*- */
 /*
- * Gnome-Mahjongg
+ * GNOME-Mahjongg
  * (C) 1998-1999 the Free Software Foundation
  *
  *
@@ -30,7 +30,7 @@
 #include "gnome-canvas-pimage.h"
 
 #define APPNAME "mahjongg"
-#define APPNAME_LONG "Gnome Mahjongg"
+#define APPNAME_LONG "GNOME Mahjongg"
 /*
 #define MAH_VERSION "0.99.2+"
 */
@@ -1410,7 +1410,7 @@ void about_callback (GtkWidget *widget, gpointer data)
         /* Translator credits */
         gchar *translator_credits = _("");
 
-	about = gnome_about_new (_("Gnome Mahjongg"), MAH_VERSION,
+	about = gnome_about_new (_("GNOME Mahjongg"), MAH_VERSION,
 				 "(C) 1998 The Free Software Foundation",
 				  _("Send comments and bug reports to:\n"
 				   "        pancho@nuclecu.unam.mx or\n"
@@ -2124,7 +2124,7 @@ int main (int argc, char *argv [])
         }
 
   	gnome_app_flash (GNOME_APP (window), 
-  				"Welcome to Gnome Mahjongg!"); 
+  				"Welcome to GNOME Mahjongg!"); 
 
 	gtk_main ();
 	
