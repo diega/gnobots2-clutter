@@ -1,3 +1,8 @@
+2003-11-19  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* data/Makefile.am (CLEANFILES): Make sure we clean up after
+	ourselves.
+
 2003-11-13  William Jon McCann  <mccann@jhu.edu>
 
 	* help/C/blackjack.xml: Document keyboard controls.
