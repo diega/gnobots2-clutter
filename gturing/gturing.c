@@ -430,35 +430,38 @@ void about_call(GtkWidget *w, gpointer data)
 }
 
 GnomeUIInfo filemenu[] = {
-	GNOMEUIINFO_ITEM_STOCK(N_("Open..."), N_("Open a program file."), 
-		open_call, GNOME_STOCK_MENU_OPEN),
+
+        GNOMEUIINFO_MENU_OPEN_ITEM(open_call, NULL),
+
 	GNOMEUIINFO_SEPARATOR,
-	GNOMEUIINFO_ITEM_STOCK(N_("Exit"), N_("Close the program."), 
-		exit_call, GNOME_STOCK_MENU_EXIT),
+
+	GNOMEUIINFO_MENU_EXIT_ITEM(exit_call, NULL),
+
 	GNOMEUIINFO_END
 };
 
-GnomeUIInfo optionmenu[] = {
-	GNOMEUIINFO_ITEM_NONE(N_("Play Speed..."), N_("Set playing speed."),
+GnomeUIInfo settingsmenu[] = {
+  
+	GNOMEUIINFO_ITEM_NONE(N_("_Play Speed..."), N_("Set playing speed."),
 			      playspeed_call),
-	GNOMEUIINFO_ITEM_NONE(N_("Tape..."), N_("Set the machine's tape."),
+	GNOMEUIINFO_ITEM_NONE(N_("_Tape..."), N_("Set the machine's tape."),
 			      tape_call),
-	GNOMEUIINFO_ITEM_NONE(N_("View States"), N_("Open a table with the machine's states."),
+	GNOMEUIINFO_ITEM_NONE(N_("_View States"),
+			      N_("Open a table with the machine's states."),
 			      view_states_call),
 	GNOMEUIINFO_END
 };
 
 GnomeUIInfo helpmenu[] = {
 	GNOMEUIINFO_HELP("gTuring"),
-	GNOMEUIINFO_ITEM_STOCK(N_("About..."), N_("Version, credits, etc."),
-			       about_call, GNOME_STOCK_MENU_ABOUT),
+	GNOMEUIINFO_MENU_ABOUT_ITEM(about_call, NULL),
 	GNOMEUIINFO_END
 };
 
 GnomeUIInfo mainmenu[] = {
-	GNOMEUIINFO_SUBTREE(N_("File"), filemenu),
-	GNOMEUIINFO_SUBTREE(N_("Options"), optionmenu),
-	GNOMEUIINFO_SUBTREE(N_("Help"), helpmenu),
+        GNOMEUIINFO_MENU_FILE_TREE(filemenu),
+	GNOMEUIINFO_MENU_SETTINGS_TREE(settingsmenu),
+	GNOMEUIINFO_MENU_HELP_TREE(helpmenu),
 	GNOMEUIINFO_END
 };
 
