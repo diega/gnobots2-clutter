@@ -18,7 +18,7 @@
 	<applyto>/apps/mahjongg/tileset</applyto>
 	<owner>mahjongg</owner>
 	<type>string</type>
-	<default>default.png</default>
+	<default>postmodern.svg</default>
 	<locale name="C">
 	  <short></short>
 	  <long></long>
