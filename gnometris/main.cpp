@@ -20,7 +20,7 @@
 
 #include <config.h>
 #include "tetris.h"
-
+#include <libgnomeui/gnome-window-icon.h>
 int nr_of_colors = 0;
 
 int
@@ -42,6 +42,7 @@ main(int argc, char *argv[])
 	gnome_score_init("gnometris");
 
 	gnome_init_with_popt_table("gnometris", TETRIS_VERSION, argc, argv, options, 0, 0);
+	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-gtetris.png");
 
 //	GnomeClient *client= gnome_master_client();
 	

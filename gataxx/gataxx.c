@@ -22,6 +22,7 @@
 
 #include "config.h"
 #include <gnome.h>
+#include <libgnomeui/gnome-window-icon.h>
 #include <gdk/gdkkeysyms.h>
 
 #include <sys/time.h>
@@ -853,7 +854,7 @@ int main(int argc, char **argv) {
     struct timeval tv;
     
     gnome_score_init("gataxx");
-    
+
     bindtextdomain(PACKAGE, GNOMELOCALEDIR);
     textdomain(PACKAGE);
     
@@ -866,7 +867,8 @@ int main(int argc, char **argv) {
 #else
     gnome_init_with_popt_table("gataxx", VERSION, argc, argv, options, 0, NULL);
 #endif
-    
+
+    gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gataxx.png");
     client= gnome_master_client();
     
     gtk_object_ref(GTK_OBJECT(client));

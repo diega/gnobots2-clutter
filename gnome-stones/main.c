@@ -20,6 +20,7 @@
  */
 #include <config.h>
 #include <gnome.h>
+#include <libgnomeui/gnome-window-icon.h>
 #include <stdlib.h>
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
@@ -1118,7 +1119,7 @@ main (int argc, char *argv[])
   gnome_score_init (APP_NAME);
 
   gnome_init_with_popt_table (APP_NAME, VERSION, argc, argv, options, 0, NULL);
-
+  gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-stones.png");
   /* That's what a gnome application needs:  */
   app= gnome_app_new ("gnome-stones", _("Gnome-Stones"));
   gtk_window_set_policy  (GTK_WINDOW (app), FALSE, FALSE, TRUE);

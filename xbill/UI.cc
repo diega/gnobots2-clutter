@@ -6,6 +6,7 @@
 #include "x11.h"
 #include "Strings.h"
 
+#include <libgnomeui/gnome-window-icon.h>
 GtkWidget *toplevel, *menubar, *field;
 GtkWidget *scorebox, *endgamebox;
 GtkWidget *warpbox, *quitbox, *newgamebox, *pausebox;
@@ -43,6 +44,7 @@ void UI::resume_game() {
 void UI::initialize(int argc, char **argv, const struct poptOption *options) {
         gnome_init_with_popt_table(PACKAGE, VERSION, argc, argv,
 				   options, 0, NULL);
+	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/xbill.png");
 	toplevel = gnome_app_new("gnome-xbill", "Gnome xBill");
 	gtk_signal_connect(GTK_OBJECT(toplevel), "destroy",
 			   GTK_SIGNAL_FUNC(gtk_main_quit), NULL);

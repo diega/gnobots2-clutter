@@ -17,6 +17,7 @@
 
 #include <config.h>
 #include <gnome.h>
+#include <libgnomeui/gnome-window-icon.h>
 #include <gdk_imlib.h>
 
 
@@ -797,6 +798,7 @@ main (int argc, char *argv [])
 
 	gnome_init_with_popt_table ("same-gnome", VERSION, argc, argv, options, 0, NULL);
 
+	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-gsame.png");
 	client= gnome_master_client ();
 
 	gtk_signal_connect (GTK_OBJECT (client), "save_yourself",

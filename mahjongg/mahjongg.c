@@ -21,6 +21,7 @@
 
 #include <gtk/gtk.h>
 #include <gnome.h>
+#include <libgnomeui/gnome-window-icon.h>
 #include <gdk_imlib.h>
 
 #include "mahjongg.h"
@@ -1992,7 +1993,7 @@ int main (int argc, char *argv [])
 	textdomain (PACKAGE);
 
   	gnome_init (APPNAME, MAH_VERSION, argc, argv); 
-
+        gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-mahjongg.png");
 	srand (time (NULL));
 	
 	window = gnome_app_new (APPNAME, _(APPNAME_LONG));
