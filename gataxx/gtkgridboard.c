@@ -169,7 +169,6 @@ static gboolean gtk_gridboard_expose(GtkWidget * widget, GdkEventExpose * event)
 
         gtk_gridboard_paint(gridboard);
 
-        /* FIXME should this be TRUE ? */
         return FALSE;
 }
 
@@ -389,7 +388,6 @@ static void gtk_gridboard_load_pixmaps (GtkGridBoard * gridboard) {
 
 /* helper functions */
 
-/* FIXME improve this: sizeof(gint *) != sizeof(gint) */ 
 /* allocates memory for the array */
 static gint ** make_array(int width, int height) {
         gint ** result;
@@ -398,11 +396,11 @@ static gint ** make_array(int width, int height) {
         
         valarraysiz=width*height;       /* size of actual array */
         ptrarraysiz=width;              /* size of pointer array */
-        result=(gint **)malloc(ptrarraysiz*sizeof(gint *)+valarraysiz*sizeof(gint));
+        result=(gint **)g_try_malloc(ptrarraysiz*sizeof(gint *)+valarraysiz*sizeof(gint));
         if (result==NULL) return NULL;
         memset(result, 0, ptrarraysiz*sizeof(gint *)+valarraysiz*sizeof(gint));
         for (i=0; i<width; i++) {
-                result[i]=(gint *)(result+ptrarraysiz+i*height);
+                result[i]=(gint *)(result+ptrarraysiz)+i*height;
         }
         return result;
 }
@@ -551,10 +549,7 @@ void gtk_gridboard_save_state(GtkWidget * widget, gpointer data) {
 	StateList * newstate;
 	int x, y;
 
-	newstate=malloc(sizeof(StateList));
-	if (newstate==NULL) { /* FIXME do something */
-		exit(1);
-	}
+	newstate = g_malloc(sizeof(StateList));
 
 	newstate->board=make_array(gridboard->width, gridboard->height);
 	for (x=0; x<gridboard->width; x++) {

@@ -1,3 +1,8 @@
+2004-10-15  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gtkgridboard.c: Fix a 64-bit crasher and g_-ize some
+	libc-isms. See bug #153803 for details on the crasher.
+
 2004-10-07  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gataxx.c (new_game): Set the counter count when loading from the
