@@ -1,3 +1,8 @@
+2004-09-08  callum  <callum@spooky-possum.org>
+
+	* C/blackjack.xml: 
+	* C/figures: Updated version and figures for 2.8.
+
 2004-08-26  Richard Hoelscher  <rah@rahga.com>
 
 	* C/blackjack.xml: document payout on a blackjack hand
