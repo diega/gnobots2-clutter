@@ -125,16 +125,16 @@ static struct poptOption options[] = {
  * Game menu entries
  */
 GnomeUIInfo gamemenu[] = {
-    {GNOME_APP_UI_ITEM, N_("New"), NULL, new_cb, NULL, NULL,
+    {GNOME_APP_UI_ITEM, N_("_New"), NULL, new_cb, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
 
-    {GNOME_APP_UI_ITEM, N_("Properties..."), NULL, properties_cb, NULL, NULL,
+    {GNOME_APP_UI_ITEM, N_("_Properties..."), NULL, properties_cb, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
 
-    {GNOME_APP_UI_ITEM, N_("Scores..."), NULL, game_scores_cb, NULL, NULL,
+    {GNOME_APP_UI_ITEM, N_("_Scores..."), NULL, game_scores_cb, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SCORES, 0, 0, NULL},
 
-    {GNOME_APP_UI_ITEM, N_("Exit"), NULL, quit_cb, NULL, NULL,
+    {GNOME_APP_UI_ITEM, N_("E_xit"), NULL, quit_cb, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 0, 0, NULL},
 
     {GNOME_APP_UI_ENDOFINFO}
@@ -144,7 +144,7 @@ GnomeUIInfo gamemenu[] = {
  * Help menu entries
  */
 GnomeUIInfo helpmenu[] = {
-    {GNOME_APP_UI_ITEM, N_("About..."), NULL, about_cb, NULL, NULL,
+    {GNOME_APP_UI_ITEM, N_("_About..."), NULL, about_cb, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
 
     {GNOME_APP_UI_HELP, NULL, NULL, "gnobots", NULL, NULL,
@@ -157,10 +157,10 @@ GnomeUIInfo helpmenu[] = {
  * Main menu
  */
 GnomeUIInfo mainmenu[] = {
-    {GNOME_APP_UI_SUBTREE, N_("Game"), NULL, gamemenu, NULL, NULL,
+    {GNOME_APP_UI_SUBTREE, N_("_Game"), NULL, gamemenu, NULL, NULL,
         GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
-    {GNOME_APP_UI_SUBTREE, N_("Help"), NULL, helpmenu, NULL, NULL,
+    {GNOME_APP_UI_SUBTREE, N_("_Help"), NULL, helpmenu, NULL, NULL,
         GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
         
     {GNOME_APP_UI_ENDOFINFO}
@@ -1287,7 +1287,7 @@ char *argv[]
     gnome_app_create_menus(GNOME_APP(app), mainmenu);
 
     /* move Help to the right-hand side */
-    gtk_menu_item_right_justify(GTK_MENU_ITEM(mainmenu[1].widget));
+/*    gtk_menu_item_right_justify(GTK_MENU_ITEM(mainmenu[1].widget));*/
 
     load_properties();
 
