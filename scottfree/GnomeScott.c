@@ -1497,67 +1497,34 @@ static void AboutScottFree(GtkWidget *w, gpointer *spare)
 
 static GnomeUIInfo toolbar[]=
 {
-	{GNOME_APP_UI_ITEM, N_("North"), NULL, TypeNorth, NULL, NULL,
-	 GNOME_APP_PIXMAP_DATA, north_xpm, 0, 0, NULL},
-
-	{GNOME_APP_UI_ITEM, N_("East"), NULL, TypeEast, NULL, NULL,
-	 GNOME_APP_PIXMAP_DATA, east_xpm, 0, 0, NULL},
-
-	{GNOME_APP_UI_ITEM, N_("South"), NULL, TypeSouth, NULL, NULL,
-	 GNOME_APP_PIXMAP_DATA, south_xpm, 0, 0, NULL},
-
-	{GNOME_APP_UI_ITEM, N_("West"), NULL, TypeWest, NULL, NULL,
-	 GNOME_APP_PIXMAP_DATA, west_xpm, 0, 0, NULL},
-
-	{GNOME_APP_UI_ITEM, N_("Up"), NULL, TypeUp, NULL, NULL,
-	 GNOME_APP_PIXMAP_DATA, up_xpm, 0, 0, NULL},
-
-	{GNOME_APP_UI_ITEM, N_("Down"), NULL, TypeDown, NULL, NULL,
-	 GNOME_APP_PIXMAP_DATA, down_xpm, 0, 0, NULL},
-
-	{GNOME_APP_UI_ITEM, N_("List"),N_("What am I carrying"),
-	 TypeInventory, NULL, NULL,
-	 GNOME_APP_PIXMAP_DATA, inventory_xpm, 0, 0, NULL},
-
-	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
-	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
+        GNOMEUIINFO_ITEM(N_("North"), NULL, TypeNorth, north_xpm),
+        GNOMEUIINFO_ITEM(N_("East"), NULL, TypeEast, east_xpm),
+        GNOMEUIINFO_ITEM(N_("South"), NULL, TypeSouth, south_xpm),
+        GNOMEUIINFO_ITEM(N_("West"), NULL, TypeWest, west_xpm),
+        GNOMEUIINFO_ITEM(N_("Up"), NULL, TypeUp, up_xpm),
+        GNOMEUIINFO_ITEM(N_("Down"), NULL, TypeDown, down_xpm),
+        GNOMEUIINFO_ITEM(N_("List"), N_("What am I carrying"), TypeInventory, inventory_xpm),
+	GNOMEUIINFO_END
 };
 
 static GnomeUIInfo file_menu[]={
-	{GNOME_APP_UI_ITEM, N_("_New"), NULL, NewGame, NULL, NULL,
-	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 'n', GDK_CONTROL_MASK, NULL},
-
-	{GNOME_APP_UI_ITEM, N_("_Load..."), NULL, LoadAGame, NULL, NULL,
-	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_OPEN, 0, 0, NULL},
-
-	{GNOME_APP_UI_ITEM, N_("_Save..."), NULL, TypeSave, NULL, NULL, 
-	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SAVE, 0, 0, NULL},
-
-	{GNOME_APP_UI_ITEM, N_("_Quit"), NULL, gtk_main_quit, NULL, NULL,
-	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 'q', GDK_CONTROL_MASK, NULL},
-
-	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
-	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
+        GNOMEUIINFO_MENU_NEW_ITEM( N_("_New"), NULL, NewGame, NULL),
+	GNOMEUIINFO_MENU_OPEN_ITEM(LoadAGame, NULL),
+	GNOMEUIINFO_MENU_SAVE_AS_ITEM(TypeSave, NULL),
+        GNOMEUIINFO_MENU_EXIT_ITEM(gtk_main_quit, NULL),
+	GNOMEUIINFO_END
 };
 
 static GnomeUIInfo help_menu[]={
-	{GNOME_APP_UI_HELP, NULL, NULL, "scottfree", NULL, NULL,
-	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-
-	{GNOME_APP_UI_ITEM, N_("_About..."), NULL, AboutScottFree, NULL, NULL,
-	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
-
-	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
-	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
+	GNOMEUIINFO_HELP("scottfree"),
+	GNOMEUIINFO_MENU_ABOUT_ITEM(AboutScottFree, NULL),
+	GNOMEUIINFO_END
 };
 
 static GnomeUIInfo menu[]={
-	{GNOME_APP_UI_SUBTREE, "_File", NULL, file_menu, NULL, NULL,
-	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-	{GNOME_APP_UI_SUBTREE, "_Help", NULL, help_menu, NULL, NULL,
-	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
-	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
+        GNOMEUIINFO_MENU_FILE_TREE(file_menu),
+	GNOMEUIINFO_MENU_HELP_TREE(help_menu),
+	GNOMEUIINFO_END
 };
 
 int main(int argc, char *argv[])
