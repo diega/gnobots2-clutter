@@ -38,7 +38,7 @@ player_new (GStonesGame *game)
   if (player)
     {
       player->new_life_score= game->new_life_score;
-      player->max_time      = 1;
+      player->max_time      = G_MAXINT;
 
       player->score         = 0;
       player->lives         = game->lives;

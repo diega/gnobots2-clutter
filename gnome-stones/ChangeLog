@@ -1,3 +1,15 @@
+2004-03-03  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* player.c (player_new): Use G_MAXINT rather than 1 as the default
+	max_time. This prevents a warning when the progress bar gets
+	updated during the "undefined" period. The correct place to fix
+	this is in player_set_time, but that function has no idea of game
+	state, so for now we just feed it a value that makes sure things
+	work out. Fixes bug #136015.
+
+	* help/C/gnome-stones.xml: Update version number since the docs
+	are still applicable.
+
 2004-02-15  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* main.c (draw_text_centered): Added an ugly hack to make the text

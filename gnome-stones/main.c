@@ -1005,7 +1005,6 @@ game_start_cb (GtkWidget *widget, gpointer data)
   GList       *tmp = NULL;
   GStonesCave *cave= NULL;
   
-
   stop_title_music();
 
   if (!game) return;
