@@ -37,9 +37,14 @@ ScoreFrame::ScoreFrame(int cmdlLevel)
 		startingLevel = cmdlLevel;
 	else {
 		GConfClient *gconf_client = gconf_client_get_default ();
+		
 		startingLevel = gconf_client_get_int (gconf_client,
 						      KEY_STARTING_LEVEL,
 						      NULL);
+		if (startingLevel < 1)
+			startingLevel = 1;
+		if (startingLevel > 10)
+			startingLevel = 10;
 		g_object_unref (gconf_client);
 	}
 	if (startingLevel < 1)

@@ -418,6 +418,8 @@ Tetris::initOptions ()
 	}
         if (startingLevel < 1) 
           startingLevel = 1;
+        if (startingLevel > 10) 
+          startingLevel = 10;
 
 	do_preview = gconf_client_get_bool (gconf_client, KEY_DO_PREVIEW, &error);
 	if (error) {
@@ -446,13 +448,21 @@ Tetris::initOptions ()
 		g_error_free (error);
 		error = NULL;
 	}
-
+	if (line_fill_height < 0)
+		line_fill_height = 0;
+	if (line_fill_height > 19)
+		line_fill_height = 19;
+	
 	line_fill_prob = gconf_client_get_int (gconf_client, KEY_LINE_FILL_PROBABILITY, &error);
 	if (error) {
 		g_warning ("gconf error: %s\n", error->message);
 		g_error_free (error);
 		error = NULL;
 	}
+	if (line_fill_prob < 0)
+		line_fill_prob = 0;
+	if (line_fill_prob > 10)
+		line_fill_prob = 10;
 }
 
 void

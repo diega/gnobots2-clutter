@@ -1,3 +1,8 @@
+2003-08-09  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* tetris.cpp: 
+	* scoreframe.cpp (ScoreFrame): GConf return value checks.
+
 2003-07-27  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gnome-canvas-pimage.c: Removed dead code, gets rid of warnings.
