@@ -58,9 +58,11 @@ if GCONF_SCHEMAS_INSTALL
 endif
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
 	$(mkinstalldirs) $(DESTDIR)$(bgdir)
-	touch $(DESTDIR)$(scoredir)/mahjongg.{easy,difficult}.scores
-	-chown $(scores_user).$(scores_group) $(DESTDIR)$(scoredir)/mahjongg.{easy,difficult}.scores
-	-chmod 664 $(DESTDIR)$(scoredir)/mahjongg.{easy,difficult}.scores
+	-for i in easy difficult ; do \
+		touch $(DESTDIR)$(scoredir)/mahjongg.$$i.scores \
+		chown $(scores_user).$(scores_group) $(DESTDIR)$(scoredir)/mahjongg.$$i.scores \
+		chmod 664 $(DESTDIR)$(scoredir)/mahjongg.$$i.scores \
+	done
 	-if test "x$(setgid)" = "xtrue"; then chgrp $(scores_group) $(DESTDIR)$(bindir)/mahjongg && chmod 2555 $(DESTDIR)$(bindir)/mahjongg ; fi
 	$(mkinstalldirs) $(DESTDIR)$(Gamesdir)
 

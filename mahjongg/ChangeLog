@@ -1,3 +1,8 @@
+2003-06-21  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* Makefile.am (install-data-local): Remove bash specific shell
+	code (for FreeBSD).
+
 2003-06-20  William Jon McCann  <mccann@jhu.edu>
 
 	* gnome-canvas-pimage.h: 
