@@ -1,3 +1,7 @@
+Sun Mar  8 20:57:40 1998  Tom Tromey  <tromey@cygnus.com>
+
+	* Makefile.am (INCLUDES): Added GNOME_INCLUDEDIR.
+
 1998-02-19  Federico Mena Quintero  <federico@nuclecu.unam.mx>
 
 	* phaser-chess.m ([phaser_chess_app -initApp:::]): Added app_id parameter.

@@ -3,7 +3,8 @@
 Gamesdir  = $(datadir)/apps/Games
 
 INCLUDES = 			\
-	-I$(includedir)
+	-I$(includedir)		\
+	$(GNOME_INCLUDEDIR)
 
 SUFFIXES = .m
 
