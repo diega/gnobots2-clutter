@@ -33,7 +33,7 @@
 		     GDK_LEAVE_NOTIFY_MASK          |\
 		     GDK_POINTER_MOTION_MASK)
 
-static GtkWidget *pref_dialog, *scorew, *markedw;
+static GtkWidget *pref_dialog, *scorew;
 static GtkWidget *app, *draw_area, *vb, *appbar;
 static GdkPixbuf *image;
 static GdkPixmap *stones, *mask;
@@ -151,7 +151,6 @@ move_tagged_balls (void *data)
 			field [x][y].frame = (field [x][y].frame + 1) % nstones;
 			draw_ball (x, y);
 		}
-	gdk_flush ();
 	return 1;
 }
 
@@ -159,7 +158,7 @@ static void
 disable_timeout ()
 {
 	if (ball_timeout_id != -1){
-		gtk_timeout_remove (ball_timeout_id);
+		g_source_remove (ball_timeout_id);
 		ball_timeout_id = -1;
 	}
 }
@@ -181,12 +180,12 @@ mark_balls (int x, int y)
 	
 	if (tagged_count > 1) {
 		char *b;
-		ball_timeout_id = gtk_timeout_add (100, move_tagged_balls, 0);
-		b = g_strdup_printf ("%.2d", tagged_count);
-		gtk_label_set_text (GTK_LABEL(markedw), b);
+		ball_timeout_id = g_timeout_add (100, move_tagged_balls, 0);
+		b = g_strdup_printf ("%d %s", tagged_count, _("stones selected"));
+                gnome_appbar_set_status (GNOME_APPBAR(appbar), b);
 		g_free (b);
 	} else
-		gtk_label_set_text (GTK_LABEL(markedw), "00");
+                gnome_appbar_set_status (GNOME_APPBAR(appbar), _("No stones selected"));
 }
 
 static void
@@ -353,6 +352,7 @@ area_event (GtkWidget *widget, GdkEvent *event, void *d)
 		old_y = -1;
 		disable_timeout ();
 		untag_all ();
+                gnome_appbar_set_status (GNOME_APPBAR(appbar), "");
 		return TRUE;
 
 	default:
@@ -655,30 +655,6 @@ game_about_callback (GtkWidget *widget, void *data)
 static int
 game_quit_callback (GtkWidget *widget, void *data)
 {
-	if (!game_over) {
-		GtkWidget *box;
-		gint response;
-		
-		box = gtk_message_dialog_new (GTK_WINDOW (app),
-				GTK_DIALOG_DESTROY_WITH_PARENT,
-				GTK_MESSAGE_QUESTION,
-				GTK_BUTTONS_NONE,
-				_("Are you sure you want to quit Same GNOME?"));
-
-		gtk_dialog_add_buttons (GTK_DIALOG (box),
-						GTK_STOCK_CANCEL,
-						GTK_RESPONSE_CANCEL,
-						GTK_STOCK_QUIT,
-						GTK_RESPONSE_YES,
-						NULL);
-
-		gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_YES);
-		response = gtk_dialog_run (GTK_DIALOG (box));
-		gtk_widget_destroy (box);
-
-		if (response != GTK_RESPONSE_YES)
-			return TRUE;
-	}
 	gtk_main_quit ();
 	return FALSE;
 }
@@ -820,7 +796,7 @@ main (int argc, char *argv [])
 		{ "scenario", 's', POPT_ARG_STRING, &fname, 0, N_("Set game scenario"), N_("NAME") },
 		{ NULL, '\0', 0, NULL, 0 }
 	};
-	GtkWidget *label, *separator;
+        GtkWidget * label;
 	GnomeClient *client;
 
 	gnome_score_init("same-gnome");
@@ -883,14 +859,6 @@ main (int argc, char *argv [])
 	create_same_board (fname);
 
 	update_score_state ();
-
-	separator = gtk_vseparator_new ();
-	label = gtk_label_new (_("Marked: "));
-	markedw = gtk_label_new ("00");
-
-	gtk_box_pack_start(GTK_BOX(appbar), label, FALSE, TRUE, 0);
-	gtk_box_pack_start(GTK_BOX(appbar), markedw, FALSE, TRUE, 0);
-	gtk_box_pack_start(GTK_BOX(appbar), separator, FALSE, TRUE, 5);
 	
 	label = gtk_label_new (_("Score: "));
 	scorew = gtk_label_new ("");

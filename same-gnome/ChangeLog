@@ -1,5 +1,14 @@
 2003-05-14  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* same-gnome.c (game_quit_callback): Removed the quit dialog. As
+	per the general guideline: Don't ask "Are you sure".
+	(move_tagged_balls): gdk_flush is  not needed.
+	(disable_timeout): Changed deprecated gtk_timeout functions to be
+	g_timeout functions.
+	(area_event) and others: Moved the reporting of the number of
+	stones selected to the appbar status widget and made it a bit
+	more verbose (and hopefully less cryptic).
+
 	* Makefile.am: Moved the icon into here from the gnome-desktop
 	module.
 
