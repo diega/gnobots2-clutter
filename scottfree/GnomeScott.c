@@ -220,7 +220,7 @@ void LoadDatabase(FILE *f, int loud)
 /* Load the header */
 	
 	if(fscanf(f,"%*d %d %d %d %d %d %d %d %d %d %d %d",
-		  &ni, &na,&nw,&nr,&mc,&pr,&tr,&wl,&lt,&mn,&trm,&ct)<10)
+		  &ni, &na,&nw,&nr,&mc,&pr,&tr,&wl,&lt,&mn,&trm /*,&ct */)<10)
 		Fatal(GNOME_MESSAGE_BOX_ERROR, "Invalid database(bad header)");
 	GameHeader.NumItems=ni;
 	Items=(Item *)MemAlloc(sizeof(Item)*(ni+1));
@@ -620,7 +620,7 @@ static void LoadGame(char *name)
 	{
 		fscanf(f,"%d %d\n",&Counters[ct],&RoomSaved[ct]);
 	}
-	fscanf(f,"%ld %d %hd %d %d %hd\n",
+	fscanf(f,"%ld %hd %hd %d %d %hd\n",
 		&BitFlags,&DarkFlag,&MyLoc,&CurrentCounter,&SavedRoom,
 		&GameHeader.LightTime);
 	/* Backward compatibility */
@@ -1479,11 +1479,11 @@ static void NewGame(GtkWidget *w, gpointer *spare)
 static void AboutScottFree(GtkWidget *w, gpointer *spare)
 {
 	GtkWidget *about;
-	gchar *authors[] = { "Alan Cox" };
+	const gchar *authors[] = { "Alan Cox", NULL };
 
 	about = gnome_about_new("ScottFree", "1.15",
 				_("Copyright (C) 1997 Alan Cox"),
-				authors, NULL, NULL);
+				(const char **)authors, NULL, NULL);
 	gtk_widget_show(about);
 }
 
@@ -1564,7 +1564,7 @@ int main(int argc, char *argv[])
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
 
-	gnome_init("GnomeScott", NULL, argc, argv, 0, NULL);
+	gnome_init("GnomeScott", NULL, 1, argv, 0, NULL);
 	
 	while(argv[1])
 	{

@@ -623,7 +623,7 @@ void properties_callback (GtkWidget *widget, gpointer data)
 void about_callback (GtkWidget *widget, gpointer data)
 {
 	GtkWidget *about;
-	gchar *authors [] = {
+	const gchar *authors [] = {
 		"Code: Francisco Bustamante",
 		"      Max Watson",
 		"      Heinz Hempe",
@@ -634,7 +634,7 @@ void about_callback (GtkWidget *widget, gpointer data)
 
 	about = gnome_about_new (_("Gnome Mahjongg"), MAH_VERSION,
 				 "(C) 1998 The Free Software Foundation",
-				 authors,
+				 (const char **)authors,
 				 _("Send comments and bug reports to: pancho@nuclecu.unam.mx\n"
 				   "Tiles under the General Public License."),
 				 NULL);

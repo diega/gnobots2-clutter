@@ -75,7 +75,6 @@ static int     save_state(GnomeClient*, gint, GnomeRestartStyle, gint,
 static void    session_die(gpointer);
 static void    reset_player_frame();
 static void    update_player_frame();
-static void    reset_robot_frame();
 static void    update_robot_frame();
 static void    not_playing_animate();
 static void    draw_grid();
@@ -284,10 +283,12 @@ static void update_player_frame(
 /*
  * Reset robot animation
  */
+#if 0
 static void reset_robot_frame(
 ){
     robot_frame = 0;
 }
+#endif
 
 /*
  * Update robot animation
@@ -768,14 +769,14 @@ GtkWidget *widget,
 gpointer data
 ){
     GtkWidget *about;
-    gchar *authors[] = {
+    const gchar *authors[] = {
             "Mark Rae <Mark.Rae@ed.ac.uk>",
             NULL
     };
 
     about = gnome_about_new(_("Gnobots"), VERSION,
                              "(C) 1998 Mark Rae",
-                             authors,
+                             (const char **) authors,
                              _("Gnome Robots game"),
                              NULL);
     gtk_widget_show(about);

@@ -36,6 +36,7 @@ static char * mini_sound_xpm[] = {
 "                        "};
 
 /* XPM */
+#if 0
 static char * mini_tiles_xpm[] = {
 "24 24 4 1",
 " 	c None",
@@ -66,5 +67,6 @@ static char * mini_tiles_xpm[] = {
 "                        ",
 "                        ",
 "                        "};
+#endif /* 0 */
 
 #endif

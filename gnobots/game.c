@@ -4,6 +4,7 @@
  */
 
 #include "gbdefs.h"
+#include <stdlib.h> /* For rand() */
 
 /*
  * Variables
@@ -70,8 +71,8 @@ static void generate_level(
     
     for(i = 0; i < num_robots; i++){
         while(1){
-            x = random()%GAME_WIDTH;
-            y = random()%GAME_HEIGHT;
+            x = rand()%GAME_WIDTH;
+            y = rand()%GAME_HEIGHT;
             if((x == player_xpos) && (y == player_ypos)) continue;
             if(game_grid[x][y] == GRID_EMPTY) break;
         }

@@ -634,7 +634,7 @@ static int
 game_about_callback (GtkWidget *widget, void *data)
 {
 	GtkWidget *about;
-	gchar *authors[] = {
+	const gchar *authors[] = {
 		"Miguel de Icaza.",
 		"Federico Mena.",
 		"Horacio J. Peña.",
@@ -643,7 +643,7 @@ game_about_callback (GtkWidget *widget, void *data)
 
 	about = gnome_about_new (_("The Same Gnome"), VERSION,
 				 "(C) 1997-1998 the Free Software Foundation",
-				 authors,
+				 (const char **)authors,
 				 _("Original idea from KDE's same game program."),
 				 /*"gnome-same-gnome.xpm"*/
 				 NULL);
@@ -652,7 +652,7 @@ game_about_callback (GtkWidget *widget, void *data)
 	return TRUE;
 }
 
-static int
+static void
 game_maybe_quit (GtkWidget *widget, int button)
 {
 	if (button == 0) {

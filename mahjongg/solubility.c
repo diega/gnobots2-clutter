@@ -122,7 +122,7 @@ int random_on_layer (int l)
 /* This determines whether it is OK to mark this tile as free */
 int ok_free_validate_line (int t)
 {
-  int valid = 1, i, lp, w ;
+  int i, w ;
   int in, out ;
   int next[MAX_TILES] ;
 
@@ -179,7 +179,7 @@ int ok_free_validate_line (int t)
    It does this by examining its dependancies to see if they are filled */
 void validate_tile (int t)
 {
-  int valid, lfilled, rfilled, lp, free, i, iv ;
+  int lfilled, rfilled, lp, free, i, valid;
 
   if (t==-1||dep_tree[t].filled)
     return ;	// No point.
@@ -191,7 +191,7 @@ void validate_tile (int t)
 
   free = dep_tree[t].free ;
 
-  valid = 1 ;
+  valid = 1;
   /* Check below */
   for (lp=0;lp<4;lp++)
     if ((i = dep_tree[t].place_dep[lp]) != -1)
@@ -403,7 +403,7 @@ void tile_deps (int tn)
    to determine which tiles can be turned / how to place the tiles */
 void generate_dependancies ()
 {
-  int lp, pr, num, tile ;
+  int lp, num, tile ;
 
   for (lp=0;lp<MAX_TILES;lp++)
     {
@@ -433,7 +433,7 @@ void generate_game (void)
 {
   static int fails = 0 ;
   static int generation = 0 ;
-  int i, lp, n;
+  int i, lp;
   
   /* If this bites please mail me as above */
   for (lp=0;lp<MAX_TILES*MAX_TILES;lp++)
@@ -476,7 +476,9 @@ void generate_game (void)
 #endif
   
   {
-    int last_place, tileo, tile, offset ;
+    int last_place, tileo, tile, offset;
+
+    last_place = tileo = tile = offset = -1;
     
     /* Insert */
     for (lp=0;lp<MAX_TILES;lp++)
