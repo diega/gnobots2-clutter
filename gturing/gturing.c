@@ -358,6 +358,7 @@ void view_states_call(GtkWidget *widget, gpointer data)
 	char *text[5] = { N_("State"), N_("Read"), N_("Write"), N_("Move"), 
 		                N_("New State")	};
 	GtkWidget *w;
+	GtkWidget *scrolled;
 	int i;
 	
 	if (state_clist)
@@ -370,15 +371,23 @@ void view_states_call(GtkWidget *widget, gpointer data)
 	
 	state_clist = gtk_clist_new_with_titles(5, text);
 	gtk_clist_set_selection_mode(GTK_CLIST(state_clist), GTK_SELECTION_SINGLE);
-	gtk_clist_set_policy(GTK_CLIST(state_clist), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+//	gtk_clist_set_policy(GTK_CLIST(state_clist), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_clist_column_titles_passive(GTK_CLIST(state_clist));
 	for (i = 0; i < 5; i++)
 		gtk_clist_set_column_width(GTK_CLIST(state_clist), i, 60);
 	gtk_widget_set_usize(state_clist, 360, 200);
 	
 	state_clist_load_states();
-	
-	gtk_box_pack_start(GTK_BOX(GNOME_DIALOG(w)->vbox), state_clist, FALSE, FALSE, 0);
+
+	/* Needed for the new clist api  -- Greg*/
+
+	scrolled = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled), 
+					GTK_POLICY_AUTOMATIC,
+					GTK_POLICY_AUTOMATIC);
+	gtk_container_add (GTK_CONTAINER (scrolled), state_clist);
+
+	gtk_box_pack_start(GTK_BOX(GNOME_DIALOG(w)->vbox), scrolled, FALSE, FALSE, 0);
   gtk_widget_show_all(GNOME_DIALOG(w)->vbox);
 	gtk_widget_show(w);
 }
