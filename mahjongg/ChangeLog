@@ -1,3 +1,16 @@
+2000-10-19  Dan Mueth <d-mueth@uchicago.edu>
+
+	* Makefile.am: added SUBDIRS = help
+	* help/Makefile.am: Added this file, with SUBDIRS = C
+	* help/C/topic.dat: Added this file 
+	* help/C/Makefile.am: Added this file 
+	* mahjongg.c: I didn't change this.  It currently calls
+	  up the help doc okay, but we should change the call
+	  to list Help with the pretty logo instead of just
+	  listing 'mahjong'.  We also need to hook up a Help
+	  button in the preferences dialog.  I have to run
+	  now, so this will have to wait until later.
+
 2000-09-13  Eric Baudais  <baudais@okstate.edu>
 
 	* help/C/*: Added documentation to mahjongg.  It is not currently linked 

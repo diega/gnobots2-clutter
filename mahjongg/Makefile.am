@@ -33,6 +33,8 @@ EXTRA_DIST = mahjongg.desktop $(pixmap_DATA) $(appicon_DATA) $(bg_DATA)
 
 Games_DATA = mahjongg.desktop
 
+SUBDIRS = help
+
 install-data-local:
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
 	$(mkinstalldirs) $(DESTDIR)$(bgdir)
