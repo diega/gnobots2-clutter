@@ -36,9 +36,9 @@ Games_DATA = mahjongg.desktop
 install-data-local:
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
 	$(mkinstalldirs) $(DESTDIR)$(bgdir)
-	touch $(DESTDIR)$(scoredir)/mahjongg.scores
-	-chown games.games $(DESTDIR)$(scoredir)/mahjongg.scores
-	-chmod 664 $(DESTDIR)$(scoredir)/mahjongg.scores
+	touch $(DESTDIR)$(scoredir)/mahjongg.{easy,difficult}.scores
+	-chown games.games $(DESTDIR)$(scoredir)/mahjongg.{easy,difficult}.scores
+	-chmod 664 $(DESTDIR)$(scoredir)/mahjongg.{easy,difficult}.scores
 	-chgrp games $(DESTDIR)$(bindir)/mahjongg && chmod 2111 $(DESTDIR)$(bindir)/mahjongg
 	$(mkinstalldirs) $(DESTDIR)$(Gamesdir)
 

@@ -1,9 +1,42 @@
-1999-07-18  Thomas Meeks  <thomas@imaginator.com>
+1999-07-20  Michael Meeks  <michael@imaginator.com>
+
+	* mahjongg.c: Re-enabled preferences, killed 'seed'.
+	Updated all char [4] buffers to char [16], perhaps safer.
+	(exit_game_callback): Add warning for broken case, add NEW_GAME.
+	various stylistic fixups.
+	Renumbered and named game_state enumeration to help debugging.
+	chain on to (exit_game_callback_query): correct 3 arg. function
+	for (main): delete_event. This fixes killing the window via the WM.
+
+1999-07-20  Philippe Chavin  <Philippe.Chavin@wanadoo.fr>
+
+	* mahjongg.c (load_images): fixed background loading to 
+	follow the current map.
+	(shuffle_tiles_callback): added, allow to continue playing when
+	no moves are left.
+	(you_won, scores_callback): fixed level name to use mapset.
+	Use stopped, not seconds for scoring, else we get current time.
+	show score board only if in top ten.
+	(exit_game_callback): asks for confirmation; replaces 
+	({new|restart|select|quit}_game_callback).
+	(apply_preferences): asks for a new game if mapset changed.
+	(properties_callback): two columns presentation. 
+	popup_config.warn replaces warn, popup_config.confirm added.
+	(ensure_pause_off): toggle off the pause button
+	(game_score): removed.
+	The buttons callbacks check the status of the game: running, won 
+	or lost. This should allow the game to  finish correctly in every 
+	cases.
+
+	* Makefile.am: installs mahjongg.easy.scores and 
+	mahjongg.difficult.scores
+	
+1999-07-18  Thomas Meeks <thomas@imaginator.com>
 
 	* mahjongg.c (show_tb_callback): Fixed re-draw
 	(main): fixed show load & save.
 
-1999-07-14  Michael Meeks  <michael@edenproject.org>
+1999-07-14  Michael Meeks <michael@edenproject.org>
 
 	* mahjongg.c (apply_preferences): Commented out 'Synced'
 	(game_score): moved contents to (you_won): manualy call
@@ -13,20 +46,19 @@
 
 1999-07-14  Philippe Chavin <Philippe.Chavin@wanadoo.fr>
 
-	* mahjongg.c: APPNAME support.
-	warn_popup, moves_*: New scoring system.
-	(scores_callback, pause_callback, ensure_pause_off):
-	New Scoring / Pause features.
-	(no_match): Added
-	(properties_callback): Added warning options.
-	(hint_callback): Added score / time penalty.
-	(redo_tile_callback, undo_tile_calback): Add available moves
-	left display.
-	(select_game_callback): Check for Pause.
-	(create_mahjongg_board): Load warning option.
-	(main): Create time dialog & new menu stuff
+	* mahjongg.c: 
+	(scores_callback, chrono_start): scoring based on time.
+	(pause_callback, ensure_pause_off): pause features.
+	(hint_callback): added time penalty.
+	(*_callback): check for Pause.
+	(redo_tile_callback, undo_tile_calback, check_free): add 
+	available moves	left display.
+	(properties_callback, apply_preferences, create_mahjongg_board,
+	no_match): added option to choose between popup windows or 
+	display in the status bar.
+	(main): create timer widget.
 
-1999-07-14  Michael Meeks  <michael@edenproject.org>
+1999-07-14  Michael Meeks <michael@edenproject.org>
 
 	* mahjongg.c (about_callback): Added Philippe
 
