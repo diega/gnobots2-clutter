@@ -7,7 +7,7 @@ appicondir=$(datadir)/pixmaps
 INCLUDES = -I.. -I$(srcdir)/..		\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	-I$(includedir)			\
-	$(GNOME_INCLUDEDIR)
+	$(GNOME_INCLUDEDIR) $(GDK_PIXBUF_CFLAGS)
 
 bin_PROGRAMS = mahjongg
 
@@ -16,11 +16,14 @@ mahjongg_SOURCES = 	\
 	solubility.c	\
 	solubility.h	\
 	mahjongg.h	\
-	button-images.h
+	button-images.h \
+	gnome-canvas-pimage.h \
+	gnome-canvas-pimage.c
 
 mahjongg_LDADD = \
 	$(GNOME_LIBDIR) \
 	$(GNOMEUI_LIBS)	\
+	$(GDK_PIXBUF_LIBS) \
 	$(INTLLIBS)
 
 pixmap_DATA = default.png seta.png

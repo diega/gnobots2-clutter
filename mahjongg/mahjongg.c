@@ -22,10 +22,11 @@
 #include <gtk/gtk.h>
 #include <gnome.h>
 #include <libgnomeui/gnome-window-icon.h>
-#include <gdk_imlib.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "mahjongg.h"
 #include "solubility.h"
+#include "gnome-canvas-pimage.h"
 
 #define APPNAME "mahjongg"
 #define APPNAME_LONG "Gnome Mahjongg"
@@ -256,7 +257,7 @@ GtkWidget *tiles_label;
 int selected_tile, visible_tiles;
 int sequence_number;
 
-static GdkImlibImage *tiles_image, *bg_image;
+static GdkPixbuf *tiles_image, *bg_image;
 static gchar *tileset = 0 ;
 
 static struct {
@@ -317,6 +318,8 @@ typedef enum { NEW_GAME, RESTART_GAME, SELECT_GAME, QUIT_GAME } game_state;
 
 enum { GAME_RUNNING, GAME_WON, GAME_LOST, GAME_DEAD } game_over;
 
+static void change_tiles (void);
+static void change_tile_image (tile *tile_inf);
 void clear_undo_queue ();
 void you_won (void);
 void no_match (void);
@@ -570,8 +573,16 @@ void set_backgnd_colour (char *str)
 }
 
 static void
+change_tiles (void) {
+        int i;
+        
+        for (i = 0; i < MAX_TILES; i++) {
+                change_tile_image (&tiles[i]);
+	}
+}
+
+static void
 change_tile_image (tile *tile_inf) {
-	GdkImlibImage *new_image, *new_bg;
 	gint orig_x, orig_y;
 
 	orig_x = (tile_inf->image % 21) * TILE_WIDTH;
@@ -581,16 +592,18 @@ change_tile_image (tile *tile_inf) {
 		orig_y += 2 * TILE_HEIGHT;
 	}
 
-	gdk_imlib_destroy_image (tile_inf->current_image);
-	gdk_imlib_destroy_image (tile_inf->current_bg);
+       /*gdk_pixbuf_finalize (tile_inf->current_image);
+          gdk_pixbuf_finalize (tile_inf->current_bg);*/
 	
-	tile_inf->current_image = new_image = gdk_imlib_crop_and_clone_image (tiles_image, orig_x, orig_y, TILE_WIDTH, TILE_HEIGHT);
-        tile_inf->current_bg = new_bg = gdk_imlib_crop_and_clone_image (bg_image, pos[tile_inf->number].layer * TILE_WIDTH,
-                                                                        (tile_inf->selected != 0 ? 1 : 0) * TILE_HEIGHT,
-                                                                        TILE_WIDTH, TILE_HEIGHT);
+	gdk_pixbuf_copy_area (tiles_image, orig_x, orig_y,
+			      TILE_WIDTH, TILE_HEIGHT,
+			      tile_inf->current_image, 0, 0);
+	gdk_pixbuf_copy_area (bg_image, pos[tile_inf->number].layer * TILE_WIDTH, (tile_inf->selected != 0 ? 1 : 0) * TILE_HEIGHT,
+			      TILE_WIDTH, TILE_HEIGHT,
+			      tile_inf->current_bg, 0, 0);
         
-	gnome_canvas_item_set (tile_inf->bg_item, "image", new_bg, NULL);
-	gnome_canvas_item_set (tile_inf->image_item, "image", new_image, NULL);
+	gnome_canvas_item_set (tile_inf->bg_item, "image", tile_inf->current_bg, NULL);
+	gnome_canvas_item_set (tile_inf->image_item, "image", tile_inf->current_image, NULL);
 }
 
 void select_tile (tile *tile_inf)
@@ -687,6 +700,7 @@ apply_preferences (void)
     {
       buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/bg=bg1.png", NULL);
       load_tiles (selected_tileset.tileset, buf);
+      change_tiles();
       g_free (buf);
       redraw = 1 ;
       if (selected_tileset.make_it_default)
@@ -701,10 +715,12 @@ apply_preferences (void)
     {
       if (buf2) {
         load_tiles (buf2, selected_bg.bg);
+        change_tiles();
       }
       else {
         buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/tileset=default.png", NULL);
         load_tiles (buf, selected_bg.bg);
+        change_tiles();
 	 g_free (buf);
       }
       redraw = 1 ;
@@ -1760,7 +1776,6 @@ void load_images (void)
 
 void create_canvas_items (void)
 {
-  GdkImlibImage *image, *bg_cimage;
   gint orig_x, orig_y, i;
   
   /* It's essential that the tiles are already sorted into layer order (lowest first) */
@@ -1772,29 +1787,38 @@ void create_canvas_items (void)
 	orig_y = (tiles[i].image / 21) * TILE_HEIGHT;
 	
 	tiles[i].number = i;
+
+        tiles[i].current_image = gdk_pixbuf_new (gdk_pixbuf_get_colorspace(tiles_image),
+                                                 TRUE, gdk_pixbuf_get_bits_per_sample(tiles_image),
+                                                 TILE_WIDTH, TILE_HEIGHT);
+        tiles[i].current_bg = gdk_pixbuf_new (gdk_pixbuf_get_colorspace(tiles_image),
+                                                 TRUE, gdk_pixbuf_get_bits_per_sample(tiles_image),
+                                                 TILE_WIDTH, TILE_HEIGHT);
 	
-	tiles[i].current_image = image = gdk_imlib_crop_and_clone_image (tiles_image, orig_x, orig_y, TILE_WIDTH, TILE_HEIGHT);
-	tiles[i].current_bg = bg_cimage = gdk_imlib_crop_and_clone_image (bg_image, pos[i].layer * TILE_WIDTH,
-                                                                          0, TILE_WIDTH, TILE_HEIGHT);
+        gdk_pixbuf_copy_area (tiles_image, orig_x, orig_y,
+                             TILE_WIDTH, TILE_HEIGHT,
+                             tiles[i].current_image, 0, 0);
+        gdk_pixbuf_copy_area (bg_image, pos[i].layer * TILE_WIDTH, 0,
+                             TILE_WIDTH, TILE_HEIGHT,
+                             tiles[i].current_bg, 0, 0);
+                             
 	
         tiles[i].bg_item = gnome_canvas_item_new (GNOME_CANVAS_GROUP (tiles[i].canvas_item),
-						      gnome_canvas_image_get_type(),
-						      "image", bg_cimage,
+						     gnome_canvas_pimage_get_type(),
+						     "image", tiles[i].current_bg,
 						     "x", (double)canvas_x(i),
 						     "y", (double)canvas_y(i),
-						      "width", (double)TILE_WIDTH,
-						      "height", (double)TILE_HEIGHT,
-						      "anchor", GTK_ANCHOR_NW,
+						     "width", (double)TILE_WIDTH,
+						     "height", (double)TILE_HEIGHT,
 						      NULL);
 
 	tiles[i].image_item = gnome_canvas_item_new (GNOME_CANVAS_GROUP (tiles[i].canvas_item),
-						      gnome_canvas_image_get_type(),
-						      "image", image,
+						     gnome_canvas_pimage_get_type(),
+						     "image", tiles[i].current_image,
 						     "x", (double)canvas_x(i),
 						     "y", (double)canvas_y(i),
-						      "width", (double)TILE_WIDTH,
-						      "height", (double)TILE_HEIGHT,
-						      "anchor", GTK_ANCHOR_NW,
+						     "width", (double)TILE_WIDTH,
+						     "height", (double)TILE_HEIGHT,
 						      NULL);
 	
 	gtk_signal_connect (GTK_OBJECT (tiles[i].canvas_item), "event",
@@ -1842,21 +1866,15 @@ void load_tiles (char *fname, char *bg_fname)
 	tileset = g_strdup(fname);
 	
 	if (tiles_image)
-		gdk_imlib_destroy_image (tiles_image);
+		gdk_pixbuf_finalize (tiles_image);
 
 	if (bg_image)
-		gdk_imlib_destroy_image (bg_image);
+		gdk_pixbuf_finalize (bg_image);
 
-	tiles_image = gdk_imlib_load_image (fn);
-	gdk_imlib_render (tiles_image, tiles_image->rgb_width, tiles_image->rgb_height);
+	tiles_image = gdk_pixbuf_new_from_file (fn);
 
-        bg_image = gdk_imlib_load_image (bg_fn);
-        gdk_imlib_render (bg_image, bg_image->rgb_width, bg_image->rgb_height);
+        bg_image = gdk_pixbuf_new_from_file (bg_fn);
         
-	for (i = 0; i < MAX_TILES; i++) {
-	  change_tile_image (&tiles[i]);
-	}
-
 	g_free (bg_fn);
 	g_free (fn);
 }
@@ -1866,8 +1884,8 @@ void create_mahjongg_board (void)
 	gchar *buf, *buf2;
 	gint ibuf;
 	
-	gtk_widget_push_visual (gdk_imlib_get_visual ());
-	gtk_widget_push_colormap (gdk_imlib_get_colormap ());
+	gtk_widget_push_visual (gdk_rgb_get_visual ());
+	gtk_widget_push_colormap (gdk_rgb_get_cmap ());
 
 	canvas = gnome_canvas_new();
 
@@ -1901,9 +1919,10 @@ void create_mahjongg_board (void)
 
 	load_map (); /* assigns pos, and calculates dependencies */
 	generate_game (); /* puts in the positions of the tiles */
+	load_tiles (buf, buf2);
+
 	create_canvas_items ();
 
-	load_tiles (buf, buf2);
         g_free (buf2);
 	g_free (buf);
 	init_game ();

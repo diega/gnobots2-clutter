@@ -11,6 +11,7 @@
  *
  */
 #include <gnome.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #define MAX_TILES 144
 #define MAX_TILES_STR "144"
@@ -34,8 +35,8 @@ struct _tile{
   int selected;
   int sequence;
   int number;
-  GdkImlibImage *current_image;
-  GdkImlibImage *current_bg;
+  GdkPixbuf *current_image;
+  GdkPixbuf *current_bg;
   GnomeCanvasItem *canvas_item;
   GnomeCanvasItem *image_item;
   GnomeCanvasItem *bg_item;
