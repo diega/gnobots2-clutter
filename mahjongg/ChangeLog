@@ -1,3 +1,8 @@
+2003-03-10  Ross Burton  <ross@burtonini.com>
+
+	* mahjongg.c (properties_callback): Cool new Preferences dialog,
+	HIG compliant and all.
+
 2003-03-07  Ross Burton  <ross@burtonini.com>
 
 	* mahjongg.c (main): Use the new sanity check function in

@@ -1123,146 +1123,144 @@ pref_dialog_response (GtkDialog *dialog, gint response, gpointer data)
 void
 properties_callback (GtkWidget *widget, gpointer data)
 {
-	GtkWidget *tmenu, *mmenu, *otmenu, *ommenu;
-	GtkWidget *l, *hb, *f, *fv, *cols, *col1, *col2;
+	GtkWidget *menu, *omenu;
+	GtkWidget *vbox, *frame, *table, *w, *label;
+	GtkSizeGroup *group;
 
 	if (pref_dialog) {
 		gtk_window_present (GTK_WINDOW (pref_dialog));
 		return;
 	}
 
-	pref_dialog = gtk_dialog_new_with_buttons (_("Mahjongg - Preferences"),
+	pref_dialog = gtk_dialog_new_with_buttons (_("Preferences"),
 			GTK_WINDOW (window),
 			GTK_DIALOG_DESTROY_WITH_PARENT,
 			GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 			NULL);
 
+	gtk_window_set_resizable (GTK_WINDOW (pref_dialog), FALSE);
 	gtk_dialog_set_default_response (GTK_DIALOG (pref_dialog),
-					 GTK_RESPONSE_OK);
+					 GTK_RESPONSE_CLOSE);
 	g_signal_connect (G_OBJECT (pref_dialog), "response",
 			  G_CALLBACK(pref_dialog_response), NULL);
 
-        cols = gtk_hbox_new (FALSE, FALSE);
-        col1 = gtk_vbox_new (FALSE, FALSE);
-        col2 = gtk_vbox_new (FALSE, FALSE);
+	group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 
-	f = gtk_frame_new (_ ("Tiles"));
-	gtk_container_set_border_width (GTK_CONTAINER (f), 5);
-	gtk_box_pack_start_defaults (GTK_BOX(col1), f);
+	vbox = gtk_vbox_new (FALSE, 0);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), 8);
 
-	fv = gtk_vbox_new (0, 5);
-	gtk_container_set_border_width (GTK_CONTAINER (fv), 5);
-	gtk_container_add (GTK_CONTAINER (f), fv);
+	frame = gtk_frame_new(_("<b>Tiles</b>"));
+	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
+	gtk_label_set_use_markup (GTK_LABEL (gtk_frame_get_label_widget(GTK_FRAME(frame))), TRUE);
 
-	/* The Tile sub-menu */
-	otmenu = gtk_option_menu_new ();
-	tmenu = gtk_menu_new ();
-	fill_tile_menu (tmenu, "mahjongg", 1);
-	gtk_option_menu_set_menu (GTK_OPTION_MENU(otmenu), tmenu);
-
-	hb = gtk_hbox_new (FALSE, FALSE);
+	table = gtk_table_new (2, 2, FALSE);
+	gtk_container_set_border_width (GTK_CONTAINER (table), 8);
+	gtk_table_set_row_spacings (GTK_TABLE (table), 4);
+	gtk_table_set_col_spacings (GTK_TABLE (table), 8);
 	
-	l = gtk_label_new (_("Tile set:"));
-	    
-	gtk_box_pack_start_defaults (GTK_BOX(hb), l);
-	gtk_box_pack_start_defaults (GTK_BOX(hb), otmenu);
+	label = gtk_label_new (_("Tile Set"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_size_group_add_widget (group, label);
+	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
 
-	gtk_box_pack_start_defaults (GTK_BOX(fv), hb);
+	omenu = gtk_option_menu_new ();
+	menu = gtk_menu_new ();
+	fill_tile_menu (menu, "mahjongg", 1);
+	gtk_option_menu_set_menu (GTK_OPTION_MENU(omenu), menu);
+	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 0, 1);
 
-	/* The Tile Background sub-menu */
-	otmenu = gtk_option_menu_new ();
-	tmenu = gtk_menu_new ();
-	fill_tile_menu (tmenu, "mahjongg/bg", 0);
-	gtk_option_menu_set_menu (GTK_OPTION_MENU(otmenu), tmenu);
+	label = gtk_label_new (_("Tile Background"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_size_group_add_widget (group, label);
+	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 1, 2);
 
-	hb = gtk_hbox_new (FALSE, FALSE);
+	omenu = gtk_option_menu_new ();
+	menu = gtk_menu_new ();
+	fill_tile_menu (menu, "mahjongg/bg", 0);
+	gtk_option_menu_set_menu (GTK_OPTION_MENU(omenu), menu);
+	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 1, 2);
 
-	l = gtk_label_new (_("Tile background:"));
+	gtk_container_add(GTK_CONTAINER (frame), table);
+	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
-	gtk_box_pack_start_defaults (GTK_BOX(hb), l);
-	gtk_box_pack_start_defaults (GTK_BOX(hb), otmenu);
 
-	gtk_box_pack_start_defaults (GTK_BOX(fv), hb);
+	frame = gtk_frame_new(_("<b>Maps</b>"));
+	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
+	gtk_label_set_use_markup (GTK_LABEL (gtk_frame_get_label_widget(GTK_FRAME(frame))), TRUE);
 
-	/* The Map sub-menu */
-	ommenu = gtk_option_menu_new ();
-	mmenu = gtk_menu_new ();
-	fill_map_menu (mmenu);
-	gtk_option_menu_set_menu (GTK_OPTION_MENU(ommenu), mmenu);
-
-	f = gtk_frame_new (_ ("Maps"));
-	gtk_container_set_border_width (GTK_CONTAINER (f), 5);
-
-	hb = gtk_hbox_new (FALSE, FALSE);
-       	l = gtk_label_new (_("Select Map:"));
-	    
-	gtk_box_pack_start_defaults (GTK_BOX(hb), l);
-	gtk_box_pack_start_defaults (GTK_BOX(hb), ommenu);
-
-	fv = gtk_vbox_new (0, 5);
-	gtk_container_set_border_width (GTK_CONTAINER (fv), 5);
+	table = gtk_table_new (1, 2, FALSE);
+	gtk_container_set_border_width (GTK_CONTAINER (table), 8);
+	gtk_table_set_row_spacings (GTK_TABLE (table), 4);
+	gtk_table_set_col_spacings (GTK_TABLE (table), 8);
 	
-	gtk_box_pack_start_defaults (GTK_BOX(fv), hb);
-	gtk_box_pack_start_defaults (GTK_BOX(col1), f);
-	gtk_container_add (GTK_CONTAINER (f), fv);
+	label = gtk_label_new (_("Select Map"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_size_group_add_widget (group, label);
+	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
 
-	/* The colour */
-	f = gtk_frame_new (_ ("Colours"));
-	gtk_container_set_border_width (GTK_CONTAINER (f), 5);
+	omenu = gtk_option_menu_new ();
+	menu = gtk_menu_new ();
+	fill_map_menu (menu);
+	gtk_option_menu_set_menu (GTK_OPTION_MENU(omenu), menu);
+	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 0, 1);
 
-	hb = gtk_hbox_new (FALSE, FALSE);
-	l = gtk_label_new (_("Background:"));
-      	gtk_box_pack_start_defaults (GTK_BOX(hb), l);
+	gtk_container_add(GTK_CONTAINER (frame), table);
+	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
+
+
+	frame = gtk_frame_new(_("<b>Colours</b>"));
+	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
+	gtk_label_set_use_markup (GTK_LABEL (gtk_frame_get_label_widget(GTK_FRAME(frame))), TRUE);
+
+	table = gtk_table_new (1, 2, FALSE);
+	gtk_container_set_border_width (GTK_CONTAINER (table), 8);
+	gtk_table_set_row_spacings (GTK_TABLE (table), 4);
+	gtk_table_set_col_spacings (GTK_TABLE (table), 8);
+	
+	label = gtk_label_new (_("Background Color"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_size_group_add_widget (group, label);
+	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
+
 	{
 	  int ur,ug,ub ;
 
-	  colour_well  = gnome_color_picker_new();
+	  w  = gnome_color_picker_new();
 	  sscanf (backgnd.name, "#%02x%02x%02x", &ur,&ug,&ub);
-	  gnome_color_picker_set_i8 (GNOME_COLOR_PICKER(colour_well),
-			  ur, ug, ub, 0);
-	  g_signal_connect (G_OBJECT(colour_well), "color_set",
+	  gnome_color_picker_set_i8 (GNOME_COLOR_PICKER(w), ur, ug, ub, 0);
+	  g_signal_connect (G_OBJECT(w), "color_set",
 			    G_CALLBACK (bg_colour_callback), &backgnd.name);
 	}
-	gtk_box_pack_start_defaults (GTK_BOX(hb), colour_well);
+	gtk_table_attach_defaults (GTK_TABLE (table), w, 1, 2, 0, 1);
 
-	fv = gtk_vbox_new (0, 5);
-	gtk_container_set_border_width (GTK_CONTAINER (fv), 5);
+	gtk_container_add(GTK_CONTAINER (frame), table);
+	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
-	gtk_box_pack_start_defaults (GTK_BOX(fv), hb);
-	gtk_box_pack_start_defaults (GTK_BOX(col2), f) ;
-	gtk_container_add (GTK_CONTAINER (f), fv);
+
+	frame = gtk_frame_new(_("<b>Warnings</b>"));
+	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
+	gtk_label_set_use_markup (GTK_LABEL (gtk_frame_get_label_widget(GTK_FRAME(frame))), TRUE);
+
+	table = gtk_vbox_new (FALSE, FALSE);
+	gtk_container_set_border_width (GTK_CONTAINER (table), 8);
+
+	w = gtk_check_button_new_with_label (_("Warn when tiles don't match"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), popup_warn);
+	g_signal_connect (G_OBJECT(w), "clicked", G_CALLBACK (popup_warn_callback), NULL);
+	gtk_box_pack_start_defaults (GTK_BOX (table), w);
+
+	w = gtk_check_button_new_with_label (_("Show confirmation dialogs"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), popup_confirm);
+	g_signal_connect (G_OBJECT(w), "clicked", G_CALLBACK (popup_confirm_callback), NULL);
+	gtk_box_pack_start_defaults (GTK_BOX(table), w);
 	
-	/* Warning submenu */
-  	f = gtk_frame_new (_ ("Warnings"));
-  	gtk_container_set_border_width (GTK_CONTAINER (f), 5); 
+	gtk_container_add(GTK_CONTAINER (frame), table);
+	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
-	fv = gtk_vbox_new (0,5);
-	gtk_container_set_border_width (GTK_CONTAINER (fv), 5);
+	gtk_box_pack_start_defaults (GTK_BOX(GTK_DIALOG(pref_dialog)->vbox), vbox);
 
-	warn_cb = gtk_check_button_new_with_label
-		(_("Warn when tiles don't match"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(warn_cb), popup_warn);
-	g_signal_connect (G_OBJECT(warn_cb), "clicked",
-			  G_CALLBACK (popup_warn_callback), NULL);
-	gtk_box_pack_start_defaults (GTK_BOX(fv), warn_cb);
-
-	confirm_cb = gtk_check_button_new_with_label
-		(_("Show confirmation dialogs"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(confirm_cb),
-			popup_confirm);
-	g_signal_connect (G_OBJECT(confirm_cb), "clicked",
-			  G_CALLBACK (popup_confirm_callback), NULL);
-	gtk_box_pack_start_defaults (GTK_BOX(fv), confirm_cb);
-
-	gtk_box_pack_start_defaults (GTK_BOX(col2), f) ;
-	gtk_container_add (GTK_CONTAINER (f), fv);
-
-        gtk_box_pack_start_defaults (GTK_BOX(cols), col1);
-        gtk_box_pack_start_defaults (GTK_BOX(cols), col2);
-        gtk_box_pack_start_defaults (GTK_BOX(GTK_DIALOG(pref_dialog)->vbox),
-			cols);
-
-        gtk_widget_show_all (pref_dialog);
+	g_object_unref (group);
+	gtk_widget_show_all (pref_dialog);
 }
 
 gint
