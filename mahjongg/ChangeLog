@@ -1,3 +1,10 @@
+2002-01-24  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* mahjongg.c: make all confirmations work, ask if start new
+	game after selecting a seed. Make all OK buttons default.
+	Make prefs dialog modeless. Mark strings for translation.
+	General cleanup.
+
 2002-01-24  Markus Bertheau <twanger@bluetwanger.de>
 
 	* mahjongg.c:
