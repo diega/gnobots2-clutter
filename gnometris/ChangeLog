@@ -1,3 +1,14 @@
+2003-06-08  William Jon McCann  <mccann@jhu.edu>
+
+	* tetris.cpp (endOfGame): Hide paused message before
+	displaying end of game message.
+	(setupScoreState): Make score menu item insensitive if
+	scores are not available.
+	(gameProperties): HIG fixes for preferences
+	dialog.
+	
+	* scoreframe.cpp (ScoreFrame): HIG fixes for score frame.
+
 2003-06-05  William Jon McCann  <mccann@jhu.edu>
 
 	* tetris.cpp (Tetris): Don't exit if schemas are not installed,

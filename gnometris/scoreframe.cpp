@@ -25,10 +25,19 @@
 ScoreFrame::ScoreFrame(int cmdlLevel)
 	: score(0), lines(0)
 {
+	gchar *markup;
   startingLevel = cmdlLevel ? cmdlLevel : gnome_config_get_int_with_default("/gnometris/Properties/StartingLevel=1", 0);
 	level = startingLevel;
 	
-	w = gtk_frame_new(_("Game Status"));
+	markup = g_strdup_printf ("<span weight=\"bold\">%s</span>",
+                                  _("Game Status"));
+	w = gtk_frame_new(markup);
+        g_free (markup);
+	gtk_frame_set_shadow_type (GTK_FRAME (w), GTK_SHADOW_NONE);
+	gtk_label_set_use_markup
+          (GTK_LABEL (gtk_frame_get_label_widget (GTK_FRAME (w))), TRUE);
+	gtk_misc_set_alignment
+          (GTK_MISC (gtk_frame_get_label_widget (GTK_FRAME (w))), 0, 0.5);
 
 	scoreLabel = gtk_label_new(_("Score: "));
 	sprintf(b, "%7d", 0);
