@@ -101,7 +101,7 @@ plugin_busy_message (gint player)
 }
 
 void
-plugin_about_window (GtkWindow *parent, gint player)
+plugin_about_window (GtkWindow *parent)
 {
   GtkWidget *about;
   const gchar *authors[] = {
