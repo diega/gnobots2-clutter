@@ -386,7 +386,7 @@ bj_gconf_card_style_cb (GConfClient *client, guint cnxn_id,
         gchar *card_style;
 
         card_style = bj_get_card_style ();
-        // FIXME
+        bj_card_set_theme (card_style);
         bj_draw_refresh_screen ();
 }
 

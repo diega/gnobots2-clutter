@@ -66,5 +66,6 @@ void bj_card_load_pixmaps (GtkWidget*, gchar *card_style);
 void bj_card_free_pixmaps (void);
 
 void bj_card_set_size (gint width, gint height);
+void bj_card_set_theme (gchar *theme);
 
 #endif

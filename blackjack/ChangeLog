@@ -1,3 +1,10 @@
+2004-05-24  William Jon McCann  <mccann@jhu.edu>
+
+	* src/blackjack.cpp (bj_gconf_card_style_cb): Instant
+	apply card theme.
+
+	* src/card.h (bj_card_set_theme): Add function prototype.
+
 2004-05-20  William Jon McCann  <mccann@jhu.edu>
 
 	* dialog.cpp (reset_button_cb, show_preferences_dialog):
