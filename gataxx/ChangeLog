@@ -1,3 +1,7 @@
+2003-06-27  William Jon McCann  <mccann@jhu.edu>
+
+	* gataxx.h: Fixed off by one error in BOARDHEIGHT and BOARDWIDTH.
+
 2003-06-20  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gataxx.c: Only make the undo button sensitive when it has to

@@ -31,8 +31,8 @@
 
 #define TILEWIDTH 60
 #define TILEHEIGHT 60
-#define BOARDWIDTH ((TILEWIDTH * 7) + 1)
-#define BOARDHEIGHT ((TILEHEIGHT * 7) +1)
+#define BOARDWIDTH (TILEWIDTH * 7)
+#define BOARDHEIGHT (TILEHEIGHT * 7)
 
 struct _MoveHistory
 {
