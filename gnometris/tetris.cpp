@@ -26,6 +26,7 @@
 #include "blocks.h"
 #include "preview.h"
 #include "scoreframe.h"
+#include "sound.h"
 
 #include <games-gconf.h>
 #include <games-frame.h>
@@ -63,6 +64,7 @@ bool rotateCounterClockWise = true;
 #define TETRIS_OBJECT "gnometris-tetris-object"
 
 #define KEY_OPTIONS_DIR "/apps/gnometris/options"
+#define KEY_SOUND "/apps/gnometris/options/sound"
 #define KEY_BLOCK_PIXMAP "/apps/gnometris/options/block_pixmap"
 #define KEY_STARTING_LEVEL "/apps/gnometris/options/starting_level"
 #define KEY_DO_PREVIEW "/apps/gnometris/options/do_preview"
@@ -107,6 +109,9 @@ Tetris::Tetris(int cmdlLevel):
 				    {"property/bgimage", 0, URI_LIST},
 				    {"text/plain", 0, TEXT_PLAIN},
 				    {"STRING", 0, TEXT_PLAIN}};
+
+	if (!sound)
+		sound = new Sound();
 
 	pic = new GdkPixbuf*[tableSize];
 	for (int i = 0; i < tableSize; ++i)
@@ -521,6 +526,11 @@ Tetris::initOptions ()
 	if (startingLevel > 10) 
 		startingLevel = 10;
 
+	if (gconfGetBoolean (gconf_client, KEY_SOUND, TRUE)) 
+		sound->turnOn ();
+	else
+		sound->turnOff ();
+
 	do_preview = gconfGetBoolean (gconf_client, KEY_DO_PREVIEW, TRUE);
 
 	random_block_colors = gconfGetBoolean (gconf_client, KEY_RANDOM_BLOCK_COLORS, TRUE);
@@ -554,6 +564,7 @@ Tetris::setOptions ()
 		gtk_spin_button_set_value (GTK_SPIN_BUTTON (sentry), startingLevel);
 		gtk_spin_button_set_value (GTK_SPIN_BUTTON (fill_prob_spinner), line_fill_prob);
 		gtk_spin_button_set_value (GTK_SPIN_BUTTON (fill_height_spinner), line_fill_height);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sound_toggle), sound->isOn ());
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (do_preview_toggle), do_preview);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (random_block_colors_toggle), random_block_colors);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rotate_counter_clock_wise_toggle), rotateCounterClockWise);
@@ -562,6 +573,14 @@ Tetris::setOptions ()
 	scoreFrame->setLevel (startingLevel);
 	scoreFrame->setStartingLevel (startingLevel);
 	setupPixmap ();
+}
+
+void
+Tetris::setSound (GtkWidget *widget, gpointer data)
+{
+	Tetris *t = (Tetris*)data;
+	gconf_client_set_bool (t->gconf_client, KEY_SOUND,
+			       GTK_TOGGLE_BUTTON (widget)->active, NULL);
 }
 
 void 
@@ -784,6 +803,16 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	frame = games_frame_new (_("Operation"));
 	fvbox = gtk_vbox_new (FALSE, 6);
 
+	/* sound */
+	t->sound_toggle =
+		gtk_check_button_new_with_label (_("Enable sounds"));
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (t->sound_toggle),
+				     sound->isOn ());
+	g_signal_connect (t->sound_toggle, "clicked",
+			  G_CALLBACK (setSound), d);
+	gtk_box_pack_start (GTK_BOX (fvbox), t->sound_toggle, 0, 0, 0);
+	
+
 	/* preview next block */
 	t->do_preview_toggle =
 		gtk_check_button_new_with_label (_("Preview next block"));
@@ -880,7 +909,7 @@ int
 Tetris::gameEnd(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
-	
+
 	g_source_remove(t->timeoutId);
 	t->timeoutId = 0;
 	blocknr_next = -1;
@@ -920,10 +949,13 @@ void
 Tetris::manageFallen()
 {
 	ops->fallingToLaying();
+	sound->playSound (SOUND_LAND);
 
 	int levelBefore = scoreFrame->getLevel();
 	ops->checkFullLines(scoreFrame);
 	int levelAfter = scoreFrame->getLevel();
+	if (levelAfter != levelBefore) 
+		sound->playSound (SOUND_GNOMETRIS);
 	if ((levelBefore != levelAfter) || fastFall)
 		generateTimer(levelAfter);
 	
@@ -985,12 +1017,15 @@ Tetris::keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 		return FALSE;
 
 	if (keyval == t->moveLeft) {
+		sound->playSound (SOUND_SLIDE);
 		res = t->ops->moveBlockLeft();
 		t->onePause = false;
 	} else if (keyval == t->moveRight) {
+		sound->playSound (SOUND_SLIDE);
 		res = t->ops->moveBlockRight();
 		t->onePause = false;
 	} else if (keyval == t->moveRotate) {
+		sound->playSound (SOUND_TURN);
 		res = t->ops->rotateBlock(rotateCounterClockWise);
 		t->onePause = false;
 	} else if (keyval == t->moveDown) {
@@ -1239,6 +1274,7 @@ Tetris::endOfGame()
         gnome_canvas_item_hide (pauseMessage);
         gnome_canvas_item_show (gameoverMessage);
         gnome_canvas_item_raise_to_top (gameoverMessage);
+	sound->playSound (SOUND_GAMEOVER);
 	inPlay = false;
 
 	if (scoreFrame->getScore() > 0) 
@@ -1302,6 +1338,8 @@ Tetris::gameNew(GtkWidget *widget, void *d)
         gnome_canvas_item_hide (t->pauseMessage);
         gnome_canvas_item_hide (t->gameoverMessage);
         
+	sound->playSound (SOUND_GNOMETRIS);
+
 	return TRUE;
 }
 

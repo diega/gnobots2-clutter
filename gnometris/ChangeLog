@@ -1,3 +1,13 @@
+2004-07-18  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* Makefile.am: 
+	* sounds/*:
+	* sound.h:
+	* sound.cpp:	
+	* tetris.h:
+	* tetris.cpp: Sound support added. Sounds courtesy of Richard
+	Hoelscher.
+
 2004-07-14  Paolo Borelli  <pborelli@katamail.com>
 
 	* gnometris.schema.in:

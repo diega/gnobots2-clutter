@@ -39,6 +39,18 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/gnometris/options/sound</key>
+      <applyto>/apps/gnometris/options/sound</applyto>
+      <owner>gnometris</owner>
+      <type>bool</type> 
+      <default>TRUE</default>
+      <locale name="C">
+        <short>Whether to use sound</short>
+        <long>Whether to use sound.</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/gnometris/options/random_block_colors</key>
       <applyto>/apps/gnometris/options/random_block_colors</applyto>
       <owner>gnometris</owner>

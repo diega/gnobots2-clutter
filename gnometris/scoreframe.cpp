@@ -26,6 +26,7 @@
 #include <games-frame.h>
 
 #include "scoreframe.h"
+#include "sound.h"
 
 // FIXME: This is also defined in tetris.cpp
 #define KEY_STARTING_LEVEL "/apps/gnometris/options/starting_level"
@@ -131,15 +132,19 @@ ScoreFrame::incLines(int newlines)
 	{
 		case 1:
 			linescore = 40;
+			sound->playSound (SOUND_LINES1);
 			break;
 		case 2:
 			linescore = 100;
+			sound->playSound (SOUND_LINES2);
 			break;
 		case 3:
 			linescore = 300;
+			sound->playSound (SOUND_LINES3);
 			break;
 		case 4:
 			linescore = 1200;
+			sound->playSound (SOUND_LINES3);
 			break;
 	}
 	incScore(linescore * level);

@@ -1,6 +1,4 @@
-SUBDIRS=pix help
-
-
+SUBDIRS=pix help sounds
 
 Gamesdir=$(datadir)/applications
 
@@ -31,6 +29,8 @@ gnometris_SOURCES=\
 	tetris.h \
 	scoreframe.cpp \
 	scoreframe.h	\
+	sound.cpp \
+	sound.h \
 	gnome-canvas-pimage.h \
 	gnome-canvas-pimage.c
 

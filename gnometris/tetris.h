@@ -26,6 +26,8 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gconf/gconf-client.h>
 
+#include "sound.h"
+
 extern int LINES;
 extern int COLUMNS;
 
@@ -120,6 +122,7 @@ private:
 	static int gameProperties(GtkWidget *widget, void *d);
 	static void setupdialogDestroy(GtkWidget *widget, void *d);
 	static void setupdialogResponse(GtkWidget *dialog, gint response_id, void *d);
+	static void setSound (GtkWidget *widget, gpointer data);
  	static void setRotateCounterClockWise(GtkWidget *widget, void *d);
 	static void setSelectionPreview(GtkWidget *widget, void *d);
 	static void setSelectionBlocks(GtkWidget *widget, void *d);
@@ -157,7 +160,8 @@ private:
 	GtkWidget *do_preview_toggle;
 	GtkWidget *random_block_colors_toggle;
 	GtkWidget *rotate_counter_clock_wise_toggle;
-
+	GtkWidget *sound_toggle;
+	
 	int moveLeft;
 	int moveRight;
 	int moveDown;
