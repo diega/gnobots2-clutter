@@ -298,7 +298,7 @@ int ypos_offset;
 
 tile tiles[MAX_TILES];
 
-GtkWidget *window, *pref_dialog, *hint_dialog;
+GtkWidget *window, *pref_dialog, *hint_dialog, *appbar;
 GtkWidget *mbox;
 GtkWidget *canvas;
 GtkWidget *tiles_label;
@@ -359,71 +359,58 @@ void show_tb_callback (GtkWidget *widget, gpointer data);
 void sound_on_callback (GtkWidget *widget, gpointer data);
 
 
-GnomeUIInfo filemenu [] = {
-         {GNOME_APP_UI_ITEM, N_("_New"), NULL, new_game_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 'n', GDK_CONTROL_MASK, NULL},
+GnomeUIInfo gamemenu [] = {
+         GNOMEUIINFO_MENU_NEW_GAME_ITEM(new_game_callback, NULL),
 
-         {GNOME_APP_UI_ITEM, N_("New _Seed..."), NULL, select_game_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
+         {GNOME_APP_UI_ITEM, N_("New _seed..."), NULL,
+	  select_game_callback, NULL, NULL, GNOME_APP_PIXMAP_STOCK,
+	  GNOME_STOCK_MENU_NEW, 0, 0, NULL},
 
-         {GNOME_APP_UI_ITEM, N_("_Restart"), NULL, restart_game_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_REFRESH, 0, 0, NULL},
+	 GNOMEUIINFO_MENU_RESTART_GAME_ITEM(restart_game_callback, NULL),
 
-         {GNOME_APP_UI_SEPARATOR},
+	 GNOMEUIINFO_SEPARATOR,
 
-         {GNOME_APP_UI_ITEM, N_("_Hint"), NULL, hint_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+	 GNOMEUIINFO_MENU_UNDO_MOVE_ITEM(undo_tile_callback, NULL),
 
-         {GNOME_APP_UI_ITEM, N_("_Undo"), NULL, undo_tile_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_UNDO, 'z', GDK_CONTROL_MASK, NULL},
+	 GNOMEUIINFO_MENU_HINT_ITEM(hint_callback, NULL),
 
-         {GNOME_APP_UI_SEPARATOR},
-	
-         {GNOME_APP_UI_ITEM, N_("E_xit"), NULL, quit_game_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 'x', GDK_CONTROL_MASK, NULL},
-
-         {GNOME_APP_UI_ENDOFINFO}
+	 GNOMEUIINFO_END
 };
 
-GnomeUIInfo optionsmenu [] = {
-	{GNOME_APP_UI_TOGGLEITEM, N_("Show _Tool Bar"), NULL, show_tb_callback, NULL, NULL,
-	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+GnomeUIInfo filemenu [] = {
+         GNOMEUIINFO_MENU_EXIT_ITEM(quit_game_callback, NULL),
+	 GNOMEUIINFO_END
+};
 
-        {GNOME_APP_UI_SEPARATOR},
+GnomeUIInfo settingsmenu [] = {
+        GNOMEUIINFO_TOGGLEITEM(N_("Show _Tool Bar"),
+			       N_("Toggle display of the toolbar"),
+			       show_tb_callback, NULL),
+
+	GNOMEUIINFO_SEPARATOR,
 
 #ifdef SOUND_SUPPORT_FINISHED
         {GNOME_APP_UI_TOGGLEITEM, N_("_Sound"), NULL, NULL, NULL, NULL,
         GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 #endif
 
-        {GNOME_APP_UI_ITEM, N_("_Properties..."), NULL, properties_callback, NULL, NULL,
-        GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
-
-        
-        {GNOME_APP_UI_ENDOFINFO}
+	GNOMEUIINFO_MENU_PREFERENCES_ITEM(properties_callback, NULL),
+	GNOMEUIINFO_END
 };
 
 GnomeUIInfo helpmenu[] = {
-/* 	{GNOME_APP_UI_HELP, NULL, NULL, NULL, NULL, NULL, */
-/*         GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}, */
-	
-	{GNOME_APP_UI_ITEM, N_("_About Mahjongg"), NULL, about_callback, NULL, NULL,
-	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
-	
-	{GNOME_APP_UI_ENDOFINFO}
+        GNOMEUIINFO_HELP("mahjongg"),
+	GNOMEUIINFO_MENU_ABOUT_ITEM(about_callback, NULL),
+	GNOMEUIINFO_END
+
 };
 
 GnomeUIInfo mainmenu [] = {
-	{GNOME_APP_UI_SUBTREE, N_("_Game"), NULL, filemenu, NULL, NULL,
-	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-
-         {GNOME_APP_UI_SUBTREE, N_("_Options"), NULL, optionsmenu, NULL, NULL,
-	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-	
-	{GNOME_APP_UI_SUBTREE, N_("_Help"), NULL, helpmenu, NULL, NULL,
-	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-	
-	{GNOME_APP_UI_ENDOFINFO}
+        GNOMEUIINFO_MENU_FILE_TREE(filemenu),
+	GNOMEUIINFO_MENU_GAME_TREE(gamemenu),
+	GNOMEUIINFO_MENU_SETTINGS_TREE(settingsmenu),
+	GNOMEUIINFO_MENU_HELP_TREE(helpmenu),
+	GNOMEUIINFO_END
 };
 
 GnomeUIInfo toolbar_uiinfo [] = {
@@ -1186,7 +1173,7 @@ void show_tb_callback (GtkWidget *widget, gpointer data)
     gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
     toolbar = gnome_dock_item_get_child (gdi);
 
-    if((GTK_CHECK_MENU_ITEM(optionsmenu[0].widget))->active)
+    if((GTK_CHECK_MENU_ITEM(settingsmenu[0].widget))->active)
     {
         gnome_config_set_bool("gmahjongg/toolbar/show", TRUE);
         gtk_widget_show(GTK_WIDGET(gdi));
@@ -1397,14 +1384,22 @@ int main (int argc, char *argv [])
 	window = gnome_app_new ("gmahjongg", _("Gnome Mahjongg"));
 /*	gtk_window_set_policy (GTK_WINDOW (window), FALSE, FALSE, TRUE); */
 
+	appbar = gnome_appbar_new (FALSE, TRUE, GNOME_PREFERENCES_USER);
+	gnome_app_set_statusbar (GNOME_APP (window), appbar);
+
+	gnome_appbar_set_status(GNOME_APPBAR (appbar),
+				_("Welcome to Gnome Mahjongg!"));
+
 	gnome_app_create_menus (GNOME_APP (window), mainmenu);
+	gnome_app_install_menu_hints(GNOME_APP (window), mainmenu);
+
         gnome_app_create_toolbar (GNOME_APP (window), toolbar_uiinfo);
 	gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
 	toolbar = gnome_dock_item_get_child (gdi);
         gtk_toolbar_set_space_size(GTK_TOOLBAR (toolbar), 25);
         
         if(gnome_config_get_bool("/gmahjongg/toolbar/show=TRUE"))
-            gtk_check_menu_item_set_state(GTK_CHECK_MENU_ITEM(optionsmenu[0].widget), TRUE);
+            gtk_check_menu_item_set_state(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), TRUE);
         else
 	    gtk_widget_hide(GTK_WIDGET(gdi));
 
