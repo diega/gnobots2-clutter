@@ -1,3 +1,22 @@
+/*
+ * Swedish Chef for Iagno II: A plugin for Iagno II
+ * Copyright (C) 1999-2000 Ian Peters <itp@gnu.org>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+ */
+
 #include <gnome.h>
 #include <sys/time.h>
 #include <unistd.h>
@@ -123,13 +142,13 @@ plugin_about_window (GtkWindow *parent)
 {
   GtkWidget *about;
   const gchar *authors[] = {
-    "Ian Peters",
-    "Peter Österlund",
+    "Peter Österlund (peter.osterlund@mailbox.swipnet.se)",
+    "Ian Peters (itp@gnu.org)",
     NULL
   };
 
   about = gnome_about_new (_("Swedish Chef for Iagno II"), VERSION,
-                           "Copyright 2000 Ian Peters",
+                           "(C) 1999-2000 Ian Peters",
                            (const gchar **) authors,
                            _("This is a computer player plugin for Iagno II. "
 			     "It uses the alpha-beta algorithm and is "
