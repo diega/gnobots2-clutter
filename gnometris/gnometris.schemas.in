@@ -7,7 +7,7 @@
       <applyto>/apps/gnometris/options/block_pixmap</applyto>
       <owner>gnometris</owner>
       <type>string</type> 
-      <default>7blocks-tig.png</default>
+      <default>7blocks-gw.png</default>
       <locale name="C">
         <short>Image to use for drawing blocks</short>
         <long>Image to use for drawing blocks.</long>
@@ -19,7 +19,7 @@
       <applyto>/apps/gnometris/options/background_pixmap</applyto>
       <owner>gnometris</owner>
       <type>string</type> 
-      <default>gnometris-bg.jpg</default>
+      <default>gnome2-foot.jpg</default>
       <locale name="C">
         <short>Image to use as background</short>
 	<long>Image to use as background.</long>

@@ -9,7 +9,8 @@ pixmap_DATA=\
 	5blocks-tig.png \
 	7blocks-tig.png \
 	7stones-gn.png \
-	7stones2-gn.png
+	7stones2-gn.png \
+	7blocks-gw.png
 
 appicon_DATA=gnome-gtetris.png
 
@@ -27,7 +28,8 @@ bg_DATA=\
 	gnometris-bg.jpg \
 	rhinoceros-bg.jpg \
 	scrcow-bg.jpg \
-	trees-bg.jpg
+	trees-bg.jpg \
+	gnome2-foot.png
 
 EXTRA_DIST=$(pixmap_DATA) $(appicon_DATA) $(bg_DATA)
 

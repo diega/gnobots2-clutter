@@ -1,3 +1,10 @@
+2004-01-02  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gnometris.schemas.in: And make the new graphics the default.
+
+	* pix/Makefile.am: Added a nice (small) background and block set
+	from Graeme Worthy (see bug #130254).
+
 2003-12-22  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* tetris.cpp (gameQuit): Check that the games is in progress
