@@ -1,3 +1,9 @@
+1998-02-14  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* same-gnome.c (save_state): Changed to use new SM support.
+	(connect): New function.
+	(parse_args): Changed to use new SM support.
+
 Sat Feb 14 09:43:48 1998  Tom Tromey  <tromey@cygnus.com>
 
 	* Makefile.am (same_gnome_LDADD): Added INTLLIBS.
