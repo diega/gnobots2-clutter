@@ -242,7 +242,7 @@ set_score (int new_score)
 }
 
 void
-show_scores ( gchar *level, gchar *title, guint pos )
+show_scores ( gchar *title, guint pos )
 {
 	GtkWidget *hs;
 	GdkColor ctitle = {0, 0, 0, 65535};
@@ -253,8 +253,9 @@ show_scores ( gchar *level, gchar *title, guint pos )
 	gint top;
 	int i;
 	
-	top = gnome_score_get_notable("samegnome",level, &names, &scores, &scoretimes);
+	top = gnome_score_get_notable("samegnome", NULL, &names, &scores, &scoretimes);
 	hs = gnome_scores_new(top, names, scores, scoretimes, 0);
+
 	gnome_scores_set_logo_label (GNOME_SCORES(hs), _("The Same Gnome"), 0, &ctitle);
 	gtk_window_set_title (GTK_WINDOW (hs), title);
 	
@@ -262,12 +263,16 @@ show_scores ( gchar *level, gchar *title, guint pos )
 		gnome_scores_set_color(hs, pos-1, &col);
 	
 	gtk_widget_show (hs);
+
+	gnome_string_array_free(names);
+	g_free(scores);
+	g_free(scoretimes);
 }
 
 void 
 game_top_ten_callback(GtkWidget *widget, gpointer data)
 {
-	show_scores(scenario, _("High Scores"), 0);
+	show_scores(_("High Scores"), 0);
 }
 
 void
@@ -275,8 +280,8 @@ end_of_game (char *title)
 {
 	int pos;
 
-	pos = gnome_score_log(score, scenario, 1);
-	show_scores(scenario, title, pos);
+	pos = gnome_score_log(score, scenario, TRUE);
+	show_scores(title, pos);
 }
 
 void
