@@ -1,3 +1,10 @@
+1999-01-08  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* preferences.c (preferences_dialog_new): Set the window class
+ 	information on the preferences window.  Together with the
+ 	SM_CLIENT_ID window property, a window manager should be able to
+ 	restore the windows geometry on a session startup.
+
 1999-01-07  Nat Friedman  <nat@nat.org>
 
 	* main.c (main): Install menu hints.

@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1998/12/23 23:27:27 carsten>
+ * Time-stamp: <1999/01/08 18:01:33 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -449,6 +449,9 @@ preferences_dialog_new (void)
   
   gtk_window_set_title (GTK_WINDOW(&GNOME_PROPERTY_BOX(propbox)->dialog.window),
 			_("Gnome-Stones Preferences"));
+  gtk_window_set_wmclass (GTK_WINDOW(&GNOME_PROPERTY_BOX(propbox)->dialog.window),
+			  "gnome-stones", "preferences");
+  
 
   /* The first page of our preferences dialog. */
   box= gtk_vbox_new (FALSE, GNOME_PAD);
