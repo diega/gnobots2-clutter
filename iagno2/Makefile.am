@@ -1,6 +1,6 @@
 SUBDIRS = reversi-iagno2 src tiles plugins
 
-Gamesdir = $(datadir)/gnome/apps/Games
+Gamesdir = $(datadir)/applications
 icondir = $(datadir)/pixmaps
 
 Games_DATA = iagno2.desktop
