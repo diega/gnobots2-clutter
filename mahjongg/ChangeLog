@@ -1,3 +1,12 @@
+2005-03-07  Richard Hoelscher  <rah@rahga.com>
+
+	* mahjongg.c (mapset_changed_cb): Switch tilesets without the dialog
+	whenever game is over or hasn't begun. Bug #169499
+	(tile_event): Resume a paused game if a tile gets clicked.
+	Don't start the timer until a tile is clicked. Bug #165196
+	(chrono_start): Removed.
+	(game_init): Relocated two of the clock funtions from chrono_start()
+
 2005-03-02  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* help/C/mahjongg.xml: Bump the app version number. No revisions.

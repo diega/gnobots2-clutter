@@ -415,6 +415,12 @@ mapset_changed_cb (GConfClient *client,
 
 	new_map = TRUE;
 
+	/* Skip the dialog if a game isn't in play. */
+	if (game_over || !games_clock_get_seconds(GAMES_CLOCK(chrono))) {
+		new_game ();
+		return;
+	}
+
 	dialog = gtk_message_dialog_new_with_markup (
 		GTK_WINDOW (window),
 		GTK_DIALOG_MODAL,
@@ -501,15 +507,6 @@ update_score_state ()
 	g_free (scoretimes);
 }
 
-
-static void
-chrono_start (void)
-{
-	games_clock_stop (GAMES_CLOCK (chrono));
-	games_clock_set_seconds (GAMES_CLOCK (chrono), 0);
-	games_clock_start (GAMES_CLOCK (chrono));
-}
-
 static gint
 update_moves_left (void)
 {
@@ -571,11 +568,16 @@ remove_pair (gint tile1, gint tile2)
 void
 tile_event (gint tileno, gint button)
 {
-	if (paused)
+	if (paused) {
+		pause_callback ();
 		return;
+	}
 
 	if (!tile_free (tileno))
 		return;
+
+	if (!games_clock_get_seconds (GAMES_CLOCK(chrono))) 
+		games_clock_start (GAMES_CLOCK(chrono));
 	
 	switch (button) {
 	case 1:
@@ -1120,7 +1122,8 @@ init_game (void)
 	set_undoredo_sensitive (FALSE, FALSE);
 	set_menus_sensitive ();
 
-        chrono_start();
+        games_clock_stop (GAMES_CLOCK (chrono));
+        games_clock_set_seconds (GAMES_CLOCK (chrono), 0);
 }
 
 void new_game_cb (GtkWidget *widget, gpointer data)
