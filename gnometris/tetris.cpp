@@ -75,7 +75,7 @@ Tetris::Tetris(int cmdlLevel):
 	field(0),
 	preview(0),
 	paused(false), 
-	timeoutId(-1), 
+	timeoutId(0), 
 	onePause(false), 
 	inPlay(false),
 	image(0),
@@ -815,7 +815,7 @@ Tetris::gameEnd(GtkWidget *widget, void *d)
 	Tetris *t = (Tetris*) d;
 	
 	g_source_remove(t->timeoutId);
-	t->timeoutId = -1;
+	t->timeoutId = 0;
 	blocknr_next = -1;
 	t->endOfGame();
 	return TRUE;
@@ -869,7 +869,7 @@ Tetris::timeoutHandler(void *d)
 	Tetris *t = (Tetris*) d;
 	
 	if (t->paused)
-		return 1;
+		return TRUE;
 
  	if (t->onePause)
  	{
@@ -893,7 +893,7 @@ Tetris::timeoutHandler(void *d)
 			++t->fastFallPoints;
 	}
 
-	return 1;	
+	return TRUE;	
 }
 
 gint
@@ -902,7 +902,7 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 	Tetris *t = (Tetris*) d;
         int bonus;
         
-	if (t->timeoutId == -1)
+	if (t->timeoutId == 0)
 		return FALSE;
 	
 	if (event->type == GDK_KEY_PRESS)
@@ -1023,7 +1023,7 @@ Tetris::generate()
 	else
 	{
 		g_source_remove(timeoutId);
-		timeoutId = -1;
+		timeoutId = 0;
 		blocknr_next = -1;
 		
 		endOfGame();
@@ -1071,7 +1071,7 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 	if (t->timeoutId) 
 	{
 		g_source_remove(t->timeoutId);
-		t->timeoutId = -1;
+		t->timeoutId = 0;
 
 		/* Catch the case where we started a new game without
 		 * finishing the old one. */
