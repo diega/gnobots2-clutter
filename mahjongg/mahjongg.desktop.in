@@ -4,7 +4,6 @@ _Name=Mahjongg
 _Comment=Mahjongg game
 Exec=mahjongg
 Icon=gnome-mahjongg.png
-Info=Gnome Mahjongg program
 Terminal=false
 Type=Application
 Categories=GNOME;Application;Game;BoardGame;
