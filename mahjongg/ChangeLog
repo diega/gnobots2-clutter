@@ -1,3 +1,7 @@
+2004-11-02  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c: Menu state fixes. Including bug #156961.
+
 2004-11-01  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c (stop_hints): Fix the fix. It now works for cases

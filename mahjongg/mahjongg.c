@@ -729,6 +729,9 @@ static gchar *score_current_mapset = NULL;
 
 static gchar *selected_tileset = NULL;
 
+gboolean undo_state = FALSE;
+gboolean redo_state = FALSE;
+
 struct _maps
 {
   gchar *name ;
@@ -897,6 +900,9 @@ static void set_menus_sensitive (void)
 /* Undo and redo sensitivity functionality. */
 static void set_undoredo_sensitive (gboolean undo, gboolean redo)
 {
+	undo_state = undo;
+	redo_state = redo;
+
 	gtk_widget_set_sensitive(gamemenu[4].widget, undo);
 	gtk_widget_set_sensitive(toolbar_uiinfo[4].widget, undo);
 	gtk_widget_set_sensitive(gamemenu[5].widget, redo);
@@ -1717,12 +1723,24 @@ pause_callback (void)
         if (paused) {
 		gtk_toggle_button_set_active (
                   GTK_TOGGLE_BUTTON (toolbar_uiinfo[2].widget), TRUE);
+		gtk_widget_set_sensitive(gamemenu[4].widget, FALSE);
+		gtk_widget_set_sensitive(toolbar_uiinfo[4].widget, FALSE);
+		gtk_widget_set_sensitive(gamemenu[5].widget, FALSE);
+		gtk_widget_set_sensitive(toolbar_uiinfo[5].widget, FALSE);
+		gtk_widget_set_sensitive(gamemenu[6].widget, FALSE);
+		gtk_widget_set_sensitive(toolbar_uiinfo[6].widget, FALSE);
                 games_clock_stop (GAMES_CLOCK (chrono));
                 message(_("Game paused"));
         }
         else {
 		gtk_toggle_button_set_active (
                   GTK_TOGGLE_BUTTON (toolbar_uiinfo[2].widget), FALSE);
+		gtk_widget_set_sensitive(gamemenu[4].widget, undo_state);
+		gtk_widget_set_sensitive(toolbar_uiinfo[4].widget, undo_state);
+		gtk_widget_set_sensitive(gamemenu[5].widget, redo_state);
+		gtk_widget_set_sensitive(toolbar_uiinfo[5].widget, redo_state);
+		gtk_widget_set_sensitive(gamemenu[6].widget, TRUE); 
+		gtk_widget_set_sensitive(toolbar_uiinfo[6].widget, TRUE);
                 games_clock_start (GAMES_CLOCK(chrono));
                 message ("");
         }
@@ -1731,11 +1749,8 @@ pause_callback (void)
 
 void ensure_pause_off (void)
 {
-        if (paused) {
-		draw_all_tiles ();
-                message("");
-        }
-        paused = FALSE;
+        if (paused)
+		pause_callback ();
 }
 
 void
