@@ -359,41 +359,41 @@ void sound_on_callback (GtkWidget *widget, gpointer data);
 
 
 GnomeUIInfo filemenu [] = {
-         {GNOME_APP_UI_ITEM, N_("New"), NULL, new_game_callback, NULL, NULL,
+         {GNOME_APP_UI_ITEM, N_("_New"), NULL, new_game_callback, NULL, NULL,
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 'n', GDK_CONTROL_MASK, NULL},
+
+         {GNOME_APP_UI_ITEM, N_("New _Seed..."), NULL, select_game_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
 
-         {GNOME_APP_UI_ITEM, N_("New Seed..."), NULL, select_game_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
-
-         {GNOME_APP_UI_ITEM, N_("Restart"), NULL, restart_game_callback, NULL, NULL,
+         {GNOME_APP_UI_ITEM, N_("_Restart"), NULL, restart_game_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_REFRESH, 0, 0, NULL},
 
          {GNOME_APP_UI_SEPARATOR},
 
-         {GNOME_APP_UI_ITEM, N_("Hint"), NULL, hint_callback, NULL, NULL,
+         {GNOME_APP_UI_ITEM, N_("_Hint"), NULL, hint_callback, NULL, NULL,
          GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
-         {GNOME_APP_UI_ITEM, N_("Undo"), NULL, undo_tile_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_UNDO, 0, 0, NULL},
+         {GNOME_APP_UI_ITEM, N_("_Undo"), NULL, undo_tile_callback, NULL, NULL,
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_UNDO, 'z', GDK_CONTROL_MASK, NULL},
 
          {GNOME_APP_UI_SEPARATOR},
 	
-         {GNOME_APP_UI_ITEM, N_("Exit"), NULL, quit_game_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 0, 0, NULL},
+         {GNOME_APP_UI_ITEM, N_("E_xit"), NULL, quit_game_callback, NULL, NULL,
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 'q', GDK_CONTROL_MASK, NULL},
 
          {GNOME_APP_UI_ENDOFINFO}
 };
 
 GnomeUIInfo optionsmenu [] = {
-	{GNOME_APP_UI_TOGGLEITEM, N_("Show Tool Bar"), NULL, show_tb_callback, NULL, NULL,
+	{GNOME_APP_UI_TOGGLEITEM, N_("Show _Tool Bar"), NULL, show_tb_callback, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
         {GNOME_APP_UI_SEPARATOR},
 
-        {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), NULL, NULL, NULL, NULL,
+        {GNOME_APP_UI_TOGGLEITEM, N_("_Sound"), NULL, NULL, NULL, NULL,
         GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
-        {GNOME_APP_UI_ITEM, N_("Properties..."), NULL, properties_callback, NULL, NULL,
+        {GNOME_APP_UI_ITEM, N_("_Properties..."), NULL, properties_callback, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
 
         
@@ -404,30 +404,30 @@ GnomeUIInfo helpmenu[] = {
 /* 	{GNOME_APP_UI_HELP, NULL, NULL, NULL, NULL, NULL, */
 /*         GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}, */
 	
-	{GNOME_APP_UI_ITEM, N_("About"), NULL, about_callback, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("_About Mahjongg"), NULL, about_callback, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
 	
 	{GNOME_APP_UI_ENDOFINFO}
 };
 
 GnomeUIInfo mainmenu [] = {
-	{GNOME_APP_UI_SUBTREE, N_("Game"), NULL, filemenu, NULL, NULL,
+	{GNOME_APP_UI_SUBTREE, N_("_Game"), NULL, filemenu, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
-         {GNOME_APP_UI_SUBTREE, N_("Options"), NULL, optionsmenu, NULL, NULL,
+         {GNOME_APP_UI_SUBTREE, N_("_Options"), NULL, optionsmenu, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 	
-	{GNOME_APP_UI_SUBTREE, N_("Help"), NULL, helpmenu, NULL, NULL,
+	{GNOME_APP_UI_SUBTREE, N_("_Help"), NULL, helpmenu, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 	
 	{GNOME_APP_UI_ENDOFINFO}
 };
 
 GnomeUIInfo toolbar [] = {
-         {GNOME_APP_UI_ITEM, N_("New"), NULL, new_game_callback, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("New"), NULL, new_game_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_NEW, 0, 0, NULL},
 
-         {GNOME_APP_UI_ITEM, N_("New Seed"), NULL, select_game_callback, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("New Seed"), NULL, select_game_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_NEW, 0, 0, NULL},
 
          {GNOME_APP_UI_ITEM, N_("Restart"), NULL, restart_game_callback, NULL, NULL,
