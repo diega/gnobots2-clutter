@@ -1,8 +1,8 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <2002/06/03 16:02:27 ross>
+ * Time-stamp: <2003-05-09 19:12:40 callum>
  *
- * Copyright (C) 1998 Carsten Schaar
+ * Copyright (C) 1998, 2003 Carsten Schaar
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -161,7 +161,7 @@ load_image_from_path (const char *relative_name)
       widget= gtk_message_dialog_new (GTK_WINDOW(app), 
                                       GTK_DIALOG_DESTROY_WITH_PARENT,
                                       GTK_MESSAGE_ERROR, 
-                                      GTK_BUTTONS_CLOSE, 
+                                      GTK_BUTTONS_OK, 
                                       buffer);
       gtk_dialog_run(GTK_DIALOG(widget));
 

@@ -1,3 +1,7 @@
+2003-05-09  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* main.c (load_image_from_path): HIG fixup as per bug #112244.
+
 2003-04-06  Ross Burton  <ross@burtonini.com>
 
 	* main.c: Try and speed up the keyboard, thanks to Rick

@@ -1,3 +1,10 @@
+2003-05-09  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gataxx.schemas.in: Well gataxx has been completely
+	non-functional for the last two months since Ross applied the
+	sanity checks. Unfortunately the gataxx schemas file wasn't sane.
+	Fixes bug #110813.
+
 2003-04-30  Abel Cheung  <maddog@linux.org.hk>
 
 	* ChangeLog: Convert to UTF-8.

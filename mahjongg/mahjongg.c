@@ -670,7 +670,7 @@ mapset_changed_cb (GConfClient *client,
 		GTK_WINDOW (window),
 		GTK_DIALOG_MODAL,
 		GTK_MESSAGE_INFO,
-		GTK_BUTTONS_CLOSE,
+		GTK_BUTTONS_OK,
 		_("This new mapset will take effect when you start "
 		  "a new game, or when Mahjongg is restarted."));
 
@@ -1120,6 +1120,21 @@ pref_dialog_response (GtkDialog *dialog, gint response, gpointer data)
 	colour_well = NULL;
 }
 
+GtkWidget *
+bold_frame (gchar * title)
+{
+	gchar *markup;
+	GtkWidget * frame;
+	
+	markup = g_strdup_printf ("<b>%s</b>",title);
+	frame = gtk_frame_new(markup);
+	g_free(markup);
+	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
+	gtk_label_set_use_markup (GTK_LABEL (gtk_frame_get_label_widget(GTK_FRAME(frame))), TRUE);
+	
+	return frame;
+}
+
 void
 properties_callback (GtkWidget *widget, gpointer data)
 {
@@ -1149,9 +1164,7 @@ properties_callback (GtkWidget *widget, gpointer data)
 	vbox = gtk_vbox_new (FALSE, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 8);
 
-	frame = gtk_frame_new(_("<b>Tiles</b>"));
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
-	gtk_label_set_use_markup (GTK_LABEL (gtk_frame_get_label_widget(GTK_FRAME(frame))), TRUE);
+	frame = bold_frame (_("Tiles"));
 
 	table = gtk_table_new (2, 2, FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 8);
@@ -1184,9 +1197,7 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
 
-	frame = gtk_frame_new(_("<b>Maps</b>"));
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
-	gtk_label_set_use_markup (GTK_LABEL (gtk_frame_get_label_widget(GTK_FRAME(frame))), TRUE);
+	frame = bold_frame (_("Maps"));
 
 	table = gtk_table_new (1, 2, FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 8);
@@ -1208,9 +1219,7 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
 
-	frame = gtk_frame_new(_("<b>Colours</b>"));
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
-	gtk_label_set_use_markup (GTK_LABEL (gtk_frame_get_label_widget(GTK_FRAME(frame))), TRUE);
+	frame = bold_frame (_("Colours"));
 
 	table = gtk_table_new (1, 2, FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 8);
@@ -1237,9 +1246,7 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
 
-	frame = gtk_frame_new(_("<b>Warnings</b>"));
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
-	gtk_label_set_use_markup (GTK_LABEL (gtk_frame_get_label_widget(GTK_FRAME(frame))), TRUE);
+	frame = bold_frame (_("Warnings"));
 
 	table = gtk_vbox_new (FALSE, FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 8);

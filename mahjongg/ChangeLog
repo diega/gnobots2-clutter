@@ -1,3 +1,9 @@
+2003-05-09  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c: i18n fixups. Created the bold_frame convenience
+	function to help achieve this. Fixes bug #112576. Also HIG fixups
+	as per bug #112244.
+
 2003-05-01  Abel Cheung  <maddog@linux.org.hk>
 
 	* mahjongg.c (properties_callback): Revert accidental commit.
