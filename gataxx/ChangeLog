@@ -1,3 +1,24 @@
+2001-12-29  Josh Barrow  <drleary@mac.com>
+
+	* Makefile.am:
+	* clock.c: (update_clock):
+	* gataxx.c: (quit_game_cb), (about_cb), (expose_event),
+	(configure_event), (gui_draw_pixmap), (gui_draw_pixmap_buffer),
+	(load_pixmaps), (init_new_game), (create_window), (gui_status),
+	(set_bg_color), (main):
+	* properties.c: (black_computer_level_select),
+	(white_computer_level_select), (quick_moves_select),
+	(flip_final_select), (animate_select), (set_selection),
+	(fill_menu), (show_properties_dialog):
+
+	Made to compile and run with G_DISABLE_DEPRECATED,
+	GDK_DISABLE_DEPRECATEd, GTK_DISABLE_DEPRECATED, and 
+	GNOME_DISABLE_DEPRECATED.  Also rewrote the preferences 
+	dialog to make it instant apply. (The rewrite was initally
+	required becuase gnome_properties_dialog is deprecated)
+
+	This will most certainly make Greg happy.  ; D
+
 2001-12-19  Seth Nickell  <snickell@stanford.edu>
 
 	* Makefile.am:

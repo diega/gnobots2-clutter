@@ -248,11 +248,11 @@ gboolean quit_game_cb(GtkWidget *widget, gpointer data)
     gtk_timeout_remove(white_computer_id);
 
   if(buffer_pixmap)
-    gdk_pixmap_unref(buffer_pixmap);
+    gdk_drawable_unref(buffer_pixmap);
   if(tiles_pixmap)
-    gdk_pixmap_unref(tiles_pixmap);
+    gdk_drawable_unref(tiles_pixmap);
   if(tiles_mask)
-    gdk_pixmap_unref(tiles_mask);
+    gdk_drawable_unref(tiles_mask);
 
   gtk_main_quit();
 
@@ -412,7 +412,7 @@ void about_cb(GtkWidget *widget, gpointer data) {
   			  (const char **)documenters,
                           (const char *)translator_credits,
 			  NULL);
-  gtk_signal_connect (GTK_OBJECT (about), "destroy", GTK_SIGNAL_FUNC
+  g_signal_connect (G_OBJECT (about), "destroy", G_CALLBACK
 		      (gtk_widget_destroyed), &about);
   gtk_window_set_transient_for (GTK_WINDOW (about), GTK_WINDOW(window));
   
@@ -427,7 +427,7 @@ gint expose_event(GtkWidget *widget, GdkEventExpose *event){
 
   int i;
 
-  gdk_draw_pixmap(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], buffer_pixmap, event->area.x, event->area.y, event->area.x, event->area.y, event->area.width, event->area.height);
+  gdk_draw_drawable(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], buffer_pixmap, event->area.x, event->area.y, event->area.x, event->area.y, event->area.width, event->area.height);
   
  
  for(i = 0; i < 7; i++) {
@@ -443,7 +443,7 @@ gint configure_event(GtkWidget *widget, GdkEventConfigure *event) {
   guint i, j;
   
   if(buffer_pixmap)
-    gdk_pixmap_unref(buffer_pixmap);
+    gdk_drawable_unref(buffer_pixmap);
   buffer_pixmap = gdk_pixmap_new(widget->window, widget->allocation.width, widget->allocation.height, -1);
   
   for(i = 0; i < 7; i++)
@@ -516,8 +516,8 @@ void gui_draw_selected(gint x, gint y, gint on) {
 
 void gui_draw_pixmap(gint which, gint x, gint y) {
 
- gdk_draw_pixmap(drawing_area->window, drawing_area->style->fg_gc[GTK_WIDGET_STATE(drawing_area)], tiles_pixmap, (which % 7) * TILEWIDTH, (which / 7) * TILEHEIGHT, x * TILEWIDTH, y * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
-  gdk_draw_pixmap(buffer_pixmap, drawing_area->style->fg_gc[GTK_WIDGET_STATE(drawing_area)], tiles_pixmap, (which % 7) * TILEWIDTH, (which / 7) * TILEHEIGHT, x * TILEWIDTH, y * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
+ gdk_draw_drawable(drawing_area->window, drawing_area->style->fg_gc[GTK_WIDGET_STATE(drawing_area)], tiles_pixmap, (which % 7) * TILEWIDTH, (which / 7) * TILEHEIGHT, x * TILEWIDTH, y * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
+  gdk_draw_drawable(buffer_pixmap, drawing_area->style->fg_gc[GTK_WIDGET_STATE(drawing_area)], tiles_pixmap, (which % 7) * TILEWIDTH, (which / 7) * TILEHEIGHT, x * TILEWIDTH, y * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
   
 
   gdk_draw_line(drawing_area->window, window->style->black_gc, x * TILEWIDTH, y * TILEHEIGHT, (x) * TILEWIDTH, (y+1) * TILEHEIGHT);
@@ -529,7 +529,7 @@ void gui_draw_pixmap(gint which, gint x, gint y) {
 }
 void gui_draw_pixmap_buffer(gint which, gint x, gint y) {
 
-   gdk_draw_pixmap(buffer_pixmap, drawing_area->style->fg_gc[GTK_WIDGET_STATE(drawing_area)], tiles_pixmap, (which % 7) * TILEWIDTH, (which / 7) * TILEHEIGHT, x * TILEWIDTH, y * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
+   gdk_draw_drawable(buffer_pixmap, drawing_area->style->fg_gc[GTK_WIDGET_STATE(drawing_area)], tiles_pixmap, (which % 7) * TILEWIDTH, (which / 7) * TILEHEIGHT, x * TILEWIDTH, y * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
    
 }
 
@@ -539,10 +539,10 @@ void load_pixmaps() {
   GdkPixbuf *image;
   
   tmp = g_strconcat("gataxx/", tile_set, NULL);
-  fname = gnome_unconditional_pixmap_file(tmp);
+  fname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP, (tmp), FALSE, NULL);
   g_free(tmp);
   
-  if(!g_file_exists(fname)) {
+  if(!g_file_test (fname, G_FILE_TEST_EXISTS)) {
     g_print(_("Could not find \'%s\' pixmap file for gataxx\n"), fname);
     exit(1);
   }
@@ -658,7 +658,7 @@ void init_new_game() {
     for(j = 0; j < 7; j++)
       gui_draw_pixmap_buffer(pixmaps[i][j], i, j);
   
-  gdk_draw_pixmap(drawing_area->window, drawing_area->style->fg_gc[GTK_WIDGET_STATE(drawing_area)], buffer_pixmap, 0, 0, 0, 0, BOARDWIDTH, BOARDHEIGHT);
+  gdk_draw_drawable(drawing_area->window, drawing_area->style->fg_gc[GTK_WIDGET_STATE(drawing_area)], buffer_pixmap, 0, 0, 0, 0, BOARDWIDTH, BOARDHEIGHT);
   for(i = 0; i < 7; i++) {
     gdk_draw_line(drawing_area->window, drawing_area->style->black_gc, i * TILEWIDTH, 0, i * TILEWIDTH, 7 * TILEHEIGHT);
     gdk_draw_line(drawing_area->window, drawing_area->style->black_gc, 0, (i * TILEHEIGHT) , 7 * TILEWIDTH, (i * TILEHEIGHT));
@@ -688,28 +688,22 @@ void create_window() {
   GtkWidget *table;
   GtkWidget *sep;
   
-  gtk_widget_push_visual (gdk_rgb_get_visual ());
-  gtk_widget_push_colormap (gdk_rgb_get_cmap ());
-
   window = gnome_app_new("gataxx", _("gataxx"));
   
   gtk_widget_realize(window);
   gtk_window_set_policy(GTK_WINDOW(window), FALSE, FALSE, TRUE);
-  gtk_signal_connect(GTK_OBJECT(window), "delete_event", GTK_SIGNAL_FUNC(quit_game_cb), NULL);
+  g_signal_connect(G_OBJECT(window), "delete_event", G_CALLBACK(quit_game_cb), NULL);
   
   gnome_app_create_menus(GNOME_APP(window), mainmenu);
   
   drawing_area = gtk_drawing_area_new();
 
-  gtk_widget_pop_colormap ();
-  gtk_widget_pop_visual ();
-  
   gnome_app_set_contents(GNOME_APP(window), drawing_area);
 
   gtk_drawing_area_size(GTK_DRAWING_AREA(drawing_area), BOARDWIDTH, BOARDHEIGHT);
-  gtk_signal_connect(GTK_OBJECT(drawing_area), "expose_event", GTK_SIGNAL_FUNC(expose_event), NULL);
-  gtk_signal_connect(GTK_OBJECT(drawing_area), "configure_event", GTK_SIGNAL_FUNC(configure_event), NULL);
-  gtk_signal_connect(GTK_OBJECT(drawing_area), "button_press_event", GTK_SIGNAL_FUNC(button_press_event), NULL);
+  g_signal_connect(G_OBJECT(drawing_area), "expose_event", G_CALLBACK(expose_event), NULL);
+  g_signal_connect(G_OBJECT(drawing_area), "configure_event", G_CALLBACK(configure_event), NULL);
+  g_signal_connect(G_OBJECT(drawing_area), "button_press_event", G_CALLBACK(button_press_event), NULL);
   gtk_widget_set_events(drawing_area, GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK);
   gtk_widget_show(drawing_area);
 
@@ -767,9 +761,9 @@ void gui_status() {
   gchar message[3];
   
   sprintf(message, _("%.2d"), bcount);
-  gtk_label_set(GTK_LABEL(black_score), message);
+  gtk_label_set_text(GTK_LABEL(black_score), message);
   sprintf(message, _("%.2d"), wcount);
-  gtk_label_set(GTK_LABEL(white_score), message);
+  gtk_label_set_text(GTK_LABEL(white_score), message);
 }
 
 void gui_message(gchar *message) {
@@ -817,7 +811,7 @@ void set_bg_color() {
   tmpimage = gdk_image_get(tiles_pixmap, 0, 0, 1, 1);
   bgcolor.pixel = gdk_image_get_pixel(tmpimage, 0, 0);
   gdk_window_set_background(drawing_area->window, &bgcolor);
-  gdk_image_destroy(tmpimage);
+  gdk_image_unref(tmpimage);
 }
 
 static char *nstr(int n) {
@@ -877,8 +871,8 @@ int main(int argc, char **argv) {
     gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gataxx.png");
     client= gnome_master_client();
     
-    gtk_signal_connect(GTK_OBJECT(client), "save_yourself", GTK_SIGNAL_FUNC(save_state), argv[0]);
-    gtk_signal_connect(GTK_OBJECT(client), "die", GTK_SIGNAL_FUNC(quit_game_cb), argv[0]);
+    g_signal_connect(G_OBJECT(client), "save_yourself", G_CALLBACK(save_state), argv[0]);
+    g_signal_connect(G_OBJECT(client), "die", G_CALLBACK(quit_game_cb), argv[0]);
   
     create_window();
     

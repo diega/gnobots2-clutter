@@ -83,7 +83,7 @@ update_clock (gpointer data)
 	tm = localtime (&clock->seconds);
 
 	strftime (str, 10, "%s", tm);
-	gtk_label_set (GTK_LABEL (clock), str);
+	gtk_label_set_text (GTK_LABEL (clock), str);
 
 	return TRUE;
 }
