@@ -1,3 +1,7 @@
+2003-08-07  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c: GConf result checks and the like.
+
 2003-08-02  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* help/C/mahjongg.xml: Updated for 2.4, including the graphics.

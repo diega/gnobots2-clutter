@@ -483,11 +483,9 @@ static void set_undoredo_sensitive (gboolean undo, gboolean redo)
 static void
 tileset_callback (GtkWidget *widget, void *data)
 {
-	selected_tileset = data;
-
 	gconf_client_set_string (conf_client,
 			"/apps/mahjongg/tileset",
-			selected_tileset,
+			data,
 			NULL);
 }
 
@@ -497,22 +495,20 @@ tileset_changed_cb (GConfClient *client,
 		    GConfEntry *entry,
 		    gpointer user_data)
 {
-	char *tile_tmp = NULL, *bg_tmp = NULL;
+	char *tile_tmp = NULL;
 
 	tile_tmp = gconf_client_get_string (conf_client,
 			"/apps/mahjongg/tileset", NULL);
-	bg_tmp = gconf_client_get_string (conf_client,
-			"/apps/mahjongg/background", NULL);
-	if (strcmp (tile_tmp, selected_tileset) != 0)
-	{
-		selected_tileset = tile_tmp;
-	} else {
-		g_free (tile_tmp);
+	if (tile_tmp) {
+		if (strcmp (tile_tmp, selected_tileset) != 0) {
+			g_free (selected_tileset);
+			selected_tileset = tile_tmp;
+			load_tiles (selected_tileset, selected_bg);
+			change_tiles ();
+		} else {
+			g_free (tile_tmp);
+		}
 	}
-
-	load_tiles (selected_tileset, bg_tmp);
-	change_tiles();
-	g_free (bg_tmp);
 	gnome_canvas_update_now(GNOME_CANVAS(canvas));
 	//FIXME apply in the GUI
 }
@@ -520,11 +516,9 @@ tileset_changed_cb (GConfClient *client,
 static void
 bg_callback (GtkWidget *widget, void *data)
 {
-	selected_bg = data;
-
 	gconf_client_set_string (conf_client,
 			"/apps/mahjongg/background",
-			selected_bg,
+			data,
 			NULL);
 }
 
@@ -534,22 +528,20 @@ bg_changed_cb (GConfClient *client,
 	       GConfEntry *entry,
 	       gpointer user_data)
 {
-	char *tile_tmp = NULL, *bg_tmp = NULL;
+	char *bg_tmp = NULL;
 
-	tile_tmp = gconf_client_get_string (conf_client,
-			"/apps/mahjongg/tileset", NULL);
 	bg_tmp = gconf_client_get_string (conf_client,
 			"/apps/mahjongg/background", NULL);
-	if (strcmp (bg_tmp, selected_bg) != 0)
-	{
-		selected_bg = bg_tmp;
-	} else {
-		g_free (bg_tmp);
+	if (bg_tmp) {
+		if (strcmp (bg_tmp, selected_bg) != 0) {
+			g_free (selected_bg);
+			selected_bg = bg_tmp;
+			load_tiles (selected_tileset, selected_bg);
+			change_tiles ();
+		} else {
+			g_free (bg_tmp);
+		}
 	}
-
-	load_tiles (tile_tmp, selected_bg);
-	change_tiles();
-	g_free (tile_tmp);
 	gnome_canvas_update_now(GNOME_CANVAS(canvas));
 	//FIXME apply in the GUI
 }
@@ -671,11 +663,11 @@ mapset_changed_cb (GConfClient *client,
 	mapset_tmp = gconf_client_get_string (conf_client,
 			"/apps/mahjongg/mapset",
 			NULL);
-	if ((mapset != NULL) && (strcmp (mapset, mapset_tmp) != 0)) {
+	/* We check whether the name is valid later. */
+	if (mapset_tmp != NULL) {
 		g_free (mapset);
 		mapset = mapset_tmp;
-	} else
-		g_free (mapset_tmp);
+	} 
 	
 	dialog = gtk_message_dialog_new (
 		GTK_WINDOW (window),
@@ -798,7 +790,9 @@ set_backgnd_colour (gchar *str)
 		backgnd.name = g_strdup (str) ;
 	}
 	colourmap = gtk_widget_get_colormap (canvas);
-	gdk_color_parse (backgnd.name, &backgnd.colour);
+	if (!gdk_color_parse (backgnd.name, &backgnd.colour)) {
+		gdk_color_parse ("#34385b", &backgnd.colour);
+	}
 
 	gdk_colormap_alloc_color (colourmap, &backgnd.colour,
 				  FALSE, TRUE);
@@ -1647,22 +1641,35 @@ load_map (void)
 	gint lp ;
 	gint xmax = 0, ymax = 0;
 	tilepos *t;
+	gboolean found;
 
+	found = FALSE;
 	for (lp=0;lp<G_N_ELEMENTS(maps);lp++)
 		if (g_ascii_strcasecmp (maps[lp].name, name) == 0) {
-			pos = maps[lp].map ;
-
-			for (t = pos ; t < pos + MAX_TILES ; t++) {
-				if ( (*t).x  > xmax )
-					xmax = (*t).x;
-				if ( (*t).y  > ymax )
-					ymax = (*t).y;
-			}
-			xpos_offset = ( AREA_WIDTH - (HALF_WIDTH * (xmax+1)) ) / 2;
-			ypos_offset = ( AREA_HEIGHT - (HALF_HEIGHT * (ymax+1) ) ) / 2;
-
-			generate_dependancies() ;
+			found = TRUE;
+			break;
 		}
+
+	if (!found) {
+		lp = 0;
+		g_free (mapset);
+		mapset = g_strdup (maps[0].name);
+		/* We don't set the gconf key to avoid warning messages appearing multiple times.
+		 * Yes, I know this is a bad excuse. */
+	}
+
+	pos = maps[lp].map ;
+
+	for (t = pos ; t < pos + MAX_TILES ; t++) {
+		if ( (*t).x  > xmax )
+			xmax = (*t).x;
+		if ( (*t).y  > ymax )
+			ymax = (*t).y;
+	}
+	xpos_offset = ( AREA_WIDTH - (HALF_WIDTH * (xmax+1)) ) / 2;
+	ypos_offset = ( AREA_HEIGHT - (HALF_HEIGHT * (ymax+1) ) ) / 2;
+	
+	generate_dependancies() ;
 }
 
 static gint
@@ -1857,17 +1864,22 @@ create_mahjongg_board (GtkWidget *mbox)
 	buf = gconf_client_get_string (conf_client, "/apps/mahjongg/tileset", NULL);
 	if (buf == NULL) {
 		buf = g_strdup("default.png");
+	} else {
+		selected_tileset = g_strdup (buf);
 	}
+	
 	buf2 = gconf_client_get_string (conf_client, "/apps/mahjongg/background", NULL);
 	if (buf2 == NULL) {
 		buf2 = g_strdup("bg1.png");
+	} else {
+		selected_bg = g_strdup (buf2);
 	}
         
 	popup_warn = gconf_client_get_bool (conf_client,
 					    "/apps/mahjongg/warn", NULL);
 	
 	do_game ();
-	load_tiles (buf, buf2);
+	load_tiles (selected_tileset, selected_bg);
 
 	create_canvas_items ();
 
@@ -2078,7 +2090,7 @@ main (int argc, char *argv [])
 
 	init_config ();
 
-	score_current_mapset = strdup (mapset);
+	score_current_mapset = g_strdup (mapset);
 	update_score_state ();
 
   	gnome_app_flash (GNOME_APP (window), 
