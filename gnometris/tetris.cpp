@@ -121,7 +121,7 @@ Tetris::Tetris(int cmdlLevel):
 
 	/* init gconf */
 	gconf_client = gconf_client_get_default ();
-	if (!games_gconf_sanity_check_string (gconf_client, "")) {
+	if (!games_gconf_sanity_check_string (gconf_client, "/apps/gnometris/options/block_pixmap")) {
 		exit(1);
 	}
 	gconf_client_add_dir (gconf_client_get_default (), "/apps/gnometris/options", GCONF_CLIENT_PRELOAD_NONE, NULL);

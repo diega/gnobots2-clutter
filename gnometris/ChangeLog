@@ -1,3 +1,8 @@
+2003-04-15  Ross Burton  <ross@burtonini.com>
+
+	* tetris.cpp: Actually pass a key name to the sanity check
+	function, instead of "". Whoops. Closes #110814.
+
 2003-04-06  Ross Burton  <ross@burtonini.com>
 
 	* tetris.cpp: Remove deprecated calls, fixes Sun builds. Thanks to
