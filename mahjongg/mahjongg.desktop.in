@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 _Name=Mahjongg
-_Comment=Mahjongg game
+_Comment=Disassemble a pile of tiles by removing matching pairs
 Exec=mahjongg
 Icon=gnome-mahjongg.png
 Terminal=false
