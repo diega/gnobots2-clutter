@@ -52,7 +52,7 @@ EXTRA_DIST = AUTHORS \
 
 install-data-local:
 if GCONF_SCHEMAS_INSTALL
-	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(top_builddir)/$(schema_DATA)
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(top_builddir)/gnometris/$(schema_DATA)
 endif
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
 	touch $(DESTDIR)$(scoredir)/gnometris.scores
