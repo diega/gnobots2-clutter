@@ -98,7 +98,6 @@
   </indexterm> 
 
 <!-- ============= Document Body ============================= -->
-<!-- ============= Introduction ============================== -->
 
   <sect1 id="introduction"> 
     <title>Playing &app;</title> 
@@ -116,6 +115,17 @@
     </figure>
 
     <para>The board starts as a full grid of objects. Depending on the size of board you select, there are either three or four types of object. If a group of objects are adjacent and all the same type, then they can be removed simply by clicking them with the mouse (or by pressing the space bar). The objects in a group will start spinning when the mouse moves over them. The number of objects, and the points you will score for removing that group, is shown in the lower left corner of the window.  The more objects in the group, the more points you score. Once the group has been removed the objects above them fall down to fill the space. If an entire column is cleared then the objects slide leftward to fill the gap.</para>
+
+    <figure id="play">
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/play.png" format="PNG"/>
+	  </imageobject>
+	</mediaobject>
+      </screenshot>
+      <title>Playing &app;.</title>
+    </figure>
 
     <para>Scoring is based on the number of objects you delete:</para>
     <table frame="topbot" align="center">
@@ -142,15 +152,6 @@
     <para>If you clear all the objects there is a 1000 point bonus.</para>
   </sect1>
 
-<!-- =========== Getting Started ============================== -->
-<!-- Use the Getting Started section to describe the steps required
-     to start the application and to describe the user interface components
-     of the application. If there is other information that it is important
-     for readers to know before they start using the application, you should
-     also include this information here. 
-     If the information about how to get started is very short, you can 
-     include it in the Introduction and omit this section. -->
-
   <sect1 id="same-gnome-customisation">
     <title>Customization</title>
 
@@ -175,17 +176,14 @@
   <sect1 id="same-gnome-strategy">
     <title>Strategy</title>
 
+    <para>The most important rule when aiming for a high score is to think ahead: each group you remove will form and destroy other groups. Remove the higher group first, unless removing other groups will make it larger. Fortunately vertical groups can never be detroyed, but horizontal alignments change.</para>
+
     <para>Because the score increases quadratically, big groups of objects are always better. For example, the points difference between a six object group and a seven object group is nine points. This means that in a situation where you have a choice between merging two groups of two into four or just adding one more to a group of six then you should go with the later option, even though you may score no points from the other balls. On the other hand, if even one of the groups of two can be merged with five or more it is better to sacrifice the group of six.</para>
 
     <para>The thousand point bonus for clearing all the balls is also worth pursuing. To beat 1000 points you have to form a group of 34 objects. You are very unlikley to be in a position where you will have to choose between the two options.</para>
   </sect1>
 
 <!-- ============= About ================================== -->
-<!-- This section contains info about the program (not docs), such as
-      author's name(s), web page, license, feedback address. This
-      section is optional: primary place for this info is "About.." box of
-      the program. However, if you do wish to include this info in the
-      manual, this is the place to put it. Alternatively, you can put this information in the title page.-->
   <sect1 id="same-gnome-about"> 
     <title>About <application>&app;</application></title> 
     <para> <application>&app;</application> was written by Callum McKenzie

@@ -132,18 +132,20 @@ gboolean expose_cb (GtkWidget *canvas, GdkEventExpose *event, gpointer data)
 			}
 		}
 
-		/* FIXME: These checks are wrong. */
-		if ((event->area.y + event->area.height) == board_height) {
+		/* Fixup the left and bottom lines. */
+		if ((event->area.y + event->area.height + 1) >= board_height*tile_size) {
 			/* FIXME: This should have it's own gc. */
 			gdk_draw_line (canvas->window, canvas->style->white_gc,
-										 event->area.x, board_height, 
-										 event->area.x + event->area.width, board_height);
+										 event->area.x, board_height*tile_size - 1, 
+										 event->area.x + event->area.width - 2, 
+										 board_height*tile_size - 1);
 		}
-		if ((event->area.x + event->area.width) == board_width) {
+		if ((event->area.x + event->area.width + 1) >= board_width*tile_size) {
 			/* FIXME: This should have it's own gc. */
 			gdk_draw_line (canvas->window, canvas->style->white_gc,
-										 board_width, event->area.y,
-										 board_width, event->area.y + event->area.height);
+										 board_width*tile_size - 1, event->area.y,
+										 board_width*tile_size - 1, 
+										 event->area.y + event->area.height - 2);
 		}
 
 	} else { /* Draw only the grid. */
