@@ -1,3 +1,8 @@
+2002-01-10  Juan Pablo Mendoza <jpablo@gnome.org>
+
+	* main.c: Comment out some stuff, so the game
+	actualy work.
+
 2002-01-09  Juan Pablo Mendoza <jpablo@gnome.org>
 
 	* Makefile.am: Compile gnome-stones with -export-dynamic

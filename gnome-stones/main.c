@@ -250,8 +250,9 @@ game_update_title (void)
 
 #if 0
       font = gdk_font_ref (gstones_view->style->font);
-#endif
+
       if (!font)
+#endif
 	font= gdk_font_load ("fixed");
 
       height= font->ascent+font->descent;
