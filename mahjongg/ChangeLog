@@ -1,3 +1,17 @@
+Fri Jun 12 10:08:22 EDT 1998 Gregory Mclean <gregm@comstar.net>
+
+	* Incorperated patch from Michael Meeks, this starts on one
+	of the TODO items. (solveable games.). 
+
+Thu Jun 11 17:40:43 BST 1998   Michael Meeks <michael@imaginator.com>
+
+	* Added module solubility.c
+	* Moved tile_free into this and altered to use dependancy trees.
+	* Added sequence number to each tile
+	* Implemented undo
+	* Implemented redo
+	* Removed redundant 'Tile-Set' icon, replaced with redo
+
 Wed May 27 16:30:18 CDT 1998
 	* mahjongg.c: Added preferences dialog. Changed
 	gnome_message_box_set_modal to gnome_dialog_set_modal to avoid

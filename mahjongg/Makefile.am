@@ -11,6 +11,9 @@ bin_PROGRAMS = mahjongg
 
 mahjongg_SOURCES = 	\
 	mahjongg.c	\
+	solubility.c	\
+	solubility.h	\
+	mahjongg.h	\
 	button-images.h
 
 mahjongg_LDADD = \
