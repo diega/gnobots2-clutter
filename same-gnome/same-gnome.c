@@ -30,6 +30,8 @@
 #define MAXIMUM_CUSTOM_HEIGHT 100
 #define MAXIMUM_CUSTOM_WIDTH 100
 
+gchar *localthemedir;
+
 gchar *theme;
 gint   game_size = UNSET;
 
@@ -61,6 +63,10 @@ static void initialise_options (gint requested_size, gchar *requested_theme)
     game_size = requested_size;
   if (requested_theme != NULL)
     theme = requested_theme;
+
+	localthemedir = g_build_filename (g_get_user_data_dir (), 
+																		"/gnome-games/same-gnome/themes/",
+																		THEME_VERSION, NULL);
 
   gcclient = gconf_client_get_default ();
   games_gconf_sanity_check_string (gcclient, GCONF_THEME_KEY);

@@ -22,7 +22,9 @@
 
 #define DEFAULT_THEME "planets.png"
 
-#define MAX_COLOURS 4
+#define THEME_VERSION "2.10"
+
+#define MAX_COLOURS 5
 
 #define GCONF_THEME_KEY "/apps/same-gnome/tileset"
 #define GCONF_SIZE_KEY  "/apps/same-gnome/size"
@@ -57,6 +59,9 @@ extern gint ncolours;
 /* The size of the window. These are the parameters we save with gconf. */
 extern gint window_width;
 extern gint window_height;
+
+/* Where the user can stash their themes. */
+extern gchar *localthemedir;
 
 extern gchar *theme;
 

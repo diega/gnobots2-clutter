@@ -214,6 +214,7 @@ static gboolean render_cb (GtkWidget *canvas)
 	guchar *p, *bp;
 	guint shift;
 	gchar *filename;
+	GtkWidget *dialog;
 
 	if (idle_state == INIT) {
 		last_tile_size = tile_size;
@@ -256,11 +257,19 @@ static gboolean render_cb (GtkWidget *canvas)
 										 0, 0, 0, 0, tile_size, tile_size, GDK_RGB_DITHER_NORMAL,
 										 0, 0);
 
-		/* FIXME: We should also look in the users home directory. */
-		filename = g_build_filename (THEMEDIR, theme, NULL);
+		/* FIXME: We should also look for different suffices, e.g.
+		 * in case of a .png -> .svg changeover. */
+		/* First look in the players home directory. */
+		filename = g_build_filename (localthemedir, theme, NULL);
 		if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
-			g_free (filename);
-			filename = g_build_filename (THEMEDIR, DEFAULT_THEME, NULL);			
+			g_free (filename);		
+			/* Then look in the system directory. */
+			filename = g_build_filename (THEMEDIR, theme, NULL);
+			if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
+				g_free (filename);
+				/* And finallyy fall back to the default. */
+				filename = g_build_filename (THEMEDIR, DEFAULT_THEME, NULL);			
+			}
 		}
 
 		file_pixbuf = gdk_pixbuf_new_from_file_at_size (filename,
@@ -270,7 +279,24 @@ static gboolean render_cb (GtkWidget *canvas)
 		g_free (filename);
 
 		idle_state = DRAW;
-		/* FIXME: No fallback if we fail to open the file. */
+
+		/* Do something halfway sensible in the absense of any data. */
+		if (file_pixbuf == NULL) {
+			/* FIXME: We haven't got the parent window right. */
+			dialog = gtk_message_dialog_new (NULL,
+																			 GTK_DIALOG_MODAL | 
+																			 GTK_DIALOG_DESTROY_WITH_PARENT,
+																			 GTK_MESSAGE_ERROR,
+																			 GTK_BUTTONS_NONE,
+																			 _("No theme data was found."));
+			gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_QUIT, 
+														 GTK_RESPONSE_OK);
+			gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+																								_("It is impossible to play the game. Please check that the game has been installed correctly and try again."));
+			gtk_dialog_run (GTK_DIALOG (dialog));
+			gtk_main_quit ();
+			return FALSE;
+		}
 	} else if (idle_state == DRAW) {
 		if (last_tile_size != tile_size) {
 			idle_state = INIT;
@@ -478,6 +504,33 @@ static gboolean render_cb (GtkWidget *canvas)
 	return TRUE;
 }
 
+static void start_renderer (void)
+{
+	pixmaps_ready = FALSE;
+	
+	if (idle_id == 0)
+		g_idle_add ((GSourceFunc)render_cb, canvaswidget);
+	
+	if (resize_timeout_id != 0)
+		g_source_remove (resize_timeout_id);
+	resize_timeout_id = g_timeout_add (300, (GSourceFunc)redraw_cb, 
+																		 canvaswidget);
+}
+
+void change_theme (gchar *newtheme)
+{
+	if (g_utf8_collate (theme, newtheme) != 0) {
+
+		g_free (theme);
+		theme = g_strdup (newtheme);
+
+		start_renderer ();
+		redraw ();
+		
+		gconf_client_set_string (gcclient, GCONF_THEME_KEY, theme, NULL);
+	}
+}
+
 void resize_graphics (void)
 {
 	int size;
@@ -488,15 +541,7 @@ void resize_graphics (void)
 
 		tile_size = size;
 
-		pixmaps_ready = FALSE;
-
-		if (idle_id == 0)
-			g_idle_add ((GSourceFunc)render_cb, canvaswidget);
-
-		if (resize_timeout_id != 0)
-			g_source_remove (resize_timeout_id);
-		resize_timeout_id = g_timeout_add (300, (GSourceFunc)redraw_cb, 
-																			 canvaswidget);
+		start_renderer ();
 	}
 }
 

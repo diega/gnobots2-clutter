@@ -10,6 +10,7 @@
 #include <libintl.h>
 #include <gnome.h>
 
+#include <games-files.h>
 #include <games-gridframe.h>
 #include <games-scores-dialog.h>
 
@@ -36,6 +37,12 @@ GtkWidget *gridframe = NULL;
 GtkToggleAction *fullscreenaction;
 GtkWidget *undo_widget;
 GtkWidget *redo_widget;
+
+/* The index for the current theme in the theme list. This shouldn't
+ * really be a global variable, but C sucks. */
+/* FIXME: C shouldn't suck. */
+gint current_theme_index;
+gint theme_index_counter;
 
 /* All quit events must go through here to ensure consistant behaviour. */
 static void quit_cb (void)
@@ -174,7 +181,7 @@ void game_over_dialog (gint place)
 			/* This is a bit evil, the dialog doesn't quite suit, so
 			 * we take a machete to it. */
 			gtk_container_foreach (GTK_CONTAINER (GTK_DIALOG (gooddialog)->action_area),
-														 G_CALLBACK (gtk_widget_destroy), NULL);
+														 (GtkCallback) (gtk_widget_destroy), NULL);
 			gtk_dialog_add_buttons (GTK_DIALOG (gooddialog), 
 															GTK_STOCK_QUIT, GTK_RESPONSE_CLOSE,
 															_("New Game"), GTK_RESPONSE_ACCEPT,
@@ -220,9 +227,110 @@ static void new_game_cb (void)
 	new_game ();
 }
 
+static void change_theme_cb (GtkTreeSelection *selection)
+{
+	gchar *filename;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	
+	gtk_tree_selection_get_selected (selection, &model, &iter);
+	gtk_tree_model_get (model, &iter, 1, &filename, -1);
+	
+	change_theme (filename);
+}
+
+static void fill_list (gchar *name, GtkListStore *list)
+{
+	gchar *uiname;
+	gchar *suffix;
+	GtkTreeIter iter;
+
+	if (g_utf8_collate (name, theme) == 0)
+		current_theme_index = theme_index_counter;
+	theme_index_counter++;
+
+	/* We strip the final suffix for the displayed name. */
+	uiname = g_strdup (name);
+	suffix = g_strrstr (uiname, ".");
+	if (suffix)
+		*suffix = '\0';
+
+	/* Capitalise the first letter. This won't work wonderfully in
+	 * general, but it will be just fine for the themes we currently
+	 * supply. */
+	*uiname = g_unichar_toupper (*uiname);
+
+	gtk_list_store_append (list, &iter);
+	gtk_list_store_set (list, &iter, 0, uiname, 1, g_strdup (name), -1);
+
+
+
+}
+
 static void theme_cb (void)
 {
+	static GtkWidget *dialog = NULL;
+	GtkWidget *listview;
+	GtkWidget *scroll;
+	GtkTreeViewColumn *column;
+	GtkTreeSelection *selection;
+	GtkListStore *list;
+	GamesFileList *filelist;
 
+	if (dialog) {
+		gtk_window_present (GTK_WINDOW (dialog));
+	} else {
+		dialog = gtk_dialog_new_with_buttons (_("Same GNOME Theme"),
+																					GTK_WINDOW (application),
+																					GTK_DIALOG_DESTROY_WITH_PARENT |
+																					GTK_DIALOG_NO_SEPARATOR,
+																					GTK_STOCK_CLOSE, GTK_RESPONSE_ACCEPT,
+																					NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog),
+																		 GTK_RESPONSE_ACCEPT);
+		g_signal_connect (G_OBJECT (dialog), "response",
+												G_CALLBACK (gtk_widget_hide), NULL);
+		g_signal_connect (G_OBJECT (dialog), "delete_event",
+												G_CALLBACK (gtk_widget_hide), NULL);
+		
+		scroll = gtk_scrolled_window_new (NULL, NULL);
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
+																		GTK_POLICY_AUTOMATIC,
+																		GTK_POLICY_AUTOMATIC);
+		gtk_widget_set_size_request (scroll, 250, 250);
+		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), scroll,
+												TRUE, TRUE, 0);
+
+		list = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_STRING);
+
+		current_theme_index = -1;
+		theme_index_counter = 0;
+		filelist = games_file_list_new_images (THEMEDIR, localthemedir, NULL);
+		games_file_list_transform_basename (filelist);
+		games_file_list_for_each (filelist, (GFunc) fill_list, list);
+		g_object_unref (filelist);
+
+		listview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list));
+		gtk_container_add (GTK_CONTAINER (scroll), listview);
+		column = gtk_tree_view_column_new_with_attributes (_("Theme"),
+																											 gtk_cell_renderer_text_new (),
+																											 "text", 0, NULL);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (listview),
+																 GTK_TREE_VIEW_COLUMN (column));
+		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (listview));
+		gtk_tree_selection_set_mode (selection, GTK_SELECTION_BROWSE);
+		if (current_theme_index >= 0) {
+			gtk_tree_selection_select_path (selection, 
+																			gtk_tree_path_new_from_indices (current_theme_index, -1));
+		} else {
+			gtk_tree_selection_unselect_all (selection);
+		}
+
+		g_signal_connect (G_OBJECT (selection), "changed",
+											G_CALLBACK (change_theme_cb), NULL);
+
+		gtk_widget_show_all (dialog);
+	}
 }
 
 static void fullscreen_cb (GtkToggleAction *action)
@@ -385,9 +493,11 @@ void build_gui (void)
   /* FIXME: Will need to initialise the pixmap array to zero. */
   init_pixmaps ();
   
-  /* FIXME: Set the icon. */
+	/* FIXME: Can we get a better name for the icon? */
+	gtk_window_set_default_icon_name ("gnome-gsame");
 
-  application = gnome_app_new (APPNAME, _(APPNAME_LONG));
+  application = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_title (GTK_WINDOW (application), _(APPNAME_LONG));
   gtk_window_set_default_size (GTK_WINDOW (application), window_width,
 			       window_height);
   g_signal_connect (G_OBJECT (application), "delete_event",
@@ -398,7 +508,7 @@ void build_gui (void)
 		    G_CALLBACK (window_state_cb), NULL);
 
   vbox = gtk_vbox_new (FALSE, 0);
-  gnome_app_set_contents (GNOME_APP (application), vbox);
+  gtk_container_add (GTK_CONTAINER (application), vbox);
   
   action_group = gtk_action_group_new ("MenuActions");
   gtk_action_group_set_translation_domain (action_group, GETTEXT_PACKAGE);

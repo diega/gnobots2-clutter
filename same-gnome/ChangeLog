@@ -1,3 +1,19 @@
+2005-01-09  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* same-gnome.c:
+	* same-gnome.h:
+	* drawing.c:
+	* ui.c: Add support for user-supplied themes.
+
+	* drawing.h:
+	* drawing.c:
+	* ui.c: Finish the theme dialog and implement theme changing.
+
+2005-01-08  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* ui.c (theme_cb): Start a theme dialog.
+	(build_gui): Remove deprecated gnome_* functions.
+
 2005-01-07  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* ui.c: Rework the end of game dialogs.

@@ -23,6 +23,7 @@ void pixels_to_logical (gint px, gint py, gint *lx, gint *ly);
 void start_spinning (void);
 void stop_spinning (void);
 
+void change_theme (gchar *newtheme);
 void resize_graphics (void);
 
 #endif /* DRAWING_H */
