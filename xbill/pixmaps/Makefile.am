@@ -7,7 +7,9 @@ PIXMAPS = billA_0.xpm billA_1.xpm billA_2.xpm billA_3.xpm billA_4.xpm \
 	about.xpm bucket.xpm icon.xpm logo.xpm spark_0.xpm spark_1.xpm \
 	apple.xpm bsd.xpm bsdcpu.xpm hurd.xpm linux.xpm maccpu.xpm \
 	next.xpm nextcpu.xpm os2.xpm os2cpu.xpm redhat.xpm sgi.xpm \
-	sgicpu.xpm sun.xpm suncpu.xpm toaster.xpm wingdows.xpm
+	sgicpu.xpm sun.xpm suncpu.xpm toaster.xpm wingdows.xpm \
+	debian.xpm beos.xpm turbolinux.xpm suse.xpm caldera.xpm \
+	mandrake.xpm
 
 pixmapdir = $(datadir)/xbill/pixmaps
 

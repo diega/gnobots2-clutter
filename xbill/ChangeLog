@@ -1,3 +1,10 @@
+2000-04-30  James Henstridge  <james@daa.com.au>
+
+	* MCursor.cc: fix problem with initialisation of static variable.
+
+	* pixmaps/Makfile.am, cursors/Makefile.am: you need to edit the
+	Makefile.am's rather than .in's if you want your additions to work.
+
 2000-04-30  James Cape  <jcape@jcinteractive.com>
 
 	* pixmaps/*.xpm: Updated all remaining pixmaps to look better.

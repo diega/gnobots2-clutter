@@ -2,10 +2,12 @@
 #include "objects.h"
 
 void MCursor::load(const char *name, int masked) {
-	static char *dir = gnome_datadir_file("xbill/cursors");
+	static char *dir = NULL;
 	GdkPixmap *pixmap, *bitmap, *mask;
 	int width, height;
 	char file[255];
+
+	if (!dir) dir = gnome_datadir_file("xbill/cursors");
 
 	sprintf (file, "%s/%s.xpm", dir, name);
 	pixmap = gdk_pixmap_colormap_create_from_xpm(ui.display, ui.colormap,
