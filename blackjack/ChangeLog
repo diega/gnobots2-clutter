@@ -1,3 +1,7 @@
+2003-07-06  William Jon McCann  <mccann@jhu.edu>
+
+	* src/strategy.h: Fix for Sun Forte build errors from Eric.
+
 2003-07-04  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* data/Makefile.am (install-data-local): Use a tab rather than
