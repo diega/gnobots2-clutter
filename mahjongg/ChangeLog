@@ -1,3 +1,8 @@
+2002-06-01  Bastien Nocera  <hadess@hadess.net>
+
+	* mahjongg.c: (mapset_changed_cb): hopefully fix the mahjongg string
+	space bug, I hope I didn't break any translations (Closes: #82136)
+
 2002-05-27  Michael Meeks  <michael@ximian.com>
 
 	dung out, improved seed handling & display.

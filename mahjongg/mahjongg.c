@@ -667,7 +667,7 @@ mapset_changed_cb (GConfClient *client,
 		GTK_DIALOG_MODAL,
 		GTK_MESSAGE_INFO,
 		GTK_BUTTONS_CLOSE,
-		_("This new mapset will take effect when you start up"
+		_("This new mapset will take effect when you start "
 		  "a new game, or when Mahjongg is restarted."));
 
 	gtk_dialog_run (GTK_DIALOG (dialog));
