@@ -2,7 +2,7 @@
 #define __blockops_h__
 
 /*
- * written by J. Marcin Gorycki <mgo@olicom.dk>
+ * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -2,7 +2,7 @@
 #define __tetris_h__
 
 /*
- * written by J. Marcin Gorycki <mgo@olicom.dk>
+ * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 #include <config.h>
 #include <gnome.h>
 
-#define TETRIS_VERSION "1.2.0"
+#define TETRIS_VERSION "1.2.1"
 
 extern int LINES;
 extern int COLUMNS;

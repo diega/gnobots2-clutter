@@ -1,5 +1,5 @@
 /*
- * written by J. Marcin Gorycki <mgo@olicom.dk>
+ * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -820,7 +820,7 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 	about = gnome_about_new("Gnometris", TETRIS_VERSION, "(C) 1999 J. Marcin Gorycki", 
 													(const char **)authors,
 													_("Written for my wife, Matylda\n"
-														"Send comments and bug reports to: mgo@olicom.dk"), 0);
+														"Send comments and bug reports to: marcin.gorycki@intel.com"), 0);
 	gnome_dialog_set_parent(GNOME_DIALOG(about), GTK_WINDOW(t->w));
 	gtk_window_set_modal(GTK_WINDOW(about), TRUE);
 
