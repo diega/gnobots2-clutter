@@ -1,5 +1,13 @@
 2000-04-10  Ian Peters  <itp@gnu.org>
 
+	* src/iagno2.c: switched from threads to fork and pipe to do computer
+	  player trickery
+	* src/Makefile.am: who needs pthread anymore?
+	* src/main.c: Added End Game option
+	* src/main.h, src/iagno2.h: added some prototypes that needed adding
+
+2000-04-10  Ian Peters  <itp@gnu.org>
+
 	* src/preferences.c, src/iagno2.c: fixed bg color detection, readded
 	  support for showing grid lines
 	* src/*.c: Killed a lot of code that's been commented out for a while

@@ -20,7 +20,15 @@
 #include <gnome.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
+/*
 #include <pthread.h>
+*/
+
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#include <signal.h>
 
 #include "defines.h"
 #include "iagno2.h"
@@ -60,7 +68,10 @@ gboolean interactive = 0;
 gint computer_timeout_id = 0;
 gint game_over_flip_id = 0;
 
+/*
 gint computer_return = 64;
+*/
+gint computer_thread = 0;
 
 GnomeAppBar *appbar;
 
@@ -244,7 +255,7 @@ iagno2_set_bg_color ()
 }
 */
 
-static void
+void
 iagno2_render_buffer_to_screen (int x, int y, int width, int height)
 {
   GdkGC *gc = drawing_area->style->fg_gc[GTK_WIDGET_STATE (drawing_area)];
@@ -445,6 +456,7 @@ iagno2_board_changed ()
   }
 }
 
+/*
 static gint
 iagno2_get_computer_move ()
 {
@@ -455,27 +467,77 @@ iagno2_get_computer_move ()
 
   return TRUE;
 }
+*/
 
-static void
-iagno2_computer_thread ()
+static gint
+iagno2_get_computer_move (int fd)
 {
-  int player = PLAYER (whose_turn);
-  
-  computer_return = players[player]->plugin_move (board, whose_turn);
+  int index;
+  fd_set rfds;
+  struct timeval tv;
 
-  _exit (0);
+  FD_ZERO (&rfds);
+  FD_SET (fd, &rfds);
+
+  tv.tv_sec = 0;
+  tv.tv_usec = 0;
+
+  if (select (fd + 1, &rfds, NULL, NULL, &tv)) {
+    read (fd, &index, sizeof (int));
+    iagno2_move (index);
+    waitpid (computer_thread, NULL, 0);
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+void
+timeout_removed (gpointer data)
+{
+  close ((int) data);
 }
 
 static gint
 iagno2_computer_player_wrapper ()
 {
-  pthread_t tid;
+  int player = PLAYER (whose_turn);
+  int fd[2];
 
-  computer_return = 64;
+  pipe (fd);
 
-  pthread_create (&tid, NULL, (void *)iagno2_computer_thread, NULL);
+  if (!(computer_thread = fork ())) {
+    int index;
 
-  computer_timeout_id = gtk_timeout_add (500, iagno2_get_computer_move, NULL);
+    int kill_myself (int signal)
+    {
+      index = BOARDSIZE * BOARDSIZE;
+      
+      write (fd[1], &index, sizeof (int));
+
+      close (fd[1]);
+
+      _exit (0);
+    }
+
+    signal (SIGUSR1, kill_myself);
+
+    close (fd[0]);
+
+    index = players[player]->plugin_move (board, whose_turn);
+
+    write (fd[1], &index, sizeof (int));
+
+    close (fd[1]);
+
+    _exit (0);
+  }
+
+  close (fd[1]);
+
+  computer_timeout_id = gtk_timeout_add_full (500, iagno2_get_computer_move,
+                                              NULL, (gpointer) fd[0],
+                                              timeout_removed);
 
   return FALSE;
 }

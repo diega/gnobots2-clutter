@@ -53,6 +53,8 @@ void iagno2_draw_grid ();
 
 gint iagno2_game_over ();
 
+void iagno2_render_buffer_to_screen ();
+
 /*
 Iagno2Move iagno2_get_move (int move);
 */

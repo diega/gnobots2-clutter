@@ -21,5 +21,4 @@ iagno2_LDADD = \
 	$(GNOME_LIBDIR) \
 	$(GNOMEUI_LIBS) \
 	$(GDK_PIXBUF_LIBS) \
-	$(PTHREAD_LIB) \
 	$(INTLLIBS)

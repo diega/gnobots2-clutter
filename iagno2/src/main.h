@@ -28,6 +28,6 @@ gint about_cb ();
 
 void new_game_real_cb (gint reply, gpointer data);
 
-gint end_game_cb (GtkWidget *, gpointer);
+static gint end_game_cb (GtkWidget *, gpointer);
 
 #endif

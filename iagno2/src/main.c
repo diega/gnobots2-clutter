@@ -20,6 +20,8 @@
 #include <gnome.h>
 #include <gmodule.h>
 
+#include <signal.h>
+
 #include "defines.h"
 #include "iagno2.h"
 #include "main.h"
@@ -45,8 +47,13 @@ extern gchar whose_turn;
 
 extern gint computer_timeout_id;
 extern gint game_over_flip_id;
+extern gint computer_thread;
 
 extern GdkColor colors[2];
+
+extern GdkPixmap *buffer_pixmap;
+
+extern GnomeAppBar *appbar;
 
 static GnomeUIInfo
 game_menu[] = {
@@ -54,6 +61,7 @@ game_menu[] = {
   GNOMEUIINFO_SEPARATOR,
   GNOMEUIINFO_MENU_UNDO_MOVE_ITEM (NULL, NULL),
   GNOMEUIINFO_SEPARATOR,
+  GNOMEUIINFO_MENU_END_GAME_ITEM (end_game_cb, NULL),
   GNOMEUIINFO_MENU_EXIT_ITEM (delete_event_cb, NULL),
   GNOMEUIINFO_END
 };
@@ -116,6 +124,72 @@ delete_event_cb (GtkWidget *window, GdkEventAny *event, gpointer data)
   return FALSE;
 }
 
+static void
+clean_up (gboolean full)
+{  
+  if (computer_timeout_id) {
+    gtk_timeout_remove (computer_timeout_id);
+    computer_timeout_id = 0;
+  }
+
+  if (computer_thread) {
+    kill (computer_thread, SIGUSR1);
+    waitpid (computer_thread, NULL, 0);
+    computer_thread = 0;
+  }
+
+  if (board) {
+    reversi_destroy_board (board);
+    board = NULL;
+  }
+
+  if (board_pixmaps) {
+    g_free (board_pixmaps);
+    board_pixmaps = NULL;
+  }
+
+  if (game_over_flip_id) {
+    gtk_timeout_remove (game_over_flip_id);
+    game_over_flip_id = 0;
+  }
+
+  if (full) {
+    if (properties) {
+      iagno2_properties_destroy (properties);
+      properties = NULL;
+    }
+
+    if (buffer_pixmap) {
+      gdk_pixmap_unref (buffer_pixmap);
+      buffer_pixmap = NULL;
+    }
+
+    gdk_colormap_free_colors (gdk_colormap_get_system (), colors, 2);
+  }
+}
+
+static gint
+end_game_cb (GtkWidget *widget, gpointer data)
+{
+  int i;
+
+  if (!game_in_progress) {
+    return;
+  }
+
+  game_in_progress = 0;
+
+  clean_up (FALSE);
+
+  for (i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+    iagno2_render_tile_to_buffer (0, i);
+  }
+
+  gnome_appbar_set_status (GNOME_APPBAR (appbar), "");
+
+  iagno2_render_buffer_to_screen (0, 0, BOARDWIDTH, BOARDHEIGHT);
+}
+
 gint
 new_game_cb (GtkWidget *widget, gpointer data)
 {
@@ -142,27 +216,8 @@ new_game_real_cb (gint reply, gpointer data)
   if (reply) {
     return;
   }
-  
-  if (board) {
-    reversi_destroy_board (board);
-  }
 
-  if (board_pixmaps) {
-    /*
-    reversi_destroy_board (&board_pixmaps);
-    */
-    g_free (board_pixmaps);
-  }
-
-  if (computer_timeout_id) {
-    gtk_timeout_remove (computer_timeout_id);
-    computer_timeout_id = 0;
-  }
-
-  if (game_over_flip_id) {
-    gtk_timeout_remove (game_over_flip_id);
-    game_over_flip_id = 0;
-  }
+  clean_up (FALSE);
 
   board = reversi_init_board ();
   board_pixmaps = g_new0 (gchar, BOARDSIZE * BOARDSIZE);
@@ -213,13 +268,5 @@ main (int argc, char **argv)
 
   gtk_main ();
 
-  iagno2_properties_destroy (properties);
-
-  reversi_destroy_board (board);
-  /*
-  reversi_destroy_board (&board_pixmaps);
-  */
-  g_free (board_pixmaps);
-
-  gdk_colormap_free_colors (gdk_colormap_get_system (), colors, 2);
+  clean_up (TRUE);
 }
