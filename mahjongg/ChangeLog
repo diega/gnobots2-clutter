@@ -1,3 +1,14 @@
+2004-10-31  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c (stop_hints): Set timeout_counter directly to
+	HINT_BLINK_NUM rather than repeatedly calling hint_callback to
+	increment it.
+
+2004-10-30  Richard Hoelscher  <rah@rahga.com>
+
+	* mahjongg.c (stop_hints): Run down the hint timeout, called from
+	callbacks for new, restart, shuffle, undo, redo, and pause.
+
 2004-10-13  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c: Fix up the restart sensitivity and make sure that

@@ -1558,6 +1558,13 @@ hint_timeout (gpointer data)
 	return 1;
 }
 
+static void
+stop_hints (void)
+{
+	timeout_counter = HINT_BLINK_NUM;
+	hint_timeout (NULL);
+}
+
 void
 hint_callback (GtkWidget *widget, gpointer data)
 {
@@ -1697,6 +1704,7 @@ pause_callback (void)
                 return;
 
 	noloops = TRUE;
+        stop_hints ();
         paused = !paused;
 	draw_all_tiles ();
         if (paused) {
@@ -1753,12 +1761,14 @@ init_game (void)
 
 void new_game_cb (GtkWidget *widget, gpointer data)
 {
+	stop_hints ();
 	ensure_pause_off ();
 	new_game ();
 }
 
 void restart_game_cb (GtkWidget *widget, gpointer data)
 {
+	stop_hints ();
 	restart_game ();
 }
 
@@ -1794,6 +1804,8 @@ redo_tile_callback (GtkWidget *widget, gpointer data)
                 return; 
         if (sequence_number>(MAX_TILES/2))
                 return ;
+        
+	stop_hints ();
         
         if (selected_tile<MAX_TILES) {
                 tiles[selected_tile].selected = 0 ;
@@ -1839,6 +1851,8 @@ undo_tile_callback (GtkWidget *widget, gpointer data)
                 return;
         if (game_over == GAME_LOST)
                 game_over = GAME_RUNNING;
+        stop_hints ();
+
         if (sequence_number>1)
                 sequence_number-- ;
         else
@@ -2006,6 +2020,8 @@ shuffle_tiles_callback (GtkWidget *widget, gpointer data)
 	gboolean ok;
 
         if (paused || game_over == GAME_DEAD || game_over == GAME_WON) return;
+
+        stop_hints ();
 
 	/* Make sure no tiles are selected. */
 	if (selected_tile < MAX_TILES) {
