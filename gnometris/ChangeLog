@@ -1,3 +1,8 @@
+1999-02-19  Tuomas Kuosmanen  <tigert@gimp.org>
+
+	* pix/5blocks-tig.png: Added a new tileset - if you like it, make it
+	the default if you want.
+
 1999-02-11  Marcin Gorycki  <mgo@olicom.dk>
 
 	* tetris.h, tetris.cpp, preview.h, preview.cpp, main.cpp, field.h, field.cpp:
