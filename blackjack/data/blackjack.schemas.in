@@ -2,8 +2,8 @@
   <schemalist>
 
     <schema>
-      <key>/schemas/apps/blackjack/show_toolbar</key>
-      <applyto>/apps/blackjack/show_toolbar</applyto>
+      <key>/schemas/apps/blackjack/toolbar</key>
+      <applyto>/apps/blackjack/toolbar</applyto>
       <owner>blackjack</owner>
       <type>bool</type>
       <default>TRUE</default>

@@ -1,3 +1,8 @@
+2004-07-20  William Jon McCann  <mccann@jhu.edu>
+
+	* data/blackjack.schemas.in: Use toolbar and not show_toolbar.
+	Wow, how long has this been broken.
+
 2004-07-17  William Jon McCann  <mccann@jhu.edu>
 
 	* src/slot.cpp (bj_slot_set_size): 
