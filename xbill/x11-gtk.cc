@@ -130,44 +130,9 @@ GtkWidget *CreateEnterText (char *title, const char *text,
 GtkWidget *CreateDialog (char *title, int buttonmask, GdkPixmap *icon,
 			 const char *text, const char *buttonlabel,
 			 GtkSignalFunc callback) {
-	GtkWidget *win, *hbox, *wid, *button;
-	GtkButtonsType buttons;
-
-	if (icon != NULL)
-	{
-		return CreateDialogIcon (title, buttonmask, icon,
-				text, buttonlabel,
-				callback);
-	}
-
-	if (buttonmask&CANCEL && buttonmask&OK)
-	{
-		buttons = GTK_BUTTONS_OK_CANCEL;
-	} else if (buttonmask&CANCEL) {
-		buttons = GTK_BUTTONS_CANCEL;
-	} else if (buttonmask&OK) {
-		buttons = GTK_BUTTONS_OK;
-	}
-
-	win = gtk_message_dialog_new (NULL,
-			GTK_DIALOG_MODAL,
-			GTK_MESSAGE_QUESTION,
-			GTK_BUTTONS_OK_CANCEL,
-			text, NULL);
-
-	if (callback && buttonmask&OK) {
-		g_signal_connect(GTK_DIALOG(win), "response",
-				callback, NULL);
-	}
-
-	g_signal_connect(GTK_OBJECT(win), "destroy",
-			GTK_SIGNAL_FUNC(popdown), NULL);
-	g_signal_connect(GTK_OBJECT(win), "response",
-			GTK_SIGNAL_FUNC(popdown), NULL);
-
-	gtk_dialog_set_default_response(GTK_DIALOG(win), GTK_RESPONSE_OK);
-
-	return win;
+	return CreateDialogIcon (title, buttonmask, icon,
+				 text, buttonlabel,
+				 callback);
 }
 
 static
@@ -190,9 +155,11 @@ GtkWidget *CreateDialogIcon (char *title, int buttonmask, GdkPixmap *icon,
 			TRUE, TRUE, 0);
 	gtk_widget_show(hbox);
 
-	wid = gtk_image_new_from_pixmap(icon, NULL);
-	gtk_box_pack_start(GTK_BOX(hbox), wid, FALSE, TRUE, 0);
-	gtk_widget_show(wid);
+	if (icon != NULL) {
+		wid = gtk_image_new_from_pixmap(icon, NULL);
+		gtk_box_pack_start(GTK_BOX(hbox), wid, FALSE, TRUE, 0);
+		gtk_widget_show(wid);
+	}
 
 	wid = gtk_label_new(text);
 	g_object_set_data(G_OBJECT(win), "key", wid);
@@ -266,7 +233,7 @@ void quit_game_cb (GtkDialog *dialog, gint arg1, gpointer user_data) {
 
 void popup (GtkWidget *mi, GtkWidget **box) {
   ui.pause_game();
-  gtk_widget_show(*box);
+  gtk_widget_show_all(*box);
   gtk_grab_add(*box);
   gtk_main();
   gtk_grab_remove(*box);

@@ -1,3 +1,12 @@
+2002-08-02  Ross Burton  <ross@burtonini.com>
+
+	* x11-gtk.cc: Remove the body of CreateDialog and simply call
+	CreateDialogIcon. Not sure why there are two almost identical
+	methods... This ends up fixing #89443, inspired by a patch from
+	Samuel Stringham.
+	XBill needs major UI love, which is probably due to the fact that
+	it wouldn't build until recently.
+
 2002-06-09  Juan Pablo Mendoza <jpablo@gnome.org>
 
 	* MCursor.cc, Picture.cc: Find files at the correct
