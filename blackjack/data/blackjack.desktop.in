@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 _Name=Blackjack
-_Comment=Blackjack
+_Comment=Play the casino card game Blackjack
 Exec=blackjack
 Icon=gnome-blackjack.png
 Terminal=false
