@@ -307,10 +307,10 @@ static void confirm_action (GtkWidget *widget, gpointer data) {
 
   		  switch((gint)data) {
 			case CONFIRM_NEW_GAME:
-			  confirm_text = _("Do you want to start a new game?");
+			  confirm_text = _("Are you sure you want to start a new game?");
 			  break;
 			case CONFIRM_QUIT:
-			  confirm_text = _("Do you want to quit GNOME xBill?");
+			  confirm_text = _("Are you sure you want to quit GNOME xBill?");
 			  break;
 			default:
 			  g_printerr(PACKAGE ": confirm_action: bad switch\n");

@@ -7,3 +7,6 @@ Exec=gnome-xbill
 Terminal=false
 Type=Application
 Categories=Application;Game;ArcadeGame;
+X-GNOME-Bugzilla-Bugzilla=GNOME
+X-GNOME-Bugzilla-Product=gnome-games
+X-GNOME-Bugzilla-Component=gnome-xbill
