@@ -540,8 +540,8 @@ bj_hand_split ()
                         hslot_type slot = ((PlayerHand*)tempptr->data)->hslot;
                         slot->x = (double)i / (numHands + 1);
                         bj_chip_stack_new_with_value (bj_get_wager (),
-                                                      slot->pixelx - bj_chip_get_width () - 5,
-                                                      slot->pixely + card_height / 2);
+                                                      slot->x - 0.15,
+                                                      slot->y + 0.2);
                         i++;
                 }
  

@@ -38,10 +38,14 @@ typedef struct {
 
   gint id;
   GList* chips;
-  gint x;
-  gint y;
-  gint dx;
-  gint dy;
+  double x;
+  double y;
+  double dx;
+  double dy;
+  gint pixelx;
+  gint pixely;
+  gint pixeldx;
+  gint pixeldy;
   gint length;
   gint exposed;
   gint expansion_depth;
@@ -67,17 +71,19 @@ extern GdkPixbuf *chip_pixbuf[4];
 
 gint bj_chip_get_width (void);
 gint bj_chip_get_id (gfloat value);
-GdkPixbuf* bj_chip_get_pixbuf (gint);
+GdkPixbuf * bj_chip_get_pixbuf (gint);
+GdkPixbuf * bj_chip_get_scaled_pixbuf (gint chip);
+void bj_chip_set_scaled_pixbuf (gint chip, GdkPixbuf *pixmap);
 gdouble bj_chip_get_value (gint);
 
 gfloat bj_chip_stack_get_chips_value (GList *chips);
 
-void bj_chip_stack_add (gint, gint, gint);
+void bj_chip_stack_add (gint, double, double);
 hchip_type bj_chip_new (gfloat);
 
 void bj_chip_stack_pressed (gint, gint, hstack_type *, gint *);
 
-GList* bj_chip_stack_get_list (void);
+GList * bj_chip_stack_get_list (void);
 
 void bj_chip_stack_delete (hstack_type);
 void bj_chip_stack_delete_all (void);
@@ -89,9 +95,9 @@ void bj_chip_stack_update_length (hstack_type);
 void bj_chip_stack_decompose_value (gfloat value, gint *blacks, 
                                     gint *greens, gint *reds, gint *whites);
 
-void bj_chip_stack_new_with_id_value (gint id, gfloat value, gint x, gint y);
-void bj_chip_stack_new_with_value (gfloat value, gint x, gint y);
-void bj_chip_stack_new_source_with_value (gfloat value, gint x, gint y);
+void bj_chip_stack_new_with_id_value (gint id, gfloat value, double x, double y);
+void bj_chip_stack_new_with_value (gfloat value, double x, double y);
+void bj_chip_stack_new_source_with_value (gfloat value, double x, double y);
 
 void bj_chip_stack_create_sources (void);
 

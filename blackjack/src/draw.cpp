@@ -65,6 +65,8 @@ static int slot_height = 2;
 int card_width;
 int card_height;
 
+int chip_width;
+
 /* The offset of the cards within the slot. */
 int xoffset, yoffset;
 
@@ -148,26 +150,24 @@ static void
 bj_draw_chips ()
 {
         GList* chip_stack;
-        gint x, y;
-        GList* chip_list;
-        GdkPixbuf *image;
 
-        for (chip_stack = bj_chip_stack_get_list (); chip_stack; 
+        for (chip_stack = bj_chip_stack_get_list ();
+             chip_stack; 
              chip_stack = chip_stack->next) {
                 hstack_type hstack = (hstack_type) chip_stack->data;
-                chip_list = hstack->chips;
-                if (chip_list != NULL) {
-                        chip_list = g_list_nth (chip_list, hstack->length - hstack->exposed);
+
+                if (hstack->chips) {
+                        GList *chip_list = hstack->chips; //g_list_nth (hstack->chips, hstack->length - hstack->exposed);
                         
-                        x = hstack->x;
-                        y = hstack->y;
+                        gint x = hstack->pixelx;
+                        gint y = hstack->pixely;
           
                         for (; chip_list; chip_list = chip_list->next) {
                                 chip_type *chip = (chip_type*)chip_list->data;
                                 
-                                image = bj_chip_get_pixbuf (bj_chip_get_id (chip->value));
+                                GdkPixbuf *image = bj_chip_get_scaled_pixbuf (bj_chip_get_id (chip->value));
 	
-                                if (image != NULL)
+                                if (image)
                                         gdk_draw_pixbuf (surface,
                                                          draw_gc,
                                                          image,
@@ -177,7 +177,8 @@ bj_draw_chips ()
                                                          GDK_RGB_DITHER_MAX,
                                                          0, 0);
                                 
-                                x += hstack->dx; y -= hstack->dy;
+                                x += hstack->pixeldx;
+                                y -= hstack->pixeldy;
                         }
                 }
         }
@@ -203,6 +204,29 @@ calculate_card_location (hslot_type hslot)
         hslot->pixeldy = (int)(hslot->dy * card_height);
 
         bj_slot_update_length (hslot);
+}
+
+static void
+calculate_stack_location (hstack_type hstack)
+{
+        int xofs, yofs;
+
+        xofs = xoffset;
+        yofs = yoffset;
+
+        /* If this is an extended stack, position the cards to one side. */
+        if (hstack->dx > 0.0)
+                xofs = yofs;
+        if (hstack->dy > 0.0)
+                yofs = xofs;
+
+        hstack->pixelx = (int)(window_width * hstack->x + xofs);
+        hstack->pixely = (int)(window_height * hstack->y + yofs);
+        //hstack->pixeldx = (int)(hstack->dx * chip_width);
+        //hstack->pixeldy = (int)(hstack->dy * chip_width);
+        hstack->pixeldy = chip_width / 5;
+
+        bj_chip_stack_update_length (hstack);
 }
 
 /* Work out new sizes and spacings for the cards. */
@@ -240,9 +264,14 @@ bj_draw_set_geometry (gint new_width, gint new_height)
 
         bj_card_set_size (card_width, card_height);
 
+        chip_width = card_width / 2;
+        
         /* Recalculate the slot locations. */
         g_list_foreach (bj_slot_get_list (),
                         (GFunc) calculate_card_location, NULL);
+
+        g_list_foreach (bj_chip_stack_get_list (),
+                        (GFunc) calculate_stack_location, NULL);
 }
 
 void
@@ -292,28 +321,8 @@ void
 bj_draw_take_snapshot ()
 {
         GList* slot;
-        GdkPixbuf *chip_pixbuf;
-        gint x, y, x_offset;
 
         gdk_draw_rectangle (surface, bg_gc, TRUE, 0, 0, -1, -1);
-
-        // Draw chips under source chip stacks
-        x = CHIP_X_ORIGIN;
-        y = CHIP_Y_ORIGIN;
-        x_offset = 0;
-        for (int i=0; i < 4; i++) {
-                chip_pixbuf = bj_chip_get_pixbuf (i);
-                if (chip_pixbuf)
-                        gdk_draw_pixbuf (surface,
-                                         draw_gc,
-                                         chip_pixbuf,
-                                         0, 0,
-                                         x + x_offset, y, 
-                                         -1, -1, 
-                                         GDK_RGB_DITHER_MAX,
-                                         0, 0);
-                x_offset += bj_chip_get_width () + 5;
-        }
 
         for (slot = bj_slot_get_list (); slot; slot = slot->next) {
                 GdkPixbuf *slot_pixbuf = bj_slot_get_scaled_pixbuf ();

@@ -1,3 +1,26 @@
+2004-05-20  William Jon McCann  <mccann@jhu.edu>
+
+	* src/press_data.cpp (bj_chip_stack_press_data_generate): 
+	* src/hand.cpp (bj_hand_split): 
+	* src/game.cpp (bj_clear_table): 
+	* src/events.cpp (handle_chip_stack_pressed):
+	* src/draw.cpp (bj_draw_chips, calculate_stack_location) 
+	(bj_draw_set_geometry): 
+	* src/chips.cpp (bj_chip_get_scaled_pixbuf) 
+	(bj_chip_set_scaled_pixbuf, bj_chip_stack_add) 
+	(bj_chip_stack_pressed, bj_chip_stack_update_length) 
+	(bj_chip_stack_create_sources, bj_chip_stack_new_with_id_value) 
+	(bj_chip_stack_new_with_value) 
+	(bj_chip_stack_new_source_with_value): 
+	* src/card.cpp (bj_card_set_size): 
+	* src/blackjack.cpp (create_chip_stack_press_data):
+	Use normal coordinates and rescale chips.
+
+	* src/events.cpp (handle_chip_stack_pressed) 
+	(bj_event_button_press, handle_other_motion_event):
+	Handle chip stacks before card slots since they are smaller
+	and would otherwise be obscured by the slots.
+
 2004-05-18  William Jon McCann  <mccann@jhu.edu>
 
 	* src/blackjack.cpp (main_prog): Use printf to format wager label.

@@ -26,14 +26,9 @@
 #include "draw.h"
 
 GdkPixbuf *chip_pixbuf[4];
-GList *chip_stack_list = NULL;
+GdkPixbuf *chip_scaled_pixbuf[4];
 
-gint
-bj_chip_get_width ()
-{
-        // assume they are all the same size
-        return gdk_pixbuf_get_width (bj_chip_get_pixbuf (0));
-}
+GList *chip_stack_list = NULL;
 
 gint
 bj_chip_get_id (gfloat value)
@@ -54,12 +49,32 @@ bj_chip_get_id (gfloat value)
         return id;
 }
 
-GdkPixbuf*
+GdkPixbuf *
 bj_chip_get_pixbuf (gint chip)
 {
         if (chip < 0 || chip > 3)
                 return NULL;
         return chip_pixbuf[chip];
+}
+
+GdkPixbuf *
+bj_chip_get_scaled_pixbuf (gint chip)
+{
+        if (chip < 0 || chip > 3)
+                return NULL;
+        return chip_scaled_pixbuf[chip];
+}
+
+void
+bj_chip_set_scaled_pixbuf (gint chip, GdkPixbuf *pixbuf)
+{
+        if (chip < 0 || chip > 3)
+                return;
+
+        if (chip_scaled_pixbuf[chip])
+                g_object_unref (chip_scaled_pixbuf[chip]);
+
+        chip_scaled_pixbuf[chip] = pixbuf;
 }
 
 gdouble
@@ -102,7 +117,7 @@ bj_chip_stack_get_chips_value (GList *chips)
 }
 
 void 
-bj_chip_stack_add (gint id, gint x, gint y)
+bj_chip_stack_add (gint id, double x, double y)
 {
         hstack_type hstack = (hstack_type) g_malloc (sizeof (chip_stack_type));
 
@@ -110,13 +125,15 @@ bj_chip_stack_add (gint id, gint x, gint y)
         hstack->chips = NULL;
         hstack->x = x;
         hstack->y = y;
+        hstack->pixelx = 0;
+        hstack->pixely = 0;
 
-        hstack->dx = hstack->dy = 0;
+        hstack->dx = 0;
+        hstack->dy = 0;
+        hstack->pixeldx = 0;
+        hstack->pixeldy = 0;
         hstack->expansion_depth = 0;
 
-        //hstack->dx = x_expanded_offset;
-        hstack->dy = bj_chip_get_width () / 5;
-    
         hstack->length = hstack->exposed = 0;
         bj_chip_stack_update_length (hstack);
 
@@ -144,25 +161,25 @@ bj_chip_stack_pressed (gint x, gint y, hstack_type *stack, gint *chipid)
         *stack = NULL;
         *chipid = -1;
 
-        gint chip_height = bj_chip_get_width ();
+        gint chip_height = chip_width;
         for (tempptr = g_list_last (chip_stack_list); tempptr; tempptr = tempptr->prev) {
                 
                 hstack_type hstack = (hstack_type) tempptr->data;
-                gint bottom_chip_edge = hstack->y + chip_height;
+                gint bottom_chip_edge = hstack->pixely + chip_height;
                 gint top_chip_edge = bottom_chip_edge - hstack->height;
                 /* if point is within our rectangle */
-                if (hstack->x < x && x < hstack->x + hstack->width 
+                if (hstack->pixelx < x && x < hstack->pixelx + hstack->width 
                     && bottom_chip_edge > y && y > top_chip_edge) {
                         num_chips = hstack->length;
         
-                        if ( got_stack == FALSE || num_chips > 0 ) {  
+                        if (got_stack == FALSE || num_chips > 0) {  
                                 // loop through chips top down (cascade)
                                 // check if click is within chip radius
                                 gint x_center, y_center;
-                                x_center = hstack->x + chip_height / 2;
+                                x_center = hstack->pixelx + chip_height / 2;
                                 gfloat radius, x_diff, y_diff;
-                                for (gint chip_i = num_chips-1; chip_i >= 0; chip_i--) {
-                                        y_center = hstack->y + chip_height / 2 - chip_i * hstack->dy;
+                                for (gint chip_i = num_chips - 1; chip_i >= 0; chip_i--) {
+                                        y_center = hstack->pixely + chip_height / 2 - chip_i * hstack->pixeldy;
                                         y_diff = ABS ((y - y_center));
                                         x_diff = ABS ((x - x_center));
                                         radius = sqrt (x_diff * x_diff + y_diff * y_diff);
@@ -176,7 +193,7 @@ bj_chip_stack_pressed (gint x, gint y, hstack_type *stack, gint *chipid)
                                 
                                 /* this is the topmost stack with a chip */
                                 /* take it and run*/
-                                if ( num_chips > 0 )
+                                if (num_chips > 0)
                                         break;
                                 
                                 got_stack = TRUE;
@@ -193,17 +210,17 @@ bj_chip_stack_update_length (hstack_type hstack)
         hstack->length += delta;
         hstack->exposed += delta;
 
-        if ((hstack->dx == 0 && hstack->dy == 0 && hstack->exposed > 1) 
+        if ((hstack->pixeldx == 0 && hstack->pixeldy == 0 && hstack->exposed > 1) 
             || (hstack->length > 0 && hstack->exposed < 1))
                 hstack->exposed = 1;
 
         delta = hstack->exposed ? hstack->exposed - 1 : 0;
   
-        hstack->width = bj_chip_get_width () + delta * hstack->dx;
-        hstack->height = bj_chip_get_width () + delta * hstack->dy;
+        hstack->width = chip_width + delta * hstack->pixeldx;
+        hstack->height = chip_width + delta * hstack->pixeldy;
 }
 
-GList* 
+GList * 
 bj_chip_stack_get_list ()
 {
         return chip_stack_list;
@@ -250,18 +267,18 @@ bj_chip_stack_delete_all_wagers (void)
 void
 bj_chip_stack_create_sources (void)
 {
-        gint x = CHIP_X_ORIGIN;
-        gint y = CHIP_Y_ORIGIN;
-        gint x_offset = 0;
-        for (int i=0; i < 4; i++) {
+        double x = CHIP_X_ORIGIN;
+        double y = CHIP_Y_ORIGIN;
+        double x_offset = 0.0;
+        for (int i = 0; i < 4; i++) {
                 bj_chip_stack_new_source_with_value (bj_chip_get_value (i),
                                                      x + x_offset, y);
-                x_offset += bj_chip_get_width () + 5;
+                x_offset += CHIP_X_OFFSET;
         }
 }
 
 void
-bj_chip_stack_new_with_id_value (gint id, gfloat value, gint x, gint y)
+bj_chip_stack_new_with_id_value (gint id, gfloat value, double x, double y)
 {
         bj_chip_stack_add (id, x, y);
         GList *chiplist = NULL;
@@ -292,14 +309,14 @@ bj_chip_stack_new_with_id_value (gint id, gfloat value, gint x, gint y)
 }
 
 void
-bj_chip_stack_new_with_value (gfloat value, gint x, gint y)
+bj_chip_stack_new_with_value (gfloat value, double x, double y)
 {
         // New wager chip stack
         bj_chip_stack_new_with_id_value (1, value, x, y);
 }
 
 void
-bj_chip_stack_new_source_with_value (gfloat value, gint x, gint y)
+bj_chip_stack_new_source_with_value (gfloat value, double x, double y)
 {
         // New source chip stack
         bj_chip_stack_new_with_id_value (0, value, x, y);

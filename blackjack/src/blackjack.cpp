@@ -272,7 +272,7 @@ create_chip_stack_press_data ()
         attributes.wclass = GDK_INPUT_OUTPUT;
         attributes.window_type = GDK_WINDOW_CHILD;
         attributes.event_mask = 0;
-        attributes.width = bj_chip_get_width ();
+        attributes.width = chip_width;
         attributes.height = attributes.width;
         attributes.colormap = gdk_drawable_get_colormap (GDK_DRAWABLE (playing_area->window));
         attributes.visual = gdk_drawable_get_visual (GDK_DRAWABLE (playing_area->window));

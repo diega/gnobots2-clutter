@@ -305,14 +305,14 @@ handle_chip_stack_pressed (GdkEventButton *event,
         }
         if (chipid >= 0 && chip_stack_press_data->status == STATUS_NONE) {
                 guint delta = hstack->exposed - (hstack->length - chipid) - 1;
-                int x = hstack->x + delta * hstack->dx;
-                int y = hstack->y + delta * hstack->dy;
+                int x = hstack->pixelx + delta * hstack->pixeldx;
+                int y = hstack->pixely + delta * hstack->pixeldy;
                 
                 press_data->status = STATUS_SHOW;
                 gfloat chip_value = 
                         ((hchip_type)g_list_nth_data (hstack->chips, chipid))->value;
                 
-                GdkPixbuf *pixbuf = bj_chip_get_pixbuf (bj_chip_get_id (chip_value));
+                GdkPixbuf *pixbuf = bj_chip_get_scaled_pixbuf (bj_chip_get_id (chip_value));
                 GdkPixmap *pixmap;
                 GdkBitmap *mask;
                 gdk_pixbuf_render_pixmap_and_mask (pixbuf, &pixmap, &mask, 127);
@@ -345,8 +345,6 @@ handle_chip_stack_pressed (GdkEventButton *event,
 gint
 bj_event_button_press (GtkWidget *widget, GdkEventButton *event, void *d)
 {
-        hslot_type hslot;
-        gint cardid;
 
         // ignore clicks during actions
         if (events_pending)
@@ -370,17 +368,16 @@ bj_event_button_press (GtkWidget *widget, GdkEventButton *event, void *d)
                 || chip_stack_press_data->status == STATUS_IS_DRAG))
                 return TRUE;
 
+        gint chipid;
+        hstack_type hstack;
+        bj_chip_stack_pressed ((gint)event->x, (gint)event->y, &hstack, &chipid);
+        if (hstack)
+                return handle_chip_stack_pressed (event, hstack, chipid);
+
+        gint cardid;
+        hslot_type hslot;
         bj_slot_pressed ((gint)event->x, (gint)event->y, &hslot, &cardid);
-        if (!hslot) {
-                gint chipid;
-                hstack_type hstack;
-                bj_chip_stack_pressed ((gint)event->x, (gint)event->y, &hstack, &chipid);
-                if (hstack)
-                        handle_chip_stack_pressed (event, hstack, chipid);
-                
-                return TRUE;
-        }
-        else
+        if (hslot)
                 return handle_slot_pressed (event, hslot, cardid);
 
         return TRUE;
@@ -454,59 +451,56 @@ static gint
 handle_other_motion_event (GtkWidget *widget, GdkEventMotion *event)
 {
         // This is primarily to display help information
-        hslot_type hslot = NULL;
-        gint cardid;
-        bj_slot_pressed ((gint)event->x, (gint)event->y, &hslot, &cardid);
-        if (hslot) {
-                gchar *message;
-                if (bj_game_is_active ()) { 
-                        if (hslot == bj_hand_get_slot ())
-                                if (bj_hand_can_be_split ())
-                                        message = g_strdup (_("Click to deal another card; drag card to split pair"));
-                                else
-                                        message = g_strdup (_("Click to deal another card"));
-                        else
-                                message = g_strdup (_("Click to finish adding cards to your hand"));
+
+        hstack_type hstack;
+        gint chipid;
+        bj_chip_stack_pressed (event->x, event->y, &hstack, &chipid);
+        if (hstack) {
+                if (bj_chip_stack_is_source (hstack)) {
+                        if (bj_hand_can_be_doubled ())
+                                gnome_appbar_set_status (GNOME_APPBAR (status_bar), 
+                                                         _("Click to double your wager"));
+                        else if (! bj_game_is_active ()) {
+                                gfloat chip_value = 
+                                        ((hchip_type)g_list_last (hstack->chips)->data)->value;
+                                gchar *message = g_strdup_printf
+                                        (_("Double click to increase your wager by %.2f"), 
+                                         chip_value);
+                                gnome_appbar_set_status (GNOME_APPBAR (status_bar), 
+                                                         message);
+                                g_free (message);
+                        }
                 }
-                else
-                        message = g_strdup (_("Click to deal a new hand"));
-                gnome_appbar_set_status (GNOME_APPBAR (status_bar), message);
-                g_free (message);
+                else {
+                        if (! bj_game_is_active ()) {
+                                gfloat chip_value = ((hchip_type)g_list_last (hstack->chips)->data)->value;
+                                gchar *message = g_strdup_printf (_("Double click to decrease your wager by %.2f"), 
+                                                                  chip_value);
+                                gnome_appbar_set_status (GNOME_APPBAR (status_bar), 
+                                                         message);
+                                g_free (message);
+                        }
+                }
         }
         else {
-                hstack_type hstack;
-                gint chipid;
-                bj_chip_stack_pressed ((gint)event->x, (gint)event->y,
-                                       &hstack, &chipid);
-                if (hstack) {
-                        if (bj_chip_stack_is_source (hstack)) {
-                                if (bj_hand_can_be_doubled ())
-                                        gnome_appbar_set_status (GNOME_APPBAR (status_bar), 
-                                                                 _("Click to double your wager"));
-                                else if (! bj_game_is_active ()) {
-                                        gfloat chip_value = 
-                                                ((hchip_type)g_list_last (hstack->chips)->data)->value;
-                                        gchar *message = g_strdup_printf
-                                                (_("Double click to increase your wager by %.2f"), 
-                                                 chip_value);
-                                        gnome_appbar_set_status (GNOME_APPBAR (status_bar), 
-                                                                 message);
-                                        g_free (message);
-                                }
+                hslot_type hslot = NULL;
+                gint cardid;
+                bj_slot_pressed ((gint)event->x, (gint)event->y, &hslot, &cardid);
+                if (hslot) {
+                        gchar *message;
+                        if (bj_game_is_active ()) { 
+                                if (hslot == bj_hand_get_slot ())
+                                        if (bj_hand_can_be_split ())
+                                                message = g_strdup (_("Click to deal another card; drag card to split pair"));
+                                        else
+                                                message = g_strdup (_("Click to deal another card"));
+                                else
+                                        message = g_strdup (_("Click to finish adding cards to your hand"));
                         }
-                        else {
-                                if (! bj_game_is_active ())
-                                        {
-                                                gfloat chip_value = 
-                                                        ((hchip_type)g_list_last (hstack->chips)->data)->value;
-                                                gchar *message = g_strdup_printf
-                                                        (_("Double click to decrease your wager by %.2f"), 
-                                                         chip_value);
-                                                gnome_appbar_set_status (GNOME_APPBAR (status_bar), 
-                                                                         message);
-                                                g_free (message);
-                                        }
-                        }
+                        else
+                                message = g_strdup (_("Click to deal a new hand"));
+                        gnome_appbar_set_status (GNOME_APPBAR (status_bar), message);
+                        g_free (message);
                 }
                 else {
                         // Not over anything we know about

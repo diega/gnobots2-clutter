@@ -487,11 +487,13 @@ bj_clear_table ()
         player->hslot = (hslot_type) g_list_nth_data (slot_list, 1);
 
         bj_chip_stack_new_with_value (bj_get_wager (),
-                                      player->hslot->pixelx - bj_chip_get_width () - 5,
-                                      player->hslot->pixely + card_height / 2);
+                                      player->hslot->x - 0.2,
+                                      player->hslot->y + 0.2);
 
         // Create source chip stacks 
         bj_chip_stack_create_sources ();
+
+        bj_draw_rescale_cards ();
 
         player->nextHand = NULL;
         player->reset ();

@@ -135,7 +135,7 @@ bj_card_load_pixmaps (GtkWidget *app, gchar *card_style)
 void
 bj_card_free_pixmaps () 
 {
-        for (int i=0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
                 if (chip_pixbuf[i] != NULL)
                         g_object_unref (chip_pixbuf[i]);
 
@@ -164,6 +164,14 @@ bj_card_set_size (gint width, gint height)
                                                   GDK_INTERP_BILINEAR);
 
                 bj_slot_set_scaled_pixbuf (scaled);
+        }
+
+        for (int i = 0; i < 4; i++) {
+                scaled = gdk_pixbuf_scale_simple (bj_chip_get_pixbuf (i),
+                                                  width / 2, width / 2,
+                                                  GDK_INTERP_BILINEAR);
+
+                bj_chip_set_scaled_pixbuf (i, scaled);
         }
 
         if (!images) {
