@@ -708,16 +708,17 @@ static gchar *selected_tileset = NULL;
 struct _maps
 {
   gchar *name ;
+  gchar *score_name;
   tilepos *map ;
 } maps[] = {
-	{ N_("Easy"),      easy_map },
-	{ N_("Difficult"), hard_map },
-        { N_("Confounding Cross"),      cross_map },
-        { N_("Pyramid's Walls"),      pyramid_map },
-        { N_("Tic-Tac-Toe"),      tictactoe_map },
-        { N_("Cloud"),      cloud_map },
-        { N_("Red Dragon"),      reddragon_map },
-        { N_("Four Bridges"),      fourbridges_map },
+	{ N_("Easy"), "easy", easy_map },
+	{ N_("Difficult"), "difficult", hard_map },
+        { N_("Confounding Cross"), "confounding", cross_map },
+        { N_("Pyramid's Walls"), "pyramid", pyramid_map },
+        { N_("Tic-Tac-Toe"), "tictactoe", tictactoe_map },
+        { N_("Cloud"), "cloud", cloud_map },
+        { N_("Red Dragon"), "dragon", reddragon_map },
+        { N_("Four Bridges"), "bridges", fourbridges_map },
 
 };
 
@@ -2016,6 +2017,20 @@ new_seed ()
 	next_seed = (guint) (t.tv_sec ^ t.tv_usec);
 }
 
+static void set_score_file (gchar * mapset)
+{
+	int i;
+
+	/* FIXME: This is a bit ugly, but we only save the name of the
+	   map (and it isn't suitable for generating the scorefile
+	   name. It's also a bit close to code freeze to introduce
+	   gratuitous changes so this is it. */
+	for (i=0; i<G_N_ELEMENTS(maps); i++) {
+		if (g_utf8_collate (mapset, maps[i].name) == 0)
+			score_current_mapset = maps[i].score_name;
+	}
+}
+
 void
 new_game (gboolean re_seed)
 {
@@ -2028,10 +2043,8 @@ new_game (gboolean re_seed)
 
 	init_game ();
 
-	if (score_current_mapset != NULL)
-		g_free (score_current_mapset);
+	set_score_file (mapset);
 
-	score_current_mapset = strdup (mapset);
 	update_score_state ();
 }
 
@@ -2174,7 +2187,7 @@ main (int argc, char *argv [])
 
 	do_game ();
 	init_game ();
-	score_current_mapset = g_strdup (mapset);
+	set_score_file (mapset);
 	update_score_state ();
 	
 	/* Note: we have to have a layout loaded before here so that the

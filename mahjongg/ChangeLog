@@ -1,5 +1,8 @@
 2004-02-19  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* Makefile.am:
+	* mahjongg.c (new_game): Make scores work properly.
+
 	* solubility.c (shuffle): Removed unused variables.
 	(walk_tree): Make the random shuffle actually uniform. I really
 	shouldn't have tried to write that from memory.

@@ -51,7 +51,7 @@ if GCONF_SCHEMAS_INSTALL
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(top_builddir)/mahjongg/$(schema_DATA)
 endif
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
-	-for i in easy difficult ; do \
+	-for i in easy difficult confounding pyramid tictactoe cloud dragon bridges; do \
 		touch $(DESTDIR)$(scoredir)/mahjongg.$$i.scores; \
 		chown $(scores_user):$(scores_group) $(DESTDIR)$(scoredir)/mahjongg.$$i.scores; \
 		chmod 664 $(DESTDIR)$(scoredir)/mahjongg.$$i.scores; \
