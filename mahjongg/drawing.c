@@ -268,7 +268,7 @@ static void recreate_tile_images (void)
 
   gdk_pixbuf_render_threshold_alpha (fg, tilemask, 0, 0, 0, 0,
                                      tilewidth, tileheight, 128);
-  gdk_draw_pixbuf (tileimages, gc, fg, 0, 0, 0, 0,
+  gdk_draw_pixbuf (tileimages, NULL, fg, 0, 0, 0, 0,
                    tilewidth*NUM_PATTERNS, tileheight*2,
                    GDK_RGB_DITHER_MAX, 0, 0);
 

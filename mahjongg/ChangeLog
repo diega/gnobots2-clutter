@@ -1,3 +1,9 @@
+2004-01-21  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* drawing.c (recreate_tile_images): Set the gc for gdk_draw_pixbuf
+	to NULL. It was being used, inappropriately for clipping with bad
+	results. Fixes bug #131905.
+
 2004-01-19  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am (pixmap_DATA): Added new tile sets, smooth.png and
