@@ -1,3 +1,12 @@
+2002-01-24  Markus Bertheau <twanger@bluetwanger.de>
+
+	* mahjongg.c:
+	1. new game and restart game dont cause the game to exit anymore
+	2. prefs dialog, tile background initial selection reflects current
+	setting
+	4. remove "make it default"'s
+	6. remove old properties_callback
+
 2002-01-20  Josh Barrow  <drleary@mac.com>
 
 	* Makefile.am:
