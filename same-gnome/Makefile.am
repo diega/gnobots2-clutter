@@ -20,7 +20,7 @@ same_gnome_LDADD =		\
 	$(INTLLIBS)
 
 pixmap_DATA = planets.png blink-sync.png marbles.png \
-	stones.png rotate.png
+	stones.png rotate.png glass.png
 EXTRA_DIST = same-gnome.desktop $(pixmap_DATA)
 
 Games_DATA = same-gnome.desktop
