@@ -1,9 +1,10 @@
 ASAP:
-2. Clean up the code - remove global variables
+* Clean up the code - remove global variables, smaller, more specialize classes, 
+   less static methods etc.
 
 Next:
-1. user preferences:
-	- configurable field size
+* configurable block shapes and block pictures
+* changeable field background
+* configurable field size
+* major redesign: tetris, jewel and trojka in one shell (Sergey's (sipan@mit.edu) idea)
 
-Would be Nice:
-1. configurable block shapes and block pictures
