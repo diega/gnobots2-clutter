@@ -2,8 +2,7 @@ rulesdir      = $(datadir)/blackjack
 rules_DATA    = Ameristar.rules		\
 		Atlantic_City.rules	\
 		Vegas_Downtown.rules	\
-		Vegas_Strip.rules	\
-		Vegas_Strip.rules.dat
+		Vegas_Strip.rules
 
 sysdir = $(datadir)/applications/
 sys_in_files = blackjack.desktop.in
