@@ -1,3 +1,7 @@
+2000-05-06  Karl Eichwalder  <ke@suse.de>
+
+	* xbill.desktop: Add de.
+
 2000-04-30  James Henstridge  <james@daa.com.au>
 
 	* MCursor.cc: fix problem with initialisation of static variable.
