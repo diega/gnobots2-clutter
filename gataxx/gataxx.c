@@ -296,8 +296,8 @@ static void new_game(void)
 	}
 	
 	appbar_set_turn(turn);
-	appbar_set_black(2);
-	appbar_set_white(2);
+	appbar_set_white(gtk_gridboard_count_pieces(gridboard, WHITE));
+	appbar_set_black(gtk_gridboard_count_pieces(gridboard, BLACK));
 
 	if (!props_is_human(turn)) {
 		g_timeout_add(timeout, computer_move_cb,

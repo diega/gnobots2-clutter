@@ -1,3 +1,8 @@
+2004-10-07  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gataxx.c (new_game): Set the counter count when loading from the
+	command line.
+
 2004-09-19  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gataxx.c: Set the light/dark's move correctly on an undo.
