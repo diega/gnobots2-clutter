@@ -122,15 +122,6 @@ static struct poptOption options[] = {
 };
 
 /*
- * The File menu
- */
-GnomeUIInfo filemenu[] = {
-  GNOMEUIINFO_MENU_EXIT_ITEM(quit_cb, NULL),
-  GNOMEUIINFO_END
-};
-
-
-/*
  * The Settings menu
  */
 GnomeUIInfo settingsmenu[] = {
@@ -148,6 +139,10 @@ GnomeUIInfo gamemenu[] = {
 
     GNOMEUIINFO_MENU_SCORES_ITEM(game_scores_cb, NULL),
 
+    GNOMEUIINFO_SEPARATOR,
+
+    GNOMEUIINFO_MENU_EXIT_ITEM(quit_cb, NULL),
+
     GNOMEUIINFO_END
 };
 
@@ -164,7 +159,6 @@ GnomeUIInfo helpmenu[] = {
  * Main menu
  */
 GnomeUIInfo mainmenu[] = {
-    GNOMEUIINFO_MENU_FILE_TREE(filemenu),
     GNOMEUIINFO_MENU_GAME_TREE(gamemenu),
     GNOMEUIINFO_MENU_SETTINGS_TREE(settingsmenu),
     GNOMEUIINFO_MENU_HELP_TREE(helpmenu),
@@ -1269,10 +1263,12 @@ main(int argc, char *argv[])
 
     gnome_score_init("gnobots");
 
-    
     gnome_init_with_popt_table("gnobots", VERSION, argc, argv, options, 0, NULL);
 
-    client = gnome_master_client();
+    gtk_widget_push_visual (gdk_imlib_get_visual ());
+    gtk_widget_push_colormap (gdk_imlib_get_colormap ());
+     
+   client = gnome_master_client();
 
     getcwd(buf, sizeof(buf));
 
