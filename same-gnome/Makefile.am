@@ -16,7 +16,7 @@ samegnome_LDADD = \
 	$(top_builddir)/libgnomeui/libgnomeui.la 	\
 	$(top_builddir)/libgnome/libgnome.la		\
 	$(GTK_LIBS)					\
-        $(X_LIBS) $(x_libs)
+        $(X_LIBS) $(x_libs) $(INTLLIBS)
 
 pixmap_DATA = planets.xpm blink-sync.xpm puyonew2-sync.xpm stones.xpm rotate.xpm
 EXTRA_DIST = same-gnome.desktop $(pixmap_DATA)
