@@ -1,0 +1,101 @@
+This is a quick and dirty README file.
+
+
+Gnome-Stones keys:
+==================
+
+In the title-screen:
+* [UP] and [DOWN] key to select the starting cave.
+* [RETURN] or Game/New to start game.
+
+While playing:
+* Cursor keys to move the game figure.
+* [Shift]+Cursor key, to dig the sand near the game figure, put don't move it.
+* [p] key to pause the game.
+* [ESC] key to kill game figure.
+* [Shift]+[ESC] to abort game.
+
+
+Gnome-Stone caves:
+==================
+
+The default caves are intended for debugging, but not for real playing. The
+general structure of a caves file is the following:
+
+[General] section:
+------------------
+* Title: (translated string, mandatory)
+	Is the name of this game.
+
+* Object size: (integer, mandatory, has to be 1 right now)
+	How many characters does an object take in the cave description
+	
+* New life score: (integer, optional, default 500)
+
+* Lifes: (integer, optional, default 3)
+	The number of lifes, that you start with 
+	
+* Frame rate: (float, optional, default 0.2)
+	The game is updated every "Frame rate" second (float, optional
+
+
+[Objects] section:
+------------------
+
+
+[Caves] section:
+----------------
+* Number: (integer, mandatory)
+	Number of caves in the caves section.
+
+* Cave###: (string, mandatory)
+	Name of a cave. Every cave in the game must be listed here.
+	
+
+[Start caves] section:
+----------------------
+* Number: (integer, mandatory)
+	Number of start caves in the Start caves section. 
+    
+* Cave###: (string, mandatory)
+	Name of every cave, that you can start the game with.
+
+
+Cave sections:
+--------------
+* Diamonds needed: (integer, mandatory)
+	The number of diamonds, that are needed to open the exit.
+
+* Diamond score: (integer, optional, default ?)
+	The score you gain for the first 'Diamonds needed' diamonds.
+
+* Extra: diamond score (integer, option, default 'Diamond score')
+	The score you gain for every diamond, if the door has opened.
+
+* Time: (integer, mandatory)
+	The time you have to exit this cave.
+
+* Magic wall time: (integer, optional)
+	The time, that the magic wall mills.
+
+* Amoeba slow time: (integer, optional)
+	The time, that the amoeba grows slowly. After this time, the
+	amoeba will speed up growing
+
+* Amoeba max size: (integer, optional)
+	If the amoeba grow larger than this size, it will transform to
+	boulders.
+
+* Message: (translated string, optional)
+	This message is shown in the status-bar while playing this cave.
+
+* Next cave: (string, optional)
+	Which cave to play, after finishing this cave.  If no 'Next
+	cave' is given, this cave will be the last in the game.
+
+* Height: (integer, mandatory)
+* Width: (integer, mandatory)
+	Size of a cave.
+
+* Line##: (string, mandatory)
+	Description of the cave.
