@@ -1166,13 +1166,10 @@ about_cb (GtkWidget *widget, gpointer data)
 
 
 static GnomeUIInfo game_menu[]= {
-  {
-    GNOME_APP_UI_ITEM,
-    N_("_New"), N_("Start a new game"),
-    game_start_cb, NULL, NULL,
-    GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW,
-    GNOME_KEY_NAME_NEW, GNOME_KEY_MOD_NEW, NULL
-  },
+  GNOMEUIINFO_MENU_NEW_ITEM(N_("_New"), N_("Start a new game"),
+			    game_start_cb, NULL),
+  GNOMEUIINFO_SEPARATOR,
+
   {
     GNOME_APP_UI_ITEM,
     N_("_Scores..."), N_("Show highscore table"),
@@ -1180,42 +1177,30 @@ static GnomeUIInfo game_menu[]= {
     GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SCORES,
     0, (GdkModifierType) 0, NULL
   },
+
   GNOMEUIINFO_SEPARATOR,
-  {
-    GNOME_APP_UI_ITEM,
-    N_("_Preferences..."), N_("Change Gnome-Stones preferences"),
-    preferences_cb, (gpointer) 0, NULL,
-    GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PREF,
-    0, (GdkModifierType) 0, NULL
-  },
-  GNOMEUIINFO_SEPARATOR,
-  {
-    GNOME_APP_UI_ITEM,
-    N_("E_xit"), N_("Exit Gnome Stones"),
-    quit_cb, NULL, NULL,
-    GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_QUIT,
-    GNOME_KEY_NAME_EXIT, GNOME_KEY_MOD_EXIT, NULL
-  },
+
+  GNOMEUIINFO_MENU_EXIT_ITEM(quit_cb, NULL),
+
   GNOMEUIINFO_END
 };
 
 static GnomeUIInfo help_menu[]= {
-  {
-    GNOME_APP_UI_ITEM,
-    N_("_About Gnome-Stones"), N_("Info about Gnome Stones"),
-    about_cb, NULL, NULL,
-    GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT,
-    0, (GdkModifierType) 0, NULL
-  },
-  GNOMEUIINFO_SEPARATOR,
   GNOMEUIINFO_HELP(APP_NAME),
+  GNOMEUIINFO_MENU_ABOUT_ITEM(about_cb, NULL),
+  GNOMEUIINFO_END
+};
+
+static GnomeUIInfo settings_menu[]= {
+  GNOMEUIINFO_MENU_PREFERENCES_ITEM(preferences_cb, NULL),
   GNOMEUIINFO_END
 };
 
 static GnomeUIInfo main_menu[]= 
 {
   GNOMEUIINFO_SUBTREE(N_("_Game"), game_menu),
-  GNOMEUIINFO_SUBTREE(N_("_Help"), help_menu),
+  GNOMEUIINFO_MENU_SETTINGS_TREE(settings_menu),
+  GNOMEUIINFO_MENU_HELP_TREE(help_menu),
   GNOMEUIINFO_END
 };
 
@@ -1377,6 +1362,8 @@ main (int argc, char *argv[])
   gnome_app_set_statusbar (GNOME_APP (app), statusbar);
 
   gnome_appbar_set_default (GNOME_APPBAR (statusbar), _(default_message));
+
+  gnome_app_install_menu_hints(GNOME_APP (app), main_menu);
 
   /* and, last but not least the game display.  */
   vbox = gtk_vbox_new (FALSE, 0);
