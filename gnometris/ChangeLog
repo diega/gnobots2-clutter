@@ -1,3 +1,10 @@
+2002-05-10  Bastien Nocera  <hadess@hadess.net>
+
+	* Makefile.am: nothing interesting
+	* tetris.cpp: add an icon to the about box, make 'P' be the pause
+	button, make 'Space' drop the block at the bottom (like in all the
+	other implementations) (Closes: #60579)
+
 2002-02-26  Juan Pablo Mendoza <jpablo@gnome.org>
 
 	* tetris.cpp (Tetris::gameAbout): Don't make

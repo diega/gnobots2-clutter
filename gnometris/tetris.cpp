@@ -794,7 +794,9 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 	
 	if (event->type == GDK_KEY_PRESS)
 	{
-		if (((GdkEventKey*)event)->keyval == GDK_space)
+		int keyval = ((GdkEventKey*)event)->keyval;
+
+		if ((keyval == GDK_p) || (keyval == GDK_P))
 		{
 			t->togglePause();
 			return TRUE;
@@ -803,10 +805,10 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 	
 	if (t->paused)
 		return FALSE;
-	
+
 	bool res = false;
 	bool keyEvent = false;
-	
+
 	switch (event->type)
 	{
 	case GDK_KEY_PRESS: 
@@ -843,14 +845,23 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 	case GDK_KEY_RELEASE:
 	{
 		GdkEventKey *e = (GdkEventKey*)event;
-		if (e->keyval == GDK_Down)
+
+		switch (e->keyval)
 		{
+		case GDK_Down:
 			keyEvent = true;
 			if (t->fastFall)
 			{
 				t->fastFall = false;
  				t->generateTimer(t->scoreFrame->getLevel());
 			}
+			break;
+		case GDK_space:
+			t->ops->dropBlock();
+			res = TRUE;
+			break;
+		default:
+			return FALSE;
 		}
 		break;
 	}
@@ -956,11 +967,25 @@ int
 Tetris::gameAbout(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
-
+	GdkPixbuf *pixbuf = NULL;
 	GtkWidget *about;
 
 	const gchar *authors[] = {"J. Marcin Gorycki", 0};
-	
+
+	{
+		char *filename = NULL;
+
+		filename = gnome_program_locate_file (NULL,
+				GNOME_FILE_DOMAIN_PIXMAP, 
+				"gnome-gtetris.png",
+				TRUE, NULL);
+		if (filename != NULL)
+		{
+			pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+			g_free (filename);
+		}
+	}
+
 	about = gnome_about_new("Gnometris", 
 				TETRIS_VERSION, 
 				"(C) 2000 J. Marcin Gorycki",
@@ -970,7 +995,7 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 				(const char **)authors,
 				NULL,
 				NULL,
-				NULL);
+				pixbuf);
 
 	gtk_widget_show(about);
 
