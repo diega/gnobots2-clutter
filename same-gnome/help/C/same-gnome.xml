@@ -101,7 +101,7 @@
 
   <sect1 id="introduction"> 
     <title>Playing &app;</title> 
-    <para>&app; is a puzzle game. The goal is to remove as many objects as possible in as few moves as possible. Objects that are adjacent to each other get removed as a group, then the remaining objects collapse to fill in the gaps and make new groups. You can't remove single objects.</para>
+    <para>&app; is a puzzle game. The goal is to remove as many objects as possible in as few moves as possible. Objects that are adjacent to each other get removed as a group. The remaining objects then collapse to fill in the gaps and new groups are formed. You cannot remove single objects.</para>
 
     <figure id="start-up">
       <screenshot>
@@ -114,7 +114,7 @@
       <title>&app; at the beginning of a new game.</title>
     </figure>
 
-    <para>The board starts as a full grid of objects. Depending on the size of board you select, there are either three or four types of object. If a group of objects are adjacent and all the same type, then they can be removed simply by clicking them with the mouse (or by pressing the space bar). The objects in a group will start spinning when the mouse moves over them. The number of objects, and the points you will score for removing that group, is shown in the lower left corner of the window.  The more objects in the group, the more points you score. Once the group has been removed the objects above them fall down to fill the space. If an entire column is cleared then the objects slide leftward to fill the gap.</para>
+    <para>The board starts as a full grid of objects. Depending on the size of board you select, there are either three or four types of object. If a group of objects are adjacent and all the same type, then they can be removed simply by clicking them with the mouse (or by pressing the space bar). When you move the mouse over a group you can remove, the objects will start moving. The number of objects in the group, and the points you will score for removing that group, is shown in the lower left corner of the window.  The more objects in the group, the more points you will score. Once the group has been removed the objects above them fall down to fill the space. If an entire column is cleared then the objects slide leftward to fill the gap.</para>
 
     <figure id="play">
       <screenshot>
@@ -143,32 +143,29 @@
     <row><entry>7</entry><entry>25</entry></row>
     <row><entry>8</entry><entry>36</entry></row>
     <row><entry>9</entry><entry>49</entry></row>
+    <row><entry>&vellip;</entry><entry>&vellip;</entry></row>
+    <row><entry><inlineequation>p</inlineequation></entry><entry><inlineequation>(n - 2)<superscript>2</superscript></inlineequation></entry></row>
     </tbody>
     </tgroup>
     </table>
-    <para>For larger numbers the formula is
-    <inlineequation>p = (n - 2)<superscript>2</superscript></inlineequation>, where n is the number of objects and p the points scored.
-    </para>
-    <para>If you clear all the objects there is a 1000 point bonus.</para>
+    <para>If you clear the board there is a 1000 point bonus.</para>
   </sect1>
 
   <sect1 id="same-gnome-customisation">
     <title>Customization</title>
 
-    <para>You can alter the look of the game and the size of the
-  board. The former is done via the view menu and the later via the size
-  menu.</para>
+    <sect2 id="changing-the-look">
+      <title>Changing the Look</title>
+      <para>Changing the size of the objects is as simple as resizing the window. To make the maximum use of the screen choose the <guimenuitem>Fullscreen</guimenuitem> option from the <guimenu>View</guimenu> menu.</para>
+
+      <para>To change the appearance of the objects use the <guimenuitem>Theme</guimenuitem> item in the <guimenu>View</guimenu> menu. Selecting an item from the list changes the theme immediately.</para>
+
+        <para>You can also create your own themes, although the process is not very straight-forward yet. Use a copy of an existing theme as a template and alter it with your favorite paint program. Put the result in <filename>$XDG_DATA_HOME/gnome-games/same-gnome/themes/2.10/</filename>. It will be automatically included on the themes list next time you run &app;. <filename>$XDG_DATA_HOME</filename> is usually <filename>~/.local/share/</filename>.</para>
+    </sect2>
 
     <sect2 id="changing-the-size">
       <title>Changing the Size</title>
       <para>The <guimenuitem>Size</guimenuitem> menu contains three settings: small, medium and large. Aside from increasing the number of objects, the large setting also increases the number of different objects.</para>
-    </sect2>
-
-    <sect2 id="changing-the-look">
-      <title>Changing the Look</title>
-      <para>You can change the look of the objects by using the <guimenuitem>Theme</guimenuitem> item in the <guimenu>View</guimenu> menu. You are presented with a list of the available styles.</para>
-      <para>To change the size of the individual objects, resize the window. To make the maximum use of the screen, choose the <guimenuitem>Fullscreen</guimenuitem> option from the <guimenu>View</guimenu> menu.</para>
-        <para>You can create your own themes. Use an existing theme as a template and put the result in <filename>$XDG_DATA_HOME/gnome-games/same-gnome/themes/2.10/</filename>. It will be automatically included on the themes list next time you run &app;. <filename>$XDG_DATA_HOME</filename> is usually <filename>~/.local/share/</filename>.</para>
     </sect2>
 
   </sect1>
@@ -176,11 +173,13 @@
   <sect1 id="same-gnome-strategy">
     <title>Strategy</title>
 
-    <para>The most important rule when aiming for a high score is to think ahead: each group you remove will form and destroy other groups. Remove the higher group first, unless removing other groups will make it larger. Fortunately vertical groups can never be detroyed, but horizontal alignments change.</para>
+    <para>The most important rule when aiming for a high score is to think ahead: each group you remove will form and destroy other groups.</para>
 
-    <para>Because the score increases quadratically, big groups of objects are always better. For example, the points difference between a six object group and a seven object group is nine points. This means that in a situation where you have a choice between merging two groups of two into four or just adding one more to a group of six then you should go with the later option, even though you may score no points from the other balls. On the other hand, if even one of the groups of two can be merged with five or more it is better to sacrifice the group of six.</para>
+<para> Remove higher groups first, unless removing another group will make it larger. Vertically aligned objects can't be misaligned, but horizontal arrangements can.</para>
 
-    <para>The thousand point bonus for clearing all the balls is also worth pursuing. To beat 1000 points you have to form a group of 34 objects. You are very unlikley to be in a position where you will have to choose between the two options.</para>
+    <para>Since the score increases quadratically, big groups of objects are always better. For example, the points difference between a six object group and a seven object group is nine points. In a situation where you have a choice between merging two groups of two into four or just adding one more to the group of six then you should add the single object. Even though the groups of two you are left with score no points, the bigger group scores more overall.</para>
+
+    <para>Don't forget the thousand point bonus for clearing all the balls. To get 1000 points from a single group you need 34 objects. You are very unlikely to be in a position where you have to sacrifice a group that large to clear the board.</para>
   </sect1>
 
 <!-- ============= About ================================== -->
@@ -189,7 +188,7 @@
     <para> <application>&app;</application> was written by Callum McKenzie
       (<email>callum@physics.otago.ac.nz</email>). To find more information about
       <application>&app;</application>, please visit the 
-      <ulink url="http://www.gnome.org/projects/gnome-games/" type="http">GNOME Games Web page</ulink>. </para>
+      <ulink url="http://www.gnome.org/projects/gnome-games/" type="http">GNOME Games web page</ulink>. </para>
     <para>
       To report a bug or make a suggestion regarding this application or
       this manual, follow the directions in this 

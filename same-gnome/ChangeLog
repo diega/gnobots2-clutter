@@ -1,3 +1,9 @@
+2005-03-03  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/same-gnome.xml: Yet more updates. I actually
+	spell-checked it this time. Also fixed up one of the pictures, I
+	have no idea how a lime green line got down one side of it.
+
 2005-02-26  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* drawing.c (expose_cb): Make sure we draw the left and bottom
