@@ -14,7 +14,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include <dirent.h>
 
 #include <config.h>
 #include <gnome.h>
@@ -44,6 +43,7 @@ static int score;
 static gchar *scenario;
 static gint restarted;
 static gboolean game_over = FALSE;
+static gboolean ignore_selection;
 
 void update_score_state ();
 
@@ -506,46 +506,64 @@ game_new_callback (GtkWidget *widget, void *data)
 }
 
 static void
-set_selection (GtkWidget *widget, gpointer data)
+set_selection (GtkTreeSelection *selection, gpointer data)
 {
-	load_scenario (data);
-	gconf_client_set_string (conf_client, "/apps/same-gnome/tileset", data, NULL);
+        gchar * filename;
+        GtkTreeModel * model;
+        GtkTreeIter iter;
+
+        /* This is here because I can't figure out how to set the list
+         * so nothing is selected when it is created. */
+        if (ignore_selection) {
+                ignore_selection = FALSE;
+                return;
+        }
+
+        gtk_tree_selection_get_selected (selection, &model, &iter);
+        gtk_tree_model_get (model, &iter, 1, &filename, -1);
+
+	load_scenario (filename);
+	gconf_client_set_string (conf_client, "/apps/same-gnome/tileset", filename, NULL);
 }
 
 static void
-fill_menu (GtkWidget *menu)
+fill_list (GtkListStore *list)
 {
-	struct dirent *e;
-	DIR *dir;
-        int itemno = 0;
+        GDir * dir;
+        gchar * filename;
+        GtkTreeIter iter;
 	
-	dir = opendir (PIXMAPDIR);
+	dir = g_dir_open (PIXMAPDIR, 0, NULL);
 
 	if (!dir)
 		return;
 	
-	while ((e = readdir (dir)) != NULL){
-		GtkWidget *item;
-		char *name, *label, *p;
-		name = strdup (e->d_name);
+	while ((filename = g_strdup (g_dir_read_name (dir))) != NULL){
+		gchar *name;
+                gchar *suffix;
+                
+                if (!g_file_test (filename, G_FILE_TEST_IS_REGULAR)) {
+                        g_free(filename);
+                        continue;
+                }
 
-		if (!(p = strstr (name, ".png"))) {
-			free (name);
-			continue;
-		}
-		
-		item = gtk_menu_item_new_with_label (g_strndup (name, p - name ));
-		gtk_widget_show (item);
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-		g_signal_connect (G_OBJECT (item), "activate",
-				  G_CALLBACK (set_selection), name);
-	  
-	        if (!strcmp(scenario, name))
-			gtk_menu_set_active(GTK_MENU(menu), itemno);
-	  
-	        itemno++;
+                /* We strip any trailing suffix, any -sync suffix
+                 * and convert '_' to ' '. This is brutal code. */
+                name = g_strdup(filename);
+                suffix = g_strrstr(name,".");
+                if (suffix) *suffix = '\0';
+                suffix = g_strrstr(name,"-sync");
+                if (suffix) *suffix = '\0';
+                suffix = name;
+                while (*suffix) {
+                        if (*suffix == '_') *suffix = ' ';
+                        suffix++;
+                }
+                
+                gtk_list_store_append (list, &iter);
+                gtk_list_store_set (list, &iter, 0, name, 1, filename, -1);
 	}
-	closedir (dir);
+	g_dir_close (dir);
 }
 
 static void
@@ -558,15 +576,20 @@ pref_dialog_response (GtkDialog *dialog, gint response, gpointer data)
 static void
 game_preferences_callback (GtkWidget *widget, void *data)
 {
-	GtkWidget *menu, *omenu, *l, *hb;
-	GtkWidget *button;
+	GtkWidget *listview, *hbox;
+	GtkWidget *button, *scroll;
+        GtkTreeViewColumn *column;
+        GtkTreeSelection * select;
+        GtkListStore *list;
 
 	if (pref_dialog) {
 		gtk_window_present (GTK_WINDOW (pref_dialog));
 		return;
 	}
-	
-	pref_dialog = gtk_dialog_new_with_buttons (_("Preferences"),
+
+        ignore_selection = TRUE;
+        
+	pref_dialog = gtk_dialog_new_with_buttons (_("Same GNOME Preferences"),
 			GTK_WINDOW (app),
 			GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
 			GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
@@ -577,25 +600,39 @@ game_preferences_callback (GtkWidget *widget, void *data)
 	g_signal_connect (G_OBJECT (pref_dialog), "response",
 			  G_CALLBACK(pref_dialog_response), NULL);
 
-	omenu = gtk_option_menu_new ();
-	menu = gtk_menu_new ();
-	fill_menu (menu);
-	gtk_widget_show (omenu);
-	gtk_option_menu_set_menu (GTK_OPTION_MENU(omenu), menu);
+        list = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_STRING);
+	fill_list (list);
 
-	hb = gtk_hbox_new (FALSE, FALSE);
-	gtk_container_set_border_width (GTK_CONTAINER (hb), 4);
-	gtk_widget_show (hb);
-	
-	l = gtk_label_new (_("Select scenario:"));
-	gtk_widget_show (l);
-	    
-	gtk_box_pack_start (GTK_BOX(hb), l, TRUE, FALSE, 4);
-	gtk_box_pack_start_defaults (GTK_BOX(hb), omenu);
+        listview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list));
+        column = gtk_tree_view_column_new_with_attributes (_("Theme"),
+                                                           gtk_cell_renderer_text_new (),
+                                                           "text", 0,
+                                                           NULL);
+        gtk_tree_view_append_column (GTK_TREE_VIEW (listview),
+                                     GTK_TREE_VIEW_COLUMN (column));
 
-	gtk_box_pack_start_defaults (GTK_BOX(GTK_DIALOG(pref_dialog)->vbox), hb);
-	
-        gtk_widget_show (pref_dialog);
+        select = gtk_tree_view_get_selection (GTK_TREE_VIEW (listview));
+        gtk_tree_selection_set_mode (select, GTK_SELECTION_BROWSE);
+        gtk_tree_selection_unselect_all (select);
+        g_signal_connect (G_OBJECT (select), "changed",
+                          G_CALLBACK (set_selection), NULL);
+        
+        scroll = gtk_scrolled_window_new (NULL, NULL);
+        gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
+                                        GTK_POLICY_AUTOMATIC,
+                                        GTK_POLICY_AUTOMATIC);
+        gtk_widget_set_size_request (scroll, 250, 200);
+        gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroll),
+                                             GTK_SHADOW_IN);
+        gtk_container_add (GTK_CONTAINER(scroll), listview);
+
+        hbox = gtk_hbox_new (TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG(pref_dialog)->vbox),
+                                     hbox, TRUE, TRUE, GNOME_PAD_SMALL);
+	gtk_box_pack_start (GTK_BOX (hbox), scroll, TRUE, TRUE,
+                            GNOME_PAD_SMALL);
+
+        gtk_widget_show_all (pref_dialog);
 }
 
 static int

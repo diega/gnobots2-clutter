@@ -1,3 +1,10 @@
+2003-05-15  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* same-gnome.c: Reworked the preferences dialog to be more
+	usable. It uses a list rather than a menu. Fixes bug
+	#94797. Same-gnome also accepts a wider range of image file
+	formats now.
+
 2003-05-14  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* same-gnome.c (game_quit_callback): Removed the quit dialog. As
