@@ -681,20 +681,23 @@ preferences_dialog_new (void)
 			    (GNOME_PROPERTY_BOX (propbox)->notebook), 
 			    box, label);
 
-  /* The third page of our preferences dialog. */
-  box= gtk_vbox_new (FALSE, GNOME_PAD);
-  gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
+  /* The third page of our preferences dialog. 
+   *  box= gtk_vbox_new (FALSE, GNOME_PAD);
+   *  gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
+   */
 
-  label= gtk_label_new (_("Not yet implemented!"));
-  gtk_box_pack_start (GTK_BOX (box), label, TRUE, FALSE, GNOME_PAD_SMALL);
+  /*  label= gtk_label_new (_("Not yet implemented!"));
+   *  gtk_box_pack_start (GTK_BOX (box), label, TRUE, FALSE, GNOME_PAD_SMALL);
+   */
 
-  gtk_widget_show (label);
-  gtk_widget_show (box);
+   /*  gtk_widget_show (label); */
+   /*  gtk_widget_show (box); */
 
-  label= gtk_label_new (_("Sound"));
-  gtk_notebook_append_page (GTK_NOTEBOOK 
-			    (GNOME_PROPERTY_BOX (propbox)->notebook), 
-			    box, label);
+  /* label= gtk_label_new (_("Sound"));
+   *  gtk_notebook_append_page (GTK_NOTEBOOK
+   *                       (GNOME_PROPERTY_BOX (propbox)->notebook),
+   *                       box, label);
+   */
 
   gtk_signal_connect (GTK_OBJECT (propbox), "destroy",
 		      GTK_SIGNAL_FUNC (preferences_destroy_cb), prdata);

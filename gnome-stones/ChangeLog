@@ -1,3 +1,10 @@
+2001-07-07  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	Patch from Ta^3 <tacvbo@correo.unam.mx>
+
+	* preferences.c (preferences_dialog_new): Don't show the Sound tab
+	  since it is useless.
+
 2001-07-05  Christian Rose  <menthos@menthos.com>
 
 	* gnome-stones.desktop: Modified Swedish entries.
