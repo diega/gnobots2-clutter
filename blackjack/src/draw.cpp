@@ -43,22 +43,67 @@ using namespace std;
 #include "game.h"
 #include "hand.h"
 
+gchar *dealer_markup = NULL;
+gchar *player_markup = NULL;
+
 static void
 bj_draw_hand_counts ()
 {
   bj_game_show_hand_counts ();
 }
 
-static void
-bj_draw_user_options ()
+void
+bj_draw_set_dealer_text (gchar *markup)
 {
-  bj_hand_show_options ();
+  if (dealer_markup)
+    g_free (dealer_markup);
+
+  if (markup)
+    dealer_markup = g_strdup (markup);
+  else
+    dealer_markup = NULL;
 }
 
 void
-bj_draw_dealer_probabilities ()
+bj_draw_set_player_text (gchar *markup)
 {
-  bj_hand_show_dealer_probabilities ();
+  if (player_markup)
+    g_free (player_markup);
+
+  if (markup)
+    player_markup = g_strdup (markup);
+  else
+    player_markup = NULL;
+}
+
+static void
+bj_draw_paint_text (void)
+{
+  PangoLayout *layout;
+  gint x, y, width, height;
+
+  if (playing_area)
+    {
+      layout = gtk_widget_create_pango_layout (playing_area, "");
+      if (dealer_markup)
+        pango_layout_set_markup (layout, dealer_markup, -1);
+      x = y = 10;
+      gtk_paint_layout (playing_area->style, playing_area->window, 
+                        (GtkStateType) GTK_WIDGET_STATE (playing_area),
+                        FALSE, NULL, playing_area, NULL, x, y, layout);
+      pango_layout_get_size (layout, &width, &height);
+      g_object_unref (layout);
+
+      layout = gtk_widget_create_pango_layout (playing_area, "");
+      if (player_markup)
+        pango_layout_set_markup (layout, player_markup, -1);
+      x = 10;
+      y = y + PANGO_PIXELS (height);
+      gtk_paint_layout (playing_area->style, playing_area->window, 
+                        (GtkStateType) GTK_WIDGET_STATE (playing_area),
+                        FALSE, NULL, playing_area, NULL, x, y, layout);
+      g_object_unref (layout);
+    }
 }
 
 void
@@ -68,14 +113,11 @@ bj_draw_playing_area_text (gchar *markup, gint x, gint y)
   if (playing_area)
     {
       layout = gtk_widget_create_pango_layout (playing_area, "");
-      //font = pango_font_description_from_string ("Fixed");
-      //pango_layout_set_font_description (layout, font);
       pango_layout_set_markup (layout, markup, -1);
       gtk_paint_layout (playing_area->style, playing_area->window, 
                         (GtkStateType) GTK_WIDGET_STATE (playing_area),
                         FALSE, NULL, playing_area, NULL, x, y, layout);
       g_object_unref (layout);
-      //g_object_unref (font);
     }
 }
 
@@ -208,6 +250,8 @@ bj_draw_take_snapshot ()
     }
   bj_draw_cards ();
   bj_draw_chips ();
+  if (bj_game_is_active () && bj_get_show_probabilities ())
+    bj_draw_paint_text ();
   gdk_window_set_back_pixmap (playing_area->window, surface, 0);
 }
 
@@ -216,13 +260,7 @@ bj_draw_refresh_screen()
 {
   bj_draw_take_snapshot();
   gdk_window_clear (playing_area->window);
-  if (bj_game_is_active ())
-    {
-      if (bj_get_show_probabilities ()) 
-        {
-          bj_draw_dealer_probabilities ();
-          bj_draw_user_options ();
-        }
-    }
+  if (bj_game_is_active () && bj_get_show_probabilities ())
+    bj_draw_paint_text ();
   bj_draw_hand_counts ();
 }

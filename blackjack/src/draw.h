@@ -25,6 +25,8 @@
 #define CHIP_X_ORIGIN 25
 #define CHIP_Y_ORIGIN 340
 
+void bj_draw_set_dealer_text (gchar *);
+void bj_draw_set_player_text (gchar *);
 void bj_draw_playing_area_text (gchar *, gint, gint);
 void bj_draw_dealer_probabilities ();
 

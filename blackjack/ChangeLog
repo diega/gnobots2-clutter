@@ -1,3 +1,26 @@
+2003-12-20  William Jon McCann  <mccann@jhu.edu>
+
+	* src/hand.cpp (bj_hand_hit, bj_hand_double, bj_hand_finish_play): 
+	* src/draw.cpp (bj_draw_set_dealer_text, bj_draw_set_player_text) 
+	(bj_draw_paint_text, bj_draw_take_snapshot, bj_draw_refresh_screen):
+	Use new approach for creating the text on the playing area.  Instead
+	of having the hand and dealer methods called to update the text
+	on screen for every screen update, have the hand and dealer set
+	the markup text after every play and let the screen update render
+	that when needed.  This allows the positioning of the pango layout
+	to happen in draw.cpp.  And that allows positioning to scale with
+	font size.
+
+	* src/player.cpp (showProbabilities, showOptions):
+	(showCount):
+	Use monospace font family instead of fixed.  Use non-white color so
+	that text will show up against white card if necessary.  Make
+	headings bold.  Make best option bold.  Don't use a fixed font
+	size.
+
+	* src/dialog.cpp (get_insurance_choice): Insurance is for suckers or
+	counters.  Make the default answer no.
+
 2003-12-18  William Jon McCann  <mccann@jhu.edu>
 
 	* src/menu.cpp (help_about_callback): Remove email addresses from main

@@ -59,7 +59,7 @@ get_insurance_choice ()
 
   gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (dialog)->label),
                             TRUE);
-  gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
+  gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_NO);
 
   /* add a stock icon? */ 
   switch (gtk_dialog_run (GTK_DIALOG (dialog)))

@@ -211,7 +211,7 @@ Hand::showCount (bool blackjack)
   if (results == NULL)
     results = g_strdup ("");
 
-  markup = g_strdup_printf ("<span size=\"10000\" foreground=\"white\">%s%s</span>", 
+  markup = g_strdup_printf ("<span weight=\"bold\" size=\"small\" foreground=\"#eaeac1\">%s%s</span>", 
                             message, results);
   g_free (message);
   g_free (results);
@@ -253,7 +253,7 @@ Player::reset ()
 int
 Player::showOptions (Hand *player, int upCard, int numHands)
 {
-  int bestOption, num_options;
+  int bestOption, num_options, bestOptionNumber;
   double value, bestValue;
   gchar *markup = NULL;
   gchar *tmpstr = NULL;
@@ -263,7 +263,7 @@ Player::showOptions (Hand *player, int upCard, int numHands)
 
   num_options = 0;
 
-  mark_list[num_options++] = g_strdup_printf ("%s\n", _("Player expected values"));
+  mark_list[num_options++] = g_strdup_printf ("<b>%s</b>\n", _("Player expected values"));
 
   // Player can always stand.
 
@@ -271,6 +271,7 @@ Player::showOptions (Hand *player, int upCard, int numHands)
   mark_list[num_options++] = g_strdup_printf ("  %s     %8.2lf%%\n", 
                                               _("Stand"), value * 100);
   bestOption = KEY_S;
+  bestOptionNumber = num_options;
 
   // Player can't hit split aces.
   if (bj_hand_can_be_hit ())
@@ -283,6 +284,7 @@ Player::showOptions (Hand *player, int upCard, int numHands)
         {
           bestValue = value;
           bestOption = KEY_H;
+          bestOptionNumber = num_options;
         }
       
       // Check if player can double down.
@@ -295,6 +297,7 @@ Player::showOptions (Hand *player, int upCard, int numHands)
             {
               bestValue = value;
               bestOption = KEY_D;
+              bestOptionNumber = num_options;
             }
         }
     }
@@ -310,6 +313,7 @@ Player::showOptions (Hand *player, int upCard, int numHands)
         {
           bestValue = value;
           bestOption = KEY_P;
+          bestOptionNumber = num_options;
         }
     }
 
@@ -323,8 +327,13 @@ Player::showOptions (Hand *player, int upCard, int numHands)
         {
           bestValue = value;
           bestOption = KEY_R;
+          bestOptionNumber = num_options;
         }
     }
+
+  tmpstr = mark_list[bestOptionNumber - 1];
+  mark_list[bestOptionNumber - 1] = g_strdup_printf ("<b>%s</b>", tmpstr);
+  g_free (tmpstr);
 
   switch (num_options)
     {
@@ -355,13 +364,14 @@ Player::showOptions (Hand *player, int upCard, int numHands)
 
   if (tmpstr)
     {
-      markup = g_strdup_printf ("<span size=\"10000\" font_family=\"fixed\" "
-                                "foreground=\"white\">%s</span>",
+      markup = g_strdup_printf ("<span size=\"small\" font_family=\"monospace\" "
+                                "foreground=\"#eaeac1\">%s</span>",
                                 tmpstr);
       g_free (tmpstr);
       for (int i = 0; i < num_options; i++)
         g_free (mark_list[i]);
-      bj_draw_playing_area_text (markup, 10, 120);
+
+      bj_draw_set_player_text (markup);
       g_free (markup);
     }
   return bestOption;
@@ -451,7 +461,7 @@ Probabilities::showProbabilities (BJShoe *distribution, int upCard,
     notBlackjack = 1;
   reset();
 
-  mark_list[0] = g_strdup_printf ("%s\n", _("Dealer hand probabilities"));
+  mark_list[0] = g_strdup_printf ("<b>%s</b>\n", _("Dealer hand probabilities"));
   mark_list[1] = g_strdup_printf ("  %s         %5.2lf%%\n", _("Bust"),
                                   getProbabilityBust (upCard) * 100.0 / notBlackjack);
   for (int count = 17; count <= 21; count++)
@@ -461,14 +471,14 @@ Probabilities::showProbabilities (BJShoe *distribution, int upCard,
                                              * 100.0 / notBlackjack);
     }
 
-  markup = g_strconcat ("<span size=\"10000\" font_family=\"fixed\" foreground=\"white\">", 
+  markup = g_strconcat ("<span size=\"small\" font_family=\"monospace\" foreground=\"#eaeac1\">", 
                         mark_list[0], mark_list[1], mark_list[2], mark_list[3], 
                         mark_list[4], mark_list[5], mark_list[6],
                         "</span>", NULL);
   
   for (int i = 0; i < 7; i++)
     g_free (mark_list[i]);
-  bj_draw_playing_area_text (markup, 10, 10);
+  bj_draw_set_dealer_text (markup);
   g_free (markup);
 }
 

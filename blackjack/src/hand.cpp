@@ -416,8 +416,6 @@ bj_hand_hit ()
     {
       bj_deal_card_to_player ();
 
-      if (bj_get_show_probabilities ()) 
-        bj_draw_dealer_probabilities ();
       player->showCount ();
       if (player->getCount () >= 21)
         if ((player = player->nextHand) == NULL)
@@ -455,8 +453,7 @@ bj_hand_double ()
       player->showWager ();
       
       bj_deal_card_to_player ();
-      if (bj_get_show_probabilities ()) 
-        bj_draw_dealer_probabilities ();
+
       player->showCount ();
       if (player->getCount () <= 21)
         allSettled = false;
@@ -581,8 +578,6 @@ bj_hand_finish_play ()
         if (player->getCards () == 1)
           {
             bj_deal_card_to_player ();
-            if (bj_get_show_probabilities ()) 
-              bj_draw_dealer_probabilities ();
           }
         else
           {
@@ -596,7 +591,8 @@ bj_hand_finish_play ()
               bj_hand_finish ();
             }
         
-        //player->showCount(numHands == 1);
+        bj_hand_show_dealer_probabilities ();
+        bj_hand_show_options ();
       }
     }
   bj_draw_refresh_screen ();
