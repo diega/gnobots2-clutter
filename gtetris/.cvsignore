@@ -1,1 +1,4 @@
-gtetris *.d
+gtetris
+Makefile
+Makefile.in
+.deps
