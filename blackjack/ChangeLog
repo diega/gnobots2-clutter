@@ -1,3 +1,15 @@
+2003-07-07  William Jon McCann  <mccann@jhu.edu>
+
+	* src/events.cpp (bj_event_expose_callback) 
+	(bj_event_enter_notify): 
+	* src/blackjack.cpp (bj_quit_app): Added return values to fix
+	Sun build errors.
+
+	* src/strategy.h: One more line for the Sun Forte build fix.
+
+	* src/game.cpp (bj_game_find_rules): Rewrote function to remove
+	scandir/alphasort dependency.
+
 2003-07-06  William Jon McCann  <mccann@jhu.edu>
 
 	* src/strategy.h: Fix for Sun Forte build errors from Eric.
