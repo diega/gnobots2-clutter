@@ -100,6 +100,8 @@ private:
 	bool paused;
 	int timeoutId;
 	bool onePause;
+	
+	bool inPlay;
 
 	void generateTimer(int level);
 	

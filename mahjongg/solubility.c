@@ -351,7 +351,6 @@ static void place_tiles (guint a, guint b, gint depth)
   tiles[a].type = tiles[b].type = type_info[depth].type;
   tiles[a].image = type_info[depth].image[0];
   tiles[b].image = type_info[depth].image[1];
-  tiles[a].sequence = tiles[b].sequence = 0;
 }
 
 static gboolean walk_tree (gint depth)
@@ -445,8 +444,10 @@ void generate_game (guint32 seed)
 
   /* Find which tiles are initially free. */
   numfree = 0;
-  for (i=0; i<MAX_TILES; i++)
+  for (i=0; i<MAX_TILES; i++) {
     filled[i] = TRUE;
+    tiles[i].sequence = 0;
+  }
   for (i=0; i<MAX_TILES; i++) {
     freetiles[0][i] = FALSE;
     check_tile_is_free (i, 0);
@@ -456,5 +457,32 @@ void generate_game (guint32 seed)
   if (walk_tree (0))
     return;
 
-  /* FIXME: we should report the error that this pile cannot be solved. */
+  /* FIXME: we should report the error that the pile cannot be solved. */
+}
+
+int shuffle (void)
+{
+  int n = 0;
+  int i;
+  
+  /* FIXME: This doesn't really work. */
+
+  for (i=0; i<MAX_TILES; i++) {
+    if (tiles[i].visible) {
+      filled[i] = TRUE;
+    } else {
+      filled[i] = FALSE;
+      n++;
+    }
+  }
+  n >>= 1;
+
+  for (i=0; i<MAX_TILES; i++) {
+    freetiles[n][i] = FALSE;
+    if (tiles[i].visible) {
+      check_tile_is_free (i, n);
+    } 
+  }
+
+  return walk_tree (n);
 }

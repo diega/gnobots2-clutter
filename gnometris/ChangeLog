@@ -1,3 +1,9 @@
+2003-12-08  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* tetris.cpp: Avoid duplicate high scores when starting a new game
+	without finishing the old one. Also record the score when we quit
+	the game to be consistent. Fixes bug #128735.
+
 2003-11-03  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* tetris.cpp: 
@@ -9,7 +15,7 @@
 	* preview.cpp: Reworked the preview pane code to remove drawing
 	glitches and to use GTK+ to do most of the hard work.
 
-2003-10-29  Callum McKenzie  <callum@localhost.localdomain>
+2003-10-29  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am (INCLUDES): Remove *_DISABLE_DEPRECATED.
 

@@ -1,3 +1,9 @@
+2003-12-08  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c: 
+	* solubility.c: Work on the new shuffle algorithm so that
+	it produces solvable results (if possible).
+
 2003-12-07  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* drawing.c (draw_all_tiles): Fix a drawing error when shuffling

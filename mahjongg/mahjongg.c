@@ -1585,9 +1585,12 @@ shuffle_tiles_callback (GtkWidget *widget, gpointer data)
         gint i, previous = 0, first=1, num_shuffle=0;
         tile temp;
         time_t seconds;
+	gboolean ok;
 
         if (paused || game_over == GAME_DEAD || game_over == GAME_WON) return;
 
+#undef USE_NEW_SHUFFLE_ALGORITHM
+#ifndef USE_NEW_SHUFFLE_ALGORITHM
         do {
                 num_shuffle++;
                 /* We do a circular permutation */
@@ -1607,8 +1610,15 @@ shuffle_tiles_callback (GtkWidget *widget, gpointer data)
                 tiles[previous].image = temp.image;
         }
         while (!(update_moves_left ()) && num_shuffle < visible_tiles);
-        
-        if (num_shuffle >= visible_tiles) {
+     
+#endif
+	ok = shuffle ();
+   
+#ifdef USE_NEW_SHUFFLE_ALGORITHM
+	if (!ok) {
+#else
+	if (num_shuffle >= visible_tiles) { 
+#endif
                 GtkWidget *mb;
                 game_over = GAME_DEAD;
                 games_clock_stop (GAMES_CLOCK (chrono));

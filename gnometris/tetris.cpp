@@ -78,6 +78,7 @@ Tetris::Tetris(int cmdlLevel):
 	paused(false), 
 	timeoutId(-1), 
 	onePause(false), 
+	inPlay(false),
 	image(0),
 	bgimage(0),
 	setupdialog(0), 
@@ -812,6 +813,10 @@ Tetris::gameQuit(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
 
+	/* Record the score if the game isn't over. */
+	if ((t->scoreFrame->getScore() > 0) && t->inPlay)
+		gnome_score_log(t->scoreFrame->getScore(), 0, TRUE);
+
 	if (t->w)
 		gtk_widget_destroy(t->w);
 	gtk_main_quit();
@@ -1024,6 +1029,7 @@ Tetris::endOfGame()
         gnome_canvas_item_hide (pauseMessage);
         gnome_canvas_item_show (gameoverMessage);
         gnome_canvas_item_raise_to_top (gameoverMessage);
+	inPlay = false;
 
 	if (scoreFrame->getScore() > 0) 
 	{
@@ -1054,9 +1060,13 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 		g_source_remove(t->timeoutId);
 		t->timeoutId = -1;
 
-		if (t->scoreFrame->getScore() > 0) 
+		/* Catch the case where we started a new game without
+		 * finishing the old one. */
+		if ((t->scoreFrame->getScore() > 0) && t->inPlay)
 			gnome_score_log(t->scoreFrame->getScore(), 0, TRUE);
 	}
+
+	t->inPlay = true;
 
 	int level = t->cmdlineLevel ? t->cmdlineLevel : t->startingLevel;
 
