@@ -1,3 +1,23 @@
+2001-12-28  Josh Barrow  <drleary@mac.com>
+
+	* mahjongg.c: (hint_cancel), (update_moves_left),
+	(set_backgnd_colour), (change_tiles), (tile_event),
+	(apply_preferences), (fill_tile_menu), (fill_map_menu),
+	(find_tile_in_layer), (find_tile), (no_match), (check_free),
+	(colour_changed_cb), (properties_callback), (hint_callback),
+	(about_callback), (pause_callback), (ensure_pause_off),
+	(init_game), (confirm_callback), (exit_game_callback_query),
+	(exit_game_callback), (new_game_reply_callback), (restart_game),
+	(redo_tile_callback), (undo_tile_callback),
+	(seed_dialog_clicked_cb), (select_game), (clear_undo_queue),
+	(set_map), (load_map), (canvas_x), (canvas_y), (load_images),
+	(create_canvas_items), (load_tiles), (create_mahjongg_board),
+	(new_game), (shuffle_tiles_callback), (main):
+	Changed to compile with G_DISABLE_DEPRECATED and 
+	GTK_DISABLE_DEPRECATED.  In doing this, also made it more
+	compilant with the HIG.  There are certainly problems with
+	this big of a change.
+
 2001-12-23  Mark McLoughlin  <mark@skynet.ie>
 
 	* mahjongg.c: port to GamesClock.
