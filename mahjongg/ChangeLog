@@ -1,5 +1,7 @@
 Sun Mar  8 20:44:15 1998  Tom Tromey  <tromey@cygnus.com>
 
+	* Makefile.am (mahjongg_LDADD): Don't include libsupport.a.
+
 	* Makefile.am (INCLUDES): Added GNOME_INCLUDEDIR.
 
 Sat Mar  7 22:49:06 1998  Tom Tromey  <tromey@cygnus.com>
