@@ -38,6 +38,7 @@ struct _tile{
 };
 
 void tile_event (gint tileno, gint button);
+void save_size (guint width, guint height);
 
 extern tile tiles[MAX_TILES];
 extern gint paused;

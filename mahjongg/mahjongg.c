@@ -243,6 +243,8 @@ gint sequence_number;
 
 guint current_seed, next_seed;
 
+gint windowwidth, windowheight;
+
 gchar *tileset = NULL;
 static gchar *mapset = NULL;
 static gchar *score_current_mapset = NULL;
@@ -1492,6 +1494,14 @@ do_game (void)
 	generate_game (current_seed); /* puts in the positions of the tiles */
 }
 
+void save_size (guint width, guint height)
+{
+	gconf_client_set_int (conf_client, "/apps/mahjongg/width",
+			      width, NULL);
+	gconf_client_set_int (conf_client, "/apps/mahjongg/height",
+			      height, NULL);
+}
+
 static void
 load_preferences (void)
 {
@@ -1515,6 +1525,17 @@ load_preferences (void)
 	popup_warn = gconf_client_get_bool (conf_client,
 					    "/apps/mahjongg/warn", NULL);
 
+	windowwidth = gconf_client_get_int (conf_client,
+					    "/apps/mahjongg/width", NULL);
+	if (windowwidth <= 0)
+		windowwidth = 530;
+	
+	windowheight = gconf_client_get_int (conf_client,
+					     "/apps/mahjongg/height", NULL);
+	if (windowheight <= 0)
+		windowheight = 440;
+
+	
 	load_images (selected_tileset);
 }
 
@@ -1637,7 +1658,9 @@ main (int argc, char *argv [])
 	new_seed ();
 
 	window = gnome_app_new (APPNAME, _(APPNAME_LONG));
-
+	gtk_window_set_default_size (GTK_WINDOW (window), windowwidth,
+				     windowheight);
+	
 	/* Statusbar for a chrono, Tiles left and Moves left */
 	status_box = gtk_hbox_new (FALSE, 10);
 

@@ -3,7 +3,7 @@
  * Copyright (C) 2003 by Callum McKenzie
  *
  * Created: <2003-09-07 05:02:22 callum>
- * Time-stamp: <2003-09-30 11:09:09 callum>
+ * Time-stamp: <2003-10-02 09:49:45 callum>
  *
  */
 
@@ -54,6 +54,12 @@ guint tilewidth;
 guint tileheight;
 guint xoffset;
 guint yoffset;
+
+/* This is the minimum size of the widget containing the tiles. These
+ * numbers are completely arbitrary and any resemblance to the resolution
+ * of the basic VGA 256 colour mode is a sign of a mis-spent youth. */
+#define MINWIDTH 320
+#define MINHEIGHT 200
 
 /* These two are in units of tiles and do not include a half tile border. */
 /* FIXME: these should be derived from the geometry. */
@@ -298,10 +304,11 @@ static void configure_board (GtkWidget *w, GdkEventConfigure *e, gpointer data)
                                2*tileheight, -1);
   tilemask = gdk_pixmap_new (NULL, tilewidth, tileheight, 1);
   tilebuffer = gdk_pixmap_new (w->window, tilewidth, tileheight, -1);
-  
+
   recreate_tile_images ();
   calculate_view_geometry ();
   draw_all_tiles ();
+  save_size (windowwidth, windowheight);
 }
 
 /* Handle exposes by dumping out the backing pixmap. */
@@ -328,9 +335,7 @@ static void board_click (GtkWidget * w, GdkEventButton * e, gpointer data)
 GtkWidget * create_mahjongg_board (void)
 {
   board = gtk_drawing_area_new ();
-  /* FIXME: This should be done from a gconf key (and via the overall
-   * window size. */
-  gtk_widget_set_size_request (board, 600, 450);
+  gtk_widget_set_size_request (board, MINWIDTH, MINHEIGHT);
   
   gtk_widget_add_events (board, GDK_BUTTON_PRESS_MASK);
   

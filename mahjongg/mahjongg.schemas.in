@@ -61,6 +61,30 @@
         </locale>
       </schema>
 
+      <schema>
+        <key>/schemas/apps/mahjongg/width</key>
+	<applyto>/apps/mahjongg/width</applyto>
+	<owner>mahjongg</owner>
+	<type>int</type>
+	<default>530</default>
+	<locale name="C">
+	  <short>The width of the window</short>
+	  <long>The requested width of the main window in pixels. Note that the  widgets the window contains are at least 320 pixels wide.</long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/mahjongg/height</key>
+	<applyto>/apps/mahjongg/height</applyto>
+	<owner>mahjongg</owner>
+	<type>int</type>
+	<default>440</default>
+	<locale name="C">
+	  <short>The height of the window</short>
+          <long>The requested height of the main window in pixels. Note that the  widgets the window contains are at least 200 pixels high.</long>
+        </locale>
+      </schema>
+
   </schemalist>
   
 </gconfschemafile>
