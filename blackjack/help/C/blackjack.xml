@@ -824,10 +824,7 @@
   <sect1 id="blackjack-about"> 
     <title>About &app;</title> 
     <para> &app; was written by William Jon McCann
-      (<email>mccann@jhu.edu</email>). To find more information about
-      &app;, please visit the 
-      <ulink url="http://www.my-gnome-app.org" type="http">MY-GNOME-APP Web
-	page</ulink>. </para>
+      (<email>mccann@jhu.edu</email>).</para>
     <para>
       To report a bug or make a suggestion regarding this application or
       this manual, follow the directions in this 
