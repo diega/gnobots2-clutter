@@ -1,3 +1,16 @@
+2004-03-25  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* For_Iagno: Added to the repository: a list of what needs to be
+	done for the Iagno merge.
+
+	* Makefile.am: 
+	* sounds/*:
+	* gataxx.soundlist.in:	
+	* TODO: Remvoe the sound infrastructure, it seems to have never
+	been used and it is identical to what iagno has. I'll add sound
+	support when I merge in iagno. Also remove TODO since it is out of
+	date.
+
 2004-03-06  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* properties.c: A simple adaption of jrb's iagno patch for fixing

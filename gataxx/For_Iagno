@@ -1,0 +1,10 @@
+The plan is to merge in iagno a bit at a time. This is a partial list of
+what needs to be implemented/imported:
+
+ - Sound support.
+ - Network support.
+ - Iagno AI.
+ - Iagno/gataxx command line switches.
+ - Multiple desktop entries (in the same file ?)
+
+Also note the usability bugs in bugzilla related to iagno.

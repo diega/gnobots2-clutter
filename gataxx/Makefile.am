@@ -34,14 +34,8 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 
 EXTRA_DIST = AUTHORS \
 	gataxx.desktop.in 	\
-	gataxx.soundlist.in \
 	$(appicon_DATA) \
 	$(schema_in_files)
-
-soundlistdir = $(sysconfdir)/sound/events
-soundlist_in_files = gataxx.soundlist.in
-soundlist_DATA = $(soundlist_in_files:.soundlist.in=.soundlist)
-@INTLTOOL_SOUNDLIST_RULE@
 
 SUBDIRS = sounds help
 
