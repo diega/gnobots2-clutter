@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Gnobots
+Name[es]=Gnobots
+Name[de]=Gnobots
+Name[ko]=Gnobots
+Name[fr]=Gnobots
+Name[no]=Gnobots
+Comment=Gnome Robots game
+Comment[es]=Gnome Robots game
+Comment[de]=Gnome Robots game
+Comment[ko]=Gnome Robots game
+Comment[fr]=Gnome Robots game
+Comment[no]=Gnome Robots game
+Exec=gnobots
+Icon=gnome-gnobots.png
+Terminal=0
+Type=Application
