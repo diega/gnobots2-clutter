@@ -1638,6 +1638,9 @@ int main(int argc, char *argv[])
 
 	App=gnome_app_new(argv[0],"ScottFree 1.15");
 	
+	gtk_signal_connect(GTK_OBJECT(App), "destroy",
+			   GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+			   
 	divider=gtk_vbox_new(FALSE, 1);
 	
 	gnome_app_set_contents(GNOME_APP(App), divider);
