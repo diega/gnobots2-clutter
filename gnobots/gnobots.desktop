@@ -1,16 +1,16 @@
 [Desktop Entry]
 Name=Gnobots
-Name[es]=Gnobots
 Name[de]=Gnobots
-Name[ko]=Gnobots
+Name[es]=Gnobots
 Name[fr]=Gnobots
+Name[ko]=Gnobots
 Name[no]=Gnobots
 Name[pt]=Gnobots
 Comment=Gnome Robots game
-Comment[es]=Trate de escapar a los robots que le asedian
 Comment[de]=Gnome Robots game
+Comment[es]=Trate de escapar a los robots que le asedian
+Comment[fr]=Essayez d'échaper aux robots qui vous poursuivent
 Comment[ko]=Gnome Robots game
-Comment[fr]=Jeu Gnome Robots
 Comment[no]=Gnome Robots game
 Comment[pt]=Jogo Gnome Robots
 Exec=gnobots
