@@ -10,9 +10,12 @@
 #include "plugin.h"
 
 GtkWidget *app;
+GtkWidget *new_game_dialog = NULL;
 Iagno2Properties *properties;
 
 Iagno2Plugin *plugin;
+
+gboolean game_in_progress = FALSE;
 
 extern gchar *board;
 extern gchar *board_pixmaps;
@@ -23,8 +26,6 @@ extern gchar whose_turn;
 
 extern gint computer_timeout_id;
 extern gint game_over_flip_id;
-
-int number = 3;
 
 static GnomeUIInfo
 game_menu[] = {
@@ -58,6 +59,30 @@ delete_event_cb (GtkWidget *window, GdkEventAny *event, gpointer data)
 gint
 new_game_cb (GtkWidget *widget, gpointer data)
 {
+  if (new_game_dialog) {
+    return;
+  }
+
+  if (!game_in_progress) {
+    new_game_real_cb (0, NULL);
+    return;
+  }
+
+  new_game_dialog = gnome_question_dialog_parented (_("Game already in progress!\nStart a new game?"),
+                                                    new_game_real_cb,
+                                                    NULL, GTK_WINDOW (app));
+}
+
+void
+new_game_real_cb (gint reply, gpointer data)
+{
+  game_in_progress = TRUE;
+  new_game_dialog = NULL;
+
+  if (reply) {
+    return;
+  }
+  
   if (board) {
     reversi_destroy_board (&board);
   }
@@ -92,7 +117,7 @@ new_game_cb (GtkWidget *widget, gpointer data)
 
   iagno2_force_board_redraw ();
 
-  iagno2_setup_current_player ();
+  iagno2_setup_current_player (FALSE);
 }
 
 int
@@ -110,6 +135,7 @@ main (int argc, char **argv)
   iagno2_initialize_players ();
 
   iagno2_app_init ();
+  iagno2_appbar_init ();
   iagno2_drawing_area_init ();
   
   gtk_widget_show_all (app);

@@ -1,5 +1,14 @@
 2000-04-08  Ian Peters  <itp@gnu.org>
 
+	* src/plugin.c, src/plugin.h: Added a function to the plugin spec to
+	  return a busy message while the plugin decides on a move
+
+	* src/iango2.c, src/main.c, src/main.h: Added an appbar that displays
+	  prompts to move, the plugin status message, etc.  Also added a new
+	  game dialog.
+
+2000-04-08  Ian Peters  <itp@gnu.org>
+
 	* src/iagno2.c, plugins/random/random.c: Changed code to use a thread to
 	  handle moving the computer player, so that GUI won't block, updated
 	  reference plugin random to reflect the change.

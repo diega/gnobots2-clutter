@@ -11,12 +11,15 @@
 #include "plugin.h"
 
 extern GtkWidget *app;
+extern GtkWidget *new_game_dialog;
 extern GnomeUIInfo iagno2_menu[];
 extern Iagno2Properties *properties;
 
 extern gchar *board;
 
 extern Iagno2Plugin *plugin;
+
+extern gboolean game_in_progress;
 
 /*
 GtkWidget *canvas;
@@ -49,6 +52,8 @@ gboolean interactive = 0;
 
 gint computer_timeout_id = 0;
 gint game_over_flip_id = 0;
+
+GnomeAppBar *appbar;
 
 void
 iagno2_tileset_load ()
@@ -235,6 +240,16 @@ iagno2_app_init ()
       "delete_event",
       GTK_SIGNAL_FUNC (delete_event_cb),
       NULL);
+}
+
+void
+iagno2_appbar_init ()
+{
+  appbar = GNOME_APPBAR (gnome_appbar_new (FALSE, TRUE, FALSE));
+
+  gnome_app_set_statusbar (GNOME_APP (app), GTK_WIDGET (appbar));
+
+  gnome_appbar_set_status (GNOME_APPBAR (appbar), _(" Welcome to Iagno2!"));
 }
 
 void
@@ -590,42 +605,72 @@ iagno2_computer_player_wrapper ()
 }
 
 void
-iagno2_setup_current_player ()
+iagno2_setup_current_player (gboolean pass)
 {
   gchar player = PLAYER (whose_turn);
+  gchar *sides[2];
+  gchar *interactive_message;
+  gchar *message;
+  gchar *pad;
+
+  sides[0] = g_strdup (_("Dark"));
+  sides[1] = g_strdup (_("Light"));
+
+  if (pass) {
+    pad = g_strconcat (" [", sides[(player)?0:1],
+                       _(" was forced to pass] "), NULL);
+  } else {
+    pad = g_strdup (" ");
+  }
 
   computer_timeout_id = 0;
   
   if (players[player] == NULL) {
     interactive = 1;
+    message = g_strconcat (pad, _("Waiting for input from user... ["),
+                           sides[player], "]", NULL);
   } else {
     interactive = 0;
     computer_timeout_id = gtk_timeout_add (1000,
                                            iagno2_computer_player_wrapper,
                                            NULL);
+    message = g_strconcat (pad, players[player]->plugin_busy_message (),
+                           " [", sides[player], "]", NULL);
   }
+
+  gnome_appbar_set_status (GNOME_APPBAR (appbar), message);
+
+  g_free (sides[0]);
+  g_free (sides[1]);
+  g_free (message);
+  g_free (pad);
 }
 
 static void
 iagno2_post_move_check ()
 {
+  gboolean pass = FALSE;
+  
   iagno2_board_changed ();
 
   whose_turn = other_player (whose_turn);
 
   if (!are_valid_moves (board, whose_turn)) {
     if (!are_valid_moves (board, other_player (whose_turn))) {
-      printf ("The game is over!\n");
       game_over_flip_id = gtk_timeout_add (3000,
           iagno2_game_over, NULL);
+      gnome_appbar_set_status (GNOME_APPBAR (appbar), " Game over!");
       return;
     } else {
+      /*
       printf ("A player had to pass!\n");
+      */
       whose_turn = other_player (whose_turn);
+      pass = TRUE;
     }
   }
 
-  iagno2_setup_current_player ();
+  iagno2_setup_current_player (pass);
 }
 
 void
@@ -680,12 +725,26 @@ iagno2_initialize_players ()
   }
 }
 
+/*
+void
+game_over_new_game_cb (gint reply, gpointer data)
+{
+  new_game_dialog = NULL;
+  if (!reply) {
+    new_game_cb (NULL, NULL);
+  }
+}
+*/
+
 gint
 iagno2_game_over ()
 {
   gchar white_count = 0;
   gchar black_count = 0;
   gchar i;
+  gchar *message;
+
+  game_in_progress = FALSE;
 
   for (i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
     if (board[i] == WHITE_TILE) {
@@ -699,13 +758,31 @@ iagno2_game_over ()
     board[i] = BLACK_TILE;
   }
 
-  for (i = black_count; i < BOARDSIZE * BOARDSIZE; i++) {
+  for (i = black_count; i < (64 - white_count); i++) {
+    board[i] = 0;
+  }
+
+  for (i = (64 - white_count); i < BOARDSIZE * BOARDSIZE; i++) {
     board[i] = WHITE_TILE;
   }
 
   iagno2_board_changed ();
 
   game_over_flip_id = 0;
+
+  if (black_count > white_count) {
+    message = g_strdup_printf (_(" Dark player wins by a score of %d to %d"),
+                               black_count, white_count);
+  } else if (white_count > black_count) {
+    message = g_strdup_printf (_(" Light player wins by a score f %d to %d"),
+                               white_count, black_count);
+  } else {
+    message = g_strdup_printf (_(" The game was a tie at %d"), black_count);
+  }
+
+  gnome_appbar_set_status (GNOME_APPBAR (appbar), message);
+
+  g_free (message);
 
   return FALSE;
 }

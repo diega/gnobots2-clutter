@@ -26,8 +26,6 @@ plugin_move (gchar *board)
   gint moves[32];
   gint nummoves = 0;
 
-  sleep (1);
-  
   for (i = 0; i < 64; i++) {
     if (is_valid_move (board, i, whose_turn)) {
       moves[nummoves++] = i;
@@ -47,4 +45,10 @@ const gchar *
 plugin_name ()
 {
   return "Random player for Iagno II";
+}
+
+const gchar *
+plugin_busy_message ()
+{
+  return "Random player is stalling for time...";
 }

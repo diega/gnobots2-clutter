@@ -31,6 +31,9 @@ iagno2_plugin_open (const gchar *plugin_file)
     return NULL;
   }
 
+  g_module_symbol (tmp->module, "plugin_busy_message",
+                   ((gpointer)&(tmp->plugin_busy_message)));
+
   g_module_symbol (tmp->module, "plugin_preferences_cb",
                    ((gpointer)&(tmp->plugin_preferences_cb)));
 

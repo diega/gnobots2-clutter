@@ -9,6 +9,7 @@ typedef struct {
 	void (*plugin_init)();
 	gint (*plugin_move)(gchar *board);
 	const gchar *(*plugin_name)();
+  const gchar *(*plugin_busy_message)();
 	gint (*plugin_preferences_cb)(GtkWidget *widget, gpointer data);
 } Iagno2Plugin;
 
