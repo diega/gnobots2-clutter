@@ -45,8 +45,6 @@ plugin_init_player (gchar player)
 
   g_snprintf (busy_message[player], 50, "%s", tmp_message);
   g_free (tmp_message);
-
-  printf ("%s\n", busy_message[player]);
 }
 
 void
@@ -148,8 +146,6 @@ plugin_preferences_window (GtkWidget *parent, gchar player)
     gnome_property_box_changed (GNOME_PROPERTY_BOX (parent));
   }
 
-  printf ("%d\n", player);
-
   dialog = gnome_dialog_new (_("Random Player Configuration"),
                              GNOME_STOCK_BUTTON_OK,
                              GNOME_STOCK_BUTTON_CANCEL,
@@ -184,8 +180,6 @@ void
 plugin_preferences_save (gchar player)
 {
   gchar *pref_file;
-
-  printf ("%d\n", player);
   
   if (new_message[player] == NULL) {
     return;
