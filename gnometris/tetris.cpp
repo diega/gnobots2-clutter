@@ -139,7 +139,8 @@ Tetris::Tetris(int cmdlLevel):
 	g_signal_connect (w, "delete_event", G_CALLBACK (gameQuit), this);
 	gtk_window_set_resizable (GTK_WINDOW (w), FALSE);
 	gtk_drag_dest_set (w, GTK_DEST_DEFAULT_ALL, targets, 
-			   G_N_ELEMENTS(targets), GDK_ACTION_COPY);
+			   G_N_ELEMENTS(targets), 
+			   GDK_ACTION_MOVE);
 	g_signal_connect (G_OBJECT (w), "drag_data_received", 
 			  G_CALLBACK (dragDrop), this);
 

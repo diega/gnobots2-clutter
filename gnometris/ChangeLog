@@ -1,3 +1,8 @@
+2004-10-19  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* tetris.cpp: Change GDK_ACTION_COPY -> GDK_ACTION_MOVE to make
+	drag and drop from konqueror happy.
+
 2004-10-17  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am: Explicitly include the esd cflags and libs
