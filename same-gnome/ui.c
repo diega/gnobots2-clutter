@@ -23,6 +23,8 @@ GtkWidget *application;
 GtkWidget *scorewidget;
 GtkWidget *gridframe = NULL;
 GtkToggleAction *fullscreenaction;
+GtkWidget *undo_widget;
+GtkWidget *redo_widget;
 
 static void quit_cb (void)
 {
@@ -118,12 +120,16 @@ static void scores_cb (void)
 
 static void undo_cb (void)
 {
-
+	undo ();
+	redraw ();
+	select_cells ();
 }
 
 static void redo_cb (void)
 {
-
+	redo ();
+	redraw ();
+	select_cells ();
 }
 
 static void size_change_cb (GtkRadioAction *action, gpointer data)
@@ -256,6 +262,11 @@ void build_gui (void)
   ui_manager = gtk_ui_manager_new ();
   gtk_ui_manager_insert_action_group (ui_manager, action_group, 1);
   gtk_ui_manager_add_ui_from_string (ui_manager, ui_description, -1, NULL);
+
+	undo_widget = gtk_ui_manager_get_widget (ui_manager, 
+																					 "/MainMenu/GameMenu/UndoMove");
+	redo_widget = gtk_ui_manager_get_widget (ui_manager, 
+																					 "/MainMenu/GameMenu/RedoMove");
   
   gtk_window_add_accel_group (GTK_WINDOW (application),
 			      gtk_ui_manager_get_accel_group (ui_manager));
@@ -298,4 +309,10 @@ void build_gui (void)
   
   gtk_widget_show_all (application);
   
+}
+
+void set_undoredo_sensitive (gboolean undo, gboolean redo)
+{
+	gtk_widget_set_sensitive (undo_widget, undo);
+	gtk_widget_set_sensitive (redo_widget, redo);
 }

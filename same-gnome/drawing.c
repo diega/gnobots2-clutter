@@ -614,10 +614,7 @@ static gboolean animation_timer (void)
 					game_state = GAME_MOVING_LEFT;
 					speed = 1.0;
 				} else {
-					game_state = GAME_IDLE;
-					/* FIXME: The setting of GAME_IDLE and end_of_game_check seem to go
-					 * together, can this be simplified. */
-					end_of_game_check ();
+					end_of_move ();
 				}
 			else {
 				game_state = GAME_MOVING_DOWN;
@@ -632,8 +629,7 @@ static gboolean animation_timer (void)
 				if (mark_shifting_balls ()) {
 					game_state = GAME_MOVING_LEFT;
 				} else {
-					game_state = GAME_IDLE;
-					end_of_game_check ();
+					end_of_move ();
 					select_cells ();
 				}
 				speed = 1.0;
@@ -643,8 +639,7 @@ static gboolean animation_timer (void)
 			break;
 		case GAME_MOVING_LEFT:
 			if (!mark_shifting_balls ()) {
-				game_state = GAME_IDLE;
-				end_of_game_check ();
+				end_of_move ();
 				select_cells ();
 			}
 			break;

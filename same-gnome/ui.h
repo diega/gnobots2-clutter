@@ -13,7 +13,8 @@
 
 void show_score (gint score);
 void game_over_dialog (void);
-void  new_frame_ratio (gint board_width, gint board_height);
+void new_frame_ratio (gint board_width, gint board_height);
 void build_gui (void);
+void set_undoredo_sensitive (gboolean undo, gboolean redo);
 
 #endif /* UI_H */

@@ -44,6 +44,7 @@ gint board_sizes[MAX_SIZE][3] = {{-1, -1, -1}, /* This is a dummy entry. */
 
 gint board_width;
 gint board_height;
+gint board_ncells;
 gint ncolours;
 
 gint window_width;

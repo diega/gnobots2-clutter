@@ -50,6 +50,7 @@ extern gint board_sizes[MAX_SIZE][3];
 /* The parameters for the current game. */
 extern gint board_width;
 extern gint board_height;
+extern gint board_ncells;
 extern gint ncolours;
 
 /* The size of the window. These are the parameters we save with gconf. */

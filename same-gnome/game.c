@@ -12,6 +12,11 @@
 #include "game.h"
 #include "ui.h"
 
+typedef struct _game_state_record {
+	gint score;
+	gint8 *colours;
+} game_state_record;
+
 /* The blank colour. */
 const gint NONE = -1;
 
@@ -31,11 +36,118 @@ gint count = 0;
 
 gint game_state = GAME_IDLE;
 
+/* The undo/redo list. It stores arrays of colours. */
+GList *urlist = NULL;
+/* This points the position of the current game in the list.
+ * The next pointer points to the future, the prev pointer to
+ * the past. */
+GList *urptr;
+
+static void game_state_free (game_state_record *g)
+{
+	g_free (g->colours);
+	g_free (g);
+}
+
+static void free_urlist (GList *l)
+{
+	if (l == NULL)
+		return;
+
+	g_list_foreach (l, (GFunc) game_state_free, NULL);
+	g_list_free (l);
+}
+
+static void record_game_state (void)
+{
+	game_state_record *g;
+	int i;
+	game_cell *c;
+	gint8 *p;
+
+	g = g_malloc (sizeof(game_state_record));
+
+	if (urptr) {
+		if (urptr->next) { 	/* Erase the future, if we have one. */
+			free_urlist (urptr->next);
+			urptr->next = NULL;
+		}
+		urptr = g_list_append (urptr, g);
+		urptr = urptr->next;
+	} else { /* We have a new, blank, undo list. */
+		urptr = g_list_append (urptr, g);
+		urlist = urptr;
+	}
+
+	/* FIXME: This is a bit ugly, but necessary so we can keep
+	 * track of the beginning of the list. */
+	if (urlist == NULL)
+		urlist = urptr;
+
+	g->score = score;
+	g->colours = g_malloc (board_ncells*sizeof(gint8));
+
+	p = g->colours;
+	c = board;
+	for (i=0; i<board_ncells; i++) {
+		*p = c->colour; 
+		p++;
+		c++;
+	}
+
+	set_undoredo_sensitive (urptr->prev != NULL, urptr->next != NULL);
+}
+
+static void restore_game_state (void)
+{
+	game_cell *c;
+	gint8 *p;
+	int i;
+	game_state_record *g;
+
+	g = urptr->data;
+	p = g->colours;
+	c = board;
+
+	for (i=0; i<board_ncells; i++) {
+		c->colour = *p;
+		c->style = ANI_STILL;
+		c->frame = 0;
+		p++;
+		c++;
+	}
+	
+	score = g->score;
+	show_score (score);
+
+	game_state = GAME_IDLE;
+}
+
+void undo (void)
+{
+	if (urptr->prev) {
+		urptr = urptr->prev;
+		restore_game_state ();
+		set_undoredo_sensitive (urptr->prev != NULL, TRUE);
+	}
+}
+
+void redo (void)
+{
+	if (urptr->next) {
+		urptr = urptr->next;
+		restore_game_state ();
+		set_undoredo_sensitive (TRUE, urptr->next != NULL);
+	}
+}
+
 void set_sizes (gint size)
 {
 	board_width = board_sizes[size][0];
 	board_height = board_sizes[size][1];
 	ncolours = board_sizes[size][2];
+
+	board_ncells = board_height*board_width;
 	
 	gconf_client_set_int (gcclient, GCONF_SIZE_KEY, size, NULL);
 
@@ -76,7 +188,7 @@ void find_connected_component (int x, int y)
 	int k;
 
 	c = board;
-	for (k=0; k<board_width*board_height; k++) {
+	for (k=0; k<board_ncells; k++) {
 		c->visited = 0;
 		c++;
 	}
@@ -137,7 +249,9 @@ void destroy_balls (void)
 
 	count = 0;
 
-	/* The end of game check is not triggered here, we want the balls 
+	/* We add the removed columns to the undo list later. */
+
+	/* The end of game check is also not triggered here, we want the balls 
 	 * to settle first. It is called from the animation code. */
 }
 
@@ -179,7 +293,7 @@ gboolean mark_shifting_balls (void)
 	 * Once we find an empty cell beside a full cell we start moving.
 	 * i.e. we collapse from the right. */
 
-	p = board + board_height*board_width - 2;
+	p = board + board_ncells - 2;
 	k = board_width - 2;
 	for (i=0; i<(board_width-1); i++) {
 		q = p + 1;
@@ -215,7 +329,7 @@ static void game_over (void)
 	game_over_dialog ();
 }
 
-void end_of_game_check (void)
+static void end_of_game_check (void)
 {
 	int i,j;
 	game_cell *p, *q;
@@ -257,6 +371,14 @@ void end_of_game_check (void)
 
 }
 
+void end_of_move (void) {
+	game_state = GAME_IDLE;
+	end_of_game_check ();
+	/* FIXME: This placement gives odd semantics when undo is called
+	 * during an animation. */
+	record_game_state ();
+}
+
 void new_game (void)
 {
 	int i,j,c,l;
@@ -273,15 +395,11 @@ void new_game (void)
 			g_free (selected);
 		board = g_new0 (game_cell, board_width*board_height);
 		/* FIXME: *4 is way overkill, but may be the only way to be sure. */
-		findstack = g_malloc (sizeof(coordinates)*((board_width
-													*board_height)*4));
-		selected = g_malloc (sizeof(coordinates)*((board_width
-												 *board_height)/ncolours + 1));
+		findstack = g_malloc (sizeof(coordinates)*(board_ncells*4));
+		selected = g_malloc (sizeof(coordinates)*(board_ncells/ncolours + 1));
 		last_board_width = board_width;
 		last_board_height = board_height;
 	}
-
-	/* FIXME: Reset and reallocate the memory for the undo queue. */
 
 	/* Allocate equal numbers of each colour across the board. */	
 	p = board;
@@ -296,7 +414,7 @@ void new_game (void)
 		}
 
 	/* Randomise the colours. */
-	l = board_width*board_height;
+	l = board_ncells;
 	for (i=0; i<l; i++) {
 		j = g_random_int_range (0, l);
 		c = board[j].colour;
@@ -307,6 +425,14 @@ void new_game (void)
 	game_state = GAME_IDLE;
 	score = 0;
 	show_score (score);
+
+	/* Free and reset the memory for the undo queue. */
+	free_urlist (urlist);
+	urlist = NULL;
+	urptr = NULL;
+	record_game_state ();
+
+	set_undoredo_sensitive (FALSE, FALSE);
 	
 	redraw ();
 }

@@ -1,3 +1,13 @@
+2004-12-30  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* drawing.c:
+	* ui.c: 
+	* ui.h:
+	* game.h:
+	* globals.h:
+	* same-gnome.c:
+	* game.c: Implement Undo/Redo.
+
 2004-12-27  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* drawing.c:

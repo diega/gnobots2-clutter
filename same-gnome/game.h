@@ -71,6 +71,8 @@ extern gint count;
 extern game_cell *board;
 
 void new_game (void);
+void undo (void);
+void redo (void);
 void set_sizes (gint size);
 game_cell * get_game_cell (int x, int y);
 void find_connected_component (int x, int y);
@@ -79,7 +81,7 @@ void destroy_balls (void);
 gint mark_falling_balls (void);
 gboolean mark_shifting_balls (void);
 void fixup_marks (void);
-void end_of_game_check (void);
+void end_of_move (void);
 
 #endif /* GAME_H */
 
