@@ -1,3 +1,7 @@
+2004-07-16  William Jon McCann  <mccann@jhu.edu>
+
+	* data/Vegas_Strip.rules.dat: Removed.
+
 2004-07-11  William Jon McCann  <mccann@jhu.edu>
 
 	* src/strategy.cpp: Fix for bug #145586.
