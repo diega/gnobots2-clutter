@@ -215,15 +215,15 @@ gint event_bouncer (GtkWidget *widget, GdkEvent *e, void *d)
   fire_button0 = [[[Gtk_Button alloc] initWithLabel : "Fire"] show];
   pass_button0 = [[[Gtk_Button alloc] initWithLabel : "Pass"] show];
   left_draw = [[[Gtk_DrawingArea alloc] init] show];
-  [left_draw size : MOVES_WIDTH aHeight: MOVES_HEIGHT];
+  [left_draw size : MOVES_WIDTH setHeight: MOVES_HEIGHT];
 
   draw = [[[Gtk_DrawingArea alloc] init] show];
-  [draw size : GRID_SZ*15 aHeight: GRID_SZ*11];
+  [draw size : GRID_SZ*15 setHeight: GRID_SZ*11];
   
   fire_button1 = [[[Gtk_Button alloc] initWithLabel : "Fire"] show];
   pass_button1 = [[[Gtk_Button alloc] initWithLabel : "Pass"] show];
   right_draw = [[[Gtk_DrawingArea alloc] init] show];
-  [right_draw size : MOVES_WIDTH aHeight: MOVES_HEIGHT];
+  [right_draw size : MOVES_WIDTH setHeight: MOVES_HEIGHT];
 
 
   gdk_window_get_geometry (draw->gtkwidget->window,
