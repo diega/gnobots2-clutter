@@ -1,5 +1,6 @@
 scoredir=$(localstatedir)/games
 pixmapdir = $(datadir)/pixmaps/same-gnome
+sharedpixmapdir = $(datadir)/pixmaps
 Gamesdir = $(datadir)/applications
 
 SUBDIRS = help
@@ -30,6 +31,7 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 
 pixmap_DATA = planets.png blink-sync.png marbles.png \
 	stones.png rotate.png glass.png
+sharedpixmap_DATA = gnome-gsame.png
 EXTRA_DIST = same-gnome.desktop.in $(pixmap_DATA) $(schema_in_files)
 
 Games_in_files = same-gnome.desktop.in
