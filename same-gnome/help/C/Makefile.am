@@ -10,7 +10,7 @@ all: index.html
 
 # No-op if db2html failed
 index.html: same-gnome/book1.html
-	cd $(srcdir) && cp same-gnome/book1.html index.html || touch index.html
+	-cd $(srcdir) && cp same-gnome/book1.html index.html
 
 same-gnome/book1.html: same-gnome.sgml
 	-cd $(srcdir) && db2html same-gnome.sgml
