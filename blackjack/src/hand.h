@@ -22,6 +22,7 @@
 
 void                    bj_hand_new (void);
 void                    bj_hand_finish (void);
+void                    bj_hand_cancel (void);
 
 gboolean                bj_hand_can_be_hit (void);
 gboolean                bj_hand_can_be_doubled (void);

@@ -406,9 +406,20 @@ bj_game_eval_installed_file (gchar *file)
   g_free (relative);
 }
 
-void bj_game_new (gchar* file, guint *seedp )
+void 
+bj_game_cancel ()
+{
+  bj_hand_cancel ();
+  bj_game_set_active (FALSE);
+}
+
+void
+bj_game_new (gchar* file, guint *seedp )
 {
   gint min_w, min_h;
+
+  if (bj_game_is_active ())
+    bj_game_cancel ();
 
   first_hand = true;
 
@@ -433,7 +444,7 @@ void bj_game_new (gchar* file, guint *seedp )
   if (seedp)
     seed = *seedp;
   else
-    seed = g_random_int();
+    seed = g_random_int ();
 
   g_random_set_seed (seed);
 

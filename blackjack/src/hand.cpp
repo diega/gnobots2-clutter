@@ -45,10 +45,39 @@
 #include <iostream>
 using namespace std;
 
+guint deal_timeout_id = 0;
+guint finish_timeout_id = 0;
+guint hit_timeout_id = 0;
+
+void
+bj_hand_cancel ()
+{
+  if (deal_timeout_id != 0)
+    {
+      g_source_remove (deal_timeout_id);
+      deal_timeout_id = 0;
+    }
+
+  if (hit_timeout_id != 0)
+    {
+      g_source_remove (hit_timeout_id);
+      hit_timeout_id = 0;
+    }
+  
+  if (finish_timeout_id != 0)
+    {
+      g_source_remove (finish_timeout_id);
+      finish_timeout_id = 0;
+    }
+
+  events_pending = false;
+}
+
 hslot_type
 bj_hand_get_slot ()
 {
-  g_return_val_if_fail (player != NULL, NULL);
+  if (player == NULL)
+    return NULL;
 
   return player->hslot;
 }
@@ -272,6 +301,7 @@ bj_hand_new5 (gpointer data)
     }
 
   bj_draw_refresh_screen ();
+  deal_timeout_id = 0;
   return FALSE;
 }
 
@@ -280,7 +310,7 @@ bj_hand_new4 (gpointer data)
 {
   bj_deal_card_to_dealer (false);
   bj_draw_refresh_screen ();
-  g_timeout_add ((gint)bj_get_deal_delay (), bj_hand_new5, NULL);
+  deal_timeout_id = g_timeout_add ((gint)bj_get_deal_delay (), bj_hand_new5, NULL);
   return FALSE;
 }
 
@@ -289,7 +319,7 @@ bj_hand_new3 (gpointer data)
 {
   bj_deal_card_to_player ();
   bj_draw_refresh_screen ();
-  g_timeout_add ((gint)bj_get_deal_delay (), bj_hand_new4, NULL);
+  deal_timeout_id = g_timeout_add ((gint)bj_get_deal_delay (), bj_hand_new4, NULL);
   return FALSE;
 }
 
@@ -298,7 +328,7 @@ bj_hand_new2 (gpointer data)
 {
   bj_deal_card_to_dealer ();
   bj_draw_refresh_screen ();
-  g_timeout_add ((gint)bj_get_deal_delay (), bj_hand_new3, NULL);
+  deal_timeout_id = g_timeout_add ((gint)bj_get_deal_delay (), bj_hand_new3, NULL);
   return FALSE;
 }
 
@@ -307,7 +337,7 @@ bj_hand_new1 (gpointer data)
 {
   bj_deal_card_to_player ();
   bj_draw_refresh_screen ();
-  g_timeout_add ((gint)bj_get_deal_delay (), bj_hand_new2, NULL);
+  deal_timeout_id = g_timeout_add ((gint)bj_get_deal_delay (), bj_hand_new2, NULL);
   return FALSE;
 }
 
@@ -367,6 +397,7 @@ bj_hand_finish1 (gpointer data)
         }
       events_pending = false;
       bj_draw_refresh_screen ();
+      finish_timeout_id = 0;
       return FALSE;
     }
 }
@@ -382,8 +413,8 @@ bj_hand_finish ()
   dealer->showCount ();
   bj_draw_refresh_screen ();
 
-  g_timeout_add ((gint)bj_get_deal_delay (), 
-                 bj_hand_finish1, NULL);
+  finish_timeout_id = g_timeout_add ((gint)bj_get_deal_delay (), 
+                                     bj_hand_finish1, NULL);
 }
 
 void
@@ -423,6 +454,7 @@ bj_hand_hit_delay_cb (gpointer data)
 {
   events_pending = false;
   bj_hand_hit ();
+  hit_timeout_id = 0;
   return FALSE;
 }
 
@@ -430,7 +462,8 @@ void
 bj_hand_hit_with_delay (void)
 {
   events_pending = true;
-  g_timeout_add ((gint)bj_get_deal_delay (), bj_hand_hit_delay_cb, NULL);
+  hit_timeout_id = g_timeout_add ((gint)bj_get_deal_delay (),
+                                  bj_hand_hit_delay_cb, NULL);
 }
   
 void
