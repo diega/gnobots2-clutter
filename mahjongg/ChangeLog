@@ -1,3 +1,8 @@
+2004-04-26  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c (about_callback): Update credits to make it clear who
+	did what.
+
 2004-04-25  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am: 	

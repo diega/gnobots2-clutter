@@ -1644,6 +1644,8 @@ about_callback (GtkWidget *widget, gpointer data)
 		"Michael Meeks",
                 "Philippe Chavin",
 		"Callum McKenzie",
+		"",
+		N_("Maps:"),
 		"Rexford Newbould",
 		"Krzysztof Foltman",
 		"",
