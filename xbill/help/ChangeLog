@@ -1,0 +1,4 @@
+2002-02-04  Kevin Breit  <mrproper@ximian.com>
+
+	* C/gnome-xbill-doc.sgml: Added this and all the files to CVS.  This needs to be added to the Makefiles though.
+
