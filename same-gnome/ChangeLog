@@ -1,3 +1,9 @@
+2001-03-28  Dan Mueth  <dan@eazel.com>
+
+	Changed from <book> to <article>.
+
+	* help/C/same-gnome.sgml:
+
 2000-05-12  Andreas Hyden  <a.hyden@cyberpoint.se>
 
 	* same-gnome.desktop: Added Swedish translation.
