@@ -1,3 +1,10 @@
+2001-12-19  Seth Nickell  <snickell@stanford.edu>
+
+	* Makefile.am:
+	* mahjongg.desktop:
+
+	Install into the panel menus correctly.
+	
 2001-12-16  Juan Pablo Mendoza <jpablo@gnome.org>
 
 	* mahjongg.c: Hide/Show toolbar works again.

@@ -1,7 +1,7 @@
 scoredir=$(localstatedir)/games
 pixmapdir = $(datadir)/pixmaps/mahjongg
 bgdir = $(datadir)/pixmaps/mahjongg/bg
-Gamesdir = $(datadir)/gnome/apps/Games
+Gamesdir = $(datadir)/applications
 appicondir=$(datadir)/pixmaps
 
 INCLUDES = -I.. -I$(srcdir)/..		\
