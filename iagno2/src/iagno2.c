@@ -601,7 +601,7 @@ iagno2_game_over ()
   }
 
   for (i = black_count; i < (64 - white_count); i++) {
-    board->board[i] = 0;
+    board->board[i] = EMPTY;
   }
 
   for (i = (64 - white_count); i < BOARDSIZE * BOARDSIZE; i++) {
