@@ -198,11 +198,15 @@ static void display_scores() {
 /* Callback functions */
 /**********************/
 
-void new_game_cb () {
+void new_game_cb (GtkDialog *dialog, gint arg1, gpointer user_data) {
+	if (arg1 == GTK_RESPONSE_REJECT)
+		return;
 	game.start(1);
 }
 
-void quit_game_cb () {
+void quit_game_cb (GtkDialog *dialog, gint arg1, gpointer user_data) {
+	if (arg1 == GTK_RESPONSE_REJECT)
+		return;
 	game.quit();
 }
 

@@ -1,5 +1,10 @@
 2002-04-16  Bastien Nocera  <hadess@hadess.net>
 
+	* x11-gtk.cc:
+	* x11.h: check the return values of the dialogs before taking action
+
+2002-04-16  Bastien Nocera  <hadess@hadess.net>
+
 	* MCursor.cc:
 	* Makefile.am:
 	* Picture.cc:

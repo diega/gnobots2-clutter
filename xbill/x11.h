@@ -9,8 +9,8 @@
 
 void popup (GtkWidget *mi, GtkWidget **dlgbox);
 
-void new_game_cb ();
-void quit_game_cb ();
+void new_game_cb (GtkDialog *dialog, gint arg1, gpointer user_data);
+void quit_game_cb (GtkDialog *dialog, gint arg1, gpointer user_data);
 
 void leave_window_eh(GtkWidget *w, GdkEventCrossing *event);
 void enter_window_eh(GtkWidget *w, GdkEventCrossing *event);
