@@ -1075,7 +1075,7 @@ you_won (void)
         seconds = GAMES_CLOCK (chrono)->stopped;
 
         score = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
-        if (!(pos = gnome_score_log (score, score_current_mapset, FALSE))) {
+        if (pos = gnome_score_log (score, score_current_mapset, FALSE)) {
                 gnome_scores_display (_(APPNAME_LONG), APPNAME, score_current_mapset, pos);
                 message = g_strdup_printf
 			(_("Fantastic!  %.2f!\n"
