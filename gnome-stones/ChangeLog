@@ -1,3 +1,9 @@
+2003-06-10  William Jon McCann  <mccann@jhu.edu>
+
+	* preferences.c: HIG fixes for preferences dialog.
+
+	* Makefile.am (gnome_stones_LDADD): Added libgames-support.
+
 2003-06-09  William Jon McCann  <mccann@jhu.edu>
 
 	* main.c: 

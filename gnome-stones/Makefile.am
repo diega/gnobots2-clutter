@@ -18,6 +18,7 @@ INCLUDES =						\
 	-DGTK_DISABLE_DEPRECATED 			\
 	-DGNOME_DISABLE_DEPRECATED			\
 	-DCAVESDIR=\""$(Cavesdir)"\"			\
+	-I$(top_srcdir)/libgames-support		\
 	$(GNOME_GAMES_CFLAGS)				\
 	$(ESD_CFLAGS)
 
@@ -50,6 +51,7 @@ gnome_stones_SOURCES =				\
 
 gnome_stones_LDADD =				\
 	$(GNOME_GAMES_LIBS)			\
+	$(top_srcdir)/libgames-support/libgames-support.la \
 	$(ESD_LIBS)				\
 	$(INTLLIBS)
 
