@@ -1,3 +1,12 @@
+2003-06-25  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* solubility.c: Started work on a cleaner new game routine. It is
+	really only lacking in it's handling of the dependencies. The code
+	is currently #ifdefed out.
+
+	* mahjongg.c (update_score_state): It's that bloody memory leak
+	again, in about the third app in a row.
+
 2003-06-22  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c (main): Doh, change the gconf key in the code too.

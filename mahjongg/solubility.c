@@ -424,7 +424,7 @@ place_tile (int f, int t, int idx)
 
   tiles[f].type = type_info[t].type;
   tiles[f].image = type_info[t].image[idx] ;
-  
+
   assert (dep_tree[f].free) ;
   assert (!dep_tree[f].filled) ;
   dep_tree[f].filled = 1 ; /* Lord */
@@ -586,6 +586,10 @@ void generate_dependancies ()
     }
 }
 
+
+#define USE_CREEPING_HORROR
+#ifdef USE_CREEPING_HORROR
+
 /* Do the tile placement for a soluable game */
 void generate_game (guint seed)
 {
@@ -701,3 +705,56 @@ void generate_game (guint seed)
   global_wait = 1 ;
 #endif
 }
+
+#else
+
+int remaining_tiles = 0;
+
+static guint get_free_location (GRand * generator)
+{
+  int a,i,j;
+
+  a = g_rand_int_range (generator, 0, remaining_tiles);
+  j = 0;
+  for (i=0; i<a; i++) {
+/*    while (dep_tree[j].free != 1)
+      j++; */
+    while (tiles[j].visible)
+      j++;
+  }
+
+  return j;
+}
+
+void generate_game (guint32 seed)
+{
+  GRand * generator;
+  int i, a, b, c, t;
+  
+  generator = g_rand_new_with_seed (seed);
+  remaining_tiles = MAX_TILES;
+  
+  for (i=0; i<MAX_TILES/2; i++) {
+    /* Find a random available pair of tiles. */
+    c = g_rand_int_range (generator, 1, MAX_TILES/2 - i + 1);
+    for (t=0; t<MAX_TILES/2; t++)
+      if (type_info[t].placed == 0)
+        if (!(--c)) break;
+
+    type_info[t].placed = 1;
+
+    /* Now find some places to put them. */
+    a = get_free_location (generator);
+    do {
+      b = get_free_location (generator);
+    } while (a != b);
+      
+    /* Finally we actually place them. */
+    place_tile(a,t,0);
+    place_tile(b,t,1);
+
+    remaining_tiles -= 2;
+  }
+}
+
+#endif

@@ -719,14 +719,10 @@ update_score_state ()
 
 	top = gnome_score_get_notable (APPNAME, score_current_mapset,
 				       &names, &scores, &scoretimes);
-	if (top > 0) {
-		gtk_widget_set_sensitive (HIGHSCORE_WIDGET, TRUE);
-		g_strfreev (names);
-		g_free (scores);
-		g_free (scoretimes);
-	} else {
-		gtk_widget_set_sensitive (HIGHSCORE_WIDGET, FALSE);
-	}
+	gtk_widget_set_sensitive (HIGHSCORE_WIDGET, top > 0);
+	g_strfreev (names);
+	g_free (scores);
+	g_free (scoretimes);
 }
 
 
