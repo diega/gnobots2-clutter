@@ -24,5 +24,6 @@ Comment[lt]=Eikvok laikà su simuliuojama Turing maðina
 Comment[no]=Kast bort tiden med en simulert Turing maskin
 Comment[sv]=Kasta bort tiden med en simulerad Turingmaskin
 Exec=gturing
+Icon=gnome-gturing.png
 Terminal=0
 Type=Application
