@@ -25,7 +25,7 @@
 #include <gnome.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-#define TETRIS_VERSION "1.2.4"
+#define TETRIS_VERSION "1.2.5"
 
 extern int LINES;
 extern int COLUMNS;

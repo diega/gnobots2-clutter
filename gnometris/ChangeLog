@@ -1,3 +1,10 @@
+2001-08-18  Marcin Gorycki  <Janusz.Gorycki@intel.com>
+
+	* pix/*: Added 2 great new tiles and 7 great new backgrounds 
+	  (C) Gunther Noack <gnoack@guenthernoack.de>
+	  http://www.guenthernoack.de.
+	  Changed default background to his gnometris-bg.png
+	
 2001-07-27  Abel Cheung  <maddog@linux.org.hk>
 
 	* gnometris.desktop: Added traditional Chinese translation.
@@ -22,7 +29,7 @@
 
 	* Makefile.am: Don't hardcode gcc-specific compiler flags.
 
-2000-05-28  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+2001-05-28  Juan Pablo Mendoza <pablo_juan@yahoo.com>
 
 	* tetris.cpp (Tetris::gameProperties): Connect the dialog to the
 	  close signal instead of delete_event.

@@ -124,7 +124,7 @@ Tetris::Tetris(int cmdlLevel):
 	blockPixmap = strdup(gnome_config_get_string_with_default(
 		"/gnometris/Properties/BlockPixmap=7blocks-tig.png", 0));
 	bgPixmap = strdup(gnome_config_get_string_with_default(
-		"/gnometris/Properties/BackgroundPixmap=fishy-bg.png", 0));
+		"/gnometris/Properties/BackgroundPixmap=gnometris-bg.png", 0));
 
 	gnome_app_create_menus(GNOME_APP(w), mainmenu);
 
