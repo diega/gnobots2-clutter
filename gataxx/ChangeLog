@@ -1,3 +1,10 @@
+2002-11-11  Tim Musson <trmusson@ihug.co.nz>
+
+	* properties.c: (show_properties_dialog): Multiple open properties
+	  dialogs no longer possible (fixes #97320 for gataxx).
+	  Replaced the OK button with a Close button (#97322).
+	* gataxx.c: (about_cb): gtk_window_present gives focus to dialog
+
 2002-08-18  Ross Burton  <ross@burtonini.com>
 
 	* gataxx.c (quit_game_cb): Make the Quit dialog conform to the

@@ -296,7 +296,6 @@ void fill_menu(GtkWidget *menu)
 void show_properties_dialog ()
 {
 	GtkWidget *notebook;
-	GtkWidget *propbox;
 	GtkWidget *frame;
 	GtkWidget *label;
 	GtkWidget *label2;
@@ -307,18 +306,23 @@ void show_properties_dialog ()
 	GtkWidget *hbox;
 	GtkWidget *option_menu;
 	
-	propbox = gtk_dialog_new_with_buttons (_("Properties"),
+	if (propbox != NULL) {
+		gtk_window_present (GTK_WINDOW(propbox));
+		return;
+	}
+
+        propbox = gtk_dialog_new_with_buttons (_("Properties"),
 					       GTK_WINDOW (window),
 					       GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
-					       GTK_STOCK_OK,
-					       GTK_RESPONSE_OK,
+					       GTK_STOCK_CLOSE,
+					       GTK_RESPONSE_CLOSE,
 					       NULL);
 	
 	g_signal_connect (G_OBJECT (propbox), "response",
-			  G_CALLBACK (gtk_widget_destroy), propbox);
+			  G_CALLBACK (gtk_widget_destroy), &propbox);
 
-	g_signal_connect (G_OBJECT (propbox), "delete_event",
-			  G_CALLBACK (gtk_widget_destroy), propbox);
+	g_signal_connect (G_OBJECT (propbox), "destroy",
+			  G_CALLBACK (gtk_widget_destroyed), &propbox);
 	
 	notebook = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_TOP);

@@ -1463,7 +1463,7 @@ confirm_action (GtkWidget *widget, gpointer data)
 		
 		switch ((game_state)data) {
 		case RESTART_GAME :
-			confirm_text = _("Really restart this game?");
+			confirm_text = _("Are you sure you want to restart this game?");
 			break;
 		case QUIT_GAME :
 			/* GNOME IS AN ACRONYM, DAMNIT! */
@@ -1471,7 +1471,7 @@ confirm_action (GtkWidget *widget, gpointer data)
 			break;
 		case NEW_GAME:
 		case NEW_GAME_WITH_SEED:
-			confirm_text = _("Really start a new game?");
+			confirm_text = _("Are you sure you want to start a new game?");
 			break;
 		default:
 			confirm_text = _("Serious internal error");
