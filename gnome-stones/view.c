@@ -143,13 +143,11 @@ view_new (GdkPixbuf *curtain_image)
 
   g_return_val_if_fail (curtain_image, NULL);
 
-  gtk_widget_push_visual (gdk_rgb_get_visual ());
   gtk_widget_push_colormap (gdk_rgb_get_cmap ());
 
   view= gtk_type_new (view_get_type ());
   
   gtk_widget_pop_colormap ();
-  gtk_widget_pop_visual ();
 
 #ifdef USE_GNOME_CANVAS
   canvas      = GNOME_CANVAS (view);
@@ -171,14 +169,12 @@ view_new (GdkPixbuf *curtain_image)
 
 #else
 
-  gtk_widget_push_visual (gdk_rgb_get_visual ());
   gtk_widget_push_colormap (gdk_rgb_get_cmap ());
 
   view->canvas= gtk_drawing_area_new ();
   canvas= gnome_canvas_new ();
 
   gtk_widget_pop_colormap ();
-  gtk_widget_pop_visual ();
   
   gtk_widget_set_events (view->canvas, gtk_widget_get_events (view->canvas) | GAME_EVENTS);
 

@@ -317,11 +317,9 @@ motion_notify_event_cb (GtkWidget *widget, GdkEventMotion *event, gpointer data)
 void
 iagno2_drawing_area_init ()
 {
-  gtk_widget_push_visual (gdk_rgb_get_visual ());
   gtk_widget_push_colormap (gdk_rgb_get_cmap ());
   drawing_area = gtk_drawing_area_new ();
   gtk_widget_pop_colormap ();
-  gtk_widget_pop_visual ();
 
   gtk_drawing_area_size (GTK_DRAWING_AREA (drawing_area),
                          BOARDWIDTH, BOARDHEIGHT);

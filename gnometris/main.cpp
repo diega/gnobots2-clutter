@@ -27,9 +27,9 @@ int nr_of_colors = 0;
 int
 main(int argc, char *argv[])
 {
-	bindtextdomain(PACKAGE, GNOMELOCALEDIR);
+	bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
         bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");	
-	textdomain(PACKAGE);
+	textdomain(GETTEXT_PACKAGE);
 	
 	int cmdlineLevel = 0;
 
