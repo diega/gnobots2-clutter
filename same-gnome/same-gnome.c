@@ -897,7 +897,8 @@ main (int argc, char *argv [])
 	label = gtk_label_new (_("Score: "));
 	scorew = gtk_label_new ("");
 	set_score (score);
-	gtk_box_pack_start_defaults (GTK_BOX(vb), hb);
+//	gtk_box_pack_start_defaults (GTK_BOX(vb), hb);
+	gtk_box_pack_start(GTK_BOX(vb), hb, 1, 1, 3);
 	gtk_box_pack_end (GTK_BOX(hb), scorew, 0, 0, 10);
 	gtk_box_pack_end (GTK_BOX(hb), label,  0, 0, 0);
 	
