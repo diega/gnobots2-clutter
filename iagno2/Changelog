@@ -1,5 +1,11 @@
 2000-04-09  Ian Peters  <itp@gnu.org>
 
+	* Added license information to all source files
+	* src/main.c, plugins/random/random.c,
+	  plugins/swedishchef/swedishchef.c: cleaned up the about dialogs some.
+
+2000-04-09  Ian Peters  <itp@gnu.org>
+
 	* plugins/swedishchef/*: Added a new plugin, code named "swedish chef",
 	  written by Peter Österlund
 	* plugins/Makefile.am: build new plugin
