@@ -1,3 +1,24 @@
+2002-05-27  Michael Meeks  <michael@ximian.com>
+
+	dung out, improved seed handling & display.
+
+	* mahjongg.c (tile_event): use update_moves_left
+	instead of cut and paste.
+	(main): remove horrible hacks for padding.
+	(do_game): split out of
+	(create_mahjongg_board, new_game): here.
+	(do_game): handle seeding nicely.
+	(you_won): fixup test for top 10.
+	(new_seed): impl.
+	(new_game, main): use it.
+
+2002-05-21  Stuart Scharf <ss@ll.mit.edu>
+
+	* mahjongg.c (set_backgnd_colour): g_free not
+	free. homogenize style somewhat.
+	(main): set next_seed.
+	(select_game): ditto.
+
 2002-05-15  Bastien Nocera  <hadess@hadess.net>
 
 	* mahjongg.c: (set_backgnd_colour): work around NULL background

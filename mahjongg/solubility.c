@@ -576,10 +576,12 @@ void generate_dependancies ()
 }
 
 /* Do the tile placement for a soluable game */
-void generate_game (void)
+void generate_game (guint seed)
 {
   static int generation = 0 ;
   int i, lp;
+
+  srand (seed);
 
   /* If this bites please mail me as above */
   for (lp=0;lp<MAX_TILES*MAX_TILES;lp++)

@@ -8,10 +8,10 @@
  *
  * http://www.nuclecu.unam.mx/~pancho/
  * pancho@nuclecu.unam.mx
- *
  */
 
 #include <sys/types.h>
+#include <sys/time.h>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
@@ -245,8 +245,11 @@ tile tiles[MAX_TILES];
 GtkWidget *window, *appbar;
 GtkWidget *canvas;
 GtkWidget *tiles_label;
+GtkWidget *seed_label;
 gint selected_tile, visible_tiles;
 gint sequence_number;
+
+guint current_seed, next_seed;
 
 static GdkPixbuf *tiles_image, *bg_image;
 
@@ -256,7 +259,6 @@ static gchar *mapset = NULL;
 
 static gchar *selected_tileset = NULL;
 static gchar *selected_bg = NULL;
-static gchar *selected_mapset = NULL;
 
 static struct {
   GdkColor colour ;
@@ -294,6 +296,7 @@ GtkWidget *pref_dialog = NULL;
 
 typedef enum {
 	NEW_GAME,
+	NEW_GAME_WITH_SEED,
 	RESTART_GAME,
 	QUIT_GAME
 } game_state;
@@ -325,7 +328,7 @@ void confirm_action       (GtkWidget *widget, gpointer data);
 void shuffle_tiles_callback   (GtkWidget *widget, gpointer data);
 void ensure_pause_off (void);
 void pause_callback (void);
-void new_game (void);
+void new_game (gboolean with_seed);
 void restart_game (void);
 void select_game (GtkWidget *widget, gpointer data);
 void set_backgnd_colour (gchar *str);
@@ -506,7 +509,8 @@ bg_changed_cb (GConfClient *client,
 	//FIXME apply in the GUI
 }
 
-void popup_warn_callback (GtkWidget *widget, gpointer data)
+void
+popup_warn_callback (GtkWidget *widget, gpointer data)
 {
 	popup_warn = gtk_toggle_button_get_active
 		(GTK_TOGGLE_BUTTON (widget));
@@ -596,7 +600,7 @@ show_toolbar_changed_cb (GConfClient *client,
 void
 show_tb_callback (GtkWidget *widget, gpointer data)
 {
-	if((GTK_CHECK_MENU_ITEM(widget))->active) {
+	if ((GTK_CHECK_MENU_ITEM (widget))->active) {
 		gconf_client_set_bool(conf_client,
 				"/apps/mahjongg/show-toolbar", TRUE, NULL);
 	} else {
@@ -607,9 +611,9 @@ show_tb_callback (GtkWidget *widget, gpointer data)
 
 void
 bg_colour_changed_cb (GConfClient *client,
-		guint cnxn_id,
-		GConfEntry *entry,
-		gpointer user_data)
+		      guint cnxn_id,
+		      GConfEntry *entry,
+		      gpointer user_data)
 {
 	gchar *colour;
 
@@ -626,7 +630,8 @@ bg_colour_changed_cb (GConfClient *client,
 	}
 }
 
-void bg_colour_callback (GtkWidget *widget, gpointer data)
+void
+bg_colour_callback (GtkWidget *widget, gpointer data)
 {
 	static char *tmp = "";
 	guint8 r, g, b, a;
@@ -641,9 +646,9 @@ void bg_colour_callback (GtkWidget *widget, gpointer data)
 
 void
 mapset_changed_cb (GConfClient *client,
-		guint cnxn_id,
-		GConfEntry *entry,
-		gpointer user_data)
+		   guint        cnxn_id,
+		   GConfEntry  *entry,
+		   gpointer     user_data)
 {
 	GtkWidget *dialog;
 	char *mapset_tmp;
@@ -651,20 +656,20 @@ mapset_changed_cb (GConfClient *client,
 	mapset_tmp = gconf_client_get_string (conf_client,
 			"/apps/mahjongg/mapset",
 			NULL);
-	if ((mapset != NULL) && (strcmp (mapset, mapset_tmp) != 0))
-	{
+	if ((mapset != NULL) && (strcmp (mapset, mapset_tmp) != 0)) {
 		g_free (mapset);
 		mapset = mapset_tmp;
-	} else {
+	} else
 		g_free (mapset_tmp);
-	}
+	
+	dialog = gtk_message_dialog_new (
+		NULL,
+		GTK_DIALOG_MODAL,
+		GTK_MESSAGE_INFO,
+		GTK_BUTTONS_CLOSE,
+		_("This new mapset will take effect when you start up"
+		  "a new game, or when Mahjongg is restarted."));
 
-	dialog = gtk_message_dialog_new (NULL,
-			GTK_DIALOG_MODAL,
-			GTK_MESSAGE_INFO,
-			GTK_BUTTONS_CLOSE,
-			_("This new mapset will take effect when you start up"
-				"a new game, or when Mahjongg is restarted."));
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (dialog);
 }
@@ -678,8 +683,8 @@ set_map_selection (GtkWidget *widget, void *data)
 	mapset = map->name;
 
 	gconf_client_set_string (conf_client,
-			"/apps/mahjongg/mapset",
-			mapset, NULL);
+				 "/apps/mahjongg/mapset",
+				 mapset, NULL);
 }
 
 void
@@ -718,76 +723,79 @@ init_config (void)
 			NULL, NULL, NULL);
 }
 
-
 static void
 free_str (GtkWidget *widget, void *data)
 {
 	g_free (data);
 }
 
-void message (gchar *message)
+void
+message (gchar *message)
 {
-  gnome_appbar_pop (GNOME_APPBAR (appbar));
-  gnome_appbar_push (GNOME_APPBAR (appbar), message);
+	gnome_appbar_pop (GNOME_APPBAR (appbar));
+	gnome_appbar_push (GNOME_APPBAR (appbar), message);
 }
 
-void chrono_start ()
+void
+chrono_start (void)
 {
-  games_clock_stop (GAMES_CLOCK (chrono));
-  games_clock_set_seconds (GAMES_CLOCK (chrono), 0);
-  games_clock_start (GAMES_CLOCK (chrono));
+	games_clock_stop (GAMES_CLOCK (chrono));
+	games_clock_set_seconds (GAMES_CLOCK (chrono), 0);
+	games_clock_start (GAMES_CLOCK (chrono));
 }
 
-gint update_moves_left ()
+gint
+update_moves_left (void)
 {
         char *tmpstr;
 
-        check_free();
+        check_free ();
 	tmpstr = g_strdup_printf ("%2d", moves_left);
-        gtk_label_set_text (GTK_LABEL(moves_label), tmpstr);
+        gtk_label_set_text (GTK_LABEL (moves_label), tmpstr);
+
         return moves_left;
 }
 
-void set_backgnd_colour (gchar *str)
+void
+set_backgnd_colour (gchar *str)
 {
-  GdkColormap *colourmap ;
-  GtkStyle *widget_style, *temp_style;
+	GdkColormap *colourmap ;
+	GtkStyle *widget_style, *temp_style;
 
-  g_return_if_fail (str != NULL);
+	g_return_if_fail (str != NULL);
 
-  if (str != backgnd.name)
-    {
-      if (backgnd.name)
-	free (backgnd.name) ;
-      backgnd.name = g_strdup (str) ;
-    }
-  colourmap = gtk_widget_get_colormap(canvas);
-  gdk_color_parse (backgnd.name, &backgnd.colour);
+	if (str != backgnd.name) {
+		g_free (backgnd.name) ;
+		backgnd.name = g_strdup (str) ;
+	}
+	colourmap = gtk_widget_get_colormap (canvas);
+	gdk_color_parse (backgnd.name, &backgnd.colour);
 
-  gdk_color_alloc(colourmap, &backgnd.colour);
+	gdk_color_alloc (colourmap, &backgnd.colour);
 
-  widget_style = gtk_widget_get_style (canvas);
-  temp_style = gtk_style_copy (widget_style);
-  temp_style->bg[0] = backgnd.colour;
-  temp_style->bg[1] = backgnd.colour;
-  temp_style->bg[2] = backgnd.colour;
-  temp_style->bg[3] = backgnd.colour;
-  temp_style->bg[4] = backgnd.colour;
-  gtk_widget_set_style (canvas, temp_style);
-  gnome_canvas_update_now (GNOME_CANVAS(canvas));
+	widget_style = gtk_widget_get_style (canvas);
+	temp_style = gtk_style_copy (widget_style);
+	temp_style->bg[0] = backgnd.colour;
+	temp_style->bg[1] = backgnd.colour;
+	temp_style->bg[2] = backgnd.colour;
+	temp_style->bg[3] = backgnd.colour;
+	temp_style->bg[4] = backgnd.colour;
+	gtk_widget_set_style (canvas, temp_style);
+	gnome_canvas_update_now (GNOME_CANVAS(canvas));
 }
 
 static void
-change_tiles (void) {
+change_tiles (void)
+{
         gint i;
         
-        for (i = 0; i < MAX_TILES; i++) {
+        for (i = 0; i < MAX_TILES; i++)
                 change_tile_image (&tiles[i]);
-	}
 }
 
 static void
-change_tile_image (tile *tile_inf) {
+change_tile_image (tile *tile_inf)
+{
 	gint orig_x, orig_y;
 
 	orig_x = (tile_inf->image % 21) * TILE_WIDTH;
@@ -815,14 +823,16 @@ change_tile_image (tile *tile_inf) {
 			tile_inf->current_image, NULL);
 }
 
-void select_tile (tile *tile_inf)
+void
+select_tile (tile *tile_inf)
 {
         tile_inf->selected |= SELECTED_FLAG;
         change_tile_image(tile_inf);
         selected_tile = tile_inf->number;
 }
 
-void unselect_tile (tile *tile_inf)
+void
+unselect_tile (tile *tile_inf)
 {
         selected_tile = MAX_TILES + 1;
         tile_inf->selected &= ~SELECTED_FLAG;
@@ -832,64 +842,63 @@ void unselect_tile (tile *tile_inf)
 static void
 tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
 {
-  char *tmpstr;
+	char *tmpstr;
 
-  if (paused) return; 
+	if (paused)
+		return;
 
-  switch(event->type) {
-  case GDK_BUTTON_PRESS :
-          if(tile_free(tile_inf->number)) {
-                  switch (event->button.button) {
-                  case 1:
-                          if (tile_inf->selected & SELECTED_FLAG)
-                                  unselect_tile (tile_inf);
-                          else {
-                                  if (selected_tile < MAX_TILES) {
-                                          if ((tiles[selected_tile].type == tile_inf->type) ) {
-                                                  tiles[selected_tile].visible = 0;
-                                                  tile_inf->visible = 0;
-                                                  tiles[selected_tile].selected &= ~SELECTED_FLAG;
-                                                  change_tile_image (&tiles[selected_tile]);
-                                                  gnome_canvas_item_hide (tiles[selected_tile].canvas_item);
-                                                  gnome_canvas_item_hide (tile_inf->canvas_item);
-                                                  clear_undo_queue ();
-                                                  tiles[selected_tile].sequence = tile_inf->sequence = sequence_number;
-                                                  sequence_number ++;
-                                                  selected_tile = MAX_TILES + 1;
-                                                  visible_tiles -= 2;
-                                                  tmpstr = g_strdup_printf("%3d", visible_tiles);
-                                                  gtk_label_set_text (GTK_LABEL(tiles_label), tmpstr);
-                                                  check_free();
-                                                  tmpstr = g_strdup_printf("%2d", moves_left);
-                                                  gtk_label_set_text (GTK_LABEL(moves_label), tmpstr);
+	switch (event->type) {
+	case GDK_BUTTON_PRESS :
+		if (tile_free (tile_inf->number)) {
+			switch (event->button.button) {
+			case 1:
+				if (tile_inf->selected & SELECTED_FLAG)
+					unselect_tile (tile_inf);
+				else {
+					if (selected_tile < MAX_TILES) {
+						if ((tiles[selected_tile].type == tile_inf->type) ) {
+							tiles[selected_tile].visible = 0;
+							tile_inf->visible = 0;
+							tiles[selected_tile].selected &= ~SELECTED_FLAG;
+							change_tile_image (&tiles[selected_tile]);
+							gnome_canvas_item_hide (tiles[selected_tile].canvas_item);
+							gnome_canvas_item_hide (tile_inf->canvas_item);
+							clear_undo_queue ();
+							tiles[selected_tile].sequence = tile_inf->sequence = sequence_number;
+							sequence_number ++;
+							selected_tile = MAX_TILES + 1;
+							visible_tiles -= 2;
+							tmpstr = g_strdup_printf("%3d", visible_tiles);
+							gtk_label_set_text (GTK_LABEL(tiles_label), tmpstr);
+							update_moves_left ();
 
-                                                  if (visible_tiles <= 0) {
-                                                          games_clock_stop(GAMES_CLOCK(chrono));
-                                                          you_won ();
-                                                  }
-                                          }
-                                          else
-                                                  no_match ();
-                                  }
-                                  else 
-                                          select_tile (tile_inf);
-                          }
-                          break;
+							if (visible_tiles <= 0) {
+								games_clock_stop(GAMES_CLOCK(chrono));
+								you_won ();
+							}
+						}
+						else
+							no_match ();
+					}
+					else 
+						select_tile (tile_inf);
+				}
+				break;
                           
-                  case 3:
-                          if (selected_tile < MAX_TILES) 
-                                  unselect_tile (&tiles[selected_tile]);
-                          select_tile (tile_inf);
+			case 3:
+				if (selected_tile < MAX_TILES) 
+					unselect_tile (&tiles[selected_tile]);
+				select_tile (tile_inf);
                           
-                  default: 
-                          break;
-                  }
-                  break;
+			default: 
+				break;
+			}
+			break;
 
-          default :
-                  break;
-          }
-  }
+		default :
+			break;
+		}
+	}
 }
 
 static void
@@ -904,8 +913,7 @@ fill_tile_menu (GtkWidget *menu, gchar *sdir, gint is_tile)
 			(sdir), FALSE, NULL);
 	dir = opendir (dname);
 
-	if (dir == NULL)
-	{
+	if (!dir) {
 		g_free (dname);
 		return;
 	}
@@ -927,14 +935,14 @@ fill_tile_menu (GtkWidget *menu, gchar *sdir, gint is_tile)
 		gtk_widget_show (item);
 		gtk_menu_shell_append (GTK_MENU_SHELL(menu), item);
                 if (is_tile) {
-                        g_signal_connect (G_OBJECT(item), "activate",
+                        g_signal_connect (G_OBJECT (item), "activate",
                                           G_CALLBACK (tileset_callback), s); 
-                        g_signal_connect (G_OBJECT(item), "destroy",
+                        g_signal_connect (G_OBJECT (item), "destroy",
                                           G_CALLBACK (free_str), s);
                 } else {
-                        g_signal_connect (G_OBJECT(item), "activate",
-                                          G_CALLBACK(bg_callback), s); 
-                        g_signal_connect (G_OBJECT(item), "destroy",
+                        g_signal_connect (G_OBJECT (item), "activate",
+                                          G_CALLBACK (bg_callback), s); 
+                        g_signal_connect (G_OBJECT (item), "destroy",
                                           G_CALLBACK (free_str), s);
                 }
 
@@ -958,27 +966,27 @@ fill_tile_menu (GtkWidget *menu, gchar *sdir, gint is_tile)
 static void
 fill_map_menu (GtkWidget *menu)
 {
-  gint lp, itemno=0 ;
-  GtkWidget *item;
+	gint lp, itemno=0 ;
+	GtkWidget *item;
 
-  for (lp=0;lp<G_N_ELEMENTS(maps);lp++)
-    {
-      gchar *str = g_strdup (_(maps[lp].name)) ;
+	for (lp=0;lp<G_N_ELEMENTS(maps);lp++) {
+		gchar *str = g_strdup (_(maps[lp].name)) ;
 
-      item = gtk_menu_item_new_with_label (str) ;
-      gtk_widget_show (item);
-      gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-      g_signal_connect (G_OBJECT(item), "activate",
-			G_CALLBACK (set_map_selection), &maps[lp]); 
-      g_signal_connect (G_OBJECT(item), "destroy",
-			G_CALLBACK (free_str), str); 
-      if (!g_strcasecmp(mapset, maps[lp].name))
-	  gtk_menu_set_active(GTK_MENU(menu), itemno); 
-      itemno++ ;
-    }
+		item = gtk_menu_item_new_with_label (str) ;
+		gtk_widget_show (item);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+		g_signal_connect (G_OBJECT(item), "activate",
+				  G_CALLBACK (set_map_selection), &maps[lp]); 
+		g_signal_connect (G_OBJECT(item), "destroy",
+				  G_CALLBACK (free_str), str); 
+		if (!g_ascii_strcasecmp (mapset, maps[lp].name))
+			gtk_menu_set_active (GTK_MENU (menu), itemno); 
+		itemno++ ;
+	}
 }
 
-void no_match (void)
+void
+no_match (void)
 {
 	if (popup_warn == TRUE) {
 		GtkWidget *mb;
@@ -990,13 +998,13 @@ void no_match (void)
 				_("These tiles don't match."));
 		gtk_dialog_run (GTK_DIALOG (mb));
 		gtk_widget_destroy (mb);
-        } else {
+        } else
 		gnome_app_flash (GNOME_APP (window),
 				_("These tiles don't match."));
-	}
 }
 
-void check_free (void)
+void
+check_free (void)
 {
 	gint i;
         gint tile_count[MAX_TILES];
@@ -1019,11 +1027,11 @@ void check_free (void)
 
                 if (!game_over) {
 			mb = gtk_message_dialog_new (GTK_WINDOW (window),
-					GTK_DIALOG_MODAL
-					| GTK_DIALOG_DESTROY_WITH_PARENT,
-					GTK_MESSAGE_INFO,
-					GTK_BUTTONS_OK,
-					(_("There are no more moves.")));
+						     GTK_DIALOG_MODAL
+						     | GTK_DIALOG_DESTROY_WITH_PARENT,
+						     GTK_MESSAGE_INFO,
+						     GTK_BUTTONS_OK,
+						     (_("There are no more moves.")));
 			gtk_dialog_run (GTK_DIALOG (mb));
 			gtk_widget_destroy (mb);
                 }
@@ -1031,7 +1039,8 @@ void check_free (void)
  	} 
 }
 
-void you_won (void)
+void
+you_won (void)
 {
         gint pos;
         time_t seconds;
@@ -1045,7 +1054,7 @@ void you_won (void)
         seconds = GAMES_CLOCK (chrono)->stopped;
 
         score = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
-        if ( pos = gnome_score_log (score, mapset, FALSE) ) {
+        if (!(pos = gnome_score_log (score, mapset, FALSE))) {
                 gnome_scores_display (_(APPNAME_LONG), APPNAME, mapset, pos);
                 message = g_strdup_printf
 			(_("Fantastic!  %.2f!\n"
@@ -1057,11 +1066,13 @@ void you_won (void)
 			   "Another game?"), score);
 	}
        	
-       	dialog = gtk_message_dialog_new (GTK_WINDOW (window),
-			GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-			GTK_MESSAGE_QUESTION,
-			GTK_BUTTONS_YES_NO,
-			message);
+       	dialog = gtk_message_dialog_new (
+		GTK_WINDOW (window),
+		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+		GTK_MESSAGE_QUESTION,
+		GTK_BUTTONS_YES_NO,
+		message);
+
        	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
 
        	response = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -1070,7 +1081,7 @@ void you_won (void)
        	
        	if (response == GTK_RESPONSE_YES) {
 		ensure_pause_off ();
-		new_game ();
+		new_game (TRUE);
 	}       	
 }
 
@@ -1089,13 +1100,13 @@ pref_dialog_response (GtkDialog *dialog, gint response, gpointer data)
 	colour_well = NULL;
 }
 
-void properties_callback (GtkWidget *widget, gpointer data)
+void
+properties_callback (GtkWidget *widget, gpointer data)
 {
-	GtkWidget *button;
-	GtkWidget *tmenu, *mmenu, *otmenu, *ommenu, *l, *hb, *f, *fv, *cols, *col1, *col2;
+	GtkWidget *tmenu, *mmenu, *otmenu, *ommenu;
+	GtkWidget *l, *hb, *f, *fv, *cols, *col1, *col2;
 
-	if (pref_dialog)
-	{
+	if (pref_dialog) {
 		gtk_window_present (GTK_WINDOW (pref_dialog));
 		return;
 	}
@@ -1190,8 +1201,8 @@ void properties_callback (GtkWidget *widget, gpointer data)
 	  sscanf (backgnd.name, "#%02x%02x%02x", &ur,&ug,&ub);
 	  gnome_color_picker_set_i8 (GNOME_COLOR_PICKER(colour_well),
 			  ur, ug, ub, 0);
-	  g_signal_connect(G_OBJECT(colour_well), "color_set",
-			   G_CALLBACK (bg_colour_callback), &backgnd.name);
+	  g_signal_connect (G_OBJECT(colour_well), "color_set",
+			    G_CALLBACK (bg_colour_callback), &backgnd.name);
 	}
 	gtk_box_pack_start_defaults (GTK_BOX(hb), colour_well);
 
@@ -1235,26 +1246,27 @@ void properties_callback (GtkWidget *widget, gpointer data)
         gtk_widget_show_all (pref_dialog);
 }
 
-gint hint_timeout (gpointer data)
+gint
+hint_timeout (gpointer data)
 {
-  timeout_counter ++;
+	timeout_counter ++;
 
-  if (timeout_counter > HINT_BLINK_NUM) {
-    if (selected_tile < MAX_TILES) {
-      tiles[selected_tile].selected = 1;
-    }
-    return 0;
-  }
+	if (timeout_counter > HINT_BLINK_NUM) {
+		if (selected_tile < MAX_TILES)
+			tiles[selected_tile].selected = 1;
+		return 0;
+	}
 
-  tiles[hint_tiles[0]].selected ^= HINT_FLAG;
-  tiles[hint_tiles[1]].selected ^= HINT_FLAG;
-  change_tile_image(&tiles[hint_tiles[0]]);
-  change_tile_image(&tiles[hint_tiles[1]]);
+	tiles[hint_tiles[0]].selected ^= HINT_FLAG;
+	tiles[hint_tiles[1]].selected ^= HINT_FLAG;
+	change_tile_image(&tiles[hint_tiles[0]]);
+	change_tile_image(&tiles[hint_tiles[1]]);
 
-  return 1;
+	return 1;
 }
 
-void hint_callback (GtkWidget *widget, gpointer data)
+void
+hint_callback (GtkWidget *widget, gpointer data)
 {
         gint i, j, free=0, type ;
         time_t seconds;
@@ -1262,53 +1274,54 @@ void hint_callback (GtkWidget *widget, gpointer data)
         if (paused || game_over)
                 return;
 
-                /* This prevents the flashing speeding up if the hint button is
-                 * pressed multiple times. */
-                if (timeout_counter <= HINT_BLINK_NUM)
-                        return;
+	/* This prevents the flashing speeding up if the hint button is
+	 * pressed multiple times. */
+	if (timeout_counter <= HINT_BLINK_NUM)
+		return;
 
-                /* Snarfed from check free
-                 * Tile Free is now _so_ much quicker, it is more elegant to do a
-                 * British Library search, and safer. */
+	/* Snarfed from check free
+	 * Tile Free is now _so_ much quicker, it is more elegant to do a
+	 * British Library search, and safer. */
 
-                /* Clear any selection */
-                if (selected_tile < MAX_TILES) {
-                        tiles[selected_tile].selected = 0;
-                        change_tile_image (&tiles[selected_tile]);
-                        selected_tile = MAX_TILES + 1;
-                }
+	/* Clear any selection */
+	if (selected_tile < MAX_TILES) {
+		tiles[selected_tile].selected = 0;
+		change_tile_image (&tiles[selected_tile]);
+		selected_tile = MAX_TILES + 1;
+	}
                 
-                for (i=0;i<MAX_TILES && !free;i++)
-                        if (tile_free(i)) {
-                                type = tiles[i].type ;
-                                for (j=0;j<MAX_TILES && !free;j++) {
-                                        free = (tiles[j].type == type && i != j && tile_free(j)) ;
-                                        if (free) {
-                                                tiles[i].selected ^= HINT_FLAG;
-                                                tiles[j].selected ^= HINT_FLAG;
-                                                change_tile_image (&tiles[i]);
-                                                change_tile_image (&tiles[j]);
-                                                hint_tiles[0] = i;
-                                                hint_tiles[1] = j;
-                                        }
-                                }
-                        }
-                /* This is a good way to test check_free
-                   for (i=0;i<MAX_TILES;i++)
-                   if (tiles[i].selected == 17)
-                   tiles[i].visible = 0 ;*/
+	for (i=0;i<MAX_TILES && !free;i++)
+		if (tile_free(i)) {
+			type = tiles[i].type ;
+			for (j=0;j<MAX_TILES && !free;j++) {
+				free = (tiles[j].type == type && i != j && tile_free(j)) ;
+				if (free) {
+					tiles[i].selected ^= HINT_FLAG;
+					tiles[j].selected ^= HINT_FLAG;
+					change_tile_image (&tiles[i]);
+					change_tile_image (&tiles[j]);
+					hint_tiles[0] = i;
+					hint_tiles[1] = j;
+				}
+			}
+		}
+	/* This is a good way to test check_free
+	   for (i=0;i<MAX_TILES;i++)
+	   if (tiles[i].selected == 17)
+	   tiles[i].visible = 0 ;*/
                 
-                timeout_counter = 0;
-                timer = gtk_timeout_add (250, (GtkFunction) hint_timeout, NULL);
+	timeout_counter = 0;
+	timer = gtk_timeout_add (250, (GtkFunction) hint_timeout, NULL);
                 
-                /* 30s penalty */
-                games_clock_stop (GAMES_CLOCK(chrono));
-                seconds = GAMES_CLOCK(chrono)->stopped;
-                games_clock_set_seconds(GAMES_CLOCK(chrono), (gint) (seconds+30));
-                games_clock_start (GAMES_CLOCK(chrono));
+	/* 30s penalty */
+	games_clock_stop (GAMES_CLOCK(chrono));
+	seconds = GAMES_CLOCK(chrono)->stopped;
+	games_clock_set_seconds(GAMES_CLOCK(chrono), (gint) (seconds+30));
+	games_clock_start (GAMES_CLOCK(chrono));
 }
 
-void about_callback (GtkWidget *widget, gpointer data)
+void
+about_callback (GtkWidget *widget, gpointer data)
 {
 	GtkWidget *about;
 	GdkPixbuf *pixbuf = NULL;
@@ -1335,8 +1348,7 @@ void about_callback (GtkWidget *widget, gpointer data)
 				GNOME_FILE_DOMAIN_PIXMAP, 
 				"gnome-mahjongg.png",
 				TRUE, NULL);
-		if (filename != NULL)
-		{
+		if (filename != NULL) {
 			pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 			g_free (filename);
 		}
@@ -1357,10 +1369,11 @@ void about_callback (GtkWidget *widget, gpointer data)
 	gtk_widget_show (about);
 }
 
-void pause_callback()
+void
+pause_callback (void)
 {
         gint i;
-        if(game_over) {
+        if (game_over) {
                 gtk_toggle_button_set_active (PAUSE_BUTTON, FALSE);
                 return;
         }
@@ -1395,16 +1408,16 @@ void ensure_pause_off (void)
         paused = FALSE;
 }
 
-void scores_callback(GtkWidget *widget, gpointer data)
+void
+scores_callback (GtkWidget *widget, gpointer data)
 {
         gnome_scores_display (_(APPNAME_LONG), APPNAME, mapset, 0);
 }
 
-void init_game (void)
+void
+init_game (void)
 {
-        gchar tmpstr[16] ;
-        
-        gtk_label_set_text(GTK_LABEL(tiles_label), MAX_TILES_STR);
+        gtk_label_set_text (GTK_LABEL (tiles_label), MAX_TILES_STR);
         update_moves_left ();
         game_over = GAME_RUNNING;
         sequence_number = 1 ;
@@ -1415,32 +1428,32 @@ void init_game (void)
         chrono_start();
 }
 
-void confirm_action (GtkWidget *widget, gpointer data)
+void
+confirm_action (GtkWidget *widget, gpointer data)
 {
 	gboolean doit = TRUE;
 
-	if (popup_confirm == TRUE)
-	{
+	if (popup_confirm == TRUE) {
 		gchar *confirm_text;
 		GtkWidget *dialog;
 		gint response;
 		
-		switch ((game_state)data)
-			{
-			case RESTART_GAME :
-				confirm_text = _("Really restart this game?");
-				break;
-			case QUIT_GAME :
-				/* GNOME IS AN ACRONYM, DAMNIT! */
-				confirm_text = _("Really exit GNOME Mahjongg?");
-				break;
-			case NEW_GAME:
-				confirm_text = _("Really start a new game?");
-				break;
-			default:
-				confirm_text = _("Serious internal error");
-				break;
-			}
+		switch ((game_state)data) {
+		case RESTART_GAME :
+			confirm_text = _("Really restart this game?");
+			break;
+		case QUIT_GAME :
+			/* GNOME IS AN ACRONYM, DAMNIT! */
+			confirm_text = _("Really exit GNOME Mahjongg?");
+			break;
+		case NEW_GAME:
+		case NEW_GAME_WITH_SEED:
+			confirm_text = _("Really start a new game?");
+			break;
+		default:
+			confirm_text = _("Serious internal error");
+			break;
+		}
 			
 		dialog = gtk_message_dialog_new (GTK_WINDOW (window),
 						 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -1455,13 +1468,12 @@ void confirm_action (GtkWidget *widget, gpointer data)
 		doit = (response == GTK_RESPONSE_YES);
 	}
 	
-	if (doit)
-	{
-		switch ((gint)data)
-		{
+	if (doit) {
+		switch ((gint)data) {
 		case NEW_GAME:
+		case NEW_GAME_WITH_SEED:
 			ensure_pause_off ();
-			new_game ();
+			new_game ((gint)data == NEW_GAME);
 			break;
 		case RESTART_GAME:
 			restart_game ();
@@ -1475,13 +1487,15 @@ void confirm_action (GtkWidget *widget, gpointer data)
 	}
 }
 
-gboolean delete_event_callback (GtkWidget *widget, GdkEventAny *any, gpointer data)
+gboolean
+delete_event_callback (GtkWidget *widget, GdkEventAny *any, gpointer data)
 {
         confirm_action (widget, data);
         return TRUE;
 }
 
-void restart_game ()
+void
+restart_game (void)
 {
     gint i;
 
@@ -1497,7 +1511,9 @@ void restart_game ()
     }
     init_game ();
 }
-void redo_tile_callback (GtkWidget *widget, gpointer data)
+
+void
+redo_tile_callback (GtkWidget *widget, gpointer data)
 {
         gint i, change ;
         char *tmpstr;
@@ -1534,7 +1550,8 @@ void redo_tile_callback (GtkWidget *widget, gpointer data)
         gnome_canvas_update_now (GNOME_CANVAS (canvas));
 }
 
-void undo_tile_callback (GtkWidget *widget, gpointer data)
+void
+undo_tile_callback (GtkWidget *widget, gpointer data)
 {
         gint i;
         char *tmpstr;
@@ -1569,7 +1586,8 @@ void undo_tile_callback (GtkWidget *widget, gpointer data)
         update_moves_left ();
 }
 
-void select_game (GtkWidget *widget, gpointer data)
+void
+select_game (GtkWidget *widget, gpointer data)
 {
 	GtkWidget *dialog, *entry, *label;
 	gint response;
@@ -1599,131 +1617,141 @@ void select_game (GtkWidget *widget, gpointer data)
 	response = gtk_dialog_run (GTK_DIALOG (dialog));
 	
         if (response == GTK_RESPONSE_OK) {
-                srand (atoi (gtk_entry_get_text (GTK_ENTRY (entry))));
+		next_seed = atoi (gtk_entry_get_text (GTK_ENTRY (entry)));
 		gtk_widget_destroy (dialog);
-                confirm_action (widget, NEW_GAME);
+                confirm_action (widget, (gpointer) NEW_GAME_WITH_SEED);
         } else
               	gtk_widget_destroy (dialog);
 }
 
-void sound_on_callback (GtkWidget *widget, gpointer data)
+void
+sound_on_callback (GtkWidget *widget, gpointer data)
 {
-    printf("mer\n");
+	printf ("mer\n");
 }
 
 /* You loose your re-do queue when you make a move */
-void clear_undo_queue ()
+void
+clear_undo_queue (void)
 {
-  gint lp ;
-  for (lp=0;lp<MAX_TILES;lp++)
-    if (tiles[lp].sequence>=sequence_number)
-      tiles[lp].sequence = 0 ;
+	gint lp ;
+
+	for (lp=0;lp<MAX_TILES;lp++)
+		if (tiles[lp].sequence>=sequence_number)
+			tiles[lp].sequence = 0 ;
 }
 
-void load_map (void)
+void
+load_map (void)
 {
-  gchar* name = mapset;
-  gint lp ;
-  gint xmax = 0, ymax = 0;
-  tilepos *t;
+	gchar* name = mapset;
+	gint lp ;
+	gint xmax = 0, ymax = 0;
+	tilepos *t;
 
-  for (lp=0;lp<G_N_ELEMENTS(maps);lp++)
-    if (g_strcasecmp (maps[lp].name, name) == 0)
-      {
-	pos = maps[lp].map ;
+	for (lp=0;lp<G_N_ELEMENTS(maps);lp++)
+		if (g_ascii_strcasecmp (maps[lp].name, name) == 0) {
+			pos = maps[lp].map ;
 
-	for ( t = pos ; t < pos + MAX_TILES ; t++ ) {
-	    if ( (*t).x  > xmax ) xmax = (*t).x;
-	    if ( (*t).y  > ymax ) ymax = (*t).y;
+			for (t = pos ; t < pos + MAX_TILES ; t++) {
+				if ( (*t).x  > xmax )
+					xmax = (*t).x;
+				if ( (*t).y  > ymax )
+					ymax = (*t).y;
+			}
+			xpos_offset = ( AREA_WIDTH - (HALF_WIDTH * (xmax+1)) ) / 2;
+			ypos_offset = ( AREA_HEIGHT - (HALF_HEIGHT * (ymax+1) ) ) / 2;
+
+			generate_dependancies() ;
+		}
+}
+
+gint
+canvas_x (gint i)
+{
+	return pos[i].x * (HALF_WIDTH-0) + xpos_offset + (THICKNESS * pos[i].layer);
+}
+
+gint
+canvas_y (gint i)
+{
+	return pos[i].y * (HALF_HEIGHT-0) + ypos_offset - (THICKNESS * pos[i].layer);
+}
+
+void
+load_images (void)
+{
+	gint i;
+  
+	for (i = MAX_TILES - 1; i >= 0; i --) {
+		gnome_canvas_item_set (tiles[i].image_item,
+				       "x", (double)canvas_x(i),
+				       "y", (double)canvas_y(i),
+				       NULL);
+		gnome_canvas_item_set (tiles[i].bg_item,
+				       "x", (double)canvas_x(i),
+				       "y", (double)canvas_y(i),
+				       NULL);
 	}
-	xpos_offset = ( AREA_WIDTH - (HALF_WIDTH * (xmax+1)) ) / 2;
-	ypos_offset = ( AREA_HEIGHT - (HALF_HEIGHT * (ymax+1) ) ) / 2;
-
-	generate_dependancies() ;
-      }
 }
 
-gint canvas_x (gint i)
+void
+create_canvas_items (void)
 {
-     return pos[i].x * (HALF_WIDTH-0) + xpos_offset + (THICKNESS * pos[i].layer);
-}
-gint canvas_y (gint i)
-{
-     return pos[i].y * (HALF_HEIGHT-0) + ypos_offset - (THICKNESS * pos[i].layer);
-}
-
-void load_images (void)
-{
-  gint i;
+	gint orig_x, orig_y, i;
   
-  for (i = MAX_TILES - 1; i >= 0; i --) {
-    gnome_canvas_item_set (tiles[i].image_item,
-			   "x", (double)canvas_x(i),
-			   "y", (double)canvas_y(i),
-			   NULL);
-    gnome_canvas_item_set (tiles[i].bg_item,
-			   "x", (double)canvas_x(i),
-			   "y", (double)canvas_y(i),
-			   NULL);
-  }
+	/* It's essential that the tiles are already sorted ginto layer order (lowest first) */
+	for (i = MAX_TILES - 1; i >= 0; i --) {
+		tiles[i].canvas_item = gnome_canvas_item_new (gnome_canvas_root(GNOME_CANVAS(canvas)),
+							      gnome_canvas_group_get_type (),
+							      NULL);
+		orig_x = (tiles[i].image % 21) * TILE_WIDTH;
+		orig_y = (tiles[i].image / 21) * TILE_HEIGHT;
+	
+		tiles[i].number = i;
+
+		tiles[i].current_image = gdk_pixbuf_new (gdk_pixbuf_get_colorspace(tiles_image),
+							 TRUE, gdk_pixbuf_get_bits_per_sample(tiles_image),
+							 TILE_WIDTH, TILE_HEIGHT);
+		tiles[i].current_bg = gdk_pixbuf_new (gdk_pixbuf_get_colorspace(tiles_image),
+						      TRUE, gdk_pixbuf_get_bits_per_sample(tiles_image),
+						      TILE_WIDTH, TILE_HEIGHT);
+	
+		gdk_pixbuf_copy_area (tiles_image, orig_x, orig_y,
+				      TILE_WIDTH, TILE_HEIGHT,
+				      tiles[i].current_image, 0, 0);
+		gdk_pixbuf_copy_area (bg_image, pos[i].layer * TILE_WIDTH, 0,
+				      TILE_WIDTH, TILE_HEIGHT,
+				      tiles[i].current_bg, 0, 0);
+
+
+		tiles[i].bg_item = gnome_canvas_item_new (GNOME_CANVAS_GROUP (tiles[i].canvas_item),
+							  gnome_canvas_pimage_get_type(),
+							  "image", tiles[i].current_bg,
+							  "x", (double)canvas_x(i),
+							  "y", (double)canvas_y(i),
+							  "width", (double)TILE_WIDTH,
+							  "height", (double)TILE_HEIGHT,
+							  NULL);
+
+		tiles[i].image_item = gnome_canvas_item_new (GNOME_CANVAS_GROUP (tiles[i].canvas_item),
+							     gnome_canvas_pimage_get_type(),
+							     "image", tiles[i].current_image,
+							     "x", (double)canvas_x(i),
+							     "y", (double)canvas_y(i),
+							     "width", (double)TILE_WIDTH,
+							     "height", (double)TILE_HEIGHT,
+							     NULL);
+	
+		g_signal_connect (G_OBJECT (tiles[i].canvas_item), "event",
+				  G_CALLBACK (tile_event), &tiles[i]);
+	}
 }
 
-void create_canvas_items (void)
-{
-  gint orig_x, orig_y, i;
-  
-  /* It's essential that the tiles are already sorted ginto layer order (lowest first) */
-  for (i = MAX_TILES - 1; i >= 0; i --) {
-       tiles[i].canvas_item = gnome_canvas_item_new (gnome_canvas_root(GNOME_CANVAS(canvas)),
-						      gnome_canvas_group_get_type (),
-						      NULL);
-	orig_x = (tiles[i].image % 21) * TILE_WIDTH;
-	orig_y = (tiles[i].image / 21) * TILE_HEIGHT;
-	
-	tiles[i].number = i;
-
-        tiles[i].current_image = gdk_pixbuf_new (gdk_pixbuf_get_colorspace(tiles_image),
-                                                 TRUE, gdk_pixbuf_get_bits_per_sample(tiles_image),
-                                                 TILE_WIDTH, TILE_HEIGHT);
-        tiles[i].current_bg = gdk_pixbuf_new (gdk_pixbuf_get_colorspace(tiles_image),
-                                                 TRUE, gdk_pixbuf_get_bits_per_sample(tiles_image),
-                                                 TILE_WIDTH, TILE_HEIGHT);
-	
-        gdk_pixbuf_copy_area (tiles_image, orig_x, orig_y,
-                             TILE_WIDTH, TILE_HEIGHT,
-                             tiles[i].current_image, 0, 0);
-        gdk_pixbuf_copy_area (bg_image, pos[i].layer * TILE_WIDTH, 0,
-                             TILE_WIDTH, TILE_HEIGHT,
-                             tiles[i].current_bg, 0, 0);
-
-
-        tiles[i].bg_item = gnome_canvas_item_new (GNOME_CANVAS_GROUP (tiles[i].canvas_item),
-						     gnome_canvas_pimage_get_type(),
-						     "image", tiles[i].current_bg,
-						     "x", (double)canvas_x(i),
-						     "y", (double)canvas_y(i),
-						     "width", (double)TILE_WIDTH,
-						     "height", (double)TILE_HEIGHT,
-						      NULL);
-
-	tiles[i].image_item = gnome_canvas_item_new (GNOME_CANVAS_GROUP (tiles[i].canvas_item),
-						     gnome_canvas_pimage_get_type(),
-						     "image", tiles[i].current_image,
-						     "x", (double)canvas_x(i),
-						     "y", (double)canvas_y(i),
-						     "width", (double)TILE_WIDTH,
-						     "height", (double)TILE_HEIGHT,
-						      NULL);
-	
-	g_signal_connect (G_OBJECT (tiles[i].canvas_item), "event",
-			  G_CALLBACK (tile_event), &tiles[i]);
-    }
-}
-
-void load_tiles (gchar *fname, gchar *bg_fname)
+void
+load_tiles (gchar *fname, gchar *bg_fname)
 {
 	gchar *tmp, *fn, *bg_fn;
-	gint i;
 
 	tmp = g_strconcat ("mahjongg/", fname, NULL);
 	
@@ -1784,7 +1812,22 @@ void load_tiles (gchar *fname, gchar *bg_fname)
 	g_free (fn);
 }
 
-static void create_mahjongg_board (GtkWidget *mbox)
+static void
+do_game (void)
+{
+	char *str;
+
+	current_seed = next_seed;
+	str = g_strdup_printf ("%d", current_seed);
+	gtk_label_set_text (GTK_LABEL (seed_label), str);
+	g_free (str);
+	
+	load_map (); /* assigns pos, and calculates dependencies */
+	generate_game (current_seed); /* puts in the positions of the tiles */
+}
+
+static void
+create_mahjongg_board (GtkWidget *mbox)
 {
 	gchar *buf, *buf2;
 	
@@ -1792,10 +1835,10 @@ static void create_mahjongg_board (GtkWidget *mbox)
 
 	gtk_box_pack_start_defaults (GTK_BOX (mbox), canvas);
 
-	gtk_widget_set_usize(canvas, AREA_WIDTH, AREA_HEIGHT);
-	gnome_canvas_set_pixels_per_unit (GNOME_CANVAS(canvas), 1);
-	gnome_canvas_set_scroll_region(GNOME_CANVAS(canvas), 0, 0, AREA_WIDTH, AREA_HEIGHT);
-	
+	gtk_widget_set_usize (canvas, AREA_WIDTH, AREA_HEIGHT);
+	gnome_canvas_set_pixels_per_unit (GNOME_CANVAS (canvas), 1);
+	gnome_canvas_set_scroll_region (GNOME_CANVAS (canvas),
+					0, 0, AREA_WIDTH, AREA_HEIGHT);
 	gtk_widget_show (canvas);
 
 	mapset = gconf_client_get_string (conf_client,
@@ -1817,8 +1860,7 @@ static void create_mahjongg_board (GtkWidget *mbox)
 	popup_confirm = gconf_client_get_bool (conf_client,
 			"/apps/mahjongg/confirm", NULL);
 
-	load_map (); /* assigns pos, and calculates dependencies */
-	generate_game (); /* puts in the positions of the tiles */
+	do_game ();
 	load_tiles (buf, buf2);
 
 	create_canvas_items ();
@@ -1828,12 +1870,23 @@ static void create_mahjongg_board (GtkWidget *mbox)
 	init_game ();
 }
 
-void new_game (void)
+void
+new_seed ()
+{
+	struct timeval t;
+	gettimeofday (&t, NULL);
+
+	next_seed = (guint) (t.tv_sec ^ t.tv_usec);
+}
+
+void
+new_game (gboolean re_seed)
 {
 	gint i;
 
-	load_map ();
-	generate_game() ;
+	if (re_seed)
+		new_seed ();
+	do_game ();
 	load_images ();
 
 	for (i = 0; i < MAX_TILES; i++) {
@@ -1844,9 +1897,10 @@ void new_game (void)
 	init_game ();
 }
 
-void shuffle_tiles_callback (GtkWidget *widget, gpointer data)
+void
+shuffle_tiles_callback (GtkWidget *widget, gpointer data)
 {
-        gint i, previous, first=1, num_shuffle=0;
+        gint i, previous = 0, first=1, num_shuffle=0;
         tile temp;
         time_t seconds;
 
@@ -1854,7 +1908,6 @@ void shuffle_tiles_callback (GtkWidget *widget, gpointer data)
 
         do {
                 num_shuffle++;
-
                 /* We do a circular permutation (FIXME: check the english term...)*/
                 for (i=0; i<MAX_TILES; i++) {
                         if (tiles[i].visible) {
@@ -1904,10 +1957,13 @@ void shuffle_tiles_callback (GtkWidget *widget, gpointer data)
         }
 }
 
-int main (int argc, char *argv [])
+int
+main (int argc, char *argv [])
 {
 	GtkWidget *mbox;
-	GtkWidget *chrono_label,*status_box;
+	GtkWidget *chrono_label;
+	GtkWidget *status_box;
+	GtkWidget *group_box;
         gboolean show=TRUE;
 
         gnome_score_init (APPNAME);
@@ -1923,48 +1979,45 @@ int main (int argc, char *argv [])
 			    NULL);
 
         gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-mahjongg.png");
-	srand (time (NULL));
+	new_seed ();
 	conf_client = gconf_client_get_default ();
 
 	window = gnome_app_new (APPNAME, _(APPNAME_LONG));
 	gtk_window_set_resizable (GTK_WINDOW (window), FALSE);
 
 	/* Statusbar for a chrono, Tiles left and Moves left */
-	status_box = gtk_hbox_new(0, FALSE);
+	status_box = gtk_hbox_new (FALSE, 10);
 
-	tiles_label = gtk_label_new(_("Tiles Left: "));
-	gtk_widget_show(tiles_label);
-	gtk_box_pack_start (GTK_BOX(status_box), tiles_label, FALSE, FALSE, 0);
-	tiles_label = gtk_label_new(MAX_TILES_STR);
-	gtk_widget_show(tiles_label);
-	gtk_box_pack_start (GTK_BOX(status_box), tiles_label, FALSE, FALSE, 0);
+	group_box = gtk_hbox_new (FALSE, 0);
+	tiles_label = gtk_label_new (_("Tiles Left: "));
+	gtk_box_pack_start (GTK_BOX (group_box), tiles_label, FALSE, FALSE, 0);
+	tiles_label = gtk_label_new (MAX_TILES_STR);
+	gtk_box_pack_start (GTK_BOX (group_box), tiles_label, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
 
-	/* separator */
-	moves_label = gtk_label_new("     ");
-	gtk_widget_show(moves_label);
-	gtk_box_pack_start (GTK_BOX(status_box), moves_label, FALSE, FALSE, 0);
-
+	group_box = gtk_hbox_new (FALSE, 0);
 	moves_label = gtk_label_new(_("Moves Left: "));
-	gtk_widget_show(moves_label);
-	gtk_box_pack_start (GTK_BOX(status_box), moves_label, FALSE, FALSE, 0);
-	moves_label = gtk_label_new(MAX_TILES_STR);
-	gtk_widget_show(moves_label);
-	gtk_box_pack_start (GTK_BOX(status_box), moves_label, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (group_box), moves_label, FALSE, FALSE, 0);
+	moves_label = gtk_label_new (MAX_TILES_STR);
+	gtk_box_pack_start (GTK_BOX (group_box), moves_label, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
 
-	/* again */
-	chrono_label = gtk_label_new("     ");
-	gtk_widget_show (chrono_label);
-	gtk_box_pack_start (GTK_BOX(status_box), chrono_label, FALSE, FALSE, 0);
-
+	group_box = gtk_hbox_new (FALSE, 0);
 	chrono_label = gtk_label_new (_("Time: "));
-	gtk_widget_show (chrono_label);
-	gtk_box_pack_start (GTK_BOX(status_box), chrono_label, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (group_box), chrono_label, FALSE, FALSE, 0);
 	chrono = games_clock_new ();
-	gtk_box_pack_start (GTK_BOX(status_box), chrono, FALSE, FALSE, 0);
-	gtk_widget_show (chrono);
+	gtk_box_pack_start (GTK_BOX (group_box), chrono, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
+
+	group_box = gtk_hbox_new (FALSE, 0);
+	seed_label = gtk_label_new (_("Seed: "));
+	gtk_box_pack_start (GTK_BOX (group_box), seed_label, FALSE, FALSE, 0);
+	seed_label = gtk_label_new ("");
+	gtk_box_pack_start (GTK_BOX (group_box), seed_label, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
 
 	/* show the status bar items */
-	gtk_widget_show (status_box);
+	gtk_widget_show_all (status_box);
 
 	appbar = gnome_appbar_new (FALSE, TRUE, GNOME_PREFERENCES_USER);
 	gtk_box_pack_end(GTK_BOX(appbar), status_box, FALSE, FALSE, 0);
@@ -1987,7 +2040,7 @@ int main (int argc, char *argv [])
 	show = gconf_client_get_bool (conf_client,
 			"/apps/mahjongg/show-toolbar", NULL);
 
-        if(show) {
+        if (show) {
 		gtk_check_menu_item_set_active
 			(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), TRUE);
 	} else {
