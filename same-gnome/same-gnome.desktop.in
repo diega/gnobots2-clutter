@@ -1,6 +1,6 @@
 [Desktop Entry]
-_Name=Same Gnome
-_Comment=Gnome SameGame program
+_Name=Same GNOME
+_Comment=GNOME SameGame
 Exec=same-gnome
 Icon=gnome-gsame.png
 Terminal=0

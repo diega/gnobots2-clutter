@@ -1,6 +1,6 @@
 [Desktop Entry]
 _Name=Gnometris
-_Comment=Gnome Tetris Game
+_Comment=Tetris game
 Icon=gnome-gtetris.png
 Exec=gnometris
 Terminal=0
