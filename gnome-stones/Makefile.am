@@ -41,6 +41,7 @@ gnome_stones_LDADD =				\
 	$(GNOME_GAMES_LIBS) \
 	$(INTLLIBS)
 
+gnome_stones_LDFLAGS=-export-dynamic
 
 Pixmap_DATA = gnome-stones.png gnome-stones-file.png
 Games_in_files = gnome-stones.desktop.in

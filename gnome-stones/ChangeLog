@@ -1,3 +1,8 @@
+2002-01-09  Juan Pablo Mendoza <jpablo@gnome.org>
+
+	* Makefile.am: Compile gnome-stones with -export-dynamic
+	so the dlopened modules works.
+
 2001-12-19  Seth Nickell  <snickell@stanford.edu>
 
 	* Makefile.am:
