@@ -1,3 +1,7 @@
+1998-02-15  Raja R Harinath  <harinath@cs.umn.edu>
+
+	* Makefile.am (phaser_chess_LDADD): Use $(OBJC_LIBS).
+
 Sat Feb 14 09:51:56 1998  Tom Tromey  <tromey@cygnus.com>
 
 	* Makefile.am (phaser_chess_LDADD): Include INTLLIBS.
