@@ -18,22 +18,22 @@ static void display_scores();
                    {GNOME_APP_UI_ITEM, label, tip, cb, data, NULL, \
 	            GNOME_APP_PIXMAP_NONE, NULL, 0, (GdkModifierType)0, NULL}
 static GnomeUIInfo game_menu[] = {
-  GNOMEUIINFO_MENU_NEW_GAME_ITEM(popup, &newgamebox),
-  GNOMEUIINFO_MENU_PAUSE_GAME_ITEM(popup, &pausebox),
+  GNOMEUIINFO_MENU_NEW_GAME_ITEM((void *) popup, &newgamebox),
+  GNOMEUIINFO_MENU_PAUSE_GAME_ITEM((void *) popup, &pausebox),
   GNOMEUIINFO_SEPARATOR,
-  GNOMEUIINFO_ITEM_STOCK_DATA("Warp to level...", NULL, popup, &warpbox,
+  GNOMEUIINFO_ITEM_STOCK_DATA("Warp to level...", NULL, (void *) popup, &warpbox,
 			      GNOME_STOCK_MENU_FORWARD),
-  GNOMEUIINFO_MENU_SCORES_ITEM(display_scores, NULL),
+  GNOMEUIINFO_MENU_SCORES_ITEM((void *) display_scores, NULL),
   GNOMEUIINFO_SEPARATOR,
-  GNOMEUIINFO_MENU_EXIT_ITEM(popup, &quitbox),
+  GNOMEUIINFO_MENU_EXIT_ITEM((void *) popup, &quitbox),
   GNOMEUIINFO_END
 };
   
 static GnomeUIInfo help_menu[] = {
-  GNOMEUIINFO_ITEM_NONE_DATA("Story of xBill", NULL, popup, &storybox),
-  GNOMEUIINFO_ITEM_NONE_DATA("Rules", NULL, popup, &rulesbox),
+  GNOMEUIINFO_ITEM_NONE_DATA("Story of xBill", NULL, (void *) popup, &storybox),
+  GNOMEUIINFO_ITEM_NONE_DATA("Rules", NULL, (void *) popup, &rulesbox),
   GNOMEUIINFO_SEPARATOR,
-  GNOMEUIINFO_MENU_ABOUT_ITEM(popup, &aboutbox),
+  GNOMEUIINFO_MENU_ABOUT_ITEM((void *) popup, &aboutbox),
   GNOMEUIINFO_END
 };
 static GnomeUIInfo menus[] = {

@@ -200,7 +200,7 @@ static void parseAnArg(poptContext con, enum poptCallbackReason reason,
 }
 static const struct poptOption options[] = {
   { NULL, '\0', POPT_ARG_CALLBACK,
-    &parseAnArg, 0, NULL },
+    (void *) &parseAnArg, 0, NULL },
   { "warp", 'l', POPT_ARG_STRING, NULL, -1,
     "Start at a different level", "LEVEL" },
   POPT_AUTOHELP
