@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1998/11/29 10:14:55 carsten>
+ * Time-stamp: <1998/12/06 17:33:09 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -697,9 +697,6 @@ session_management_init (void)
   gtk_signal_connect (GTK_OBJECT (client), "die",
 		      GTK_SIGNAL_FUNC (gstones_exit), NULL);
 
-#if 0
-  /* Currently disabled, because gnome-session seems to have some bugs
-     concerning the discard_command.  */
   if (GNOME_CLIENT_CONNECTED (client))
     {
       gchar *discard_command[3];
@@ -709,7 +706,6 @@ session_management_init (void)
       discard_command[2]= gnome_client_get_config_prefix (client);
       gnome_client_set_discard_command (client, 3, discard_command);
     }  
-#endif
 }
 
 
