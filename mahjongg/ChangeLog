@@ -1,3 +1,8 @@
+2004-06-09  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* solubility.c: Fix the shuffle routine so that the same 
+	tiles are reused. Fixes bug #139294.
+
 2004-06-05  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c: Make sure the state of the pause menubar button
