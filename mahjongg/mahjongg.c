@@ -930,62 +930,64 @@ gint hint_timeout (gpointer data)
   timeout_counter ++;
   
   if (timeout_counter > HINT_BLINK_NUM)
-    return 0;
+	  return 0;
   
   tiles[hint_tiles[0]].selected ^= HINT_FLAG;
   tiles[hint_tiles[1]].selected ^= HINT_FLAG;
   change_tile_image(&tiles[hint_tiles[0]]);
   change_tile_image(&tiles[hint_tiles[1]]);
-
+  
   return 1;
 }
-
+  
 void hint_callback (GtkWidget *widget, gpointer data)
 {
   int i, j, free=0, type ;
 
-  if (hint_dialog)
-    return;
-  /* This prevents the flashing speeding up if the hint button is
-   * pressed multiple times. */
-  
-  if (timeout_counter<=HINT_BLINK_NUM) 
-    return;
-
-  /* Snarfed from check free
-   * Tile Free is now _so_ much quicker, it is more elegant to do a
-   * British Library search, and safer. */
-
-  if (selected_tile < MAX_TILES) {
-	  tiles[selected_tile].selected = 0;
+  if (visible_tiles > 0) {
+    if (hint_dialog)
+      return;
+    /* This prevents the flashing speeding up if the hint button is
+     * pressed multiple times. */
+    
+    if (timeout_counter<=HINT_BLINK_NUM) 
+      return;
+    
+    /* Snarfed from check free
+     * Tile Free is now _so_ much quicker, it is more elegant to do a
+     * British Library search, and safer. */
+    
+    if (selected_tile < MAX_TILES) {
+      tiles[selected_tile].selected = 0;
+    }
+    selected_tile = MAX_TILES + 1;
+    
+    for (i=0;i<MAX_TILES && !free;i++)
+      if (tile_free(i))
+	{
+	  type = tiles[i].type ;
+	  for (j=0;j<MAX_TILES && !free;j++)
+	    {
+	      free = (tiles[j].type == type && i != j && tile_free(j)) ;
+	      if (free)
+		{
+		  tiles[i].selected ^= HINT_FLAG;
+		  tiles[j].selected ^= HINT_FLAG;
+		  change_tile_image (&tiles[i]);
+		  change_tile_image (&tiles[j]);
+		  hint_tiles[0] = i;
+		  hint_tiles[1] = j;
+		}
+	    }
+	}
+    /* This is a good way to test check_free
+       for (i=0;i<MAX_TILES;i++)
+       if (tiles[i].selected == 17)
+       tiles[i].visible = 0 ;*/
+    
+    timeout_counter = 0;
+    timer = gtk_timeout_add (250, (GtkFunction) hint_timeout, NULL);
   }
-  selected_tile = MAX_TILES + 1;
-  
-  for (i=0;i<MAX_TILES && !free;i++)
-    if (tile_free(i))
-      {
-	type = tiles[i].type ;
-	for (j=0;j<MAX_TILES && !free;j++)
-	  {
-	    free = (tiles[j].type == type && i != j && tile_free(j)) ;
-	    if (free)
-	      {
-		tiles[i].selected ^= HINT_FLAG;
-		tiles[j].selected ^= HINT_FLAG;
-		change_tile_image (&tiles[i]);
-		change_tile_image (&tiles[j]);
-		hint_tiles[0] = i;
-		hint_tiles[1] = j;
-	      }
-	  }
-      }
-  /* This is a good way to test check_free
-    for (i=0;i<MAX_TILES;i++)
-    if (tiles[i].selected == 17)
-    tiles[i].visible = 0 ;*/
-
-  timeout_counter = 0;
-  timer = gtk_timeout_add (250, (GtkFunction) hint_timeout, NULL);
 }
 
 void about_callback (GtkWidget *widget, gpointer data)
