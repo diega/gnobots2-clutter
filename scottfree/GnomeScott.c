@@ -144,7 +144,7 @@ static char *MapSynonym(const char *word)
 			tp++;
 		else
 			strcpy(lastword,tp);
-		if(strncasecmp(word,tp,GameHeader.WordLength)==0)
+		if(g_strncasecmp(word,tp,GameHeader.WordLength)==0)
 			return(lastword);
 		n++;
 	}
@@ -162,7 +162,7 @@ static int MatchUpItem(const char *text, int loc)
 	while(ct<=GameHeader.NumItems)
 	{
 		if(Items[ct].AutoGet && Items[ct].Location==loc &&
-			strncasecmp(Items[ct].AutoGet,word,GameHeader.WordLength)==0)
+			g_strncasecmp(Items[ct].AutoGet,word,GameHeader.WordLength)==0)
 			return(ct);
 		ct++;
 	}
@@ -531,7 +531,7 @@ static int WhichWord(const char *word, char **list)
 			tp++;
 		else
 			n=ne;
-		if(strncasecmp(word,tp,GameHeader.WordLength)==0)
+		if(g_strncasecmp(word,tp,GameHeader.WordLength)==0)
 			return(n);
 		ne++;
 	}
@@ -1113,7 +1113,7 @@ static int PerformActions(int vb,int no)
 			/* Yes they really _are_ hardcoded values */
 			if(vb==10)
 			{
-				if(strcasecmp(NounText,"ALL")==0)
+				if(g_strcasecmp(NounText,"ALL")==0)
 				{
 					int ct=0;
 					int f=0;
@@ -1180,7 +1180,7 @@ static int PerformActions(int vb,int no)
 			}
 			if(vb==18)
 			{
-				if(strcasecmp(NounText,"ALL")==0)
+				if(g_strcasecmp(NounText,"ALL")==0)
 				{
 					int ct=0;
 					int f=0;

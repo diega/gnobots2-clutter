@@ -1,3 +1,7 @@
+Wed Apr  7 20:02:35 1999  ape@lrdpf.spacetec.no  (Asbjorn Pettersen)
+
+	* GnomeScott.c: Use g_strcasecmp() instead of strcasecmp().
+
 1999-02-19  Raja R Harinath  <harinath@cs.umn.edu>
 
 	* Makefile.am (GnomeScott_LDADD): Use $(ZVT_LIBS) instead of
