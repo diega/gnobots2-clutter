@@ -29,6 +29,7 @@
 #include <sys/time.h>
 #include <string.h>
 #include <games-clock.h>
+#include <gconf/gconf-client.h>
 
 #include "gataxx.h"
 #include "ataxx.h"
@@ -45,6 +46,8 @@ GtkWidget *tile_dialog;
 GtkWidget *black_score;
 GtkWidget *white_score;
 GtkWidget *time_display;
+
+GConfClient *gataxx_gconf_client = NULL;
 
 gint flip_pixmaps_id = 0;
 gint statusbar_id;
@@ -94,7 +97,7 @@ int session_xpos = -1;
 int session_ypos = -1;
 int session_position = 0;
 
-gchar *tile_set;
+gchar *tile_set = NULL;
 
 guint selected_x;
 guint selected_y;
@@ -352,8 +355,8 @@ void black_level_cb(GtkWidget *widget, gpointer data) {
   
   tmp = atoi((gchar *)data);
   
-  gnome_config_set_int("/gataxx/Preferences/blacklevel", tmp);
-  gnome_config_sync();
+  gconf_client_set_int(gataxx_gconf_client, "/apps/gataxx/blacklevel",
+                       tmp, NULL);
   
   black_computer_level = tmp;
   
@@ -373,8 +376,8 @@ void white_level_cb(GtkWidget *widget, gpointer data)
   
   tmp = atoi((gchar *)data);
   
-  gnome_config_set_int("/gataxx/Preferences/whitelevel", tmp);
-  gnome_config_sync();
+  gconf_client_set_int(gataxx_gconf_client, "/apps/gataxx/whitelevel",
+                       tmp, NULL);
   
   white_computer_level = tmp;
   
@@ -391,7 +394,7 @@ void white_level_cb(GtkWidget *widget, gpointer data)
 void about_cb(GtkWidget *widget, gpointer data) {
 
   static GtkWidget *about;
-  
+  GdkPixbuf *pixbuf = NULL;
   const gchar *authors[] = {"Chris Rogers", NULL};
   gchar *documenters[] = {
                           NULL
@@ -404,13 +407,26 @@ void about_cb(GtkWidget *widget, gpointer data) {
     gdk_window_show (about->window);
     return;
   }
+
+  {
+	  char *filename = NULL;
+
+	  filename = gnome_program_locate_file (NULL,
+			  GNOME_FILE_DOMAIN_PIXMAP,  ("gataxx.png"),
+			  TRUE, NULL);
+	  if (filename != NULL)
+	  {
+		  pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+		  g_free (filename);
+	  }
+  }
   
   about = gnome_about_new(_("gataxx"), VERSION, "(C) 1999 Chris Rogers",
   			  _("gataxx is a Gnome port of the old game ataxx.  It is derived from Ian Peters' iagno code."),
   			  (const char **)authors,
   			  (const char **)documenters,
   			  strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
-			  NULL);
+			  pixbuf);
   g_signal_connect (G_OBJECT (about), "destroy", G_CALLBACK
 		      (gtk_widget_destroyed), &about);
   gtk_window_set_transient_for (GTK_WINDOW (about), GTK_WINDOW(window));
@@ -627,7 +643,7 @@ gint flip_pixmaps(gpointer data) {
 void init_new_game() {
   
   guint i, j;
-  
+
   if (flip_final_id) {
     gtk_timeout_remove(flip_final_id);
     flip_final_id = 0;
@@ -837,15 +853,21 @@ static int save_state(GnomeClient *client, gint phase, GnomeRestartStyle save_st
   return TRUE;
 }
 
-int main(int argc, char **argv) {
+void
+key_changed_cb (GConfClient *tmp_client, guint cnx_id, GConfEntry *tmp_entry,
+                gpointer tmp_data)
+{
+	reload_properties ();
+}
 
-  GnomeClient *client;
+int main(int argc, char **argv) {
+    GnomeClient *client;
 
   /*  CORBA_def(CORBA_Environment ev;) */
     struct timeval tv;
     
     gnome_score_init("gataxx");
-
+  
     bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
     bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
@@ -865,10 +887,17 @@ int main(int argc, char **argv) {
     
     g_signal_connect(G_OBJECT(client), "save_yourself", G_CALLBACK(save_state), argv[0]);
     g_signal_connect(G_OBJECT(client), "die", G_CALLBACK(quit_game_cb), argv[0]);
-  
+
+    gconf_init(argc, argv, NULL);
+    gataxx_gconf_client = gconf_client_get_default();
+    gconf_client_add_dir(gataxx_gconf_client, "/apps/gataxx",
+                         GCONF_CLIENT_PRELOAD_NONE, NULL);
+    gconf_client_notify_add(gataxx_gconf_client, "/apps/gataxx",
+                            key_changed_cb, NULL, NULL, NULL);
+
     create_window();
 
-    load_properties ();
+    load_properties();
     
     load_pixmaps();
     
@@ -886,5 +915,7 @@ int main(int argc, char **argv) {
     
     gtk_main();
     
+    g_object_unref(G_OBJECT(gataxx_gconf_client));
+
     return 0;
 }

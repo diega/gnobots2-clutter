@@ -29,7 +29,7 @@
 #include <games-clock.h>
 
 guint flip_final_id = 0;
-gint flip_final;
+gboolean flip_final;
 
 extern guint black_computer_level;
 extern guint white_computer_level;

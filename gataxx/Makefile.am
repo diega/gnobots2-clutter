@@ -38,11 +38,15 @@ Games_in_files = gataxx.desktop.in
 Games_DATA = $(Games_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
+schemadir = $(sysconfdir)/gconf/schemas
+schema_DATA = gataxx.schemas
+
 EXTRA_DIST = AUTHORS \
              gataxx.desktop.in 	\
 	     gataxx.soundlist.in \
              $(pixmap_DATA)	\
-	     $(appicon_DATA)
+	     $(appicon_DATA) \
+	     $(schema_DATA)
 
 soundlistdir = $(sysconfdir)/sound/events
 soundlist_in_files = gataxx.soundlist.in
@@ -50,3 +54,7 @@ soundlist_DATA = $(soundlist_in_files:.soundlist.in=.soundlist)
 @INTLTOOL_SOUNDLIST_RULE@
 
 SUBDIRS = sounds help
+
+install-data-local:
+	GCONF_CONFIG_SOURCE=$(GCONF_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
+

@@ -24,6 +24,7 @@
 #include <gnome.h>
 #include <dirent.h>
 #include <games-clock.h>
+#include <gconf/gconf-client.h>
 
 #include "properties.h"
 #include "gataxx.h"
@@ -34,6 +35,7 @@ static GtkWidget *propbox = NULL;
 
 extern GtkWidget *window;
 extern GtkWidget *time_display;
+extern GConfClient *gataxx_gconf_client;
 extern guint black_computer_level;
 extern guint white_computer_level;
 extern guint computer_speed;
@@ -44,30 +46,40 @@ extern gchar *tile_set;
 extern gint8 pixmaps[7][7];
 extern gint animate;
 extern gint flip_pixmaps_id;
-extern gint flip_final;
+extern gboolean flip_final;
 
-gint quick_moves;
+gboolean quick_moves;
 gint response;
 
 int mapped = 0;
 
+gchar * gataxx_gconf_get_string (gchar *key);
+gint gataxx_gconf_get_int (gchar *key, gint default_int);
+gboolean gataxx_gconf_get_bool (gchar *key, gint default_bool);
+
 void load_properties ()
 {
-	black_computer_level = gnome_config_get_int
-		("/gataxx/Preferences/blacklevel=0");
-	white_computer_level = gnome_config_get_int
-		("/gataxx/Preferences/whitelevel=0");
-	tile_set = gnome_config_get_string ("/gataxx/Preferences/tileset=classic.png");
-	animate = gnome_config_get_int ("/gataxx/Preferences/animate=2");
+	black_computer_level =
+		gataxx_gconf_get_int ("/apps/gataxx/blacklevel", 0);
 
-	if (gnome_config_get_int ("/gataxx/Preferences/quickmoves=0")) {
+	white_computer_level =
+		gataxx_gconf_get_int ("/apps/gataxx/whitelevel", 0);
+
+	tile_set = gataxx_gconf_get_string ("/apps/gataxx/tileset");
+	if (tile_set == NULL)
+		tile_set = "classic.png";
+
+	animate = gataxx_gconf_get_int ("/apps/gataxx/animate", 2);
+
+	if ((quick_moves =
+	     gataxx_gconf_get_bool ("/apps/gataxx/quickmoves", FALSE)))
+	{
 		computer_speed = COMPUTER_MOVE_DELAY / 2;
 	}
 	else {
 		computer_speed = COMPUTER_MOVE_DELAY;
 	}
-	flip_final = gnome_config_get_int
-		("/gataxx/Preferences/flipfinal=1");
+	flip_final = gataxx_gconf_get_bool ("/apps/gataxx/flipfinal", TRUE);
 	
 	switch (animate) {
 		case 0:
@@ -83,18 +95,18 @@ void load_properties ()
 
 void save_properties ()
 {
-	gnome_config_set_int ("/gataxx/Preferences/blacklevel",
-			black_computer_level);
-	gnome_config_set_int ("/gataxx/Preferences/whitelevel",
-			white_computer_level);
-	gnome_config_set_int ("/gataxx/Preferences/quickmoves",
-			quick_moves);
-	gnome_config_set_string ("/gataxx/Preferences/tileset",
-			tile_set);
-	gnome_config_set_int ("/gataxx/Preferences/animate", animate);
-	gnome_config_set_int ("/gataxx/Preferences/flipfinal", flip_final);
-	
-	gnome_config_sync ();
+	gconf_client_set_int (gataxx_gconf_client, "/apps/gataxx/blacklevel",
+	                      black_computer_level, NULL);
+	gconf_client_set_int (gataxx_gconf_client, "/apps/gataxx/whitelevel",
+	                      white_computer_level, NULL);
+	gconf_client_set_bool (gataxx_gconf_client, "/apps/gataxx/quickmoves",
+	                       quick_moves, NULL);
+	gconf_client_set_string (gataxx_gconf_client, "/apps/gataxx/tileset",
+	                         tile_set, NULL);
+	gconf_client_set_int (gataxx_gconf_client, "/apps/gataxx/animate",
+	                      animate, NULL);
+	gconf_client_set_bool (gataxx_gconf_client, "/apps/gataxx/flipfinal",
+	                       flip_final, NULL);
 }
 
 void apply_changes ()
@@ -158,7 +170,6 @@ void apply_changes ()
 	}
 	
 	check_computer_players ();
-	save_properties ();
 }
 
 void black_computer_level_select (GtkWidget *widget, gpointer data)
@@ -167,6 +178,7 @@ void black_computer_level_select (GtkWidget *widget, gpointer data)
 		       (GTK_TOGGLE_BUTTON (widget)->active)) {
 		black_computer_level = (guint) data;
 	}
+	save_properties ();
 	apply_changes ();
 }
 
@@ -176,29 +188,32 @@ void white_computer_level_select (GtkWidget *widget, gpointer data)
 		       (GTK_TOGGLE_BUTTON (widget)->active)) {
 		white_computer_level = (guint) data;
 	}
+	save_properties ();
 	apply_changes ();
 }
 
 void quick_moves_select (GtkWidget *widget, gpointer data)
 {
 	if (GTK_TOGGLE_BUTTON (widget)->active) {
-		quick_moves = 1;
+		quick_moves = TRUE;
 	}
 	else {
-		quick_moves = 0;
+		quick_moves = FALSE;
 	}
 
+	save_properties ();
 	apply_changes ();
 }
 
 void flip_final_select (GtkWidget *widget, gpointer data)
 {
 	if (GTK_TOGGLE_BUTTON (widget)->active) {
-		flip_final = 1;
+		flip_final = TRUE;
 	}
 	else {
-		flip_final = 0;
+		flip_final = FALSE;
 	}
+	save_properties ();
 	apply_changes ();
 }
 
@@ -209,11 +224,13 @@ void animate_select (GtkWidget *widget, gpointer data)
 		animate = (gint) data;
 	}
 
+	save_properties ();
 	apply_changes ();
 }
 
 void apply_cb (GtkWidget *widget, gpointer data)
 {
+	save_properties ();
 	apply_changes();
 }
 
@@ -229,6 +246,7 @@ void set_selection(GtkWidget *widget, gpointer data)
 
 	tile_set = g_strdup ((char *) data);
         
+	save_properties ();
 	apply_changes();
 }
 
@@ -292,7 +310,7 @@ void show_properties_dialog ()
 	propbox = gtk_dialog_new_with_buttons (_("Properties"),
 					       GTK_WINDOW (window),
 					       GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
-					       _("Done"),
+					       GTK_STOCK_OK,
 					       GTK_RESPONSE_OK,
 					       NULL);
 	
@@ -521,3 +539,108 @@ void show_properties_dialog ()
 	gtk_widget_show (propbox);
 
 }	
+
+/* First checks gconf, then schema, then defaults to the value passed. */
+gint
+gataxx_gconf_get_int (gchar *key, gint default_int)
+{
+	GConfValue *value = NULL;
+	GConfValue *schema_value = NULL;
+	gint retval;
+
+	value = gconf_client_get (gataxx_gconf_client, key, NULL);
+	if (value == NULL)
+		return default_int;
+
+	if (value->type == GCONF_VALUE_INT) {
+		retval = gconf_value_get_int (value);
+		gconf_value_free (value);
+	}
+	else {
+		schema_value = gconf_client_get_default_from_schema
+			(gataxx_gconf_client, key, NULL);
+		if (schema_value == NULL) {
+			retval = default_int;
+		}
+		else {
+			retval = gconf_value_get_int (schema_value);
+		}
+		gconf_value_free (value);
+		gconf_value_free (schema_value);
+	}
+
+	return retval;
+}
+
+gboolean
+gataxx_gconf_get_bool (gchar *key, gboolean default_bool)
+{
+	GConfValue *value = NULL;
+	GConfValue *schema_value = NULL;
+	gboolean retval;
+
+	value = gconf_client_get (gataxx_gconf_client, key, NULL);
+	if (value == NULL)
+		return default_bool;
+
+	if (value->type == GCONF_VALUE_BOOL) {
+		retval = gconf_value_get_bool (value);
+		gconf_value_free (value);
+	}
+	else {
+		schema_value = gconf_client_get_default_from_schema
+			(gataxx_gconf_client, key, NULL);
+		if (schema_value == NULL) {
+			retval = default_bool;
+		}
+		else {
+			retval = gconf_value_get_bool (schema_value);
+		}
+		gconf_value_free (value);
+		gconf_value_free (schema_value);
+	}
+
+	return retval;
+}
+
+/* Returns gchar* you should free with g_free(). */
+/* First checks gconf, then schema. Returns NULL if not found in either. */
+gchar *
+gataxx_gconf_get_string (gchar *key)
+{
+	GConfValue *value = NULL;
+	GConfValue *schema_value = NULL;
+	gchar *retval = NULL;
+
+	value = gconf_client_get (gataxx_gconf_client, key, NULL);
+	if (value == NULL)
+		return NULL;
+
+	if (value->type == GCONF_VALUE_STRING) {
+		retval = g_strdup (gconf_value_get_string (value));
+		gconf_value_free (value);
+	}
+	else {
+		schema_value = gconf_client_get_default_from_schema
+			(gataxx_gconf_client, key, NULL);
+		if (schema_value == NULL) {
+			retval = NULL;
+		}
+		else {
+			retval = g_strdup (gconf_value_get_string (schema_value));
+		}
+		gconf_value_free (value);
+		gconf_value_free (schema_value);
+	}
+
+	return retval;
+}
+
+void reload_properties ()
+{
+	g_free (tile_set);
+	tile_set = NULL;
+	load_properties ();
+	apply_changes ();
+}
+

@@ -1,5 +1,21 @@
 2002-04-15  Bastien Nocera  <hadess@hadess.net>
 
+	* Makefile.am:
+	* ataxx.c:
+	* gataxx.c: (black_level_cb), (white_level_cb), (about_cb),
+	(init_new_game), (key_changed_cb), (main):
+	* properties.c: (load_properties), (save_properties),
+	(apply_changes), (black_computer_level_select),
+	(white_computer_level_select), (quick_moves_select),
+	(flip_final_select), (animate_select), (apply_cb), (set_selection),
+	(show_properties_dialog), (gataxx_gconf_get_int),
+	(gataxx_gconf_get_bool), (gataxx_gconf_get_string),
+	(reload_properties):
+	* properties.h: port to gconf (patch by mark@sporkstorms.org (Mark
+	Stratman)), have a nice icon in the about box, more porting
+
+2002-04-15  Bastien Nocera  <hadess@hadess.net>
+
 	* gataxx.c: (save_state): remove nstr(), patch from
 	r_kinder@yahoo.com (Richard Kinder)
 

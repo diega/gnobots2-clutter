@@ -24,6 +24,7 @@
 #define _PROPERTIES_H_
 
 void load_properties ();
+void reload_properties ();
 void show_properties_dialog ();
 
 #endif
