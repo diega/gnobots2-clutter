@@ -1,3 +1,10 @@
+2003-06-24  William Jon McCann  <mccann@jhu.edu>
+
+	* same-gnome.c: #define gconf key names.  Convert to pixbufs so
+	we are ready for tranparent background themes.
+	(draw_ball): Fixed a nasty little off-by-one error that caused
+	segfaults after converting to pixbufs.
+
 2003-06-22  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* same-gnome.c (main): Space at end of string fixes for i18n

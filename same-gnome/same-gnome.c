@@ -39,10 +39,16 @@
 		     GDK_LEAVE_NOTIFY_MASK          |\
 		     GDK_POINTER_MOTION_MASK)
 
+#define KEY_DIR "/apps/same-gnome"
+#define KEY_TILESET "/apps/same-gnome/tileset"
+#define KEY_SCORE "/apps/same-gnome/score"
+#define KEY_NSTONES "/apps/same-gnome/nstones"
+#define KEY_FIELD "/apps/same-gnome/field"
+
 static GtkWidget *pref_dialog, *scorew;
 static GtkWidget *app, *draw_area, *vb, *appbar;
 static GdkPixbuf *image;
-static GdkPixmap *stones, *mask;
+
 static int tagged_count = 0;
 static int ball_timeout_id = -1;
 static int old_x = -1, old_y = -1;
@@ -74,14 +80,21 @@ draw_ball (int x, int y)
 {
 	int bx, by;
 
+	if (x >= STONE_COLS || x < 0)
+		return;
+	if (y >= STONE_LINES || y < 0)
+		return;
+
 	if (field [x][y].color) {
 		by = STONE_SIZE * (field [x][y].color - 1);
 		bx = STONE_SIZE * (field [x][y].frame);
 
-		gdk_draw_drawable (draw_area->window,
-				 draw_area->style->black_gc, stones,
-				 bx, by, x * STONE_SIZE, y * STONE_SIZE,
-				 STONE_SIZE, STONE_SIZE);
+		gdk_draw_pixbuf (draw_area->window,
+				 draw_area->style->black_gc, image,
+				 bx, by,
+				 x * STONE_SIZE, y * STONE_SIZE,
+				 STONE_SIZE, STONE_SIZE,
+				 GDK_RGB_DITHER_NORMAL, 0, 0);
 	} else {
 		gdk_window_clear_area (draw_area->window,
 				       x * STONE_SIZE, y * STONE_SIZE,
@@ -406,24 +419,26 @@ static void
 load_scenario (char *fname)
 {
 	gchar *fn;
-        GdkColor bgcolor;
-        GdkImage *tmpimage;
+        GdkColor background_color;
 	gint i, j;
+	GdkColormap *colormap;
+	gchar *color_name;
     
 	g_return_if_fail (fname != NULL);
 
 	if (g_path_is_absolute (fname))
 		fn = g_strdup (fname);
 	else
-		fn = g_build_filename ( PIXMAPDIR, fname, NULL);
+		fn = g_build_filename (PIXMAPDIR, fname, NULL);
 
-	if (!g_file_test (fn, G_FILE_TEST_EXISTS)) {
-		GtkWidget *box = gtk_message_dialog_new (GTK_WINDOW (app),
-			GTK_DIALOG_DESTROY_WITH_PARENT,
-			GTK_MESSAGE_ERROR,
-			GTK_BUTTONS_OK,
-			_("Could not find the theme:\n%s\n\n"
-			"Please check your Same GNOME installation."), fn);
+	if (! g_file_test (fn, G_FILE_TEST_EXISTS)) {
+		GtkWidget *box = gtk_message_dialog_new 
+			(GTK_WINDOW (app),
+			 GTK_DIALOG_DESTROY_WITH_PARENT,
+			 GTK_MESSAGE_ERROR,
+			 GTK_BUTTONS_OK,
+			 _("Could not find the theme:\n%s\n\n"
+			   "Please check your Same GNOME installation."), fn);
 
 		gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_OK);
                 gtk_dialog_set_has_separator (GTK_DIALOG (box), FALSE);
@@ -469,12 +484,15 @@ load_scenario (char *fname)
                   exit(1);
 	}
 
-	gdk_pixbuf_render_pixmap_and_mask (image, &stones, &mask, 127);
+	/* FIXME: this should be a preference */
+	color_name = g_strdup ("#000000");
+	gdk_color_parse (color_name, &background_color);
+	g_free (color_name);
 
-        tmpimage = gdk_drawable_get_image (stones, 0, 0, 1, 1);
-        bgcolor.pixel = gdk_image_get_pixel (tmpimage, 0, 0);
-        gdk_window_set_background (draw_area->window, &bgcolor);
-	g_object_unref (tmpimage);
+	colormap = gtk_widget_get_colormap (draw_area);
+	gdk_colormap_alloc_color (colormap, &background_color, FALSE, TRUE);
+
+        gdk_window_set_background (draw_area->window, &background_color);
   
 	g_free( fn );
 
@@ -534,7 +552,7 @@ set_selection (GtkTreeSelection *selection, gpointer data)
         gtk_tree_model_get (model, &iter, 1, &filename, -1);
 
 	load_scenario (filename);
-	gconf_client_set_string (conf_client, "/apps/same-gnome/tileset", filename, NULL);
+	gconf_client_set_string (conf_client, KEY_TILESET, filename, NULL);
 }
 
 static void
@@ -806,8 +824,8 @@ save_state (GnomeClient *client,
 	struct ball *f = (struct ball*) field;
 	int i;  
 	
-	gconf_client_set_int (conf_client, "/apps/same-gnome/score", score, NULL);
-	gconf_client_set_int (conf_client, "/apps/same-gnome/nstones", sync_stones ? 1 : nstones, NULL);
+	gconf_client_set_int (conf_client, KEY_SCORE, score, NULL);
+	gconf_client_set_int (conf_client, KEY_NSTONES, sync_stones ? 1 : nstones, NULL);
 	
 	buf= g_malloc (STONE_COLS*STONE_LINES+1);
 
@@ -815,8 +833,8 @@ save_state (GnomeClient *client,
 		buf [i]= f [i].color + 'a';
 	}
 	buf [STONE_COLS*STONE_LINES]= '\0';
-	gconf_client_set_string (conf_client, "/apps/same-gnome/field", buf, NULL);
-	g_free(buf);
+	gconf_client_set_string (conf_client, KEY_FIELD, buf, NULL);
+	g_free (buf);
 
 	return TRUE;
 }
@@ -829,10 +847,10 @@ restart (void)
 	struct ball *f = (struct ball*) field;
 	int i;
 	
-	score = gconf_client_get_int (conf_client, "/apps/same-gnome/score", NULL);
-	nstones = gconf_client_get_int (conf_client, "/apps/same-gnome/nstones", NULL);
+	score = gconf_client_get_int (conf_client, KEY_SCORE, NULL);
+	nstones = gconf_client_get_int (conf_client, KEY_NSTONES, NULL);
 	
-	buf = gconf_client_get_string (conf_client, "/apps/same-gnome/field", NULL);
+	buf = gconf_client_get_string (conf_client, KEY_FIELD, NULL);
 
 	if (buf) {
 		for (i= 0; i < (STONE_COLS*STONE_LINES); i++) 
@@ -899,7 +917,7 @@ main (int argc, char *argv [])
 
 	/* Get the default GConfClient */
 	conf_client = gconf_client_get_default ();
-	if (!games_gconf_sanity_check_string (conf_client, "/apps/same-gnome/tileset")) {
+	if (!games_gconf_sanity_check_string (conf_client, KEY_TILESET)) {
 		return 1;
 	}
 
@@ -926,7 +944,7 @@ main (int argc, char *argv [])
 
 	if (! fname) {
 		fname = gconf_client_get_string
-			(conf_client, "/apps/same-gnome/tileset", NULL);
+			(conf_client, KEY_TILESET, NULL);
 	}
 
 	create_same_board (fname);
