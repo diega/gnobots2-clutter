@@ -3,7 +3,7 @@
  * Copyright (C) 2003 by Callum McKenzie
  *
  * Created: <2003-09-07 05:02:22 callum>
- * Time-stamp: <2003-10-03 09:04:34 callum>
+ * Time-stamp: <2003-10-08 22:34:35 callum>
  *
  */
 
@@ -46,16 +46,16 @@ GdkColor bgcolour;
 
 GdkPixbuf * tilepixbuf = NULL;
 
-guint windowwidth;
-guint windowheight;
-guint tilebasewidth = 0;
-guint tilebaseheight = 0;
-guint tileoffsetx;
-guint tileoffsety;
-guint tilewidth;
-guint tileheight;
-guint xoffset;
-guint yoffset;
+gint windowwidth;
+gint windowheight;
+gint tilebasewidth = 0;
+gint tilebaseheight = 0;
+gint tileoffsetx;
+gint tileoffsety;
+gint tilewidth;
+gint tileheight;
+gint xoffset;
+gint yoffset;
 
 /* This is the minimum size of the widget containing the tiles. These
  * numbers are completely arbitrary and any resemblance to the resolution
@@ -205,7 +205,7 @@ void draw_tile (gint tileno)
                          sx, sy, dx, dy, tilewidth, tileheight);
     }
   }
-
+  
   gdk_gc_set_clip_origin (gc, ox, oy);
   gdk_draw_drawable (buffer, gc, tilebuffer, 0, 0, ox, oy,
                      tilewidth, tileheight);

@@ -1722,7 +1722,7 @@ main (int argc, char *argv [])
 	init_game ();
 	score_current_mapset = g_strdup (mapset);
 	update_score_state ();
-
+	
 	/* Note: we have to have a layout loaded before here so that the
 	 * window knows how big to make the tiles. */
 	gtk_widget_show (window);
@@ -1743,7 +1743,6 @@ main (int argc, char *argv [])
 		gtk_widget_hide(GTK_WIDGET(gdi)) ;
 		gtk_widget_queue_resize (window);
 	}
-
 
   	gnome_app_flash (GNOME_APP (window), 
   				_("Welcome to GNOME Mahjongg!")); 

@@ -1,3 +1,9 @@
+2003-10-08  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* drawing.c: Fixed the problem with tiles on the second layer at
+	the top of the screen not being drawn. gint + guint evaluates to
+	guint in a comparison operation. Oops..
+
 2003-10-03  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* drawing.c:
