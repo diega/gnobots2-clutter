@@ -1,3 +1,7 @@
+2001-12-04  Duarte Loreto <happyguy_pt@hotmail.com>
+
+        * xbill.desktop: Added Portuguese (pt) translation.
+
 2001-10-27  Juan Pablo Mendoza <pablo_juan@yahoo.com>
 
 	* Game.cc: Changed some _()'s to N_()'s to fix compilation.

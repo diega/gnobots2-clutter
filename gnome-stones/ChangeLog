@@ -1,3 +1,7 @@
+2001-12-04  Duarte Loreto <happyguy_pt@hotmail.com>
+        
+        * gnome-stones.desktop, default.caves, gnomekoban.caves and tutorial.caves : Added Portuguese (pt) translation.
+
 2001-11-24  Kevin Vandersloot <kfv101@psu.edu>
 
 	* main.c, status.c: change gnome_appbar_set_progress to
