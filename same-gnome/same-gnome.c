@@ -23,6 +23,7 @@
 #include <gnome.h>
 #include <libgnomeui/gnome-window-icon.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gconf/gconf-client.h>
 
 
 #define STONE_SIZE 40
@@ -46,6 +47,8 @@ static gchar *scenario;
 static gint restarted;
 static gboolean game_over = FALSE;
 
+/* Prefs */
+GConfClient *conf_client = NULL;
 char *selected_scenario = NULL;
 
 static struct ball {
@@ -479,8 +482,7 @@ static void
 set_selection (GtkWidget *widget, void *data)
 {
 	load_scenario (data);
-	gnome_config_set_string ("/same-gnome/Preferences/Scenario", data);
-	gnome_config_sync();
+	gconf_client_set_string (conf_client, "/apps/same-gnome/tileset", data, NULL);
 }
 
 static void
@@ -524,13 +526,13 @@ pref_dialog_response (GtkDialog *dialog, gint response, gpointer data)
 	if (response == GTK_RESPONSE_OK)
 	{
 		g_free (selected_scenario);
-		selected_scenario = gnome_config_get_string ("/same-gnome/Preferences/Scenario");
+		selected_scenario = gconf_client_get_string (conf_client, "/apps/same-gnome/tileset", NULL);
 	} else {
 		/* Restore previous scenario */
 		load_scenario (selected_scenario);
-		gnome_config_set_string ("/same-gnome/Preferences/Scenario", 
-			selected_scenario);
-		gnome_config_sync();
+
+		gconf_client_set_string (conf_client, "/apps/same-gnome/tileset", 
+			selected_scenario, NULL);
 	}
 
 	gtk_widget_destroy (pref_dialog);
@@ -695,31 +697,28 @@ save_state (GnomeClient *client,
 	    gint fast,
 	    gpointer client_data)
 {
-	const gchar *prefix = gnome_client_get_config_prefix (client);
 	gchar *argv []= { "rm", "-r", NULL };
 	gchar *buf;
 	struct ball *f = (struct ball*) field;
 	int i;  
 	
-	gnome_config_push_prefix (prefix);
-	
-	gnome_config_set_int ("Game/Score", score);
-	gnome_config_set_int ("Game/NStones", sync_stones ? 1 : nstones);
+	gconf_client_set_int (conf_client, "/apps/same-gnome/score", score, NULL);
+	gconf_client_set_int (conf_client, "/apps/same-gnome/nstones", sync_stones ? 1 : nstones, NULL);
 	
 	buf= g_malloc (STONE_COLS*STONE_LINES+1);
-	
+
 	for (i = 0 ; i < (STONE_COLS*STONE_LINES); i++){
 		buf [i]= f [i].color + 'a';
 	}
 	buf [STONE_COLS*STONE_LINES]= '\0';
-	gnome_config_set_string ("Game/Field", buf);
+	gconf_client_set_string (conf_client, "/apps/same-gnome/field", buf, NULL);
 	g_free(buf);
-	
-	gnome_config_pop_prefix ();
-	gnome_config_sync();
-	
+
+	/* FIXME if anybody knows what this does...
 	argv[2]= gnome_config_get_real_path (prefix);
 	gnome_client_set_discard_command (client, 3, argv);
+	gnome_client_set_discard_command (client, 2, argv);
+	*/
 	
 	return TRUE;
 }
@@ -732,10 +731,10 @@ restart (void)
 	struct ball *f = (struct ball*) field;
 	int i;
 	
-	score = gnome_config_get_int_with_default ("Game/Score", 0);
-	nstones = gnome_config_get_int_with_default ("Game/NStones", 0);
+	score = gconf_client_get_int (conf_client, "/apps/same-gnome/score", NULL);
+	nstones = gconf_client_get_int (conf_client, "/apps/same-gnome/nstones", NULL);
 	
-	buf = gnome_config_get_string_with_default ("Game/Field", NULL);  
+	buf = gconf_client_get_string (conf_client, "/apps/same-gnome/field", NULL);
 
 	if (buf) {
 		for (i= 0; i < (STONE_COLS*STONE_LINES); i++) 
@@ -792,13 +791,12 @@ main (int argc, char *argv [])
 			  G_CALLBACK (client_die), NULL);
 
 	if (GNOME_CLIENT_RESTARTED (client)){
-		gnome_config_push_prefix (gnome_client_get_config_prefix (client));
-	    
 		restart ();
 		restarted = 1;
-		
-		gnome_config_pop_prefix ();
 	}
+
+	/* Get the default GConfClient */
+	conf_client = gconf_client_get_default ();
 
 	srand (time (NULL));
 
@@ -822,8 +820,8 @@ main (int argc, char *argv [])
 	gnome_app_set_contents (GNOME_APP (app), vb);
 
 	if (!fname) {
-		fname = gnome_config_get_string
-			("/same-gnome/Preferences/Scenario=stones.png");
+		fname = gconf_client_get_string
+			(conf_client, "/apps/same-gnome/tileset", NULL);
 	}
 
 	create_same_board (fname);

@@ -18,15 +18,19 @@ same_gnome_LDADD =		\
 	$(GNOME_GAMES_LIBS)      \
 	$(INTLLIBS)
 
+schemadir   = $(sysconfdir)/gconf/schemas
+schema_DATA = same-gnome.schemas
+
 pixmap_DATA = planets.png blink-sync.png marbles.png \
 	stones.png rotate.png glass.png
-EXTRA_DIST = same-gnome.desktop.in $(pixmap_DATA)
+EXTRA_DIST = same-gnome.desktop.in $(pixmap_DATA) $(schema_DATA)
 
 Games_in_files = same-gnome.desktop.in
 Games_DATA = $(Games_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
 install-data-local:
+	GCONF_CONFIG_SOURCE=$(GCONF_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
 	touch $(DESTDIR)$(scoredir)/same-gnome.scores
 	-chown games.games $(DESTDIR)$(scoredir)/same-gnome.scores

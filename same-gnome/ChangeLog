@@ -1,3 +1,10 @@
+2002-04-19  Bastien Nocera  <hadess@hadess.net>
+
+	* Makefile.am:
+	* same-gnome.c: (set_selection), (pref_dialog_response),
+	(save_state), (restart), (main):
+	* same-gnome.schemas: ported to gconf
+
 2002-02-17  Chris Lyttle  <chris@wilddev.net>
 
 	* help/C/same-gnome.xml: updated for new template.
