@@ -94,7 +94,7 @@ struct _GStonesViewClass
 
 GtkType    view_get_type         (void);
 
-GtkWidget *view_new              (GdkImlibImage *curtain_image);
+GtkWidget *view_new              (GdkPixbuf *curtain_image);
 
 void       view_set_curtain_mode (GStonesView     *view,
 				  ViewCurtainMode  mode,

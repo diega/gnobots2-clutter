@@ -24,6 +24,7 @@
 #include <config.h>
 #include <gmodule.h>
 #include <gnome.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 
 
@@ -142,7 +143,7 @@ struct _GStonesObject
 
   guint               num_images;
   GdkPixmap         **image;
-  GdkImlibImage     **imlib_image;
+  GdkPixbuf     **pixbuf_image;
 };
 
 

@@ -121,15 +121,15 @@ my_exit (GtkWidget *widget, gpointer client_data)
   exit (1);
 }
 
-static GdkImlibImage *
+static GdkPixbuf *
 load_image_from_path (const char *relative_name)
 {
   gchar         *filename;
-  GdkImlibImage *image= NULL;
+  GdkPixbuf *image= NULL;
 
   filename= gnome_pixmap_file (relative_name);
   if (filename)
-    image= gdk_imlib_load_image (filename);
+    image= gdk_pixbuf_new_from_file (filename);
 
   g_free (filename);
   
@@ -157,11 +157,12 @@ load_image_from_path (const char *relative_name)
 static void
 title_image_load (void)
 {
-  GdkImlibImage *image= load_image_from_path ("gnome-stones/title.png");
+  GdkPixbuf *image= load_image_from_path ("gnome-stones/title.png");
 
-  gdk_imlib_render (image, image->rgb_width, image->rgb_height);
-  title_template= gdk_imlib_copy_image (image);
-  title_image   = gdk_imlib_move_image (image);  
+  gdk_pixbuf_render_pixmap_and_mask (image, &title_template, NULL, 127);
+
+  title_image = title_template; /* FIXME */
+  gdk_pixmap_ref (title_template);
 
   /* Redraw the game widget.  */
   gtk_widget_draw (gstones_view, NULL);
@@ -175,13 +176,13 @@ title_image_load (void)
 
 #ifdef USE_GNOME_CANVAS
 static GnomeCanvasItem *game_items[GAME_COLS][GAME_ROWS];
-static GdkImlibImage   *game_current_images[GAME_COLS][GAME_ROWS];
+static GdkPixbuf   *game_current_images[GAME_COLS][GAME_ROWS];
 
 
 static void
 game_update_image (GtkWidget *widget)
 {
-  GdkImlibImage *image;
+  GdkPixbuf *image;
   int x1, y1, x2, y2, x, y;
 
   x1 = x_offset;
@@ -201,7 +202,7 @@ game_update_image (GtkWidget *widget)
 	     (x+y < curtain+x_offset+y_offset)))
 	  {
 	    cave_mode= TRUE;
-	    image= curtain_imlib_image;
+	    image= curtain_pixbuf_image;
 	  }
 	else if (display_mode == GAME_DISPLAY_IMAGE)
 	  {
@@ -211,7 +212,7 @@ game_update_image (GtkWidget *widget)
 	  {
 	    cave_mode= TRUE;
 
-	    image= cave_get_imlib_image (cave, x+1, y+1);
+	    image= cave_get_pixbuf_image (cave, x+1, y+1);
 	  }
 	
 	if (image != game_current_images[x-x_offset][y-y_offset])
@@ -413,7 +414,7 @@ game_widget_key_release_callback (GtkWidget   *widget,
    canvas after loading the needed images.  */
 GtkWidget *canvas;
 
-/* This function need 'canvas' and 'curtain_imlib_image' to have well
+/* This function need 'canvas' and 'curtain_pixbuf_image' to have well
    defined values.  */
 
 static gboolean
@@ -429,13 +430,12 @@ game_widget_fill (void)
 	  gnome_canvas_item_new (GNOME_CANVAS_GROUP (gnome_canvas_root 
 						     (GNOME_CANVAS 
 						      (canvas))),
-				 gnome_canvas_image_get_type (),
-				 "image", curtain_imlib_image,
+				 gnome_canvas_pixbuf_get_type (),
+				 "pixbuf", curtain_pixbuf_image,
 				 "x", (double) x*STONE_SIZE,
 				 "y", (double) y*STONE_SIZE,
-				 "width", (double) curtain_imlib_image->rgb_width,
-				 "height", (double) curtain_imlib_image->rgb_height,
-				 "anchor", GTK_ANCHOR_NW,
+				 "width", (double) , gdk_pixbuf_get_width (curtain_pixbuf_image),
+				 "height", (double) gdk_pixbuf_get_height (curtain_pixbuf_image),
 				 NULL);
 	
       }

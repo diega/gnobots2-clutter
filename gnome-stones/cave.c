@@ -494,13 +494,13 @@ cave_get_image (GStonesCave *cave, guint x, guint y)
 }
 
 
-GdkImlibImage *
-cave_get_imlib_image (GStonesCave *cave, guint x, guint y)
+GdkPixbuf *
+cave_get_pixbuf_image (GStonesCave *cave, guint x, guint y)
 {
   g_return_val_if_fail (cave != NULL, NULL);
   
   /* Return the right GdkPixmap belonging to index 'idx'.  */
-  return object_get_imlib_image (cave->entry[x][y].object, 
+  return object_get_pixbuf_image (cave->entry[x][y].object, 
 				 cave_get_image_index (cave, x, y));
 }
 

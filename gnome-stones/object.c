@@ -223,7 +223,7 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
   guint          idx;
   char          *filename;
   char          *pathname;
-  GdkImlibImage *image;
+  GdkPixbuf *image;
   GStonesObject *object;
 
   object= g_new0 (GStonesObject, 1);
@@ -236,7 +236,7 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
 
   filename= g_strconcat ("gnome-stones/", description->image_name, NULL);
   pathname= gnome_pixmap_file (filename);
-  image   = gdk_imlib_load_image (pathname);
+  image   = gdk_pixbuf_new_from_file (pathname);
   g_free (pathname);
   g_free (filename);
   
@@ -252,8 +252,8 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
     }
 
   /* Determine the number of images in the loaded image.  */
-  num_x= image->rgb_width/STONE_SIZE;
-  num_y= image->rgb_height/STONE_SIZE;
+  num_x= gdk_pixbuf_get_width (image)/STONE_SIZE;
+  num_y= gdk_pixbuf_get_height (image)/STONE_SIZE;
 
   if (num_x*num_y == 0)
     {
@@ -280,7 +280,7 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
       return NULL;
     }
   
-  object->imlib_image= g_malloc (num_x*num_y*sizeof (GdkImlibImage*));
+  object->pixbuf_image= g_malloc (num_x*num_y*sizeof (GdkPixbuf*));
   
   if (object->image == NULL)
     {
@@ -295,22 +295,19 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
     }
   
   /* We cut our image into small pieces.  */
-  /* gdk_imlib_render (image, image->rgb_width, image->rgb_height); */
+  /* gdk_pixbuf_render (image, image->rgb_width, image->rgb_height); */
 
   idx= 0;
   for (y= 0; y < num_y; y++)
     for (x= 0; x < num_x; x++, idx++)
       {
 	/* FIXME: check error conditions.  */
-	object->imlib_image[idx]= 
-	  gdk_imlib_crop_and_clone_image (image, x*STONE_SIZE, y*STONE_SIZE,
-					  STONE_SIZE, STONE_SIZE);
+	object->pixbuf_image[idx]= 
+	   gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, STONE_SIZE, STONE_SIZE);
+	gdk_pixbuf_copy_area (image, x*STONE_SIZE, y*STONE_SIZE,
+                                          STONE_SIZE, STONE_SIZE, object->pixbuf_image[idx], 0, 0);
 	
-	gdk_imlib_render (object->imlib_image[idx], 
-			  object->imlib_image[idx]->rgb_width, 
-			  object->imlib_image[idx]->rgb_height);
-
-	object->image[idx]= gdk_imlib_copy_image (object->imlib_image[idx]);
+	gdk_pixbuf_render_pixmap_and_mask (object->pixbuf_image[idx], &object->image[idx], NULL, 127);
       }
   
   /* Add object to the plugin's object table.  */
@@ -367,8 +364,8 @@ object_get_image (GStonesObject *object, gint index)
 }
 
 
-GdkImlibImage *
-object_get_imlib_image (GStonesObject *object, gint index)
+GdkPixbuf *
+object_get_pixbuf_image (GStonesObject *object, gint index)
 {
   g_return_val_if_fail (object, NULL);
   
@@ -379,7 +376,7 @@ object_get_imlib_image (GStonesObject *object, gint index)
   
   g_return_val_if_fail ((index >= 0) && (index <= object->num_images), NULL);
 
-  return object->imlib_image[index];
+  return object->pixbuf_image[index];
 }
 
 

@@ -1,3 +1,12 @@
+2001-07-08  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	* cave.[ch]:
+	* main.c:
+	* object.[ch]:
+	* types.h:
+	* view.[ch]: After some canvas confusion the last one is ported
+	  to gdk-pixbuf, wheeeee!
+
 2001-07-07  Juan Pablo Mendoza <pablo_juan@yahoo.com>
 
 	Patch from Ta^3 <tacvbo@correo.unam.mx>

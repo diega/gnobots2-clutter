@@ -11,7 +11,7 @@ INCLUDES =					\
 	-DGNOMEPIXMAPDIR=\""$(datadir)/pixmaps"\"	\
 	-DCAVESDIR=\""$(Cavesdir)"\"			\
 	-I$(includedir)					\
-	$(GNOME_INCLUDEDIR)
+	$(GNOME_INCLUDEDIR) $(GDK_PIXBUF_CFLAGS)
 
 
 bin_PROGRAMS = gnome-stones
@@ -40,6 +40,7 @@ gnome_stones_SOURCES =				\
 gnome_stones_LDADD =				\
 	$(GNOME_LIBDIR)				\
 	$(GNOMEUI_LIBS)				\
+	$(GDK_PIXBUF_LIBS)			\
 	$(INTLLIBS)
 
 

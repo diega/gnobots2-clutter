@@ -53,7 +53,7 @@ GStonesObject *object_register            (GStonesPlugin     *plugin,
 GStonesObject *object_find_object_by_name (const gchar *name);
 
 GdkPixmap     *object_get_image           (GStonesObject *object, gint index);
-GdkImlibImage *object_get_imlib_image     (GStonesObject *object, gint index);
+GdkPixbuf *object_get_pixbuf_image     (GStonesObject *object, gint index);
 
 /* Returns the object's fullname, i. e. '<pluginname>:<objectname>'.  */
 gchar         *object_get_fullname        (GStonesObject *object);

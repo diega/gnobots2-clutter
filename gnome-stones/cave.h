@@ -116,7 +116,7 @@ gboolean       cave_set_entry         (GStonesCave   *cave,
 
 GdkPixmap     *cave_get_image         (GStonesCave *cave, guint x, guint y);
 
-GdkImlibImage *cave_get_imlib_image   (GStonesCave *cave, guint x, guint y);
+GdkPixbuf *cave_get_pixbuf_image   (GStonesCave *cave, guint x, guint y);
 
 
 /* Object options stuff.  */

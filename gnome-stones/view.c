@@ -124,10 +124,8 @@ view_get_type (void)
 /*****************************************************************************/
 
 
-
-
 GtkWidget *
-view_new (GdkImlibImage *curtain_image)
+view_new (GdkPixbuf *curtain_image)
 {
   GStonesView    *view;
 #ifdef USE_GNOME_CANVAS
@@ -140,8 +138,8 @@ view_new (GdkImlibImage *curtain_image)
 
   g_return_val_if_fail (curtain_image, NULL);
 
-  gtk_widget_push_visual (gdk_imlib_get_visual ());
-  gtk_widget_push_colormap (gdk_imlib_get_colormap ());
+  gtk_widget_push_visual (gdk_rgb_get_visual ());
+  gtk_widget_push_colormap (gdk_rgb_get_cmap ());
 
   view= gtk_type_new (view_get_type ());
   
@@ -168,8 +166,8 @@ view_new (GdkImlibImage *curtain_image)
 
 #else
 
-  gtk_widget_push_visual (gdk_imlib_get_visual ());
-  gtk_widget_push_colormap (gdk_imlib_get_colormap ());
+  gtk_widget_push_visual (gdk_rgb_get_visual ());
+  gtk_widget_push_colormap (gdk_rgb_get_cmap ());
 
   view->canvas= gtk_drawing_area_new ();
   canvas= gnome_canvas_new ();
@@ -196,12 +194,8 @@ view_new (GdkImlibImage *curtain_image)
 #endif
 
   /* Initialize curtain stuff.  */
-  gdk_imlib_render (curtain_image, 
-		    curtain_image->rgb_width,
-		    curtain_image->rgb_height);
+  gdk_pixbuf_render_pixmap_and_mask (curtain_image, &view->curtain_image, NULL, 127);
   
-  view->curtain_image= gdk_imlib_copy_image (curtain_image);
-
   view->curtain_display_mode= CURTAIN_DISPLAY_CLOSING;
   view->curtain             = 0;
 
