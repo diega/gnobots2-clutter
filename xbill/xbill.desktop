@@ -39,3 +39,4 @@ Icon=xbill.png
 Exec=gnome-xbill
 Terminal=0
 Type=Application
+Categories=Application;Game;

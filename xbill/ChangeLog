@@ -1,3 +1,10 @@
+2001-12-19  Seth Nickell  <snickell@stanford.edu>
+
+	* Makefile.am:
+	* xbill.desktop:
+
+	Install into the panel menus correctly.
+	
 2001-12-18  Juan Pablo Mendoza <jpablo@gnome.org>
 
 	* UI.cc: Comment out some stuff so we compile again.

@@ -21,7 +21,7 @@ EXTRA_DIST = README.Ports xbill.png xbill.desktop
 pixmapdir = $(datadir)/pixmaps
 pixmap_DATA = xbill.png
 
-Gamesdir=$(datadir)/gnome/apps/Games
+Gamesdir=$(datadir)/applications
 Games_DATA = xbill.desktop
 
 install-data-local:
