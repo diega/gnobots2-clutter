@@ -1,5 +1,8 @@
 2003-05-28  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* blocks.cpp (blockTable): Changed the way the I piece rotates. It
+	now rotates about a central block. No more shifting sideways.
+
 	* tetris.cpp (eventHandler): Fiddling to get the key press handling
 	feeling right when a new piece appears.
 
