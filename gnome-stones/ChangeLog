@@ -1,3 +1,11 @@
+1999-04-18  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* objects/gnomekoban.c (empty_signals): Removed check wheater a
+ 	level is finished or not.
+	(crate_signals): New function that checks wheater a level is
+ 	finshed or not.  This fixes a bug, that one has be able the finish
+ 	a level, without push all boulders on the marks.
+
 1999-03-03  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
 	* io.c:

@@ -1,6 +1,6 @@
 /* gnome-stones - objects/gnomekoban.c
  *
- * Time-stamp: <1998/11/09 21:47:56 carsten>
+ * Time-stamp: <1999/04/18 11:44:13 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -100,9 +100,6 @@ static void
 empty_signals (GStonesCave *cave, GStonesSignal signal, 
 	       GStonesObjContext *context)
 {
-  guint x;
-  guint y;
-
   EmptyData *empty= (EmptyData *) object_context_private_data (context); 
   
   if (signal == SIGNAL_CAVE_PRE_SCAN)
@@ -112,19 +109,6 @@ empty_signals (GStonesCave *cave, GStonesSignal signal,
       
       if (empty->extra_life_animation)
 	empty->extra_life_animation--;
-    }
-  else if (signal == SIGNAL_CAVE_POST_SCAN)
-    {
-      gboolean finished= TRUE;
-      
-      for (y= 1 ; y <= CAVE_MAX_HEIGHT; y++)
-	for (x= 1 ; x <= CAVE_MAX_WIDTH; x++)
-	  if ((cave->entry[x][y].object == OBJECT_EMPTY) &&
-	      (cave->entry[x][y].state > 0))
-	    finished= FALSE;
-
-      if (finished)
-	cave->flags|= CAVE_FINISHED;
     }
   else if (signal == SIGNAL_DOOR_OPEN)
     {
@@ -158,6 +142,29 @@ static GStonesObjectDesc empty_object=
 /* CRATE stuff */
 
 
+static void
+crate_signals (GStonesCave *cave, GStonesSignal signal, 
+	       GStonesObjContext *context)
+{
+  guint x;
+  guint y;
+
+  if (signal == SIGNAL_CAVE_POST_SCAN)
+    {
+      gboolean finished= TRUE;
+      
+      for (y= 1 ; y <= CAVE_MAX_HEIGHT; y++)
+	for (x= 1 ; x <= CAVE_MAX_WIDTH; x++)
+	  if ((cave->entry[x][y].object == OBJECT_CRATE) &&
+	      (cave->entry[x][y].state == 0))
+	    finished= FALSE;
+      
+      if (finished)
+	cave->flags|= CAVE_FINISHED;
+    }
+}
+
+
 static GStonesObjectDesc crate_object=
 {
   "crate",
@@ -166,7 +173,7 @@ static GStonesObjectDesc crate_object=
   NULL,
 
   NULL,
-  NULL,
+  crate_signals,
   
   "boulder.png",
   NULL,
