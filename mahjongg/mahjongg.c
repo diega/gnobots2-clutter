@@ -381,10 +381,6 @@ GnomeUIInfo gamemenu [] = {
 	 GNOMEUIINFO_END
 };
 
-GnomeUIInfo filemenu [] = {
-	 GNOMEUIINFO_END
-};
-
 GnomeUIInfo settingsmenu [] = {
         GNOMEUIINFO_TOGGLEITEM(N_("Show _Tool Bar"),
 			       N_("Toggle display of the toolbar"),
