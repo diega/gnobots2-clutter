@@ -379,7 +379,7 @@ GnomeUIInfo filemenu [] = {
          {GNOME_APP_UI_SEPARATOR},
 	
          {GNOME_APP_UI_ITEM, N_("E_xit"), NULL, quit_game_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 'q', GDK_CONTROL_MASK, NULL},
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 'x', GDK_CONTROL_MASK, NULL},
 
          {GNOME_APP_UI_ENDOFINFO}
 };
@@ -390,8 +390,10 @@ GnomeUIInfo optionsmenu [] = {
 
         {GNOME_APP_UI_SEPARATOR},
 
+#ifdef SOUND_SUPPORT_FINISHED
         {GNOME_APP_UI_TOGGLEITEM, N_("_Sound"), NULL, NULL, NULL, NULL,
         GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+#endif
 
         {GNOME_APP_UI_ITEM, N_("_Properties..."), NULL, properties_callback, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
@@ -442,8 +444,10 @@ GnomeUIInfo toolbar_uiinfo [] = {
          {GNOME_APP_UI_ITEM, N_("Re-do"), NULL, redo_tile_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_REDO, 0, 0, NULL},
 
+#ifdef SOUND_SUPPORT_FINISHED
          {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), NULL, sound_on_callback, NULL, NULL,
          GNOME_APP_PIXMAP_DATA, mini_sound_xpm, 0, 0, NULL},
+#endif
 
          {GNOME_APP_UI_ITEM, N_("Prop."), NULL, properties_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_PROPERTIES, 0, 0, NULL},
@@ -1392,7 +1396,7 @@ int main (int argc, char *argv [])
 	generate_dependancies () ;
 
 	window = gnome_app_new ("gmahjongg", _("Gnome Mahjongg"));
-	gtk_window_set_policy (GTK_WINDOW (window), FALSE, FALSE, TRUE);
+/*	gtk_window_set_policy (GTK_WINDOW (window), FALSE, FALSE, TRUE); */
 
 	gnome_app_create_menus (GNOME_APP (window), mainmenu);
         gnome_app_create_toolbar (GNOME_APP (window), toolbar_uiinfo);
