@@ -2,7 +2,7 @@
 
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <2003-06-19 11:19:35 callum>
+ * Time-stamp: <2003-08-02 04:29:58 callum>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -829,7 +829,7 @@ preferences_dialog_new (void)
     
     scale= gtk_hscale_new (GTK_ADJUSTMENT (adjust));
     gtk_scale_set_digits (GTK_SCALE (scale), 2);
-    gtk_box_pack_start (GTK_BOX (hbox), scale, FALSE, FALSE, GNOME_PAD_SMALL);
+    gtk_box_pack_start (GTK_BOX (hbox), scale, TRUE, TRUE, GNOME_PAD_SMALL);
 #if 0    
     if (prdata->joystick_deviceid == GDK_CORE_POINTER)
       {
