@@ -48,7 +48,7 @@ void UI::initialize(int argc, char **argv, const struct poptOption *options) {
 			argc, argv,
 			GNOME_PARAM_POPT_TABLE, options,
 			GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
-	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/xbill.png");
+	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-xbill.png");
 	toplevel = gnome_app_new("gnome-xbill", "GNOME xBill");
         g_signal_connect(G_OBJECT(toplevel), "delete_event",
                 G_CALLBACK(delete_event_callback), (gpointer)CONFIRM_QUIT);

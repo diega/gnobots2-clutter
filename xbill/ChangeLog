@@ -1,3 +1,13 @@
+2003-01-10  Alex Duggan  <aldug@gnome.org>
+	
+	* gnome-xbill.png: renamed from xbill.png
+	* Makefile.am:
+	* UI.cc:
+	* x11-gtk.cc:
+	* xbill.desktop.in:
+	Rename the icon from xbill.png to gnome-xbill.png to avoid
+	conflict with the regular xbill game.  Fixes #102919
+	
 2002-12-11  Ross Burton  <ross@burtonini.com>
 
 	* help/C/xbill-C.omf

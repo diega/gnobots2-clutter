@@ -209,7 +209,7 @@ static void display_about (void) {
 	}
 
 	fname_icon = gnome_program_locate_file(NULL,
-	  GNOME_FILE_DOMAIN_APP_PIXMAP, "xbill.png", TRUE, NULL);
+	  GNOME_FILE_DOMAIN_APP_PIXMAP, "gnome-xbill.png", TRUE, NULL);
 
 	if (fname_icon != NULL) {
 		pixbuf = gdk_pixbuf_new_from_file(fname_icon, NULL);

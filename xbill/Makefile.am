@@ -20,10 +20,10 @@ gnome_xbill_SOURCES = Bucket.cc Bucket.h Cable.cc Cable.h Computer.cc \
 
 gnome_xbill_LDADD = $(GNOME_GAMES_LIBS)
 
-EXTRA_DIST = README.Ports xbill.png xbill.desktop.in
+EXTRA_DIST = README.Ports gnome-xbill.png xbill.desktop.in
 
 pixmapdir = $(datadir)/pixmaps
-pixmap_DATA = xbill.png
+pixmap_DATA = gnome-xbill.png
 
 Gamesdir=$(datadir)/applications
 Games_in_files = xbill.desktop.in
