@@ -76,10 +76,13 @@ gboolean         events_pending = false;
 static GConfClient *gconf_client = NULL;
 
 gfloat wager_value = 5.0;
+gfloat balance_value = 0.0;
+gboolean quick_deals = FALSE;
+gboolean show_probabilities = FALSE;
+gboolean show_toolbar = TRUE;
+gchar *game_variation = NULL;
 
 #define DEFAULT_VARIATION "Vegas_Strip.rules"
-#define GNOME_SESSION_BUG
-
 
 void
 bj_make_window_title (gchar *game_name, gint seed) 
@@ -100,7 +103,6 @@ bj_gui_show_toolbar (gboolean do_toolbar)
 
   toolbar_gdi = gnome_app_get_dock_item_by_name (GNOME_APP(app), 
                                                  GNOME_APP_TOOLBAR_NAME);
-  
   if (do_toolbar) {
     gtk_widget_show (GTK_WIDGET(toolbar_gdi));
   }
@@ -196,30 +198,6 @@ bj_create_board ()
 gboolean
 bj_quit_app (GtkMenuItem *menuitem)
 {
-  GtkWidget *box;
-  gint response;
-
-  if (bj_game_is_active ())
-    {
-      box = gtk_message_dialog_new (GTK_WINDOW (app),
-                                    GTK_DIALOG_MODAL,
-                                    GTK_MESSAGE_QUESTION,
-                                    GTK_BUTTONS_NONE,
-                                    _("Are you sure you want to quit Blackjack?"));
-      gtk_dialog_add_buttons (GTK_DIALOG (box),
-                              GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
-                              GTK_STOCK_QUIT, GTK_RESPONSE_ACCEPT,
-                              NULL);
-    
-      gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_REJECT);
-      
-      response = gtk_dialog_run (GTK_DIALOG (box));
-      gtk_widget_destroy (box);
-
-      if (response == GTK_RESPONSE_REJECT)
-        return TRUE;
-    }
-
   delete rules;
   delete strategy;
   delete dealer;
@@ -301,8 +279,6 @@ create_chip_stack_press_data ()
   chip_stack_press_data->status = 0;
 }
 
-gchar* start_game;
-
 static void
 main_prog(int argc, char *argv[])
 {
@@ -356,7 +332,7 @@ main_prog(int argc, char *argv[])
   balance_label = gtk_label_new (_("Balance:"));
   gtk_box_pack_start (GTK_BOX (group_box), balance_label, 
                       FALSE, FALSE, 0);
-  balance_value_label = gtk_label_new ("0.00");
+  balance_value_label = gtk_label_new (g_strdup_printf ("%.2f", balance_value));
   gtk_box_pack_start (GTK_BOX (group_box), balance_value_label, 
                       FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (balance_box), group_box, FALSE, FALSE, 0);
@@ -365,11 +341,13 @@ main_prog(int argc, char *argv[])
 
   bj_menu_install_hints (GNOME_APP (app));
 
-  bj_game_new (start_game, &seed);
+  bj_game_new (bj_get_game_variation (), &seed);
 
   splash_destroy ();
 
   gtk_widget_show (app);
+
+  bj_gui_show_toolbar (show_toolbar);
 
   create_press_data ();
   create_chip_stack_press_data ();
@@ -377,43 +355,6 @@ main_prog(int argc, char *argv[])
   gtk_widget_pop_colormap ();
 
   gtk_main ();
-}
-
-gchar *
-bj_gconf_client_get_string_or_set_default (GConfClient *client, const gchar* key, const gchar* def)
-{
-  GError *error = NULL;
-  gchar *value;
-  gboolean use_default = false;
-
-  g_return_val_if_fail (client != NULL, NULL);
-  g_return_val_if_fail (key != NULL, NULL);
-  
-  value = gconf_client_get_string (client, key, &error);
-
-  if (error != NULL)
-    {
-      g_warning (error->message);
-      /* If a default was passed return that, otherwise NULL */
-      use_default = true;
-    }
-
-  /* value is null if key was not set */
-  if (value == NULL)
-    {
-      /* If a default was passed return that, otherwise NULL */
-      use_default = true;
-    }
-
-  if (use_default)
-    {
-      if (def)
-        {
-          gconf_client_set_string (client, key, def, NULL);
-        }
-      return g_strdup (def);
-    }
-  return value;
 }
 
 GConfClient *
@@ -428,10 +369,9 @@ static void
 bj_gconf_balance_cb (GConfClient *client, guint cnxn_id, 
                      GConfEntry *entry, gpointer user_data)
 {
-  gdouble balance;
-
-  balance = bj_get_balance ();
-  bj_show_balance (balance);
+  balance_value = gconf_client_get_float 
+    (client, "/apps/blackjack/global/balance", NULL);
+  bj_show_balance (balance_value);
 }
 
 static void
@@ -450,6 +390,17 @@ static void
 bj_gconf_show_probabilities_cb (GConfClient *client, guint cnxn_id, 
                                 GConfEntry *entry, gpointer user_data)
 {
+  show_probabilities = gconf_client_get_bool 
+    (client, "/apps/blackjack/settings/show_probabilities", NULL);
+  bj_draw_refresh_screen ();
+}
+
+static void
+bj_gconf_quick_deal_cb (GConfClient *client, guint cnxn_id, 
+                        GConfEntry *entry, gpointer user_data)
+{
+  quick_deals = gconf_client_get_bool 
+    (client, "/apps/blackjack/settings/quick_deal", NULL);
   bj_draw_refresh_screen ();
 }
 
@@ -459,7 +410,7 @@ bj_gconf_show_toolbar_cb (GConfClient *client, guint cnxn_id,
 {
   gboolean show_toolbar;
 
-  show_toolbar = bj_get_show_toolbar ();
+  show_toolbar = gconf_client_get_bool (client, "/apps/blackjack/toolbar", NULL);
   bj_gui_show_toolbar (show_toolbar);
 }
 
@@ -486,9 +437,7 @@ bj_set_deck_options (GdkCardDeckOptions value)
 gboolean
 bj_get_show_probabilities ()
 {
-  return gconf_client_get_bool (bj_gconf_client (), 
-                                "/apps/blackjack/settings/show_probabilities", 
-                                NULL);
+  return show_probabilities;
 }
 void
 bj_set_show_probabilities (gboolean value)
@@ -501,13 +450,13 @@ bj_set_show_probabilities (gboolean value)
 gboolean
 bj_get_show_toolbar ()
 {
-  return gconf_client_get_bool (bj_gconf_client (), 
-                                "/apps/blackjack/toolbar", 
-                                NULL);
+  return show_toolbar;
 }
 void
 bj_set_show_toolbar (gboolean value)
 {
+  show_toolbar = value;
+  bj_gui_show_toolbar (value);
   gconf_client_set_bool (bj_gconf_client (), 
                          "/apps/blackjack/toolbar", 
                          value, NULL);
@@ -516,9 +465,7 @@ bj_set_show_toolbar (gboolean value)
 gboolean
 bj_get_quick_deal ()
 {
-  return gconf_client_get_bool (bj_gconf_client (), 
-                                "/apps/blackjack/settings/quick_deal", 
-                                NULL);
+  return quick_deals;
 }
 void
 bj_set_quick_deal (gboolean value)
@@ -531,34 +478,34 @@ bj_set_quick_deal (gboolean value)
 gchar *
 bj_get_game_variation ()
 {
-  char *value;
-  value = gconf_client_get_string (bj_gconf_client (), 
-                                   "/apps/blackjack/settings/variation", 
-                                   NULL);
-  return value;
+  return g_strdup (game_variation);
 }
 
 void
 bj_set_game_variation (const gchar *value)
 {
+  if (game_variation)
+    g_free (game_variation);
+  game_variation = g_strdup (value);
   gconf_client_set_string (bj_gconf_client (), 
                            "/apps/blackjack/settings/variation", 
-                           value, NULL);
+                           game_variation, NULL);
 }
 
 gdouble
 bj_get_balance ()
 {
-  gdouble balance;
-
-  balance = gconf_client_get_float (bj_gconf_client (), "/apps/blackjack/global/balance", NULL);
-  return balance;
+  return balance_value;
 }
 
 void
 bj_set_balance (gdouble balance)
 {
-  gconf_client_set_float (bj_gconf_client (), "/apps/blackjack/global/balance", balance, NULL);
+  balance_value = balance;
+  bj_show_balance (balance_value);
+  gconf_client_set_float (bj_gconf_client (),
+                          "/apps/blackjack/global/balance",
+                          balance, NULL);
 }
 
 void
@@ -575,11 +522,34 @@ bj_gconf_init (GConfClient *client)
 {
   GError *error = NULL;
   gdouble balance;
+  gchar *variation_tmp;
 
-  start_game = bj_gconf_client_get_string_or_set_default
-    (client, "/apps/blackjack/settings/variation", DEFAULT_VARIATION);
+  variation_tmp = gconf_client_get_string (client,
+                                           "/apps/blackjack/settings/variation",
+                                           NULL);
+  if (variation_tmp) 
+    {
+      game_variation = g_strdup (variation_tmp);
+      g_free (variation_tmp);
+    }
+  else
+    game_variation = g_strdup (DEFAULT_VARIATION);
 
-  balance = bj_get_balance ();
+  balance = gconf_client_get_float (client,
+                                    "/apps/blackjack/global/balance",
+                                    NULL);
+  if (balance)
+    balance_value = balance;
+
+  show_probabilities = gconf_client_get_bool (client,
+                                              "/apps/blackjack/settings/show_probabilities",
+                                              NULL);
+  quick_deals = gconf_client_get_bool (client, 
+                                       "/apps/blackjack/settings/quick_deal",
+                                       NULL);
+  show_toolbar = gconf_client_get_bool (client, 
+                                        "/apps/blackjack/toolbar",
+                                        NULL);
 
   gconf_client_notify_add (client,
                            "/apps/blackjack/global/balance",
@@ -592,6 +562,10 @@ bj_gconf_init (GConfClient *client)
   gconf_client_notify_add (client,
                            "/apps/blackjack/settings/show_probabilities",
                            bj_gconf_show_probabilities_cb,
+                           NULL, NULL, NULL);
+  gconf_client_notify_add (client,
+                           "/apps/blackjack/settings/quick_deal",
+                           bj_gconf_quick_deal_cb,
                            NULL, NULL, NULL);
   gconf_client_notify_add (client,
                            "/apps/blackjack/toolbar",

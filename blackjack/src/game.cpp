@@ -154,7 +154,7 @@ bj_game_find_rules (gchar *variation)
     gchar *game_name = bj_game_file_to_name (game_dents[i]->d_name);
     rules_list = g_list_append (rules_list, g_strdup (game_dents[i]->d_name));
     if (!g_ascii_strcasecmp (variation, game_dents[i]->d_name)) {
-      start_game = g_strdup (game_dents[i]->d_name);
+      bj_set_game_variation (game_dents[i]->d_name);
     }
   }
 }
@@ -349,19 +349,20 @@ bj_game_eval_installed_file (gchar *file)
     } 
   else
     {
-      char *message = g_strdup_printf 
-        (_("Blackjack can't load the file: \n%s\n\n"
-           "Please check your Blackjack installation"), installed_filename);
+      gchar *message = g_strdup_printf ("%s\n %s", _("Blackjack can't load the requested file"),
+                                         installed_filename);
+      gchar *message2 = _("Please check your Blackjack installation");
       GtkWidget *w = gtk_message_dialog_new (GTK_WINDOW (app),
                                              GTK_DIALOG_DESTROY_WITH_PARENT,
                                              GTK_MESSAGE_ERROR,
                                              GTK_BUTTONS_CLOSE,
-                                             message);
-    
-    gtk_dialog_run (GTK_DIALOG (w));
-    gtk_widget_destroy (w);
-    g_free (message);
-    exit (1);
+                                             "<span weight=\"bold\" size=\"larger\">%s</span>\n\n%s",
+                                             message, message2);
+      gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (w)->label), TRUE);
+      gtk_dialog_run (GTK_DIALOG (w));
+      gtk_widget_destroy (w);
+      g_free (message);
+      exit (1);
   }
   g_free (installed_filename);
   g_free (relative);

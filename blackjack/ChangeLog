@@ -1,5 +1,17 @@
 2003-06-07  William Jon McCann  <mccann@jhu.edu>
 
+	* src/game.cpp (bj_game_eval_installed_file): Use HIG
+	markup in error dialog.
+
+	* src/dialog.cpp (show_preferences_dialog): HIG spacing
+	tweak.
+
+	* src/player.cpp (showOptions): Fixed i18n string issue.
+
+	* src/blackjack.cpp: Keep local state information,
+	removed quit confirmation dialog, use toolbar setting
+	at startup.
+
 	* src/dialog.cpp (pref_dialog_response): Make card
 	preferences instant apply.
 

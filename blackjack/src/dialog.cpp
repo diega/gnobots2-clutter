@@ -225,9 +225,10 @@ show_preferences_dialog ()
 
       // Game Tab
       hbox = gtk_vbox_new (FALSE, GNOME_PAD_SMALL);
+			gtk_container_set_border_width (GTK_CONTAINER (hbox), 12);
       gtk_notebook_append_page ( GTK_NOTEBOOK (notebook), hbox, 
                                  gtk_label_new (_("Game")) );
-      vbox = gtk_vbox_new (FALSE, GNOME_PAD_SMALL);
+      vbox = gtk_vbox_new (FALSE, 6);
       gtk_box_pack_start_defaults(GTK_BOX (hbox), vbox);
 
       // Show probabilities
@@ -394,6 +395,7 @@ show_preferences_dialog ()
               i++;
             }
         }
+      g_free (current_rule);
 
       // Cards Tab
       deck_edit = gtk_card_deck_options_edit_new ();

@@ -148,7 +148,7 @@ GnomeUIInfo file_menu[] = {
 };
 
 GnomeUIInfo settings_menu[] = {
-  GNOMEUIINFO_TOGGLEITEM_DATA (N_("Show _tool bar"), 
+  GNOMEUIINFO_TOGGLEITEM_DATA (N_("_Toolbar"), 
                                N_("Show or hide the toolbar"), 
                                settings_toolbar_callback, NULL, NULL),
 
@@ -214,9 +214,10 @@ bj_menu_create ()
   gnome_app_create_menus (GNOME_APP(app), top_menu);
   gnome_app_create_toolbar (GNOME_APP(app), toolbar);
 
-  GTK_CHECK_MENU_ITEM (settings_menu[0].widget)->active = true;
-
-  bj_gui_show_toolbar (bj_get_show_toolbar ());
+  gboolean value = bj_get_show_toolbar ();
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (settings_menu[0].widget),
+                                  value);
+  bj_gui_show_toolbar (value);
 }
 
 void
