@@ -1,3 +1,8 @@
+2002-08-18  Andrew Sobala <andrew@sobala.net>
+
+	* mahjongg.c: Use the stock icons for the Quit dialog, fixing
+	#73031.
+
 2002-07-07  Ross Burton  <ross@burtonini.com>
 
 	* mahjongg.c (shuffle_tiles_callback): Pressing the OK button

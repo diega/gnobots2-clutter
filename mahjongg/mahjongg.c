@@ -1444,7 +1444,7 @@ confirm_action (GtkWidget *widget, gpointer data)
 			break;
 		case QUIT_GAME :
 			/* GNOME IS AN ACRONYM, DAMNIT! */
-			confirm_text = _("Really exit GNOME Mahjongg?");
+			confirm_text = _("Are you sure you want to quit GNOME Mahjongg?");
 			break;
 		case NEW_GAME:
 		case NEW_GAME_WITH_SEED:
@@ -1454,12 +1454,31 @@ confirm_action (GtkWidget *widget, gpointer data)
 			confirm_text = _("Serious internal error");
 			break;
 		}
-			
-		dialog = gtk_message_dialog_new (GTK_WINDOW (window),
+
+		/* Special case the quit because the buttons are different */
+
+		if ((game_state)data == QUIT_GAME)
+		{
+			dialog = gtk_message_dialog_new (GTK_WINDOW (window),
 						 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_QUESTION,
-						 GTK_BUTTONS_YES_NO,
+						 GTK_BUTTONS_NONE,
 						 confirm_text);
+			gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+						GTK_STOCK_CANCEL,
+						GTK_RESPONSE_NO,
+						GTK_STOCK_QUIT,
+						GTK_RESPONSE_YES,
+						NULL);
+		}
+		else {
+                        dialog = gtk_message_dialog_new (GTK_WINDOW (window),
+                                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                 GTK_MESSAGE_QUESTION,
+                                                 GTK_BUTTONS_YES_NO,
+                                                 confirm_text);
+		}
+
 		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
 
 		response = gtk_dialog_run (GTK_DIALOG (dialog));

@@ -660,8 +660,15 @@ game_quit_callback (GtkWidget *widget, void *data)
 		box = gtk_message_dialog_new (GTK_WINDOW (app),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_MESSAGE_QUESTION,
-					     GTK_BUTTONS_YES_NO,
-					     _("Do you really want to quit?"));
+					     GTK_BUTTONS_NONE,
+					     _("Are you sure you want to quit?"));
+
+		gtk_dialog_add_buttons (GTK_DIALOG (box),
+						GTK_STOCK_CANCEL,
+						GTK_RESPONSE_CANCEL,
+						GTK_STOCK_QUIT,
+						GTK_RESPONSE_YES,
+						NULL);
 
 		gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_YES);
 		response = gtk_dialog_run (GTK_DIALOG (box));
