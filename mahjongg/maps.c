@@ -26,6 +26,8 @@
 #include <gnome.h>
 /* #include <stdlib.h> */
 
+#include <games-files.h>
+
 #include "mahjongg.h"
 #include "maps.h"
 
@@ -977,7 +979,7 @@ static void load_map_from_file (gchar *filename)
   ok = g_file_get_contents (filename, &file, &length, NULL);
 
   if (!ok) {
-    g_warning ("Coul not read file %s\n", filename);
+    g_warning ("Could not read file %s\n", filename);
     return;
   }
 
@@ -992,6 +994,7 @@ void load_maps (void)
 {
   int i;
   map *m;
+  GamesFileList *filelist;
 
   /* Initialise the parser. */
   parser.start_element = parse_start_el;
@@ -1002,12 +1005,14 @@ void load_maps (void)
 
   maplist = NULL;
 
+  /* Load up the hard-coded games. */
   for (i=0; i<G_N_ELEMENTS (hardcoded); i++) {
     maplist = g_list_prepend (maplist, hardcoded + i);
   }
 
-  /* FIXME: Find files in an actual path. */
-  load_map_from_file ("easy.map");
+  /* Now read the remainder in from file. */
+  filelist = games_file_list_new ("*.map", ".", MAPDIR, NULL);
+  games_file_list_for_each (filelist, (GFunc)load_map_from_file, NULL);
 
   /* FIXME: Ideally we would do this transformation, but the old code 
    * expects an array, so we give it one. */

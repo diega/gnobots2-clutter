@@ -1,6 +1,7 @@
 
 
 
+mapdir = $(datadir)/gnome-games/mahjongg/maps
 pixmapdir = $(datadir)/pixmaps/mahjongg
 Gamesdir = $(datadir)/applications
 appicondir=$(datadir)/pixmaps
@@ -15,7 +16,8 @@ INCLUDES =						\
 	-I..						\
 	-I$(srcdir)/..					\
 	$(GNOME_GAMES_CFLAGS)				\
-	-DDATADIR=\""$(datadir)"\"		   \
+	-DDATADIR=\""$(datadir)"\"		   	\
+	-DMAPDIR=\""$(mapdir)"\"			\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"
 
 bin_PROGRAMS = mahjongg
@@ -35,12 +37,14 @@ mahjongg_LDADD =					\
 	../libgames-support/libgames-support.la		\
 	$(INTLLIBS)
 
+map_DATA = 
+
 pixmap_DATA = smooth.png postmodern.svg
 
 appicon_DATA = gnome-mahjongg.png
 
 EXTRA_DIST = mahjongg.desktop.in $(pixmap_DATA) $(appicon_DATA) \
-	$(schema_in_files)
+	$(schema_in_files) $(map_DATA)
 
 Games_in_files = mahjongg.desktop.in
 Games_DATA = $(Games_in_files:.desktop.in=.desktop)
