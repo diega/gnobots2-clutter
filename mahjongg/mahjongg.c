@@ -24,7 +24,7 @@
 #define MAX_TILES 146
 #define HALF_WIDTH 20
 #define HALF_HEIGHT 28
-#define MAH_VERSION "0.1.0"
+#define MAH_VERSION "0.2.0"
      
 typedef struct _tilepos tilepos;     
 typedef struct _tile tile;
