@@ -1,3 +1,8 @@
+1999-03-15  Janusz Marcin Gorycki  <mgo@spiderman.pl.olicom.com>
+
+	* tetris.h, tetris.cpp:
+	changes suggested by Ian Peters - style guid compliance
+
 1999-02-25  Marcin Gorycki  <mgo@olicom.dk>
 
 	* tetris.h, tetris.cpp: "variable gravity" down-arrow key
