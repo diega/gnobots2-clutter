@@ -567,7 +567,7 @@ static void file_picked(GtkWidget *w, gpointer data)
 {
 	int ct;
 	FILE *f;
-	int save_this=(int)data;
+	gint save_this=GPOINTER_TO_INT (data);
 	
 	if(save_this)
 	{
@@ -1439,7 +1439,7 @@ static void TypeSave(GtkWidget *w, gpointer *spare)
 
 static void LoadThis(GtkWidget *w, gpointer data)
 {
-	int load_this=(int)data;
+	gint load_this=GPOINTER_TO_INT (data);
 	
 	if(load_this)
 	{

@@ -169,7 +169,7 @@ void states_view_close_callback(GtkWidget *w, gpointer data)
 
 void state_clist_select_state(turing *t)
 {
-	int i, tmp;
+	gint i, tmp;
 	char buff[20];
 
 	if (t->actualstate) {
@@ -179,7 +179,7 @@ void state_clist_select_state(turing *t)
 		gtk_label_set(GTK_LABEL(statusline), _("Stopped"));
 			
 	if (state_clist) {
-		tmp = i = (int) gtk_object_get_user_data(GTK_OBJECT(state_clist));
+		tmp = i = GPOINTER_TO_INT (gtk_object_get_user_data(GTK_OBJECT(state_clist)));
 		while (i--)
 			if (t->actualstate == 
 					(state *) gtk_clist_get_row_data(GTK_CLIST(state_clist), i))
@@ -322,7 +322,7 @@ void state_clist_load_states(void)
 {
 	char *text[5];
 	state *s;
-	int i;
+	gint i;
 
 	if (state_clist) {
 		gtk_clist_clear(GTK_CLIST(state_clist));
@@ -341,7 +341,7 @@ void state_clist_load_states(void)
 			gtk_clist_insert(GTK_CLIST(state_clist), 0, text);
 		}
 		
-		gtk_object_set_user_data(GTK_OBJECT(state_clist), (gpointer) i);
+		gtk_object_set_user_data(GTK_OBJECT(state_clist), GINT_TO_POINTER (i));
 		
 		for (s = tm->statehead; i--; s = s->next)
 			gtk_clist_set_row_data(GTK_CLIST(state_clist), i, s);

@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <1998/11/22 16:29:51 carsten>
+ * Time-stamp: <1998/11/28 13:39:56 hvr>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -1139,7 +1139,7 @@ quit_cb (GtkWidget *widget, gpointer data)
 static void
 show_scores_cb (GtkWidget *widget, gpointer data)
 {
-  gnome_scores_display ("Gnome-Stones", APP_NAME, NULL, (int) data);
+  gnome_scores_display ("Gnome-Stones", APP_NAME, NULL, GPOINTER_TO_INT (data));
 }
 
 

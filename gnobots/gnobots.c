@@ -662,7 +662,7 @@ static void really_new_cb(
 GtkWidget *widget,
 gpointer  data
 ){
-    int button = (int)data;
+    gint button = GPOINTER_TO_INT (data);
     
     if(button != 0) return;
     
@@ -734,7 +734,7 @@ static void really_quit_cb(
 GtkWidget   *widget,
 gpointer    data
 ){
-    int button = (int)data;
+    gint button = GPOINTER_TO_INT (data);
     
     if(button != 0) return;
     
