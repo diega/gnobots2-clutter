@@ -85,6 +85,10 @@ Tetris::Tetris(int cmdlLevel):
 	fastFall(false),
         dropBlock(false)
 {
+	double x1, y1, x2, y2;
+	double width;
+	double pts;
+
 	pic = new GdkPixbuf*[tableSize];
 	for (int i = 0; i < tableSize; ++i)
 		pic[i] = 0;
@@ -199,6 +203,22 @@ Tetris::Tetris(int cmdlLevel):
                                               "size_points", 36.0,
                                               0
                                               );
+
+	/* Since gnome_canvas doesn't support setting the size of text in
+	 * pixels (read the source where the "size" parameter gets set)
+	 * and pango isn't forthcoming about how it scales things (see
+	 * http://mail.gnome.org/archives/gtk-i18n-list/2003-August/msg00001.html
+	 * and bug #119081). We guess at the size, see what size it is rendered
+	 * to and then adjust the point size to fit. 36.0 points is pretty
+	 * close for 96 dpi . */
+
+	gnome_canvas_item_get_bounds (pauseMessage, &x1, &y1, &x2, &y2);
+	width = x2 - x1;
+	/* 0.8 is the fraction of the screen we want to use and 36.0 is
+	 * the guess we use previously for the point size. */
+	pts = 0.8*36.0*COLUMNS*BLOCK_SIZE/width;
+	gnome_canvas_item_set (pauseMessage, "size_points", pts, 0);
+
         gnome_canvas_item_hide (pauseMessage);
 
         gameoverMessage = gnome_canvas_item_new (gnome_canvas_root(GNOME_CANVAS(field->getWidget())),
@@ -211,6 +231,14 @@ Tetris::Tetris(int cmdlLevel):
                                                  "size_points", 36.0,
                                                  0
                                                  );
+
+	gnome_canvas_item_get_bounds (gameoverMessage, &x1, &y1, &x2, &y2);
+	width = x2 - x1;
+	/* 0.9 is the fraction of the screen we want to use and 36.0 is
+	 * the guess we use previously for the point size. */
+	pts = 0.9*36.0*COLUMNS*BLOCK_SIZE/width;
+	gnome_canvas_item_set (gameoverMessage, "size_points", pts, 0);
+
         gnome_canvas_item_hide (gameoverMessage);
 
 }
@@ -267,8 +295,6 @@ Tetris::setupdialogDestroy(GtkWidget *widget, void *d)
 void
 Tetris::setupdialogResponse (GtkWidget *dialog, gint response_id, void *d)
 {
-	Tetris *t = (Tetris *) d;
-
 	setupdialogDestroy (NULL, d);
 }
 
@@ -592,7 +618,6 @@ Tetris::fillMenu(GtkWidget *menu, char *pixname, char *dirname,
 	if (!dir)
 		return;
 	
-	GtkWidget *item;
 	char *s;
 	
 	while ((e = readdir (dir)) != 0)
@@ -628,12 +653,10 @@ Tetris::fillMenu(GtkWidget *menu, char *pixname, char *dirname,
 int 
 Tetris::gameProperties(GtkWidget *widget, void *d)
 {
-	GtkWidget *allBoxes;
-	GtkWidget *box, *box2;
 	GtkWidget *label;
 	GtkWidget *frame;
 	GtkWidget *table;
-	GtkWidget *hbox, *fvbox, *space_label;
+	GtkWidget *fvbox;
 	GtkObject *adj;
         
 	Tetris *t = (Tetris*) d;

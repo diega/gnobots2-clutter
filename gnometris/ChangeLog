@@ -1,3 +1,11 @@
+2004-02-03  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* tetris.cpp (Tetris): Added an awful hack to get around
+	limitations in both pango and gnome canvas. See the comments in
+	the code for the details. This will however allow the text to be
+	the right size regardless of the dpi of the display. See bug
+	#131829.
+
 2004-01-29  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* tetris.cpp: Make sure New Game is disabled while the preferences
