@@ -5,3 +5,4 @@ _libs
 same-gnome
 Makefile.in
 same-gnome.desktop
+same-gnome.schemas
