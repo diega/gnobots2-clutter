@@ -825,15 +825,18 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 		{
 		case GDK_Left:
 			res = t->ops->moveBlockLeft();
+                        t->onePause = false;
 			break;
 		case GDK_Right:
 			res = t->ops->moveBlockRight();
+                        t->onePause = false;
 			break;
 		case GDK_Up:
 			res = t->ops->rotateBlock(rotateCounterClockWise);
+                        t->onePause = false;
 			break;
 		case GDK_Down:
-			if (!t->fastFall)
+			if (!t->fastFall && !t->onePause)
 			{
 				t->fastFall = true;
 				t->fastFallPoints = 0;

@@ -1,3 +1,8 @@
+2003-05-28  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* tetris.cpp (eventHandler): Fiddling to get the key press handling
+	feeling right when a new piece appears.
+
 2003-05-27  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* tetris.cpp (eventHandler): Rearranged so that the block drops
