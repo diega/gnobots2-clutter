@@ -881,7 +881,6 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 				NULL,
 				NULL,
 				NULL);
-	gtk_window_set_modal(GTK_WINDOW(about), TRUE);
 
 	gtk_widget_show(about);
 

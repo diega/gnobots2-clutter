@@ -1,3 +1,8 @@
+2002-02-26  Juan Pablo Mendoza <jpablo@gnome.org>
+
+	* tetris.cpp (Tetris::gameAbout): Don't make
+	  the about dialog modal (#72371)
+
 2001-12-19  Seth Nickell  <snickell@stanford.edu>
 
 	* gnometris.desktop:
