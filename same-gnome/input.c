@@ -85,6 +85,11 @@ gboolean mouse_click_cb (GtkWidget *widget, GdkEventButton *e, gpointer data)
 
 gboolean mouse_leave_cb (GtkWidget *widget, GdkEventCrossing *e, gpointer data)
 {
+	/* Because sloppy focus is evil and produces extra leave and enter
+	 * events. */
+	if (e->mode != GDK_CROSSING_NORMAL)
+		return FALSE;
+
 	clear_message ();
 
 	if (game_state == GAME_SELECTED) {		

@@ -1,3 +1,8 @@
+2005-01-21  William Jon McCann  <mccann@jhu.edu>
+
+	* input.c (mouse_leave_cb): Only respond to normal event
+	crossings.  Fixes #163963.
+
 2005-01-10  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* stones.png: Expand to have four colours. Also pad out to have 16
