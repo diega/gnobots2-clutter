@@ -1,6 +1,8 @@
-Tue Jul 28 17:19:54 BST 1998 Mark Rae <Mark.Rae@ed.ac.uk>
+Tue Jul 28 19:40:06 BST 1998 Mark Rae <Mark.Rae@ed.ac.uk>
 
         * gnobots.c  - Allowed 'Space' key to start a new game
+                     - Added confirmation dialog if new game is selected
+                       while game is in progress
         * index.html - Changed instructions for space key change
 
 1998-07-24  Nuno Ferreira  <nmrf@rnl.ist.utl.pt>

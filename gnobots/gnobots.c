@@ -95,6 +95,7 @@ static void    draw_yahoo_bubble(int, int);
 static void    draw_aieee_bubble(int, int);
 static void    load_bubble_pixmaps();
        void    load_tile_pixmap(char*);
+static void    really_new_cb(GtkWidget*, gpointer);       
 static void    new_cb(GtkWidget*, gpointer);
 static void    quit_cb(GtkWidget*, gpointer);
 static void    really_quit_cb(GtkWidget*, gpointer);
@@ -668,12 +669,16 @@ char *pmname
 
 
 /*
- * Callback for the menu - New
+ * Really start new game
  */
-static void new_cb(
+static void really_new_cb(
 GtkWidget *widget,
 gpointer  data
 ){
+    int button = (int)data;
+    
+    if(button != 0) return;
+    
     game_state = GAME_PLAYING;    
     start_new_game();
     
@@ -682,6 +687,32 @@ gpointer  data
     update_score_label();
     update_teleports_label();
     update_level_label();
+}
+
+/*
+ * Callback for the menu - New
+ */
+static void new_cb(
+GtkWidget *widget,
+gpointer  data
+){
+    GtkWidget *box;
+
+    if(game_state == GAME_NOT_PLAYING){
+        really_new_cb(widget, (gpointer)0);
+    } else {
+        box = gnome_message_box_new(
+                            _("Do you really want to start a new game?"),
+                                     GNOME_MESSAGE_BOX_QUESTION,
+                                     GNOME_STOCK_BUTTON_YES,
+                                     GNOME_STOCK_BUTTON_NO,
+                                     NULL);
+        gnome_dialog_set_default (GNOME_DIALOG(box), 0);
+        gnome_dialog_set_modal (GNOME_DIALOG(box));
+        gtk_signal_connect (GTK_OBJECT(box), "clicked",
+                           GTK_SIGNAL_FUNC(really_new_cb), NULL);
+        gtk_widget_show(box);
+    }
 }
 
 /*
@@ -694,7 +725,7 @@ gpointer  data
     GtkWidget *box;
         
     if(game_state == GAME_NOT_PLAYING){
-        really_quit_cb(widget, data);
+        really_quit_cb(widget, (gpointer)0);
     } else {
         box = gnome_message_box_new(_("Do you really want to quit?"),
                                      GNOME_MESSAGE_BOX_QUESTION,
@@ -967,7 +998,7 @@ gpointer data
 
     /* allow 'Space' to start a new game if we are not already playing */
     if(game_state != GAME_PLAYING){
-        if(event->keyval == GDK_space){
+        if((event->keyval == GDK_space) && (game_state == GAME_NOT_PLAYING)){
             new_cb(widget, NULL);
             return TRUE;
         } else {
