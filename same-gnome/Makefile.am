@@ -12,7 +12,7 @@ same_gnome_SOURCES = 	\
 	same-gnome.c
 
 same_gnome_LDADD =		\
-	-lgdk_imlib		\
+	$(GNOME_LIBDIR)         \
 	$(GNOMEUI_LIBS)		\
 	$(INTLLIBS)		\
 	$(top_builddir)/support/libsupport.a

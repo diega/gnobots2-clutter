@@ -12,6 +12,7 @@ mahjongg_SOURCES = 	\
 	mahjongg.c
 
 mahjongg_LDADD = \
+	$(GNOME_LIBDIR) \
 	$(GNOMEUI_LIBS)	\
 	$(INTLLIBS) \
 	$(top_builddir)/support/libsupport.a
