@@ -1,3 +1,8 @@
+2004-10-28  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gtkgridboard.c: Clear the selection when we undo a move. Fixes
+	bug #152706.
+
 2004-10-27  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gtkgridboard.c: Use g_malloc rather than g_try_malloc for
