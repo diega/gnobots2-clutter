@@ -60,28 +60,28 @@ Tetris::Tetris(int cmdlLevel)
 	GnomeUIInfo game_menu[] = 
 	{
 		{ GNOME_APP_UI_ITEM, N_("_New"), "_Start a new game", gameNew, this, NULL, 
-			GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 'n', GDK_CONTROL_MASK, NULL },
+			GNOME_APP_PIXMAP_STOCK, (gpointer)GNOME_STOCK_MENU_NEW, 'n', GDK_CONTROL_MASK, NULL },
 		{ GNOME_APP_UI_ITEM, N_("_Properties..."), NULL, gameProperties, this, NULL,
-			GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
+			GNOME_APP_PIXMAP_STOCK, (gpointer)GNOME_STOCK_MENU_PROP, 0, (GdkModifierType)0, NULL},
 		{ GNOME_APP_UI_ITEM, N_("_Scores"), NULL, gameTopTen, this, NULL,
-			GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SCORES, 0, 0, NULL},
+			GNOME_APP_PIXMAP_STOCK, (gpointer)GNOME_STOCK_MENU_SCORES, 0, (GdkModifierType)0, NULL},
 		{ GNOME_APP_UI_ITEM, N_("E_xit"), "E_xit Gnometris", gameQuit, this, NULL, 
-			GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 'q', GDK_CONTROL_MASK, NULL },
+			GNOME_APP_PIXMAP_STOCK, (gpointer)GNOME_STOCK_MENU_EXIT, 'q', GDK_CONTROL_MASK, NULL },
 		GNOMEUIINFO_END
 	};
 
 	GnomeUIInfo help_menu[] = 
 	{
-		{ GNOME_APP_UI_HELP, NULL, NULL, "gnometris", NULL, NULL,GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+		{ GNOME_APP_UI_HELP, NULL, NULL, (gpointer)"gnometris", NULL, NULL, GNOME_APP_PIXMAP_NONE, NULL, 0, (GdkModifierType)0, NULL},
 		{ GNOME_APP_UI_ITEM, N_("_About Gnometris"), NULL, gameAbout, this, NULL, 
-			GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL },
+			GNOME_APP_PIXMAP_STOCK, (gpointer)GNOME_STOCK_MENU_ABOUT, 0, (GdkModifierType)0, NULL },
 		GNOMEUIINFO_END
 	};
 
 	GnomeUIInfo mainmenu[] = 
 	{
-		{ GNOME_APP_UI_SUBTREE, N_("_Game"), NULL, game_menu, NULL, NULL, GNOME_APP_PIXMAP_DATA, NULL, 0, 0, NULL },
-		{ GNOME_APP_UI_SUBTREE, N_("_Help"), NULL, help_menu, NULL, NULL, GNOME_APP_PIXMAP_DATA, NULL, 0, 0, NULL },
+		{ GNOME_APP_UI_SUBTREE, N_("_Game"), NULL, game_menu, NULL, NULL, GNOME_APP_PIXMAP_DATA, NULL, 0, (GdkModifierType)0, NULL },
+		{ GNOME_APP_UI_SUBTREE, N_("_Help"), NULL, help_menu, NULL, NULL, GNOME_APP_PIXMAP_DATA, NULL, 0, (GdkModifierType)0, NULL },
 		GNOMEUIINFO_END
 	};
 
@@ -344,7 +344,8 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 	
 	switch (event->type)
 	{
-	case GDK_KEY_PRESS:
+	case GDK_KEY_PRESS: 
+	{
 		GdkEventKey *e = (GdkEventKey*)event;
 		keyEvent = true;
 		
@@ -367,6 +368,10 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 		default:
 			return FALSE;
 		}
+		break;
+	}
+	default:
+		break;
 	}
 
 	if (res)
