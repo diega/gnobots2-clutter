@@ -1,3 +1,8 @@
+2003-04-06  Ross Burton  <ross@burtonini.com>
+
+	* tetris.cpp: Remove deprecated calls, fixes Sun builds. Thanks to
+	Rich Burridge, closing #109991.
+
 2003-03-07  Ross Burton  <ross@burtonini.com>
 
 	* Makefile.am: Link to the shared games library.

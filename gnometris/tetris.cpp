@@ -711,7 +711,7 @@ Tetris::gameEnd(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
 	
-	gtk_timeout_remove(t->timeoutId);
+	g_source_remove(t->timeoutId);
 	t->timeoutId = -1;
 	blocknr_next = -1;
 	t->endOfGame();
@@ -733,13 +733,13 @@ Tetris::gameQuit(GtkWidget *widget, void *d)
 void
 Tetris::generateTimer(int level)
 {
-	gtk_timeout_remove(timeoutId);
+	g_source_remove(timeoutId);
 
 	int intv = 1000 - 100 * (level - 1);
 	if (intv <= 0)
 		intv = 100;
 		
-	timeoutId = gtk_timeout_add(intv, timeoutHandler, this);
+	timeoutId = g_timeout_add_full(0, intv, timeoutHandler, this, NULL);
 }
 
 void
@@ -837,8 +837,8 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 			{
 				t->fastFall = true;
 				t->fastFallPoints = 0;
-				gtk_timeout_remove(t->timeoutId);
-				t->timeoutId = gtk_timeout_add(10, timeoutHandler, t);
+				g_source_remove(t->timeoutId);
+				t->timeoutId = g_timeout_add_full(0, 10, timeoutHandler, t, NULL);
 				res = true;
 			}
 			break;
@@ -897,7 +897,7 @@ Tetris::generate()
 	}
 	else
 	{
-		gtk_timeout_remove(timeoutId);
+		g_source_remove(timeoutId);
 		timeoutId = -1;
 		blocknr_next = -1;
 		
@@ -943,7 +943,7 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 
 	if (t->timeoutId) 
 	{
-		gtk_timeout_remove(t->timeoutId);
+		g_source_remove(t->timeoutId);
 		t->timeoutId = -1;
 
 		if (t->scoreFrame->getScore() > 0) 
@@ -957,7 +957,7 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 	t->scoreFrame->setLevel(level);
 	t->scoreFrame->setStartingLevel(level);
 
-	t->timeoutId = gtk_timeout_add(1000 - 100 * (level - 1), timeoutHandler, t);
+	t->timeoutId = g_timeout_add_full(0, 1000 - 100 * (level - 1), timeoutHandler, t, NULL);
 	t->ops->emptyField(t->line_fill_height,t->line_fill_prob);
 
 	t->scoreFrame->resetLines();
