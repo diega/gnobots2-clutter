@@ -2,8 +2,8 @@
     <schemalist>    
 
       <schema>
-        <key>/schemas/apps/mahjongg/show-toolbar</key>
-        <applyto>/apps/mahjongg/show-toolbar</applyto>
+        <key>/schemas/apps/mahjongg/show_toolbar</key>
+        <applyto>/apps/mahjongg/show_toolbar</applyto>
         <owner>mahjongg</owner>
         <type>bool</type>
         <default>TRUE</default>
