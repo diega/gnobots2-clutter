@@ -43,12 +43,15 @@ gnome_stones_LDADD =				\
 	$(INTLLIBS)
 
 
-Pixmap_DATA= gnome-stones.png
+Pixmap_DATA= gnome-stones.png gnome-stones-file.png
 Games_DATA = gnome-stones.desktop
 Caves_DATA = default.caves tutorial.caves gnomekoban.caves
 
 gtkrcdir = $(datadir)
 gtkrc_DATA = gnome-stonesrc gnome-stonesrc.ko
+
+Mimedir    = $(datadir)/mime-info
+Mime_DATA  = gnome-stones.keys gnome-stones.mime
 
 EXTRA_DIST    =					\
 	$(Pixmap_DATA)				\
@@ -56,7 +59,10 @@ EXTRA_DIST    =					\
 	$(Caves_DATA)				\
 	$(gtkrc_DATA)				\
 	TODO					\
-	README
+	README					\
+	gnome-stones.keys.in			\
+	gnome-stones.mime			\
+	gnome-stones-file.png
 
 install-data-local:
 	-$(mkinstalldirs) $(scoredir)
@@ -64,3 +70,7 @@ install-data-local:
 	-chown games.games $(scoredir)/gnome-stones.scores
 	-chmod 664 $(scoredir)/gnome-stones.scores	
 	-chgrp games $(bindir)/gnome-stones && chmod 2111 $(bindir)/gnome-stones
+
+gnome-stones.keys: gnome-stones.keys.in Makefile
+	sed -e 's^\@icondir\@^$(Pixmapdir)^g' < $(srcdir)/gnome-stones.keys.in > gnome-stones.keys.tmp \
+	&& mv gnome-stones.keys.tmp gnome-stones.keys 

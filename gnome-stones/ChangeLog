@@ -1,5 +1,7 @@
 1999-03-02  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
+	* Makefile.am: Added installation of mime-type information.
+
 	* preferences.c: Added variable 'default_game'.
 	(preferences_restore): Load 'default_game' if specified.
 
