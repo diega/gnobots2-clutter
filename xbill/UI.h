@@ -11,7 +11,6 @@ class UI {
 	Picture icon;
 	void get_coords (gint *x, gint *y);
 	MCursor defaultcursor, downcursor;
-	GdkFont *font;
 	GdkGC *stdgc, *whitegc;
 public:
 	UI() {playing=0; timer=0;}

@@ -184,9 +184,7 @@ void UI::graph_init() {
 
 	gtk_widget_ensure_style(field);
 	gtk_widget_realize(field);
-#if 0 /* FIXME */
-	font = field->style->font;
-#endif
+
 	offscreen = gdk_pixmap_new(field->window, game.scrwidth, game.scrheight,
 				   -1);
 }
@@ -217,9 +215,16 @@ void UI::draw_line(int x1, int y1, int x2, int y2) {
 }
 
 void UI::draw_str(char *str, int x, int y) {
-#if 0 /* FIXME */
-        gdk_draw_string(offscreen, font, stdgc, x,y, str);
-#endif
+	PangoLayout *layout = gtk_widget_create_pango_layout (field, str);
+	int h;
+
+	pango_layout_get_pixel_size (layout, NULL, &h);
+
+	y -= h;
+
+	gdk_draw_layout (offscreen, stdgc, x, y, layout);
+
+	g_object_unref (layout);
 }
 
 

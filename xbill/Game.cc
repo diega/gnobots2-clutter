@@ -63,7 +63,8 @@ void Game::update_info() {
 				bill.on_screen, bill.off_screen, net.base, net.off,
 				net.win, level, score);
 
-	ui.draw_str(str, 5, scrheight-5);
+        /* FIXME: We need to use relative sizes here */
+	ui.draw_str(str, 5, scrheight);
 	efficiency += ((100*net.base-10*net.win)/net.units);
 	g_free (str);
 }

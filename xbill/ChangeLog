@@ -1,3 +1,11 @@
+2002-01-10  Juan Pablo Mendoza <jpablo@gnome.org>
+
+	* UI.cc:
+	* UI.h:
+
+	Draw the status text using panyolayout.
+
+
 2001-12-19  Seth Nickell  <snickell@stanford.edu>
 
 	* Makefile.am:
