@@ -92,7 +92,7 @@ if GCONF_SCHEMAS_INSTALL
 endif
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
 	-touch $(DESTDIR)$(scoredir)/gnome-stones.scores
-	-chown $(scores_user).$(scores_group) $(DESTDIR)$(scoredir)/gnome-stones.scores
+	-chown $(scores_user):$(scores_group) $(DESTDIR)$(scoredir)/gnome-stones.scores
 	-chmod 664 $(DESTDIR)$(scoredir)/gnome-stones.scores
 	-if test "x$(setgid)" = "xtrue"; then chgrp $(scores_group) $(DESTDIR)$(bindir)/gnome-stones && chmod 2555 $(DESTDIR)$(bindir)/gnome-stones ; fi
 
