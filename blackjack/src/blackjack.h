@@ -28,7 +28,7 @@
 
 // Constants
 
-#define BJ_RULES_DIR "blackjack/"
+#define BJ_RULES_DIR "blackjack"
 #define GAME_EVENTS (GDK_EXPOSURE_MASK        |\
 		                 GDK_BUTTON_PRESS_MASK    |\
 		                 GDK_BUTTON_RELEASE_MASK  |\

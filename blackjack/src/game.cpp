@@ -277,11 +277,11 @@ bj_game_read_rules (gchar *filename)
 BJGameRules *
 bj_game_find_and_read_rules (gchar *filename)
 {
-  char *installed_filename;
-  char *relative;
+  gchar *installed_filename;
+  gchar *relative;
   BJGameRules *ruleset = NULL;
 
-  relative = g_strconcat (BJ_RULES_DIR, filename, NULL);
+  relative = g_build_filename (BJ_RULES_DIR, filename, NULL);
   installed_filename = gnome_program_locate_file (NULL, 
                                                   GNOME_FILE_DOMAIN_APP_DATADIR,
                                                   relative,
@@ -307,7 +307,7 @@ bj_game_eval_installed_file (gchar *file)
        return;
      }
   
-  relative = g_strconcat (BJ_RULES_DIR, file, NULL);
+  relative = g_build_filename (BJ_RULES_DIR, file, NULL);
   installed_filename = gnome_program_locate_file (NULL, 
                                                   GNOME_FILE_DOMAIN_APP_DATADIR,
                                                   relative,
@@ -324,9 +324,8 @@ bj_game_eval_installed_file (gchar *file)
       BJStrategy maxValueStrategy;
       Progress progress;
 
-      const gchar *cache_filename = g_strdup_printf ("%s%s%s", 
-                                                     BJ_RULES_DIR, 
-                                                     file, ".dat");
+      gchar *cache_filename = g_strdup_printf ("%s%s", relative, ".dat");
+
       installed_filename = gnome_program_locate_file 
         (NULL, 
          GNOME_FILE_DOMAIN_APP_DATADIR,
@@ -350,6 +349,8 @@ bj_game_eval_installed_file (gchar *file)
       */
       if (! use_cache)
         splash_destroy ();
+
+      g_free (cache_filename);
      } 
   else
     {

@@ -3,6 +3,7 @@
 	* gnome-canvas-pimage.c: 
 	* solubility.c: 
 	* mahjongg.c: Fixed compiler warnings.
+	(load_tiles): Use g_build_filename to construct paths.
 
 2003-06-13  William Jon McCann  <mccann@jhu.edu>
 

@@ -1,5 +1,13 @@
 2003-06-17  William Jon McCann  <mccann@jhu.edu>
 
+	* src/blackjack.c:
+	* src/blackjack.h (BJ_RULES_DIR): Remove slash from directory.
+	We will let g_build_filename add directory separators.
+
+	* src/game.cpp (bj_game_find_and_read_rules)
+	(bj_game_eval_installed_file): Use g_build_filename to construct
+	paths.
+
 	* src/strategy.cpp: Fixed compiler warning and converted
 	to UNIX format line ending.
 

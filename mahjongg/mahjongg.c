@@ -1706,12 +1706,12 @@ load_tiles (gchar *fname, gchar *bg_fname)
 {
 	gchar *tmp, *fn, *bg_fn;
 
-	tmp = g_strconcat ("mahjongg/", fname, NULL);
+	tmp = g_build_filename ("mahjongg", fname, NULL);
 	
 	fn = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, (tmp), FALSE, NULL);
 	g_free (tmp);
 
-	tmp = g_strconcat ("mahjongg/bg/", bg_fname, NULL);
+	tmp = g_build_filename ("mahjongg", "bg", bg_fname, NULL);
 
 	bg_fn = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, (tmp), FALSE, NULL);
 	g_free (tmp);
