@@ -12,6 +12,7 @@ Comment[de]=Gnome Metatris
 Comment[es]=Simple juego de tetris
 Comment[fi]=Tetris-klooni
 Comment[fr]=Simple jeu de tetris
+Comment[no]=GNOME metatris
 Comment[ru]=Игра Метатрис для Gnome
 TryExec=metatris
 Exec=metatris
