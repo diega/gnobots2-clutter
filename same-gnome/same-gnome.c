@@ -388,6 +388,7 @@ load_scenario (char *fname)
 	char *tmp, *fn;
         GdkColor bgcolor;
         GdkImage *tmpimage;
+	int i, j;
     
 	g_return_if_fail (fname != NULL);
 
@@ -441,6 +442,17 @@ load_scenario (char *fname)
 	g_free( fn );
 
 	nstones = gdk_pixbuf_get_width (image) / STONE_SIZE;
+	for (i = 0; i < STONE_COLS; i++)
+	{
+		for (j = 0; j < STONE_LINES; j++)
+		{
+			if (sync_stones) {
+				field[i][j].frame = 0;
+			} else {
+				field[i][j].frame %= nstones;
+			}
+		}
+	}
 /*	ncolors = image->rgb_height / STONE_SIZE; */
 	ncolors = 3;
 
