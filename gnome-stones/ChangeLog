@@ -1,3 +1,7 @@
+2001-08-13  Abel Cheung  <maddog@linux.org.hk>
+
+	* \*.caves: Added traditional Chinese strings. (useless?)
+
 2001-07-27  Abel Cheung  <maddog@linux.org.hk>
 
 	* gnome-stones.desktop: Added traditional Chinese translation.

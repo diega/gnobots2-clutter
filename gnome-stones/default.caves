@@ -3,6 +3,7 @@ Title=Default caves
 Title[de]=Standardh鐬len
 Title[es]=Cavernas por omisi鏮
 Title[ko]=晦獄 翕掉
+Title[zh_TW.Big5]=預設洞穴
 Object size=1
 Plugins=default:gnome-stones
 
@@ -38,6 +39,7 @@ Extra diamond score= 15
 Next cave=Cave Test2
 Message=Collect all diamonds and find exit
 Message[DE]=Sammle alle Diamanten und finde den Ausgang
+Message[zh_TW.Big5]=收集所有寶石並尋找出口
 Time= 200
 Height=25
 Width=60
