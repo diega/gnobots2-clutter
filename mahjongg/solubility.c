@@ -47,8 +47,6 @@
  * - Callum, 20030819
  */
 
-#include <string.h>
-
 #include "mahjongg.h"
 #include "solubility.h"
 
@@ -437,9 +435,9 @@ void generate_game (guint32 seed)
   /* Scramble the tiles */
   for (i=0; i<MAX_TILES; i++) {
     j = g_rand_int_range (generator, 0, MAX_TILES/2);
-    memcpy (&tile, &type_info[0], sizeof (typeinfo));
-    memcpy (&type_info[0], &type_info[j], sizeof (typeinfo));
-    memcpy (&type_info[j], &tile, sizeof (typeinfo));    
+    tile = type_info[0];
+    type_info[0] = type_info[j];
+    type_info[j] = tile;
   }
 
   /* Find which tiles are initially free. */
@@ -463,10 +461,9 @@ void generate_game (guint32 seed)
 int shuffle (void)
 {
   int n = 0;
-  int i;
+  int i,j;
+  typeinfo tmp;
   
-  /* FIXME: This doesn't really work. */
-
   for (i=0; i<MAX_TILES; i++) {
     if (tiles[i].visible) {
       filled[i] = TRUE;
@@ -477,6 +474,7 @@ int shuffle (void)
   }
   n >>= 1;
 
+  numfree = 0;
   for (i=0; i<MAX_TILES; i++) {
     freetiles[n][i] = FALSE;
     if (tiles[i].visible) {

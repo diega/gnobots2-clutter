@@ -1582,43 +1582,14 @@ new_game (gboolean re_seed)
 void
 shuffle_tiles_callback (GtkWidget *widget, gpointer data)
 {
-        gint i, previous = 0, first=1, num_shuffle=0;
-        tile temp;
         time_t seconds;
 	gboolean ok;
 
         if (paused || game_over == GAME_DEAD || game_over == GAME_WON) return;
 
-#undef USE_NEW_SHUFFLE_ALGORITHM
-#ifndef USE_NEW_SHUFFLE_ALGORITHM
-        do {
-                num_shuffle++;
-                /* We do a circular permutation */
-                for (i=0; i<MAX_TILES; i++) {
-                        if (tiles[i].visible) {
-                                if (first) {
-                                        temp = tiles[i];
-                                        first--; }
-                                else {
-                                        tiles[previous].type = tiles[i].type;
-                                        tiles[previous].image = tiles[i].image;
-                                }
-                                previous = i; 
-                        }
-                }
-                tiles[previous].type = temp.type;
-                tiles[previous].image = temp.image;
-        }
-        while (!(update_moves_left ()) && num_shuffle < visible_tiles);
-     
-#endif
 	ok = shuffle ();
    
-#ifdef USE_NEW_SHUFFLE_ALGORITHM
 	if (!ok) {
-#else
-	if (num_shuffle >= visible_tiles) { 
-#endif
                 GtkWidget *mb;
                 game_over = GAME_DEAD;
                 games_clock_stop (GAMES_CLOCK (chrono));
@@ -1642,6 +1613,11 @@ shuffle_tiles_callback (GtkWidget *widget, gpointer data)
                 seconds = GAMES_CLOCK(chrono)->stopped;
                 games_clock_set_seconds(GAMES_CLOCK(chrono), (gint) (seconds+60));
                 games_clock_start (GAMES_CLOCK(chrono));
+
+		/* Disable undo/redo after a shuffle. */
+		sequence_number = 1;
+		clear_undo_queue ();
+		set_undoredo_sensitive (FALSE, FALSE);
         }
 	
 	set_menus_sensitive ();

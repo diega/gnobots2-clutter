@@ -1,3 +1,12 @@
+2003-12-29  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c:	
+	* solubility.c (shuffle): Shuffling finally works properly. Rather
+	than doing a permutation we re-use the pile-creation routine to
+	create a new pile that is guaranteed to me solvable. Undo and redo
+	are also properly set. The dependence of solubility.c on string.h
+	has also been removed. This fixes bugs 91098 and 94750.
+
 2003-12-08  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c: 
