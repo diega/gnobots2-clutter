@@ -1,3 +1,9 @@
+Sat Feb 14 09:43:48 1998  Tom Tromey  <tromey@cygnus.com>
+
+	* Makefile.am (same_gnome_LDADD): Added INTLLIBS.
+	(Games_DATA): New macro.
+	(install-data-local): Don't install same-gnome.desktop.
+
 1998-02-07  Raja R Harinath  <harinath@cs.umn.edu>
 
 	* Makefile.am (install-data-local): Install game `setgid' only if

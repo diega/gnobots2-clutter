@@ -11,15 +11,16 @@ same_gnome_SOURCES = 	\
 	same-gnome.c
 
 same_gnome_LDADD = \
-	$(GNOMEUI_LIBS)
+	$(GNOMEUI_LIBS)	\
+	$(INTLLIBS)
 
 pixmap_DATA = planets.xpm blink-sync.xpm puyonew2-sync.xpm \
 	stones.xpm rotate.xpm
 EXTRA_DIST = same-gnome.desktop $(pixmap_DATA)
 
+Games_DATA = same-gnome.desktop
+
 install-data-local:
-	-$(mkinstalldirs) $(Gamesdir)
-	$(INSTALL_DATA) $(srcdir)/same-gnome.desktop $(Gamesdir)/same-gnome.desktop
 	-$(mkinstalldirs) $(scoredir)
 	touch $(scoredir)/same-gnome.scores
 	-chown games.games $(scoredir)/same-gnome.scores
