@@ -1,3 +1,7 @@
+2000-04-17  Ian Peters  <itp@gnu.org>
+
+	* src/*.c, *.h: code cleanup, warnings squash
+
 2000-04-16  Ian Peters  <itp@gnu.org>
 
 	* plugins/Makefile.am: build swedishchef again

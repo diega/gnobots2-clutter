@@ -20,14 +20,10 @@
 #include <gnome.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-/*
-#include <pthread.h>
-*/
-
-#include <sys/time.h>
 #include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/time.h>
 #include <unistd.h>
-
 #include <signal.h>
 
 #include "defines.h"
@@ -37,10 +33,11 @@
 #include "../reversi-iagno2/reversi.h"
 #include "plugin.h"
 
+Iagno2Properties *properties;
+
 extern GtkWidget *app;
 extern GtkWidget *new_game_dialog;
 extern GnomeUIInfo iagno2_menu[];
-extern Iagno2Properties *properties;
 
 extern ReversiBoard *board;
 
@@ -57,7 +54,7 @@ GdkColor colors[2];
 
 gchar *board_pixmaps = NULL;
 
-gchar whose_turn = BLACK;
+gint whose_turn = BLACK;
 
 gboolean iagno2_flipping_pixmaps;
 
@@ -79,7 +76,6 @@ iagno2_tileset_load ()
 {
   gchar *tmp_path;
   gchar *filename;
-  gint i;
 
   tmp_path = g_strconcat ("iagno2/", properties->tileset, NULL);
   filename = gnome_unconditional_pixmap_file (tmp_path);
@@ -142,7 +138,6 @@ void
 iagno2_set_bg_color ()
 {
   guchar *pixels;
-  GdkGC *grid_gc;
 
   pixels = gdk_pixbuf_get_pixels (tileset_pixbuf);
 
@@ -174,10 +169,9 @@ iagno2_app_init ()
 
   gtk_window_set_policy (GTK_WINDOW (app), FALSE, FALSE, TRUE);
 
-  gtk_signal_connect (GTK_OBJECT (app),
-      "delete_event",
-      GTK_SIGNAL_FUNC (delete_event_cb),
-      NULL);
+  gtk_signal_connect (GTK_OBJECT (app), "delete_event",
+                      GTK_SIGNAL_FUNC (delete_event_cb),
+                      NULL);
 }
 
 void
@@ -206,7 +200,7 @@ void
 iagno2_draw_grid ()
 {
   GdkGC *grid_gc;
-  int i, j;
+  int i;
 
   grid_gc = gdk_gc_new (drawing_area->window);
 
@@ -233,14 +227,16 @@ iagno2_draw_grid ()
   iagno2_render_buffer_to_screen (0, 0, BOARDWIDTH, BOARDHEIGHT);
 }
 
-static gint
+static void
 drawing_area_expose_event_cb (GtkWidget *widget, GdkEventExpose *event)
 {
   iagno2_render_buffer_to_screen (event->area.x, event->area.y,
                                   event->area.width, event->area.height);
+
+  return;
 }
 
-static gint
+static void
 drawing_area_configure_event_cb (GtkWidget *widget, GdkEventConfigure *event)
 {
   gint i;
@@ -256,17 +252,14 @@ drawing_area_configure_event_cb (GtkWidget *widget, GdkEventConfigure *event)
   for (i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
     iagno2_render_tile_to_buffer (0, i);
   }
-  
-  return (TRUE);
 }
 
-static gint
+static void
 drawing_area_button_press_event_cb (GtkWidget *widget, GdkEvent *event,
                                     gpointer data)
 {
   double x, y;
   gint grid_row, grid_col, index;
-  gint i, j;
 
   switch (event->type) {
     case GDK_BUTTON_PRESS:
@@ -274,10 +267,6 @@ drawing_area_button_press_event_cb (GtkWidget *widget, GdkEvent *event,
         x = event->button.x;
         y = event->button.y;
 
-        /*
-        grid_row = x / (TILEWIDTH + GRIDWIDTH);
-        grid_col = y / (TILEHEIGHT + GRIDWIDTH);
-        */
         grid_col = x / (TILEWIDTH + GRIDWIDTH);
         grid_row = y / (TILEHEIGHT + GRIDWIDTH);
 
@@ -291,9 +280,12 @@ drawing_area_button_press_event_cb (GtkWidget *widget, GdkEvent *event,
       }
 
       break;
+
+    default:
+      break;
   }
 
-  return FALSE;
+  return;
 }
 
 void
@@ -421,7 +413,7 @@ iagno2_computer_player_wrapper ()
   if (!(computer_thread = fork ())) {
     int index;
 
-    int kill_myself (int signal)
+    void kill_myself (int signal)
     {
       index = BOARDSIZE * BOARDSIZE;
       
@@ -447,7 +439,8 @@ iagno2_computer_player_wrapper ()
 
   close (fd[1]);
 
-  computer_timeout_id = gtk_timeout_add_full (100, iagno2_get_computer_move,
+  computer_timeout_id = gtk_timeout_add_full (100,
+                                              iagno2_get_computer_move,
                                               NULL, (gpointer) fd[0],
                                               timeout_removed);
 
@@ -458,7 +451,6 @@ void
 iagno2_setup_current_player (gboolean pass)
 {
   gchar *sides[2];
-  gchar *interactive_message;
   gchar *message;
   gchar *pad;
 
@@ -591,8 +583,8 @@ iagno2_game_over ()
 {
   gchar white_count = 0;
   gchar black_count = 0;
-  gchar i;
   gchar *message;
+  gint i;
 
   game_in_progress = FALSE;
 
@@ -635,4 +627,58 @@ iagno2_game_over ()
   g_free (message);
 
   return FALSE;
+}
+
+void
+iagno2_clean_up (gboolean full)
+{
+  if (computer_timeout_id) {
+    gtk_timeout_remove (computer_timeout_id);
+    computer_timeout_id = 0;
+  }
+
+  if (computer_thread) {
+    kill (computer_thread, SIGUSR1);
+    waitpid (computer_thread, NULL, 0);
+    computer_thread = 0;
+  }
+
+  if (game_over_flip_id) {
+    gtk_timeout_remove (game_over_flip_id);
+    game_over_flip_id = 0;
+  }
+
+  if (board) {
+    reversi_destroy_board (board);
+    board = NULL;
+  }
+
+  if (board_pixmaps) {
+    g_free (board_pixmaps);
+    board_pixmaps = NULL;
+  }
+
+  if (!full) {
+    return;
+  }
+
+  if (properties) {
+    iagno2_properties_destroy (properties);
+    properties = NULL;
+  }
+
+  if (buffer_pixmap) {
+    gdk_pixmap_unref (buffer_pixmap);
+    buffer_pixmap = NULL;
+  }
+
+  if (players[0]) {
+    iagno2_plugin_close (players[0]);
+  }
+
+  if (players[1]) {
+    iagno2_plugin_close (players[1]);
+  }
+
+  gdk_colormap_free_colors (gdk_colormap_get_system (), colors, 2);
 }

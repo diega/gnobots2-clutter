@@ -50,4 +50,12 @@ gint iagno2_game_over ();
 
 void iagno2_render_buffer_to_screen ();
 
+void iagno2_render_tile_to_buffer (int tile, int index);
+
+void iagno2_clean_up (gboolean full);
+
+void iagno2_appbar_init ();
+
+void iagno2_drawing_area_init ();
+
 #endif

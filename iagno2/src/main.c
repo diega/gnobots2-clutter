@@ -32,28 +32,27 @@
 
 GtkWidget *app;
 GtkWidget *new_game_dialog = NULL;
-Iagno2Properties *properties;
-
-Iagno2Plugin *plugin;
+extern Iagno2Properties *properties;
 
 gboolean game_in_progress = FALSE;
 
 ReversiBoard *board;
 extern gchar *board_pixmaps;
 
+/*
 extern Iagno2Plugin *players[2];
+*/
 
 extern gchar whose_turn;
 
-extern gint computer_timeout_id;
-extern gint game_over_flip_id;
-extern gint computer_thread;
-
-extern GdkColor colors[2];
-
-extern GdkPixmap *buffer_pixmap;
-
 extern GnomeAppBar *appbar;
+
+static gint end_game_cb (GtkWidget *, gpointer);
+static gint new_game_cb (GtkWidget *, gpointer);
+/*
+static gint delete_event_cb (GtkWidget *, GdkEventAny *, gpointer);
+*/
+static gint about_cb ();
 
 static GnomeUIInfo
 game_menu[] = {
@@ -86,7 +85,7 @@ GnomeUIInfo iagno2_menu[] = {
   GNOMEUIINFO_END
 };
 
-gint
+static gint
 about_cb ()
 {
   static GtkWidget *about;
@@ -99,7 +98,7 @@ about_cb ()
   if (about != NULL) {
     gdk_window_raise (about->window);
     gdk_window_show (about->window);
-    return;
+    return FALSE;
   }
 
   about = gnome_about_new (_("Iagno II"),
@@ -115,6 +114,8 @@ about_cb ()
   gnome_dialog_set_parent (GNOME_DIALOG (about), GTK_WINDOW (app));
 
   gtk_widget_show (about);
+
+  return FALSE;
 }
 
 gint
@@ -124,72 +125,18 @@ delete_event_cb (GtkWidget *window, GdkEventAny *event, gpointer data)
   return FALSE;
 }
 
-static void
-clean_up (gboolean full)
-{  
-  if (computer_timeout_id) {
-    gtk_timeout_remove (computer_timeout_id);
-    computer_timeout_id = 0;
-  }
-
-  if (computer_thread) {
-    kill (computer_thread, SIGUSR1);
-    waitpid (computer_thread, NULL, 0);
-    computer_thread = 0;
-  }
-
-  if (game_over_flip_id) {
-    gtk_timeout_remove (game_over_flip_id);
-    game_over_flip_id = 0;
-  }
-
-  if (board) {
-    reversi_destroy_board (board);
-    board = NULL;
-  }
-
-  if (board_pixmaps) {
-    g_free (board_pixmaps);
-    board_pixmaps = NULL;
-  }
-
-  if (!full) {
-    return;
-  }
-
-  if (properties) {
-    iagno2_properties_destroy (properties);
-    properties = NULL;
-  }
-
-  if (buffer_pixmap) {
-    gdk_pixmap_unref (buffer_pixmap);
-    buffer_pixmap = NULL;
-  }
-
-  if (players[0]) {
-    iagno2_plugin_close (players[0]);
-  }
-
-  if (players[1]) {
-    iagno2_plugin_close (players[1]);
-  }
-
-  gdk_colormap_free_colors (gdk_colormap_get_system (), colors, 2);
-}
-
 static gint
 end_game_cb (GtkWidget *widget, gpointer data)
 {
   int i;
 
   if (!game_in_progress) {
-    return;
+    return FALSE;
   }
 
   game_in_progress = 0;
 
-  clean_up (FALSE);
+  iagno2_clean_up (FALSE);
 
   board = reversi_init_board ();
   board_pixmaps = g_new0 (gchar, BOARDSIZE * BOARDSIZE);
@@ -201,26 +148,11 @@ end_game_cb (GtkWidget *widget, gpointer data)
   gnome_appbar_set_status (GNOME_APPBAR (appbar), "");
 
   iagno2_render_buffer_to_screen (0, 0, BOARDWIDTH, BOARDHEIGHT);
+
+  return FALSE;
 }
 
-gint
-new_game_cb (GtkWidget *widget, gpointer data)
-{
-  if (new_game_dialog) {
-    return;
-  }
-
-  if (!game_in_progress) {
-    new_game_real_cb (0, NULL);
-    return;
-  }
-
-  new_game_dialog = gnome_question_dialog_parented (_("Game already in progress!\nStart a new game?"),
-                                                    new_game_real_cb,
-                                                    NULL, GTK_WINDOW (app));
-}
-
-void
+static void
 new_game_real_cb (gint reply, gpointer data)
 {
   game_in_progress = TRUE;
@@ -230,7 +162,7 @@ new_game_real_cb (gint reply, gpointer data)
     return;
   }
 
-  clean_up (FALSE);
+  iagno2_clean_up (FALSE);
 
   board = reversi_init_board ();
   board_pixmaps = g_new0 (gchar, BOARDSIZE * BOARDSIZE);
@@ -264,6 +196,25 @@ new_game_real_cb (gint reply, gpointer data)
   iagno2_setup_current_player (FALSE);
 }
 
+static gint
+new_game_cb (GtkWidget *widget, gpointer data)
+{
+  if (new_game_dialog) {
+    return FALSE;
+  }
+
+  if (!game_in_progress) {
+    new_game_real_cb (0, NULL);
+    return FALSE;
+  }
+
+  new_game_dialog = gnome_question_dialog_parented (_("Game already in progress!\nStart a new game?"),
+                                                    new_game_real_cb,
+                                                    NULL, GTK_WINDOW (app));
+
+  return FALSE;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -291,5 +242,7 @@ main (int argc, char **argv)
 
   gtk_main ();
 
-  clean_up (TRUE);
+  iagno2_clean_up (TRUE);
+
+  return 0;
 }
