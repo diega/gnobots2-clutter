@@ -1,8 +1,9 @@
 [Desktop Entry]
+Encoding=UTF-8
 _Name=GNOME xBill
 _Comment=GNOME version of the popular xBill game
 Icon=xbill.png
 Exec=gnome-xbill
-Terminal=0
+Terminal=false
 Type=Application
-Categories=Application;Game;
+Categories=Application;Game;ArcadeGame;

@@ -1,9 +1,9 @@
 [Desktop Entry]
+Encoding=UTF-8
 Icon=gataxx.png
 _Name=Gataxx
 _Comment=Ataxx game
 Exec=gataxx
-Terminal=0
+Terminal=false
 Type=Application
-Categories=Application;Game;BoardGame;
-
+Categories=GNOME;Application;Game;BoardGame;
