@@ -30,7 +30,7 @@ int Game::INTERSECT(int x1, int y1, int w1, int h1, int x2, int y2, int w2,
 		&& ((y2-y1<=h1 && y2-y1>=0) || (y1-y2<=h2 && y1-y2>=0)));
 }
 
-void Game::setup_level (unsigned int lev) {
+void Game::setup_level (int lev) {
 	level = lev;
 	bill.setup();
 	grabbed = EMPTY;
@@ -39,7 +39,12 @@ void Game::setup_level (unsigned int lev) {
 	iteration = efficiency = 0;
 }
 
-void Game::start(unsigned int lev) {
+void Game::start(int lev) {
+	/* Looks like the high number we can get is 8+3*level, so ensure
+	   G_MAXINT is not going to be passed and crash */
+
+	if (lev > G_MAXINT/8+3) return;
+
 	state = PLAYING;
 	score = 0;
 	ui.restart_timer();
@@ -53,7 +58,7 @@ void Game::quit() {
 
 void Game::update_info() {
 	static char str[80];
-	sprintf (str, "Bill:%d/%d  System:%d/%d/%d  Level:%d  Score:%d",
+	sprintf (str, "Bill:%d/%d  System:%d/%d/%d  Level: %d Score:%d",
 		bill.on_screen, bill.off_screen, net.base, net.off,
 		net.win, level, score);
 	ui.draw_str(str, 5, scrheight-5);
@@ -67,9 +72,9 @@ void Game::update_score (int action) {
 	}
 }
 
-void Game::warp_to_level (unsigned int lev) {
+void Game::warp_to_level (int lev) {
 	if (state==PLAYING) {
-		if (lev <= level) return;
+		if (lev <= level || lev > G_MAXINT/8+3 ) return;
 		setup_level(lev);
 	}
 	else {
@@ -184,7 +189,12 @@ void Game::update() {
 		ui.update_scorebox(level, score);
 		ui.popup_dialog (SCORE);
 		state = PLAYING;
-		setup_level(++level);
+		/* This is a bad kludge, but i don't think anybody can pass
+		   the 268435458 level (G_MAXINT/8+3 in a normal pcs). */
+		if (++level < G_MAXINT/8+3)
+			setup_level(level);
+		else
+			setup_level(1);
 		break;
 	}
 	ui.refresh();

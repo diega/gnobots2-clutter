@@ -57,7 +57,7 @@ GtkWidget *CreatePixmapBox(char *title, GdkPixmap *pixmap, const char *text) {
         GtkWidget *win, *hbox, *vbox, *wid;
 
 	win = gnome_dialog_new(title, GNOME_STOCK_BUTTON_OK, NULL);
-	gtk_signal_connect(GTK_OBJECT(win), "delete_event",
+	gtk_signal_connect(GTK_OBJECT(win), "close",
 			   GTK_SIGNAL_FUNC(popdown), NULL);
 	gtk_signal_connect(GTK_OBJECT(win), "clicked",
 			   GTK_SIGNAL_FUNC(popdown), NULL);
@@ -92,7 +92,7 @@ GtkWidget *CreateEnterText (char *title, const char *text,
 	win = gnome_dialog_new(title, GNOME_STOCK_BUTTON_OK,
 			       GNOME_STOCK_BUTTON_CANCEL, NULL);
 	gnome_dialog_set_default(GNOME_DIALOG(win), 0);
-	gtk_signal_connect(GTK_OBJECT(win), "delete_event",
+	gtk_signal_connect(GTK_OBJECT(win), "close",
 			   GTK_SIGNAL_FUNC(popdown), NULL);
 	gtk_signal_connect(GTK_OBJECT(win), "clicked",
 			   GTK_SIGNAL_FUNC(popdown), NULL);
@@ -117,7 +117,7 @@ GtkWidget *CreateDialog (char *title, int buttonmask, GdkPixmap *icon,
 	char *ttext= (char*)malloc(strlen(text)+5);
 
 	win = gnome_dialog_new(title, NULL);
-	gtk_signal_connect(GTK_OBJECT(win), "delete_event",
+	gtk_signal_connect(GTK_OBJECT(win), "close",
 			   GTK_SIGNAL_FUNC(popdown), NULL);
 	gtk_signal_connect(GTK_OBJECT(win), "clicked",
 			   GTK_SIGNAL_FUNC(popdown), NULL);

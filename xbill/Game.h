@@ -7,7 +7,8 @@ class Game {
 	unsigned state;
 	int efficiency;
 public:
-	unsigned score, level, iteration;
+	unsigned score, iteration;
+	int level; 
 	Picture logo;
 	int grabbed;
 
@@ -41,12 +42,12 @@ public:
 	int INTERSECT(int x1, int y1, int w1, int h1, int x2, int y2, int w2,
 		int h2);
 
-	void setup_level (unsigned int lev);
-	void start(unsigned int lev);
+	void setup_level (int lev);
+	void start (int lev);
 	void quit();
 	void update_info();
 	void update_score (int action);
-	void warp_to_level (unsigned int lev);
+	void warp_to_level (int lev);
 	void button_press(int x, int y);
 	void button_release(int x, int y);
 	void update();

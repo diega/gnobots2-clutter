@@ -974,7 +974,7 @@ void properties_callback (GtkWidget *widget, gpointer data)
 
 	pref_dialog = gtk_dialog_new ();
 	d = GTK_DIALOG(pref_dialog);
- 	gtk_signal_connect (GTK_OBJECT(pref_dialog), "delete_event",
+ 	gtk_signal_connect (GTK_OBJECT(pref_dialog), "close",
 			    (GtkSignalFunc)pref_cancel, NULL); 
 
 	/* The Tile sub-menu */
@@ -1146,7 +1146,7 @@ void properties_callback (GtkWidget *widget, gpointer data)
                            GTK_SIGNAL_FUNC(prefs_clicked_callback),
                            NULL);
                    
-        gtk_signal_connect (GTK_OBJECT(pref_dialog), "delete_event",
+        gtk_signal_connect (GTK_OBJECT(pref_dialog), "close",
 			    (GtkSignalFunc)pref_cancel, NULL); 
 
         cols = gtk_hbox_new (FALSE, FALSE);

@@ -1,3 +1,8 @@
+2001-05-23  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	* mahjongg.c (properties_callback): Connect to close signal
+	  instead of delete_event. Fixes bug #53450.
+
 2000-10-19  Dan Mueth <d-mueth@uchicago.edu>
 
 	* help/C/topic.dat: Fixed
