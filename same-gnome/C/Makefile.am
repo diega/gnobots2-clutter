@@ -17,8 +17,8 @@ same-gnome/book1.html: same-gnome.sgml
 
 dist-hook:
 	mkdir $(distdir)/same-gnome
-	cp same-gnome/*.html $(distdir)/same-gnome
-	cp same-gnome/*.css $(distdir)/same-gnome
+	cp $(srcdir)/same-gnome/*.html $(distdir)/same-gnome
+	cp $(srcdir)/same-gnome/*.css $(distdir)/same-gnome
 
 install-data-local: index.html
 	for file in same-gnome/*.html same-gnome/*.css; do \
