@@ -1,3 +1,11 @@
+2003-07-22  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* solubility.c: Fixed the clear_row_deps* functions so they
+	actually work and give us a random, solvable, pile with the new
+	code. Hints and end-of-game checks seem to be alright, but the
+	new game button can produce unexpected results. Stick to the old
+	code for now..
+
 2003-07-09  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.desktop.in: Update name to fit HIG (bug 116916). 

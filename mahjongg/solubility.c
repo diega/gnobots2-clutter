@@ -469,7 +469,7 @@ place_tile (int f, int t, int idx)
 #else
 
 /* This version checks that the tile has a foundation to build on
- * and that there is a tile to but against either to the left or right.
+ * and that there is a tile to butt against either to the left or right.
  * failing that it checks for a complete free row. */
 static void check_tile_is_free (gint index)
 {
@@ -531,8 +531,6 @@ static void place_tile (int location, int type, int index)
   gint i;
   guint target;
 
-  g_print ("(%d) %d, %d, %d\n",location,pos[location].x, pos[location].y, pos[location].layer);
-  
   /* Set up the tile. */
   tiles[location].visible = TRUE;
   tiles[location].selected = FALSE;
@@ -615,9 +613,12 @@ int tile_free (int index)
   dep_entry * dep;
   int i;
   gboolean free;
-  
+
   dep = dependencies + index;
 
+  if (tiles[index].visible == 0)
+    return 0;
+  
   /* Check to see we aren't covered. */
   for (i = 0; i<4; i++) {
     if ((dep->overhead[i] != -1) && tiles[dep->overhead[i]].visible)
@@ -936,6 +937,44 @@ void generate_game (guint seed)
 
 #else
 
+static void clear_row_deps_right (gint index)
+{
+  int i;
+  dep_entry * d;
+
+  d = dependencies + index;
+
+  if (d->free == FALSE)
+    return;
+
+  d->free = FALSE;
+
+  if (d->right[0] != -1)
+    clear_row_deps_right (d->right[0]);
+
+  if (d->right[1] != -1)
+    clear_row_deps_right (d->right[1]);
+}
+
+static void clear_row_deps_left (gint index)
+{
+  int i;
+  dep_entry * d;
+
+  d = dependencies + index;
+
+  if (d->free == FALSE)
+    return;
+
+  d->free = FALSE;
+
+  if (d->left[0] != -1)
+    clear_row_deps_left (d->left[0]);
+
+  if (d->left[1] != -1)
+    clear_row_deps_left (d->left[1]);
+}
+
 /* If the tile is the first in a row then everything left
  * and right of it instantly becomes an invalid choice (except
  * for it's immediate neighbours which are fixed up later). */
@@ -951,14 +990,17 @@ static void clear_row_deps (gint index)
   
   d->free = FALSE;
 
-  for (i = 0; i<2; i++) {
-    if (d->left[i] != -1) {
-      clear_row_deps (d->left[i]);
-    }
-    if (d->right[i] != -1) {
-      clear_row_deps (d->right[i]);
-    }
-  }
+  if (d->right[0] != -1)
+    clear_row_deps_right (d->right[0]);
+
+  if (d->right[1] != -1)
+    clear_row_deps_right (d->right[1]);
+
+  if (d->left[0] != -1)
+    clear_row_deps_left (d->left[0]);
+
+  if (d->left[1] != -1)
+    clear_row_deps_left (d->left[1]);
 }
 
 static guint get_free_location (GRand * generator)
@@ -973,7 +1015,6 @@ static guint get_free_location (GRand * generator)
       j = (j + 1) % MAX_TILES;
     } while (!dependencies[j].free);
   }
-  g_print ("%d, %d\n",a,j);
   
   return j;
 }

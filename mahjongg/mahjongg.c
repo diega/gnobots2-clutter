@@ -1301,6 +1301,7 @@ hint_callback (GtkWidget *widget, gpointer data)
 				}
 			}
 		}
+
 	/* This is a good way to test check_free
 	   for (i=0;i<MAX_TILES;i++)
 	   if (tiles[i].selected == 17)
