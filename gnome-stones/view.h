@@ -21,7 +21,6 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include <config.h>
 #include <gnome.h>
 #include "cave.h"
 

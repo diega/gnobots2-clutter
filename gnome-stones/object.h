@@ -21,7 +21,6 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include <config.h>
 #include <gnome.h>
 #include "types.h"
 

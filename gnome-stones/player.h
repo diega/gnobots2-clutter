@@ -21,7 +21,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <config.h>
 #include <gnome.h>
 #include "types.h"
 

@@ -21,7 +21,6 @@
 #ifndef CAVE_H
 #define CAVE_H
 
-#include <config.h>
 #include <gnome.h>
 #include "types.h"
 

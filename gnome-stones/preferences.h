@@ -21,7 +21,6 @@
 #ifndef PREFERENCES_H
 #define PREFERENCES_H
 
-#include <config.h>
 #include <gnome.h>
 #include "types.h"
 

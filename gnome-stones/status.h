@@ -21,7 +21,6 @@
 #ifndef STATUS_H
 #define STATUS_H
 
-#include <config.h>
 #include <gnome.h>
 
 

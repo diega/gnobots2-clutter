@@ -21,7 +21,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <config.h>
 #include <gnome.h>
 #include "types.h"
 #include "object.h"

@@ -21,7 +21,6 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#include <config.h>
 #include <gmodule.h>
 #include <gnome.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
