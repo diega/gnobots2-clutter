@@ -4,7 +4,7 @@ same_gnome_help_DATA = 	\
 	index.html		\
 	topic.dat
 
-EXTRA_DIST = same-gnome.sgml
+EXTRA_DIST = same-gnome.sgml topic.dat
 
 all: index.html
 
