@@ -1,3 +1,8 @@
+2003-12-07  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c (check_free): Add a shuffle option to the "no more
+	moves dialog".
+
 2003-11-25  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am: That reference to bg_DATA shouldn't have been

@@ -904,10 +904,19 @@ check_free (void)
 						     GTK_DIALOG_MODAL
 						     | GTK_DIALOG_DESTROY_WITH_PARENT,
 						     GTK_MESSAGE_INFO,
-						     GTK_BUTTONS_OK,
+						     GTK_BUTTONS_NONE,
 						     (_("There are no more moves.")));
+			gtk_dialog_add_buttons (GTK_DIALOG (mb),
+						_("Shuffle"),
+						GTK_RESPONSE_REJECT,
+						GTK_STOCK_OK,
+						GTK_RESPONSE_ACCEPT,
+						NULL);
+			gtk_dialog_set_default_response (GTK_DIALOG (mb),
+							 GTK_RESPONSE_ACCEPT);
 			gtk_dialog_set_has_separator (GTK_DIALOG (mb), FALSE);
-			gtk_dialog_run (GTK_DIALOG (mb));
+			if (gtk_dialog_run (GTK_DIALOG (mb)) == GTK_RESPONSE_REJECT)
+				shuffle_tiles_callback (NULL, NULL);
 			gtk_widget_destroy (mb);
                 }
                 game_over = GAME_LOST;
