@@ -1,3 +1,8 @@
+2002-10-31  Ross Burton  <ross@burtonini.com>
+
+	* same-gnome.c (load_scenario): Call gtk_main_quit() instead of
+	exit().
+
 2002-10-16  Ross Burton  <ross@burtonini.com>
 
 	* same-gnome.c: The Preferences dialog cannot be cancelled as its
