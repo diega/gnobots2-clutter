@@ -17,9 +17,6 @@
 #include <dirent.h>
 
 #include <config.h>
-#define GNOME_DISABLE_DEPRECATED
-#define GTK_DISABLE_DEPRECATED
-#define G_DISABLE_DEPRECATED
 #include <gnome.h>
 #include <libgnomeui/gnome-window-icon.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>

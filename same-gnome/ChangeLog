@@ -1,5 +1,10 @@
 2002-04-19  Bastien Nocera  <hadess@hadess.net>
 
+	* Makefile.am:
+	* same-gnome.c: oooh, it's ported to gnome2 then ?
+
+2002-04-19  Bastien Nocera  <hadess@hadess.net>
+
 	* same-gnome.c: (game_about_callback):
 	have a nice icon
 
