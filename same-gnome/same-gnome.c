@@ -725,7 +725,7 @@ game_about_callback (GtkWidget *widget, void *data)
 	}
 	
 	about = gnome_about_new (_("Same GNOME"), VERSION,
-				 "Copyright \xc2\xa9 1997-2003 Free Software "
+				 "Copyright \xc2\xa9 1997-2004 Free Software "
 				 "Foundation, Inc.",
 				 _("Original idea from KDE's same game "
 				   "program."),				 (const char **)authors,
