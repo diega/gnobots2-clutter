@@ -73,7 +73,7 @@ help_about_callback ()
         GdkPixbuf *pixbuf = NULL;
         const gchar *authors[] = {
                 "William Jon McCann <mccann@jhu.edu>",
-                "Eric Farmer <erfarmer201@comcast.net>",
+                "Eric Farmer <erfarmer@comcast.net>",
                 NULL
         };
 
