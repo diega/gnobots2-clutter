@@ -1388,7 +1388,7 @@ you_won (void)
 	
         game_over = GAME_WON;
 
-        seconds = GAMES_CLOCK (chrono)->stopped;
+        seconds = games_clock_get_seconds (GAMES_CLOCK (chrono));
 
         score = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
 	pos = gnome_score_log (score, score_current_mapset, FALSE);
@@ -1552,7 +1552,6 @@ void
 hint_callback (GtkWidget *widget, gpointer data)
 {
         gint i, j, free=0, type ;
-        time_t seconds;
 
         if (paused || game_over)
                 return;
@@ -1598,10 +1597,7 @@ hint_callback (GtkWidget *widget, gpointer data)
 	timer = g_timeout_add (250, (GSourceFunc) hint_timeout, NULL);
                 
 	/* 30s penalty */
-	games_clock_stop (GAMES_CLOCK(chrono));
-	seconds = GAMES_CLOCK(chrono)->stopped;
-	games_clock_set_seconds(GAMES_CLOCK(chrono), (gint) (seconds+30));
-	games_clock_start (GAMES_CLOCK(chrono));
+	games_clock_add_seconds(GAMES_CLOCK(chrono), 30);
 }
 
 static void
@@ -2054,7 +2050,6 @@ new_game (gboolean re_seed)
 void
 shuffle_tiles_callback (GtkWidget *widget, gpointer data)
 {
-        time_t seconds;
 	gboolean ok;
 
         if (paused || game_over == GAME_DEAD || game_over == GAME_WON) return;
@@ -2085,10 +2080,7 @@ shuffle_tiles_callback (GtkWidget *widget, gpointer data)
                 game_over = GAME_RUNNING;
 
                 /* 60s penalty */
-                games_clock_stop (GAMES_CLOCK(chrono));
-                seconds = GAMES_CLOCK(chrono)->stopped;
-                games_clock_set_seconds(GAMES_CLOCK(chrono), (gint) (seconds+60));
-                games_clock_start (GAMES_CLOCK(chrono));
+                games_clock_add_seconds(GAMES_CLOCK(chrono), 60);
 
 		update_moves_left ();
 		/* Disable undo/redo after a shuffle. */
