@@ -1,3 +1,11 @@
+1999-09-19  James Cape  <jcape@jcinteractive.com>
+
+	* Added cursors for Apple, BSD, Sun, SGI, Linux, and RedHat to match
+	  the new pixmaps.
+
+	* Changed pixmaps for Apple, BSD, Sun, SGI, Linux, and RedHat from
+	  24-bit images to 5-bit images (32 colors/image).
+
 1999-09-18  James Cape  <jcape@jcinteractive.com>
 
 	* Changed pixmaps for Apple, BSD, Sun, SGI, and Linux to better
