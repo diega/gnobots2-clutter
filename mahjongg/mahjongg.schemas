@@ -13,6 +13,78 @@
         </locale>
       </schema>
 
+      <schema>
+        <key>/schemas/apps/mahjongg/background</key>
+	<applyto>/apps/mahjongg/background</applyto>
+	<owner>mahjongg</owner>
+	<type>string</type>
+	<default>bg1.png</default>
+	<locale name="C">
+	  <short></short>
+	  <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/mahjongg/tileset</key>
+	<applyto>/apps/mahjongg/tileset</applyto>
+	<owner>mahjongg</owner>
+	<type>string</type>
+	<default>default.png</default>
+	<locale name="C">
+	  <short></short>
+	  <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/mahjongg/mapset</key>
+	<applyto>/apps/mahjongg/mapset</applyto>
+	<owner>mahjongg</owner>
+	<type>string</type>
+	<default>easy</default>
+	<locale name="C">
+	  <short></short>
+	  <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/mahjongg/bgcolour</key>
+	<applyto>/apps/mahjongg/bgcolour</applyto>
+	<owner>mahjongg</owner>
+	<type>string</type>
+	<default>#34385b</default>
+	<locale name="C">
+	  <short></short>
+	  <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/mahjongg/warn</key>
+	<applyto>/apps/mahjongg/warn</applyto>
+	<owner>mahjongg</owner>
+	<type>bool</type>
+	<default>TRUE</default>
+	<locale name="C">
+	  <short></short>
+	  <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/mahjongg/confim</key>
+	<applyto>/apps/mahjongg/confirm</applyto>
+	<owner>mahjongg</owner>
+	<type>bool</type>
+	<default>TRUE</default>
+	<locale name="C">
+	  <short></short>
+	  <long></long>
+        </locale>
+      </schema>
+
   </schemalist>
   
 </gconfschemafile>

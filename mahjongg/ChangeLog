@@ -1,5 +1,12 @@
 2002-05-09  Bastien Nocera  <hadess@hadess.net>
 
+	* mahjongg.c: (set_popup), (apply_preferences),
+	(create_mahjongg_board), (main): more gconf work, not instant apply
+	and doesn't listen to changes
+	* mahjongg.schemas: updated, changed default bg colour
+
+2002-05-09  Bastien Nocera  <hadess@hadess.net>
+
 	* Makefile.am:
 	* mahjongg.c: (show_toolbar_changed_cb), (show_tb_callback),
 	(main):

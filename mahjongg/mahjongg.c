@@ -437,7 +437,7 @@ set_map_selection (GtkWidget *widget, void *data)
         selected_mapset = map->name ;
 }
 
-set_popup (popup_type *popup, gint i)
+set_popup (popup_type *popup, gboolean i)
 {
         popup->popup = i;
 }
@@ -627,17 +627,18 @@ apply_preferences (void)
 {
 	gchar *buf, *buf2 = selected_tileset;
 
-	gint redraw = 0, sync = 0, ask_newgame = 0 ;
+	gint redraw = 0, ask_newgame = 0 ;
 	if (selected_tileset)
 	{
-		buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/bg=bg1.png", NULL);
+		buf = gconf_client_get_string (conf_client,
+				"/apps/mahjongg/background", NULL);
 		load_tiles (selected_tileset, buf);
 		change_tiles();
 		g_free (buf);
 		redraw = 1 ;
-		gnome_config_set_string ("/gmahjongg/Preferences/tileset",
-					   selected_tileset);
-		sync = 1 ;
+		gconf_client_set_string (conf_client,
+				"/apps/mahjongg/tileset",
+				selected_tileset, NULL);
 		selected_tileset = 0 ;
 	}
 	if (selected_bg)
@@ -647,53 +648,51 @@ apply_preferences (void)
 			change_tiles();
 		}
 		else {
-			buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/tileset=default.png", NULL);
+			buf = gconf_client_get_string (conf_client,
+					"/apps/mahjongg/tileset", NULL);
 			load_tiles (buf, selected_bg);
 			change_tiles();
 			g_free (buf);
 		}
 		redraw = 1 ;
-		gnome_config_set_string ("/gmahjongg/Preferences/bg",
-					 selected_bg);
-		sync = 1 ;
+		gconf_client_set_string (conf_client,
+				"/apps/mahjongg/background",
+				selected_bg, NULL);
 		selected_bg = 0 ;
 	}
 	if (selected_mapset)
 	{
 		set_map (selected_mapset) ;
-		gnome_config_set_string ("/gmahjongg/Preferences/mapset",
-					 selected_mapset);
-		sync = 1 ;
+		gconf_client_set_string (conf_client,
+				"/apps/mahjongg/mapset",
+				selected_mapset, NULL);
 		selected_mapset = 0 ;
 		ask_newgame = 1 ;
 	}
 	if (backgnd.set)
 	{
 		set_backgnd_colour (backgnd.name) ;
-		gnome_config_set_string ("/gmahjongg/Preferences/bcolour",
-					 backgnd.name) ;
-		sync = 1 ;
+		gconf_client_set_string (conf_client,
+				"/apps/mahjongg/bgcolour",
+				backgnd.name, NULL);
 		backgnd.set = 0 ;
 	}
 	if (popup_config.warn.set && (popup_config.warn.new != popup_config.warn.popup))
 		{
 			set_popup (&(popup_config.warn), (popup_config.warn.popup +1) %2);
-			gnome_config_set_int ("/gmahjongg/Preferences/warn",
-					      popup_config.warn.popup);
-			sync = 1 ;
+			gconf_client_set_bool (conf_client,
+					"/apps/mahjongg/warn",
+					popup_config.warn.popup, NULL);
 			popup_config.warn.set = 0 ;
 		}
 	if (popup_config.confirm.set && (popup_config.confirm.new != popup_config.confirm.popup))
 		{
 			set_popup (&(popup_config.confirm), (popup_config.confirm.popup +1) %2);
-			gnome_config_set_int ("/gmahjongg/Preferences/confirm",
-					      popup_config.confirm.popup);
-			sync = 1 ;
+			gconf_client_set_bool (conf_client,
+					"/apps/mahjongg/confirm",
+					popup_config.confirm.popup, NULL);
 			popup_config.confirm.set = 0 ;
 		}
-	if (sync) {
-		gnome_config_sync();
-	}
 	if (redraw)
 	  gnome_canvas_update_now(GNOME_CANVAS(canvas));
 
@@ -1696,7 +1695,7 @@ void load_tiles (gchar *fname, gchar *bg_fname)
 static void create_mahjongg_board (GtkWidget *mbox)
 {
 	gchar *buf, *buf2;
-	gint ibuf;
+	gboolean bbuf;
 	
 	canvas = gnome_canvas_new();
 
@@ -1708,22 +1707,28 @@ static void create_mahjongg_board (GtkWidget *mbox)
 	
 	gtk_widget_show (canvas);
 
-	buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/mapset=easy", NULL);
+	buf = gconf_client_get_string (conf_client,
+			"/apps/mahjongg/mapset", NULL);
 	set_map (buf);
 	g_free (buf);
 
-	buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/bcolour=#003010", NULL) ;
+	buf = gconf_client_get_string (conf_client,
+			"/apps/mahjongg/bgcolour", NULL) ;
 	set_backgnd_colour (buf) ;
 	g_free (buf);
 
-	buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/tileset=default.png", NULL);
-        buf2 = gnome_config_get_string_with_default ("/gmahjongg/Preferences/bg=bg1.png", NULL);
+	buf = gconf_client_get_string (conf_client,
+			"/apps/mahjongg/tileset", NULL);
+        buf2 = gconf_client_get_string (conf_client,
+			"/apps/mahjongg/background", NULL);
         
-	ibuf = gnome_config_get_int_with_default ("/gmahjongg/Preferences/warn=1", NULL);
-	set_popup (&(popup_config.warn), ibuf) ;
+	bbuf = gconf_client_get_bool (conf_client,
+			"/apps/mahjongg/warn", NULL);
+	set_popup (&(popup_config.warn), bbuf) ;
 
-	ibuf = gnome_config_get_int_with_default ("/gmahjongg/Preferences/confirm=1", NULL);
-	set_popup (&(popup_config.confirm), ibuf) ;
+	bbuf = gconf_client_get_bool (conf_client,
+			"/apps/mahjongg/confirm", NULL);
+	set_popup (&(popup_config.confirm), bbuf) ;
 
 	load_map (); /* assigns pos, and calculates dependencies */
 	generate_game (); /* puts in the positions of the tiles */
@@ -1833,6 +1838,7 @@ int main (int argc, char *argv [])
 
         gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-mahjongg.png");
 	srand (time (NULL));
+	conf_client = gconf_client_get_default ();
 	
 	window = gnome_app_new (APPNAME, _(APPNAME_LONG));
 	gtk_window_set_resizable (GTK_WINDOW (window), FALSE);
@@ -1890,7 +1896,6 @@ int main (int argc, char *argv [])
 
 	gtk_widget_show (window);
 
-	conf_client = gconf_client_get_default ();
 	show = gconf_client_get_bool (conf_client,
 			"/apps/mahjongg/show-toolbar", NULL);
         if(show)
