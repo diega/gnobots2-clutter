@@ -2,8 +2,10 @@ pixmapdir     = $(datadir)/pixmaps/gnome-stones
 
 pixmap_DATA     = title.png			\
 	amoeba.png				\
+	background.png				\
 	boulder.png				\
 	butterfly.png				\
+	crate.png				\
 	curtain.png				\
 	diamond.png				\
 	dirt.png				\

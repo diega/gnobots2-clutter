@@ -1,3 +1,11 @@
+1999-04-22  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* objects/gnomekoban.c (objects_init): Added two new objects. With
+ 	this changes, you can use the gnomekoban levels at
+ 	http://www.ecs.soton.ac.uk/~njl98r/code/ (Thanks to Nick Lamb).
+
+	* graphics/Makefile.am (pixmap_DATA): Added two new graphic files.
+
 1999-04-18  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
 	* objects/gnomekoban.c (empty_signals): Removed check wheater a

@@ -1,6 +1,6 @@
 /* gnome-stones - objects/gnomekoban.c
  *
- * Time-stamp: <1999/04/18 11:44:13 carsten>
+ * Time-stamp: <1999/04/21 12:33:53 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -29,6 +29,8 @@
 
 static GStonesObject *OBJECT_FRAME;
 static GStonesObject *OBJECT_EMPTY;
+static GStonesObject *OBJECT_WALL;
+static GStonesObject *OBJECT_DIRT;
 static GStonesObject *OBJECT_CRATE;
 static GStonesObject *OBJECT_GNOME;
 static GStonesObject *OBJECT_ENTRANCE;
@@ -86,11 +88,18 @@ empty_animate (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
   EmptyData *empty= (EmptyData *) object_context_private_data (context);
   
   if (cave->entry[x][y].state > 0)
-    return (cave->frame % 4);
+    {
+      guint f= cave->frame % 16;
+      
+      if (f > 8)
+	return 16-f;
+      else
+	return f;
+    }
   if (empty->open_door_animation)
     return empty->open_door_animation;
   else if (empty->extra_life_animation)
-    return 4+random () % 4;
+    return 9+random () % 4;
   else
     return 0;
 }
@@ -130,7 +139,7 @@ static GStonesObjectDesc empty_object=
   NULL,
   empty_signals,
   
-  "empty.png",
+  "background.png",
   empty_animate,
   NULL,
   0, 0
@@ -175,7 +184,7 @@ static GStonesObjectDesc crate_object=
   NULL,
   crate_signals,
   
-  "boulder.png",
+  "crate.png",
   NULL,
   NULL,
   0, 0
@@ -466,6 +475,39 @@ static GStonesObjectDesc gnome_object=
 
 
 /*****************************************************************************/
+/* Additional stuff.  */
+
+static GStonesObjectDesc dirt_object=
+{
+  "dirt",
+  NULL,
+  NULL,
+  
+  NULL,
+  NULL,
+  
+  "dirt.png",
+  NULL,
+  NULL,
+  0, 0
+};
+
+static GStonesObjectDesc wall_object=
+{
+  "wall",
+  NULL,
+  NULL,
+  
+  NULL,
+  NULL,
+  
+  "wall.png",
+  NULL,
+  NULL,
+  0, 0
+};
+ 
+/*****************************************************************************/
 /* Register all objects.  */
 
 gchar *
@@ -473,6 +515,8 @@ objects_init (GStonesPlugin *plugin)
 {
   OBJECT_FRAME       = object_find_object_by_name ("default:frame");
   OBJECT_EMPTY       = object_register (plugin, &empty_object);
+  OBJECT_WALL        = object_register (plugin, &wall_object);
+  OBJECT_DIRT        = object_register (plugin, &dirt_object);
   OBJECT_CRATE       = object_register (plugin, &crate_object);
   OBJECT_GNOME       = object_register (plugin, &gnome_object);
   OBJECT_ENTRANCE    = object_register (plugin, &entrance_object);
