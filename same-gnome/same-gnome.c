@@ -550,13 +550,14 @@ game_preferences_callback (GtkWidget *widget, void *data)
 {
 	GtkWidget *menu, *omenu, *l, *hb, *cb, *f, *fv;
 	GtkWidget *button;
-	GtkDialog *d;
 
 	if (pref_dialog)
 		return;
 	
-	pref_dialog = gtk_dialog_new ();
-	d = GTK_DIALOG(pref_dialog);
+	pref_dialog = gnome_dialog_new (_("Preferences"),
+			GNOME_STOCK_BUTTON_OK, GNOME_STOCK_BUTTON_CANCEL,
+			NULL);
+	gnome_dialog_set_parent (GNOME_DIALOG (pref_dialog), GTK_WINDOW (app));
 	gtk_signal_connect (GTK_OBJECT(pref_dialog), "delete_event", (GtkSignalFunc)cancel, NULL);
 
 	omenu = gtk_option_menu_new ();
@@ -587,22 +588,15 @@ game_preferences_callback (GtkWidget *widget, void *data)
 	
 	gtk_box_pack_start_defaults (GTK_BOX(fv), hb);
 	gtk_box_pack_start_defaults (GTK_BOX(fv), cb);
-	gtk_box_pack_start_defaults (GTK_BOX(d->vbox), f);
+	gtk_box_pack_start_defaults (GTK_BOX(GNOME_DIALOG(pref_dialog)->vbox), f);
 	gtk_container_add (GTK_CONTAINER (f), fv);
 	
 	gtk_widget_show (f);
 	
-        button = gnome_stock_button(GNOME_STOCK_BUTTON_OK);
-	gtk_signal_connect(GTK_OBJECT(button), "clicked",
-			   GTK_SIGNAL_FUNC(load_scenario_callback), NULL);
-	gtk_box_pack_start(GTK_BOX(d->action_area), button, TRUE, TRUE, 5);
-        gtk_widget_show(button);
-        button = gnome_stock_button(GNOME_STOCK_BUTTON_CANCEL);
-	gtk_signal_connect(GTK_OBJECT(button), "clicked",
-                           (GtkSignalFunc)cancel,
-			   (gpointer)1);
-	gtk_box_pack_start(GTK_BOX(d->action_area), button, TRUE, TRUE, 5);
-        gtk_widget_show(button);
+	gnome_dialog_button_connect (GNOME_DIALOG (pref_dialog), 0,
+			GTK_SIGNAL_FUNC (load_scenario_callback), NULL);
+	gnome_dialog_button_connect (GNOME_DIALOG (pref_dialog), 1,
+			GTK_SIGNAL_FUNC (cancel), (gpointer)1);
 
         gtk_widget_show (pref_dialog);
 }
