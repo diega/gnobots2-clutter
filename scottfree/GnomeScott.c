@@ -24,7 +24,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include <gnome.h>
-#include <gtktty/libgtktty.h>
+#include <zvt/zvtterm.h>
 
 #include "Scott.h"
 
@@ -38,8 +38,8 @@
 
 #define SCROLLBACK	100
 
-GtkTty *Top;
-GtkTty *Bottom;
+ZvtTerm *Top;
+ZvtTerm *Bottom;
 GtkWidget *App;
 
 Header GameHeader;
@@ -345,6 +345,12 @@ static void OutReset(void)
 #endif	
 }
 
+void
+tty_put_in (ZvtTerm *term, char *text, int len)
+{
+	zvt_term_feed (term, text, len);
+}
+
 static void OutBuf(char *buffer)
 {
 	char word[80];
@@ -357,7 +363,7 @@ static void OutBuf(char *buffer)
 			{
 				if(*buffer=='\n')
 				{
-					gtk_tty_put_in(Bottom, "\r\n",2);
+					tty_put_in(Bottom, "\r\n",2);
 					OutputPos=0;
 				}
 				buffer++;
@@ -374,10 +380,10 @@ static void OutBuf(char *buffer)
 /*		fprintf(stderr,"Word '%s' at %d\n",word,OutputPos);*/
 		if(OutputPos+strlen(word)>(Width-2))
 		{
-			gtk_tty_put_in(Bottom, "\r\n",2);
+			tty_put_in(Bottom, "\r\n",2);
 			OutputPos=0;
 		}
-		gtk_tty_put_in(Bottom,word, strlen(word));
+		tty_put_in(Bottom,word, strlen(word));
 		OutputPos+=strlen(word);
 		
 		if(*buffer==0)
@@ -385,14 +391,14 @@ static void OutBuf(char *buffer)
 		
 		if(*buffer=='\n')
 		{
-			gtk_tty_put_in(Bottom, "\r\n",2);
+			tty_put_in(Bottom, "\r\n",2);
 			OutputPos=0;
 		}
 		else
 		{
 			OutputPos++;
 			if(OutputPos<(Width-1))
-				gtk_tty_put_in(Bottom," ",1);
+				tty_put_in(Bottom," ",1);
 		}
 		buffer++;
 	}
@@ -422,35 +428,35 @@ static void Look(void)
 	int ct,f;
 	int pos;
 
-	gtk_tty_put_in(Top, "\033[0;0H\033[J",9);
+	tty_put_in(Top, "\033[0;0H\033[J",9);
 	
 	if((BitFlags&(1<<DARKBIT)) && Items[LIGHT_SOURCE].Location!= CARRIED
 	            && Items[LIGHT_SOURCE].Location!= MyLoc)
 	{
 		if(Options&YOUARE)
-			gtk_tty_put_in(Top,"You can't see. It is too dark!\r\n",
+			tty_put_in(Top,"You can't see. It is too dark!\r\n",
 				strlen("You can't see. It is too dark!\r\n"));
 		else
-			gtk_tty_put_in(Top,"I can't see. It is too dark!\r\n",
+			tty_put_in(Top,"I can't see. It is too dark!\r\n",
 				strlen("I can't see. It is too dark!\r\n"));
 		if (Options & TRS80_STYLE)
-			gtk_tty_put_in(Top,TRS80_LINE, strlen(TRS80_LINE));
+			tty_put_in(Top,TRS80_LINE, strlen(TRS80_LINE));
 		return;
 	}
 	r=&Rooms[MyLoc];
 	if(*r->Text=='*')
-		gtk_tty_put_in(Top,r->Text+1, strlen(r->Text+1));
+		tty_put_in(Top,r->Text+1, strlen(r->Text+1));
 	else
 	{
 		if(Options&YOUARE)
-			gtk_tty_put_in(Top,"You are ",8);
+			tty_put_in(Top,"You are ",8);
 		else
-			gtk_tty_put_in(Top,"I'm in a ",9);
-		gtk_tty_put_in(Top, r->Text, strlen(r->Text));
+			tty_put_in(Top,"I'm in a ",9);
+		tty_put_in(Top, r->Text, strlen(r->Text));
 	}
 	ct=0;
 	f=0;
-	gtk_tty_put_in(Top,"\r\n\nObvious exits: ",18);
+	tty_put_in(Top,"\r\n\nObvious exits: ",18);
 	while(ct<6)
 	{
 		if(r->Exits[ct]!=0)
@@ -458,14 +464,14 @@ static void Look(void)
 			if(f==0)
 				f=1;
 			else
-				gtk_tty_put_in(Top,", ",2);
-			gtk_tty_put_in(Top,ExitNames[ct], strlen(ExitNames[ct]));
+				tty_put_in(Top,", ",2);
+			tty_put_in(Top,ExitNames[ct], strlen(ExitNames[ct]));
 		}
 		ct++;
 	}
 	if(f==0)
-		gtk_tty_put_in(Top,"none",4);
-	gtk_tty_put_in(Top,".\r\n",3);
+		tty_put_in(Top,"none",4);
+	tty_put_in(Top,".\r\n",3);
 	ct=0;
 	f=0;
 	pos=0;
@@ -478,39 +484,39 @@ static void Look(void)
 			{
 				if(Options&YOUARE)
 				{
-					gtk_tty_put_in(Top,"\r\nYou can also see: ", 19);
+					tty_put_in(Top,"\r\nYou can also see: ", 19);
 					pos=18;
 				}
 				else
 				{
-					gtk_tty_put_in(Top,"\r\nI can also see: ", 17);
+					tty_put_in(Top,"\r\nI can also see: ", 17);
 					pos=16;
 				}
 				f++;
 			}
 			else if (!(Options & TRS80_STYLE))
 			{
-				gtk_tty_put_in(Top," - ",3);
+				tty_put_in(Top," - ",3);
 				pos+=3;
 			}
 			if(pos+strlen(Items[ct].Text)>(Width-10))
 			{
 				pos=0;
-				gtk_tty_put_in(Top,"\r\n",2);
+				tty_put_in(Top,"\r\n",2);
 			}
-			gtk_tty_put_in(Top,Items[ct].Text, strlen(Items[ct].Text));
+			tty_put_in(Top,Items[ct].Text, strlen(Items[ct].Text));
 			pos += strlen(Items[ct].Text);
 			if (Options & TRS80_STYLE)
 			{
-				gtk_tty_put_in(Top,". ",2);
+				tty_put_in(Top,". ",2);
 				pos+=2;
 			}
 		}
 		ct++;
 	}
-	gtk_tty_put_in(Top,"\r\n",2);
+	tty_put_in(Top,"\r\n",2);
 	if (Options & TRS80_STYLE)
-		gtk_tty_put_in(Top,TRS80_LINE, strlen(TRS80_LINE));
+		tty_put_in(Top,TRS80_LINE, strlen(TRS80_LINE));
 }
 
 static int WhichWord(const char *word, char **list)
@@ -1319,9 +1325,12 @@ static void Input_Complete(void)
 	Input_Begin(1);
 }
 
-static void Key_Press(GtkWidget *widget, const gchar *char_code, guint length,
-	guint keyval, guint key_state, gpointer data)
+static void Key_Press(GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
+	int length = event->length;
+	int key_state  = event->state;
+	int char_code  = event->keyval;
+	int keyval     = event->keyval;
 
 	if(length==0 || file_selector)
 		return;
@@ -1330,7 +1339,7 @@ static void Key_Press(GtkWidget *widget, const gchar *char_code, guint length,
 	{
 		case GDK_Return:
 			Input_Buffer[Position]=0;
-			gtk_tty_put_in(Bottom, "\r\n", 2);
+			tty_put_in(Bottom, "\r\n", 2);
 			Input_Complete();
 			Position=0;
 			return;
@@ -1338,7 +1347,7 @@ static void Key_Press(GtkWidget *widget, const gchar *char_code, guint length,
 		case GDK_BackSpace:
 			if(Position>0)
 			{
-				gtk_tty_put_in(Bottom, "\b \b",3);
+				tty_put_in(Bottom, "\b \b",3);
 				Position--;
 			}
 			break;
@@ -1349,23 +1358,24 @@ static void Key_Press(GtkWidget *widget, const gchar *char_code, guint length,
 				{
 					char c=keyval;
 					Input_Buffer[Position++]=c;
-					gtk_tty_put_in(Bottom, &c, 1);
+					tty_put_in(Bottom, &c, 1);
 				}
 			}
 			break;
 	}
 }
 
-static void Dont_Type(GtkWidget *widget, const gchar *char_code, guint length,
-	guint keyval, guint key_state, gpointer data)
+static void Dont_Type(GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
 	return;
 }
 
 static void Scroll_Bottom(GtkAdjustment *adj, gpointer *tty)
 {
-	gtk_term_set_scroll_offset(GTK_TERM(tty),
+#if 0
+	gtk_term_set_scroll_offset(ZVT_TERM(tty),
         	(gint)adj->value-SCROLLBACK);
+#endif
 }
 
 
@@ -1375,7 +1385,7 @@ static void Scroll_Bottom(GtkAdjustment *adj, gpointer *tty)
  
 void TypeString(char *s)
 {
-	gtk_tty_put_in(Bottom, "\n\r", 2);
+	tty_put_in(Bottom, "\n\r", 2);
 	strcpy(Input_Buffer,s);
 	Position=strlen(s);
 	Input_Complete();
@@ -1445,7 +1455,7 @@ static void LoadAGame(GtkWidget *w, gpointer *spare)
 	if(file_selector)
 		return;
 		
-	gtk_tty_put_in(Bottom, "\n\r", 2);
+	tty_put_in(Bottom, "\n\r", 2);
 	Position=0;
 	
 	file_selector=gtk_file_selection_new("Load ...");
@@ -1469,7 +1479,7 @@ static void NewGame(GtkWidget *w, gpointer *spare)
 	for(i=0;i<=GameHeader.NumItems;i++)
 		Items[i].Location=Items[i].InitialLoc;
 
-	gtk_tty_put_in(Bottom, "\033[0;0H\033[J", 9);
+	tty_put_in(Bottom, "\033[0;0H\033[J", 9);
 	Position=0;
 	
 	Look();
@@ -1516,27 +1526,27 @@ static GnomeUIInfo toolbar[]=
 };
 
 static GnomeUIInfo file_menu[]={
-	{GNOME_APP_UI_ITEM, N_("New"), NULL, NewGame, NULL, NULL,
-	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
+	{GNOME_APP_UI_ITEM, N_("_New"), NULL, NewGame, NULL, NULL,
+	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 'n', GDK_CONTROL_MASK, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Load..."), NULL, LoadAGame, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("_Load..."), NULL, LoadAGame, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_OPEN, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Save..."), NULL, TypeSave, NULL, NULL, 
+	{GNOME_APP_UI_ITEM, N_("_Save..."), NULL, TypeSave, NULL, NULL, 
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SAVE, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Exit"), NULL, gtk_main_quit, NULL, NULL,
-	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 0, 0, NULL},
+	{GNOME_APP_UI_ITEM, N_("_Quit"), NULL, gtk_main_quit, NULL, NULL,
+	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 'q', GDK_CONTROL_MASK, NULL},
 
 	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
 };
 
 static GnomeUIInfo help_menu[]={
-	{GNOME_APP_UI_HELP, NULL, NULL, NULL, NULL, NULL,
+	{GNOME_APP_UI_HELP, NULL, NULL, "scottfree", NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("About..."), NULL, AboutScottFree, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("_About..."), NULL, AboutScottFree, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
 
 	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
@@ -1544,9 +1554,9 @@ static GnomeUIInfo help_menu[]={
 };
 
 static GnomeUIInfo menu[]={
-	{GNOME_APP_UI_SUBTREE, "File", NULL, file_menu, NULL, NULL,
+	{GNOME_APP_UI_SUBTREE, "_File", NULL, file_menu, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-	{GNOME_APP_UI_SUBTREE, "Help", NULL, help_menu, NULL, NULL,
+	{GNOME_APP_UI_SUBTREE, "_Help", NULL, help_menu, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
@@ -1649,15 +1659,8 @@ int main(int argc, char *argv[])
 	gnome_app_create_menus(GNOME_APP(App), menu);
 	gtk_menu_item_right_justify(GTK_MENU_ITEM(menu[1].widget));
 	
-	Top = (GtkTty *)gtk_tty_new(Width, TopHeight, 0);
-	Bottom=(GtkTty *)gtk_tty_new(Width, BottomHeight, SCROLLBACK);
-
-#if 0	
-	gtk_term_set_fonts(GTK_TERM(Top),
-		font, font, font, TRUE, font, TRUE, NULL, FALSE);
-	gtk_term_set_fonts(GTK_TERM(Bottom),
-		font, font, font, TRUE, font, TRUE, NULL, FALSE);
-#endif		
+	Top = (ZvtTerm *)zvt_term_new();
+	Bottom=(ZvtTerm *)zvt_term_new();
 
 	hbox = gtk_hbox_new(FALSE, 1);
 	
@@ -1666,10 +1669,10 @@ int main(int argc, char *argv[])
 			   GTK_SIGNAL_FUNC(Scroll_Bottom), Bottom);
 	scrollbar = gtk_vscrollbar_new(GTK_ADJUSTMENT(adj));
 
-	gtk_signal_connect(GTK_OBJECT(Bottom), "key_press",
+	gtk_signal_connect(GTK_OBJECT(Bottom), "key_press_event",
 		(GtkSignalFunc)Key_Press, NULL);
 		
-	gtk_signal_connect(GTK_OBJECT(Top), "key_press",
+	gtk_signal_connect(GTK_OBJECT(Top), "key_press_event",
 		(GtkSignalFunc)Dont_Type, NULL);
 		
 	gtk_widget_grab_focus(GTK_WIDGET(Bottom));
