@@ -506,6 +506,7 @@ create_menu ()
 	return subfactory;
 }
 
+GtkWidget *
 create_main_window ()
 {
 	app = gnome_app_new ("samegnome", "Same Gnome");
@@ -538,7 +539,7 @@ main (int argc, char *argv [])
 	app = create_main_window ();
 	vb = gtk_vbox_new (FALSE, 0);
 	hb = gtk_hbox_new (FALSE, 0);
-	gnome_app_set_contents (app, vb);
+	gnome_app_set_contents (GNOME_APP (app), vb);
 	mf = create_menu ();
 	gnome_app_set_menus (GNOME_APP (app), GTK_MENU_BAR (mf->widget));
 	
