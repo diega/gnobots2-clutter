@@ -91,7 +91,7 @@ static gboolean       player_push       = FALSE;
 /* This message will be printed in the statusline, if no message was
    specified in a game file.  */
 
-static char *default_message= N_("Gnome-Stones (c) 1998 Carsten Schaar");
+static char *default_message= N_("GNOME-Stones (c) 1998 Carsten Schaar");
 
 
 /****************************************************************************/
@@ -155,7 +155,7 @@ load_image_from_path (const char *relative_name)
       char       buffer[1024];
       g_snprintf (buffer, sizeof(buffer), 
 		  _("An error occured while loading the image file \"%s\".\n"
-		    "Please make sure, that Gnome-Stones is "
+		    "Please make sure, that GNOME-Stones is "
 		    "correctly installed!"), relative_name);
 					    
       widget= gtk_message_dialog_new (GTK_WINDOW(app), 
@@ -953,7 +953,7 @@ show_scores_dialog (gint pos)
 {
   GtkWidget *dialog;
 
-  dialog = gnome_scores_display ("Gnome-Stones", APP_NAME, NULL, pos);
+  dialog = gnome_scores_display ("GNOME-Stones", APP_NAME, NULL, pos);
   if (dialog != NULL) {
     gtk_window_set_transient_for (GTK_WINDOW(dialog), GTK_WINDOW(app));
     gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
@@ -1067,7 +1067,7 @@ about_cb (GtkWidget *widget, gpointer data)
 		  g_free (filename);
 	  }
   }
-  about= gnome_about_new (_("Gnome-Stones"), VERSION,
+  about= gnome_about_new (_("GNOME-STONES"), VERSION,
 			  "(C) 1998 Carsten Schaar",
 			  _("A game."),
 			  (const char **)authors,
@@ -1280,7 +1280,7 @@ main (int argc, char *argv[])
 		      GNOME_PARAM_APP_LIBDIR, LIBDIR, NULL);
   gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-stones.png");
   /* That's what a gnome application needs:  */
-  app= gnome_app_new ("gnome-stones", _("Gnome-Stones"));
+  app= gnome_app_new ("gnome-stones", _("GNOME-Stones"));
   gtk_window_set_policy  (GTK_WINDOW (app), FALSE, FALSE, TRUE);
 
   /* ... a menu line, ... */

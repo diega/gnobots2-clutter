@@ -428,7 +428,7 @@ void about_cb(GtkWidget *widget, gpointer data) {
   }
   
   about = gnome_about_new(_("gataxx"), VERSION, "(C) 1999 Chris Rogers",
-  			  _("gataxx is a Gnome port of the old game ataxx.  It is derived from Ian Peters' iagno code."),
+  			  _("gataxx is a GNOME port of the old game ataxx.  It is derived from Ian Peters' iagno code."),
   			  (const char **)authors,
   			  (const char **)documenters,
   			  strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,

@@ -1,3 +1,8 @@
+2002-11-27  Ross Burton  <ross@burtonini.com>
+
+	* UI.cc: 
+	* x11-gtk.cc: s/Gnome/GNOME/, for #99683.
+
 2002-11-22  Tim Musson  <trmusson@ihug.co.nz>
 
 	* x11-gtk.cc: (show_scores): Made dialog modal. (#97320)

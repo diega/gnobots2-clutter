@@ -1,3 +1,9 @@
+2002-11-27  Ross Burton  <ross@burtonini.com>
+
+	* main.c: 
+	* preferences.c (preferences_save_local): s/Gnome/GNOME/, for
+	#99683.
+
 2002-11-21  Tim Musson  <trmusson@ihug.co.nz>
 
 	* main.c: (about_cb), (show_scores_cb), (countdown_timeout_function),
