@@ -165,7 +165,12 @@
 
     <sect2 id="changing-the-size">
       <title>Changing the Size</title>
-      <para>The <guimenuitem>Size</guimenuitem> menu contains three settings: small, medium and large. Aside from increasing the number of objects, the large setting also increases the number of different objects.</para>
+      <para>The <guimenu>Size</guimenu> menu contains three settings: small, medium and large. Aside from increasing the number of objects, the large setting also increases the number of different objects.</para>
+    </sect2>
+
+    <sect2 id="changing-the-speed">
+    <title>Changing the Speed</title>
+    <para>The default animation is designed to be smooth and graceful. If you like playing fast and furious then this may be too slow for you. By selecting the <guimenuitem>Fast Animation</guimenuitem> option from the <guimenu>View</guimenu> menu you can speed up game-play at the expense of animation quality.</para>
     </sect2>
 
   </sect1>

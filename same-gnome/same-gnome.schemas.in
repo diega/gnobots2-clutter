@@ -73,6 +73,18 @@
         </locale>
       </schema>
 
+      <schema>
+        <key>/schemas/apps/same-gnome/fast_animation</key>
+        <applyto>/apps/same-gnome/fast_animation</applyto>
+        <owner>same-gnome</owner>
+        <type>bool</type>
+        <default>FALSE</default>
+        <locale name="C">
+          <short>Use fast animation</short>
+          <long>Setting this to FALSE means the pieces fall slowly, but gracefully. A setting of TRUE causes the pieces to fall quickly and jerkily.</long>
+        </locale>
+      </schema>
+
   </schemalist>
   
 </gconfschemafile>

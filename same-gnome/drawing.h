@@ -26,4 +26,6 @@ void stop_spinning (void);
 void change_theme (gchar *newtheme);
 void resize_graphics (void);
 
+void fast_animation_enable (gboolean);
+
 #endif /* DRAWING_H */

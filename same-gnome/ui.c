@@ -38,6 +38,7 @@ GtkAction *undo_action;
 GtkAction *redo_action;
 GtkAction *fullscreen_action;
 GtkAction *leave_fullscreen_action;
+GtkToggleAction *animation_action;
 
 /* The index for the current theme in the theme list. This shouldn't
  * really be a global variable, but C sucks. */
@@ -359,6 +360,11 @@ static void fullscreen_cb (GtkAction *action)
   }
 }
 
+static void animation_cb (GtkToggleAction *action)
+{
+	fast_animation_enable (gtk_toggle_action_get_active (action));
+}
+
 /* Just in case something else takes us to/from fullscreen. */
 static void window_state_cb (GtkWidget *widget, GdkEventWindowState *event)
 {
@@ -468,6 +474,10 @@ const GtkRadioActionEntry radio_actions[] = {
   { "SizeLarge", NULL, N_("_Large"), NULL, NULL, LARGE }
 };
 
+const GtkToggleActionEntry toggle_actions[] = {
+	{ "Animation", NULL, N_("_Fast Animation"), NULL, NULL, G_CALLBACK (animation_cb) }
+};
+
 const char *ui_description =
 "<ui>"
 "  <menubar name='MainMenu'>"
@@ -483,6 +493,7 @@ const char *ui_description =
 "    <menu action='ViewMenu'>"
 "      <menuitem action='Fullscreen'/>"
 "      <menuitem action='LeaveFullscreen'/>"
+"      <menuitem action='Animation'/>"
 "      <menuitem action='Theme'/>"
 "    </menu>"
 "    <menu action='SizeMenu'>"
@@ -534,13 +545,21 @@ void build_gui (void)
 				      game_size, 
 				      G_CALLBACK (size_change_cb), 
 				      NULL);
+  gtk_action_group_add_toggle_actions (action_group, toggle_actions,
+                                       G_N_ELEMENTS (toggle_actions), NULL);	
 
 	undo_action = gtk_action_group_get_action (action_group, "UndoMove");
 	redo_action = gtk_action_group_get_action (action_group, "RedoMove");
   fullscreen_action = gtk_action_group_get_action (action_group, "Fullscreen");
   leave_fullscreen_action = gtk_action_group_get_action (action_group, 
 																												 "LeaveFullscreen");
+	animation_action = GTK_TOGGLE_ACTION (gtk_action_group_get_action (action_group, "Animation"));
 	set_fullscreen_actions (FALSE);
+
+	gtk_toggle_action_set_active (animation_action,
+																gconf_client_get_bool (gcclient, 
+																											 GCONF_FAST_ANIMATION_KEY,
+																											 NULL));
   
   ui_manager = gtk_ui_manager_new ();
   gtk_ui_manager_insert_action_group (ui_manager, action_group, 1);

@@ -32,6 +32,7 @@
 #define GCONF_CUSTOM_HEIGHT_KEY "/apps/same-gnome/custom_height"
 #define GCONF_WINDOW_WIDTH_KEY "/apps/same-gnome/window_width"
 #define GCONF_WINDOW_HEIGHT_KEY "/apps/same-gnome/window_height"
+#define GCONF_FAST_ANIMATION_KEY "/apps/same-gnome/fast_animation"
 
 extern GConfClient *gcclient;
 

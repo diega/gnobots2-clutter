@@ -45,6 +45,8 @@ gint cursor_x = -1;
 gint cursor_y = -1;
 gboolean draw_cursor = FALSE;
 
+gboolean fast_animation = FALSE;
+
 void pixels_to_logical (gint px, gint py, gint *lx, gint *ly)
 {
 	*lx = px / tile_size;
@@ -96,6 +98,13 @@ static void draw_ball_with_offset (GtkWidget * canvas, game_cell *p, int x,
 static void draw_ball (GtkWidget * canvas, game_cell *p, int x, int y)
 {
 	draw_ball_with_offset (canvas, p, x, y, 0, 0);
+}
+
+void fast_animation_enable (gboolean state)
+{
+	fast_animation = state;
+	
+	gconf_client_set_bool (gcclient, GCONF_FAST_ANIMATION_KEY, state, NULL);
 }
 
 void cursor_erase (void)
@@ -620,7 +629,10 @@ static gboolean animation_timer (void)
 				draw_ball (canvaswidget, p, i, j);
 				break;				
 			case ANI_DESTROY:
-				p->frame++;
+				if (fast_animation)
+					p->frame = MOVEDFRAMESOFS;
+				else
+					p->frame++;
 				if (p->frame < DESTFRAMESOFS) {
 					p->frame = DESTFRAMESOFS;
 				} else if (p->frame < MOVEDFRAMESOFS) {
@@ -635,7 +647,11 @@ static gboolean animation_timer (void)
 				break;				
 			case ANI_MOVE_DOWN:
 				if (game_state == GAME_MOVING_DOWN) {
-					p->frame += speed;
+					if (fast_animation)
+						/* This allows a fast, but not instant, animation. */
+						p->frame = MOVELFRAMESOFS; 
+					else 
+						p->frame += speed;
 					if (p->frame >= MOVELFRAMESOFS) {
 						changestatep = TRUE;
 						p->frame = 0;
@@ -649,7 +665,11 @@ static gboolean animation_timer (void)
 				break;
 			case ANI_MOVE_LEFT:
 				if (game_state == GAME_MOVING_LEFT) {
-					p->frame += speed;
+					if (fast_animation)
+						/* This allows a fast, but not instant, animation. */
+						p->frame = NFRAMES; 					
+					else 
+						p->frame += speed;
 					if (p->frame >= NFRAMES) {
 						changestatep = TRUE;
 						p->frame = 0;

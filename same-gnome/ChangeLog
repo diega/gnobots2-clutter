@@ -1,3 +1,11 @@
+2005-04-03  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/same-gnome.xml: 
+	* drawing.h: 
+	* same-gnome.h: 
+	* ui.c:
+	* drawing.c: Install a fast-animation option.
+
 2005-04-01  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* same-gnome.c:
