@@ -1,3 +1,8 @@
+2003-06-16  William Jon McCann  <mccann@jhu.edu>
+
+	* same-gnome.c (game_preferences_callback): Make current
+	theme be selected in preferences dialog.
+
 2003-06-11  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* same-gnome.c : Yet more i18n fixed (see bug #114875). 

@@ -1,4 +1,4 @@
-/* -*- mode:C; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*-
+/* -*- mode:C; indent-tabs-mode:t; tab-width:8; c-basic-offset:8; -*- */
 
 /*
  * Same-Gnome: the game.
@@ -49,7 +49,6 @@ static int score;
 static gchar *scenario;
 static gint restarted;
 static gboolean game_over = FALSE;
-static gboolean ignore_selection;
 
 void update_score_state ();
 
@@ -74,7 +73,7 @@ draw_ball (int x, int y)
 {
 	int bx, by;
 
-	if (field [x][y].color){
+	if (field [x][y].color) {
 		by = STONE_SIZE * (field [x][y].color - 1);
 		bx = STONE_SIZE * (field [x][y].frame);
 
@@ -83,7 +82,8 @@ draw_ball (int x, int y)
 				 bx, by, x * STONE_SIZE, y * STONE_SIZE,
 				 STONE_SIZE, STONE_SIZE);
 	} else {
-		gdk_window_clear_area (draw_area->window, x * STONE_SIZE, y * STONE_SIZE,
+		gdk_window_clear_area (draw_area->window,
+				       x * STONE_SIZE, y * STONE_SIZE,
 				       STONE_SIZE, STONE_SIZE);
 	}
 }
@@ -98,8 +98,8 @@ paint (GdkRectangle *area)
 	x2 = (area->x + area->width) / STONE_SIZE;
 	y2 = (area->y + area->height) / STONE_SIZE;
 
-	for (x = x1; x <= x2; x++){
-		for (y = y1; y <= y2; y++){
+	for (x = x1; x <= x2; x++) {
+		for (y = y1; y <= y2; y++) {
 			draw_ball (x, y);
 		}
 	}
@@ -111,9 +111,9 @@ untag_all ()
 	int x, y;
 
 	for (x = 0; x < STONE_COLS; x++)
-		for (y = 0; y < STONE_LINES; y++){
+		for (y = 0; y < STONE_LINES; y++) {
 			field [x][y].tag   = 0;
-			if (sync_stones){
+			if (sync_stones) {
 				field [x][y].frame = 0;
 				draw_ball (x, y);
 			}
@@ -151,7 +151,7 @@ move_tagged_balls (void *data)
 	int x, y;
 	
 	for (x = 0; x < STONE_COLS; x++)
-		for (y = 0; y < STONE_LINES; y++){
+		for (y = 0; y < STONE_LINES; y++) {
 			if (!field [x][y].tag)
 				continue;
 			field [x][y].frame = (field [x][y].frame + 1) % nstones;
@@ -163,7 +163,7 @@ move_tagged_balls (void *data)
 static void
 disable_timeout ()
 {
-	if (ball_timeout_id != -1){
+	if (ball_timeout_id != -1) {
 		g_source_remove (ball_timeout_id);
 		ball_timeout_id = -1;
 	}
@@ -199,7 +199,7 @@ compress_column (int x)
 {
 	int y, ym;
 	
-	for (y = STONE_LINES - 1; y >= 0; y--){
+	for (y = STONE_LINES - 1; y >= 0; y--) {
 		if (!field [mapx(x)][mapy(y)].tag)
 			continue;
 		for (ym = y; ym < STONE_LINES - 1; ym++)
@@ -232,7 +232,7 @@ clean_last_col ()
 {
 	int y;
 
-	for (y = 0; y < STONE_LINES; y++){
+	for (y = 0; y < STONE_LINES; y++) {
 		field [mapx(STONE_COLS-1)][mapy(y)].color = 0;
 		field [mapx(STONE_COLS-1)][mapy(y)].tag   = 0;
 	}
@@ -243,8 +243,8 @@ compress_x ()
 {
 	int x, xm, l;
 
-	for (x = 0; x < STONE_COLS; x++){
-		for (l = STONE_COLS; field [mapx(x)][mapy(0)].color == 0 && l; l--){
+	for (x = 0; x < STONE_COLS; x++) {
+		for (l = STONE_COLS; field [mapx(x)][mapy(0)].color == 0 && l; l--) {
 			for (xm = x; xm < STONE_COLS-1; xm++)
 				copy_col (xm, xm+1);
 			clean_last_col ();
@@ -329,7 +329,7 @@ kill_balls (int x, int y)
 static gint
 area_event (GtkWidget *widget, GdkEvent *event, void *d)
 {
-	switch (event->type){
+	switch (event->type) {
 	case GDK_EXPOSE: {
 		GdkEventExpose *e = (GdkEventExpose *) event;
 		paint (&e->area);
@@ -372,7 +372,7 @@ fill_board (void)
 	int x, y;
 
 	for (x = 0; x < STONE_COLS; x++)
-		for (y = 0; y < STONE_LINES; y++){
+		for (y = 0; y < STONE_LINES; y++) {
 			field [x][y].color = 1 + (rand () % ncolors);
 			field [x][y].tag   = 0;
 			field [x][y].frame = sync_stones ? 0 : (rand () % nstones);
@@ -433,7 +433,7 @@ load_scenario (char *fname)
 	}
 
 	g_free (scenario);
-	scenario = g_strdup(fname);
+	scenario = g_strdup (fname);
 
 	configure_sync (fname);
 
@@ -523,13 +523,6 @@ set_selection (GtkTreeSelection *selection, gpointer data)
         GtkTreeModel * model;
         GtkTreeIter iter;
 
-        /* This is here because I can't figure out how to set the list
-         * so nothing is selected when it is created. */
-        if (ignore_selection) {
-                ignore_selection = FALSE;
-                return;
-        }
-
         gtk_tree_selection_get_selected (selection, &model, &iter);
         gtk_tree_model_get (model, &iter, 1, &filename, -1);
 
@@ -549,7 +542,7 @@ fill_list (GtkListStore *list)
 	if (!dir)
 		return;
 	
-	while ((filename = g_strdup (g_dir_read_name (dir))) != NULL){
+	while ((filename = g_strdup (g_dir_read_name (dir))) != NULL) {
 		gchar *name;
                 gchar *suffix;
                 gchar *path = NULL;
@@ -600,8 +593,6 @@ game_preferences_callback (GtkWidget *widget, void *data)
 		return;
 	}
 
-        ignore_selection = TRUE;
-        
 	pref_dialog = gtk_dialog_new_with_buttons (_("Same GNOME Preferences"),
 			GTK_WINDOW (app),
 			GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
@@ -629,6 +620,36 @@ game_preferences_callback (GtkWidget *widget, void *data)
         select = gtk_tree_view_get_selection (GTK_TREE_VIEW (listview));
         gtk_tree_selection_set_mode (select, GTK_SELECTION_BROWSE);
         gtk_tree_selection_unselect_all (select);
+
+	{
+		gboolean valid;
+		GtkTreeIter iter;
+		GtkTreeModel *model;
+		gint index;
+
+		/* Get an iter associated with the view */
+		
+		model = gtk_tree_view_get_model (GTK_TREE_VIEW (listview));
+		valid = gtk_tree_model_get_iter_first (model, &iter);
+		index = 0;
+		while (valid) {
+			/* Walk through list, testing each row */
+			gchar *filename;
+			gtk_tree_model_get (model, &iter,
+					    1, &filename, -1);
+
+			if (strcmp (filename, scenario) == 0) {
+				gtk_tree_view_set_cursor (GTK_TREE_VIEW (listview),
+							  gtk_tree_path_new_from_indices (index, -1),
+							  NULL, FALSE);
+				/*gtk_tree_selection_select_iter (select,
+				  &iter);*/
+			}
+			valid = gtk_tree_model_iter_next (model, &iter);
+			index++;
+		}
+	}
+
         g_signal_connect (G_OBJECT (select), "changed",
                           G_CALLBACK (set_selection), NULL);
         
@@ -786,7 +807,7 @@ save_state (GnomeClient *client,
 	
 	buf= g_malloc (STONE_COLS*STONE_LINES+1);
 
-	for (i = 0 ; i < (STONE_COLS*STONE_LINES); i++){
+	for (i = 0 ; i < (STONE_COLS*STONE_LINES); i++) {
 		buf [i]= f [i].color + 'a';
 	}
 	buf [STONE_COLS*STONE_LINES]= '\0';
@@ -873,7 +894,7 @@ main (int argc, char *argv [])
 	g_signal_connect (G_OBJECT (client), "die",
 			  G_CALLBACK (client_die), NULL);
 
-	if (GNOME_CLIENT_RESTARTED (client)){
+	if (GNOME_CLIENT_RESTARTED (client)) {
 		restart ();
 		restarted = 1;
 	}
@@ -886,26 +907,26 @@ main (int argc, char *argv [])
 
 	srand (time (NULL));
 
-	app = gnome_app_new("same-gnome", _("Same GNOME"));
+	app = gnome_app_new ("same-gnome", _("Same GNOME"));
 
-        gtk_window_set_policy(GTK_WINDOW(app), FALSE, FALSE, TRUE);
+        gtk_window_set_policy (GTK_WINDOW (app), FALSE, FALSE, TRUE);
 	g_signal_connect (G_OBJECT (app), "delete_event",
-			  G_CALLBACK(game_quit_callback), NULL);
+			  G_CALLBACK (game_quit_callback), NULL);
 
-	appbar = gnome_appbar_new(FALSE, TRUE, GNOME_PREFERENCES_USER);
-	gnome_app_set_statusbar(GNOME_APP (app), GTK_WIDGET(appbar));
+	appbar = gnome_appbar_new (FALSE, TRUE, GNOME_PREFERENCES_USER);
+	gnome_app_set_statusbar (GNOME_APP (app), GTK_WIDGET (appbar));
 
-	gnome_appbar_set_status(GNOME_APPBAR (appbar),
+	gnome_appbar_set_status (GNOME_APPBAR (appbar),
 				_("Welcome to Same GNOME!"));
 
-	gnome_app_create_menus(GNOME_APP(app), mainmenu);
+	gnome_app_create_menus (GNOME_APP (app), mainmenu);
 
-	gnome_app_install_menu_hints(GNOME_APP (app), mainmenu);
+	gnome_app_install_menu_hints (GNOME_APP (app), mainmenu);
   
         vb = gtk_vbox_new (FALSE, 0);
 	gnome_app_set_contents (GNOME_APP (app), vb);
 
-	if (!fname) {
+	if (! fname) {
 		fname = gconf_client_get_string
 			(conf_client, "/apps/same-gnome/tileset", NULL);
 	}
