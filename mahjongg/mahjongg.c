@@ -1622,9 +1622,14 @@ about_callback (GtkWidget *widget, gpointer data)
 		"Michael Meeks",
                 "Philippe Chavin",
 		"Callum McKenzie",
+		"Rexford Newbould",
+		"Krzysztof Foltman",
 		"",
 		N_("Tiles:"),
 		"Jonathan Buzzard",
+		"Jim Evans",
+		"Richard Hoelscher",
+		"Gonzalo Odiard",
 		"Max Watson",
 		NULL
 	};

@@ -1,3 +1,9 @@
+2004-03-14  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c (about_callback): Updated the credits to credit all
+	those who contributed for 2.6. I am grateful to Jim Evans for
+	drawing this very unfortunate oversight to my attention.
+
 2004-03-04  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* help/C/figures/*: Updated images.
