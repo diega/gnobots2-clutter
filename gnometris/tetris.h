@@ -103,8 +103,9 @@ private:
 	bool inPlay;
 
 	void generateTimer(int level);
-	
-	static gint eventHandler(GtkWidget *widget, GdkEvent *event, void *d);
+
+	static gint keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t);
+	static gint keyReleaseHandler(GtkWidget *widget, GdkEvent *event, Tetris *t);
 	static gchar *decodeDropData(gchar * data, gint type);
 	static void dragDrop(GtkWidget *widget, GdkDragContext *context,
 			     gint x, gint y, GtkSelectionData *data, 
@@ -130,6 +131,9 @@ private:
 	static void startingLevelChanged (GtkWidget *spin, gpointer data);
 	
 	static void gconfNotify (GConfClient *tmp_client, guint cnx_id, GConfEntry *tmp_entry, gpointer tmp_data);
+	static gchar *gconfGetString (GConfClient *client, const char *key, const char *default_val);
+	static int gconfGetInt (GConfClient *client, const char *key, int default_val);
+	static gboolean gconfGetBoolean (GConfClient *client, const char *key, gboolean default_val);
 	void initOptions ();
 	void setOptions ();
 	void writeOptions ();
@@ -153,6 +157,13 @@ private:
 	GtkWidget *do_preview_toggle;
 	GtkWidget *random_block_colors_toggle;
 	GtkWidget *rotate_counter_clock_wise_toggle;
+
+	int moveLeft;
+	int moveRight;
+	int moveDown;
+	int moveDrop;
+	int moveRotate;
+	int movePause;
 	
 	GnomeUIInfo *gameMenuPtr; 
 	GnomeUIInfo *gameSettingsPtr; 

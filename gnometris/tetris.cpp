@@ -29,6 +29,7 @@
 
 #include <games-gconf.h>
 #include <games-frame.h>
+#include <games-controls.h>
 
 #include <libgnomevfs/gnome-vfs.h>
 
@@ -69,6 +70,14 @@ bool rotateCounterClockWise = true;
 #define KEY_ROTATE_COUNTER_CLOCKWISE "/apps/gnometris/options/rotate_counter_clock_wise"
 #define KEY_LINE_FILL_HEIGHT "/apps/gnometris/options/line_fill_height"
 #define KEY_LINE_FILL_PROBABILITY "/apps/gnometris/options/line_fill_probability"
+
+#define KEY_CONTROLS_DIR "/apps/gnometris/controls"
+#define KEY_MOVE_LEFT "/apps/gnometris/controls/key_left"
+#define KEY_MOVE_RIGHT "/apps/gnometris/controls/key_right"
+#define KEY_MOVE_DOWN "/apps/gnometris/controls/key_down"
+#define KEY_MOVE_DROP "/apps/gnometris/controls/key_drop"
+#define KEY_MOVE_ROTATE "/apps/gnometris/controls/key_rotate"
+#define KEY_MOVE_PAUSE "/apps/gnometris/controls/key_pause"
 
 #define TILE_THRESHOLD 65
 
@@ -166,6 +175,9 @@ Tetris::Tetris(int cmdlLevel):
 	gconf_client_add_dir (gconf_client, KEY_OPTIONS_DIR, GCONF_CLIENT_PRELOAD_NONE, NULL);
 	gconf_client_notify_add (gconf_client, KEY_OPTIONS_DIR, gconfNotify, this, NULL, NULL);
 
+	gconf_client_add_dir (gconf_client, KEY_CONTROLS_DIR, GCONF_CLIENT_PRELOAD_NONE, NULL);
+	gconf_client_notify_add (gconf_client, KEY_CONTROLS_DIR, gconfNotify, this, NULL, NULL);
+
 	initOptions ();
 
 	gnome_app_create_menus(GNOME_APP(w), mainmenu);
@@ -186,7 +198,8 @@ Tetris::Tetris(int cmdlLevel):
 	field->show();
 	setupPixmap();
 
-	g_signal_connect (w, "event", G_CALLBACK (eventHandler), this);
+	g_signal_connect (w, "key_press_event", G_CALLBACK (keyPressHandler), this);
+	g_signal_connect (w, "key_release_event", G_CALLBACK (keyReleaseHandler), this);
   
 	GtkWidget *vb2 = gtk_vbox_new(FALSE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vb2), 10);
@@ -262,7 +275,6 @@ Tetris::Tetris(int cmdlLevel):
 	gnome_canvas_item_set (gameoverMessage, "size_points", pts, 0);
 
         gnome_canvas_item_hide (gameoverMessage);
-
 }
 
 Tetris::~Tetris()
@@ -444,76 +456,95 @@ Tetris::gconfNotify (GConfClient *tmp_client, guint cnx_id, GConfEntry *tmp_entr
 	t->setOptions ();
 }
 
+char *
+Tetris::gconfGetString (GConfClient *client, const char *key, const char *default_val)
+{
+	char *val;
+	GError *error = NULL;
+
+	val = gconf_client_get_string (client, key, &error);
+	if (error) {
+		g_warning ("gconf error: %s\n", error->message);
+		g_error_free (error);
+		error = NULL;
+		val = g_strdup (default_val);
+	}
+
+	return val;
+}
+
+int
+Tetris::gconfGetInt (GConfClient *client, const char *key, int default_val)
+{
+	int val;
+	GError *error = NULL;
+
+	val = gconf_client_get_int (client, key, &error);
+	if (error) {
+		g_warning ("gconf error: %s\n", error->message);
+		g_error_free (error);
+		error = NULL;
+		val = default_val;
+	}
+
+	return val;
+}
+
+gboolean
+Tetris::gconfGetBoolean (GConfClient *client, const char *key, gboolean default_val)
+{
+	gboolean val;
+	GError *error = NULL;
+
+	val = gconf_client_get_bool (client, key, &error);
+	if (error) {
+		g_warning ("gconf error: %s\n", error->message);
+		g_error_free (error);
+		error = NULL;
+		val = default_val;
+	}
+
+	return val;
+}
+
 void
 Tetris::initOptions ()
 {
-	GError *error = NULL;
-
 	if (blockPixmap)
 		g_free (blockPixmap);
 
-	blockPixmap = gconf_client_get_string (gconf_client, KEY_BLOCK_PIXMAP, &error);
-	if (error) {
-		g_warning ("gconf error: %s\n", error->message);
-		g_error_free (error);
-		error = NULL;
-	}
-        if (blockPixmap == NULL)
-          blockPixmap = g_strdup ("7blocks-tig.png");
+	blockPixmap = gconfGetString (gconf_client, KEY_BLOCK_PIXMAP, "7blocks-tig.png");
 
-	startingLevel = gconf_client_get_int (gconf_client, KEY_STARTING_LEVEL, &error);
-	if (error) {
-		g_warning ("gconf error: %s\n", error->message);
-		g_error_free (error);
-		error = NULL;
-	}
-        if (startingLevel < 1) 
-          startingLevel = 1;
-        if (startingLevel > 10) 
-          startingLevel = 10;
+	startingLevel = gconfGetInt (gconf_client, KEY_STARTING_LEVEL, 1);
+	if (startingLevel < 1) 
+		startingLevel = 1;
+	if (startingLevel > 10) 
+		startingLevel = 10;
 
-	do_preview = gconf_client_get_bool (gconf_client, KEY_DO_PREVIEW, &error);
-	if (error) {
-		g_warning ("gconf error: %s\n", error->message);
-		g_error_free (error);
-		error = NULL;
-	}
+	do_preview = gconfGetBoolean (gconf_client, KEY_DO_PREVIEW, TRUE);
 
-	random_block_colors = gconf_client_get_bool (gconf_client, KEY_RANDOM_BLOCK_COLORS, &error);
-	if (error) {
-		g_warning ("gconf error: %s\n", error->message);
-		g_error_free (error);
-		error = NULL;
-	}
-	
-	rotateCounterClockWise = gconf_client_get_bool (gconf_client, KEY_ROTATE_COUNTER_CLOCKWISE, &error);
-	if (error) {
-		g_warning ("gconf error: %s\n", error->message);
-		g_error_free (error);
-		error = NULL;
-	}
+	random_block_colors = gconfGetBoolean (gconf_client, KEY_RANDOM_BLOCK_COLORS, TRUE);
 
-	line_fill_height = gconf_client_get_int (gconf_client, KEY_LINE_FILL_HEIGHT, &error);
-	if (error) {
-		g_warning ("gconf error: %s\n", error->message);
-		g_error_free (error);
-		error = NULL;
-	}
+	rotateCounterClockWise = gconfGetBoolean (gconf_client, KEY_ROTATE_COUNTER_CLOCKWISE, TRUE);
+
+	line_fill_height = gconfGetInt (gconf_client, KEY_LINE_FILL_HEIGHT, 0);
 	if (line_fill_height < 0)
 		line_fill_height = 0;
 	if (line_fill_height > 19)
 		line_fill_height = 19;
-	
-	line_fill_prob = gconf_client_get_int (gconf_client, KEY_LINE_FILL_PROBABILITY, &error);
-	if (error) {
-		g_warning ("gconf error: %s\n", error->message);
-		g_error_free (error);
-		error = NULL;
-	}
+
+	line_fill_prob = gconfGetInt (gconf_client, KEY_LINE_FILL_PROBABILITY, 0);
 	if (line_fill_prob < 0)
 		line_fill_prob = 0;
 	if (line_fill_prob > 10)
 		line_fill_prob = 10;
+
+	moveLeft = gconfGetInt (gconf_client, KEY_MOVE_LEFT, GDK_Left);
+	moveRight = gconfGetInt (gconf_client, KEY_MOVE_RIGHT, GDK_Right);
+	moveDown = gconfGetInt (gconf_client, KEY_MOVE_DOWN, GDK_Down);
+	moveDrop = gconfGetInt (gconf_client, KEY_MOVE_DROP, GDK_Pause);
+	moveRotate = gconfGetInt (gconf_client, KEY_MOVE_ROTATE, GDK_Up);
+	movePause = gconfGetInt (gconf_client, KEY_MOVE_PAUSE, GDK_space);
 }
 
 void
@@ -657,11 +688,14 @@ Tetris::fillMenu(GtkWidget *menu, char *pixname, char *dirname,
 int 
 Tetris::gameProperties(GtkWidget *widget, void *d)
 {
+	GtkWidget *notebook;
+	GtkWidget *vbox;
 	GtkWidget *label;
 	GtkWidget *frame;
 	GtkWidget *table;
 	GtkWidget *fvbox;
 	GtkObject *adj;
+	GtkWidget *controls_list;
         
 	Tetris *t = (Tetris*) d;
 	
@@ -683,6 +717,15 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 			  G_CALLBACK (setupdialogDestroy), d);
 	g_signal_connect (t->setupdialog, "response",
 			  G_CALLBACK (setupdialogResponse), d);
+
+	notebook = gtk_notebook_new ();
+	gtk_box_pack_start (GTK_BOX(GTK_DIALOG(t->setupdialog)->vbox), notebook,
+			    TRUE, TRUE, 0);
+
+	/* game page */
+	vbox = gtk_vbox_new (FALSE, 0);
+	label = gtk_label_new_with_mnemonic (_("_Game"));
+	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), vbox, label);
 
 	frame = games_frame_new (_("Setup"));
 	table = gtk_table_new (3, 2, FALSE);
@@ -735,12 +778,11 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_table_attach_defaults (GTK_TABLE (table), t->sentry, 1, 2, 2, 3);
 
 	gtk_container_add (GTK_CONTAINER (frame), table);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (t->setupdialog)->vbox), frame, 
+	gtk_box_pack_start (GTK_BOX (vbox), frame, 
 			    FALSE, FALSE, 0);
 
 	frame = games_frame_new (_("Operation"));
-	fvbox = gtk_vbox_new (FALSE, FALSE);
-	gtk_box_set_spacing (GTK_BOX (fvbox), 6);
+	fvbox = gtk_vbox_new (FALSE, 6);
 
 	/* preview next block */
 	t->do_preview_toggle =
@@ -774,7 +816,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 			    0, 0, 0);
 
 	gtk_container_add (GTK_CONTAINER (frame), fvbox);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (t->setupdialog)->vbox), frame, 
+	gtk_box_pack_start (GTK_BOX (vbox), frame, 
 			    FALSE, FALSE, 0);
 
 	frame = games_frame_new (_("Theme"));
@@ -795,8 +837,31 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 0, 1);
 
 	gtk_container_add (GTK_CONTAINER (frame), table);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (t->setupdialog)->vbox), frame, 
+	gtk_box_pack_start (GTK_BOX (vbox), frame, 
 			    FALSE, FALSE, 0);
+
+	/* controls page */
+	vbox = gtk_vbox_new (FALSE, 0);
+	label = gtk_label_new_with_mnemonic (_("_Controls"));
+	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), vbox, label);
+
+	frame = games_frame_new (_("Keyboard controls"));
+	fvbox = gtk_vbox_new (FALSE, 6);
+	gtk_container_add (GTK_CONTAINER (frame), fvbox);
+
+	controls_list = games_controls_list_new ();
+	games_controls_list_add_controls (GAMES_CONTROLS_LIST (controls_list),
+					  KEY_MOVE_LEFT,
+					  KEY_MOVE_RIGHT,
+					  KEY_MOVE_DOWN,
+					  KEY_MOVE_DROP,
+					  KEY_MOVE_ROTATE,
+					  KEY_MOVE_PAUSE,
+					  NULL);
+
+	gtk_box_pack_start (GTK_BOX (fvbox), controls_list, FALSE, FALSE, 0);
+
+	gtk_container_add (GTK_CONTAINER (vbox), frame);
 	
 	gtk_widget_show_all (t->setupdialog);
 	gtk_widget_set_sensitive(t->gameMenuPtr[0].widget, FALSE);
@@ -898,108 +963,82 @@ Tetris::timeoutHandler(void *d)
 	return TRUE;	
 }
 
-gint
-Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
+gboolean
+Tetris::keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 {
-	Tetris *t = (Tetris*) d;
-        int bonus;
-        
+	int keyval;
+	bool res = false;
+	int bonus;
+
 	if (t->timeoutId == 0)
 		return FALSE;
-	
-	if (event->type == GDK_KEY_PRESS)
-	{
-		int keyval = ((GdkEventKey*)event)->keyval;
 
-		if ((keyval == GDK_p) || (keyval == GDK_P))
-		{
-			t->togglePause();
-			return TRUE;
-		}
+	keyval = ((GdkEventKey*)event)->keyval;
+
+	if (keyval == t->movePause)
+	{
+		t->togglePause();
+		return TRUE;
 	}
+
+	if (t->paused)
+		return FALSE;
+
+	if (keyval == t->moveLeft) {
+		res = t->ops->moveBlockLeft();
+		t->onePause = false;
+	} else if (keyval == t->moveRight) {
+		res = t->ops->moveBlockRight();
+		t->onePause = false;
+	} else if (keyval == t->moveRotate) {
+		res = t->ops->rotateBlock(rotateCounterClockWise);
+		t->onePause = false;
+	} else if (keyval == t->moveDown) {
+		if (!t->fastFall && !t->onePause) {
+			t->fastFall = true;
+			t->fastFallPoints = 0;
+			g_source_remove (t->timeoutId);
+			t->timeoutId = g_timeout_add_full(0, 10, timeoutHandler, t, NULL);
+			res = true;
+		}
+	} else if (keyval == t->moveDrop) {
+		if (!t->dropBlock) {
+			t->dropBlock = true;
+			bonus = t->ops->dropBlock();
+			t->scoreFrame->incScore(bonus);
+			t->manageFallen();
+			res = TRUE;
+		}        
+	}
+
+	return res;
+}
+
+gint
+Tetris::keyReleaseHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
+{
+	bool res = false;
+
+	if (t->timeoutId == 0)
+		return FALSE;
 	
 	if (t->paused)
 		return FALSE;
 
-	bool res = false;
-	bool keyEvent = false;
+	int keyval = ((GdkEventKey*)event)->keyval;
 
-	switch (event->type)
-	{
-	case GDK_KEY_PRESS: 
-	{
-		GdkEventKey *e = (GdkEventKey*)event;
-		keyEvent = true;
-		
-		switch(e->keyval)
-		{
-		case GDK_Left:
-			res = t->ops->moveBlockLeft();
-                        t->onePause = false;
-			break;
-		case GDK_Right:
-			res = t->ops->moveBlockRight();
-                        t->onePause = false;
-			break;
-		case GDK_Up:
-			res = t->ops->rotateBlock(rotateCounterClockWise);
-                        t->onePause = false;
-			break;
-		case GDK_Down:
-			if (!t->fastFall && !t->onePause)
-			{
-				t->fastFall = true;
-				t->fastFallPoints = 0;
-				g_source_remove(t->timeoutId);
-				t->timeoutId = g_timeout_add_full(0, 10, timeoutHandler, t, NULL);
-				res = true;
-			}
-			break;
-		case GDK_space:
-                        if (!t->dropBlock)
-                        {
-                                t->dropBlock = true;
-                                bonus = t->ops->dropBlock();
-                                t->scoreFrame->incScore(bonus);
-                                t->manageFallen();
-                                res = TRUE;
-                        }        
-			break;
-		default:
-			return FALSE;
+	if (keyval == t->moveDown) {
+		if (t->fastFall) {
+			t->fastFall = false;
+ 			t->generateTimer(t->scoreFrame->getLevel());
 		}
-		break;
-	}
-	case GDK_KEY_RELEASE:
-	{
-		GdkEventKey *e = (GdkEventKey*)event;
-
-		switch (e->keyval)
-		{
-		case GDK_Down:
-			keyEvent = true;
-			if (t->fastFall)
-			{
-				t->fastFall = false;
- 				t->generateTimer(t->scoreFrame->getLevel());
-			}
-			break;
-		case GDK_space:
-                        t->dropBlock = false;
-			break;
-		default:
-			return FALSE;
-		}
-		break;
-	}
-	default:
-		break;
+		res = TRUE;
+	} else if (keyval == t->moveDrop) {
+		t->dropBlock = false;
+		res = TRUE;
 	}
 
-	if (res)
-		gtk_widget_queue_draw(t->field->getWidget());
-
-	return (keyEvent == true);
+	return res;
 }
 
 gchar * 

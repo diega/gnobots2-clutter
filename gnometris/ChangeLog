@@ -1,3 +1,8 @@
+2004-07-14  Paolo Borelli  <pborelli@katamail.com>
+
+	* gnometris.schema.in:
+	* Tetris.[ch]: add keyboard controls configurability.
+
 2004-07-14  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* tetris.cpp (setupPixmap): w->ww, h->hh to avoid warnings about shadowing members with local variables (bug #147543).
