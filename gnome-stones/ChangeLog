@@ -1,5 +1,8 @@
 2003-05-29  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* io.c (gstones_cave_load): Handle the case of a missing line
+	while loading a cave. Fixes bug #105254.
+
 	* preferences.c (preferences_dialog_show): Use gtk_window_present
 	for the properties dialog.
 

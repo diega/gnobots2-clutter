@@ -1,8 +1,8 @@
 /* gnome-stones - io.c
  *
- * Time-stamp: <2002/05/02 14:50:18 dave>
+ * Time-stamp: <2003/05/29 22:43:35 callum>
  *
- * Copyright (C) 1998 Carsten Schaar
+ * Copyright (C) 1998, 2003 Carsten Schaar
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -341,9 +341,18 @@ gstones_cave_load (GStonesGame *game, const gchar *cavename)
     {
       char *line;
       char  buffer[8];
+      gchar * error;
       sprintf (buffer, "Line%.2d", y);
-
+      
       line= gnome_config_get_string (buffer);
+      if (!line) {
+        error = g_strdup_printf (_("The cave is corrupted: %s is missing."), buffer);
+        gstone_error (error);
+        g_free (error);
+        gnome_config_pop_prefix ();
+        cave_free (cave);
+        return NULL;
+      }
       
       for (x= 1 ; x <= MIN (strlen (line), cave->width); x++)
 	{
