@@ -1,3 +1,9 @@
+2003-06-26  William Jon McCann  <mccann@jhu.edu>
+
+	* graphics/Makefile.am (pixmap_DATA): Removed title.png.
+
+	* main.c (title_image_load): Enabled new text title screen.
+
 2003-06-23  Abel Cheung  <maddog@linux.org.hk>
 
 	* gnome-stones.schemas.in: Fix description typo.

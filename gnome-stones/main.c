@@ -154,8 +154,6 @@ draw_text_centered (GdkDrawable *pixmap, gchar *markup, gint y)
     }
 }
 
-#define USE_ORIG_TITLE_SCREEN
-
 static void
 title_image_load (void)
 {
@@ -166,12 +164,6 @@ title_image_load (void)
   GdkGC *gc;
   GdkPixmap *tile;
 
-#ifdef USE_ORIG_TITLE_SCREEN
-  image = load_image_from_path ("gnome-stones/title.png");
-  gdk_pixbuf_render_pixmap_and_mask (image, &title_template, NULL, 127);
-  gdk_pixbuf_render_pixmap_and_mask (image, &title_image, NULL, 127);
-
-#else
   image = load_image_from_path ("gnome-stones/title-tile.png");
   if (image != NULL) 
     {
@@ -204,9 +196,6 @@ title_image_load (void)
   title_image = gdk_pixmap_new (gstones_view->window,
                                 GAME_COLS * STONE_SIZE,
                                 GAME_ROWS * STONE_SIZE, -1);
-  
-#endif
-
 }
 
 

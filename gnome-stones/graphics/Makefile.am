@@ -1,6 +1,7 @@
 pixmapdir     = $(datadir)/pixmaps/gnome-stones
 
-pixmap_DATA     = title.png			\
+pixmap_DATA   = 				\
+	title-tile.png				\
 	amoeba.png				\
 	background.png				\
 	boulder.png				\
