@@ -1,0 +1,12 @@
+# 3ones2zeroes.tur: un ejercicio que vi en una revista. Cambia las ocurrencias
+#                   de 3 unos consecutivos por ceros hasta terminar la cinta.
+#
+# Formato de la cinta: cualquier secuencia de unos y ceros.
+#
+0 0 0 r 0
+0 1 1 r 1
+1 0 0 r 0
+1 1 1 r 2
+2 0 0 r 0
+2 1 0 l 2
+2 _ _ r 0

@@ -1,0 +1,642 @@
+/* gturing.c - a Turing machine simulator.
+ * Copyright (C) 1998 The Free Software Foundation
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+#include <gnome.h>
+#include "turing.h"
+
+#include "power.xpm"
+#include "play.xpm"
+#include "step.xpm"
+#include "stop.xpm"
+
+#define SCROLL_WIDTH 10000
+
+#define TAPE_FONT "-bitstream-courier-bold-r-*-*-25-*-*-*-*-*-*-*"
+
+/* A few globals. */
+static char *progname;
+static char tape_string[1024] = "";
+static char states_fname[1024] = "";
+
+static turing *tm;
+static long speed = 0;
+static int stop_flag = 1;
+
+static GtkWidget *rootw;
+static GtkWidget *dialog = NULL;
+static GtkWidget *state_clist = NULL;
+static GtkWidget *entry;
+
+static GtkWidget *tapelabel;
+static GtkWidget *headlabel;
+static GtkWidget *power;
+static GtkWidget *stop;
+static GtkWidget *play;
+static GtkWidget *step;
+static GtkWidget *statusline;
+static GtkWidget *helpline;
+
+void power_callback(GtkWidget *power_button, gpointer data);
+void state_clist_load_states(void);
+
+void set_toolbar_sens(gboolean powers, gboolean stops,
+											gboolean plays, gboolean steps)
+{
+	gtk_widget_set_sensitive(power, powers);
+	gtk_widget_set_sensitive(stop, stops);
+	gtk_widget_set_sensitive(play, plays);
+	gtk_widget_set_sensitive(step, steps);
+}
+
+void set_tape(char *str)
+{
+	int len, i;
+	char *tmp;
+	
+	len = strlen(str);
+	tmp = malloc(len + 1);
+	
+	for (i = 0; i < len; i++)
+		if (i == tm->pos)
+			tmp[i] = '^';
+		else
+			tmp[i] = ' ';
+	
+	tmp[len] = 0;
+		
+  gtk_label_set(GTK_LABEL(tapelabel), str);
+  gtk_label_set(GTK_LABEL(headlabel), tmp);
+	
+	free(tmp);
+}
+
+void set_states_fname(char *str)
+{
+	char *c;
+	
+	strncpy(states_fname, str, 1024);
+	if (turing_fread_states(tm, states_fname))
+		*states_fname = 0;
+	
+	if ((*states_fname != 0) && (*tape_string != 0))
+		power_callback(power, NULL);
+	else
+		set_toolbar_sens(FALSE, FALSE, FALSE, FALSE);
+	
+	if ((c = strrchr(states_fname, '/')) != NULL)
+		c++;
+	else
+		c = states_fname;
+
+	state_clist_load_states();
+  gtk_label_set(GTK_LABEL(helpline), c);
+}
+
+void states_fname_callback(GtkWidget *ok_button, gpointer data)
+{
+	set_states_fname(gtk_file_selection_get_filename(GTK_FILE_SELECTION(dialog)));
+
+	gtk_widget_destroy(dialog);
+	dialog = NULL;
+	
+	gnome_config_set_string("/gTuring/Options/program", states_fname);
+}
+
+void tape_string_callback(GtkWidget *ok_button, gpointer data)
+{
+	strncpy(tape_string, gtk_entry_get_text(GTK_ENTRY(entry)), 1024);
+	turing_set_tape(tm, tape_string);
+	set_tape(tape_string);
+	
+	gtk_widget_destroy(dialog);
+	dialog = NULL;
+	
+	if ((*states_fname != 0) && (*tape_string != 0))
+		power_callback(power, NULL);
+	else
+		set_toolbar_sens(FALSE, FALSE, FALSE, FALSE);
+	
+	gnome_config_set_string("/gTuring/Options/tape", tape_string);
+}
+
+void speed_callback(GtkWidget *ok_button, gpointer data)
+{
+	speed = atoi(gtk_entry_get_text(GTK_ENTRY(entry)));
+							 
+	gtk_widget_destroy(dialog);
+	dialog = NULL;
+	
+	gnome_config_set_int("/gTuring/Options/speed", speed);
+}
+
+void cancel_callback(GtkWidget *widget, gpointer data)
+{
+	void *p;
+
+	if ((p = gtk_object_get_user_data(GTK_OBJECT(widget))) != NULL)
+		g_free(p);
+	
+	gtk_widget_destroy(dialog);
+	dialog = NULL;
+}
+
+void states_view_close_callback(GtkWidget *w, gpointer data)
+{
+	state_clist = NULL;
+	
+	gtk_widget_destroy(w);
+}
+
+void state_clist_select_state(turing *t)
+{
+	int i, tmp;
+	char buff[20];
+
+	snprintf(buff, 20, _("State: %d"), t->actualstate->no);
+	gtk_label_set(GTK_LABEL(statusline), buff);
+			
+	if (state_clist) {
+		tmp = i = (int) gtk_object_get_user_data(GTK_OBJECT(state_clist));
+		while (i--)
+			if (t->actualstate == 
+					(state *) gtk_clist_get_row_data(GTK_CLIST(state_clist), i))
+				break;
+		
+		if (i >= 0) {
+			gtk_clist_select_row(GTK_CLIST(state_clist), i, 0);
+			/* bug: moveto corrupts the clist if all the rows appear in the list */
+			if (tmp > 11)
+				gtk_clist_moveto(GTK_CLIST(state_clist), (i - 5 < 5)? 0 : i - 5, 0, 0, 0);
+		}
+	}
+}
+
+int next_state(turing *t)
+{
+	int ret;
+	
+	ret = turing_run_state(t);
+	state_clist_select_state(t);
+	
+	return ret;
+}
+
+void power_callback(GtkWidget *power_button, gpointer data)
+{
+	stop_flag = 1;
+	tm->state = 0;
+	tm->pos = 0;
+
+	turing_set_tape(tm, tape_string);
+	set_tape(tape_string);
+
+	next_state(tm);
+	set_toolbar_sens(FALSE, FALSE, TRUE, TRUE);
+}
+
+gint do_play(gpointer data)
+{
+	char *tmp;
+	int cont;
+	
+	cont = FALSE;
+
+	if (!stop_flag) {
+		tmp = turing_get_tape(tm);
+		set_tape(tmp);
+		free (tmp);
+		
+		cont = next_state(tm);
+		
+		if (! cont)	{
+			set_toolbar_sens(TRUE, FALSE, stop_flag, stop_flag);
+			gtk_label_set(GTK_LABEL(statusline), _("Stopped"));
+		}
+	}
+	
+	return cont;
+}
+
+void play_callback(GtkWidget *play_button, gpointer data)
+{
+	set_toolbar_sens(TRUE, TRUE, FALSE, FALSE);
+	
+	stop_flag = 0;
+	gtk_timeout_add(speed, do_play, NULL);
+}
+
+void step_callback(GtkWidget *step_buttton, gpointer data)
+{
+	char *tmp;
+	
+	tmp = turing_get_tape(tm);
+	set_tape(tmp);
+	free (tmp);
+			
+	if (! next_state(tm))	{
+		set_toolbar_sens(TRUE, FALSE, FALSE, FALSE);
+		gtk_label_set(GTK_LABEL(statusline), _("Stopped"));
+	}
+	
+	gtk_widget_set_sensitive(power, TRUE);
+}
+
+void stop_callback(GtkWidget *stop_button, gpointer data)
+{
+	stop_flag = 1;
+	
+	set_toolbar_sens(TRUE, FALSE, TRUE, TRUE);
+}
+
+void prompt(char *title, char *msg, GtkSignalFunc callback, char *def)
+{
+	GtkWidget *vbox, *label;
+	
+	if (dialog != NULL)
+		return;
+	
+	dialog = gnome_dialog_new(title, GNOME_STOCK_BUTTON_OK, 
+														GNOME_STOCK_BUTTON_CANCEL, NULL);
+	vbox = GNOME_DIALOG(dialog)->vbox;
+	label = gtk_label_new(msg);
+	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
+	entry = gtk_entry_new();
+	gtk_entry_set_text(GTK_ENTRY(entry), def);
+	gtk_box_pack_start(GTK_BOX(vbox), entry, TRUE, TRUE, 0);
+	
+	gtk_signal_connect(GTK_OBJECT(dialog), "destroy",
+			   GTK_SIGNAL_FUNC(cancel_callback), NULL);
+  gnome_dialog_button_connect(GNOME_DIALOG(dialog), 0,
+															GTK_SIGNAL_FUNC(callback), NULL);
+	gnome_dialog_button_connect_object(GNOME_DIALOG(dialog), 1,
+																		 GTK_SIGNAL_FUNC(cancel_callback),
+																		 GTK_OBJECT(dialog));	
+	
+	gtk_widget_show_all(vbox);
+	gtk_widget_show(dialog);
+}
+
+void open_call(GtkWidget *w, gpointer data) 
+{
+	GtkWidget *fsel;
+	        
+	dialog = fsel = gtk_file_selection_new(_("Open gTuring Program File"));
+	gtk_file_selection_hide_fileop_buttons(GTK_FILE_SELECTION(fsel));
+	gtk_signal_connect_object(GTK_OBJECT(GTK_FILE_SELECTION(fsel)->ok_button),
+														"clicked", GTK_SIGNAL_FUNC(states_fname_callback),
+														GTK_OBJECT(fsel));
+	gtk_signal_connect_object(GTK_OBJECT(GTK_FILE_SELECTION(fsel)->cancel_button),
+														"clicked", GTK_SIGNAL_FUNC(cancel_callback),
+														GTK_OBJECT(fsel));
+	gtk_widget_show(fsel);
+}
+
+void tape_call(GtkWidget *w, gpointer data)
+{
+	prompt(_("Tape Setting"), _("Please enter the tape:"), 
+				 GTK_SIGNAL_FUNC(tape_string_callback), tape_string);
+}
+
+void state_clist_load_states(void)
+{
+	char *text[5];
+	state *s;
+	int i;
+
+	if (state_clist) {
+		gtk_clist_clear(GTK_CLIST(state_clist));
+		
+		for (i = 0; i < 5; i++)
+			text[i] = malloc(6);
+		
+		i = 0;
+		for (s = tm->statehead; s; s = s->next) {
+			snprintf(text[0], 6, "%d", s->no);
+			text[1][0] = s->read; text[1][1] = 0;
+			text[2][0] = s->write; text[2][1] = 0;
+			text[3][0] = s->move; text[3][1] = 0;
+			snprintf(text[4], 6, "%d", s->new);
+			i++;
+			gtk_clist_insert(GTK_CLIST(state_clist), 0, text);
+		}
+		
+		gtk_object_set_user_data(GTK_OBJECT(state_clist), (gpointer) i);
+		
+		for (s = tm->statehead; i--; s = s->next)
+			gtk_clist_set_row_data(GTK_CLIST(state_clist), i, s);
+		
+		for (i = 0; i < 5; i++)
+			free(text[i]);
+		
+		state_clist_select_state(tm);
+	}
+}
+
+void view_states_call(GtkWidget *widget, gpointer data)
+{
+	char *text[5] = { N_("State"), N_("Read"), N_("Write"), N_("Move"), 
+		                N_("New State")	};
+	GtkWidget *w;
+	int i;
+	
+	if (state_clist)
+		return;
+	
+	w = gnome_dialog_new(_("Machine's states"), GNOME_STOCK_BUTTON_CLOSE, NULL);
+	gnome_dialog_button_connect_object(GNOME_DIALOG(w),	0,
+																		 GTK_SIGNAL_FUNC(states_view_close_callback),
+																		 GTK_OBJECT(w));
+	
+	state_clist = gtk_clist_new_with_titles(5, text);
+	gtk_clist_set_selection_mode(GTK_CLIST(state_clist), GTK_SELECTION_SINGLE);
+	gtk_clist_set_policy(GTK_CLIST(state_clist), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_clist_column_titles_passive(GTK_CLIST(state_clist));
+	for (i = 0; i < 5; i++)
+		gtk_clist_set_column_width(GTK_CLIST(state_clist), i, 60);
+	gtk_widget_set_usize(state_clist, 360, 200);
+	
+	state_clist_load_states();
+	
+	gtk_box_pack_start(GTK_BOX(GNOME_DIALOG(w)->vbox), state_clist, FALSE, FALSE, 0);
+  gtk_widget_show_all(GNOME_DIALOG(w)->vbox);
+	gtk_widget_show(w);
+}
+
+void exit_call(GtkWidget *w, gpointer data)
+{
+	gtk_main_quit();
+	exit (0);
+}
+
+void playspeed_call(GtkWidget *w, gpointer data)
+{
+	char buff[1024];
+					
+	sprintf(buff, "%ld", speed);
+	prompt(_("Animation Speed"), _("Miliseconds between steps:"), 
+				 GTK_SIGNAL_FUNC(speed_callback), buff);
+}
+
+void viewstates_call(GtkWidget *w, gpointer data)
+{
+}
+
+void operation_call(GtkWidget *w, gpointer data)
+{
+}
+
+void about_call(GtkWidget *w, gpointer data)
+{
+	GtkWidget *about;
+	const gchar *authors[] = { "arturo@nuclecu.unam.mx", NULL };
+	
+	about = gnome_about_new (_("gTuring"), NULL,
+													 "(C) 1997-1998 the Free Software Fundation",
+													 authors,
+													 _("A Turing Machine for GNOME"),
+													 NULL);
+	gtk_widget_show (about);
+}
+
+GnomeUIInfo filemenu[] = {
+	{GNOME_APP_UI_ITEM, N_("Open..."), N_("Open a program file."), 
+		open_call, NULL, NULL,
+	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_OPEN, 0, 0, NULL},
+
+	{GNOME_APP_UI_SEPARATOR},
+
+	{GNOME_APP_UI_ITEM, N_("Exit"), N_("Close the program."), 
+		exit_call, NULL, NULL,
+	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 0, 0, NULL},
+
+	{GNOME_APP_UI_ENDOFINFO}
+};
+
+GnomeUIInfo optionmenu[] = {
+	{GNOME_APP_UI_ITEM, N_("Play Speed..."), N_("Set playing speed."),
+	 playspeed_call, NULL, NULL,
+	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+	
+	{GNOME_APP_UI_ITEM, N_("Tape..."), N_("Set the machine's tape."),
+	 tape_call, NULL, NULL,
+	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+	
+	{GNOME_APP_UI_ITEM, N_("View States"), N_("Open a table with the machine's states."),
+	 view_states_call, NULL, NULL,
+	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+	
+	{GNOME_APP_UI_ENDOFINFO}
+};
+
+GnomeUIInfo helpmenu[] = {
+	{GNOME_APP_UI_HELP, NULL, NULL, NULL, NULL, NULL,
+	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("About..."), N_("Version, credits, etc."), 
+		about_call, NULL, NULL,
+	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
+
+	{GNOME_APP_UI_ENDOFINFO}
+};
+
+GnomeUIInfo mainmenu[] = {
+	{GNOME_APP_UI_SUBTREE, N_("File"), NULL, filemenu, NULL, NULL,
+	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+
+	{GNOME_APP_UI_SUBTREE, N_("Options"), NULL, optionmenu, NULL, NULL,
+	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+
+	{GNOME_APP_UI_JUSTIFY_RIGHT},
+		
+	{GNOME_APP_UI_SUBTREE, N_("Help"), NULL, helpmenu, NULL, NULL,
+	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+
+	{GNOME_APP_UI_ENDOFINFO}
+};
+
+GnomeUIInfo toolbar[] = {
+	{GNOME_APP_UI_ITEM, "Reset", N_("Reset"),
+	 power_callback, NULL, NULL,
+	GNOME_APP_PIXMAP_STOCK, "gTuringReset", 0, 0, NULL},
+	
+	{GNOME_APP_UI_ITEM, "Stop", N_("Stop"),
+	 stop_callback, NULL, NULL,
+	GNOME_APP_PIXMAP_STOCK, "gTuringStop", 0, 0, NULL},
+	
+	{GNOME_APP_UI_ITEM, "Run", N_("Run"),
+	 play_callback, NULL, NULL,
+	GNOME_APP_PIXMAP_STOCK, "gTuringRun", 0, 0, NULL},
+	
+	{GNOME_APP_UI_ITEM, "Step", N_("Step"),
+	 step_callback, NULL, NULL,
+	GNOME_APP_PIXMAP_STOCK, "gTuringStep", 0, 0, NULL},
+	
+	{GNOME_APP_UI_ENDOFINFO}
+};
+
+void create_machine(void)
+{
+	GtkWidget *frame;
+	
+	frame = rootw;
+	tapelabel = gtk_label_new((*tape_string != 0)? tape_string : _("Wellcome to gTuring."));
+	headlabel = gtk_label_new("^                   ");
+	headlabel->style = tapelabel->style = gtk_style_copy(tapelabel->style);
+	tapelabel->style->font = gdk_font_load(TAPE_FONT);
+	gtk_box_pack_start(GTK_BOX(rootw), tapelabel, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(rootw), headlabel, TRUE, TRUE, 0);
+}
+
+void create_status(void)
+{
+	GtkWidget *hbox, *frame;
+
+	hbox = gtk_hbox_new(FALSE, 0);
+	gtk_box_pack_end(GTK_BOX(rootw), hbox, FALSE, FALSE, 0);
+	
+	frame = gtk_frame_new(NULL);
+	gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_IN);
+	gtk_box_pack_start(GTK_BOX(hbox), frame, TRUE, TRUE, 0);
+	helpline = gtk_label_new("");
+	gtk_container_add(GTK_CONTAINER(frame), helpline);
+	
+	frame = gtk_frame_new(NULL);
+	gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_IN);
+	gtk_box_pack_start(GTK_BOX(hbox), frame, TRUE, TRUE, 0);
+	statusline = gtk_label_new("");
+	gtk_container_add(GTK_CONTAINER(frame), statusline);
+}
+
+GnomeStockPixmapEntry *pentry_new(gchar **xpm_data, gint size)
+{
+	GnomeStockPixmapEntry *pentry;
+	
+	pentry = g_malloc(sizeof(GnomeStockPixmapEntry));
+	pentry->data.type = GNOME_STOCK_PIXMAP_TYPE_DATA;
+	pentry->data.width = size;
+	pentry->data.height = size;
+	pentry->data.label = NULL;
+	pentry->data.xpm_data = xpm_data;
+	
+	return pentry;
+}
+
+static void init_stock(void)
+{
+	GnomeStockPixmapEntry *pentry;
+	gchar **xpms[] = { power_xpm, play_xpm, stop_xpm, step_xpm, NULL };
+	gchar *names[] = { "Reset", "Run", "Stop", "Step" };
+	gchar stockname[22];
+	int i;
+	
+	for (i = 0; xpms[i]; i++) {
+		snprintf(stockname, 22, "gTuring%s", names[i]);
+		pentry = pentry_new(xpms[i], 8);
+		gnome_stock_pixmap_register(stockname, GNOME_STOCK_PIXMAP_REGULAR, pentry);
+	}
+}
+
+void init_interfase(int argc, char *argv[])
+{
+	GtkWidget *app;
+	
+	init_stock();						
+	
+	app = gnome_app_new("gTuring", "gTuring");
+	gtk_window_set_wmclass(GTK_WINDOW(app), "gturing", "gTuring");
+	gtk_widget_show(app);
+
+	rootw = gtk_vbox_new(FALSE, GNOME_PAD_SMALL);
+	gnome_app_set_contents(GNOME_APP(app), rootw);
+	gnome_app_create_menus(GNOME_APP(app), mainmenu);
+	gnome_app_create_toolbar(GNOME_APP(app), toolbar);
+
+	power = toolbar[0].widget;
+	stop = toolbar[1].widget;
+	play = toolbar[2].widget;
+	step = toolbar[3].widget;
+
+	set_toolbar_sens(FALSE, FALSE, FALSE, FALSE);
+	
+	create_machine();
+	create_status();
+	
+	gtk_widget_show_all(rootw);
+}
+
+void init_globals(void)
+{
+	tm = new_turing();
+	
+	strncpy(tape_string, gnome_config_get_string("/gTuring/Options/tape="), 1024);
+	strncpy(states_fname, gnome_config_get_string("/gTuring/Options/program="), 1024);
+	speed = gnome_config_get_int("/gTuring/Options/speed=50");
+}
+
+/* Want to add command-line options? This is the right place. */
+void parse_args(int argc, char *argv[])
+{
+/*	int i;
+	char help[] = N_("%s:\n\nUsage: %s [options] [states_file] [tape_string]\n\n\
+-?  --help           Display this help and exit.\n");*/
+
+	progname = argv[0];
+/*	i = 1;
+	
+	while(i < argc)
+		{
+			if ((strcmp(argv[i], _("--help")) == 0) ||
+							 (strcmp(argv[i], "-?") == 0))
+				{
+					fprintf(stderr, help, progname, progname);
+					exit (1);
+				}
+			else if (*states_fname == 0)
+				strcpy(states_fname, argv[i]);
+			else if (*tape_string == 0)
+				strcpy(tape_string, argv[i]);
+			else
+				{
+					fprintf(stderr, help, progname, progname);
+					exit (1);
+				}
+			
+			i++;
+		}*/
+}
+
+/* The main. */
+int main (int argc, char *argv[])
+{
+	parse_args(argc, argv);
+	gnome_init("gnomecard", NULL, argc, argv, 0, NULL);
+	init_globals();
+	init_interfase(argc, argv);
+	
+	if (*states_fname != 0)
+		set_states_fname(states_fname);
+
+	gtk_main();
+	
+	return 0;
+}
