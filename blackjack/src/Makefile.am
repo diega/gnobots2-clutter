@@ -3,9 +3,7 @@ INCLUDES =  \
 	-I$(top_srcdir)/libgames-support           \
 	-DDATADIR=\""$(datadir)"\"		   \
 	$(GNOME_GAMES_CFLAGS)			   \
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"   \
-	-DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED \
-	-DGTK_DISABLE_DEPRECATED -DGNOME_DISABLE_DEPRECATED
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"
 
 bin_PROGRAMS = blackjack
 

@@ -12,9 +12,7 @@ INCLUDES = -I.. -I$(srcdir)/..		\
 	$(GNOME_GAMES_CFLAGS) \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	-DDATADIR=\""$(datadir)"\"		   \
-	-DPIXMAPDIR=\""$(datadir)/pixmaps/same-gnome"\" \
-	-DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED \
-	-DGTK_DISABLE_DEPRECATED -DGNOME_DISABLE_DEPRECATED
+	-DPIXMAPDIR=\""$(datadir)/pixmaps/same-gnome"\"
 
 bin_PROGRAMS = same-gnome
 
