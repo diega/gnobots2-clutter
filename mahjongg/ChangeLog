@@ -1,3 +1,9 @@
+2003-07-07  Steve Chaplin  <stevech1097@yahoo.com.au>
+
+	* mahjongg.c (update_moves_left): Fix a memory leak.
+	(tile_event): And another.
+	(undo_tile_callback): And another.
+
 2003-07-04  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am (install-data-local): Fix the high-score file

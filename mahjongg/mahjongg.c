@@ -780,6 +780,7 @@ update_moves_left (void)
         check_free ();
 	tmpstr = g_strdup_printf ("%2d", moves_left);
         gtk_label_set_text (GTK_LABEL (moves_label), tmpstr);
+	g_free (tmpstr);
 
         return moves_left;
 }
@@ -899,6 +900,7 @@ tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
 							visible_tiles -= 2;
 							tmpstr = g_strdup_printf("%3d", visible_tiles);
 							gtk_label_set_text (GTK_LABEL(tiles_label), tmpstr);
+							g_free (tmpstr);
 							update_moves_left ();
 							set_undoredo_sensitive (TRUE, FALSE);
 							set_menus_sensitive ();
@@ -1565,6 +1567,7 @@ undo_tile_callback (GtkWidget *widget, gpointer data)
 
         tmpstr = g_strdup_printf ("%3d", visible_tiles);
         gtk_label_set_text (GTK_LABEL(tiles_label), tmpstr);
+	g_free (tmpstr);
         gnome_canvas_update_now (GNOME_CANVAS (canvas));
 
 	set_menus_sensitive ();
