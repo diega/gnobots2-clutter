@@ -24,7 +24,7 @@
 #define MAX_TILES 146
 #define HALF_WIDTH 20
 #define HALF_HEIGHT 28
-#define MAH_VERSION "0.3.0"
+#define MAH_VERSION "0.4.0"
      
 typedef struct _tilepos tilepos;     
 typedef struct _tile tile;
@@ -69,11 +69,11 @@ tiletypes default_types [] = {
 	{29, 4, 29}, 
 	{30, 4, 30}, 
 	{31, 4, 31},
-	{32, 1, 32}, 
-	{32, 1, 33}, 
-	{32, 1, 34}, 
-	{32, 1, 35},
-	{33, 4, 36}, 
+	{32, 4, 32}, 
+	{33, 1, 33}, 
+	{33, 1, 34}, 
+	{33, 1, 35},
+	{33, 1, 36}, 
 	{34, 4, 37}, 
 	{35, 1, 38}, 
 	{35, 1, 39}, 
@@ -306,8 +306,8 @@ int find_tile_in_layer (int x, int y, int layer)
 	int i, tile_num = MAX_TILES + 1;
 
 	for (i = 0; i < MAX_TILES; i ++) {
-		if ((tiles[i].x < x) && ((tiles[i].x + TILE_WIDTH) > x)) {
-			if ((tiles[i].y < y) && ((tiles[i].y + TILE_HEIGHT) > y)) {
+		if ((tiles[i].x < x) && ((tiles[i].x + TILE_WIDTH - 1) > x)) {
+			if ((tiles[i].y < y) && ((tiles[i].y + TILE_HEIGHT - 1) > y)) {
 				if ((tiles[i].layer == layer) && (tiles[i].visible == 1))
 					tile_num = i;
 			}
@@ -321,8 +321,8 @@ int find_tile (int x, int y)
 	int i, tile_num = MAX_TILES + 1, layer = 0;
 
 	for (i = 0; i < MAX_TILES; i++) {
-		if ((tiles[i].x < x) && ((tiles[i].x + TILE_WIDTH) > x) && (tiles[i].visible)) {
-			if ((tiles[i].y < y) && ((tiles[i].y + TILE_HEIGHT) > y)) {
+		if ((tiles[i].x < x) && ((tiles[i].x + TILE_WIDTH - 1) > x) && (tiles[i].visible)) {
+			if ((tiles[i].y < y) && ((tiles[i].y + TILE_HEIGHT - 1) > y)) {
 				if ((tiles[i].layer >= layer) && (tiles[i].visible == 1)) {
 					tile_num = i;
 					layer = tiles[i].layer;
@@ -386,11 +386,11 @@ int tile_free (int tile_num)
 		uleft_tile = find_tile_in_layer (tile_x - HALF_WIDTH, tile_y, tiles[tile_num].layer);
 		bleft_tile = find_tile_in_layer (tile_x - HALF_WIDTH,
 						 tile_y + HALF_HEIGHT, tiles[tile_num].layer);
-		uright_tile = find_tile_in_layer (tile_x + TILE_WIDTH, tile_y, tiles[tile_num].layer);
-		bright_tile = find_tile_in_layer (tile_x + TILE_WIDTH,
+		uright_tile = find_tile_in_layer (tile_x + TILE_WIDTH - 1, tile_y, tiles[tile_num].layer);
+		bright_tile = find_tile_in_layer (tile_x + TILE_WIDTH - 1,
 						  tile_y + HALF_HEIGHT, tiles[tile_num].layer);
-		rbottom_tile = find_tile_in_layer (tile_x + HALF_WIDTH, tile_y + TILE_HEIGHT, tiles[tile_num].layer);
-		lbottom_tile = find_tile_in_layer (tile_x, tile_y + TILE_HEIGHT, tiles[tile_num].layer);
+		rbottom_tile = find_tile_in_layer (tile_x + HALF_WIDTH, tile_y + TILE_HEIGHT - 1, tiles[tile_num].layer);
+		lbottom_tile = find_tile_in_layer (tile_x, tile_y + TILE_HEIGHT - 1, tiles[tile_num].layer);
 		rup_tile = find_tile_in_layer (tile_x + HALF_WIDTH, tile_y - TILE_HEIGHT, tiles[tile_num].layer);
 		lup_tile = find_tile_in_layer (tile_x, tile_y - TILE_HEIGHT, tiles[tile_num].layer);
 
