@@ -1,3 +1,7 @@
+2001-07-05  Christian Rose  <menthos@menthos.com>
+
+	* gnome-stones.desktop: Modified Swedish entries.
+
 2001-06-03  Juan Pablo Mendoza <pablo_juan@yahoo.com>
 
 	* help/Makefile.am (SUBDIRS): Add "it" again since the compilation
