@@ -17,8 +17,13 @@
 
 2003-06-07  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* src/menu.cpp: 
+	* src/dialog.cpp:
+	Fixes to make dialogs be presented properly. Fixes bug #114623.
+
 	* src/dialog.cpp: Updated to use the revised
 	gtk_card_deck_blah_blah API.
+	
 
 2003-06-06  Callum McKenzie  <callum@physics.otago.ac.nz>
 
