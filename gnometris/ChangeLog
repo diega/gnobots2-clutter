@@ -1,3 +1,8 @@
+2003-12-22  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* tetris.cpp (gameQuit): Check that the games is in progress
+	before getting the score. Fixes bug #129711.
+
 2003-12-12  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am (INCLUDES): Use GNOME_GAMES_CXXFLAGS rather than

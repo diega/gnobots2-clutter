@@ -74,7 +74,6 @@ Tetris::Tetris(int cmdlLevel):
 	bgPixmap(0),
 	field(0),
 	preview(0),
-	scoreFrame(0),
 	paused(false), 
 	timeoutId(-1), 
 	onePause(false), 
@@ -814,7 +813,7 @@ Tetris::gameQuit(GtkWidget *widget, void *d)
 	Tetris *t = (Tetris*) d;
 
 	/* Record the score if the game isn't over. */
-	if ((t->scoreFrame->getScore() > 0) && t->inPlay)
+	if (t->inPlay && (t->scoreFrame->getScore() > 0))
 		gnome_score_log(t->scoreFrame->getScore(), 0, TRUE);
 
 	if (t->w)
