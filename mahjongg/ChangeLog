@@ -1,3 +1,11 @@
+2005-04-05  Richard Hoelscher  <rah@rahga.com>
+
+	* mahjongg.c: Make menu items for "Toolbar" and "Preferences"
+	comply with HIG. (Dennis Cranston)
+	(set_fullscreen_actions, fullscreen_callback) 
+	(window_state_callback): Add fullscreen support.
+	Experimental change: Add "Leave Fullscreen" to the toolbar.
+
 2005-04-04  Richard Hoelscher  <rah@rahga.com>
 
 	* mahjongg.c: Support games-stock items, port to GtkUIInfo.

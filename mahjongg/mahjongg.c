@@ -60,6 +60,8 @@ GtkAction *undo_action;
 GtkAction *restart_action;
 GtkAction *scores_action;
 GtkAction *show_toolbar_action;
+GtkAction *fullscreen_action;
+GtkAction *leavefullscreen_action;
 
 gint selected_tile, visible_tiles;
 gint sequence_number;
@@ -139,6 +141,34 @@ void mahjongg_theme_warning (gchar *message)
 	gtk_widget_destroy (dialog);
 }
 
+static void
+set_fullscreen_actions (gboolean is_fullscreen)
+{
+	gtk_action_set_sensitive (leavefullscreen_action, is_fullscreen);
+	gtk_action_set_visible (leavefullscreen_action, is_fullscreen);
+
+	gtk_action_set_sensitive (fullscreen_action, !is_fullscreen);
+	gtk_action_set_visible (fullscreen_action, !is_fullscreen);
+}
+
+static void
+fullscreen_callback (GtkAction *action)
+{
+	if (action == fullscreen_action)
+		gtk_window_fullscreen (GTK_WINDOW (window));
+	else
+		gtk_window_unfullscreen (GTK_WINDOW (window));
+}
+
+static void
+window_state_callback (GtkWidget *widget, GdkEventWindowState *event)
+{
+	if (!(event->changed_mask & GDK_WINDOW_STATE_FULLSCREEN))
+		return;
+
+	set_fullscreen_actions (event->new_window_state & 
+				GDK_WINDOW_STATE_FULLSCREEN);
+}
 
 /* At the end of the game, hint, shuffle and pause all become unavailable. */
 /* Undo and Redo are handled elsewhere. */
@@ -1295,13 +1325,15 @@ const GtkActionEntry actions[] = {
         { "Hint", GAMES_STOCK_HINT, NULL, NULL, NULL, G_CALLBACK (hint_callback) },
         { "Scores", GAMES_STOCK_SCORES, NULL, NULL, NULL, G_CALLBACK (scores_callback) },
         { "Quit", GTK_STOCK_QUIT, NULL, NULL, NULL, G_CALLBACK (quit_cb) },
-        { "Preferences", GTK_STOCK_PROPERTIES, NULL, NULL, NULL, G_CALLBACK (properties_callback) },
+	{ "Fullscreen", GAMES_STOCK_FULLSCREEN, NULL, NULL, NULL, G_CALLBACK (fullscreen_callback) },
+	{ "LeaveFullscreen", GAMES_STOCK_LEAVE_FULLSCREEN, NULL, NULL, NULL, G_CALLBACK (fullscreen_callback) },
+        { "Preferences", GTK_STOCK_PREFERENCES, NULL, NULL, NULL, G_CALLBACK (properties_callback) },
         { "Contents", GAMES_STOCK_CONTENTS, NULL, NULL, NULL, G_CALLBACK (help_cb) },
         { "About", GTK_STOCK_ABOUT, NULL, NULL, NULL, G_CALLBACK (about_callback) }
 };
 
 const GtkToggleActionEntry toggle_actions[] = {
-        { "ShowToolbar", NULL, N_("_Show toolbar"), NULL, N_("Show or hide the toolbar"), G_CALLBACK (show_tb_callback) },
+        { "ShowToolbar", NULL, N_("_Toolbar"), NULL, N_("Show or hide the toolbar"), G_CALLBACK (show_tb_callback) },
 	{ "PauseGame", GAMES_STOCK_PAUSE_GAME, NULL, NULL, NULL, G_CALLBACK (pause_callback) }
 };
 
@@ -1322,7 +1354,10 @@ const char *ui_description =
 "      <menuitem action='Quit'/>"
 "    </menu>"
 "    <menu action='SettingsMenu'>"
+"      <menuitem action='Fullscreen'/>"
+"      <menuitem action='LeaveFullscreen'/>"
 "      <menuitem action='ShowToolbar'/>"
+"      <separator/>"
 "      <menuitem action='Preferences'/>"
 "    </menu>"
 "    <menu action='HelpMenu'>"
@@ -1338,6 +1373,7 @@ const char *ui_description =
 "    <toolitem action='UndoMove'/>"
 "    <toolitem action='RedoMove'/>"
 "    <toolitem action='Hint'/>"
+"    <toolitem action='LeaveFullscreen'/>"
 "  </toolbar>"
 "</ui>";
 
@@ -1367,6 +1403,10 @@ create_ui_manager (const gchar *group)
 	redo_action = gtk_action_group_get_action (action_group, "RedoMove");
 	scores_action = gtk_action_group_get_action (action_group, "Scores");
 	show_toolbar_action = gtk_action_group_get_action (action_group, "ShowToolbar");
+
+	fullscreen_action = gtk_action_group_get_action (action_group, "Fullscreen");
+	leavefullscreen_action = gtk_action_group_get_action (action_group, "LeaveFullscreen");
+	set_fullscreen_actions (FALSE);
 
         gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (show_toolbar_action),
         			      gconf_client_get_bool (conf_client, "/apps/mahjongg/show_toolbar", NULL));
@@ -1420,6 +1460,8 @@ main (int argc, char *argv [])
 	gtk_window_set_title (GTK_WINDOW (window), _("Mahjongg"));
 	g_signal_connect (G_OBJECT (window), "configure_event",
 			  G_CALLBACK (window_configure_cb), NULL);
+	g_signal_connect (G_OBJECT (window), "window_state_event",
+			  G_CALLBACK (window_state_callback), NULL);
 	
 	/* Statusbar for a chrono, Tiles left and Moves left */
 	status_box = gtk_hbox_new (FALSE, 10);
