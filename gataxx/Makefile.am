@@ -12,6 +12,7 @@ bin_PROGRAMS = gataxx
 
 gataxx_SOURCES = \
 	ai.c \
+	ai.h \
 	appbar.c \
 	appbar.h \
 	gtkgridboard.c \
