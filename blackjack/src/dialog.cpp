@@ -176,6 +176,12 @@ select_rule_cb (GtkTreeSelection *select, gpointer data)
         }
 }
 
+static void
+reset_button_cb (GtkWidget *widget, gpointer data)
+{
+        bj_set_balance (500.0);
+}
+
 void
 show_preferences_dialog () 
 {
@@ -184,6 +190,7 @@ show_preferences_dialog ()
         GtkWidget *top_vbox;
         GtkWidget *vbox;
         GtkWidget *toggle;
+        GtkWidget *button;
         gboolean show_probabilities = false;
         gboolean quick_deal = false;
         static GtkListStore* list;
@@ -232,6 +239,11 @@ show_preferences_dialog ()
                 gtk_box_pack_start (GTK_BOX (vbox), toggle, FALSE, FALSE, 0);
                 g_signal_connect (toggle, "toggled",
                                   G_CALLBACK (quick_deal_toggle_cb), NULL);
+                
+                button = gtk_button_new_with_label (_("Reset balance"));
+                gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+                g_signal_connect (button, "clicked",
+                                  G_CALLBACK (reset_button_cb), NULL);
                 
                 
                 // Rules Tab
