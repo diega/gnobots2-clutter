@@ -1,3 +1,8 @@
+1999-02-19  Raja R Harinath  <harinath@cs.umn.edu>
+
+	* Makefile.am (GnomeScott_LDADD): Use $(ZVT_LIBS) instead of
+	-lzvt. 
+
 1999-02-10 Sergey Panov
 
         * GnomeScott.c: Use GNOMEUIINFO_ macros. Now it will not polute
