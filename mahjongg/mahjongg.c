@@ -28,7 +28,10 @@
 
 #define APPNAME "mahjongg"
 #define APPNAME_LONG "Gnome Mahjongg"
+/*
 #define MAH_VERSION "0.99.2+"
+*/
+#define MAH_VERSION VERSION
 
 #define AREA_WIDTH 600
 #define AREA_HEIGHT 470
