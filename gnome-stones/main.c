@@ -946,13 +946,13 @@ about_cb (GtkWidget *widget, gpointer data)
                           NULL
                          };
   /* Translator credits */
-  gchar *translator_credits = _("");
+  gchar *translator_credits = _("translator_credits");
   about= gnome_about_new (_("Gnome-Stones"), VERSION,
 			  "(C) 1998 Carsten Schaar",
 			  _("A game."),
 			  (const char **)authors,
                           (const char **)documenters,
-                          (const char *)translator_credits,
+                          strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
 			  NULL);
   gtk_widget_show (about);
 }

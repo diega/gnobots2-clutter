@@ -1,3 +1,7 @@
+2002-02-02  Zbigniew Chyla  <cyba@gnome.pl>
+
+	* mahjongg.c (about_callback): Don't try to translate empty string.
+
 2002-01-24  Gediminas Paulauskas <menesis@delfi.lt>
 
 	* mahjongg.c: make all confirmations work, ask if start new

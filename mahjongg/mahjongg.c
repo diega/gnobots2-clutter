@@ -1199,7 +1199,7 @@ void about_callback (GtkWidget *widget, gpointer data)
                 NULL
         };
         /* Translator credits */
-        gchar *translator_credits = _("");
+        gchar *translator_credits = _("translator_credits");
 
 	about = gnome_about_new (_("GNOME Mahjongg"), MAH_VERSION,
 				 "(C) 1998 The Free Software Foundation",
@@ -1209,7 +1209,7 @@ void about_callback (GtkWidget *widget, gpointer data)
 				   "Tiles under the General Public License."),
 				 (const gchar **)authors,
 				 (const gchar **)documenters,
-                                 (const gchar *)translator_credits,
+				 strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
 				NULL);
 
 	gtk_widget_show (about);

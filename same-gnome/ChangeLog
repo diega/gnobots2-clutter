@@ -1,3 +1,7 @@
+2002-02-02  Zbigniew Chyla  <cyba@gnome.pl>
+
+	* same-gnome.c (game_about_callback): Don't try to translate empty string.
+
 2002-01-03  Josh Barrow  <drleary@mac.com>
 
 	* same-gnome.c: (load_scenario), (create_same_board):
