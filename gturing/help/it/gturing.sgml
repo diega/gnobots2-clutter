@@ -1,0 +1,176 @@
+<!DOCTYPE BOOK PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+<!ENTITY GNOME-APPS SYSTEM "gnomecard.sgml">] >
+
+
+<Book id="index"><title>Guida utente del simulatore di Macchina di Turing per GNOME</title>
+ <bookinfo>
+ <authorgroup>
+   <author>
+    <firstname>Arturo</firstname><surname>Espinosa Aldama</surname>
+   </author>
+   <abstract>Traduzione di Fabrizio Stefani (fabrizio_stefani@yahoo.it)</abstract>
+  </authorgroup>
+  <releaseinfo>documentazione in corso...</releaseinfo>
+  <legalnotice>
+   <para>
+   Questo documento &egrave; liberamente ridistribuibile in accordo con
+   i termini della Licenza Pubblica Generica di GNU.
+   </para>
+  </legalnotice>
+ </bookinfo>
+ <toc></toc>
+ 
+ <chapter id="description"><title>Descrizione</title>
+  <para>
+         Un semplicissimo simulatore di Macchina di Turing. Se volete saperne di
+         pi&ugrave; sulle Macchine di Turing, guardate la 
+	 <ulink URL="http://obiwan.uvi.edu/computing/turing/ture.htm">Turing Machine
+	 Introduction</ulink>.
+	</para>
+	<para>
+         Questo programma &egrave; molto intuitivo. Ha quattro bottoni principali
+         per resettare, fermare, far girare e far girare passo passo la macchina.
+         Quando un programma viene caricato nel simulatore, all'utente vengono
+         date delle indicazioni sul formato del nastro per quello specifico 
+         programma, ed &egrave; possibile lanciare un Monitor degli Stati per
+         vedere (e anche fare il debug di) qualsiasi programma in esecuzione.
+         In questo documento viene data anche una descrizione del formato del
+         file col programma. Per favore, mandate qualunque programma da voi
+         realizzato ad Arturo Espinosa, cos&igrave; verr&agrave; incluso nella
+         prossima versione.
+  </para>
+	<para>
+         La Macchina di Turing simulata da questo programma permette di leggere
+   qualsiasi carattere disponibile, ma non ha un modo di esprimere l'istruzione
+   "else", quindi i programmi che prevedono un grande spazio per l'input 
+   potrebbero crescere molto facilmente.
+	</para>
+ </chapter>
+   
+ <chapter id="display"><title>Il display</title>
+   <para>
+          All'avvio si troveranno dei controlli molto elementari per tali
+          applicazioni:
+                una barra dei menu, una barra degli attrezzi su cui &egrave; 
+                mostrata l'applicazione principale e un display di stato.
+                Il display di stato mostra sulla sinistra il nome del file
+                di programma che &egrave; attualmente caricato, e mostra lo
+                stato corrente sulla destra.
+	 </para>
+	 <para>
+          Il display dell'applicazione principale mostra i contenuti del nastro
+          della macchina e la posizione della testina di lettura/scrittura della
+          macchina, indicata da un accento circonflesso (^). Il display si anima
+          durante l'esecuzione del programma da parte della macchina, o quando
+          l'utente preme il bottone "Passo" ("Step") sulla barra degli attrezzi.
+   </para>
+  <sect1 id="menubar"><title>La barra dei Menu</title>
+   <para>
+          Il menu "File" vi permette di caricare un programma nella macchina ed
+          esce dall'applicazione. Quando caricate un programma dovrete scegliere 
+          un file precedentemente scritto. La prima volta che scegliete questa
+          opzione verr&agrave; aperta la directory degli esempi (examples).
+	 </para>
+	 <para>
+          Impostate i contenuti del nastro e la velocit&agrave; a cui la macchina
+          li eseguir&agrave; tramite il menu "Opzioni". Qui c'&egrave; un'opzione per
+          attivare o disattivare la Vista degli Stati. Cambiando i contenuti del
+          nastro si resetter&agrave; la macchina.
+	 </para>
+  </sect1>
+  <sect1 id="toolbar"><title>La barra degli attrezzi</title>
+   <para>
+          La barra degli attrezzi &egrave; il controllo principale di gTuring. Essa
+          vi offre quattro bottoni per operare sulla macchina. Ogni bottone viene
+          attivato o disattivato a seconda dello stato di esecuzione della macchina,
+          mostrandovi le opzioni in quel momento.
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>Reset: Imposta la macchina nello stato 0 e mette i contenuti del
+     nastro come erano stati originariamente immessi dall'utente. La testina
+     della macchina viene messa sul carattere all'estrema sinistra del nastro.</para>
+    </listitem>
+    <listitem>
+     <para>Stop: Mette in Pausa la macchina.</para>
+    </listitem>
+    <listitem>
+     <para>Run (Esegui): La macchina inizia a transitare da uno stato al successivo,
+     secondo gli stati che sono stati caricati precedentemente. La velocit&agrave;
+     con cui vengono eseguite le transizioni &egrave; impostata nel menu
+     "Opzioni".</para>
+    </listitem>
+    <listitem>
+     <para>Step (Passo): Esegue solo una transizione.</para>
+    </listitem>
+   </itemizedlist>
+  </sect1>
+  <sect1 id="dialogs"><title>Vista degli Stati</title>
+   <para>
+          La Vista degli Stati fa vedere agli utenti, in una lista a colonna,
+          l'intera tavola degli stati della Macchina di Turing. Lo stato in cui
+          si trova la macchina &egrave; quello della riga sottolineata. Mentre la
+          macchina si sposta da uno stato all'altro la riga sottolineata
+          cambier&agrave; per riflettere lo stato che sta per essere eseguito.
+   </para>
+  </sect1>
+ </chapter>
+ <chapter id="prgfmt"><title>Formato del File di Programma</title>
+  <para>
+Viene ignorata qualsiasi linea vuota o qualsiasi linea che inizia con (#).
+Altrimenti ci si aspettano cinque elementi, separati da uno spazio. Essi
+sono il numero dello stato, il simbolo atteso, il simbolo da scrivere, la
+direzione in cui muoversi e il nuovo stato. Qualsiasi cosa segua tali elementi
+verr&agrave; ignorata.
+</para>
+<para>
+I simboli attesi e i simboli da scrivere possono essere qualsiasi carattere
+stampabile. Il carattere blank (spazio vuoto) &egrave; rappresentato 
+dall'underscore (_). Gli stati sono numeri interi, a partire da 0. Le 
+possibili direzioni di movimento sono sinistra e destra, rappresentate,
+rispettivamente, da 'l' (left, sinistra) e 'r' (right, destra).
+</para>
+<para>
+La macchina parte dallo stato 0 e si ferma quando non riesce a trovare il
+nuovo stato o il nuovo stato non si aspetta il simbolo di lettura.
+</para>
+<para>
+&Egrave; importante osservare che, poich&eacute; il nastro della macchina
+&egrave; pensato di lunghezza infinita, il nastro avr&agrave; un infinito
+numero di spazi vuoti in fondo ad ogni estremit&agrave; di ci&ograve; che
+l'utente ha messo come contenuti del nastro.
+</para>
+<para>
+<example><title>Binario ++</title>
+<programlisting>
+# Questo programma aggiunge 1 ad un numero binario. Il nastro iniziale deve
+# essere un numero binario.
+
+0 1 1 r 0 Muove fino alla cifra piu' a destra del numero binario. Poi, va nello
+0 0 0 r 0 stato 1.
+0 _ _ l 1
+1 1 0 l 1 Se c'e' un 1, lo cambia in 0 e si sposta a sinistra.
+1 0 1 r 2 Se c'e' uno 0, lo cambia in 1 e va nello stato 2
+1 _ 1 r 2 Fa lo stesso per gli spazi bianchi.
+
+# Visto che non c'e' uno stato 2, la macchina si ferma.
+</programlisting>
+</example>
+	</para>
+ </chapter>
+</book>
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: sgml
+sgml-omittag:t
+sgml-shorttag:t
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-indent-data:t
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->
