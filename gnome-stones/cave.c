@@ -1,6 +1,6 @@
 /* gnome-stones - cave.c
  *
- * Time-stamp: <1998/08/23 12:30:22 carsten>
+ * Time-stamp: <1998/09/09 21:10:55 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -57,6 +57,93 @@ static GList *object_descriptions= NULL;
 gboolean
 object_register (GStonesObject *object)
 {
+  guint          num_x;
+  guint          num_y;
+  guint          x;
+  guint          y;
+  guint          idx;
+  char          *filename;
+  char          *pathname;
+  GdkImlibImage *image;
+  
+  filename= g_copy_strings ("gnome-stones/", object->image_name, NULL);
+  pathname= gnome_pixmap_file (filename);
+  image   = gdk_imlib_load_image (pathname);
+  g_free (pathname);
+  g_free (filename);
+  
+  if (!image)
+    {
+      char *error= g_copy_strings ("Error while loading image ", 
+				   object->image_name, 
+				   ": file not found!", NULL);
+      g_warning (error);
+      g_free (error);
+
+      return FALSE;
+    }
+
+  /* Determine the number of images in the loaded image.  */
+  num_x= image->rgb_width/STONE_SIZE;
+  num_y= image->rgb_height/STONE_SIZE;
+
+  if (num_x*num_y == 0)
+    {
+      char *error= g_copy_strings ("Error while registering object ", 
+				   object->image_name, 
+				   ": image contains no data!", NULL);
+      g_warning (error);
+      g_free (error);
+
+      return FALSE;
+    }
+
+  object->image= g_malloc (num_x*num_y*sizeof (GdkPixmap*));
+  
+  if (object->image == NULL)
+    {
+      char *error= g_copy_strings ("Error while registering object ", 
+				   object->image_name, 
+				   ": out of memory!", NULL);
+      g_warning (error);
+      g_free (error);
+
+      return FALSE;
+    }
+  
+  object->imlib_image= g_malloc (num_x*num_y*sizeof (GdkImlibImage*));
+  
+  if (object->image == NULL)
+    {
+      char *error= g_copy_strings ("Error while registering object ", 
+				   object->image_name, 
+				   ": out of memory!", NULL);
+      g_warning (error);
+      g_free (error);
+      g_free (object->image);
+
+      return FALSE;
+    }
+  
+  /* We cut our image into small pieces.  */
+  /* gdk_imlib_render (image, image->rgb_width, image->rgb_height); */
+
+  idx= 0;
+  for (y= 0; y < num_y; y++)
+    for (x= 0; x < num_x; x++, idx++)
+      {
+	/* FIXME: check error conditions.  */
+	object->imlib_image[idx]= 
+	  gdk_imlib_crop_and_clone_image (image, x*STONE_SIZE, y*STONE_SIZE,
+					  STONE_SIZE, STONE_SIZE);
+	
+	gdk_imlib_render (object->imlib_image[idx], 
+			  object->imlib_image[idx]->rgb_width, 
+			  object->imlib_image[idx]->rgb_height);
+
+	object->image[idx]= gdk_imlib_copy_image (object->imlib_image[idx]);
+      }
+  
   object_descriptions= g_list_append (object_descriptions, object);
   
   return TRUE;
@@ -82,6 +169,35 @@ object_get_type (const gchar *name)
   return NULL;
 }
 
+GdkPixmap *
+object_get_image (ObjectType type, gint index)
+{
+  g_return_val_if_fail (type, NULL);
+  /* FIXME: add range checks.  */
+  
+  if (index == OBJECT_DEFAULT_IMAGE)
+    index= type->image_index;
+  else if (index == OBJECT_EDITOR_IMAGE)
+    index= type->editor_index;
+  
+  return type->image[index];
+}
+
+
+GdkImlibImage *
+object_get_imlib_image (ObjectType type, gint index)
+{
+  g_return_val_if_fail (type, NULL);
+  /* FIXME: add range checks.  */  
+  
+  if (index == OBJECT_DEFAULT_IMAGE)
+    index= type->image_index;
+  else if (index == OBJECT_EDITOR_IMAGE)
+    index= type->editor_index;
+  
+  return type->imlib_image[index];
+}
+
 
 
 /*****************************************************************************/
@@ -101,11 +217,10 @@ cave_open_doors (GStonesCave *cave);
 /* some animation stuff.  */
 
 
-static void
-eight_animate (GStonesCave *cave, guint x, guint y, guint *ix, guint *iy,
-	       gpointer data)
+static guint
+eight_animate (GStonesCave *cave, guint x, guint y, gpointer data)
 {
-  *iy= (cave->frame/2) % 8;
+  return (cave->frame/2) % 8;
 }
 
 
@@ -127,18 +242,15 @@ empty_pre_cave_scan (GStonesCave *cave, gpointer data)
     extra_life_animation--;
 }
 
-static void
-empty_animate (GStonesCave *cave, guint x, guint y, guint *ix, guint *iy,
-	       gpointer data)
+static guint
+empty_animate (GStonesCave *cave, guint x, guint y, gpointer data)
 {
-  *ix= 0;
-
   if (open_door_animation)
-    *iy= open_door_animation;
+    return open_door_animation;
   else if (extra_life_animation)
-    *iy= 4+random () % 4;
+    return 4+random () % 4;
   else
-    *iy= 0;
+    return 0;
 }     
 
 static GStonesObject empty_object=
@@ -152,6 +264,7 @@ static GStonesObject empty_object=
   empty_pre_cave_scan,
   NULL,
   
+  "empty.png",
   empty_animate,
   0, 0
 };
@@ -273,15 +386,13 @@ amoeba_scanned (GStonesCave *cave, guint x, guint y, gpointer data)
     }
 }
 
-static void
-amoeba_animate (GStonesCave *cave, guint x, guint y, guint *ix, guint *iy,
-		gpointer data)
+static guint
+amoeba_animate (GStonesCave *cave, guint x, guint y, gpointer data)
 {
-  *ix= 8;
   if ((cave->frame % 6) < 4)
-    *iy= cave->frame % 6;
+    return cave->frame % 6;
   else
-    *iy= 6-cave->frame % 6;
+    return 6-cave->frame % 6;
 }
 
 
@@ -297,6 +408,7 @@ static GStonesObject amoeba_object=
   amoeba_pre_cave_scan,
   NULL,
   
+  "amoeba.png",
   amoeba_animate,
   0, 0
 };
@@ -323,10 +435,20 @@ gnome_init_cave (GStonesCave *cave)
   return (gpointer) TRUE;
 }
 
+/* The internal gnome states:
+   0: standing still an waiting.
+   1: pushing right
+   2: pushing left
+   3: walk right
+   4: walk left
+*/
+
 
 static void
 gnome_scanned (GStonesCave *cave, guint x, guint y, gpointer data)
 {
+  guint state= 0;
+  
   if ((cave->player_x_direction != 0) || 
       (cave->player_y_direction != 0))
     {
@@ -339,6 +461,11 @@ gnome_scanned (GStonesCave *cave, guint x, guint y, gpointer data)
 
       if (type == OBJECT_EMPTY || type == OBJECT_DIRT)
 	{
+	  if (cave->player_x_direction > 0)
+	    state= 3;
+	  else if (cave->player_x_direction < 0)
+	    state= 4;
+
 	  moved= TRUE;
 	}
       else if (type == OBJECT_DIAMOND)
@@ -371,12 +498,28 @@ gnome_scanned (GStonesCave *cave, guint x, guint y, gpointer data)
 	      if (extra_life)
 		extra_life_animation= 10;	      	      
 
+	      if (cave->player_x_direction > 0)
+		state= 3;
+	      else if (cave->player_x_direction < 0)
+		state= 4;
+
 	      moved= TRUE;
 	    }
 	}
-      else if (type == OBJECT_BOULDER)
+      else if (type == OBJECT_EXIT_OPENED)
 	{
-	  if ((cave->player_y_direction == 0) && 
+	  /* We finished this cave!!! */
+	  moved       = TRUE;
+	  cave->flags|= CAVE_FINISHED;
+	}
+      else if (cave->player_y_direction == 0)
+	{
+	  if (cave->player_x_direction > 0)
+	    state= 1;
+	  else
+	    state= 2;
+	  
+	  if ((type == OBJECT_BOULDER) &&
 	      (cave->entry[xn][yn].state == 0) &&
 	      (cave->entry[xn+cave->player_x_direction][yn].type == OBJECT_EMPTY))
 	    { 
@@ -388,12 +531,6 @@ gnome_scanned (GStonesCave *cave, guint x, guint y, gpointer data)
 		  cave->entry[xn+cave->player_x_direction][yn].state= 0;	      
 		}
 	    }
-	}
-      else if (type == OBJECT_EXIT_OPENED)
-	{
-	  /* We finished this cave!!! */
-	  moved       = TRUE;
-	  cave->flags|= CAVE_FINISHED;
 	}
       
       if (moved)
@@ -410,9 +547,46 @@ gnome_scanned (GStonesCave *cave, guint x, guint y, gpointer data)
 	      
 	      cave->player_x= xn;
 	      cave->player_y= yn;
+
+	      x= xn;
+	      y= yn;
 	    }
 	}
     }
+  cave->entry[x][y].state= state;
+}
+
+
+static guint
+gnome_animate (GStonesCave *cave, guint x, guint y, gpointer data)
+{
+  register gint state= cave->entry[x][y].state;
+  register gint anim = cave->entry[x][y].anim_state;
+  
+  switch (state)
+    {
+    case 0:
+      if ((anim == 0) && (random () % 8 == 0))
+	anim= 1;
+      else if (anim > 0)
+	anim= (anim+1)%4;
+      
+      cave->entry[x][y].anim_state= anim;
+
+      return anim;
+
+    case 1:
+    case 2:
+      anim= 0;
+      return 8*state+cave->frame % 8;
+    case 3:
+    case 4:
+      anim= 0;
+      return 12+4*state+cave->frame % 4;
+    default:
+      return 0;
+    }
+  
 }
 
 
@@ -427,9 +601,10 @@ static GStonesObject gnome_object=
 
   NULL,
   NULL,
-  
-  NULL,
-  10, 0
+
+  "gnome.png",
+  gnome_animate,
+  0, 0
 };
 
 
@@ -466,9 +641,10 @@ static GStonesObject growing_wall_object=
   
   NULL,
   NULL,
-  
+
+  "wall.png",
   NULL,
-  1, 0
+  0, 0
 };
 
 
@@ -548,13 +724,13 @@ magic_wall_post_cave_scan (GStonesCave *cave, gpointer data)
 }
 
 
-static void
-magic_wall_animate (GStonesCave *cave, guint x, guint y, guint *ix, guint *iy,
-		    gpointer data)
+static guint
+magic_wall_animate (GStonesCave *cave, guint x, guint y, gpointer data)
 {
-  *ix= 1;
   if (cave->entry[x][y].state == 1)
-    *iy= 1+cave->frame % 4;
+    return 1+cave->frame % 4;
+
+  return 0;
 }
 
 
@@ -568,7 +744,8 @@ static GStonesObject magic_wall_object=
   NULL,
   magic_wall_pre_cave_scan,
   magic_wall_post_cave_scan,
-  
+
+  "wall.png",
   magic_wall_animate,
   0, 0
 };
@@ -627,9 +804,10 @@ static GStonesObject firefly_object=
   
   NULL,
   NULL,
-  
+
+  "firefly.png",
   eight_animate,
-  7, 0
+  0, 0
 };
 
 
@@ -687,9 +865,10 @@ static GStonesObject butterfly_object=
   
   NULL,
   NULL,
-  
+
+  "butterfly.png",
   eight_animate,
-  6, 0
+  0, 0
 };
 
 
@@ -777,8 +956,9 @@ static GStonesObject boulder_object=
   NULL,
   NULL,
   
+  "boulder.png",
   NULL,
-  3, 0
+  0, 0
 };
 
 
@@ -865,9 +1045,10 @@ static GStonesObject diamond_object=
   
   NULL,
   NULL,
-  
+
+  "diamond.png",
   eight_animate,
-  5, 0
+  0, 0
 };
 
 
@@ -945,14 +1126,12 @@ explosion_new (GStonesCave *cave, guint x, guint y, gboolean diamond)
 }
 
 
-static void
-explosion_animate (GStonesCave *cave, guint x, guint y, guint *ix, guint *iy,
-		   gpointer data)
+static guint
+explosion_animate (GStonesCave *cave, guint x, guint y, gpointer data)
 {
   ExplosionState state= *((ExplosionState*) &cave->entry[x][y].state);
     
-  *ix= 9;
-  *iy= state.state;
+  return state.state;
 }
 
 
@@ -967,9 +1146,10 @@ static GStonesObject explosion_object=
   
   NULL,
   NULL,
-  
+
+  "explosion.png",
   explosion_animate,
-  9, 0
+  0, 0
 };
 
 
@@ -992,20 +1172,13 @@ entrance_scanned (GStonesCave *cave, guint x, guint y, gpointer data)
     }
 }
 
-static void
-entrance_animate (GStonesCave *cave, guint x, guint y, guint *ix, guint *iy, 
-		  gpointer data)
+static guint
+entrance_animate (GStonesCave *cave, guint x, guint y, gpointer data)
 {
   if (cave->entry[x][y].state == 0)
-    {
-      *ix= 4;
-      *iy= (cave->frame % 4)/2;
-    }
+    return (cave->frame % 4)/2;
   else
-    {
-      *ix= 9;
-      *iy= cave->entry[x][y].state-1;
-    }
+    return cave->entry[x][y].state+1;
 }
 
 
@@ -1020,7 +1193,8 @@ static GStonesObject entrance_object=
   
   NULL,
   NULL,
-  
+
+  "door.png",
   entrance_animate,
   0, 0
 };
@@ -1042,8 +1216,9 @@ static GStonesObject frame_object=
   NULL,
   NULL,
   
+  "frame.png",
   NULL,
-  4, 0
+  0, 0
 };
 
 
@@ -1058,9 +1233,10 @@ static GStonesObject wall_object=
 
   NULL,
   NULL,
-  
+
+  "wall.png",
   NULL,
-  1, 0
+  0, 0
 };
 
 
@@ -1076,8 +1252,9 @@ static GStonesObject dirt_object=
   NULL,
   NULL,
   
+  "dirt.png",
   NULL,
-  2, 0
+  0, 0
 };
 
 
@@ -1093,8 +1270,9 @@ static GStonesObject closed_exit_object=
   NULL,
   NULL,
   
+  "door.png",
   NULL,
-  4, 0
+  0, 0
 };
 
 
@@ -1109,7 +1287,8 @@ static GStonesObject opened_exit_object=
 
   NULL,
   NULL,
-  
+
+  "door.png",
   entrance_animate,
   0, 0
 };
@@ -1137,6 +1316,7 @@ objects_register_all (void)
   object_register (&explosion_object);
   object_register (&entrance_object);
   object_register (&closed_exit_object);
+  object_register (&opened_exit_object);
 
   return TRUE;
 }
@@ -1499,24 +1679,39 @@ cave_time_to_frames (GStonesCave *cave, gdouble time)
 }
 
 
-void
-cave_get_image_index (GStonesCave *cave, guint x, guint y,
-		      guint *ix, guint *iy)
+static gint
+cave_get_image_index (GStonesCave *cave, guint x, guint y)
 {
-  ObjectType type;
-  
-  g_return_if_fail (cave != NULL);
-  g_return_if_fail (ix != NULL);
-  g_return_if_fail (iy != NULL);
-  
-  type= cave->entry[x][y].type;
+  register ObjectType type= cave->entry[x][y].type;
 
-  *ix=type->ix;
-  *iy=type->iy;
-
+  /* Determine the image index, that belongs to the objects state.  */
   if (type->animation_function)
-    type->animation_function (cave, x, y, ix, iy, 
-			      g_hash_table_lookup (cave->object_data, type));
+    return type->animation_function 
+      (cave, x, y, g_hash_table_lookup (cave->object_data, type));
+  else
+    return OBJECT_DEFAULT_IMAGE;
+}
+
+
+GdkPixmap *
+cave_get_image (GStonesCave *cave, guint x, guint y)
+{
+  g_return_val_if_fail (cave != NULL, NULL);
+  
+  /* Return the right GdkPixmap belonging to index 'idx'.  */
+  return object_get_image (cave->entry[x][y].type, 
+			   cave_get_image_index (cave, x, y));
+}
+
+
+GdkImlibImage *
+cave_get_imlib_image (GStonesCave *cave, guint x, guint y)
+{
+  g_return_val_if_fail (cave != NULL, NULL);
+  
+  /* Return the right GdkPixmap belonging to index 'idx'.  */
+  return object_get_imlib_image (cave->entry[x][y].type, 
+				 cave_get_image_index (cave, x, y));
 }
 
 
