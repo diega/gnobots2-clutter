@@ -16,6 +16,7 @@
  * the overhead was quite noticeable. */
 
 #include <gnome.h>
+#include <games-preimage.h>
 
 #include "mahjongg.h"
 #include "drawing.h"
@@ -49,7 +50,7 @@ gboolean nowindow = TRUE;
 
 GdkColor bgcolour;
 
-GdkPixbuf * tilepixbuf = NULL;
+GamesPreimage * tilepreimage = NULL;
 
 static gint windowwidth;
 static gint windowheight;
@@ -266,14 +267,28 @@ void draw_all_tiles (void)
 
 static void recreate_tile_images (void)
 {
-  GdkPixbuf * fg;
+  GdkPixbuf * fg = NULL;
   
   /* Now composite the tiles across it. */
-  /* FIXME: svg images should be rerendered directly from file, but
-   * this may give a performance hit that we can't handle. */
-  fg = gdk_pixbuf_scale_simple (tilepixbuf, tilewidth*NUM_PATTERNS,
-                                tileheight*2,
-                                GDK_INTERP_HYPER);
+  
+  if (tilepreimage) {
+    fg = games_preimage_render (tilepreimage, tilewidth*NUM_PATTERNS,
+                                tileheight*2, NULL);
+    
+    /* If the preimage was bad, we'll want to get rid of it. */
+    if (fg == NULL){
+      g_object_unref (tilepreimage);
+      tilepreimage = NULL;
+    }  
+  
+  }
+  
+  /* If there's no theme pixbuf, provide a blank one. */
+  if (fg == NULL){
+    fg = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, 
+                         tilewidth*NUM_PATTERNS, tileheight*2);
+    gdk_pixbuf_fill (fg, 0x00000000);
+  }
 
   gdk_pixbuf_render_threshold_alpha (fg, tilemask, 0, 0, 0, 0,
                                      tilewidth, tileheight, 128);
@@ -380,8 +395,8 @@ GtkWidget * create_mahjongg_board (void)
   return board;
 }
 
-/* Load the selected images. We return TRUE on success. */
-gboolean load_images (gchar * file)
+/* Load the selected images. */
+void load_images (gchar * file)
 {
   gchar * filename;
   gchar * temp;
@@ -394,18 +409,22 @@ gboolean load_images (gchar * file)
   g_free (temp);
 
   if (filename == NULL) {
-    file = "mahjongg/default.png";
+    file = "mahjongg/postmodern.svg";
     filename = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
                                           file, TRUE, NULL);
-    if (filename == NULL) {
-      /* FIXME: Put a warning dialog in here. */
-      g_warning ("Unable to load file %s\n", file);
-    }
   }
-  
-  if (tilepixbuf != NULL) g_object_unref (tilepixbuf);
 
-  tilepixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+  if (filename == NULL) {
+      /* FIXME: Put a warning dialog in here. */
+    g_warning ("Unable to load file %s\n", file);
+#if 0
+    error = g_error_new (G_FILE_ERROR, G_FILE_ERROR_NOENT,
+                         _("Unable to locate theme file: %s"), file);
+#endif
+  } else {
+    if (tilepreimage) g_object_unref (tilepreimage);
+    tilepreimage = games_preimage_new_from_uri (filename, NULL);
+  }
   
   update_tileimages = TRUE;
   
@@ -419,8 +438,6 @@ gboolean load_images (gchar * file)
    * we need to do this. */
   if (buffer)
     recreate_tile_images ();
-  
-  return TRUE;
 }
 
 /* EOF */

@@ -11,7 +11,7 @@
 #define DRAWING_H
 
 GtkWidget * create_mahjongg_board (void);
-gboolean load_images (gchar * file);
+void load_images (gchar * file);
 void set_background (gchar * colour);
 void draw_tile (gint tileno);
 void draw_all_tiles (void);
