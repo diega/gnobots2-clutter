@@ -906,11 +906,11 @@ main (int argc, char *argv [])
 	
 	g_free (fname);
 
-        gtk_widget_show (app);
 	gtk_widget_show (hb);
 	gtk_widget_show (vb);
 	gtk_widget_show (GTK_WIDGET(label));
 	gtk_widget_show (GTK_WIDGET(scorew));
+        gtk_widget_show (app);
 
 	gtk_main ();
 	return 0;
