@@ -791,7 +791,7 @@ void you_won (void)
 				   GNOME_MESSAGE_BOX_INFO,
 				   _("Ok"), NULL);
 	GTK_WINDOW(mb)->position = GTK_WIN_POS_MOUSE;
-	gnome_dialog_set_modal (GNOME_DIALOG (mb));
+	gtk_window_set_modal (GTK_WINDOW (mb), TRUE);
 	gtk_signal_connect_object (GTK_OBJECT(mb),
 				   "clicked",
 				   GTK_SIGNAL_FUNC (new_game_callback),
