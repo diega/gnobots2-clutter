@@ -777,10 +777,10 @@ Tetris::timeoutHandler(void *d)
 		if (res)
 		{
 			t->manageFallen();
-			if(t->fastFall)
+			if(t->fastFall) {
 				t->scoreFrame->incScore(t->fastFallPoints);
-			else
 				t->fastFall = false;
+			}
 		}
 		else if(t->fastFall)
 			++t->fastFallPoints;

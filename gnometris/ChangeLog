@@ -2,6 +2,8 @@
 
 	* tetris.cpp (eventHandler): Rearranged so that the block drops
 	when the space bar goes down, not when it comes back up.
+	(timeoutHandler): The down key now works for the new block if it
+	is held down (and keyboard auto-repeat is enabled).
 
 2003-04-15  Ross Burton  <ross@burtonini.com>
 
