@@ -41,3 +41,4 @@ Icon=gnome-gtetris.png
 Exec=gnometris
 Terminal=0
 Type=Application
+Categories=Application;Game;

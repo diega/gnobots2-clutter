@@ -1,3 +1,9 @@
+2001-12-19  Seth Nickell  <snickell@stanford.edu>
+
+	* gnometris.desktop:
+
+	Fix Categories field.
+
 2001-12-15  Johan Dahlin  <jdahlin@telia.com>
 
 	* main.cpp, tetris.cpp, gnome-canvas-pimage.[ch]: Ported to GNOME2
