@@ -10,7 +10,6 @@
  *
  * gnome-games/mahjongg
  * gnome-games/gnometris
- * gnome-games/gnome-stones
  *
  * Copyright (C) 1998 The Free Software Foundation
  * Copyright (C) 2001 Juan Pablo Mendoza Mendoza
