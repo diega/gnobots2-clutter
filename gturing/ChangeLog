@@ -1,3 +1,7 @@
+1998-09-29  Arturo Espinosa Aldama  <arturo@nuclecu.unam.mx>
+
+	* Changed to the new gnome-app-helper API.
+
 1998-09-28  Arturo Espinosa Aldama  <arturo@nuclecu.unam.mx>
 
 	* A couple of typo fixes, busy beaver and dashnumbers programs,

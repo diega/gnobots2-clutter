@@ -420,79 +420,49 @@ void about_call(GtkWidget *w, gpointer data)
 }
 
 GnomeUIInfo filemenu[] = {
-	{GNOME_APP_UI_ITEM, N_("Open..."), N_("Open a program file."), 
-		open_call, NULL, NULL,
-	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_OPEN, 0, 0, NULL},
-
-	{GNOME_APP_UI_SEPARATOR},
-
-	{GNOME_APP_UI_ITEM, N_("Exit"), N_("Close the program."), 
-		exit_call, NULL, NULL,
-	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 0, 0, NULL},
-
-	{GNOME_APP_UI_ENDOFINFO}
+	GNOMEUIINFO_ITEM_STOCK(N_("Open..."), N_("Open a program file."), 
+		open_call, GNOME_STOCK_MENU_OPEN),
+	GNOMEUIINFO_SEPARATOR,
+	GNOMEUIINFO_ITEM_STOCK(N_("Exit"), N_("Close the program."), 
+		exit_call, GNOME_STOCK_MENU_EXIT),
+	GNOMEUIINFO_END
 };
 
 GnomeUIInfo optionmenu[] = {
-	{GNOME_APP_UI_ITEM, N_("Play Speed..."), N_("Set playing speed."),
-	 playspeed_call, NULL, NULL,
-	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-	
-	{GNOME_APP_UI_ITEM, N_("Tape..."), N_("Set the machine's tape."),
-	 tape_call, NULL, NULL,
-	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-	
-	{GNOME_APP_UI_ITEM, N_("View States"), N_("Open a table with the machine's states."),
-	 view_states_call, NULL, NULL,
-	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-	
-	{GNOME_APP_UI_ENDOFINFO}
+	GNOMEUIINFO_ITEM_NONE(N_("Play Speed..."), N_("Set playing speed."),
+			      playspeed_call),
+	GNOMEUIINFO_ITEM_NONE(N_("Tape..."), N_("Set the machine's tape."),
+			      tape_call),
+	GNOMEUIINFO_ITEM_NONE(N_("View States"), N_("Open a table with the machine's states."),
+			      view_states_call),
+	GNOMEUIINFO_END
 };
 
 GnomeUIInfo helpmenu[] = {
-	{GNOME_APP_UI_HELP, NULL, NULL, NULL, NULL, NULL,
-	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-
-	{GNOME_APP_UI_ITEM, N_("About..."), N_("Version, credits, etc."), 
-		about_call, NULL, NULL,
-	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
-
-	{GNOME_APP_UI_ENDOFINFO}
+	GNOMEUIINFO_HELP("gTuring"),
+	GNOMEUIINFO_ITEM_STOCK(N_("About..."), N_("Version, credits, etc."),
+			       about_call, GNOME_STOCK_MENU_ABOUT),
+	GNOMEUIINFO_END
 };
 
 GnomeUIInfo mainmenu[] = {
-	{GNOME_APP_UI_SUBTREE, N_("File"), NULL, filemenu, NULL, NULL,
-	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-
-	{GNOME_APP_UI_SUBTREE, N_("Options"), NULL, optionmenu, NULL, NULL,
-	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-
-	{GNOME_APP_UI_JUSTIFY_RIGHT},
-		
-	{GNOME_APP_UI_SUBTREE, N_("Help"), NULL, helpmenu, NULL, NULL,
-	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-
-	{GNOME_APP_UI_ENDOFINFO}
+	GNOMEUIINFO_SUBTREE(N_("File"), filemenu),
+	GNOMEUIINFO_SUBTREE(N_("Options"), optionmenu),
+	GNOMEUIINFO_JUSTIFY_RIGHT,
+	GNOMEUIINFO_SUBTREE(N_("Help"), helpmenu),
+	GNOMEUIINFO_END
 };
 
 GnomeUIInfo toolbar[] = {
-	{GNOME_APP_UI_ITEM, "Reset", N_("Reset"),
-	 power_callback, NULL, NULL,
-	GNOME_APP_PIXMAP_STOCK, "gTuringReset", 0, 0, NULL},
-	
-	{GNOME_APP_UI_ITEM, "Stop", N_("Stop"),
-	 stop_callback, NULL, NULL,
-	GNOME_APP_PIXMAP_STOCK, "gTuringStop", 0, 0, NULL},
-	
-	{GNOME_APP_UI_ITEM, "Run", N_("Run"),
-	 play_callback, NULL, NULL,
-	GNOME_APP_PIXMAP_STOCK, "gTuringRun", 0, 0, NULL},
-	
-	{GNOME_APP_UI_ITEM, "Step", N_("Step"),
-	 step_callback, NULL, NULL,
-	GNOME_APP_PIXMAP_STOCK, "gTuringStep", 0, 0, NULL},
-	
-	{GNOME_APP_UI_ENDOFINFO}
+	GNOMEUIINFO_ITEM_STOCK(N_("Reset"), N_("Reset"), power_callback,
+			       "gTuringReset"),
+	GNOMEUIINFO_ITEM_STOCK(N_("Stop"), N_("Stop"), stop_callback,
+			       "gTuringStop"),
+	GNOMEUIINFO_ITEM_STOCK(N_("Run"), N_("Run"), play_callback,
+			       "gTuringRun"),
+	GNOMEUIINFO_ITEM_STOCK(N_("Step"), N_("Step"), step_callback,
+			       "gTuringStep"),
+	GNOMEUIINFO_END
 };
 
 void create_machine(void)
