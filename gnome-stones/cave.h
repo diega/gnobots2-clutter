@@ -1,6 +1,6 @@
 /* gnome-stones - cave.h
  *
- * Time-stamp: <1998/08/23 12:05:31 carsten>
+ * Time-stamp: <1998/09/07 22:28:49 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -37,6 +37,14 @@ object_register (GStonesObject *object);
 const ObjectType
 object_get_type (const gchar *name);
 
+#define OBJECT_DEFAULT_IMAGE -1
+#define OBJECT_EDITOR_IMAGE -2
+
+GdkPixmap *
+object_get_image (ObjectType type, gint index);
+
+GdkImlibImage *
+object_get_imlib_image (ObjectType type, gint index);
 
 gboolean
 objects_register_all (void);
@@ -47,41 +55,42 @@ objects_register_all (void);
 /* Cave declaration.  */
 
 
-GStonesCave *cave_new               (void);
-void         cave_free              (GStonesCave *cave);
+GStonesCave   *cave_new               (void);
+void           cave_free              (GStonesCave *cave);
 
-GStonesCave *cave_load              (const GStonesGame *game,
-				     const char        *cavename);
+GStonesCave   *cave_load              (const GStonesGame *game,
+				       const char        *cavename);
 
-void         cave_set_player        (GStonesCave *cave, GStonesPlayer *player);
+void           cave_set_player        (GStonesCave *cave, 
+				       GStonesPlayer *player);
 
 /* Calculate the cave's next state.
 
    The next function iterates the cave's state.*/
 
-void         cave_iterate           (GStonesCave *cave,
-				     gint         x_direction,
-				     gint         y_direction,
-				     gboolean     push);
+void           cave_iterate           (GStonesCave *cave,
+				       gint         x_direction,
+				       gint         y_direction,
+				       gboolean     push);
 
-void         cave_toggle_pause_mode (GStonesCave *cave);
+void           cave_toggle_pause_mode (GStonesCave *cave);
 
 /* Let our little gnome die.  You really don't want this to happen, do
    you?  */
 
-void         cave_player_die        (GStonesCave *cave);
+void           cave_player_die        (GStonesCave *cave);
 
 /* The following function starts the cave by replacing the entrance
    with our gnome.  */
 
-void         cave_start             (GStonesCave *cave);
+void           cave_start             (GStonesCave *cave);
 
 
-guint        cave_time_to_frames    (GStonesCave *cave, gdouble time);
+guint          cave_time_to_frames    (GStonesCave *cave, gdouble time);
 
-void         cave_get_image_index   (GStonesCave *cave, guint x, guint y,
-				     guint *ix, guint *iy);
+GdkPixmap     *cave_get_image         (GStonesCave *cave, guint x, guint y);
 
+GdkImlibImage *cave_get_imlib_image   (GStonesCave *cave, guint x, guint y);
 
 #endif
 
