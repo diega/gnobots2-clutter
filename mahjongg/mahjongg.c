@@ -1873,7 +1873,7 @@ int main (int argc, char *argv [])
         }
 
   	gnome_app_flash (GNOME_APP (window), 
-  				"Welcome to GNOME Mahjongg!"); 
+  				_("Welcome to GNOME Mahjongg!")); 
 
 	gtk_main ();
 	
