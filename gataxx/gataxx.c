@@ -639,6 +639,11 @@ void init_new_game() {
       gui_draw_pixmap_buffer(pixmaps[i][j], i, j);
   
   gdk_draw_pixmap(drawing_area->window, drawing_area->style->fg_gc[GTK_WIDGET_STATE(drawing_area)], buffer_pixmap, 0, 0, 0, 0, BOARDWIDTH, BOARDHEIGHT);
+  for(i = 0; i < 7; i++) {
+    gdk_draw_line(drawing_area->window, drawing_area->style->black_gc, i * TILEWIDTH, 0, i * TILEWIDTH, 7 * TILEHEIGHT);
+    gdk_draw_line(drawing_area->window, drawing_area->style->black_gc, 0, (i * TILEHEIGHT) , 7 * TILEWIDTH, (i * TILEHEIGHT));
+  }
+
   whose_turn = BLACK_TURN;
   gui_message(_("Dark's move"));
   
