@@ -2,7 +2,9 @@ SUBDIRS=pix
 scoredir=$(localstatedir)/games
 Gamesdir=$(datadir)/apps/Games
 
-INCLUDES=$(GNOME_INCLUDEDIR)
+INCLUDES=\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
+	$(GNOME_INCLUDEDIR)
 
 bin_PROGRAMS=gnometris
 

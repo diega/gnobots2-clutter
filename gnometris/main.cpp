@@ -18,6 +18,7 @@
  * For more details see the file COPYING.
  */
 
+#include <config.h>
 #include "tetris.h"
 
 int nr_of_colors;
@@ -25,6 +26,9 @@ int nr_of_colors;
 int
 main(int argc, char *argv[])
 {
+	bindtextdomain(PACKAGE, GNOMELOCALEDIR);
+	textdomain(PACKAGE);
+	
 	int cmdlineLevel = 0;
 
 	poptOption options[] = 
