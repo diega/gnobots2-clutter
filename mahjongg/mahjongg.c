@@ -1111,11 +1111,6 @@ you_won (void)
 static void
 pref_dialog_response (GtkDialog *dialog, gint response, gpointer data)
 {
-	if (response == GTK_RESPONSE_HELP) {
-		gnome_help_display("prefs.html", NULL, NULL);
-		return;
-	}
-
 	gtk_widget_destroy (pref_dialog);
 	pref_dialog = NULL;
 	warn_cb = NULL;
@@ -1137,7 +1132,6 @@ properties_callback (GtkWidget *widget, gpointer data)
 	pref_dialog = gtk_dialog_new_with_buttons (_("Mahjongg - Preferences"),
 			GTK_WINDOW (window),
 			GTK_DIALOG_DESTROY_WITH_PARENT,
-			GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 			GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 			NULL);
 

@@ -1,3 +1,9 @@
+2003-02-19  Alex Duggan  <aldug@astrolinux.com>
+
+	* mahjongg.c (pref_dialog_response): remove old unused call to
+	gnome_help_display,  (proporties_callback): remove help button
+	from preferences dialog.  (Fixes #103928)
+
 2002-12-11  Ross Burton  <ross@burtonini.com>
 
 	* help/C/mahjongg-C.omf, help/C/mahjongg.xml: s/Gnome/GNOME.
