@@ -48,7 +48,6 @@ void update_score_state ();
 
 /* Prefs */
 GConfClient *conf_client = NULL;
-char *selected_scenario = NULL;
 
 static struct ball {
 	int color;
@@ -510,20 +509,21 @@ fill_menu (GtkWidget *menu)
 	
 	while ((e = readdir (dir)) != NULL){
 		GtkWidget *item;
-		char *s = strdup (e->d_name);
+		char *name, *label, *p;
+		name = strdup (e->d_name);
 
-		if (!strstr (e->d_name, ".png")) {
-			free (s);
+		if (!(p = strstr (name, ".png"))) {
+			free (name);
 			continue;
 		}
-			
-		item = gtk_menu_item_new_with_label (s);
+		
+		item = gtk_menu_item_new_with_label (g_strndup (name, p - name ));
 		gtk_widget_show (item);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 		g_signal_connect (G_OBJECT (item), "activate",
-				  G_CALLBACK (set_selection), s);
+				  G_CALLBACK (set_selection), name);
 	  
-	        if (!strcmp(scenario, s))
+	        if (!strcmp(scenario, name))
 			gtk_menu_set_active(GTK_MENU(menu), itemno);
 	  
 	        itemno++;
@@ -534,18 +534,6 @@ fill_menu (GtkWidget *menu)
 static void
 pref_dialog_response (GtkDialog *dialog, gint response, gpointer data)
 {
-	if (response == GTK_RESPONSE_OK)
-	{
-		g_free (selected_scenario);
-		selected_scenario = gconf_client_get_string (conf_client, "/apps/same-gnome/tileset", NULL);
-	} else {
-		/* Restore previous scenario */
-		load_scenario (selected_scenario);
-
-		gconf_client_set_string (conf_client, "/apps/same-gnome/tileset", 
-			selected_scenario, NULL);
-	}
-
 	gtk_widget_destroy (pref_dialog);
 	pref_dialog = NULL;
 }
@@ -553,7 +541,7 @@ pref_dialog_response (GtkDialog *dialog, gint response, gpointer data)
 static void
 game_preferences_callback (GtkWidget *widget, void *data)
 {
-	GtkWidget *menu, *omenu, *l, *hb, *f;
+	GtkWidget *menu, *omenu, *l, *hb;
 	GtkWidget *button;
 
 	if (pref_dialog) {
@@ -563,11 +551,8 @@ game_preferences_callback (GtkWidget *widget, void *data)
 	
 	pref_dialog = gtk_dialog_new_with_buttons (_("Preferences"),
 			GTK_WINDOW (app),
-			GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR
-
-,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OK, GTK_RESPONSE_OK,
+			GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
+			GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 			NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (pref_dialog),
@@ -581,9 +566,6 @@ game_preferences_callback (GtkWidget *widget, void *data)
 	gtk_widget_show (omenu);
 	gtk_option_menu_set_menu (GTK_OPTION_MENU(omenu), menu);
 
-	f = gtk_frame_new (_("Scenario"));
-	gtk_container_set_border_width (GTK_CONTAINER (f), 4);
-
 	hb = gtk_hbox_new (FALSE, FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (hb), 4);
 	gtk_widget_show (hb);
@@ -594,10 +576,7 @@ game_preferences_callback (GtkWidget *widget, void *data)
 	gtk_box_pack_start (GTK_BOX(hb), l, TRUE, FALSE, 4);
 	gtk_box_pack_start_defaults (GTK_BOX(hb), omenu);
 
-	gtk_container_add (GTK_CONTAINER (f), hb);
-	
-	gtk_box_pack_start_defaults (GTK_BOX(GTK_DIALOG(pref_dialog)->vbox), f);
-	gtk_widget_show (f);
+	gtk_box_pack_start_defaults (GTK_BOX(GTK_DIALOG(pref_dialog)->vbox), hb);
 	
         gtk_widget_show (pref_dialog);
 }
@@ -879,7 +858,6 @@ main (int argc, char *argv [])
 	}
 
 	create_same_board (fname);
-	selected_scenario = g_strdup (fname);
 
 	update_score_state ();
 

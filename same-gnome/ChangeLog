@@ -1,3 +1,16 @@
+2002-10-16  Ross Burton  <ross@burtonini.com>
+
+	* same-gnome.c: The Preferences dialog cannot be cancelled as its
+	Instant Apply, so remove the "selected_scenario" variable and the
+	revert code.
+
+2002-10-16  Ross Burton  <ross@burtonini.com>
+
+	* same-gnome.c (fill_menu): Strip the file extension from the
+	filename when displaying in the list of scenarios.
+	(game_preferences_callback): Remove the labelled frame. These go
+	towards closing #94797.
+
 2002-08-23  Ross Burton  <ross@burtonini.com>
 
 	* same-gnome.c: Enable the high scores dialog. Patch from Andrew
