@@ -150,7 +150,10 @@ gint numfree;
 /* These could be placed on the stack, but they're a little large, so
  * we use the depth variable as a sort of virtual stack pointer. */
 gboolean freetiles[MAX_TILES/2][MAX_TILES];
-gboolean filled[MAX_TILES/2][MAX_TILES];
+gboolean filled[MAX_TILES]; /* This is changed incrementally with
+                               changes being undone as the program
+                               moves back towards the base of the
+                               tree. */
 guchar freelist[MAX_TILES/2][MAX_TILES];
 
 GRand * generator;
@@ -266,7 +269,7 @@ static gboolean check_tile_is_free (gint index, gint depth)
 
   dep = dependencies + index;
 
-  if (!filled[depth][index])
+  if (!filled[index])
     return FALSE;
 
   if (freetiles[depth][index])
@@ -276,7 +279,7 @@ static gboolean check_tile_is_free (gint index, gint depth)
   for (i=0; i<4; i++) {
     if (dep->overhead[i] == -1)
       break;
-    if (filled[depth][dep->overhead[i]])
+    if (filled[dep->overhead[i]])
       return FALSE;
   }
 
@@ -285,7 +288,7 @@ static gboolean check_tile_is_free (gint index, gint depth)
   for (i=0; i<2; i++) {
     if (dep->left[i] == -1)
       break;
-    if (filled[depth][dep->left[i]]) {
+    if (filled[dep->left[i]]) {
       ok = FALSE;
       break;
     }
@@ -301,7 +304,7 @@ static gboolean check_tile_is_free (gint index, gint depth)
   for (i=0; i<2; i++) {
     if (dep->right[i] == -1)
       break;
-    if (filled[depth][dep->right[i]]) {
+    if (filled[dep->right[i]]) {
       ok = FALSE;
       break;
     }
@@ -394,8 +397,6 @@ static gboolean walk_tree (gint depth)
   
   /* Try out all possibilities, bailing out if we can't find a path of
    * suitable depth. */
-  memcpy(filled[depth+1], filled[depth], MAX_TILES*sizeof(gboolean));
-
   for (i=0; i<numfree-1; i++) {
     for (j=i+1; j<numfree; j++) {
       a = freelist[depth][i];
@@ -407,8 +408,8 @@ static gboolean walk_tree (gint depth)
       memcpy(freetiles[depth+1], freetiles[depth], MAX_TILES*sizeof(gboolean));
       freetiles[depth+1][a] = FALSE;
       freetiles[depth+1][b] = FALSE;
-      filled[depth+1][a] = FALSE;
-      filled[depth+1][b] = FALSE;
+      filled[a] = FALSE;
+      filled[b] = FALSE;
       check_around (a, depth+1);
       check_around (b, depth+1);
       if (walk_tree (depth+1)) {
@@ -417,8 +418,8 @@ static gboolean walk_tree (gint depth)
         place_tiles (a, b, depth);
         return TRUE;
       }
-      filled[depth+1][a] = TRUE;
-      filled[depth+1][b] = TRUE;
+      filled[a] = TRUE;
+      filled[b] = TRUE;
       numfree = oldnumfree;
     }
   }
@@ -445,7 +446,7 @@ void generate_game (guint32 seed)
   /* Find which tiles are initially free. */
   numfree = 0;
   for (i=0; i<MAX_TILES; i++)
-    filled[0][i] = TRUE;
+    filled[i] = TRUE;
   for (i=0; i<MAX_TILES; i++) {
     freetiles[0][i] = FALSE;
     check_tile_is_free (i, 0);

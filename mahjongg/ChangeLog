@@ -1,3 +1,8 @@
+2003-08-26  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* solubility.c: Optimisations. Thats 10k shaved off, which amounts
+	to about, oh, 0.3% of its RSS.
+
 2003-08-25  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* solubility.c (walk_tree): Fixed a silly bug which meant that the
