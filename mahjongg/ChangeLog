@@ -1,6 +1,10 @@
 1999-07-14  Michael Meeks  <michael@edenproject.org>
 
 	* mahjongg.c (apply_preferences): Commented out 'Synced'
+	(game_score): moved contents to (you_won): manualy call
+	new_game_callback.
+	Use seconds, not stopped for scoring.
+	Removed redundant gtk_clock_set_seconds.
 
 1999-07-14  Philippe Chavin <Philippe.Chavin@wanadoo.fr>
 

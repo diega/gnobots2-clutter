@@ -26,7 +26,7 @@
 #include "mahjongg.h"
 #include "solubility.h"
 
-#define APPNAME "gmahjongg"
+#define APPNAME "mahjongg"
 #define APPNAME_LONG "Gnome Mahjongg"
 #define MAH_VERSION "0.99.2+"
 
@@ -496,15 +496,17 @@ free_str (GtkWidget *widget, void *data)
 	free (data);
 }
 
-void message(gchar *message){
-  gnome_appbar_pop(GNOME_APPBAR (appbar));
-  gnome_appbar_push(GNOME_APPBAR (appbar), message);
+void message (gchar *message)
+{
+  gnome_appbar_pop (GNOME_APPBAR (appbar));
+  gnome_appbar_push (GNOME_APPBAR (appbar), message);
 }
 
-void chrono_start(){
-  gtk_clock_stop(GTK_CLOCK(chrono));
-  gtk_clock_set_seconds(GTK_CLOCK(chrono), 0);
-  gtk_clock_start(GTK_CLOCK(chrono));
+void chrono_start ()
+{
+  gtk_clock_stop (GTK_CLOCK (chrono));
+  gtk_clock_set_seconds (GTK_CLOCK (chrono), 0);
+  gtk_clock_start (GTK_CLOCK (chrono));
 }
 
 
@@ -843,7 +845,7 @@ void check_free (void)
                 }
  	if (!free && visible_tiles>0) { 
                 GtkWidget *mb;
-                gtk_clock_stop (GTK_CLOCK(chrono));
+                gtk_clock_stop (GTK_CLOCK (chrono));
  		mb = gnome_message_box_new (_("No more moves"), 
  					    GNOME_MESSAGE_BOX_INFO, 
  					    _("Ok"), NULL); 
@@ -854,22 +856,21 @@ void check_free (void)
  	} 
 }
 
+void game_score ()
+{
+}
+
 void you_won (void)
 {
-	GtkWidget *mb;
-
-	mb = gnome_message_box_new (_("You won!"),
-				   GNOME_MESSAGE_BOX_INFO,
-				   _("Ok"), NULL);
-	GTK_WINDOW(mb)->position = GTK_WIN_POS_MOUSE;
-	gtk_window_set_modal (GTK_WINDOW (mb), TRUE);
-	gtk_signal_connect_object (GTK_OBJECT(mb),
-				   "clicked",
-				   GTK_SIGNAL_FUNC (new_game_callback),
-				   NULL);
+        gint pos;
+        time_t seconds;
+        gfloat score;
         
-	gnome_dialog_set_parent(&GNOME_MESSAGE_BOX(mb)->dialog,GTK_WINDOW(window));
-	gtk_widget_show (mb);
+        seconds = GTK_CLOCK (chrono)->seconds;
+        score = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
+        pos = gnome_score_log (score, selected_mapset.mapset, FALSE);
+        gnome_scores_display (_(APPNAME_LONG), APPNAME, selected_mapset.mapset, pos);
+        new_game_callback (NULL, NULL);
 }
 
 void colour_changed_cb (GtkWidget *w, int r1, int g1, int b1, int a1, 
@@ -1355,33 +1356,21 @@ void scores_callback(GtkWidget *widget, gpointer data)
         gnome_scores_display (_(APPNAME_LONG), APPNAME, selected_mapset.mapset, 0);
 }
 
-void game_score(){
-  gint pos;
-  time_t seconds;
-  gfloat score;
-  
-  seconds = GTK_CLOCK(chrono)->stopped;
-  gtk_clock_set_seconds(GTK_CLOCK(chrono), (int) seconds);
-  score = (gfloat) (seconds / 60) + (gfloat) (seconds % 60) / 100;
-  pos = gnome_score_log(score,selected_mapset.mapset,FALSE);
-  gnome_scores_display (_(APPNAME_LONG), APPNAME, selected_mapset.mapset, pos);
-}
-
 void init_game (void)
 {
-    gchar tmpchar[4] ;
-
-    gtk_label_set(GTK_LABEL(tiles_label), MAX_TILES_STR);
-    check_free();
-    sprintf(tmpchar, "%d", moves_left);
-    gtk_label_set (GTK_LABEL(moves_label), tmpchar);
-    moves_left = 0;
-    sequence_number = 1 ;
-    visible_tiles = MAX_TILES;
-    selected_tile = MAX_TILES+1;
-    gnome_canvas_update_now(GNOME_CANVAS(canvas));
-
-    chrono_start();
+        gchar tmpchar[4] ;
+        
+        gtk_label_set(GTK_LABEL(tiles_label), MAX_TILES_STR);
+        check_free();
+        sprintf(tmpchar, "%d", moves_left);
+        gtk_label_set (GTK_LABEL(moves_label), tmpchar);
+        moves_left = 0;
+        sequence_number = 1 ;
+        visible_tiles = MAX_TILES;
+        selected_tile = MAX_TILES+1;
+        gnome_canvas_update_now(GNOME_CANVAS(canvas));
+        
+        chrono_start();
 }
 
 void new_game_callback (GtkWidget *widget, gpointer data)
@@ -1777,7 +1766,7 @@ int main (int argc, char *argv [])
         GnomeDockItem *gdi;
 	GtkWidget *toolbar;
 
-        gnome_score_init(APPNAME);
+        gnome_score_init (APPNAME);
 
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
