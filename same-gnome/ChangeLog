@@ -1,0 +1,122 @@
+Tue Feb  3 10:57:13 EST 1998 Nathan Bryant <bryant@cs.usm.maine.edu>
+
+	* same-gnome.c: gnome_score_init.
+	* Makefile.am: install setgid.
+
+Sun Feb  1 00:02:27 ART 1998  Horacio J. Peña  <horape@compendium.com.ar>
+
+	* *: changed samegnome by same-gnome.
+
+Fri Jan 30 13:26:55 1998  Tom Tromey  <tromey@cygnus.com>
+
+	* same-gnome.c (restart): Don't return a value.
+
+1998-01-28  Raja R Harinath  <harinath@cs.umn.edu>
+
+	* Makefile.am: Misc. fixes.
+
+Tue Jan 27 13:57:26 1998  Federico Mena	<federico@bananoid.nuclecu.unam.mx>
+	
+	* Makefile.am (install-data-local): Updated installation of the
+	.desktop files.
+
+Tue Jan 27 13:59:41 ART 1998  Horacio J. Peña  <horape@compendium.com.ar>
+
+	* same-gnome.c: Added Help menu and About dialog.
+	(delete_session): new function (session-management)
+
+Tue Jan 27 03:56:10 ART 1998  Horacio J. Peña (n.) <horape@compendium.com.ar>
+
+	* Makefile.am: Creates $(scoredir)/same-gnome.scores.
+	* TODO: Actualized.
+
+1998-01-26  Mark Galassi  <rosalia@cygnus.com>
+
+	* Makefile.am (LDADD): added $(DL_LIB) since these are now
+	required for any user of libgnome.a.
+
+Sun Jan 25 23:38:30 1998  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* same-gnome.c: Replaced "Quit" with "Exit".
+
+Tue Jan 27 11:28:08 1998  Changwoo Ryu  <cwryu@adam.kaist.ac.kr>
+
+	* same-gnome.c (main): Add textdomain().
+
+Mon Jan 26 01:19:20 ART 1998	Horacio J. Peña (n.) <horape@compendium.com.ar>
+
+	* same-gnome.c: Session-management aware.
+	(session_id): new global.
+	(restarted): new global.
+	(debugging): new global.
+	(struct ball): named.
+	(save_state): new function.
+	(restart): new function.
+	(parse_args): new function
+
+Sat Jan 24 15:43:09 1998  Eckehard Berns  <eb@berns.prima.de>
+
+	* same-gnome.c (create_menu): changed _() to N_() in same_menu and
+	gettexted them in create_menu.
+
+Wed Jan 21 20:11:45 1998  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* same-gnome.c (show_scores): Use simplified
+	`gnome_scores_display' routine.
+	
+Wed Jan 21 01:18:34 1998  Federico Mena  <federico@bananoid.nuclecu.unam.mx>
+
+	* same-gnome.c (show_scores): cast hs to GNOME_SCORES.
+
+Tue Jan 20 17:39:25 1998  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* same-gnome.c (load_scenario): Force the number of colors to
+	three.  The right fix it to let the user tweak the number of
+	colors from 3 to heigh / STONE_SIZE.
+	(game_preferences_callback): Add a frame to the preferences, make
+	it look nicer. 
+
+Sun Jan 18 03:10:15 1998  Horacio J. Peña (n.) <horape@compendium.com.ar>
+
+	(Warning: All this changes have a lot of memory leaks.)
+	* same-gnome.c: (ncolors) new global variable.
+	(show_scores): new function.
+	(game_top_ten_callback): new function.
+	(end_of_game): new function.
+	(check_game_over): it was an empty function. Coded.
+	(fill_board): Handles more than 3 colors.
+	(load_scenario): Fixed loading of pixmaps. Handles more than 3 colors.
+	(set_selection): Changed a bit to support preferences.
+	(set_selection_def): new function.
+	(yes): Changed a bit to support preferences.
+	(fill_menu): fixed a memory leak. (One fixed, a lot added :) :( )
+	(load_scenario_callback): Support preferences.
+	(game_preferences_callback): Support preferences.
+	(same_menu): i18n'ed.
+	(main): simplified (load_scenario does the deleted check)
+	
+Wed Dec 31 18:21:41 1997  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* same-gnome.c (main): use GnomeApp widget.  Should we make
+	GnomeApp a container probably?  So we could get rid of
+	gnome_app_set_contents and use gtk_container_add
+
+Fri Jan  2 00:15:32 1998  Tom Tromey  <tromey@cygnus.com>
+
+	* same-gnome.c (create_main_window): Declare return type.
+	(main): Cast app to right type.
+
+Sun Dec  7 12:05:25 1997  Tom Tromey  <tromey@cygnus.com>
+
+	* Makefile.am (samegnome_LDADD): Added x_libs.
+
+Mon Nov  3 22:54:02 1997  Tom Tromey  <tromey@cygnus.com>
+
+	* same-gnome.desktop (Info): Corrected description; same-gnome
+	isn't mines.
+
+Wed Oct 29 23:21:01 1997  Tom Tromey  <tromey@cygnus.com>
+
+	* same-gnome.c: Don't define `_'; it is defined properly
+	elsewhere.
+

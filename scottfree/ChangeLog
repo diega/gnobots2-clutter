@@ -1,0 +1,17 @@
+1998-02-01  Raja R Harinath  <harinath@cs.umn.edu>
+
+	* programs/scottfree/GnomeScott.c (main): Return `int', not `void'.
+	(PerformActions): Declare earlier, to prevent warning.
+
+1998-01-26  Mark Galassi  <rosalia@cygnus.com>
+
+	* Makefile.am (LDADD): added $(DL_LIB) since these are now
+	required for any user of libgnome.a.
+
+Sun Jan 25 23:38:30 1998  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* GnomeScott.c: Replace "Quit" with "Exit".
+
+Sun Jan 25 20:36:56 EST 1998 Nathan Bryant <nbryan71@maine.edu>
+
+	* Makefile.am (LDADD): added $(INTLLIBS).
