@@ -1039,6 +1039,7 @@ gpointer data
             break;
         case GDK_KP_8:
         case GDK_KP_Up:
+        case GDK_Up:
         case GDK_K:
         case GDK_k:
         case GDK_W:
@@ -1057,6 +1058,7 @@ gpointer data
             break;
         case GDK_KP_4:
         case GDK_KP_Left:
+        case GDK_Left:
         case GDK_H:
         case GDK_h:
         case GDK_A:
@@ -1066,6 +1068,7 @@ gpointer data
             break;
         case GDK_KP_6:
         case GDK_KP_Right:
+        case GDK_Right:
         case GDK_L:
         case GDK_l:
         case GDK_D:
@@ -1084,6 +1087,7 @@ gpointer data
             break;
         case GDK_KP_2:
         case GDK_KP_Down:
+        case GDK_Down:
         case GDK_J:
         case GDK_j:
         case GDK_X:
