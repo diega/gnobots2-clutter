@@ -1,3 +1,5 @@
+Tue Sep  8 21:44:03 CDT 1998
+	* default.xpm seta.xpm: Changed the images for png's for space reasons
 Tue Aug 25 17:45:00 BST 1998 Michael Meeks <michael@imaginator.com>
 	* mahjongg.c (load_callback): Fixed bug with duff pointers being
 	retained after being freed.
