@@ -1,3 +1,12 @@
+2001-06-20  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* help/C/same-gnome.sgml: Changed samegnome by samegame as
+	the about box of the game tell us, I think that our KDE
+	friends don't have a game called "samegnome", do they?.
+
+	* help/Makefile.am, help/es/*: Added Spanish translation
+	by Gregorio Robles Martínez <grex@scouts-es.org>
+
 2001-05-28  Juan Pablo Mendoza <pablo_juan@yahoo.com>
 
 	* same-gnome.c (load_scenario): If we can't find the theme show a

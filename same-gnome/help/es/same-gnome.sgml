@@ -5,20 +5,6 @@
 <!ENTITY version "1.2.0"> <!-- replace with application version -->
 ]>
 
-
-<!--
-  This is a GNOME documentation template, designed by the GNOME
-  Documentation Project Team. Please use it for writing GNOME
-  documentation, making obvious changes. In particular, all the words
-  written in UPPERCASE (with the exception of GNOME) should be
-  replaced. As for "legalnotice", please leave the reference
-  unchanged.
-
-  Remember that this is a guide, rather than a perfect model to follow
-  slavishly. Make your manual logical and readable.  And don't forget
-  to remove these comments in your final documentation!  ;-)
--->
-
 <!--
       (Do not remove this comment block.)
   Maintained by the GNOME Documentation Project
@@ -32,20 +18,16 @@
 <article id="index"> <!-- please do not change the id -->
 
   <artheader>
-   <title>Same GNOME player's guide</title>
+   <title>Guía del jugador de Same GNOME</title>
     <copyright>
       <year>2000</year>
       <holder>Miguel de Icaza</holder>
     </copyright>
 
-  <!-- translators: uncomment this:
-
   <copyright>
-   <year>2000</year>
-   <holder>ME-THE-TRANSLATOR (Latin translation)</holder>
+   <year>2001</year>
+   <holder>Gregorio Robles Martínez (traducción al castellano)</holder>
   </copyright>
-
-   -->
 
   <!-- do not put authorname in the header except in copyright - use
   section "authors" below -->
@@ -106,7 +88,7 @@
   <!-- This is the manual version, not application version. -->
   <!--
     <releaseinfo>
-       This is version 1.0 of MY-GNOME-APP manual.
+       Ésta es la versión 1.0 del manual de Same GNOME.
     </releaseinfo>
   -->
 
@@ -116,70 +98,86 @@
 
   
   <sect1 id="guide">
-    <title>Same GNOME player's guide</title>
+    <title>Guía del jugador de Same GNOME</title>
 
     <sect2 id="objective">
-      <title>Game objective</title>
-      <para>The objective of the game is to get a high score by
-      eliminating as many balls as possible in a single stroke.  If
-      you eliminate only two balls, you will score zero points.  If
-      you eliminate three balls, you will score one point. The more
-      balls you eliminate in a single mouse click the higher your
-      score will be.</para>
+      <title>Objetivo del juego</title>
+      <para>
+       El objetivo del juego es obtener una puntuación alta
+       por eliminar tantas bolas como sea posible de una sola vez.
+       Si elemina sólo dos bolas, recibirá cero puntos. Si
+       elimina tres bolas, recibirá un punto. Cuantas más
+       bolas elimine con una simple pulsación de ratón, mayor será
+       su puntuación.
+      </para>
+      <para>
+       Para facilitar la tarea de eliminar las agrupaciones de bolas, Same
+       GNOME animará la agrupación de bolas cuando el ratón
+       esté sobre ellas (esto también indica que si pulsa con el ratón
+       sobre la agrupación, eliminará las bolas)
+      </para>
 
-      <para>To faciliate the task of spotting the ball clusters, Same
-      GNOME will animate the cluster of balls when the mouse is over
-      them (this also indicates that if you click on the cluster, it
-      will eliminate the balls)</para>
-
-      <para>Eliminating all of the balls on the board will grant you
-      an extra one thousand points</para>
+      <para>
+       Eliminar todas las bolas del tablero le permitirá una
+       puntuación extra de mil puntos.
+      </para>
     </sect2>
 
     <sect2 id="bugs">
-      <title>Reporting bugs and sending patches to enhance the
-      game</title>
-      
-      <para>You can contact the authors as
-      <symbol>miguel@gnu.org</symbol> and
-      <symbol>federico@nuclecu.unam.mx</symbol>.  General discussion
-      about this game is carried on the
-      <symbol>gnome-list@gnome.org</symbol> mailing list.</para>
+      <title>Mejorar el juego informando de errores y enviando parches</title>
+      <para>Puede contactar con los autores en
+      <symbol>miguel@gnu.org</symbol> y
+      <symbol>federico@nuclecu.unam.mx</symbol>. La discusión general
+      sobre este juego se lleva a cabo en la lista de correo
+      <symbol>gnome-list@gnome.org</symbol>.</para>
 
     </sect2>
 
     <sect2 id="Authors">
-      <title>Authors and history.</title>
+      <title>Autores e historia</title>
 
-      <para> This GNOME game was originally implemented by Miguel de
-      Icaza and Federico Mena at early days of the GNOME project.  It
-      was inspired by KDE's samegame which in turn was inspired
-      by a Macintosh game of a similar name.</para>
+      <para>
+       Este juego para GNOME fue originalmente implementado por Miguel de
+       Icaza y Federico Mena en los principios del proyecto GNOME. Está
+       inspirado en el juego samegame de KDE que a su vez estaba inspirado
+       en un juego de nombre similar de Macintosh.
+      </para>
       
-      <para>A number of tiles were originated from the KDE
-      project. The planets tile was rendered by Federico in his
-      copious spare time to show the world his masterful control of
-      povray command language.</para>
+      <para>
+       Varias piezas fueron creadas por el proyecto KDE. El pieza de los planetas
+       fue renderizada por Federico en su abundante tiempo libre para mostrar
+       al mundo su maestría a la hora de controlar el lenguaje
+       de comandos povray.
+      </para>
 
+      <para>
+       Traducción al español hecha por Gregorio Robles Martínez
+       (<email>grex@scouts-es.org</email>). Por favor envíe todos
+       los comentarios y sugerencias sobre esta traducción a
+       <email>traductores@es.gnome.org</email> o al autor.
+      </para>
     </sect2>
 
   </sect1>
 
   <sect1 id="newthemes">
-    <title>Making new themes for Same GNOME</title>
-      <para>Making new animation themes for Same GNOME is very simple.
-      Each tile should measure forty by forty pixels.  You need to
-      provide a graphic image that contains at least 3 rows of 40
-      pixels each (for the three different tile colors) and a variable
-      number of frames to do your animation (this animation will be
-      shown when the mouse cursor is over a cluster of tiles of the
-      same color).</para>
+    <title>Cómo hacer nuevos temas para Same GNOME</title>
+      <para>
+       La creación de nuevos temas de animación para Same GNOME
+       es muy simple. Cada pieza debe medir cuarenta por cuarenta pixels.
+       Necesita proporcionar una imagen que contenga al menos tres filas
+       de 40 píxeles cada una (para los tres colores diferentes de la pieza)
+       y un número variable de marcos para hacer sus animaciones
+       (estas animaciones serán mostradas cuando el cursor del
+       ratón pase sobre una agrupación de piezas del mismo color).
+      </para>
 
-      <para>To allow Same-GNOME to pick up your tile set you need to
-      install this on the $prefix/pixmaps/same-gnome directory (where
-      $prefix stands for the installation prefix used to configure the
-      GNOME environment, you can find this out by running the command
-      <symbol>gnome-config --prefix</symbol>).</para>
-
+      <para>
+       Para permitir a Same GNOME tomar su conjunto de piezas debe instalarlos
+       en el directorio $prefix/pixmaps/same-gnome (donde $prefix viene
+       dado por el prefijo de instalación usado para configurar el
+       entorno GNOME; puede averiguarlo ejecutando el comando
+       <symbol>gnome-config --prefix</symbol>).
+      </para>
   </sect1>
 </article>
