@@ -10,8 +10,6 @@
  *
  */
 
-#include <sys/types.h>
-#include <string.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -576,7 +574,7 @@ pref_dialog_response (GtkDialog *dialog, gint response, gpointer data)
 static void
 game_preferences_callback (GtkWidget *widget, void *data)
 {
-	GtkWidget *listview, *hbox;
+	GtkWidget *listview, *frame;
 	GtkWidget *button, *scroll;
         GtkTreeViewColumn *column;
         GtkTreeSelection * select;
@@ -610,7 +608,8 @@ game_preferences_callback (GtkWidget *widget, void *data)
                                                            NULL);
         gtk_tree_view_append_column (GTK_TREE_VIEW (listview),
                                      GTK_TREE_VIEW_COLUMN (column));
-
+        gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (listview), FALSE);
+        
         select = gtk_tree_view_get_selection (GTK_TREE_VIEW (listview));
         gtk_tree_selection_set_mode (select, GTK_SELECTION_BROWSE);
         gtk_tree_selection_unselect_all (select);
@@ -623,14 +622,16 @@ game_preferences_callback (GtkWidget *widget, void *data)
                                         GTK_POLICY_AUTOMATIC);
         gtk_widget_set_size_request (scroll, 250, 200);
         gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroll),
-                                             GTK_SHADOW_IN);
+                                             GTK_SHADOW_ETCHED_IN);
         gtk_container_add (GTK_CONTAINER(scroll), listview);
+        gtk_widget_set (scroll, "border-width", GNOME_PAD, NULL);
+        
+        frame = gtk_frame_new (_("Theme"));
+        gtk_container_add (GTK_CONTAINER (frame), scroll);
+        gtk_widget_set (frame, "border-width", GNOME_PAD_SMALL, NULL);
 
-        hbox = gtk_hbox_new (TRUE, 0);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG(pref_dialog)->vbox),
-                                     hbox, TRUE, TRUE, GNOME_PAD_SMALL);
-	gtk_box_pack_start (GTK_BOX (hbox), scroll, TRUE, TRUE,
-                            GNOME_PAD_SMALL);
+        gtk_box_pack_start (GTK_BOX (GTK_DIALOG(pref_dialog)->vbox),
+                            frame, TRUE, TRUE, GNOME_PAD_SMALL);
 
         gtk_widget_show_all (pref_dialog);
 }
