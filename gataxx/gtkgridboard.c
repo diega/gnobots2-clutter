@@ -27,7 +27,7 @@ static guint gridboard_signals[LAST_SIGNAL] = { 0 };
 
 /* prototypes for private functions */
 static gint ** make_array(int width, int height); 
-static void gtk_gridboard_draw_box(GtkWidget * widget, gint x, gint y); 
+static void gtk_gridboard_draw_box(GtkGridBoard *widget, gint x, gint y); 
 static void gtk_gridboard_draw_box_with_gc(GtkWidget * widget, GdkGC * gc, gint x, gint y);
 static void gtk_gridboard_load_pixmaps (GtkGridBoard * gridboard);
 static gint get_pixmap_num(int piece);
@@ -90,20 +90,8 @@ GtkWidget * gtk_gridboard_new(gint width, gint height, char * tileset) {
         gridboard->tileset=tileset;
 
         gridboard->board=make_array(width, height);
-        if (gridboard->board==NULL) {
-                g_warning ("Malloc for the board failed\n");
-                return NULL;
-        }
         gridboard->pixmaps=make_array(width, height);
-        if (gridboard->pixmaps==NULL) {
-                g_warning ("Malloc for the pixmaps failed\n");
-                return NULL;
-        }
         gridboard->selected=make_array(width, height);
-        if (gridboard->selected==NULL) {
-                g_warning ("Malloc for the selected failed\n");
-                return NULL;
-        }
 
         gtk_gridboard_load_pixmaps(gridboard);
         gtk_gridboard_set_animate(GTK_WIDGET(gridboard), TRUE); 
@@ -167,6 +155,8 @@ static gboolean gtk_gridboard_expose(GtkWidget * widget, GdkEventExpose * event)
         /* multiple exposures, do only the last one */
         if (event->count>0) return FALSE;
 
+	/* FIXME: We should only redraw the bit we need to. */
+
         gtk_gridboard_paint(gridboard);
 
         return FALSE;
@@ -226,8 +216,8 @@ static void gtk_gridboard_size_request(GtkWidget * widget, GtkRequisition * req)
  {
         GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
 
-        req->width=gridboard->width*gridboard->tilewidth;
-        req->height=gridboard->height*gridboard->tileheight;
+        req->width=gridboard->width*gridboard->tilewidth + 1;
+        req->height=gridboard->height*gridboard->tileheight + 1;
 }
 
 /* this isn't really used because the window is not resizable */
@@ -264,6 +254,13 @@ void gtk_gridboard_paint(GtkGridBoard * gridboard) {
                         gtk_gridboard_draw_pixmap(gridboard, piecepic, x, y);
                 }
         }
+	/* FIXME: There has to be a better way. */
+        for (x=0; x<gridboard->height; x++) {
+                for (y=0; y<gridboard->width; y++) {
+		  if (gridboard->selected[x][y] != SELECTED_NONE)
+			    gtk_gridboard_draw_box(gridboard, x, y);
+                }
+        }
 }
 
 
@@ -278,22 +275,29 @@ static void gtk_gridboard_draw_pixmap(GtkGridBoard * gridboard, gint which, gint
                 x * TILEWIDTH, y * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
 
         /* draw lines around x, y */
-        gtk_gridboard_draw_box(widget, x, y);
+        gtk_gridboard_draw_box(gridboard, x, y);
 }
-void gtk_gridboard_set_selection(GtkWidget * widget, gint type, gint x, gint y) 
+void gtk_gridboard_set_selection(GtkGridBoard * gridboard, gint type, 
+				 gint x, gint y) 
 {
-        GtkGridBoard * gridboard=GTK_GRIDBOARD(widget);
+        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
+	g_return_if_fail (x >= 0);
+	g_return_if_fail (y >= 0);
+	g_return_if_fail (x < gridboard->width);
+	g_return_if_fail (y < gridboard->height);
+
         gridboard->selected[x][y]=type;
-        gtk_gridboard_draw_box(widget, x, y);
+        gtk_gridboard_draw_box(gridboard, x, y);
 }
 
-static void gtk_gridboard_draw_box(GtkWidget * widget, gint x, gint y) {
-        GtkGridBoard * gridboard;
+static void gtk_gridboard_draw_box(GtkGridBoard *gridboard, gint x, gint y) {
+        GtkWidget *widget;
         GdkGC * gc;
         int selected;
         static GdkColor selectcolor={12345, 30208, 41216, 33792};
         
-        gridboard=GTK_GRIDBOARD(widget);
+	widget = GTK_WIDGET (gridboard);
+
         selected=gridboard->selected[x][y];
         
         if (selected==SELECTED_NONE) {
@@ -396,8 +400,7 @@ static gint ** make_array(int width, int height) {
         
         valarraysiz=width*height;       /* size of actual array */
         ptrarraysiz=width;              /* size of pointer array */
-        result=(gint **)g_try_malloc(ptrarraysiz*sizeof(gint *)+valarraysiz*sizeof(gint));
-        if (result==NULL) return NULL;
+        result=(gint **)g_malloc(ptrarraysiz*sizeof(gint *)+valarraysiz*sizeof(gint));
         memset(result, 0, ptrarraysiz*sizeof(gint *)+valarraysiz*sizeof(gint));
         for (i=0; i<width; i++) {
                 result[i]=(gint *)(result+ptrarraysiz)+i*height;

@@ -39,7 +39,7 @@
 #include "appbar.h"
 #include "ai.h"
 
-GtkWidget * gridboard;		/* current gridboard */
+GtkGridBoard * gridboard;		/* current gridboard */
 GtkWidget * window;             /* The apps main window. */
 gint turn;		        /* current player */
 position selection={0, 0, 0};	/* last selected position */

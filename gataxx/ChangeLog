@@ -1,3 +1,16 @@
+2004-10-27  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gtkgridboard.c: Use g_malloc rather than g_try_malloc for
+	make_array. We aren't going to handle the results gracefully so we
+	might as well use the standard failure mode: abort the program.
+	
+	Also do some cleanups and add some more checks and start
+	converting the "this" pointer from GtkWidget to GtkGridBoard.
+
+	Add an extra pixel all around so we draw the rightmost and
+	bottommost frames. Also fix the expose routine so we draw the 
+	grid lines correctly.
+	
 2004-10-15  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gtkgridboard.c: Fix a 64-bit crasher and g_-ize some

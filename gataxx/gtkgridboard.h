@@ -94,7 +94,8 @@ void g_cclosure_user_marshal_VOID__INT_INT (GClosure     *closure,
 
 void gtk_gridboard_set_animate(GtkWidget * gridboard, gboolean animate); 
 void gtk_gridboard_set_piece(GtkWidget * gridboard, int x, int y, int piece);
-void gtk_gridboard_set_selection(GtkWidget * widget, gint type, gint x, gint y);
+void gtk_gridboard_set_selection (GtkGridBoard *widget, gint type, 
+				  gint x, gint y);
 int gtk_gridboard_count_pieces(GtkWidget * gridboard, int piece);
 int gtk_gridboard_get_piece(GtkWidget * gridboard, int x, int y);
 void gtk_gridboard_set_show_grid(GtkWidget * widget, gboolean showgrid);
