@@ -1,7 +1,6 @@
-<!DOCTYPE article PUBLIC "-//GNOME//DTD DocBook PNG Variant V1.1//EN"[
-        <!-- if not using PNG graphic, replace reference above with
-             .....PUBLIC "-//OASIS//DTD DocBook V3.1//EN"[
-         -->
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+    "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 <!ENTITY version "1.2.0"> <!-- replace with application version -->
 ]>
 
@@ -31,7 +30,7 @@
 
 <article id="index"> <!-- please do not change the id -->
 
-  <artheader>
+  <articleinfo>
    <title>Same GNOME player's guide</title>
     <copyright>
       <year>2000</year>
@@ -110,7 +109,7 @@
     </releaseinfo>
   -->
 
-  </artheader>
+  </articleinfo>
 
  <!-- ============= Document Body ============================= -->
 

@@ -1,11 +1,13 @@
-<!DOCTYPE Article PUBLIC "-//GNOME//DTD DocBook PNG Variant V1.1//EN"[
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+    "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 <!ENTITY VERSION "0.99.2+">
 <!ENTITY DOCVERSION "1.0">
 ]>
 
 <article id="index">
 
-  <artheader>
+  <articleinfo>
   
     <title>Gnome Mahjongg</title>
     <copyright>
@@ -50,7 +52,7 @@
       This is version &DOCVERSION; of Gnome Mahjongg manual.
     </releaseinfo>
 
-  </artheader>
+  </articleinfo>
 
   <sect1 id="intro">
     <title>Introduction</title>
@@ -158,10 +160,15 @@
     <figure id="mahjongg-fig">
       <title>Mahjongg's Main Window</title>
       <screenshot>
-	<screeninfo>Main window</screeninfo>
-	<graphic fileref="figures/mahjongg" format="png"
-	       srccredit="Eric Baudais">
-	</graphic>
+	 <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/mahjongg.png" format="PNG"
+	       srccredit="Eric Baudais"/>
+	</imageobject>
+    <textobject> 
+      <phrase>Main window.</phrase> 
+    </textobject> 
+  </mediaobject>
       </screenshot>
     </figure>
 
@@ -175,10 +182,15 @@
     <figure id="info-fig2">
       <title>Information Dialog</title>
       <screenshot>
-	<screeninfo>Information Dialog</screeninfo>
-	<graphic fileref="figures/no-match" format="png"
-	       srccredit="Eric Baudais">
-	</graphic>
+	 <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/no-match.png" format="PNG"
+	       srccredit="Eric Baudais"/>
+	</imageobject>
+    <textobject> 
+      <phrase>Information Dialog.</phrase> 
+    </textobject> 
+  </mediaobject>
       </screenshot>
     </figure>
 
@@ -198,10 +210,15 @@
     <figure id="info-fig1">
       <title>Information Dialog</title>
       <screenshot>
-	<screeninfo>Information Dialog</screeninfo>
-	<graphic fileref="figures/no-move" format="png"
-	       srccredit="Eric Baudais">
-	</graphic>
+	 <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/no-move.png" format="PNG"
+	       srccredit="Eric Baudais"/>
+	</imageobject>
+    <textobject> 
+      <phrase>Information Dialog.</phrase> 
+    </textobject> 
+  </mediaobject>
       </screenshot>
     </figure>
     
@@ -321,10 +338,15 @@
       <figure id="toolbar-fig">
 	<title>Mahjongg's Toolbar</title>
 	<screenshot>
-	  <screeninfo>Toolbar</screeninfo>
-	  <graphic fileref="figures/toolbar" format="png"
-		 srccredit="Eric Baudais">
-	  </graphic>
+	   <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/toolbar.png" format="PNG"
+		 srccredit="Eric Baudais"/>
+	  </imageobject>
+    <textobject> 
+      <phrase>Toolbar.</phrase> 
+    </textobject> 
+  </mediaobject>
 	</screenshot>
       </figure>
       
@@ -365,10 +387,15 @@
 		    <figure id="seed-fig">
 		      <title>Select Game seed</title>
 		      <screenshot>
-			<screeninfo>Select Game Dialog</screeninfo>
-			<graphic fileref="figures/seed" format="png"
-				 srccredit="Eric Baudais">
-			</graphic>
+			 <mediaobject> 
+   			 <imageobject>
+  			<imagedata fileref="figures/seed.png" format="PNG"
+				 srccredit="Eric Baudais"/>
+			</imageobject>
+  			  <textobject> 
+    			  <phrase>Select Game Dialog.</phrase> 
+  			  </textobject> 
+ 			 </mediaobject>
 		      </screenshot>
 		    </figure>
 
@@ -439,10 +466,15 @@
 		    <figure id="scores-fig">
 		      <title>Top Ten Scores Dialog</title>
 		      <screenshot>
-			<screeninfo>Scores Dialog</screeninfo>
-			<graphic fileref="figures/scores" format="png"
-				 srccredit="Eric Baudais">
-			</graphic>
+			 <mediaobject> 
+ 			   <imageobject>
+			  <imagedata fileref="figures/scores.png" format="PNG"
+				 srccredit="Eric Baudais"/>
+			</imageobject>
+ 			   <textobject> 
+ 			     <phrase>Scores Dialog.</phrase> 
+ 			   </textobject> 
+ 			 </mediaobject>
 		      </screenshot>
 		    </figure>
 
@@ -543,10 +575,15 @@
     <figure id="preferences-fig">
       <title>Preferences&hellip; Dialog</title>
       <screenshot>
-	<screeninfo>Preferences dialog</screeninfo>
-	<graphic fileref="figures/preferences" format="png"
-		 srccredit="Eric Baudais">
-	</graphic>
+	 <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/preferences.png" format="PNG"
+		 srccredit="Eric Baudais"/>
+	</imageobject>
+    <textobject> 
+      <phrase>Preferences dialog.</phrase> 
+    </textobject> 
+  </mediaobject>
       </screenshot>
     </figure>
 
@@ -597,10 +634,15 @@
 	    <figure id="color-fig">
 	      <title>Color Dialog</title>
 	      <screenshot>
-		<screeninfo>Color dialog</screeninfo>
-		<graphic fileref="figures/color" format="png"
-			 srccredit="Eric Baudais">
-		</graphic>
+		 <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/color.png" format="PNG"
+			 srccredit="Eric Baudais"/>
+		</imageobject>
+    <textobject> 
+      <phrase>Color dialog.</phrase> 
+    </textobject> 
+  </mediaobject>
 	      </screenshot>
 	    </figure>
 
@@ -633,10 +675,15 @@
 	  <figure id="confirm-fig">
 	    <title>Confirmation Dialog</title>
 	    <screenshot>
-	      <screeninfo>Confirmation dialog</screeninfo>
-	      <graphic fileref="figures/confirm" format="png"
-		       srccredit="Eric Baudais">
-	      </graphic>
+	       <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/confirm.png" format="PNG"
+		       srccredit="Eric Baudais"/>
+	      </imageobject>
+    <textobject> 
+      <phrase>Confirmation dialog.</phrase> 
+    </textobject> 
+  </mediaobject>
 	    </screenshot>
 	  </figure>
 

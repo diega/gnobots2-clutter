@@ -1,5 +1,6 @@
-<!DOCTYPE Article PUBLIC "-//GNOME//DTD DocBook PNG Variant V1.1//EN"[
-
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+    "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
  <!ENTITY version "2.0">
          <!--  Template Version: 1.0.1  (do not remove this line) -->
  ]
@@ -9,7 +10,7 @@
 
  <article id="index"> <!-- please do not change the id -->
 
-   <artheader>
+   <articleinfo>
      <title>Gnome xBill</title>
      <copyright>
        <year>2000</year>
@@ -44,7 +45,7 @@
         This is version 1.0 of Gnome xBill manual.
      </releaseinfo>
 
-   </artheader>
+   </articleinfo>
   <sect1 id="intro"> <title>Introduction</title>
     <para>Gnome xBill is a port of the original xBill to the GNOME desktop
     environment.
@@ -94,53 +95,73 @@
     items, in this section you will be introduced to each of them. </para>
     <para>The overall goal is to maintain the stability of your computer system,
     therefore it makes sense that the first entity you are introduced is a
-    computer. <xref linkend="computer"> shows one of the computers you will
+    computer. <xref linkend="computer"/> shows one of the computers you will
     start the game with, this computer has RedHat Linux installed on it but the
     computers you start the game with may have any other unix based
     operating system installed.</para>
     <figure id="computer">
       <title>Computer</title>
       <screenshot>
-	<screeninfo>Computer</screeninfo>
-	<graphic fileref="computer" format="png" srccredit="Michael Koziarski">
-	</graphic>
+	 <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/computer.png" format="PNG" srccredit="Michael Koziarski"/>
+	</imageobject>
+    <textobject> 
+      <phrase>Computer.</phrase> 
+    </textobject> 
+  </mediaobject>
       </screenshot>
     </figure>
     <para>Some of the computers in your system will be connected by a black
-    cable (see <xref linkend="cable">), these computers are considered
+    cable (see <xref linkend="cable"/>), these computers are considered
     networked.  Computers on a network are susceptible to a spark attack from an
     infected computer, this is explained in greater detail in <xref
-    linkend="attacks">.</para>
+    linkend="attacks"/>.</para>
     <figure id="cable">
       <title>Network Cable</title>
       <screenshot>
-	<screeninfo>Network Cable</screeninfo>
-	<graphic fileref="cable" format="png" srccredit="Michael Koziarski">
-	</graphic>
+	 <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/cable.png" format="PNG" srccredit="Michael Koziarski"/>
+	</imageobject>
+    <textobject> 
+      <phrase>Network Cable.</phrase> 
+    </textobject> 
+  </mediaobject>
       </screenshot>
     </figure>
-    <para><xref linkend="microbill"> shows your enemies in
+    <para><xref linkend="microbill"/> shows your enemies in
     <application>Gnome-xBill</application>. The swarming micro-Bills.  <xref
-    linkend="attacks"> describes the various tactics they'll use against your
+    linkend="attacks"/> describes the various tactics they'll use against your
     network.  In the event that a computer is infected and it sends a network
-    spark (see <xref linkend="attacks">) you'll need to use the bucket of <xref
-    linkend="bucket">
+    spark (see <xref linkend="attacks"/>) you'll need to use the bucket of <xref
+    linkend="bucket"/>
     </para>
     <figure id="microbill">
       <title>micro-Bill</title>
       <screenshot>
-	<screeninfo>micro-Bill</screeninfo>
-	<graphic fileref="microbill" format="png" srccredit="Michael Koziarski">
-	</graphic>
+	 <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/microbill.png" format="PNG" srccredit="Michael Koziarski"/>
+	</imageobject>
+    <textobject> 
+      <phrase>micro-Bill.</phrase> 
+    </textobject> 
+  </mediaobject>
       </screenshot>
     </figure>
     <figure id="bucket">
       <title>Bucket</title>
       <screenshot>
-	<screeninfo>Bucket</screeninfo>
-	<graphic fileref="bucket" format="png" srccredit="Michael Koziarski">
-	</graphic>
-      </screenshot>
+	 <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/bucket.png" format="PNG" srccredit="Michael Koziarski"/>
+	</imageobject>
+    <textobject> 
+      <phrase>Bucket.</phrase> 
+    </textobject> 
+  </mediaobject>
+	</screenshot>
     </figure>
   </sect1>
   <sect1 id="usage">
@@ -155,14 +176,19 @@
       <guimenu>Main Menu</guimenu>, or type
       <command>gnome-xbill</command> on the command line.
       When <application>Gnome xBill</application> starts you will be presented
-      with the main window shown in  <xref linkend="mainwindow-fig">.
+      with the main window shown in  <xref linkend="mainwindow-fig"/>.
     </para>
     <figure id="mainwindow-fig">
       <title>Gnome xBill Main Window</title>
       <screenshot>
-	<screeninfo>Gnome xBill Main Window</screeninfo>
-	<graphic fileref="mainwin" format="png" srccredit="Michael Koziarski">
-	</graphic>
+	 <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/mainwin.png" format="PNG" srccredit="Michael Koziarski"/>
+	</imageobject>
+    <textobject> 
+      <phrase>Gnome xBill Main Window.</phrase> 
+    </textobject> 
+  </mediaobject>
       </screenshot>
     </figure>
     <para>To start a new game of Gnome xBill select 
@@ -183,57 +209,77 @@
       </menuchoice>
     </para>
     <para>When the new game begins you'll be presented with a screen like <xref
-    linkend="start-game">.This screen contains a number of computers each with an
+    linkend="start-game"/>.This screen contains a number of computers each with an
       operating system installed on it. </para>
     <para> The text in the left hand bottom corner of the screen is explained in
-    <xref linkend="scoring">After a short
+    <xref linkend="scoring"/>After a short
       period of time <link linkend="microbill"> micro-Bills </link> will begin
     to attack your network. 
       <figure id="start-game">
 	<title>Start of Gnome xBill</title>
 	<screenshot>
-	  <screeninfo>Start of Gnome xBill</screeninfo>
-	  <graphic fileref="startgame" format="png" srccredit="Michael Koziarski">
-	  </graphic>
+	   <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/startgame.png" format="PNG" srccredit="Michael Koziarski"/>
+	 </imageobject>
+    <textobject> 
+      <phrase>Start of Gnome xBill.</phrase> 
+    </textobject> 
+  </mediaobject>
 	</screenshot>
       </figure>
     </para>
     <sect2 id="attacks">
       <title> Types of attacks </title>
       <para>When a micro-Bill arrives at one of your computers it will begin to
-	uninstall the operating system as shown in <xref linkend="uninstall">
+	uninstall the operating system as shown in <xref linkend="uninstall"/>
 	After removing your operating system the micro-Bill will install the
 	'virus' on the pc.  An infected computer will have the logo of a certain
       ubiquitous legacy operating system displayed on its screen. An infected
       computer is shown in 
-	<xref linkend="infected">.
+	<xref linkend="infected"/>.
 	<figure id="uninstall">
 	  <title>Micro-Bill removing OS</title>
 	  <screenshot>
-	    <screeninfo>Micro-Bill removing OS</screeninfo>
-	    <graphic fileref="remove" format="png" srccredit="Michael Koziarski">
-	    </graphic>
+	     <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/remove.png" format="PNG" srccredit="Michael Koziarski"/>
+	   </imageobject>
+    <textobject> 
+      <phrase>Micro-Bill removing OS.</phrase> 
+    </textobject> 
+  </mediaobject>
 	  </screenshot>
 	</figure>
 	<figure id="infected">
 	  <title>Infected computer</title>
 	  <screenshot>
-	    <screeninfo>Infected Computer</screeninfo>
-	    <graphic fileref="infected" format="png" srccredit="Michael Koziarski">
-	    </graphic>
+	     <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/infected.png" format="PNG" srccredit="Michael Koziarski"/>
+	   </imageobject>
+    <textobject> 
+      <phrase>Infected Computer.</phrase> 
+    </textobject> 
+  </mediaobject>
 	  </screenshot>
 	</figure>
       </para>
       <para>With the virus installed the micro-Bill will carry your previous OS
       off the screen. A micro-Bill carrying your operating system will look like
-      <xref linkend="removeos"> you should try to <link linkend="splat"> splat
+      <xref linkend="removeos"/> you should try to <link linkend="splat"> splat
       </link> the micro-Bill before he manages to carry the OS off screen.
 	<figure id="removeos">
 	  <title>micro-Bill removing OS</title>
 	  <screenshot>
-	    <screeninfo>micro-Bill removing OS</screeninfo>
-	    <graphic fileref="removeos" format="png" srccredit="Michael Koziarski">
-	    </graphic>
+	    <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/removeos.png" format="PNG" srccredit="Michael Koziarski"/>
+	   </imageobject>
+    <textobject> 
+      <phrase>micro-Bill removing OS.</phrase> 
+    </textobject> 
+  </mediaobject>
 	  </screenshot>
 	</figure>
       </para>
@@ -241,13 +287,18 @@
       send sparks along it's network cable, once a spark arrives at it's
       destination the computer will instantly become infected. You can see a
       network spark travelling towards the HURD computer in <xref
-      linkend="spark">
+      linkend="spark"/>
     <figure id="spark">
       <title>Network Spark</title>
       <screenshot>
-	<screeninfo>Network Spark</screeninfo>
-	<graphic fileref="spark" format="png" srccredit="Michael Koziarski">
-	</graphic>
+	 <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/spark.png" format="PNG" srccredit="Michael Koziarski"/>
+	</imageobject>
+    <textobject> 
+      <phrase>Network Spark.</phrase> 
+    </textobject> 
+  </mediaobject>
       </screenshot>
     </figure>
     </para>
@@ -262,9 +313,14 @@
 	<figure id="splat">
 	  <title>Splatted micro-Bill</title>
 	  <screenshot>
-	    <screeninfo>Splatted micro-Bill</screeninfo>
-	    <graphic fileref="splat" format="png" srccredit="Michael Koziarski">
-	    </graphic>
+	     <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/splat.png" format="PNG" srccredit="Michael Koziarski"/>
+	   </imageobject>
+    <textobject> 
+      <phrase>Splatted micro-Bill.</phrase> 
+    </textobject> 
+  </mediaobject>
 	  </screenshot>
 	</figure>
       </para>
@@ -273,9 +329,14 @@
 	<figure id="fallenos">
 	  <title>Removed OS on the ground</title>
 	  <screenshot>
-	    <screeninfo>Removed OS on the ground</screeninfo>
-	    <graphic fileref="fallenos" format="png" srccredit="Michael Koziarski">
-	    </graphic>
+	     <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/fallenos.png" format="PNG" srccredit="Michael Koziarski"/>
+	   </imageobject>
+    <textobject> 
+      <phrase>Removed OS on the ground.</phrase> 
+    </textobject> 
+  </mediaobject>
 	  </screenshot>
 	</figure> You are then able to restore your OS by moving the mouse over
 	the OS, pressing down the first mouse button and then dragging the OS to
@@ -298,7 +359,7 @@
       <title>Ending your game</title>
       <para>Once all the computers in your system have had the virus installed
       your game is over. You will be presented with the dialog box shown in
-      <xref linkend="fakeseg">
+      <xref linkend="fakeseg"/>
       </para>
       <note>
 	<title>NOTE</title>
@@ -310,20 +371,30 @@
     <figure id="fakeseg">
       <title>Gameover Dialog</title>
       <screenshot>
-	<screeninfo>Gameover Dialog</screeninfo>
-	<graphic fileref="fakeseg" format="png" srccredit="Michael Koziarski">
-	</graphic>
+	 <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/fakeseg.png" format="PNG" srccredit="Michael Koziarski"/>
+	</imageobject>
+    <textobject> 
+      <phrase>Gameover Dialog.</phrase> 
+    </textobject> 
+  </mediaobject>
       </screenshot>
     </figure>
     <para>When your game is over your computers will all have become toasters
-    (<xref linkend="toastfig">).  If your score was high enough you'll enter
+    (<xref linkend="toastfig"/>).  If your score was high enough you'll enter
     the <link linkend="scoring">highscore table.</link></para>
     <figure id="toastfig">
       <title>The remains of your system</title>
       <screenshot>
-	<screeninfo>The remains of your system</screeninfo>
-	<graphic fileref="toasters" format="png" srccredit="Michael Koziarski">
-	</graphic>
+	 <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/toasters.png" format="PNG" srccredit="Michael Koziarski"/>
+	</imageobject>
+    <textobject> 
+      <phrase>The remains of your system.</phrase> 
+    </textobject> 
+  </mediaobject>
       </screenshot>
     </figure>
 
@@ -332,13 +403,18 @@
       <title>Gnome xBill Scoring system</title>
       <para>Your score in <application>Gnome-xBill</application> is based on
       total uptime and the number of micro-Bills you kill. <xref
-      linkend="scoreboard"> shows the scoreboard.</para> 
+      linkend="scoreboard"/> shows the scoreboard.</para> 
       <figure id="scoreboard">
 	<title>The Scoreboard</title>
 	<screenshot>
-	  <screeninfo>The Scoreboard</screeninfo>
-	  <graphic fileref="score" format="png" srccredit="Michael Koziarski">
-	  </graphic>
+	   <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/score.png" format="PNG" srccredit="Michael Koziarski"/>
+	  </imageobject>
+    <textobject> 
+      <phrase>The Scoreboard.</phrase> 
+    </textobject> 
+  </mediaobject>
 	</screenshot>
       </figure>
       <para>The scoreboard consists 4 blocks of text.  The last two blocks are
@@ -374,7 +450,7 @@
       systems.
       </para>
       <para>If your score is high enough then when the game is over you will be
-      entered in the Highscores (<xref linkend="highscoreboard">), to check
+      entered in the Highscores (<xref linkend="highscoreboard"/>), to check
       the current high scores chose
 	<menuchoice>
 	  <guimenu>Game</guimenu>
@@ -384,9 +460,14 @@
       <figure id="highscoreboard">
 	<title>The High Scoreboard</title>
 	<screenshot>
-	  <screeninfo>The High Scoreboard</screeninfo>
-	  <graphic fileref="scores" format="png" srccredit="Michael Koziarski">
-	  </graphic>
+	   <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/scores.png" format="PNG" srccredit="Michael Koziarski"/>
+	  </imageobject>
+    <textobject> 
+      <phrase>The High Scoreboard.</phrase> 
+    </textobject> 
+  </mediaobject>
 	</screenshot>
       </figure>
     </sect2>
