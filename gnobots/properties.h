@@ -6,6 +6,7 @@
 #define PROPERTIES_H
 
 extern int safe_move_on;
+extern int super_safe_move_on;
 extern int safe_teleport_on;
 extern int sound_on;
 

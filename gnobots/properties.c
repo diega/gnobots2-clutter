@@ -20,15 +20,17 @@
  */
 static GtkWidget *propdlg            = NULL;
 static int        make_safe_move;
+static int        make_super_safe_move;
 static int        make_safe_teleport;
 static int        make_sound_on;
 static char      *default_scenario   = NULL;
 static char      *scenario           = NULL;
 static int        make_default;
 
-int safe_move_on     = TRUE;
-int safe_teleport_on = TRUE;
-int sound_on         = TRUE;
+int safe_move_on           = TRUE;
+int super_safe_move_on     = TRUE;
+int safe_teleport_on       = TRUE;
+int sound_on               = TRUE;
 
 /*
  * Function Prototypes
@@ -50,6 +52,16 @@ GtkWidget *widget,
 void *data
 ){
     make_safe_move = GTK_TOGGLE_BUTTON(widget)->active;
+}
+
+/*
+ * Handle the 'Super safe moves' button messages
+ */
+static void set_super_cb(
+GtkWidget *widget,
+void *data
+){
+    make_super_safe_move = GTK_TOGGLE_BUTTON(widget)->active;
 }
 
 /*
@@ -177,6 +189,7 @@ gpointer  data
 
     GtkWidget *togglebox;
     GtkWidget *safecb;
+    GtkWidget *supersafecb;
     GtkWidget *telecb;
     GtkWidget *soundcb;    
     GtkWidget *defaultcb;
@@ -235,6 +248,14 @@ gpointer  data
     gtk_box_pack_start(GTK_BOX(togglebox), safecb, TRUE, TRUE, 5);
     gtk_widget_show (safecb);
     
+    supersafecb = gtk_check_button_new_with_label(
+                _("Super safe mode"));
+    GTK_TOGGLE_BUTTON(supersafecb)->active = make_safe_move = safe_move_on;
+    gtk_signal_connect (GTK_OBJECT(supersafecb), "clicked",
+                (GtkSignalFunc)set_move_cb, NULL);
+    gtk_box_pack_start(GTK_BOX(togglebox), supersafecb, TRUE, TRUE, 5);
+    gtk_widget_show (supersafecb);
+    
     telecb = gtk_check_button_new_with_label(
                 _("Safe Teleports"));
     GTK_TOGGLE_BUTTON(telecb)->active = make_safe_teleport = safe_teleport_on;
@@ -288,6 +309,7 @@ gpointer  data
     if(!propdlg) return;
 
     safe_move_on = make_safe_move;
+    super_safe_move_on = make_super_safe_move;
     safe_teleport_on = make_safe_teleport;
     sound_on = make_sound_on;    
 
@@ -344,6 +366,8 @@ void load_properties(
 
     safe_move_on = gnome_config_get_int_with_default(
                 "/gnobots/Properties/SafeMove=1", NULL);
+    super_safe_move_on = gnome_config_get_int_with_default(
+                "/gnobots/Properties/SuperSafeMove=1", NULL);
     safe_teleport_on = gnome_config_get_int_with_default(
                 "/gnobots/Properties/SafeTeleport=1", NULL);
     sound_on = gnome_config_get_int_with_default(
@@ -354,6 +378,7 @@ void save_properties(
 ){
     gnome_config_set_string("/gnobots/Properties/Scenario", default_scenario);
     gnome_config_set_int("/gnobots/Properties/SafeMove", safe_move_on);
+    gnome_config_set_int("/gnobots/Properties/SuperSafeMove", super_safe_move_on);
     gnome_config_set_int("/gnobots/Properties/SafeTeleport", safe_teleport_on);
     gnome_config_set_int("/gnobots/Properties/Sound", sound_on);
     

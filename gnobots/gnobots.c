@@ -853,7 +853,10 @@ int ny
     /* is our chosen move safe ... */
     if(!check_nhood(nx, ny)) return TRUE;
 
-    /* ... if it isn't then we look to see if there is
+    /* player is a strategist and wants to be told to teleport */
+    if (super_safe_move_on) return FALSE;
+
+    /* ... otherwise we look to see if there is
        a safe move we could have made */
 
     if((player_xpos > 0) && (player_ypos > 0) &&
