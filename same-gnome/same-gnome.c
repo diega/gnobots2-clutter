@@ -408,7 +408,7 @@ load_scenario (char *fname)
 			GTK_MESSAGE_ERROR,
 			GTK_BUTTONS_OK,
 			_("Could not find the theme:\n%s\n\n"
-			"Please check you Same GNOME installation."), fn);
+			"Please check your Same GNOME installation."), fn);
 
 		gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (box));
