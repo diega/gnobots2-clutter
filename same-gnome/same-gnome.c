@@ -260,7 +260,7 @@ show_scores ( gchar *title, guint pos )
 	gtk_window_set_title (GTK_WINDOW (hs), title);
 	
 	if (pos)
-		gnome_scores_set_color(hs, pos-1, &col);
+		gnome_scores_set_color(GNOME_SCORES(hs), pos-1, &col);
 	
 	gtk_widget_show (hs);
 
