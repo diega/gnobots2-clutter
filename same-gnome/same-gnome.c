@@ -861,6 +861,8 @@ main (int argc, char *argv [])
 {
 	GtkWidget *label, *hb;
 	gchar *fname;
+
+	gnome_score_init("same-gnome");
 	
 	gnome_init (&argc, &argv);
 	fname = parse_args(argc, argv);
