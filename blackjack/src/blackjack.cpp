@@ -221,6 +221,8 @@ bj_quit_app (GtkMenuItem *menuitem)
   g_object_unref (gconf_client);
   gtk_widget_destroy (app);
   gtk_main_quit ();
+
+  return TRUE;
 }
 
 static void

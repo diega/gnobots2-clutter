@@ -64,7 +64,6 @@ gint             dealerSpeed;
 
 gint             numHands;
 
-struct dirent    **game_dents;
 gchar            *game_file = "";
 gchar            *game_name;
 
@@ -106,15 +105,15 @@ bj_game_show_hand_counts ()
 {
   GList *temptr;
   for (temptr = playerHands; temptr; temptr = temptr->next)
-    ((PlayerHand*)temptr->data)->showCount();
+    ((PlayerHand*)temptr->data)->showCount ();
   if (! bj_game_is_active ())
     dealer->showCount ();
 }
 
-gchar*
+gchar *
 bj_game_file_to_name (const gchar* file)
 {
-  char* p, *buf = g_path_get_basename (file);
+  char *p, *buf = g_path_get_basename (file);
 
   if ((p = strrchr (buf, '.'))) *p = '\0';
   for (p = buf; p = strchr (p, '_'), p && *p;) *p = ' ';
@@ -127,35 +126,42 @@ bj_game_file_to_name (const gchar* file)
 }
 
 int
-bj_is_ruleset (const struct dirent* dent)
+bj_is_ruleset (const gchar *file_name)
 {
-  return (!strcmp (g_extension_pointer (dent->d_name), "rules"));
+  return (!strcmp (g_extension_pointer (file_name), "rules"));
 }
 
 void
 bj_game_find_rules (gchar *variation)
 {
-  gint i, records;
-  gchar* dir;
-  gint n_games;
+  GDir *dir;
+  gchar *dname;
+  G_CONST_RETURN gchar* file_name;
+  gint n_games = 0;
 
-  dir = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_DATADIR,
-                                   BJ_RULES_DIR, FALSE, NULL);
+  dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_DATADIR,
+                                     BJ_RULES_DIR, FALSE, NULL);
 
-  records = scandir (dir, &game_dents, bj_is_ruleset, alphasort);
-  g_free (dir);
+  dir = g_dir_open (dname, 0, NULL);
+  if (dir == NULL)
+    return;
+  
+  g_free (dname);
 
-  n_games = (records >= 0) ? records : 0;
+  while ((file_name = g_dir_read_name (dir)) != NULL) 
+    {
+      if (! bj_is_ruleset (file_name))
+        continue;
 
-  // Drop all previous rules
-
-  for (i = 0; i < n_games; i++) {
-    gchar *game_name = bj_game_file_to_name (game_dents[i]->d_name);
-    rules_list = g_list_append (rules_list, g_strdup (game_dents[i]->d_name));
-    if (!g_ascii_strcasecmp (variation, game_dents[i]->d_name)) {
-      bj_set_game_variation (game_dents[i]->d_name);
+      n_games++;
+      rules_list = g_list_append (rules_list, g_strdup (file_name));
+      if (! g_ascii_strcasecmp (variation, file_name)) 
+        {
+          bj_set_game_variation (file_name);
+        }
     }
-  }
+
+  g_dir_close (dir);
 }
 
 GList *

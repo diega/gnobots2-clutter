@@ -619,12 +619,16 @@ gint
 bj_event_enter_notify (GtkWidget *widget, GdkEventCrossing *event, void *d)
 {
   gtk_widget_grab_focus (playing_area);
+
+  return TRUE;
 }
 
 gint
 bj_event_expose_callback (GtkWidget *widget, GdkEventExpose *event, void *d)
 {
   bj_draw_refresh_screen ();
+
+  return TRUE;
 }
 
 gint
