@@ -13,6 +13,12 @@ Iagno2Properties *iagno2_properties_new ()
 	tmp->tileset = gnome_config_get_string
 		("/iagno2/Preferences/tileset=classic.png");
 
+	tmp->player1 = gnome_config_get_string
+		("/iagno2/Preferences/player1=Human");
+
+	tmp->player2 = gnome_config_get_string
+		("/iagno2/Preferences/player2=Human");
+
 	return (tmp);
 }
 
@@ -20,6 +26,8 @@ void
 iagno2_properties_destroy (Iagno2Properties *properties)
 {
 	g_free (properties->tileset);
+	g_free (properties->player1);
+	g_free (properties->player2);
 	g_free (properties);
 }
 
@@ -32,6 +40,8 @@ iagno2_properties_copy (Iagno2Properties *properties)
 
 	tmp->draw_grid = properties->draw_grid;
 	tmp->tileset = g_strdup (properties->tileset);
+	tmp->player1 = g_strdup (properties->player1);
+	tmp->player2 = g_strdup (properties->player2);
 
 	return (tmp);
 }
@@ -43,5 +53,9 @@ iagno2_properties_sync (Iagno2Properties *properties)
 			properties->draw_grid);
 	gnome_config_set_string ("/iagno2/Preferences/tileset",
 			properties->tileset);
+	gnome_config_set_string ("/iagno2/Preferences/player1",
+			properties->player1);
+	gnome_config_set_string ("/iagno2/Preferences/player2",
+			properties->player2);
 	gnome_config_sync ();
 }

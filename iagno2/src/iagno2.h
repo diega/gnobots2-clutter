@@ -15,3 +15,7 @@ void iagno2_move (gchar index);
 void iagno2_board_changed ();
 
 void iagno2_setup_current_player ();
+
+void iagno2_initialize_players ();
+
+gint iagno2_game_over ();

@@ -26,7 +26,7 @@ plugin_move (gchar *board)
 	gint moves[32];
 	gint nummoves = 0;
 
-	for (i = 0; i < 63; i++) {
+	for (i = 0; i < 64; i++) {
 		if (is_valid_move (board, i, whose_turn)) {
 			moves[nummoves++] = i;
 		}
@@ -46,5 +46,5 @@ plugin_move (gchar *board)
 const gchar *
 plugin_name ()
 {
-	return "Random v0.1";
+	return "Random player for Iagno II";
 }

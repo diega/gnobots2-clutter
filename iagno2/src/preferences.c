@@ -140,6 +140,8 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
 	GtkWidget *label2;
 	GtkWidget *option_menu;
 	GtkWidget *menu;
+	GtkWidget *frame;
+	GtkWidget *vbox;
 
 	if (preferences_dialog)
 		return;
@@ -159,6 +161,8 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
 			"destroy",
 			GTK_SIGNAL_FUNC (destroy_cb),
 			NULL);
+
+	/* First page of properties */
 
 	label = gtk_label_new (_("Graphics"));
 
@@ -204,6 +208,51 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
 	gnome_property_box_append_page (GNOME_PROPERTY_BOX (preferences_dialog),
 			table,
 			label);
+
+	/* Second page of properties */
+
+	label = gtk_label_new (_("Players"));
+
+	table = gtk_table_new (1, 2, TRUE);
+	gtk_table_set_row_spacings (GTK_TABLE (table), GNOME_PAD);
+	gtk_table_set_col_spacings (GTK_TABLE (table), GNOME_PAD);
+	gtk_container_border_width (GTK_CONTAINER (table), GNOME_PAD);
+
+	frame = gtk_frame_new (_("Player 1"));
+	gtk_container_border_width (GTK_CONTAINER (frame), 0);
+
+	vbox = gtk_vbox_new (TRUE, GNOME_PAD);
+	gtk_container_border_width (GTK_CONTAINER (vbox), GNOME_PAD);
+
+	option_menu = gtk_option_menu_new ();
+	menu = gtk_menu_new ();
+	fill_tileset_menu (menu);
+	gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
+	
+	gtk_box_pack_start (GTK_BOX (vbox), option_menu, TRUE, TRUE, 0);
+
+	gtk_container_add (GTK_CONTAINER (frame), vbox);
+
+	gtk_table_attach (GTK_TABLE (table), frame,
+			0, 1,
+			0, 1,
+			GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
+			0, 0);
+
+	frame = gtk_frame_new (_("Player 2"));
+	gtk_container_border_width (GTK_CONTAINER (frame), 0);
+
+	gtk_table_attach (GTK_TABLE (table), frame,
+			1, 2,
+			0, 1,
+			GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
+			0, 0);
+
+	gnome_property_box_append_page (GNOME_PROPERTY_BOX (preferences_dialog),
+			table,
+			label);
+
+	/* Set it all up */
 
 	gtk_signal_connect (GTK_OBJECT (preferences_dialog),
 			"apply",

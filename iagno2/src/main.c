@@ -22,6 +22,7 @@ extern Iagno2Plugin *players[2];
 extern gchar whose_turn;
 
 extern gint computer_timeout_id;
+extern gint game_over_flip_id;
 
 int number = 3;
 
@@ -70,6 +71,11 @@ new_game_cb (GtkWidget *widget, gpointer data)
 		computer_timeout_id = 0;
 	}
 
+	if (game_over_flip_id) {
+		gtk_timeout_remove (game_over_flip_id);
+		game_over_flip_id = 0;
+	}
+
 	reversi_init_board (&board);
 	reversi_init_board (&board_pixmaps);
 	
@@ -92,15 +98,6 @@ new_game_cb (GtkWidget *widget, gpointer data)
 int
 main (int argc, char **argv)
 {
-	gchar *tmp_path;
-	gchar *filename;
-
-	tmp_path = g_strconcat ("iagno2/", "libiagno2-random.so", NULL);
-	filename = gnome_unconditional_libdir_file (tmp_path);
-	g_free (tmp_path);
-
-	printf ("%s\n", filename);
-	
 	gnome_init ("iagno2", "0.1", argc, argv);
 
 	properties = iagno2_properties_new ();
@@ -110,24 +107,14 @@ main (int argc, char **argv)
 
 	iagno2_tileset_load ();
 
+	iagno2_initialize_players ();
+
 	iagno2_app_init ();
 	iagno2_canvas_init ();
 	
 	gtk_widget_show_all (app);
 
-	players[1] = iagno2_plugin_open (filename);
-
-	if (plugin != NULL) {
-		printf ("%s\n", (*(plugin->plugin_name))());
-	}
-
-	g_free (filename);
-
-	players[0] = NULL;
-
 	gtk_main ();
-
-	iagno2_plugin_close (players[0]);
 
 	iagno2_properties_destroy (properties);
 

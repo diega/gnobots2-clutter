@@ -201,3 +201,16 @@ move (gchar *board, gchar index, gchar player)
 	player = other_player (player);
 	*/
 }
+
+gboolean
+are_valid_moves (gchar *board, gchar player)
+{
+	gboolean valid_moves = 0;
+	gchar i;
+
+	for (i = 0; i < 64; i++) {
+		valid_moves |= is_valid_move (board, i, player);
+	}
+
+	return (valid_moves);
+}

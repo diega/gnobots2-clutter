@@ -33,7 +33,8 @@ Iagno2Plugin *players[2];
 
 gboolean interactive = 0;
 
-gint computer_timeout_id;
+gint computer_timeout_id = 0;
+gint game_over_flip_id = 0;
 
 void
 iagno2_tileset_load ()
@@ -100,7 +101,7 @@ iagno2_get_image_color (GdkImlibImage *imlib_image)
 void
 iagno2_app_init ()
 {
-	app = gnome_app_new ("iagno2", _("Iagno"));
+	app = gnome_app_new ("iagno2", _("Iagno II"));
 
 	gnome_app_create_menus (GNOME_APP (app), iagno2_menu);
 
@@ -364,11 +365,23 @@ iagno2_setup_current_player ()
 static void
 iagno2_post_move_check ()
 {
+	iagno2_board_changed ();
+
 	whose_turn = other_player (whose_turn);
 
-	iagno2_setup_current_player ();
+	if (!are_valid_moves (board, whose_turn)) {
+		if (!are_valid_moves (board, other_player (whose_turn))) {
+			printf ("The game is over!\n");
+			game_over_flip_id = gtk_timeout_add (3000,
+					iagno2_game_over, NULL);
+			return;
+		} else {
+			printf ("A player had to pass!\n");
+			whose_turn = other_player (whose_turn);
+		}
+	}
 
-	iagno2_board_changed ();
+	iagno2_setup_current_player ();
 }
 
 void
@@ -377,4 +390,78 @@ iagno2_move (gchar index)
 	move (board, index, whose_turn);
 
 	iagno2_post_move_check ();
+}
+
+void
+iagno2_initialize_players ()
+{
+	gint i;
+	gchar *tmp_path;
+	gchar *filename;
+
+	if (players[0] != NULL) {
+		iagno2_plugin_close (players[0]);
+		players[0] = NULL;
+	}
+	if (!strcmp (properties->player1, "Human")) {
+		players[0] = NULL;
+		printf ("Player 1 is \"Human\"\n");
+	} else {
+		tmp_path = g_strconcat ("iagno2/",
+				properties->player1, NULL);
+		filename = gnome_unconditional_libdir_file (tmp_path);
+		g_free (tmp_path);
+		players[0] = iagno2_plugin_open (filename);
+		g_free (filename);
+		printf ("Player 1 is \"%s\"\n", players[0]->plugin_name ());
+		players[0]->plugin_init ();
+	}
+
+	if (players[1] != NULL) {
+		iagno2_plugin_close (players[1]);
+		players[1] = NULL;
+	}
+	if (!strcmp (properties->player2, "Human")) {
+		players[1] = NULL;
+		printf ("Player 2 is \"Human\"\n");
+	} else {
+		tmp_path = g_strconcat ("iagno2/",
+				properties->player2, NULL);
+		filename = gnome_unconditional_libdir_file (tmp_path);
+		g_free (tmp_path);
+		players[1] = iagno2_plugin_open (filename);
+		g_free (filename);
+		printf ("Player 2 is \"%s\"\n", players[1]->plugin_name ());
+		players[1]->plugin_init ();
+	}
+}
+
+gint
+iagno2_game_over ()
+{
+	gchar white_count = 0;
+	gchar black_count = 0;
+	gchar i;
+
+	for (i = 0; i < 64; i++) {
+		if (board[i] == WHITE_TILE) {
+			white_count++;
+		} else {
+			black_count++;
+		}
+	}
+
+	for (i = 0; i < black_count; i++) {
+		board[i] = BLACK_TILE;
+	}
+
+	for (i = black_count; i < 64; i++) {
+		board[i] = WHITE_TILE;
+	}
+
+	iagno2_board_changed ();
+
+	game_over_flip_id = 0;
+
+	return FALSE;
 }

@@ -7,3 +7,5 @@ gboolean is_valid_move (gchar *board, gchar index, gchar player);
 void move (gchar *board, gchar index, gchar player);
 
 gchar other_player (gchar player);
+
+gboolean are_valid_moves (gchar *board, gchar player);
