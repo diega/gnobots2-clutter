@@ -846,7 +846,7 @@ static const struct poptOption options[] = {
 int
 main (int argc, char *argv [])
 {
-	GtkWidget *label, *hb;
+	GtkWidget *label, *hb, *frame;
 	GnomeClient *client;
 
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
@@ -888,17 +888,25 @@ main (int argc, char *argv [])
   
         vb = gtk_vbox_new (FALSE, 0);
 	hb = gtk_hbox_new (FALSE, 0);
+	gtk_container_border_width(GTK_CONTAINER(hb), 3);
 	gnome_app_set_contents (GNOME_APP (app), vb);
 
 	if (!fname)
 		fname = g_strdup ("stones.png");
 	create_same_board (fname);
 
+	frame = gtk_frame_new(NULL);
+	gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_OUT);
+	gtk_container_border_width(GTK_CONTAINER(frame), 0);
+	gtk_widget_show(frame);
+
 	label = gtk_label_new (_("Score: "));
 	scorew = gtk_label_new ("");
 	set_score (score);
-//	gtk_box_pack_start_defaults (GTK_BOX(vb), hb);
-	gtk_box_pack_start(GTK_BOX(vb), hb, 1, 1, 3);
+
+	gtk_container_add(GTK_CONTAINER(frame), hb);
+
+	gtk_box_pack_start(GTK_BOX(vb), frame, 1, 1, 0);
 	gtk_box_pack_end (GTK_BOX(hb), scorew, 0, 0, 10);
 	gtk_box_pack_end (GTK_BOX(hb), label,  0, 0, 0);
 	
