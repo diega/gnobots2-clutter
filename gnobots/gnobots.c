@@ -1247,6 +1247,7 @@ char *argv[]
     GtkWidget *box;
     GtkWidget *sttbl;
     GtkWidget *label;
+    GtkWidget *frame;
     GnomeClient *client;
     char buf[PATH_MAX];
     
@@ -1301,8 +1302,16 @@ char *argv[]
             TILE_WIDTH*GAME_WIDTH, TILE_HEIGHT*GAME_HEIGHT);
     gtk_widget_show(game_area);
 
+    frame = gtk_frame_new(NULL);
+    gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_OUT);
+    gtk_container_border_width(GTK_CONTAINER(frame), 0);
+    gtk_widget_show(frame);
+
     sttbl = gtk_table_new(1, 8, FALSE);
-    gtk_box_pack_start(GTK_BOX(box), sttbl, TRUE, TRUE, 0);
+
+    gtk_container_add(GTK_CONTAINER(frame), sttbl);
+
+    gtk_box_pack_start(GTK_BOX(box), frame, TRUE, TRUE, 0);
 
     label = gtk_label_new(_("Score:"));
     gtk_table_attach(GTK_TABLE(sttbl), label, 0, 1, 0, 1, 0, 0, 3, 3);
