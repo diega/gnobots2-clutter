@@ -176,8 +176,8 @@
 	traditional game offers.
 	<footnote>
 	  <para>
-	    Portions of this text was taken from the <ulink type="http"
-            url="http://members.aol.com/mahjongmuseum">Mah Jong Cyber Museum.</ulink>
+	    Portions of this text were adapted from the <ulink type="http"
+            url="http://www.mahjongmuseum.com/">Mah Jong Museum.</ulink>
 	  </para>
 	</footnote>
       </para>
@@ -200,9 +200,9 @@
 
     <para>
       As an example, the highlighted tile, in the <link linkend="mahjongg-fig">
-      figure below</link>, has six buttons.  The matching tile is the one which 
-      also has six buttons.  The tile is second from the right on the
-      second from bottom row.  
+      figure below</link>, has five buttons.  The matching tile is the one which 
+      also has five buttons.  The tile is third from the right on the
+      same row as the hilighted tile.  
       If you wanted to match the tile on the top level, you need to look for the 
       tile with the same green bamboo symbols.  Do you see a matching tile yet?  
       There are two tiles, which are visible, that match the tile on the top 
