@@ -121,12 +121,16 @@ apply_cb (GtkWidget *widget, gint pagenum, gpointer data)
       tmp_players[1] = NULL;
     }
 
-    if (players[0]->plugin_preferences_save) {
-      players[0]->plugin_preferences_save (BLACK);
+    if (players[0]) {
+      if (players[0]->plugin_preferences_save) {
+        players[0]->plugin_preferences_save (BLACK);
+      }
     }
 
-    if (players[1]->plugin_preferences_save) {
-      players[1]->plugin_preferences_save (WHITE);
+    if (players[1]) {
+      if (players[1]->plugin_preferences_save) {
+        players[1]->plugin_preferences_save (WHITE);
+      }
     }
 
     iagno2_properties_destroy (old_properties);

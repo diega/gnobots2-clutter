@@ -447,7 +447,7 @@ iagno2_computer_player_wrapper ()
 
   close (fd[1]);
 
-  computer_timeout_id = gtk_timeout_add_full (500, iagno2_get_computer_move,
+  computer_timeout_id = gtk_timeout_add_full (100, iagno2_get_computer_move,
                                               NULL, (gpointer) fd[0],
                                               timeout_removed);
 

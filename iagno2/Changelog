@@ -1,3 +1,8 @@
+2000-04-14  Ian Peters  <itp@gnu.org>
+
+	* src/preferences.c: Only call plugin_preferences_save if the plugin
+	  isn't NULL
+
 2000-04-13  Ian Peters  <itp@gnu.org>
 
 	* BLACK and WHITE are 0 and 1, not 1 and 2
