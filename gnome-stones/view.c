@@ -4,7 +4,7 @@
  *
  * Time-stamp: <1999/01/18 18:50:24 carsten>
  *
- * Copyright (C) 1998, 1999 Carsten Schaar
+ * Copyright (C) 1998, 1999, 2003 Carsten Schaar
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -377,7 +377,7 @@ view_set_curtain_mode (GStonesView     *view,
 
   if (view->curtain_timeout)
     {
-      gtk_timeout_remove (view->curtain_timeout);
+      g_source_remove (view->curtain_timeout);
       view->curtain_timeout= 0;
     }
   
@@ -397,7 +397,7 @@ view_set_curtain_mode (GStonesView     *view,
 
 
       view->curtain_timeout= 
-	gtk_timeout_add (CURTAIN_DELAY, view_curtain_timeout, (gpointer) view);
+	g_timeout_add (CURTAIN_DELAY, view_curtain_timeout, (gpointer) view);
       break;
 
     case VIEW_CURTAIN_CLOSED:

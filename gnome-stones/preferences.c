@@ -584,7 +584,9 @@ preferences_set_joystick_switch_level (GtkAdjustment *adjust, gpointer data)
 static void
 preferences_set_scroll_method (GtkWidget *widget, gpointer data)
 {
-  set_scroll_method ((gchar *)data);
+  gchar * names[3] = { "atari_scroll", "smooth_scroll", "center_scroll" };
+  
+  set_scroll_method (names[gtk_combo_box_get_active (GTK_COMBO_BOX (widget))]);
   gconf_set_scroll_method (scroll_method_name ());
 }
 
@@ -753,9 +755,7 @@ preferences_dialog_new (void)
     GtkWidget *scale;
     GtkWidget *hbox;
     GtkWidget *vbox;
-    GtkWidget *menuitem;
     GtkWidget *optionmenu;
-    GtkWidget *device_menu;
 #if 0
     GList     *devices;
 #endif
@@ -771,17 +771,16 @@ preferences_dialog_new (void)
     label= gtk_label_new (_("Joystick device:"));
     gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, GNOME_PAD_SMALL);
 
-    device_menu= gtk_menu_new ();
+    optionmenu= gtk_combo_box_new_text ();    
 
     /* We definatly have a "disable" entry.  */
-    menuitem= gtk_menu_item_new_with_label (_("disabled"));
+    gtk_combo_box_append_text (GTK_COMBO_BOX (optionmenu), _("disabled"));
 
 #if 0
     g_signal_connect (GTK_OBJECT (menuitem), "activate",
 			(GtkSignalFunc) preferences_set_joystick_device,
 			GUINT_TO_POINTER (GDK_CORE_POINTER));
 #endif
-    gtk_menu_shell_append (GTK_MENU_SHELL (device_menu), menuitem);
 
 #if 0    
     for (devices = gdk_input_list_devices (), i= 1; devices; 
@@ -804,8 +803,6 @@ preferences_dialog_new (void)
 	  gtk_menu_set_active (GTK_MENU (device_menu), i);
       }
 #endif    
-    optionmenu= gtk_option_menu_new ();
-    gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu), device_menu);
     gtk_box_pack_start (GTK_BOX (hbox), optionmenu, FALSE, FALSE, 2);
 
     frame= games_frame_new (_("Digital joystick emulation"));
@@ -883,13 +880,10 @@ preferences_dialog_new (void)
 
   
   {
-    gint      i=0;
     GtkWidget *frame;
     GtkWidget *hbox;
     GtkWidget *vbox;
-    GtkWidget *menuitem;
     GtkWidget *optionmenu;
-    GtkWidget *scroll_method_menu;
 
 
     frame= games_frame_new (_("Scroll method"));
@@ -905,48 +899,30 @@ preferences_dialog_new (void)
     label= gtk_label_new (_("Scroll method:"));
     gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, GNOME_PAD_SMALL);
     */
-    
-    scroll_method_menu= gtk_menu_new ();
 
+    optionmenu= gtk_combo_box_new_text ();
+    
 
     prdata->scroll_method_name = scroll_method_name();
 
-    menuitem= gtk_menu_item_new_with_label (_("Atari like scrolling"));
-
-    g_signal_connect (GTK_OBJECT (menuitem), "activate",
-			(GtkSignalFunc) preferences_set_scroll_method,
-			"atari_scroll");
-    gtk_menu_shell_append (GTK_MENU_SHELL (scroll_method_menu), menuitem);
-
-
+    gtk_combo_box_append_text (GTK_COMBO_BOX (optionmenu),
+                               _("Atari like scrolling"));
     if (!strcmp(prdata->scroll_method_name,"atari_scroll"))
-      gtk_menu_set_active (GTK_MENU (scroll_method_menu), i++);
-    ++i;
-
-
-    menuitem= gtk_menu_item_new_with_label (_("Smooth scrolling"));
-    g_signal_connect (GTK_OBJECT (menuitem), "activate",
-			(GtkSignalFunc) preferences_set_scroll_method,
-			"smooth_scroll");
-    gtk_menu_shell_append (GTK_MENU_SHELL (scroll_method_menu), menuitem);
-
+      gtk_combo_box_set_active (GTK_COMBO_BOX (optionmenu), 0);
+    gtk_combo_box_append_text (GTK_COMBO_BOX (optionmenu),
+                               _("Smooth scrolling"));
     if (!strcmp(prdata->scroll_method_name,"smooth_scroll"))
-      gtk_menu_set_active (GTK_MENU (scroll_method_menu), i++);
-    ++i;
-
-
-    menuitem= gtk_menu_item_new_with_label (_("Always in the center"));
-    g_signal_connect (GTK_OBJECT (menuitem), "activate",
-			(GtkSignalFunc) preferences_set_scroll_method,
-			"center_scroll");
-    gtk_menu_shell_append (GTK_MENU_SHELL (scroll_method_menu), menuitem);
-
+      gtk_combo_box_set_active (GTK_COMBO_BOX (optionmenu), 1);
+    gtk_combo_box_append_text (GTK_COMBO_BOX (optionmenu),
+                               _("Always in the center"));
     if (!strcmp(prdata->scroll_method_name,"center_scroll"))
-      gtk_menu_set_active (GTK_MENU (scroll_method_menu), i);
-    ++i;
+      gtk_combo_box_set_active (GTK_COMBO_BOX (optionmenu), 2);
+    
+    
+    g_signal_connect (GTK_OBJECT (optionmenu), "changed",
+			(GtkSignalFunc) preferences_set_scroll_method,
+			NULL);
    
-    optionmenu= gtk_option_menu_new ();
-    gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu), scroll_method_menu);
     gtk_box_pack_start (GTK_BOX (hbox), optionmenu, FALSE, FALSE, 2);
   }
 

@@ -245,6 +245,8 @@ guint current_seed, next_seed;
 
 gint windowwidth, windowheight;
 
+GList * tileset_list = NULL;
+
 gchar *tileset = NULL;
 static gchar *mapset = NULL;
 static gchar *score_current_mapset = NULL;
@@ -450,9 +452,14 @@ static void set_undoredo_sensitive (gboolean undo, gboolean redo)
 static void
 tileset_callback (GtkWidget *widget, void *data)
 {
+	GList * entry;
+	
+	entry = g_list_nth (tileset_list,
+			    gtk_combo_box_get_active (GTK_COMBO_BOX (widget)));	
+	
 	gconf_client_set_string (conf_client,
 			"/apps/mahjongg/tileset",
-			data,
+			entry->data,
 			NULL);
 }
 
@@ -555,14 +562,14 @@ bg_colour_changed_cb (GConfClient *client,
 		      gpointer user_data)
 {
 	gchar *colour;
-
+	
 	colour = gconf_client_get_string (conf_client,
 			"/apps/mahjongg/bgcolour", NULL);
 	set_background (colour);
 	if (colour_well != NULL)
 	{
-		gnome_color_picker_set_i8 (GNOME_COLOR_PICKER(colour_well),
-				bgcolour.red, bgcolour.green, bgcolour.blue, 0);
+		gtk_color_button_set_color (GTK_COLOR_BUTTON(colour_well),
+					    &bgcolour);
 	}
 	draw_all_tiles ();	
 }
@@ -571,11 +578,12 @@ static void
 bg_colour_callback (GtkWidget *widget, gpointer data)
 {
 	static char *tmp = "";
-	guint8 r, g, b, a;
+	GdkColor colour;
 
-	gnome_color_picker_get_i8(GNOME_COLOR_PICKER(widget), &r, &g, &b, &a);
+	gtk_color_button_get_color (GTK_COLOR_BUTTON (widget), &colour);
 
-	tmp = g_strdup_printf ("#%02x%02x%02x", r, g, b);
+	tmp = g_strdup_printf ("#%02x%02x%02x", colour.red,
+			       colour.green, colour.blue);
 
 	gconf_client_set_string (conf_client,
 			"/apps/mahjongg/bgcolour", tmp, NULL);
@@ -616,8 +624,10 @@ mapset_changed_cb (GConfClient *client,
 static void
 set_map_selection (GtkWidget *widget, void *data)
 {
-	struct _maps *map = (struct _maps*) data;
+	struct _maps *map;
 
+	map = &(maps[gtk_combo_box_get_active (GTK_COMBO_BOX (widget))]);
+	
 	g_free (mapset);
 	mapset = g_strdup (map->name);
 
@@ -652,12 +662,6 @@ init_config (void)
 			"/apps/mahjongg/tileset",
 			tileset_changed_cb,
 			NULL, NULL, NULL);
-}
-
-static void
-free_str (GtkWidget *widget, void *data)
-{
-	g_free (data);
 }
 
 static void
@@ -794,6 +798,15 @@ fill_tile_menu (GtkWidget *menu, gchar *sdir)
         gint itemno = 0;
 	gchar *dname = NULL;
 
+	if (tileset_list) {
+		g_list_foreach (tileset_list,
+				(GFunc) g_free,
+				NULL);
+		g_list_free (tileset_list);
+	}
+
+	tileset_list = NULL;
+	
 	dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
 			(sdir), FALSE, NULL);
 	dir = opendir (dname);
@@ -804,7 +817,6 @@ fill_tile_menu (GtkWidget *menu, gchar *sdir)
 	}
 
 	while ((e = readdir (dir)) != NULL){
-		GtkWidget *item;
 		gchar *s = g_strdup (e->d_name);
 
 		if (!(g_strrstr (s, ".xpm") ||
@@ -817,15 +829,10 @@ fill_tile_menu (GtkWidget *menu, gchar *sdir)
 			continue;
 		}
 
-		item = gtk_menu_item_new_with_label (s);
-		gtk_widget_show (item);
-		gtk_menu_shell_append (GTK_MENU_SHELL(menu), item);
-		g_signal_connect (G_OBJECT (item), "activate",
-				  G_CALLBACK (tileset_callback), s); 
-		g_signal_connect (G_OBJECT (item), "destroy",
-				  G_CALLBACK (free_str), s);
+		gtk_combo_box_append_text (GTK_COMBO_BOX (menu), s);
+		tileset_list = g_list_append (tileset_list, s);
 		if (!strcmp(tileset, s)) {
-			gtk_menu_set_active(GTK_MENU(menu), itemno);
+			gtk_combo_box_set_active(GTK_COMBO_BOX (menu), itemno);
 		}
 		
 	        itemno++;
@@ -839,20 +846,13 @@ static void
 fill_map_menu (GtkWidget *menu)
 {
 	gint lp, itemno=0 ;
-	GtkWidget *item;
 
 	for (lp=0;lp<G_N_ELEMENTS(maps);lp++) {
-		gchar *str = g_strdup (_(maps[lp].name)) ;
+		gchar *str = g_strdup(_(maps[lp].name)) ;
 
-		item = gtk_menu_item_new_with_label (str) ;
-		gtk_widget_show (item);
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-		g_signal_connect (G_OBJECT(item), "activate",
-				  G_CALLBACK (set_map_selection), &maps[lp]); 
-		g_signal_connect (G_OBJECT(item), "destroy",
-				  G_CALLBACK (free_str), str); 
+		gtk_combo_box_append_text (GTK_COMBO_BOX (menu), str) ;
 		if (!g_ascii_strcasecmp (mapset, maps[lp].name))
-			gtk_menu_set_active (GTK_MENU (menu), itemno); 
+			gtk_combo_box_set_active (GTK_COMBO_BOX (menu), itemno); 
 		itemno++ ;
 	}
 }
@@ -953,7 +953,7 @@ pref_dialog_response (GtkDialog *dialog, gint response, gpointer data)
 void
 properties_callback (GtkWidget *widget, gpointer data)
 {
-	GtkWidget *menu, *omenu;
+	GtkWidget *omenu;
 	GtkWidget *frame, *table, *w, *label;
 	GtkSizeGroup *group;
 	GtkWidget *top_table;
@@ -995,12 +995,11 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_size_group_add_widget (group, label);
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
 
-	omenu = gtk_option_menu_new ();
-	menu = gtk_menu_new ();
-	fill_tile_menu (menu, "mahjongg");
-	gtk_option_menu_set_menu (GTK_OPTION_MENU (omenu), menu);
+	omenu = gtk_combo_box_new_text ();
+	fill_tile_menu (omenu, "mahjongg");
+	g_signal_connect (G_OBJECT (omenu), "changed",
+			  G_CALLBACK (tileset_callback), NULL); 
 	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 0, 1);
-
 
 	gtk_container_add(GTK_CONTAINER (frame), table);
 
@@ -1017,10 +1016,10 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_size_group_add_widget (group, label);
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
 
-	omenu = gtk_option_menu_new ();
-	menu = gtk_menu_new ();
-	fill_map_menu (menu);
-	gtk_option_menu_set_menu (GTK_OPTION_MENU (omenu), menu);
+	omenu = gtk_combo_box_new_text ();
+	fill_map_menu (omenu);
+	g_signal_connect (G_OBJECT (omenu), "changed",
+			  G_CALLBACK (set_map_selection), NULL); 
 	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 0, 1);
 
 	gtk_container_add(GTK_CONTAINER (frame), table);
@@ -1038,9 +1037,8 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_size_group_add_widget (group, label);
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
 
-	w  = gnome_color_picker_new ();
-	gnome_color_picker_set_i8 (GNOME_COLOR_PICKER (w), bgcolour.red, bgcolour.green, bgcolour.blue,
-				   0);
+	w  = gtk_color_button_new ();
+	gtk_color_button_set_color (GTK_COLOR_BUTTON (w), &bgcolour);
 	g_signal_connect (G_OBJECT (w), "color_set",
 			  G_CALLBACK (bg_colour_callback), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), w, 1, 2, 0, 1);
@@ -1133,7 +1131,7 @@ hint_callback (GtkWidget *widget, gpointer data)
 	   tiles[i].visible = 0 ;*/
                 
 	timeout_counter = 0;
-	timer = gtk_timeout_add (250, (GtkFunction) hint_timeout, NULL);
+	timer = g_timeout_add (250, (GSourceFunc) hint_timeout, NULL);
                 
 	/* 30s penalty */
 	games_clock_stop (GAMES_CLOCK(chrono));

@@ -1,3 +1,8 @@
+2003-10-18  Callum McKenzie  <callum@physics.otago.ac.nz>
+	
+	* mahjongg.c: 
+	* drawing.c: Replace functions deprecated in gtk+ 2.4.
+
 2003-10-08  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* drawing.c: Fixed the problem with tiles on the second layer at

@@ -544,7 +544,7 @@ curtain_ready (ViewCurtainMode mode)
 	     CURTAIN_DISPLAY_NONE;
 
 	  state= STATE_WAITING_TO_START;
-	  gtk_timeout_add (START_DELAY, start_cave_delay_timeout, curtain_cave);
+	  g_timeout_add (START_DELAY, start_cave_delay_timeout, curtain_cave);
 	}
       else
 	{
@@ -556,7 +556,7 @@ curtain_ready (ViewCurtainMode mode)
 
     case VIEW_CURTAIN_CLOSED:
       /* If the iteration has been running, we stop it now.  */
-      if (iteration_timeout) gtk_timeout_remove (iteration_timeout);
+      if (iteration_timeout) g_source_remove (iteration_timeout);
       iteration_timeout=0;
       
       /* An existing cave must be deleted.  */
@@ -697,15 +697,15 @@ countdown_start (GStonesCave *cave)
 {
   /* When showing the countdown, there is no iteration in the
      background anymore.  */
-  if (iteration_timeout) gtk_timeout_remove (iteration_timeout);
+  if (iteration_timeout) g_source_remove (iteration_timeout);
   iteration_timeout=0;
 
   state    = STATE_COUNTDOWN;
   
   countdown_timeout= 
-    gtk_timeout_add (COUNTDOWN_DELAY, 
-		     (GtkFunction) countdown_timeout_function, 
-		     (gpointer) cave);
+    g_timeout_add (COUNTDOWN_DELAY, 
+		   (GSourceFunc) countdown_timeout_function, 
+		   (gpointer) cave);
 }
 
 
@@ -899,7 +899,7 @@ iteration_start (GStonesCave *newcave)
   status_set_cave (cave->name);
   
   iteration_timeout= 
-    gtk_timeout_add (game->frame_rate, iteration_timeout_function, cave);
+    g_timeout_add (game->frame_rate, iteration_timeout_function, cave);
 }
 
 
@@ -933,9 +933,9 @@ load_game (const gchar *filename, guint _start_cave)
   if (newgame)
     {
       /* Remove all running timeouts.  */
-      if (iteration_timeout) gtk_timeout_remove (iteration_timeout);
+      if (iteration_timeout) g_source_remove (iteration_timeout);
       iteration_timeout=0;
-      if (countdown_timeout) gtk_timeout_remove (countdown_timeout);
+      if (countdown_timeout) g_source_remove (countdown_timeout);
       countdown_timeout=0;
 
       /* Set display into title mode.  */
@@ -1401,7 +1401,7 @@ main (int argc, char *argv[])
 
   session_management_init ();
 
-  gtk_idle_add (startup_function, NULL);
+  g_idle_add (startup_function, NULL);
 
   sound_init ();
 

@@ -3,7 +3,7 @@
  * Copyright (C) 2003 by Callum McKenzie
  *
  * Created: <2003-09-07 05:02:22 callum>
- * Time-stamp: <2003-10-08 22:34:35 callum>
+ * Time-stamp: <2003-10-18 23:36:01 callum>
  *
  */
 
@@ -265,9 +265,9 @@ static void recreate_tile_images (void)
 
   gdk_pixbuf_render_threshold_alpha (fg, tilemask, 0, 0, 0, 0,
                                      tilewidth, tileheight, 128);
-  gdk_pixbuf_render_to_drawable (fg, tileimages, gc, 0, 0, 0, 0,
-                                 tilewidth*NUM_PATTERNS, tileheight*2,
-                                 GDK_RGB_DITHER_MAX, 0, 0);
+  gdk_draw_pixbuf (tileimages, gc, fg, 0, 0, 0, 0,
+                   tilewidth*NUM_PATTERNS, tileheight*2,
+                   GDK_RGB_DITHER_MAX, 0, 0);
 
   g_object_unref (fg);
   

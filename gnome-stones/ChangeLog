@@ -1,3 +1,9 @@
+2003-10-19  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* view.c:
+	* preferences.c:
+	* main.c: Replaced deprecated functions with gtk-2.4 equivalents.
+
 2003-08-02  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* preferences.c (preferences_dialog_new): Make the switch-level
