@@ -1,3 +1,8 @@
+2004-02-21  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* src/menu.cpp: Removed warning about unused function by removing
+	it with #if 0.
+
 2004-02-20  William Jon McCann  <mccann@jhu.edu>
 
 	* src/hand.cpp (bj_hand_finish_play): Only set the player to

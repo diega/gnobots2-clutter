@@ -53,11 +53,13 @@ random_seed ()
   bj_game_new (bj_game_get_rules_file (), NULL);
 };
 
+#if 0
 static void
 new_rules (GtkWidget* w, gchar* file) 
 {
   bj_game_new (file, NULL);
 };
+#endif
 
 static void
 about_destroy_callback (void)
