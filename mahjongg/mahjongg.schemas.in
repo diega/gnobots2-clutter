@@ -30,7 +30,7 @@
 	<applyto>/apps/mahjongg/mapset</applyto>
 	<owner>mahjongg</owner>
 	<type>string</type>
-	<default>easy</default>
+	<default>Easy</default>
 	<locale name="C">
 	  <short></short>
 	  <long></long>

@@ -1,3 +1,10 @@
+2004-01-26  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.schemas.in:
+	* mahjongg.c: Added new layouts from Rexford Newbould and
+	Krzysztof Foltman. Mark the layout names for translation and made
+	them more "readable" (i.e. easy->Easy).
+
 2004-01-21  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* drawing.c (recreate_tile_images): Set the gc for gdk_draw_pixbuf
