@@ -16,9 +16,9 @@ same-gnome/book1.html: same-gnome.sgml
 	-cd $(srcdir) && db2html same-gnome.sgml
 
 dist-hook:
-	mkdir $(distdir)/same-gnome
-	cp same-gnome/*.html $(distdir)/same-gnome
-	cp same-gnome/*.css $(distdir)/same-gnome
+	-mkdir $(distdir)/same-gnome
+	cp $(srcdir)/same-gnome/*.html $(distdir)/same-gnome
+	cp $(srcdir)/same-gnome/*.css $(distdir)/same-gnome
 
 # No-op if db2html failed
 install-data-local: index.html
