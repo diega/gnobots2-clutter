@@ -556,7 +556,7 @@ show_toolbar_changed_cb (GConfClient *client,
 	gboolean shown;
 
 	shown = gconf_client_get_bool (conf_client,
-			"/apps/mahjongg/show-toolbar", NULL);
+			"/apps/mahjongg/show_toolbar", NULL);
 
 	gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window),
 			GNOME_APP_TOOLBAR_NAME);
@@ -579,10 +579,10 @@ show_tb_callback (GtkWidget *widget, gpointer data)
 {
 	if ((GTK_CHECK_MENU_ITEM (widget))->active) {
 		gconf_client_set_bool(conf_client,
-				"/apps/mahjongg/show-toolbar", TRUE, NULL);
+				"/apps/mahjongg/show_toolbar", TRUE, NULL);
 	} else {
 		gconf_client_set_bool(conf_client,
-				"/apps/mahjongg/show-toolbar", FALSE, NULL);
+				"/apps/mahjongg/show_toolbar", FALSE, NULL);
 	}
 }
 
@@ -671,7 +671,7 @@ init_config (void)
 			"/apps/mahjongg", GCONF_CLIENT_PRELOAD_ONELEVEL,
 			NULL);
 	gconf_client_notify_add (conf_client,
-			"/apps/mahjongg/show-toolbar",
+			"/apps/mahjongg/show_toolbar",
 			show_toolbar_changed_cb,
 			NULL, NULL, NULL);
 	gconf_client_notify_add (conf_client,
@@ -2019,7 +2019,7 @@ main (int argc, char *argv [])
 	gtk_widget_show (window);
 
 	show = gconf_client_get_bool (conf_client,
-			"/apps/mahjongg/show-toolbar", NULL);
+			"/apps/mahjongg/show_toolbar", NULL);
 
 	if (show) {
 		gtk_check_menu_item_set_active

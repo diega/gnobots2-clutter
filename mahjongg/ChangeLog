@@ -1,3 +1,7 @@
+2003-06-22  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c (main): Doh, change the gconf key in the code too.
+
 2003-06-21  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.schemas.in: Change the schema to be consistent and
