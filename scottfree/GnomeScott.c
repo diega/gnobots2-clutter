@@ -10,7 +10,9 @@
  *
  *	You must have an ANSI C compiler to build this program.
  */
- 
+
+#include <config.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -1486,65 +1488,66 @@ static void AboutScottFree(GtkWidget *w, gpointer *spare)
 
 static GnomeUIInfo toolbar[]=
 {
-	{GNOME_APP_UI_ITEM, N_("North"), NULL, TypeNorth,
+	{GNOME_APP_UI_ITEM, N_("North"), NULL, TypeNorth, NULL, NULL,
 	 GNOME_APP_PIXMAP_DATA, north_xpm, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("East"), NULL, TypeEast,
+	{GNOME_APP_UI_ITEM, N_("East"), NULL, TypeEast, NULL, NULL,
 	 GNOME_APP_PIXMAP_DATA, east_xpm, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("South"), NULL, TypeSouth,
+	{GNOME_APP_UI_ITEM, N_("South"), NULL, TypeSouth, NULL, NULL,
 	 GNOME_APP_PIXMAP_DATA, south_xpm, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("West"), NULL, TypeWest,
+	{GNOME_APP_UI_ITEM, N_("West"), NULL, TypeWest, NULL, NULL,
 	 GNOME_APP_PIXMAP_DATA, west_xpm, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Up"), NULL, TypeUp,
+	{GNOME_APP_UI_ITEM, N_("Up"), NULL, TypeUp, NULL, NULL,
 	 GNOME_APP_PIXMAP_DATA, up_xpm, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Down"), NULL, TypeDown,
+	{GNOME_APP_UI_ITEM, N_("Down"), NULL, TypeDown, NULL, NULL,
 	 GNOME_APP_PIXMAP_DATA, down_xpm, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("List"),N_("What am I carrying"), TypeInventory,
+	{GNOME_APP_UI_ITEM, N_("List"),N_("What am I carrying"),
+	 TypeInventory, NULL, NULL,
 	 GNOME_APP_PIXMAP_DATA, inventory_xpm, 0, 0, NULL},
 
-	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL,
+	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
 };
 
 static GnomeUIInfo file_menu[]={
-	{GNOME_APP_UI_ITEM, N_("New"), NULL, NewGame,
+	{GNOME_APP_UI_ITEM, N_("New"), NULL, NewGame, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Load..."), NULL, LoadAGame, 
+	{GNOME_APP_UI_ITEM, N_("Load..."), NULL, LoadAGame, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_OPEN, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Save..."), NULL, TypeSave, 
+	{GNOME_APP_UI_ITEM, N_("Save..."), NULL, TypeSave, NULL, NULL, 
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SAVE, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Exit"), NULL, gtk_main_quit,
+	{GNOME_APP_UI_ITEM, N_("Exit"), NULL, gtk_main_quit, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 0, 0, NULL},
 
-	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL,
+	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
 };
 
 static GnomeUIInfo help_menu[]={
-	{GNOME_APP_UI_HELP, NULL, NULL, NULL,
+	{GNOME_APP_UI_HELP, NULL, NULL, NULL, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("About..."), NULL, AboutScottFree,
+	{GNOME_APP_UI_ITEM, N_("About..."), NULL, AboutScottFree, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
 
-	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL,
+	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
 };
 
 static GnomeUIInfo menu[]={
-	{GNOME_APP_UI_SUBTREE, "File", NULL, file_menu,
+	{GNOME_APP_UI_SUBTREE, "File", NULL, file_menu, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-	{GNOME_APP_UI_SUBTREE, "Help", NULL, help_menu,
+	{GNOME_APP_UI_SUBTREE, "Help", NULL, help_menu, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL,
+	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
 };
 
@@ -1558,6 +1561,8 @@ int main(int argc, char *argv[])
 	GtkWidget *scrollbar;
 		
 	gnome_init("GnomeScott", &argc, &argv);
+	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
+	textdomain (PACKAGE);
 	
 	while(argv[1])
 	{

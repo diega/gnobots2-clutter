@@ -1,4 +1,5 @@
 INCLUDES = 			\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	-I$(includedir)
 
 bin_PROGRAMS = GnomeScott

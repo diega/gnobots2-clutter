@@ -259,29 +259,29 @@ void redraw_area (int x1, int y1, int x2, int y2, int mlayer);
 void about_callback (GtkWidget *widget, gpointer data);
 
 GnomeUIInfo filemenu [] = {
-	{GNOME_APP_UI_ITEM, N_("New"), NULL, new_game_callback,
+	{GNOME_APP_UI_ITEM, N_("New"), NULL, new_game_callback, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
-	{GNOME_APP_UI_ITEM, N_("Exit"), NULL, quit_game_callback,
+	{GNOME_APP_UI_ITEM, N_("Exit"), NULL, quit_game_callback, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 0, 0, NULL},
-	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL,
+	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 };
 
 GnomeUIInfo helpmenu[] = {
-	{GNOME_APP_UI_HELP, NULL, NULL, NULL,
+	{GNOME_APP_UI_HELP, NULL, NULL, NULL, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-	{GNOME_APP_UI_ITEM, N_("About"), NULL, about_callback,
+	{GNOME_APP_UI_ITEM, N_("About"), NULL, about_callback, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
-	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL,
+	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 };
 
 GnomeUIInfo mainmenu [] = {
-	{GNOME_APP_UI_SUBTREE, N_("Game"), NULL, filemenu,
+	{GNOME_APP_UI_SUBTREE, N_("Game"), NULL, filemenu, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-	{GNOME_APP_UI_SUBTREE, N_("Help"), NULL, helpmenu,
+	{GNOME_APP_UI_SUBTREE, N_("Help"), NULL, helpmenu, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL,
+	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 };
 
@@ -1054,6 +1054,7 @@ int main (int argc, char *argv [])
 	gtk_init (&argc, &argv);
 	gnome_init ("mahjongg", &argc, &argv);
 
+	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
 	srand (time (NULL));
 	
