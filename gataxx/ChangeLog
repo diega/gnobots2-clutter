@@ -1,3 +1,12 @@
+2004-09-15  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gataxx.c (new_game): Swap the pieces so that the top left player
+	starts (as per other Ataxx implementations, including play-by-mail
+	ones). See bug #152609.
+	Also, remove horrendous bug where we hardcoded the pathname for 
+	the tileset data.
+	Also update the counters after an undo (bug #152701).
+
 2004-09-08  callum  <callum@spooky-possum.org>
 
 	* gataxx.c (restore_state): Fix a goof with colouring the squares

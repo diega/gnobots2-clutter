@@ -282,10 +282,10 @@ static void new_game(void)
 	if (!boardok) {
 	  gtk_gridboard_clear(gridboard);
 
-	  gtk_gridboard_set_piece(gridboard, 0, 0, BLACK);
-	  gtk_gridboard_set_piece(gridboard, 0, 6, WHITE);
-	  gtk_gridboard_set_piece(gridboard, 6, 0, WHITE);
-	  gtk_gridboard_set_piece(gridboard, 6, 6, BLACK);
+	  gtk_gridboard_set_piece(gridboard, 0, 0, WHITE);
+	  gtk_gridboard_set_piece(gridboard, 0, 6, BLACK);
+	  gtk_gridboard_set_piece(gridboard, 6, 0, BLACK);
+	  gtk_gridboard_set_piece(gridboard, 6, 6, WHITE);
 	}
 
 	if (iturn != WHITE) {
@@ -325,6 +325,8 @@ void undo_move_cb(GtkWidget * widget, gpointer data) {
 	if (!props_is_human(turn)) {
 		g_timeout_add(timeout, computer_move_cb, GINT_TO_POINTER(turn));
 	}
+	appbar_set_white(gtk_gridboard_count_pieces(gridboard, WHITE));
+	appbar_set_black(gtk_gridboard_count_pieces(gridboard, BLACK));
 }
 
 /* menu: Game->Quit */
@@ -489,21 +491,28 @@ static void create_window() {
 	apply_changes();
 }
 
-/* FIXME this should be cleaned up */
-/* returns /usr/share/pixmaps/iagno/tileset */
 char * get_tileset_path(char * tileset) {
-	static char tp[255];
-	strcpy(tp, "/usr/share/pixmaps/iagno/");
-	strcat(tp, tileset);
-	return tp;
+        static gchar *tilesetpath = NULL;
+        gchar *pathfrag;
+      
+      
+        if (tilesetpath)
+          g_free (tilesetpath);
+      
+        pathfrag = g_build_filename ("iagno", tileset, NULL);
+      
+        tilesetpath = gnome_program_locate_file (NULL, 
+						 GNOME_FILE_DOMAIN_PIXMAP, 
+						 pathfrag, FALSE, NULL);
+        g_free (pathfrag);
+      
+        return tilesetpath;
 }
 
 /* this is where it all starts. After the window is brought up, the user
  * probably starts a new game (new_game_cb()), and clicks some (boxclicked_cb).
  */
 int main(int argc, char ** argv) {
-	/* struct timeval tv; */
-
 	gnome_score_init("gataxx");
 
 	settextdomain();
