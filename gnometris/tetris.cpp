@@ -408,7 +408,7 @@ void
 Tetris::setRotateCounterClockWise(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
-	gconf_client_set_bool (t->gconf_client, "/apps/gnometris/options/rotate_counter_click_wise", GTK_TOGGLE_BUTTON(widget)->active, NULL);
+	gconf_client_set_bool (t->gconf_client, "/apps/gnometris/options/rotate_counter_clock_wise", GTK_TOGGLE_BUTTON(widget)->active, NULL);
 }
 
 void
