@@ -23,6 +23,7 @@
 #include <gconf/gconf-client.h>
 #include <games-gconf.h>
 #include <games-frame.h>
+#include <games-files.h>
 
 /* Define a sensible alternative to ngettext if we don't have it. Note that
  * this is only sensible in the context of same-gnome. */
@@ -558,29 +559,24 @@ set_selection (GtkTreeSelection *selection, gpointer data)
 static void
 fill_list (GtkListStore *list)
 {
-        GDir * dir;
-        gchar * filename;
         GtkTreeIter iter;
+	GamesFileList * filelist;
+	GList * item;
 	
-	dir = g_dir_open (PIXMAPDIR, 0, NULL);
+	filelist = games_file_list_new_images (PIXMAPDIR, NULL);
+	games_file_list_transform_basename (filelist);
+	
 
-	if (!dir)
-		return;
-	
-	while ((filename = g_strdup (g_dir_read_name (dir))) != NULL) {
+	/* FIXME: Once again we use internal knowledge of the structure 
+	 * of the GamesFileListType. We must stop this. */
+	item = (GList *) filelist;
+	while (item != NULL) {
 		gchar *name;
                 gchar *suffix;
-                gchar *path = NULL;
-                path = g_build_filename (PIXMAPDIR, filename, NULL);
-                if (!g_file_test (path, G_FILE_TEST_IS_REGULAR)) {
-                        g_free (filename);
-			g_free (path);
-                        continue;
-                }
-
+		
                 /* We strip any trailing suffix, any -sync suffix
                  * and convert '_' to ' '. This is brutal code. */
-                name = g_strdup (filename);
+                name = g_strdup (item->data);
                 suffix = g_strrstr (name,".");
                 if (suffix) *suffix = '\0';
                 suffix = g_strrstr (name,"-sync");
@@ -592,9 +588,12 @@ fill_list (GtkListStore *list)
                 }
                 
                 gtk_list_store_append (list, &iter);
-                gtk_list_store_set (list, &iter, 0, name, 1, filename, -1);
+                gtk_list_store_set (list, &iter, 0, name, 1, item->data, -1);
+		item = g_list_next (item);
 	}
-	g_dir_close (dir);
+
+
+	games_file_list_free (filelist);
 }
 
 static void

@@ -1,9 +1,14 @@
+2003-12-16  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* same-gnome.c (fill_list): The first step towards migrating this
+	code to using GamesFileList.
+
 2003-11-03  Michael Terry  <mterry@fastmail.fm>
 
 	* same-gnome.c: Changed flood_fill() to work on the 0 color and thus
 	the status bar will show that no stones are selected.
 
-2003-10-30  Callum McKenzie  <callum@localhost.localdomain>
+2003-10-30  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am: Removed *_DISABLE_DEPRECATED.
 
