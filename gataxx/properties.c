@@ -302,6 +302,10 @@ void show_properties_dialog (void) {
 					       GTK_RESPONSE_CLOSE,
 					       NULL);
 	
+	gtk_window_set_resizable (GTK_WINDOW (propbox), FALSE);
+	gtk_container_set_border_width (GTK_CONTAINER (propbox), 5);
+	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (propbox)->vbox), 2);
+	
 	g_signal_connect (G_OBJECT (propbox), "response",
 			  G_CALLBACK (quit_properties_dialog), &propbox);
 
@@ -316,24 +320,24 @@ void show_properties_dialog (void) {
 	/* create notebook (tabs) */
 	notebook = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_TOP);
+	gtk_container_set_border_width (GTK_CONTAINER (notebook), 5);
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (propbox)->vbox), notebook, TRUE, TRUE, 0);
 	
 	/* Players tab */
 	
-	/* FIXME mnemonic doesn't seem to work */
-	label = gtk_label_new_with_mnemonic (_("_Players"));
+	label = gtk_label_new (_("Players"));
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_vbox_new (FALSE, 18);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox, label);
 
 	table = gtk_table_new (1, 2, FALSE);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
+	gtk_table_set_col_spacings (GTK_TABLE (table), 18);
         gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
 
 	vbox2 = gtk_vbox_new (FALSE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox2), 12);
         gtk_box_pack_start (GTK_BOX (vbox), vbox2, FALSE, FALSE, 0);
-	button = gtk_check_button_new_with_label (_("Quick Moves"));
+	button = gtk_check_button_new_with_mnemonic (_("_Quick moves"));
 	gtk_tooltips_set_tip(tooltips, button, _("Shortens the time a computer waits before doing a move"), NULL);	
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
 				     props->quick_moves);
@@ -346,50 +350,49 @@ void show_properties_dialog (void) {
 	frame = games_frame_new (_("Dark"));
 	
 	vbox2 = gtk_vbox_new (FALSE, 6);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox2), 6);
 	
 	button=add_level(vbox2, NULL, _("Human"), 	0, BLACK);
-	button=add_level(vbox2, button, _("Very Easy"),	1, BLACK);
+	button=add_level(vbox2, button, _("Very easy"),	1, BLACK);
 	button=add_level(vbox2, button, _("Easy"), 	2, BLACK);
 	button=add_level(vbox2, button, _("Medium"), 	3, BLACK);
 	button=add_level(vbox2, button, _("Hard"), 	4, BLACK);
-	button=add_level(vbox2, button, _("Very Hard"), 5, BLACK);
+	button=add_level(vbox2, button, _("Very hard"), 5, BLACK);
 
 	gtk_container_add (GTK_CONTAINER (frame), vbox2);
 	
 	gtk_table_attach (GTK_TABLE (table), frame, 1, 2, 0, 1,
 			  GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
-			  6, 6);
+			  0, 0);
 	
 	/* Light level select */
 	frame = games_frame_new (_("Light"));
 
 	vbox2 = gtk_vbox_new (FALSE, 6);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox2), 6);
 	
 	button=add_level(vbox2, NULL, _("Human"), 0, WHITE);
-	button=add_level(vbox2, button, _("Very Easy"), 1, WHITE);
+	button=add_level(vbox2, button, _("Very easy"), 1, WHITE);
 	button=add_level(vbox2, button, _("Easy"), 	2, WHITE);
 	button=add_level(vbox2, button, _("Medium"), 	3, WHITE);
 	button=add_level(vbox2, button, _("Hard"), 	4, WHITE);
-	button=add_level(vbox2, button, _("Very Hard"), 5, WHITE);
+	button=add_level(vbox2, button, _("Very hard"), 5, WHITE);
 	
 	gtk_container_add (GTK_CONTAINER (frame), (vbox2));
 
 	gtk_table_attach (GTK_TABLE (table), frame, 0, 1, 0, 1,
 			  GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
-			  6, 6);
+			  0, 0);
 
 	/* Appearance tab */
-	label = gtk_label_new_with_mnemonic (_("_Appearance"));
+	label = gtk_label_new (_("Appearance"));
 	vbox = gtk_vbox_new (FALSE, 6);
 
         frame = games_frame_new (_("Appearance"));
 	gtk_container_add (GTK_CONTAINER (frame), vbox);
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), frame, label);
+	gtk_container_set_border_width (GTK_CONTAINER (frame), 12);
 
 	/* animation button */
-	button=gtk_check_button_new_with_label(_("Animation"));
+	button=gtk_check_button_new_with_mnemonic(_("_Animation"));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), props->animate);
 	g_signal_connect(G_OBJECT(button), "toggled",
 			G_CALLBACK(set_variable_cb), &(props->animate));
@@ -397,7 +400,7 @@ void show_properties_dialog (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 
 	/* flip tiles button */
-	button=gtk_check_button_new_with_label(_("Flip final results"));
+	button=gtk_check_button_new_with_mnemonic(_("_Flip final results"));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), props->flip_final);
 	g_signal_connect(G_OBJECT(button), "toggled",
 			G_CALLBACK(set_variable_cb), &(props->flip_final));
@@ -405,7 +408,7 @@ void show_properties_dialog (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 
 	/* show grid button */
-	button=gtk_check_button_new_with_label(_("Show grid"));
+	button=gtk_check_button_new_with_mnemonic(_("_Show grid"));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), props->show_grid);
 	g_signal_connect(G_OBJECT(button), "toggled",
 			G_CALLBACK(set_variable_cb), &(props->show_grid));
@@ -415,8 +418,8 @@ void show_properties_dialog (void) {
 	/* FIXME stagger flips button? */
 
 	/*  tileset select */
-	hbox=gtk_hbox_new(FALSE, GNOME_PAD);
-	label=gtk_label_new(_("Tile set:"));
+	hbox=gtk_hbox_new(FALSE, 12);
+	label=gtk_label_new_with_mnemonic(_("_Tile set:"));
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
 	menu = fill_tileset_menu ();
 	g_signal_connect (G_OBJECT (menu), "changed",
@@ -424,6 +427,7 @@ void show_properties_dialog (void) {
 	gtk_tooltips_set_tip(tooltips, menu, _("The appearance of the pieces"), NULL);	
 	gtk_box_pack_start(GTK_BOX(hbox), menu, TRUE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+	gtk_label_set_mnemonic_widget(GTK_LABEL (label), menu);
 
 	/* end of appearance tab */
 	gtk_widget_show_all (propbox);

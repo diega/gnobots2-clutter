@@ -787,11 +787,13 @@ properties_callback (GtkWidget *widget, gpointer data)
 		return;
 	}
 
-	pref_dialog = gtk_dialog_new_with_buttons (_("Preferences"),
+	pref_dialog = gtk_dialog_new_with_buttons (_("Mahjongg Preferences"),
 			GTK_WINDOW (window),
 			GTK_DIALOG_DESTROY_WITH_PARENT,
 			GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 			NULL);
+	gtk_container_set_border_width (GTK_CONTAINER (pref_dialog), 5);
+	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (pref_dialog)->vbox), 2);
 	gtk_dialog_set_has_separator (GTK_DIALOG (pref_dialog), FALSE);
 	gtk_window_set_resizable (GTK_WINDOW (pref_dialog), FALSE);
 	gtk_dialog_set_default_response (GTK_DIALOG (pref_dialog),
@@ -801,29 +803,31 @@ properties_callback (GtkWidget *widget, gpointer data)
 
 	group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 
-	top_table = gtk_table_new (2, 2, FALSE);
-	gtk_container_set_border_width (GTK_CONTAINER (top_table), 0);
-	gtk_table_set_row_spacings (GTK_TABLE (top_table), 0);
+	top_table = gtk_table_new (4, 1, FALSE);
+	gtk_container_set_border_width (GTK_CONTAINER (top_table), 5);
+	gtk_table_set_row_spacings (GTK_TABLE (top_table), 18);
 	gtk_table_set_col_spacings (GTK_TABLE (top_table), 0);
 
 	frame = games_frame_new (_("Tiles"));
 	gtk_table_attach_defaults (GTK_TABLE (top_table), frame, 0, 1, 0, 1);
 
 	table = gtk_table_new (2, 2, FALSE);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 8);
+	gtk_table_set_col_spacings (GTK_TABLE (table), 12);
 	
-	label = gtk_label_new (_("Tile Set"));
+	label = gtk_label_new_with_mnemonic (_("_Tile set:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-	gtk_size_group_add_widget (group, label);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
+	                  (GtkAttachOptions) GTK_FILL, 
+			  (GtkAttachOptions) 0,
+			  0, 0);
 
 	omenu = gtk_combo_box_new_text ();
 	fill_tile_menu (omenu, "mahjongg");
 	g_signal_connect (G_OBJECT (omenu), "changed",
 			  G_CALLBACK (tileset_callback), NULL); 
 	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 0, 1);
+	gtk_label_set_mnemonic_widget (GTK_LABEL (label), omenu);
 
 	gtk_container_add(GTK_CONTAINER (frame), table);
 
@@ -831,52 +835,55 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_table_attach_defaults (GTK_TABLE (top_table), frame, 0, 1, 1, 2);
 
 	table = gtk_table_new (1, 2, FALSE);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 8);
+	gtk_table_set_col_spacings (GTK_TABLE (table), 12);
 	
-	label = gtk_label_new (_("Select Map"));
+	label = gtk_label_new_with_mnemonic (_("_Select map:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-	gtk_size_group_add_widget (group, label);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
+	                  (GtkAttachOptions) GTK_FILL, 
+			  (GtkAttachOptions) 0,
+			  0, 0);
 
 	omenu = gtk_combo_box_new_text ();
 	fill_map_menu (omenu);
 	g_signal_connect (G_OBJECT (omenu), "changed",
 			  G_CALLBACK (set_map_selection), NULL); 
 	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 0, 1);
+	gtk_label_set_mnemonic_widget (GTK_LABEL (label), omenu);
 
 	gtk_container_add(GTK_CONTAINER (frame), table);
 
 	frame = games_frame_new (_("Colors"));
-	gtk_table_attach_defaults (GTK_TABLE (top_table), frame, 1, 2, 0, 1);
+	gtk_table_attach_defaults (GTK_TABLE (top_table), frame, 0, 1, 2, 3);
 
 	table = gtk_table_new (1, 2, FALSE);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 8);
+	gtk_table_set_col_spacings (GTK_TABLE (table), 12);
 	
-	label = gtk_label_new (_("Background Color"));
+	label = gtk_label_new_with_mnemonic (_("_Background color:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-	gtk_size_group_add_widget (group, label);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
+	                  (GtkAttachOptions) GTK_FILL, 
+			  (GtkAttachOptions) 0,
+			  0, 0);
 
 	w  = gtk_color_button_new ();
 	gtk_color_button_set_color (GTK_COLOR_BUTTON (w), &bgcolour);
 	g_signal_connect (G_OBJECT (w), "color_set",
 			  G_CALLBACK (bg_colour_callback), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), w, 1, 2, 0, 1);
+	gtk_label_set_mnemonic_widget (GTK_LABEL (label), w);
 
 	gtk_container_add (GTK_CONTAINER (frame), table);
 
 
 	frame = games_frame_new (_("Warnings"));
-	gtk_table_attach_defaults (GTK_TABLE (top_table), frame, 1, 2, 1, 2);
+	gtk_table_attach_defaults (GTK_TABLE (top_table), frame, 0, 1, 3, 4);
 
 	table = gtk_vbox_new (FALSE, 6);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
 
-	w = gtk_check_button_new_with_label (_("Warn when tiles don't match"));
+	w = gtk_check_button_new_with_mnemonic (_("_Warn when tiles don't match"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), popup_warn);
 	g_signal_connect (G_OBJECT(w), "clicked", G_CALLBACK (popup_warn_callback), NULL);
 	gtk_box_pack_start_defaults (GTK_BOX (table), w);

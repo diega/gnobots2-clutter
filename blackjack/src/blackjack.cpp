@@ -98,7 +98,7 @@ bj_make_window_title (gchar *game_name)
 {
         char *title;
 
-        title = g_strdup_printf (_("Blackjack: %s"), game_name);
+        title = g_strdup_printf (_("Blackjack - %s"), game_name);
 
         gtk_window_set_title (GTK_WINDOW (toplevel_window), title); 
 
@@ -304,19 +304,19 @@ create_main_window (void)
 
         static GtkActionEntry entries [] = {
                 { "game-menu", NULL, N_("_Game") },
-                { "new-game", GTK_STOCK_NEW, N_("_New game"), "<Control>N", N_("Start a new game"), G_CALLBACK (on_game_new_activate) },
-                { "restart-game", GTK_STOCK_REFRESH, N_("_Restart game"), "<Control>R", N_("Restart the current game"), G_CALLBACK (on_game_restart_activate) },
+                { "new-game", GTK_STOCK_NEW, N_("_New Game"), "<Control>N", N_("Start a new game"), G_CALLBACK (on_game_new_activate) },
+                { "restart-game", GTK_STOCK_REFRESH, N_("_Restart Game"), "<Control>R", N_("Restart the current game"), G_CALLBACK (on_game_restart_activate) },
                 { "show-hint", GTK_STOCK_HELP, N_("_Hint"), NULL, N_("Get a hint for the next action"), G_CALLBACK (on_game_hint_activate) },
                 { "quit-game", GTK_STOCK_QUIT, NULL, "<Control>Q", N_("Quit application"), G_CALLBACK (on_game_quit_activate) },
                 { "settings-menu", NULL, N_("_Settings") },
                 { "show-preferences", GTK_STOCK_PREFERENCES, NULL, NULL, N_("Show game preferences"), G_CALLBACK (on_preferences_activate) },
                 { "control-menu", NULL, N_("_Control") },
-                { "hand-deal", NULL, N_("Deal"), NULL, N_("Deal a new hand"), G_CALLBACK (on_control_deal_activate) },
+                { "hand-deal", NULL, N_("D_eal"), NULL, N_("Deal a new hand"), G_CALLBACK (on_control_deal_activate) },
                 { "hand-hit", NULL, N_("_Hit"), "H", N_("Add a card to the hand"), G_CALLBACK (on_control_hit_activate) },
                 { "hand-stand", NULL, N_("_Stand"), "S", N_("Stop adding cards to the hand"), G_CALLBACK (on_control_stand_activate) },
-                { "hand-surrender", NULL, N_("Surrender"), "R", N_("Surrender the hand"), G_CALLBACK (on_control_surrender_activate) },
+                { "hand-surrender", NULL, N_("S_urrender"), "R", N_("Surrender the hand"), G_CALLBACK (on_control_surrender_activate) },
                 { "hand-double-down", NULL, N_("_Double down"), "D", N_("Double down"), G_CALLBACK (on_control_double_activate) },
-                { "hand-split", NULL, N_("Split the hand"), "P", N_("Split the hand"), G_CALLBACK (on_control_split_activate) },
+                { "hand-split", NULL, N_("S_plit the hand"), "P", N_("Split the hand"), G_CALLBACK (on_control_split_activate) },
                 { "help-menu", NULL, N_("_Help")},
                 { "show-help-contents", GTK_STOCK_HELP, N_("_Contents"), "F1", N_("Display help for this game"), G_CALLBACK (on_help_contents_activate) },
                 { "show-about", GTK_STOCK_ABOUT, NULL, NULL, N_("About this game"), G_CALLBACK (on_help_about_activate) },
@@ -679,7 +679,7 @@ main (int argc, char *argv [])
                               GCONF_CLIENT_PRELOAD_NONE, NULL);
 
 #ifdef HAVE_GNOME
-        gnome_program_init ("blackjack", VERSION,
+        gnome_program_init ("Blackjack", VERSION,
                             LIBGNOMEUI_MODULE,
                             argc, argv,
                             GNOME_PARAM_APP_DATADIR, DATADIR, NULL);

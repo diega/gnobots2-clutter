@@ -59,7 +59,7 @@ if GCONF_SCHEMAS_INSTALL
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(top_builddir)/gnometris/$(schema_DATA)
 endif
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
-	touch $(DESTDIR)$(scoredir)/gnometris.scores
+	-touch $(DESTDIR)$(scoredir)/gnometris.scores
 	-chown $(scores_user):$(scores_group) $(DESTDIR)$(scoredir)/gnometris.scores
 	-chmod 664 $(DESTDIR)$(scoredir)/gnometris.scores
 	-if test "x$(setgid)" = "xtrue"; then chgrp $(scores_group) $(DESTDIR)$(bindir)/gnometris && chmod 2555 $(DESTDIR)$(bindir)/gnometris ; fi
