@@ -2037,7 +2037,6 @@ gconf_sanity_check(void)
     gtk_dialog_run(GTK_DIALOG(dialog));
     exit(1);
   } else {
-    g_message(tileset);
     g_free (tileset);
   }
 }
@@ -2142,6 +2141,7 @@ main (int argc, char *argv [])
 
 	init_config();
 
+	score_current_mapset = strdup (mapset);
 	update_score_state ();
 
   	gnome_app_flash (GNOME_APP (window), 

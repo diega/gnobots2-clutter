@@ -1,3 +1,9 @@
+2002-12-11  Ross Burton  <ross@burtonini.com>
+
+	* mahjongg.c (new_game): Ensure that the current map is known when
+	a game starts. Patch from Jeremy Browne
+	<gnome-bugzilla@synonymous.ca>, fixing #99164.
+
 2002-11-29  Ross Burton  <ross@burtonini.com>
 
 	* Makefile.am (EXTRA_DIST): Put the source of the schemas in the
