@@ -116,7 +116,7 @@
      <title>Gataxx Main Window</title>
      <screenshot>
       <screeninfo>Gataxx Main Window</screeninfo>
-      <graphic fileref="fig/gataxx-startgame" format="png" srccredit="aaron weber">
+      <graphic fileref="figures/gataxx-startgame" format="png" srccredit="aaron weber">
       </graphic>
      </screenshot>
     </figure>
@@ -169,7 +169,7 @@
      <title>Available Moves</title>
      <screenshot>
       <screeninfo>Gataxx Main Window</screeninfo>
-      <graphic fileref="fig/gataxx-legalmoves" format="png" srccredit="aaron weber">
+      <graphic fileref="figures/gataxx-legalmoves" format="png" srccredit="aaron weber">
       </graphic>
      </screenshot>
     </figure>
@@ -287,7 +287,7 @@
    <title>Preferences Dialog</title>
    <screenshot>
     <screeninfo>Preferences dialog</screeninfo>
-    <graphic fileref="fig/gataxx-prefs" format="png">
+    <graphic fileref="figures/gataxx-prefs" format="png">
     </graphic>
    </screenshot>
   </figure>
