@@ -1,3 +1,7 @@
+2002-11-27  Ross Burton  <ross@burtonini.com>
+
+	* same-gnome.c (load_scenario): Fix a typo, closing #99684.
+
 2002-11-21  Tim Musson  <trmusson@ihug.co.nz>
 
 	* same-gnome.c (show_scores): Made score dialog modal. (Bug #97320)
