@@ -1271,8 +1271,8 @@ main (int argc, char *argv[])
   g_signal_connect (GTK_OBJECT (app), "key_release_event",
 		      GTK_SIGNAL_FUNC (game_widget_key_release_callback), 0);
   g_signal_connect (GTK_OBJECT (app), "delete_event",
-		      GTK_SIGNAL_FUNC (gtk_widget_destroy), 0);
-  g_signal_connect (GTK_OBJECT (app), "destroy",
+		      GTK_SIGNAL_FUNC (gstones_exit), 0);
+  g_signal_connect (GTK_OBJECT (app), "destroy_event",
 		      GTK_SIGNAL_FUNC (gtk_main_quit), 0);
 
   joystick_set_widget (app);
@@ -1294,8 +1294,6 @@ main (int argc, char *argv[])
   play_title_music();
 
   gtk_main ();
-
-  sound_close ();
 
   return 0;
 }

@@ -1,3 +1,8 @@
+2002-06-01  Bastien Nocera  <hadess@hadess.net>
+
+	* main.c: (main): use gstones_exit when we get the delete_event, rather
+	than going through the widget destruction process (Closes: #81310)
+
 2002-05-10  Bastien Nocera  <hadess@hadess.net>
 
 	* objects/Makefile.am: add deprecation defines
