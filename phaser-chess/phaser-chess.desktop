@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Phaser Chess
 Name[es]=Ajedrez Phaser
+Name[de]=Phaser-Schach
 Comment=Gnome Phaser Chess
 Comment[es]=Ajedrez Phaser de Gnome
+Comment[de]=Gnome Phaser-Schach
 Exec=phaser_chess
 Icon=
 Terminal=0
