@@ -33,6 +33,7 @@ public:
 	
 	void show();
 	void updateSize();
+	void clear();
 	
 	GtkWidget * getWidget()	{return w;}
 	

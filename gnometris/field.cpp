@@ -25,11 +25,8 @@
 Field::	Field()
 {
 	bg = 0;
-	gtk_widget_push_visual (gdk_rgb_get_visual ());
-	gtk_widget_push_colormap (gdk_rgb_get_cmap ());
+
 	w = gnome_canvas_new();
-	gtk_widget_pop_colormap ();
-	gtk_widget_pop_visual ();
 }
 
 void 
@@ -44,7 +41,7 @@ Field::show()
 void
 Field::updateSize(GdkPixbuf * bgImage)
 {
-	gtk_widget_set_usize(w, COLUMNS * BLOCK_SIZE, LINES * BLOCK_SIZE);
+	gtk_widget_set_size_request(w, COLUMNS * BLOCK_SIZE, LINES * BLOCK_SIZE);
 	gnome_canvas_set_scroll_region(GNOME_CANVAS(w), 0.0, 0.0, COLUMNS * BLOCK_SIZE, LINES * BLOCK_SIZE);
 
 	if (bg)

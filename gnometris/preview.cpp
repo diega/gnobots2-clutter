@@ -23,16 +23,10 @@
 
 Preview::	Preview()
 {
-	gtk_widget_push_visual(gdk_rgb_get_visual());
-	gtk_widget_push_colormap(gdk_rgb_get_cmap());
-
 	w = gtk_drawing_area_new();
 
-	gtk_widget_pop_colormap();
-	gtk_widget_pop_visual();
-
 	gtk_widget_set_events(w, gtk_widget_get_events(w) | GDK_EXPOSURE_MASK);
-	gtk_signal_connect(GTK_OBJECT(w), "event", (GtkSignalFunc)eventHandler, this);
+	g_signal_connect (w, "event", G_CALLBACK (eventHandler), this);
 }
 
 void 
@@ -51,7 +45,7 @@ Preview::show()
 void
 Preview::updateSize()
 {
-	gtk_drawing_area_size(GTK_DRAWING_AREA(w), PREVIEW_SIZE * BLOCK_SIZE, PREVIEW_SIZE * BLOCK_SIZE);
+	gtk_widget_set_size_request (w, PREVIEW_SIZE * BLOCK_SIZE, PREVIEW_SIZE * BLOCK_SIZE);
 }
 
 gint 
@@ -71,9 +65,17 @@ Preview::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 }
 
 void
+Preview::clear ()
+{
+	gdk_window_clear_area (w->window, 0, 0,
+			       BLOCK_SIZE * PREVIEW_SIZE,
+			       BLOCK_SIZE * PREVIEW_SIZE);
+}
+
+void
 Preview::paint(GdkRectangle *area)
 {
-	gdk_window_clear_area(w->window, 0, 0, BLOCK_SIZE * PREVIEW_SIZE, BLOCK_SIZE * PREVIEW_SIZE);
+	clear ();
 
 	int xoffs = (PREVIEW_SIZE - sizeTable[blocknr_next][rot_next][1]) * BLOCK_SIZE / 2;
 	int yoffs = (PREVIEW_SIZE - sizeTable[blocknr_next][rot_next][0]) * BLOCK_SIZE / 2;
@@ -103,13 +105,3 @@ Preview::paint(GdkRectangle *area)
 		gdk_draw_line(w->window, w->style->white_gc, 0, PREVIEW_SIZE * BLOCK_SIZE, PREVIEW_SIZE * BLOCK_SIZE, 0);
 	}
 }
-
-
-
-
-
-
-
-
-
-

@@ -29,7 +29,7 @@ static GnomeUIInfo game_menu[] = {
 			      GTK_STOCK_GO_FORWARD),
   GNOMEUIINFO_MENU_SCORES_ITEM((void *) display_scores, NULL),
   GNOMEUIINFO_SEPARATOR,
-  GNOMEUIINFO_MENU_EXIT_ITEM((void *) popup, &quitbox),
+  GNOMEUIINFO_MENU_QUIT_ITEM((void *) popup, &quitbox),
   GNOMEUIINFO_END
 };
   

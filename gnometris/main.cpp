@@ -43,11 +43,11 @@ main(int argc, char *argv[])
 
 	gnome_score_init("gnometris");
 
-        gnome_init ("gnometris", VERSION, argc, argv);
+	gnome_program_init ("gnometris", VERSION,
+			    LIBGNOMEUI_MODULE,
+			    argc, argv, NULL);
 	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-gtetris.png");
 
-//	GnomeClient *client= gnome_master_client();
-	
 	Tetris * t = new Tetris(cmdlineLevel);
 
 	gtk_main();
@@ -56,5 +56,3 @@ main(int argc, char *argv[])
 	
 	return 0;
 }
-
-

@@ -24,6 +24,7 @@
 #include <config.h>
 #include <gnome.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gconf/gconf-client.h>
 
 #define TETRIS_VERSION "1.2.5"
 
@@ -92,6 +93,8 @@ private:
 	Preview *preview;
 	BlockOps *ops;
 	ScoreFrame *scoreFrame;
+
+	GConfClient *gconf_client;
 	
 	bool paused;
 	int timeoutId;
@@ -109,17 +112,23 @@ private:
 	static int gameTopTen(GtkWidget *widget, void *d);
 	static int gameProperties(GtkWidget *widget, void *d);
 	static void setupdialogDestroy(GtkWidget *widget, void *d);
-	static void doSetup(GtkWidget *widget, void *d);
+	static void setupdialogResponse(GtkWidget *dialog, gint response_id, void *d);
  	static void setRotateCounterClockWise(GtkWidget *widget, void *d);
 	static void setSelectionPreview(GtkWidget *widget, void *d);
 	static void setSelectionBlocks(GtkWidget *widget, void *d);
 	static void setSelection (GtkWidget *widget, void *data);
 	static void setBGSelection (GtkWidget *widget, void *data);
 	static void freeStr (GtkWidget *widget, void *data);
-	
-	static char *blockPixmapTmp;
-	static char *bgPixmapTmp;
 
+	static void lineFillHeightChanged (GtkWidget *spin, gpointer data);
+	static void lineFillProbChanged (GtkWidget *spin, gpointer data);
+	static void startingLevelChanged (GtkWidget *spin, gpointer data);
+	
+	static void gconfNotify (GConfClient *tmp_client, guint cnx_id, GConfEntry *tmp_entry, gpointer tmp_data);
+	void initOptions ();
+	void setOptions ();
+	void writeOptions ();
+	
 	GdkPixbuf *image;
 	GdkPixbuf *bgimage;
 
@@ -129,14 +138,15 @@ private:
 	GtkWidget *sentry;
 	int startingLevel;
 	int cmdlineLevel;
-	bool doPreviewTmp;
-	bool randomBlocksTmp;
- 	bool rotateCounterClockWiseTmp;
 
-	GtkWidget * fill_height_spinner;
 	int line_fill_height;
-	GtkWidget * fill_prob_spinner;
 	int line_fill_prob;
+
+	GtkWidget *fill_height_spinner;
+	GtkWidget *fill_prob_spinner;
+	GtkWidget *do_preview_toggle;
+	GtkWidget *random_block_colors_toggle;
+	GtkWidget *rotate_counter_clock_wise_toggle;
 	
 	GnomeUIInfo *gameMenuPtr; 
 	GnomeUIInfo *gameSettingsPtr; 
@@ -149,9 +159,3 @@ private:
 };
 
 #endif // __tetris_h__
-
-
-
-
-
-

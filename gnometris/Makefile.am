@@ -3,8 +3,10 @@ scoredir=$(localstatedir)/games
 Gamesdir=$(datadir)/applications
 
 INCLUDES=\
-	$(GNOME_GAMES_CFLAGS)		\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" 
+	$(GNOME_GAMES_CFLAGS)				\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
+	-DG_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED	\
+	-DGNOME_DISABLE_DEPRECATED
 	
 
 bin_PROGRAMS=gnometris
@@ -35,19 +37,18 @@ Games_in_files = gnometris.desktop.in
 Games_DATA = $(Games_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
+schemadir = $(sysconfdir)/gconf/schemas
+schema_DATA = gnometris.schemas
+
 EXTRA_DIST = AUTHORS \
-             gnometris.desktop.in 	
+             gnometris.desktop.in	\
+             $(schema_DATA)
 
 install-data-local:
+	GCONF_CONFIG_SOURCE=$(GCONF_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
 	touch $(DESTDIR)$(scoredir)/gnometris.scores
 	-chown games.games $(DESTDIR)$(scoredir)/gnometris.scores
 	-chmod 664 $(DESTDIR)$(scoredir)/gnometris.scores
 	-chgrp games $(DESTDIR)$(bindir)/gnometris && chmod 2111 $(DESTDIR)$(bindir)/gnometris
-
-
-
-
-
-
 

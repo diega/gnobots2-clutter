@@ -350,7 +350,7 @@ GnomeUIInfo gamemenu [] = {
          GNOMEUIINFO_MENU_SCORES_ITEM(scores_callback, NULL),
 
 	 GNOMEUIINFO_SEPARATOR,
-         GNOMEUIINFO_MENU_EXIT_ITEM(confirm_action, QUIT_GAME),
+         GNOMEUIINFO_MENU_QUIT_ITEM(confirm_action, QUIT_GAME),
 
 	 GNOMEUIINFO_END
 };

@@ -18,6 +18,11 @@
  * 	    Juan Pablo Mendoza <pablo_juan@yahoo.com>
  */
 
+#undef G_DISABLE_DEPRECATED
+#undef GDK_DISABLE_DEPRECATED
+#undef GTK_DISABLE_DEPRECATED
+#undef GNOME_DISABLE_DEPRECATED
+
 #include <config.h>
 #include <math.h>
 #include "gnome-canvas-pimage.h"
