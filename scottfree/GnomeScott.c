@@ -22,7 +22,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include <gnome.h>
-#include <gemvt/libgemvt.h>
+#include <gtktty/libgtktty.h>
 
 #include "Scott.h"
 
