@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-pixmapdir = $(datadipixmapdir = $(datadir)/pixmaps/phaser-chess
+
 Gamesdir  = $(datadir)/apps/Games
 
 INCLUDES = 			\
@@ -53,15 +53,12 @@ phaser_chess_SOURCES = 		\
 	meta_server.h
 
 phaser_chess_LDADD = \
-	$(OBGTK_LIBS) $(GNOMEUI_LIBS) \
+	$(OBGTK_LIBS) $(GNOMEUI_LIBS) $(INTLLIBS) \
 	-lobjc $(PTHREAD_LIB)
 
 EXTRA_DIST = phaser-chess.desktop
 
-install-data-local:
-	$(mkinstalldirs) $(Gamesdir)
-	$(INSTALL_DATA) $(srcdir)/phaser-chess.desktop $(Gamesdir)/phaser-chess.desktop
-
+Games_DATA = phaser-chess.desktop
 
 #phaser_chess_LDFLAGS = -version-info 0:0:0 -rpath $(libdir)
 

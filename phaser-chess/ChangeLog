@@ -1,3 +1,10 @@
+Sat Feb 14 09:51:56 1998  Tom Tromey  <tromey@cygnus.com>
+
+	* Makefile.am (phaser_chess_LDADD): Include INTLLIBS.
+	(Games_DATA): New macro.
+	(install-data-local): Removed.
+	(pixmapdir): Removed.
+
 Tue Jan 27 13:57:26 1998  Federico Mena  <federico@bananoid.nuclecu.unam.mx>
 
 	* Makefile.am (install-data-local): Updated installation of the
