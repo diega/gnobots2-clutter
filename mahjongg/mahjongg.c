@@ -17,13 +17,17 @@
 #include <gnome.h>
 #include <gdk_imlib.h>
 
+#include "button-images.h"
+
 #define GAME_EVENTS (GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK)
 
 #define TILE_WIDTH 40
-#define TILE_HEIGHT 56     
+#define TILE_HEIGHT 56
 #define MAX_TILES 146
-#define HALF_WIDTH 20
-#define HALF_HEIGHT 28
+#define HALF_WIDTH 18
+//#define HALF_WIDTH 20
+#define HALF_HEIGHT 26
+//#define HALF_HEIGHT 28
 #define MAH_VERSION "0.4.0"
      
 typedef struct _tilepos tilepos;     
@@ -88,151 +92,152 @@ struct _tilepos {
 };
 
 tilepos default_pos [] = {
-	{6, 0,  0},
-	{8, 0,  0},
-	{10, 0,  0},
-	{12, 0,  0},
-	{14, 0,  0},
-	{1, 1,  0},
-	{3, 1,  0},
-	{1, 3,  0},
-	{3, 3,  0},
-	{0, 6,  0},
-	{2, 5,  0},
-	{2, 7,  0},
-	{1, 9,  0},
-	{3, 9,  0},
-	{1, 11,  0},
-	{3, 11,  0},
-	{6, 12,  0},
+        {13, 7,  4},
+        {12, 8,  3},
+        {14, 8,  3},
+        {12, 6,  3},
+        {14, 6,  3},
+        {10, 10,  2},
+	{12, 10,  2},
+	{14, 10,  2},
+	{16, 10,  2},
+	{10, 8,  2},
+	{12, 8,  2},
+	{14, 8,  2},
+	{16, 8,  2},
+        {10, 6,  2},
+	{12, 6,  2},
+	{14, 6,  2},
+	{16, 6,  2},
+	{10, 4,  2},
+	{12, 4,  2},
+	{14, 4,  2},
+	{16, 4,  2},
+	{8, 12,  1},
+	{10, 12,  1},
+	{12, 12,  1},
+	{14, 12,  1},
+	{16, 12,  1},
+	{18, 12,  1},
+	{8, 10,  1},
+	{10, 10,  1},
+	{12, 10,  1},
+	{14, 10,  1},
+	{16, 10,  1},
+	{18, 10,  1},
+	{8, 8,  1},
+	{10, 8,  1},
+	{12, 8,  1},
+	{14, 8,  1},
+	{16, 8,  1},
+	{18, 8,  1},
+	{8, 6,  1},
+	{10, 6,  1},
+	{12, 6,  1},
+	{14, 6,  1},
+	{16, 6,  1},
+	{18, 6,  1},
+	{8, 4,  1},
+	{10, 4,  1},
+	{12, 4,  1},
+	{14, 4,  1},
+	{16, 4,  1},
+	{18, 4,  1},
+	{8, 2,  1},
+	{10, 2,  1},
+	{12, 2,  1},
+	{14, 2,  1},
+	{16, 2,  1},
+	{18, 2,  1},
+        {2, 14,  0},
+        {4, 14,  0},
+	{6, 14,  0},
+	{8, 14,  0},
+	{10, 14,  0},
+	{12, 14,  0},
+	{14, 14,  0},
+	{16, 14,  0},
+        {18, 14,  0},
+        {20, 14,  0},
+        {22, 14,  0},
+        {24, 14,  0},
+        {6, 12,  0},
 	{8, 12,  0},
 	{10, 12,  0},
 	{12, 12,  0},
 	{14, 12,  0},
-	{17, 1,  0},
-	{19, 1,  0},
-	{17, 3,  0},
-	{19, 3,  0},
-	{17, 9,  0},
-	{19, 9,  0},
-	{17, 11,  0},
-	{19, 11,  0},
-	{20, 6,  0},
-	{18, 7,  0},
-	{18, 5,  0},
-	{5, 2,  0},
-	{7, 2,  0},
-	{9, 2,  0},
-	{11, 2,  0},
-	{13, 2,  0},
-	{15, 2,  0},
-	{5, 10,  0},
-	{7, 10,  0},
-	{9, 10,  0},
-	{11, 10,  0},
-	{13, 10,  0},
-	{15, 10,  0},
-	{4, 5,  0},
-	{4, 7,  0},
-	{16, 5,  0},
-	{16, 7,  0},
-	{6, 4,  0},
-	{8, 4,  0},
-	{10, 4,  0},
-	{12, 4,  0},
-	{14, 4,  0},
-	{6, 6,  0},
-	{8, 6,  0},
-	{10, 6,  0},
-	{12, 6,  0},
-	{14, 6,  0},
+	{16, 12,  0},
+	{18, 12,  0},
+	{20, 12,  0},
+        {4, 10,  0},
+        {6, 10,  0},
+	{8, 10,  0},
+	{10, 10,  0},
+	{12, 10,  0},
+	{14, 10,  0},
+        {16, 10,  0},
+        {18, 10,  0},
+        {20, 10,  0},
+        {22, 10,  0},
+        {0, 7,  0},
+        {2, 8,  0},
+        {4, 8,  0},
 	{6, 8,  0},
 	{8, 8,  0},
 	{10, 8,  0},
 	{12, 8,  0},
 	{14, 8,  0},
-	{2, 2,  1},
-	{4, 2,  1},
-	{6, 2,  1},
-	{7, 0,  1},
-	{9, 1,  1},
-	{11, 1,  1},
-	{13, 0,  1},
-	{14, 2,  1},
-	{16, 2,  1},
-	{18, 2,  1},
-	{2, 10,  1},
-	{4, 10,  1},
-	{6, 10,  1},
-	{7, 12,  1},
-	{9, 11,  1},
-	{11, 11,  1},
-	{13, 12,  1},
-	{14, 10,  1},
-	{16, 10,  1},
-	{18, 10,  1},
-	{8, 3,  1},
-	{10, 3,  1},
-	{12, 3,  1},
-	{7, 5,  1},
-	{9, 5,  1},
-	{11, 5,  1},
-	{13, 5,  1},
-	{7, 7,  1},
-	{9, 7,  1},
-	{11, 7,  1},
-	{13, 7,  1},
-	{8, 9,  1},
-	{10, 9,  1},
-	{12, 9,  1},
-	{3, 4,  1},
-	{3, 6,  1},
-	{3, 8,  1},
-	{5, 4,  1},
-	{5, 6,  1},
-	{5, 8,  1},
-	{15, 4,  1},
-	{15, 6,  1},
-	{15, 8,  1},
-	{17, 4,  1},
-	{17, 6,  1},
-	{17, 8,  1},
-	{5, 4,  2},
-	{7, 4,  2},
-	{9, 4,  2},
-	{11, 4,  2},
-	{13, 4,  2},
-	{15, 4,  2},
-	{5, 8,  2},
-	{7, 8,  2},
-	{9, 8,  2},
-	{11, 8,  2},
-	{13, 8,  2},
-	{15, 8,  2},
-	{4, 6,  2},
-	{6, 6,  2},
-	{8, 6,  2},
-	{10, 6,  2},
-	{12, 6,  2},
-	{14, 6,  2},
-	{16, 6,  2},
-	{7, 5,  3},
-	{9, 5,  3},
-	{11, 5,  3},
-	{13, 5,  3},
-	{7, 7,  3},
-	{9, 7,  3},
-	{11, 7,  3},
-	{13, 7,  3},
-	{5, 6,  3},
-	{15, 6,  3},
-	{8, 6,  4},
-	{10, 6,  4},
-	{12, 6,  4},
-	{9, 6,  5},
-	{11, 6,  5},
-	{10, 6,  6}
+	{16, 8,  0},
+        {18, 8,  0},
+        {20, 8,  0},
+        {22, 8,  0},
+        {24, 8,  0},
+        {2, 6,  0},
+	{4, 6,  0},
+	{6, 6,  0},
+	{8, 6,  0},
+	{10, 6,  0},
+	{12, 6,  0},
+	{14, 6,  0},
+	{16, 6,  0},
+	{18, 6,  0},
+	{20, 6,  0},
+	{22, 6,  0},
+	{24, 6,  0},
+        {4, 4,  0},
+        {6, 4,  0},
+	{8, 4,  0},
+	{10, 4,  0},
+	{12, 4,  0},
+	{14, 4,  0},
+        {16, 4,  0},
+        {18, 4,  0},
+        {20, 4,  0},
+        {22, 4,  0},
+	{6, 2,  0},
+	{8, 2,  0},
+	{10, 2,  0},
+	{12, 2,  0},
+	{14, 2,  0},
+	{16, 2,  0},
+	{18, 2,  0},
+        {20, 2,  0},
+        {2, 0,  0},
+        {4, 0,  0},
+	{6, 0,  0},
+	{8, 0,  0},
+	{10, 0,  0},
+	{12, 0,  0},
+	{14, 0,  0},
+        {16, 0,  0},
+	{18, 0,  0},
+        {20, 0,  0},
+	{22, 0,  0},
+        {24, 0,  0},
+        {26, 7, 0},
+        {28, 7, 0}
 };
+
 
 struct _tile{
 	int type;
@@ -247,6 +252,7 @@ struct _tile{
 GtkWidget *window;
 GtkWidget *mbox;
 GtkWidget *draw_area;
+GtkWidget *tiles_label;
 GdkPixmap *tiles_pix, *mask;
 GdkGC *my_gc;
 tile tiles[MAX_TILES];
@@ -261,29 +267,58 @@ void select_game_callback (GtkWidget *widget, gpointer date);
 void new_game (void);
 void redraw_area (int x1, int y1, int x2, int y2, int mlayer);
 void about_callback (GtkWidget *widget, gpointer data);
+void show_tb_callback (GtkWidget *widget, gpointer data);
+void sound_on_callback (GtkWidget *widget, gpointer data);
+
 
 GnomeUIInfo filemenu [] = {
-	{GNOME_APP_UI_ITEM, N_("New"), NULL, new_game_callback, NULL, NULL,
-	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
+         {GNOME_APP_UI_ITEM, N_("New"), NULL, new_game_callback, NULL, NULL,
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Restart"), NULL, restart_game_callback, NULL, NULL,
+         {GNOME_APP_UI_ITEM, N_("New Seed..."), NULL, select_game_callback, NULL, NULL,
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
+
+         {GNOME_APP_UI_ITEM, N_("Restart"), NULL, restart_game_callback, NULL, NULL,
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_REFRESH, 0, 0, NULL},
+
+         {GNOME_APP_UI_SEPARATOR},
+
+         {GNOME_APP_UI_ITEM, N_("Hint"), NULL, NULL, NULL, NULL,
+         GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+
+         {GNOME_APP_UI_ITEM, N_("Undo"), NULL, NULL, NULL, NULL,
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_UNDO, 0, 0, NULL},
+
+         {GNOME_APP_UI_SEPARATOR},
+	
+         {GNOME_APP_UI_ITEM, N_("Exit"), NULL, quit_game_callback, NULL, NULL,
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 0, 0, NULL},
+
+         {GNOME_APP_UI_ENDOFINFO}
+};
+
+GnomeUIInfo optionsmenu [] = {
+	{GNOME_APP_UI_TOGGLEITEM, N_("Show Tool Bar"), NULL, show_tb_callback, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Select game..."), NULL, select_game_callback, NULL, NULL,
-	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
+        {GNOME_APP_UI_SEPARATOR},
 
-	{GNOME_APP_UI_ITEM, N_("Properties..."), NULL, NULL, NULL, NULL,
-	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
+        {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), NULL, NULL, NULL, NULL,
+        GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Exit"), NULL, quit_game_callback, NULL, NULL,
-	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 0, 0, NULL},
-	
-	{GNOME_APP_UI_ENDOFINFO}
+        {GNOME_APP_UI_ITEM, N_("Tile Set"), NULL, NULL, NULL, NULL,
+        GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_BLANK, 0, 0, NULL},
+
+        {GNOME_APP_UI_ITEM, N_("Properties..."), NULL, NULL, NULL, NULL,
+        GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
+
+        
+        {GNOME_APP_UI_ENDOFINFO}
 };
 
 GnomeUIInfo helpmenu[] = {
 	{GNOME_APP_UI_HELP, NULL, NULL, NULL, NULL, NULL,
-	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+        GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 	
 	{GNOME_APP_UI_ITEM, N_("About"), NULL, about_callback, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
@@ -294,10 +329,43 @@ GnomeUIInfo helpmenu[] = {
 GnomeUIInfo mainmenu [] = {
 	{GNOME_APP_UI_SUBTREE, N_("Game"), NULL, filemenu, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+
+         {GNOME_APP_UI_SUBTREE, N_("Options"), NULL, optionsmenu, NULL, NULL,
+	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 	
 	{GNOME_APP_UI_SUBTREE, N_("Help"), NULL, helpmenu, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 	
+	{GNOME_APP_UI_ENDOFINFO}
+};
+
+GnomeUIInfo toolbar [] = {
+         {GNOME_APP_UI_ITEM, N_("New"), NULL, new_game_callback, NULL, NULL,
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_NEW, 0, 0, NULL},
+
+         {GNOME_APP_UI_ITEM, N_("New Seed"), NULL, select_game_callback, NULL, NULL,
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_NEW, 0, 0, NULL},
+
+         {GNOME_APP_UI_ITEM, N_("Restart"), NULL, restart_game_callback, NULL, NULL,
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_REFRESH, 0, 0, NULL},
+
+         {GNOME_APP_UI_ITEM, N_("Hint"), NULL, NULL, NULL, NULL,
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_HELP, 0, 0, NULL},
+
+         {GNOME_APP_UI_ITEM, N_("Undo"), NULL, NULL, NULL, NULL,
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_UNDO, 0, 0, NULL},
+
+         {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), NULL, NULL, NULL, NULL,
+         GNOME_APP_PIXMAP_DATA, mini_sound_xpm, 0, 0, NULL},
+
+         {GNOME_APP_UI_ITEM, N_("Tile Set"), NULL, NULL, NULL, NULL,
+         GNOME_APP_PIXMAP_DATA, mini_tiles_xpm, 0, 0, NULL},
+
+         {GNOME_APP_UI_ITEM, N_("Properties"), NULL, NULL, NULL, NULL,
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_PROPERTIES, 0, 0, NULL},
+
+         {GNOME_APP_UI_SEPARATOR},
+
 	{GNOME_APP_UI_ENDOFINFO}
 };
 
@@ -350,40 +418,41 @@ int tile_free (int tile_num)
 	if (tiles[tile_num].visible == 0)
 		return 0;
 	
-	if (tiles[tile_num].layer < 6) {
+        /*
+        if (tiles[tile_num].layer < 6) {
 		nlayer = tiles[tile_num].layer + 1;
 		tile_x = tiles[tile_num].x + 6;
 		tile_y = tiles[tile_num].y - 3;
 		
 		temp_tile = find_tile_in_layer (tile_x, tile_y, nlayer);
-		if ((temp_tile > MAX_TILES) || (tiles[temp_tile].visible == 0))
-			nlayer_ul_free = 1;
-		
+                if ((temp_tile > MAX_TILES) || (tiles[temp_tile].visible == 0))
+                    nlayer_ul_free = 1;
+                
 		temp_tile = find_tile_in_layer (tile_x + HALF_WIDTH, tile_y, nlayer);
 		if ((temp_tile > MAX_TILES) || (tiles[temp_tile].visible == 0))
-			nlayer_ur_free = 1;
-		
+                    nlayer_ur_free = 1;
+                    
 		temp_tile = find_tile_in_layer (tile_x, tile_y + HALF_HEIGHT, nlayer);
 		if ((temp_tile > MAX_TILES) || (tiles[temp_tile].visible == 0))
-			nlayer_bl_free = 1;
-		
+                    nlayer_bl_free = 1;
+         
 		temp_tile = find_tile_in_layer (tile_x + HALF_WIDTH, tile_y + HALF_HEIGHT, nlayer);
 		if ((temp_tile > MAX_TILES) || (tiles[temp_tile].visible == 0))
-			nlayer_br_free = 1;
-	}
-	else {
+                    nlayer_br_free = 1;
+           }
+           else {
+           */
 		nlayer_ul_free = 1;
 		nlayer_ur_free = 1;
 		nlayer_bl_free = 1;
 		nlayer_br_free = 1;
-	}
-	
+	/* } */
 	tile_x = tiles[tile_num].x + 2;
 	tile_y = tiles[tile_num].y + 2;
 
 	if ((nlayer_ul_free == 1) && (nlayer_ur_free == 1) &&
 	    (nlayer_bl_free == 1) && (nlayer_br_free == 1)) {
-		uleft_tile = find_tile_in_layer (tile_x - HALF_WIDTH, tile_y, tiles[tile_num].layer);
+		uleft_tile = find_tile_in_layer (tile_x - HALF_WIDTH - 2, tile_y, tiles[tile_num].layer);
 		bleft_tile = find_tile_in_layer (tile_x - HALF_WIDTH,
 						 tile_y + HALF_HEIGHT, tiles[tile_num].layer);
 		uright_tile = find_tile_in_layer (tile_x + TILE_WIDTH - 1, tile_y, tiles[tile_num].layer);
@@ -394,22 +463,13 @@ int tile_free (int tile_num)
 		rup_tile = find_tile_in_layer (tile_x + HALF_WIDTH, tile_y - TILE_HEIGHT, tiles[tile_num].layer);
 		lup_tile = find_tile_in_layer (tile_x, tile_y - TILE_HEIGHT, tiles[tile_num].layer);
 
-		if (((uleft_tile > MAX_TILES) || (tiles[uleft_tile].visible == 0)) &&
-		    ((bleft_tile > MAX_TILES) || (tiles[bleft_tile].visible == 0))) left_free = 1;
-		if (((uright_tile > MAX_TILES) || (tiles[uright_tile].visible == 0)) &&
-		    ((bright_tile > MAX_TILES) || (tiles[bright_tile].visible == 0))) right_free = 1;
-		if (((rbottom_tile > MAX_TILES) || (tiles[rbottom_tile].visible == 0)) &&
-		    ((lbottom_tile > MAX_TILES) || (tiles[lbottom_tile].visible == 0))) bottom_free = 1;
-		if (((rup_tile > MAX_TILES) || (tiles[rup_tile].visible == 0)) &&
-		    ((lup_tile > MAX_TILES) || (tiles[lup_tile].visible == 0))) up_free = 1;
-
-		if (bottom_free) {
-			if ((left_free) || (right_free)) return 1;
-		}
-		else if (up_free) {
-			if ((left_free) || (right_free)) return 1;
-		}
-		else if ((left_free) || (right_free)) return 1;
+                if (((uleft_tile > MAX_TILES) || (tiles[uleft_tile].visible == 0))
+                 || ((bleft_tile > MAX_TILES) || (tiles[bleft_tile].visible == 0)))
+                    left_free = 1;
+                if (((uright_tile > MAX_TILES) || (tiles[uright_tile].visible == 0))
+                    ||  ((bright_tile > MAX_TILES) || (tiles[bright_tile].visible == 0)))
+                    right_free = 1;
+                if ((left_free) || (right_free)) return 1;
 		else return 0;
 	}
 	else return 0;
@@ -500,23 +560,27 @@ void about_callback (GtkWidget *widget, gpointer data)
 
 void quit_game_callback (GtkWidget *widget, gpointer data)
 {
-	gtk_main_quit ();
+    gnome_config_sync();
+    gtk_main_quit ();
 }
 
 void new_game_callback (GtkWidget *widget, gpointer data)
 {
-	new_game ();
+    gtk_label_set(GTK_LABEL(tiles_label), "144");
+    new_game ();
 }
 
 void restart_game_callback (GtkWidget *widget, gpointer data)
 {
-	int i;
-	visible_tiles = 144;
-	for (i = 0; i < 144; i++) {
-		tiles[i].visible = 1;
-		tiles[i].selected = 0;
-	}
-	gtk_widget_draw (draw_area, NULL);	
+    int i;
+    
+    visible_tiles = 144;
+    gtk_label_set(GTK_LABEL(tiles_label), "144");
+    for (i = 0; i < 144; i++) {
+        tiles[i].visible = 1;
+        tiles[i].selected = 0;
+    }
+    gtk_widget_draw (draw_area, NULL);
 }
 
 static void
@@ -539,8 +603,6 @@ void select_game_callback (GtkWidget *widget, gpointer data)
 	dialog = gtk_dialog_new ();
 	GTK_WINDOW (dialog)->position = GTK_WIN_POS_MOUSE;
 	gtk_window_set_title (GTK_WINDOW (dialog), _("Select Game"));
-	gtk_container_border_width (GTK_CONTAINER (dialog), 5);
-	        
 	gtk_signal_connect (GTK_OBJECT (dialog), "delete_event",
 			    GTK_SIGNAL_FUNC (cancel_callback),
 			    (gpointer)dialog);
@@ -579,6 +641,25 @@ void select_game_callback (GtkWidget *widget, gpointer data)
 	
 }
 
+void show_tb_callback (GtkWidget *widget, gpointer data)
+{
+    if((GTK_CHECK_MENU_ITEM(optionsmenu[0].widget))->active)
+    {
+        gnome_config_set_bool("gmahjongg/toolbar/show", TRUE);
+        gtk_widget_show(GTK_WIDGET(GNOME_APP(window)->toolbar->parent));
+    }
+    else
+    {
+        gnome_config_set_bool("gmahjongg/toolbar/show", FALSE);
+        gtk_widget_hide(GTK_WIDGET(GNOME_APP(window)->toolbar->parent));
+    }
+}
+
+void sound_on_callback (GtkWidget *widget, gpointer data)
+{
+    printf("mer\n");
+}
+
 void new_game (void)
 {
 	int i, f, n;
@@ -597,8 +678,8 @@ void new_game (void)
 				f = (int) (145.0 * rand () / RAND_MAX) - 1;
 			tiles[f].visible = 1;
 			tiles[f].selected = 0;
-			tiles[f].x = default_pos[f].x * HALF_WIDTH + 80 + (5 * default_pos[f].layer);
-			tiles[f].y = default_pos[f].y * HALF_HEIGHT + 60 - (4 * default_pos[f].layer);
+			tiles[f].x = default_pos[f].x * (HALF_WIDTH-0) + 30 + (5 * default_pos[f].layer);
+			tiles[f].y = default_pos[f].y * (HALF_HEIGHT-0) + 25 - (4 * default_pos[f].layer);
 			tiles[f].layer = default_pos[f].layer;
 			tiles[f].type = default_types[i].type; 
 			tiles[f].image = default_types[i].image; 
@@ -653,10 +734,11 @@ void redraw_area (int x1, int y1, int x2, int y2, int mlayer)
 	area.x = x1;
 	area.y = y1;
 	area.width = x2 - x1 + 1;
-	area.height = y2 - y1 + 1;
+        area.height = y2 - y1 + 1;
 
-	for(i = 0; i < MAX_TILES; i ++) {
-		if ((tiles[i].visible) && (tiles[i].layer >= mlayer)) {
+	//for(i = 0; i < MAX_TILES; i ++) {
+        for(i = MAX_TILES; i > -1; i --) {
+        	if ((tiles[i].visible) && (tiles[i].layer >= mlayer)) {
 			trect.x = tiles[i].x;
 			trect.y = tiles[i].y;
 			trect.width = TILE_WIDTH;
@@ -687,7 +769,8 @@ void tile_gone (int i, int x, int y)
 void button_pressed (int x, int y)
 {
 	int i;
-
+        gchar *tmpchar;
+        
 	i = find_tile (x, y);
 	if (i < MAX_TILES) {
 		if (tile_free (i)) {
@@ -701,7 +784,9 @@ void button_pressed (int x, int y)
 						   tiles[selected_tile].x + 1,
 						   tiles[selected_tile].y + 1);
 					selected_tile = MAX_TILES + 1;
-					visible_tiles -= 2;
+                                        visible_tiles -= 2;
+                                        sprintf(tmpchar,"%d",visible_tiles);
+                                        gtk_label_set(GTK_LABEL(tiles_label), tmpchar);
 					check_free();
 					if (visible_tiles <= 0)
 						you_won ();
@@ -803,6 +888,7 @@ void create_mahjongg_board (void)
 			       600,
 			       480);
 
+        /* FIXME: Let the user specify the tile set via a dialog or the command line */
 	load_tiles ("default.xpm");
 	my_gc = gdk_gc_new (draw_area->window);
 	gdk_gc_set_clip_mask (my_gc, mask);
@@ -835,7 +921,29 @@ int main (int argc, char *argv [])
 	gtk_window_set_policy (GTK_WINDOW (window), FALSE, FALSE, TRUE);
 
 	gnome_app_create_menus (GNOME_APP (window), mainmenu);
-	gtk_menu_item_right_justify (GTK_MENU_ITEM(mainmenu[1].widget));
+	gtk_menu_item_right_justify (GTK_MENU_ITEM(mainmenu[2].widget));
+
+        gnome_app_create_toolbar (GNOME_APP (window), toolbar);
+        gtk_toolbar_set_space_size(GTK_TOOLBAR(GNOME_APP(window)->toolbar), 25);
+        
+        if(gnome_config_get_bool("/gmahjongg/toolbar/show=TRUE"))
+            gtk_check_menu_item_set_state(GTK_CHECK_MENU_ITEM(optionsmenu[0].widget), TRUE);
+        else
+            gtk_widget_hide(GNOME_APP(window)->toolbar->parent);
+
+        tiles_label = gtk_label_new(_(" Tiles "));
+        gtk_widget_show(tiles_label);
+        gtk_toolbar_append_widget(GTK_TOOLBAR(GNOME_APP(window)->toolbar), tiles_label,
+                                  NULL, NULL);
+        tiles_label = gtk_label_new(_(" Remaining: "));
+        gtk_widget_show(tiles_label);
+        gtk_toolbar_append_widget(GTK_TOOLBAR(GNOME_APP(window)->toolbar), tiles_label,
+                                  NULL, NULL);
+        tiles_label = gtk_label_new("144");
+        gtk_widget_show(tiles_label);
+        gtk_toolbar_append_widget(GTK_TOOLBAR(GNOME_APP(window)->toolbar), tiles_label,
+                                  NULL, NULL);
+        gtk_toolbar_append_space(GTK_TOOLBAR(GNOME_APP(window)->toolbar));
 
 	gtk_signal_connect (GTK_OBJECT (window), "delete_event",
 			    GTK_SIGNAL_FUNC (quit_game_callback), NULL);
@@ -848,8 +956,8 @@ int main (int argc, char *argv [])
 	cc = gdk_color_context_new (gtk_widget_get_visual (draw_area),
 				    gtk_widget_get_colormap (draw_area));
 	color.red = 0;
-	color.green = 0x4040;
-	color.blue = 0x3030;
+	color.green = 0x3040;
+	color.blue = 0x1030;
 	color.pixel = 0;
 	x = 0;
 	gdk_color_context_get_pixels (cc,
