@@ -849,13 +849,12 @@ restart (gchar *id)
 	g_free(sess);
 }
 
-static void
-client_connect (GnomeClient *client, gint was_restarted)
+static gint
+client_die (GnomeClient *client, gpointer client_data)
 {
-	if (was_restarted) {
-		restarted = 1;
-		restart (gnome_client_get_previous_id (client));
-	}
+        gtk_exit (0);
+
+	return FALSE;
 }
 
 static error_t
@@ -895,14 +894,26 @@ main (int argc, char *argv [])
 
 	gnome_score_init("same-gnome");
 
-	client = gnome_client_new_default ();
-	gtk_signal_connect (GTK_OBJECT (client), "save_yourself",
-			    GTK_SIGNAL_FUNC (save_state), argv[0]);
-	gtk_signal_connect (GTK_OBJECT (client), "connect",
-			    GTK_SIGNAL_FUNC (client_connect), NULL);
-
 	gnome_init ("same-gnome", &parser, argc, argv, 0, NULL);
 	gdk_imlib_init ();
+
+	client= gnome_master_client ();
+
+	gtk_signal_connect (GTK_OBJECT (client), "save_yourself",
+			    GTK_SIGNAL_FUNC (save_state), argv[0]);
+	gtk_signal_connect (GTK_OBJECT (client), "die",
+			    GTK_SIGNAL_FUNC (client_die), NULL);
+
+	if (GNOME_CLIENT_CONNECTED (client))
+	  {
+	    GnomeClient *cloned= gnome_cloned_client ();
+	    
+	    if (cloned)
+	      {
+		restarted= 1;
+		restart (gnome_client_get_id (cloned));
+	      }
+	  }
 
 	srand (time (NULL));
 

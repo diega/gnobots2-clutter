@@ -1,3 +1,12 @@
+1998-10-10  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* same-gnome.c (main): Use 'gnome_master_client' instead of
+ 	'gnome_client_new_default'.  Connect to the gnome client's 'die'
+ 	signal.
+	(client_connect): Removed.
+	(client_die): New function, that quit the game, if the session manager
+	sends a 'die' signal.
+
 1998-09-24  Miguel de Icaza  <miguel@nuclecu.unam.mx>
 
 	* same-gnome.c (game_quit_callback): Do not use the deprecated
