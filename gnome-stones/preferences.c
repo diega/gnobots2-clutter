@@ -2,7 +2,7 @@
 
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <2003-08-02 04:29:58 callum>
+ * Time-stamp: <2004/07/18 16:12:47 callum>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -590,7 +590,7 @@ preferences_set_scroll_method (GtkWidget *widget, gpointer data)
   gconf_set_scroll_method (scroll_method_name ());
 }
 
-
+#if 0
 static void
 enable_sound_callback (GtkWidget *widget, gpointer *data)
 {
@@ -601,7 +601,7 @@ enable_sound_callback (GtkWidget *widget, gpointer *data)
   set_sound_enabled (is_on);
   gconf_set_sound_enabled (is_on);
 }
-
+#endif
 
 static GtkWidget *
 preferences_dialog_new (void)
@@ -612,9 +612,13 @@ preferences_dialog_new (void)
   GtkWidget *list_view;
   GtkWidget *label;
   GtkWidget *scrolled;
+#if 0
   GtkWidget *frame;
   GtkWidget *fv;
+#endif
+#if 0
   GtkWidget *enable_sound_toggle_button;
+#endif
   GtkListStore *list;
   GtkTreeIter iter;
   GtkTreeSelection *selection;
@@ -846,7 +850,7 @@ preferences_dialog_new (void)
   box = gtk_vbox_new (FALSE, GNOME_PAD);
   gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
   
-
+#if 0
   frame = games_frame_new (_("Sound"));
   fv = gtk_vbox_new (FALSE, FALSE);
   gtk_box_set_spacing (GTK_BOX (fv), 6);
@@ -866,11 +870,12 @@ preferences_dialog_new (void)
                     G_CALLBACK (enable_sound_callback), NULL);
   
   gtk_container_add (GTK_CONTAINER(fv), enable_sound_toggle_button);
-  
+
   label = gtk_label_new_with_mnemonic (_("_Sound"));
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
 			    box, label);
 
+#endif  
 
   /* Fourth page is miscellaneous stuff */
   

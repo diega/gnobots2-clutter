@@ -1,4 +1,4 @@
-SUBDIRS  = objects graphics sounds help
+SUBDIRS  = objects graphics help
 
 schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_in_files = gnome-stones.schemas.in

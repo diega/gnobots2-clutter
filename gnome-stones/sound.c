@@ -2,7 +2,7 @@
 
 /* gnome-stones - sound.c
  *
- * Time-stamp: <2003/06/19 16:11:28 mccannwj>
+ * Time-stamp: <2004/07/18 16:06:47 callum>
  *
  * Copyright (C) 2001 Michal Benes
  *
@@ -23,6 +23,9 @@
 #include <esd.h>
 #include <gnome.h>
 #include "sound.h"
+
+/* Effectively disable all sound until we canfind replacement samples. */
+#define NO_ESD
 
 gboolean sound_enabled = TRUE;
 
