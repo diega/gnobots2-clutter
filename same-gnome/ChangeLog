@@ -1,5 +1,7 @@
 Sun Mar  8 15:54:03 1998  Tom Tromey  <tromey@cygnus.com>
 
+	* Makefile.am (same_gnome_LDADD): Don't link with libsupport.a.
+
 	* Makefile.am (INCLUDES): Added GNOME_INCLUDEDIR.
 
 	* same-gnome.c (parse_an_arg): New function.

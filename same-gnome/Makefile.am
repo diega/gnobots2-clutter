@@ -15,8 +15,7 @@ same_gnome_SOURCES = 	\
 same_gnome_LDADD =		\
 	$(GNOME_LIBDIR)         \
 	$(GNOMEUI_LIBS)		\
-	$(INTLLIBS)		\
-	$(top_builddir)/support/libsupport.a
+	$(INTLLIBS)
 
 pixmap_DATA = planets.png blink-sync.png marbles.png \
 	stones.png rotate.png
