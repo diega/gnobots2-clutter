@@ -1,3 +1,7 @@
+2002-11-11  Ross Burton  <ross@burtonini.com>
+
+	* pix/gnome-gtetris.png: New icon contributed by Timothy Musson.
+
 2002-06-02  Ross Burton  <ross@burtonini.com>
 
 	* tetris.cpp: Make the about dialog a transient for the main

@@ -1,3 +1,7 @@
+2002-11-11  Ross Burton  <ross@burtonini.com>
+
+	* gnome-stones.png: New icon contributed by Timothy Musson.
+
 2002-10-31  Ross Burton  <ross@burtonini.com>
 
 	* object.c (plugin_load_plugins_in_dir): Remove the hard-coded
