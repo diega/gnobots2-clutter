@@ -506,7 +506,7 @@ LoadablePlayer::reset (const char *filename)
   gint ret = FALSE;
 
   if (filename)
-    ret = load (filename);
+    ret = loadXML (filename);
   return ret;
 }
 

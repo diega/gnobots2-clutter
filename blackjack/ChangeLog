@@ -1,3 +1,12 @@
+2004-02-04  William Jon McCann  <mccann@jhu.edu>
+
+	* src/player.cpp (reset): Load new XML cache file.
+
+	* src/game.cpp (bj_game_get_config_dir) 
+	(bj_game_ensure_config_dir_exists): New functions
+	(bj_game_eval_installed_file): Generate cache file if it
+	is not found.  
+
 2004-02-03  William Jon McCann  <mccann@jhu.edu>
 
 	* src/player.cpp (LoadablePlayer, reset):

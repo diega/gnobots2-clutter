@@ -302,6 +302,34 @@ bj_game_find_and_read_rules (gchar *filename)
   return ruleset;
 }
 
+static gchar *
+bj_game_get_config_dir (void)
+{
+  gchar *conf_dir = NULL;
+
+  conf_dir = g_build_filename (gnome_user_dir_get (),
+                               "blackjack.d",
+                               NULL);
+  return conf_dir;
+}
+
+static void
+bj_game_ensure_config_dir_exists (const char *dir)
+{
+  if (g_file_test (dir, G_FILE_TEST_IS_DIR) == FALSE)
+    {
+      if (g_file_test (dir, G_FILE_TEST_EXISTS) == TRUE)
+        {
+          // FIXME: use a dialog
+          cerr << dir << " exists, please move it out of the way." << endl;
+        }
+      if (mkdir (dir, 488) != 0)
+        {
+          cerr << "Failed to create directory " << dir << endl;
+        }
+    }
+}
+
 static void
 bj_game_eval_installed_file (gchar *file)
 {
@@ -322,7 +350,8 @@ bj_game_eval_installed_file (gchar *file)
   if (g_file_test (installed_filename, G_FILE_TEST_EXISTS))
     {
       rules = bj_game_read_rules (installed_filename);
-      
+      g_free (installed_filename);
+
       // set globals
       numDecks = rules->getNumDecks ();
       dealerSpeed = rules->getDealerSpeed ();
@@ -330,13 +359,13 @@ bj_game_eval_installed_file (gchar *file)
       BJStrategy maxValueStrategy;
       Progress progress;
 
-      gchar *cache_filename = g_strdup_printf ("%s%s", relative, ".dat");
+      gchar *cache_filename = g_strdup_printf ("%s%s", file, ".dat");
 
-      installed_filename = gnome_program_locate_file 
-        (NULL, 
-         GNOME_FILE_DOMAIN_APP_DATADIR,
-         cache_filename,
-         FALSE, NULL);
+      char *config_dir = bj_game_get_config_dir ();
+      bj_game_ensure_config_dir_exists (config_dir);
+      installed_filename = g_build_filename (config_dir, cache_filename, NULL);
+      g_free (config_dir);
+
       gboolean use_cache = false;
       if (g_file_test (installed_filename, G_FILE_TEST_EXISTS))
         use_cache = true;
@@ -348,19 +377,11 @@ bj_game_eval_installed_file (gchar *file)
                                      progress, 
                                      (use_cache) ? installed_filename : NULL);
 
-      /*
-        Use the following to save a cache file:
-        if (!use_cache)
-        strategy->save (cache_filename);
-      */
-      /* 
-         The new way, using XML cache files:
-         strategy->saveXML ("/tmp/foo.xml.gz");
-         strategy->loadXML ("/tmp/foo.xml.gz");
-      */
-
       if (! use_cache)
-        splash_destroy ();
+        {
+          strategy->saveXML (installed_filename);
+          splash_destroy ();
+        }
 
       g_free (cache_filename);
      } 
