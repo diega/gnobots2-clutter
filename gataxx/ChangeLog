@@ -1,3 +1,8 @@
+2000-10-21  Dan Mueth <d-mueth@uchicago.edu>
+
+	* help/C/Makefile.am: Added $(gataxx_help_DATA) to EXTRA_DIST
+	so that 'make dist' will run.
+
 2000-06-18  Chris Rogers <gandalf@darkcorner.net>
 
 	* added help files from Aaron Weber <aaron@helixcode.com>
