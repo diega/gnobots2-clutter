@@ -4,3 +4,5 @@ Makefile.in
 _libs
 .libs
 phaser_chess
+*.lo
+*.la
