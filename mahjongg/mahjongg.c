@@ -1530,6 +1530,7 @@ void show_tb_callback (GtkWidget *widget, gpointer data)
     {
         gnome_config_set_bool("gmahjongg/toolbar/show", FALSE);
         gtk_widget_hide(GTK_WIDGET(gdi));
+	gtk_widget_queue_resize (window);
     }
 }
 
@@ -1765,6 +1766,7 @@ int main (int argc, char *argv [])
 {
         GnomeDockItem *gdi;
 	GtkWidget *toolbar;
+        gboolean show=TRUE;
 
         gnome_score_init (APPNAME);
 
@@ -1802,11 +1804,6 @@ int main (int argc, char *argv [])
 	toolbar = gnome_dock_item_get_child (gdi);
         gtk_toolbar_set_space_size(GTK_TOOLBAR (toolbar), 25);
         
-        if(gnome_config_get_bool("/gmahjongg/toolbar/show=TRUE"))
-            gtk_check_menu_item_set_state(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), TRUE);
-        else
-            gtk_widget_hide(GTK_WIDGET(gdi)) ;
-
         tiles_label = gtk_label_new(_("Tiles Left: "));
         gtk_widget_show(tiles_label);
 	gtk_toolbar_append_widget(GTK_TOOLBAR(toolbar), tiles_label,
@@ -1827,8 +1824,6 @@ int main (int argc, char *argv [])
 				  NULL, NULL);
 	gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
 
-
-
 	gtk_signal_connect (GTK_OBJECT (window), "delete_event",
 			    GTK_SIGNAL_FUNC (quit_game_callback), NULL);
 
@@ -1838,8 +1833,17 @@ int main (int argc, char *argv [])
 	create_mahjongg_board ();
 
 	gtk_widget_show (window);
+
+        if(gnome_config_get_bool_with_default("/gmahjongg/toolbar/show",&show))
+            gtk_check_menu_item_set_state(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), TRUE);
+        else {
+                gtk_check_menu_item_set_state(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), FALSE);
+                gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
+                gtk_widget_hide(GTK_WIDGET(gdi)) ;
+                gtk_widget_queue_resize (window);
+        }
+
 	gtk_main ();
 	
 	return 0;
 }
-
