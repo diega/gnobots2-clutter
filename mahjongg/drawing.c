@@ -32,6 +32,10 @@ view_geom_record view_geometry[MAX_TILES];
 /* The number of different tile patterns plus a blank tile at the end. */
 #define NUM_PATTERNS 43
 
+/* Aspect ratio of individual tiles (i.e., height/width).
+ * 1.375 = 64/88 */
+#define ASPECT 1.375
+
 GtkWidget * board = NULL;
 GdkPixmap * buffer = NULL;
 GdkPixmap * tileimages = NULL;
@@ -69,13 +73,16 @@ gint gridheight;
 
 static void recalculate_sizes (gint width, gint height)
 {
+  gdouble scale;
+
   /* This calculates four things: the size of the complete tile pixmap,
    * the offsets from the edge of the window, the offset for the 3-D effect
    * (i.e. the sides of the tile) and the size of the face of the tile. */
-  tilebasewidth = width / gridwidth;
-  tilebaseheight = height / gridheight;
-  xoffset = tilebasewidth/2;
-  yoffset = tilebaseheight/2;
+  scale = MIN (width/gridwidth, height/(gridheight*ASPECT));
+  tilebasewidth = scale;
+  tilebaseheight = scale*ASPECT;
+  xoffset = (width - (gridwidth-1)*tilebasewidth)/2;
+  yoffset = (height - (gridheight-1)*tilebaseheight)/2;
   tileoffsetx = tilebasewidth/7;
   tileoffsety = tilebaseheight/10;
   tilewidth = tilebasewidth + tileoffsetx;
@@ -90,7 +97,7 @@ static void calculate_tile_positions (void)
   v = view_geometry;
   for (i=0; i<MAX_TILES; i++) {
     v->x = pos[i].x*tilebasewidth/2 + pos[i].layer*tileoffsetx + xoffset;
-    v->y = pos[i].y*tilebaseheight/2 - pos[i].layer*tileoffsety + xoffset;
+    v->y = pos[i].y*tilebaseheight/2 - pos[i].layer*tileoffsety + yoffset;
     v++;
   }
 }

@@ -4,6 +4,9 @@
 	to NULL. It was being used, inappropriately for clipping with bad
 	results. Fixes bug #131905.
 
+	* drawing.c: Keep the aspect ratio of the tiles constant. Patch
+	from Jim Evins (see bug #131957).
+
 2004-01-19  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am (pixmap_DATA): Added new tile sets, smooth.png and
