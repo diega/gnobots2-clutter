@@ -21,7 +21,7 @@ same_gnome_LDADD =		\
 	$(GNOME_GAMES_LIBS)      \
 	$(INTLLIBS)
 
-schemadir   = $(sysconfdir)/gconf/schemas
+schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_in_files = same-gnome.schemas.in
 schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 @INTLTOOL_SCHEMAS_RULE@
