@@ -17,15 +17,16 @@ INCLUDES = -I.. -I$(srcdir)/..		\
 bin_PROGRAMS = same-gnome
 
 same_gnome_SOURCES = 	\
-	same-gnome.c \
-	same-gnome.h \
 	drawing.c \
 	drawing.h \
 	game.c \
 	game.h \
 	globals.h \
 	input.c \
-	input.h
+	input.h \
+	same-gnome.c \
+	ui.c \
+	ui.h
 
 same_gnome_LDADD =		\
 	../libgames-support/libgames-support.la \

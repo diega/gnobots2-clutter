@@ -9,8 +9,8 @@
 #include "globals.h"
 
 #include "drawing.h"
-#include "same-gnome.h"
 #include "game.h"
+#include "ui.h"
 
 /* The blank colour. */
 const gint NONE = -1;
@@ -30,6 +30,17 @@ coordinates *selected = NULL;
 gint count = 0;
 
 gint game_state = GAME_IDLE;
+
+void set_sizes (gint size)
+{
+	board_width = board_sizes[size][0];
+	board_height = board_sizes[size][1];
+	ncolours = board_sizes[size][2];
+	
+	gconf_client_set_int (gcclient, GCONF_SIZE_KEY, size, NULL);
+
+	new_frame_ratio (board_width, board_height);
+}
 
 game_cell * get_game_cell (int x, int y)
 {

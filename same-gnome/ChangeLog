@@ -1,3 +1,13 @@
+2004-12-26  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* Makefile.am:
+	* same-gnome.c: 
+	* same-gnome.h:
+	* game.c:
+	* ui.c:	
+	* ui.h: Move the ui code to its own file. Also remove same-gnome.h
+	in the header shuffle.
+
 2004-12-23  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am: 

@@ -71,6 +71,7 @@ extern gint count;
 extern game_cell *board;
 
 void new_game (void);
+void set_sizes (gint size);
 game_cell * get_game_cell (int x, int y);
 void find_connected_component (int x, int y);
 void destroy_balls (void);
