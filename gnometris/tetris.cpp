@@ -484,7 +484,7 @@ Tetris::fillMenu(GtkWidget *menu, char *pixname, char *dirname,
 	{
 		s = g_strdup(e->d_name);
 
-		if (!strstr (e->d_name, ".png")) 
+		if (!(strstr (e->d_name, ".png") || strstr (e->d_name, ".jpg"))) 
 		{
 			free(s);
 			continue;

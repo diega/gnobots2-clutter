@@ -14,20 +14,20 @@ pixmap_DATA=\
 appicon_DATA=gnome-gtetris.png
 
 bg_DATA=\
-	fishy-bg.png \
-	greyprint-bg.png \
-	leaves-bg.png \
-	sweet-bg.png \
-	watery-bg.png \
-	weirdo-bg.png \
-	vortex-bg.png \
-	dog-bg.png \
-	geschier-bg.png \
-	gitter-bg.png \
-	gnometris-bg.png \
-	rhinoceros-bg.png \
-	scrcow-bg.png \
-	trees-bg.png
+	fishy-bg.jpg \
+	greyprint-bg.jpg \
+	leaves-bg.jpg \
+	sweet-bg.jpg \
+	watery-bg.jpg \
+	weirdo-bg.jpg \
+	vortex-bg.jpg \
+	dog-bg.jpg \
+	geschier-bg.jpg \
+	gitter-bg.jpg \
+	gnometris-bg.jpg \
+	rhinoceros-bg.jpg \
+	scrcow-bg.jpg \
+	trees-bg.jpg
 
 EXTRA_DIST=$(pixmap_DATA) $(appicon_DATA) $(bg_DATA)
 

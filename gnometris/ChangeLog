@@ -1,5 +1,13 @@
 2003-05-31  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* tetris.cpp (fillMenu): Add support for jpg images as
+	backgrounds.
+
+	* pix/Makefile.am (bg_DATA): Use jpegs for the background
+	images. This saves a *lot* of space. Quality has been carefully
+	adjusted to make sure that the old and new images are visually
+	indistinguishable.
+
 	* Makefile.am (install-data-local): Implement setgid modifications
 	(see gnome-games/ChangeLog).
 
