@@ -885,7 +885,6 @@ main (int argc, char *argv [])
 	gtk_signal_connect (GTK_OBJECT(app), "delete_event",
 			    (GtkSignalFunc)game_quit_callback, NULL);
 	gnome_app_create_menus(GNOME_APP(app), mainmenu);
-        gtk_menu_item_right_justify(GTK_MENU_ITEM(mainmenu[1].widget));
   
         vb = gtk_vbox_new (FALSE, 0);
 	hb = gtk_hbox_new (FALSE, 0);
