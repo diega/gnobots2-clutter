@@ -131,10 +131,10 @@ GnomeUIInfo gamemenu[] = {
     {GNOME_APP_UI_ITEM, N_("_Properties..."), NULL, properties_cb, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
 
-    {GNOME_APP_UI_ITEM, N_("_Scores..."), NULL, game_scores_cb, NULL, NULL,
+    {GNOME_APP_UI_ITEM, N_("_Scores"), NULL, game_scores_cb, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SCORES, 0, 0, NULL},
 
-    {GNOME_APP_UI_ITEM, N_("_Quit"), NULL, quit_cb, NULL, NULL,
+    {GNOME_APP_UI_ITEM, N_("E_xit"), NULL, quit_cb, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 'q', GDK_CONTROL_MASK, NULL},
 
     {GNOME_APP_UI_ENDOFINFO}
@@ -144,7 +144,7 @@ GnomeUIInfo gamemenu[] = {
  * Help menu entries
  */
 GnomeUIInfo helpmenu[] = {
-    {GNOME_APP_UI_ITEM, N_("_About..."), NULL, about_cb, NULL, NULL,
+    {GNOME_APP_UI_ITEM, N_("_About Gnobots"), NULL, about_cb, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
 
     {GNOME_APP_UI_HELP, NULL, NULL, "gnobots", NULL, NULL,
