@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1998/12/06 17:33:09 carsten>
+ * Time-stamp: <1998/12/23 23:27:27 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -230,6 +230,15 @@ _preferences_save (GnomeClient        *client,
   gnome_config_pop_prefix ();
   gnome_config_sync ();
 
+  if (!global)
+    {
+      gchar *prefix= gnome_client_get_config_prefix (client);
+      gchar *argv[3]= {"rm", "-r", NULL };
+      
+      argv[2]= gnome_config_get_real_path (prefix);
+      gnome_client_set_discard_command (client, 3, argv);
+    }
+
   return TRUE;
 }
 
@@ -252,7 +261,7 @@ preferences_save (void)
 gboolean
 preferences_restore (void)
 {
-  GnomeClient *client= gnome_cloned_client ();
+  GnomeClient *client= gnome_master_client ();
   gchar       *devicename;
   char        *filename;
   gboolean     def;
@@ -696,16 +705,6 @@ session_management_init (void)
 		      GINT_TO_POINTER (FALSE));
   gtk_signal_connect (GTK_OBJECT (client), "die",
 		      GTK_SIGNAL_FUNC (gstones_exit), NULL);
-
-  if (GNOME_CLIENT_CONNECTED (client))
-    {
-      gchar *discard_command[3];
-      
-      discard_command[0]= program_invocation_name;
-      discard_command[1]= "--discard-file";
-      discard_command[2]= gnome_client_get_config_prefix (client);
-      gnome_client_set_discard_command (client, 3, discard_command);
-    }  
 }
 
 
