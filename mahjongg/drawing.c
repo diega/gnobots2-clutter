@@ -44,6 +44,7 @@ GdkBitmap * tilemask = NULL;
 
 GdkGC * gc = NULL;
 
+gboolean update_tileimages = TRUE;
 gboolean nowindow = TRUE;
 
 GdkColor bgcolour;
@@ -52,6 +53,7 @@ GdkPixbuf * tilepixbuf = NULL;
 
 static gint windowwidth;
 static gint windowheight;
+gint prior_tilebasewidth = 0;
 gint tilebasewidth = 0;
 gint tilebaseheight = 0;
 gint tileoffsetx;
@@ -291,21 +293,29 @@ void configure_pixmaps (void)
   if (nowindow)
     return;
 
+  prior_tilebasewidth = tilebasewidth;
+
   recalculate_sizes (windowwidth, windowheight);
   calculate_tile_positions ();
 
   if (buffer != NULL) g_object_unref (buffer);
-  if (tileimages != NULL) g_object_unref (tileimages);
-  if (tilemask != NULL) g_object_unref (tilemask);
-  if (tilebuffer != NULL) g_object_unref (tilebuffer);
-
   buffer = gdk_pixmap_new (board->window, windowwidth, windowheight, -1);
-  tileimages = gdk_pixmap_new (board->window, NUM_PATTERNS*tilewidth,
-                               2*tileheight, -1);
-  tilemask = gdk_pixmap_new (NULL, tilewidth, tileheight, 1);
-  tilebuffer = gdk_pixmap_new (board->window, tilewidth, tileheight, -1);
 
-  recreate_tile_images ();
+  /* Recreate the tile images only if the theme or tile size changed. */
+  if ((prior_tilebasewidth != tilebasewidth) || (update_tileimages)) {
+
+    if (tileimages != NULL) g_object_unref (tileimages);
+    if (tilemask != NULL) g_object_unref (tilemask);
+    if (tilebuffer != NULL) g_object_unref (tilebuffer);
+
+    tileimages = gdk_pixmap_new (board->window, NUM_PATTERNS*tilewidth,
+                                 2*tileheight, -1);
+    tilemask = gdk_pixmap_new (NULL, tilewidth, tileheight, 1);
+    tilebuffer = gdk_pixmap_new (board->window, tilewidth, tileheight, -1);
+
+    recreate_tile_images ();
+    update_tileimages = FALSE;
+  }
 }
 
 /* Here is where we create the backing pixmap and set up the tile pixmaps. */
@@ -394,6 +404,8 @@ gboolean load_images (gchar * file)
   }
   
   tilepixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+  
+  update_tileimages = TRUE;
   
   if (tileset)
     g_free (tileset);

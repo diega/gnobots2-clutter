@@ -1,3 +1,8 @@
+2004-08-24  Richard Hoelscher  <rahga@localhost.localdomain>
+
+	* drawing.c (configure_pixmaps): Recreate tile images only when 
+	the tileset changed, or if tile size changed after window resize.
+
 2004-08-15  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* maya.png:
