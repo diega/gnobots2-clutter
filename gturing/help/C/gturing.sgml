@@ -185,7 +185,7 @@
 	  <title>gturing main window</title>
 	  <screenshot>
 	    <screeninfo>gturing Main Window</screeninfo>
-	    <graphic fileref="mainwin" format="png" srccredit="sasha">
+	    <graphic fileref="figures/mainwin" format="png" srccredit="sasha">
             </graphic>
 	  </screenshot>
 	</figure>

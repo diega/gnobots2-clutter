@@ -157,7 +157,7 @@
       <title>Mahjongg's Main Window</title>
       <screenshot>
 	<screeninfo>Main window</screeninfo>
-	<graphic fileref="mahjongg" format="png"
+	<graphic fileref="figures/mahjongg" format="png"
 	       srccredit="Eric Baudais">
 	</graphic>
       </screenshot>
@@ -174,7 +174,7 @@
       <title>Information Dialog</title>
       <screenshot>
 	<screeninfo>Information Dialog</screeninfo>
-	<graphic fileref="no-match" format="png"
+	<graphic fileref="figures/no-match" format="png"
 	       srccredit="Eric Baudais">
 	</graphic>
       </screenshot>
@@ -197,7 +197,7 @@
       <title>Information Dialog</title>
       <screenshot>
 	<screeninfo>Information Dialog</screeninfo>
-	<graphic fileref="no-move" format="png"
+	<graphic fileref="figures/no-move" format="png"
 	       srccredit="Eric Baudais">
 	</graphic>
       </screenshot>
@@ -320,7 +320,7 @@
 	<title>Mahjongg's Toolbar</title>
 	<screenshot>
 	  <screeninfo>Toolbar</screeninfo>
-	  <graphic fileref="toolbar" format="png"
+	  <graphic fileref="figures/toolbar" format="png"
 		 srccredit="Eric Baudais">
 	  </graphic>
 	</screenshot>
@@ -364,7 +364,7 @@
 		      <title>Select Game seed</title>
 		      <screenshot>
 			<screeninfo>Select Game Dialog</screeninfo>
-			<graphic fileref="seed" format="png"
+			<graphic fileref="figures/seed" format="png"
 				 srccredit="Eric Baudais">
 			</graphic>
 		      </screenshot>
@@ -438,7 +438,7 @@
 		      <title>Top Ten Scores Dialog</title>
 		      <screenshot>
 			<screeninfo>Scores Dialog</screeninfo>
-			<graphic fileref="scores" format="png"
+			<graphic fileref="figures/scores" format="png"
 				 srccredit="Eric Baudais">
 			</graphic>
 		      </screenshot>
@@ -542,7 +542,7 @@
       <title>Preferences&hellip; Dialog</title>
       <screenshot>
 	<screeninfo>Preferences dialog</screeninfo>
-	<graphic fileref="preferences" format="png"
+	<graphic fileref="figures/preferences" format="png"
 		 srccredit="Eric Baudais">
 	</graphic>
       </screenshot>
@@ -596,7 +596,7 @@
 	      <title>Color Dialog</title>
 	      <screenshot>
 		<screeninfo>Color dialog</screeninfo>
-		<graphic fileref="color" format="png"
+		<graphic fileref="figures/color" format="png"
 			 srccredit="Eric Baudais">
 		</graphic>
 	      </screenshot>
@@ -632,7 +632,7 @@
 	    <title>Confirmation Dialog</title>
 	    <screenshot>
 	      <screeninfo>Confirmation dialog</screeninfo>
-	      <graphic fileref="confirm" format="png"
+	      <graphic fileref="figures/confirm" format="png"
 		       srccredit="Eric Baudais">
 	      </graphic>
 	    </screenshot>
