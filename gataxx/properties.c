@@ -51,6 +51,7 @@ guint t_white_computer_level;
 gint t_animate;
 gint t_quick_moves;
 gint t_flip_final;
+gint response;
 
 int mapped = 0;
 
@@ -63,24 +64,23 @@ void load_properties ()
 	strncpy (tile_set, gnome_config_get_string
 			("/gataxx/Preferences/tileset=classic.png"), 255);
 	animate = gnome_config_get_int ("/gataxx/Preferences/animate=2");
-	if (gnome_config_get_int ("/gataxx/Preferences/quickmoves=0"))
+	if (gnome_config_get_int ("/gataxx/Preferences/quickmoves=0")) {
 		computer_speed = COMPUTER_MOVE_DELAY / 2;
-	else
+	}
+	else {
 		computer_speed = COMPUTER_MOVE_DELAY;
+	}
 	flip_final = gnome_config_get_int
 		("/gataxx/Preferences/flipfinal=1");
 	
 	switch (animate) {
 		case 0:
-			flip_pixmaps_id = gtk_timeout_add (100, flip_pixmaps,
-					NULL);
+			flip_pixmaps_id = gtk_timeout_add (100, flip_pixmaps, NULL);
 			break;
 		case 1:
-			flip_pixmaps_id = gtk_timeout_add (PIXMAP_FLIP_DELAY *
-					8, flip_pixmaps, NULL);
+			flip_pixmaps_id = gtk_timeout_add (PIXMAP_FLIP_DELAY * 8, flip_pixmaps, NULL);
 			break;
-		case 2: flip_pixmaps_id = gtk_timeout_add (PIXMAP_FLIP_DELAY,
-					flip_pixmaps, NULL);
+		case 2: flip_pixmaps_id = gtk_timeout_add (PIXMAP_FLIP_DELAY, flip_pixmaps, NULL);
 			break;
 	}
 }
@@ -139,10 +139,12 @@ void apply_changes ()
 		white_computer_id = 0;
 	}
 	
-	if (t_quick_moves)
+	if (t_quick_moves) {
 		computer_speed = COMPUTER_MOVE_DELAY / 2;
-	else
+	}
+	else {
 		computer_speed = COMPUTER_MOVE_DELAY;
+	}
 	
 	if (strcmp (tile_set, tile_set_tmp)) {
 		strncpy (tile_set, tile_set_tmp, 255);
@@ -150,10 +152,12 @@ void apply_changes ()
 		for (i = 0; i < 7; i++)
 			for (j = 0; j < 7; j++)
 				if (pixmaps [i][j] >= BLACK_TURN &&
-						pixmaps[i][j] <= WHITE_TURN)
+						pixmaps[i][j] <= WHITE_TURN) {
 					gui_draw_pixmap (pixmaps[i][j], i, j);
-				else
+				}
+				else {
 					gui_draw_pixmap (0, i, j);
+				}
 	}
 	
 	animate = t_animate;
@@ -204,20 +208,24 @@ void white_computer_level_select (GtkWidget *widget, gpointer data)
 
 void quick_moves_select (GtkWidget *widget, gpointer data)
 {
-	if (GTK_TOGGLE_BUTTON (widget)->active)
+	if (GTK_TOGGLE_BUTTON (widget)->active) {
 		t_quick_moves = 1;
-	else
+	}
+	else {
 		t_quick_moves = 0;
+	}
 
 	apply_changes ();
 }
 
 void flip_final_select (GtkWidget *widget, gpointer data)
 {
-	if (GTK_TOGGLE_BUTTON (widget)->active)
+	if (GTK_TOGGLE_BUTTON (widget)->active) {
 		t_flip_final = 1;
-	else
+	}
+	else {
 		t_flip_final = 0;
+	}
 	apply_changes ();
 }
 
@@ -261,8 +269,9 @@ void fill_menu(GtkWidget *menu)
 
         dir = opendir(dname);
 
-        if(!dir)
+        if(!dir) {
                 return;
+	}
 
         while((e = readdir(dir)) != NULL) {
                 GtkWidget *item;
@@ -303,7 +312,16 @@ void show_properties_dialog ()
 	GtkWidget *hbox;
 	GtkWidget *option_menu;
 	
-	propbox = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	propbox = gtk_dialog_new_with_buttons (_("Properties"),
+					       NULL,
+					       GTK_DIALOG_DESTROY_WITH_PARENT,
+					       _("Done"),
+					       GTK_RESPONSE_OK,
+					       NULL);
+	
+	g_signal_connect (G_OBJECT (propbox), "response",
+			  G_CALLBACK (gtk_widget_destroy), propbox);
+
 	g_signal_connect (G_OBJECT (propbox), "delete_event",
 			  G_CALLBACK (gtk_widget_destroy), propbox);
 	
@@ -313,7 +331,7 @@ void show_properties_dialog ()
 	
 	notebook = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_TOP);
-	gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (propbox)->vbox), notebook, TRUE, TRUE, 0);
 	
 	/* Players tab */
 	
@@ -342,43 +360,45 @@ void show_properties_dialog ()
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
 	gtk_widget_show (vbox);
 	
-		button = gtk_radio_button_new_with_label (NULL, _("Human"));
-	if (black_computer_level == 0)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-				TRUE);
+	button = gtk_radio_button_new_with_label (NULL, _("Human"));
+	if (black_computer_level == 0) {
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+	}
 	g_signal_connect (G_OBJECT (button), "toggled",
 			  G_CALLBACK (black_computer_level_select), (gpointer) 0);
 	gtk_widget_show (button);
+
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+
 	button = gtk_radio_button_new_with_label (gtk_radio_button_get_group
-			(GTK_RADIO_BUTTON (button)), _("Level one"));
-	if (black_computer_level == 1)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-				TRUE);
+		      				 (GTK_RADIO_BUTTON (button)), _("Level one"));
+	if (black_computer_level == 1) {
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+	}
 	g_signal_connect (G_OBJECT (button), "toggled",
 			  G_CALLBACK (black_computer_level_select), (gpointer) 1);
 	gtk_widget_show (button);
 	
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 	button = gtk_radio_button_new_with_label (gtk_radio_button_get_group
-			(GTK_RADIO_BUTTON (button)), _("Level two"));
-	if (black_computer_level == 2)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-				TRUE);
+						 (GTK_RADIO_BUTTON (button)), _("Level two"));
+	if (black_computer_level == 2) {
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+	}
 	g_signal_connect (G_OBJECT (button), "toggled",
-			G_CALLBACK (black_computer_level_select),
-			(gpointer) 2);
+			  G_CALLBACK (black_computer_level_select), (gpointer) 2);
 	gtk_widget_show (button);
+
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 	button = gtk_radio_button_new_with_label (gtk_radio_button_get_group
-			(GTK_RADIO_BUTTON (button)), _("Level three"));
-	if (black_computer_level == 3)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-				TRUE);
+			                         (GTK_RADIO_BUTTON (button)), _("Level three"));
+	if (black_computer_level == 3) {
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+	}
 	g_signal_connect (G_OBJECT (button), "toggled",
-			G_CALLBACK (black_computer_level_select),
-			(gpointer) 3);
+			  G_CALLBACK (black_computer_level_select), (gpointer) 3);
 	gtk_widget_show (button);
+
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 
 	gtk_container_add (GTK_CONTAINER (frame), vbox);
@@ -391,54 +411,51 @@ void show_properties_dialog ()
 	gtk_widget_show (frame);
 	
 	vbox = gtk_vbox_new (TRUE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), GNOME_PAD_SMALL);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
 	gtk_widget_show (vbox);
 	
 	button = gtk_radio_button_new_with_label (NULL, _("Human"));
-	if (white_computer_level == 0)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-				TRUE);
+	if (white_computer_level == 0) {
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+	}
 	g_signal_connect (G_OBJECT (button), "toggled",
-			G_CALLBACK (white_computer_level_select),
-			(gpointer) 0);
+			  G_CALLBACK (white_computer_level_select), (gpointer) 0);
 	gtk_widget_show (button);
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 	button = gtk_radio_button_new_with_label (gtk_radio_button_get_group
-			(GTK_RADIO_BUTTON (button)), _("Level one"));
-	if (white_computer_level == 1)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-				TRUE);
+			                         (GTK_RADIO_BUTTON (button)), _("Level one"));
+	if (white_computer_level == 1) {
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+	}
 	g_signal_connect (G_OBJECT (button), "toggled",
-			G_CALLBACK (white_computer_level_select),
-			(gpointer) 1);
-	gtk_widget_show (button);
-		gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
-	button = gtk_radio_button_new_with_label (gtk_radio_button_get_group
-			(GTK_RADIO_BUTTON (button)), _("Level two"));
-	if (white_computer_level == 2)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-				TRUE);
-	g_signal_connect (G_OBJECT (button), "toggled",
-			G_CALLBACK (white_computer_level_select),
-			(gpointer) 2);
+			  G_CALLBACK (white_computer_level_select), (gpointer) 1);
 	gtk_widget_show (button);
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 	button = gtk_radio_button_new_with_label (gtk_radio_button_get_group
-			(GTK_RADIO_BUTTON (button)), _("Level three"));
-	if (white_computer_level == 3)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-				TRUE);
+			                         (GTK_RADIO_BUTTON (button)), _("Level two"));
+	if (white_computer_level == 2) {
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+	}
 	g_signal_connect (G_OBJECT (button), "toggled",
-			G_CALLBACK (white_computer_level_select),
-			(gpointer) 3);
+			  G_CALLBACK (white_computer_level_select), (gpointer) 2);
+	gtk_widget_show (button);
+	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+	button = gtk_radio_button_new_with_label (gtk_radio_button_get_group
+			                         (GTK_RADIO_BUTTON (button)), _("Level three"));
+	if (white_computer_level == 3) {
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+	}
+	g_signal_connect (G_OBJECT (button), "toggled",
+			  G_CALLBACK (white_computer_level_select), (gpointer) 3);
 	gtk_widget_show (button);
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 	
-	gtk_container_add (GTK_CONTAINER (frame), vbox);
+	gtk_container_add (GTK_CONTAINER (frame), (vbox));
 
 	gtk_table_attach (GTK_TABLE (table), frame, 1, 2, 0, 1,
 			  GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
 			  6, 6);
+
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table, label);
 
 	/* Animation tab */
@@ -458,27 +475,30 @@ void show_properties_dialog ()
 	gtk_widget_show (vbox);
 	
 	button = gtk_radio_button_new_with_label (NULL, _("None"));
-	if (animate == 0)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-				TRUE);
+
+	if (animate == 0) {
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+	}
 	g_signal_connect (G_OBJECT (button), "toggled",
 			  G_CALLBACK (animate_select), (gpointer) 0);
 	gtk_widget_show (button);
+
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 	button = gtk_radio_button_new_with_label (gtk_radio_button_get_group
 			(GTK_RADIO_BUTTON (button)), _("Partial"));
-	if (animate == 1)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-				TRUE);
+	if (animate == 1) {
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+	}
 	g_signal_connect (G_OBJECT (button), "toggled",
-			G_CALLBACK (animate_select), (gpointer) 1);
-		gtk_widget_show (button);
+			  G_CALLBACK (animate_select), (gpointer) 1);
+	gtk_widget_show (button);
+
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 	button = gtk_radio_button_new_with_label (gtk_radio_button_get_group
 			                         (GTK_RADIO_BUTTON (button)), _("Complete"));
-	if (animate == 2)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-				              TRUE);
+	if (animate == 2) {
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+	}
 	g_signal_connect (G_OBJECT (button), "toggled",
 			  G_CALLBACK (animate_select), (gpointer) 2);
 	gtk_widget_show (button);
@@ -493,10 +513,8 @@ void show_properties_dialog ()
 	vbox = gtk_vbox_new (TRUE, 0);
 	gtk_widget_show (vbox);
 	
-
 	button = gtk_check_button_new_with_label (_("Flip final results"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-			t_flip_final);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), t_flip_final);
 	g_signal_connect (G_OBJECT (button), "toggled",
 			  G_CALLBACK (flip_final_select), NULL);
 	gtk_widget_show (button);
@@ -524,7 +542,6 @@ void show_properties_dialog ()
 	gtk_table_attach (GTK_TABLE (table), vbox, 1, 2, 0, 1,
 			  GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
 			  6, 6);
-	
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table, label);
 	
 	gtk_widget_show (notebook);

@@ -1,3 +1,13 @@
+2002-01-06  Josh Barrow  <drleary@mac.com>
+
+	* properties.c: (load_properties), (apply_changes),
+	(quick_moves_select), (flip_final_select), (fill_menu),
+	(show_properties_dialog):
+	First try at porting this to GTK_DIALOG.  No longer do 
+	I believe that buttonless dialogs are the way to go.
+	Also, some whitespace fixes and horrible coding style 
+	fixes.
+
 2002-01-02  Josh Barrow  <drleary@mac.com>
 
 	* properties.c: (fill_menu):
