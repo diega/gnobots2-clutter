@@ -825,7 +825,6 @@ save_state (GnomeClient *client,
 	int i;  
 	
 	gconf_client_set_int (conf_client, KEY_SCORE, score, NULL);
-	gconf_client_set_int (conf_client, KEY_NSTONES, sync_stones ? 1 : nstones, NULL);
 	
 	buf= g_malloc (STONE_COLS*STONE_LINES+1);
 
@@ -846,9 +845,13 @@ restart (void)
 	gchar *buf;
 	struct ball *f = (struct ball*) field;
 	int i;
-	
+
+	/* It's too late to fix this for 2.4, but setting the score
+	 * from something the player can fiddle with is *not* a
+	 * good idea. */
 	score = gconf_client_get_int (conf_client, KEY_SCORE, NULL);
-	nstones = gconf_client_get_int (conf_client, KEY_NSTONES, NULL);
+	if (score < 0)
+		score = 0;
 	
 	buf = gconf_client_get_string (conf_client, KEY_FIELD, NULL);
 
@@ -856,8 +859,12 @@ restart (void)
 		for (i= 0; i < (STONE_COLS*STONE_LINES); i++) 
 		{
 			f[i].color= buf[i] - 'a';
+			if (f[i].color < 1)
+				f[i].color = 1;
+			if (f[i].color > ncolors)
+				f[i].color = ncolors;
 			f[i].tag  = 0;
-			f[i].frame= nstones ? (rand () % nstones) : 0;
+			f[i].frame= rand () % nstones;
 		}
 		g_free (buf);
 	}
@@ -946,6 +953,9 @@ main (int argc, char *argv [])
 		fname = gconf_client_get_string
 			(conf_client, KEY_TILESET, NULL);
 	}
+
+	if (!fname)
+		fname = g_strdup ("stones.png");
 
 	create_same_board (fname);
 
