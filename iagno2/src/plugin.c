@@ -13,6 +13,7 @@ iagno2_plugin_open (const gchar *plugin_file)
   tmp = (Iagno2Plugin *) g_malloc (sizeof (Iagno2Plugin));
 
   if (!(tmp->module = g_module_open (plugin_file, 0))) {
+    printf ("Boo!\n");
     printf ("Loading plugin %s failed.\n", plugin_file);
     return NULL;
   }

@@ -748,10 +748,13 @@ iagno2_initialize_players (int which)
       g_free (tmp_path);
       players[0] = iagno2_plugin_open (filename);
       g_free (filename);
-      /*
-      printf ("Player 1 is \"%s\"\n", players[0]->plugin_name ());
-      */
-      players[0]->plugin_init ();
+      if (players[0] != NULL) {
+        players[0]->plugin_init ();
+      } else {
+        g_free (properties->player1);
+        properties->player1 = g_strdup ("Human");
+        iagno2_properties_sync (properties);
+      }
     }
   }
 
@@ -772,10 +775,13 @@ iagno2_initialize_players (int which)
       g_free (tmp_path);
       players[1] = iagno2_plugin_open (filename);
       g_free (filename);
-      /*
-      printf ("Player 2 is \"%s\"\n", players[1]->plugin_name ());
-      */
-      players[1]->plugin_init ();
+      if (players[1] != NULL) {
+        players[1]->plugin_init ();
+      } else {
+        g_free (properties->player2);
+        properties->player2 = g_strdup ("Human");
+        iagno2_properties_sync (properties);
+      }
     }
   }
 }

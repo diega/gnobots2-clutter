@@ -222,6 +222,10 @@ move (ReversiBoard *board, gchar index, gchar player)
 
   board->board[index] = player;
 
+  board->moves[board->move_count].index = index;
+  board->moves[board->move_count].player = player;
+  board->move_count++;
+
   /*
   player = other_player (player);
   */

@@ -1,5 +1,15 @@
 2000-04-09  Ian Peters  <itp@gnu.org>
 
+	* plugins/swedishchef/*: Added a new plugin, code named "swedish chef",
+	  written by Peter Österlund
+	* plugins/Makefile.am: build new plugin
+	* reversi-iagno2/reversi.c: Keep track of the game history in the
+	  ReversiBoard structure
+	* src/iagno2.c: Avoid segfault if plugin specified in config file is not
+	  present, use Human instead
+
+2000-04-09  Ian Peters  <itp@gnu.org>
+
 	* src/plugin.c: plugin_busy_message is a mandatory symbol
 	* src/plugin.h: documented the expected symbols a plugin should provide
 
