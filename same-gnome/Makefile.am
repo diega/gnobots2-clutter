@@ -15,6 +15,7 @@ samegnome_SOURCES = 	\
 samegnome_LDADD = \
 	$(top_builddir)/libgnomeui/libgnomeui.la 	\
 	$(top_builddir)/libgnome/libgnome.la		\
+	$(GTK_LIBS)					\
         $(X_LIBS) $(x_libs)
 
 pixmap_DATA = planets.xpm blink-sync.xpm puyonew2-sync.xpm stones.xpm rotate.xpm
