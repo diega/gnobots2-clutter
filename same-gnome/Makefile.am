@@ -22,7 +22,9 @@ same_gnome_LDADD =		\
 	$(INTLLIBS)
 
 schemadir   = $(sysconfdir)/gconf/schemas
-schema_DATA = same-gnome.schemas
+schema_in_files = same-gnome.schemas.in
+schema_DATA = $(schema_in_files:.schemas.in=.schemas)
+@INTLTOOL_SCHEMAS_RULE@
 
 pixmap_DATA = planets.png blink-sync.png marbles.png \
 	stones.png rotate.png glass.png

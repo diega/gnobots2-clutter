@@ -5,8 +5,8 @@ Gamesdir = $(datadir)/applications
 appicondir=$(datadir)/pixmaps
 
 schemadir   = $(sysconfdir)/gconf/schemas
-schema_DATA = mahjongg.schemas
-
+schema_in_files = mahjongg.schemas.in
+schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 INCLUDES =						\
 	-I$(top_srcdir)/libgames-support		\
 	-I..						\
@@ -45,6 +45,7 @@ EXTRA_DIST = mahjongg.desktop.in $(pixmap_DATA) $(appicon_DATA) $(bg_DATA) \
 Games_in_files = mahjongg.desktop.in
 Games_DATA = $(Games_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
+@INTLTOOL_SCHEMAS_RULE@
 
 SUBDIRS = help
 
