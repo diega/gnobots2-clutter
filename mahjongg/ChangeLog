@@ -1,3 +1,7 @@
+2003-08-02  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/mahjongg.xml: Updated for 2.4, including the graphics.
+
 2003-07-27  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gnome-canvas-pimage.c: Remove dead code, silence the compiler.

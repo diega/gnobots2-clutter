@@ -2,8 +2,8 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY appversion "2.0">
-  <!ENTITY manrevision "2.0">
+  <!ENTITY appversion "2.4">
+  <!ENTITY manrevision "2.4">
   <!ENTITY date "March 2002">
   <!ENTITY app "<application>GNOME Mahjongg</application>">
   <!ENTITY appname "GNOME Mahjongg">
@@ -201,12 +201,13 @@
     <para>
       As an example, the highlighted tile, in the <link linkend="mahjongg-fig">
       figure below</link>, has six buttons.  The matching tile is the one which 
-      also has six buttons.  The tile is on the far left side on the bottom level.  
+      also has six buttons.  The tile is second from the right on the
+      second from bottom row.  
       If you wanted to match the tile on the top level, you need to look for the 
-      tile with the same green and red symbol.  Do you see a matching tile yet?  
-      There are three tiles, which are visible, that match the tile on the top 
-      level.  On the left side, three tiles to the right of the highlighted tile, 
-      is the matching tile.  You can't remove the pair yet because the tile isn't 
+      tile with the same green bamboo symbols.  Do you see a matching tile yet?  
+      There are two tiles, which are visible, that match the tile on the top 
+      level.  One is to the left and the other on the right. You can't
+      remove the tile on the left yet because the tile isn't 
       on the outside of the stack of tiles.  Later I'll explain more fully which 
       tiles can be removed and which tiles can't be removed even though they match.
       I'll let you find the other two matching tiles, which are visible, on your own.
@@ -313,11 +314,13 @@
 	    </para>
 	  </listitem>
 	</varlistentry>
-	<varlistentry>
-	  <term><guibutton>Hint</guibutton></term>
+	<varlistentry id="pause">
+	  <term><guibutton>Pause</guibutton></term>
 	  <listitem>
 	    <para>
-	      This button gives you a pair of matching tiles to remove.
+	      This button pauses the game.  When the game is paused, the clock, 
+	      at the bottom right corner of the <interface>Main Window</interface>, 
+	      stops and you cannot see any of the tile's faces.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -335,19 +338,15 @@
 	  <listitem>
 	    <para>
 	      This button replays your previous move, the <guibutton>Undo</guibutton> 
-	      button took back.  When you reach the state you started undoing, the 
-	      message <quote>No more redo!</quote> appears at the bottom left corner 
-	      of the <interface>Main Window</interface>.
+	      button took back.
 	    </para>
 	  </listitem>
 	</varlistentry>
-	<varlistentry id="pause">
-	  <term><guibutton>Pause</guibutton></term>
+	<varlistentry>
+	  <term><guibutton>Hint</guibutton></term>
 	  <listitem>
 	    <para>
-	      This button pauses the game.  When the game is paused, the clock, 
-	      at the bottom right corner of the <interface>Main Window</interface>, 
-	      stops and you cannot see any of the tile's faces.
+	      This button gives you a pair of matching tiles to remove.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -361,20 +360,17 @@
 	    </para>
 	  </listitem>
 	</varlistentry>
-	<varlistentry>
-	  <term><guibutton>Prefs</guibutton></term>
-	  <listitem>
-	    <para>
-	      This button displays the <link linkend="prefs">Preferences&hellip;
-	      </link> dialog.
-	    </para>
-	  </listitem>
-	</varlistentry>
+      </variablelist>
+      <para>
+      There status bar at the bottom of the window gives you
+      information on the current state of the game:
+      </para>
+      <variablelist>
 	<varlistentry>
 	  <term><guilabel>Tiles Left:</guilabel></term>
 	  <listitem>
 	    <para>
-	      This part of the <interface>Toolbar</interface> shows the number 
+	      This shows the number 
 	      of tiles remaining to be matched.
 	    </para>
 	  </listitem>
@@ -383,7 +379,7 @@
 	  <term><guilabel>Moves Left:</guilabel></term>
 	  <listitem>
 	    <para>
-	      This part of the <interface>Toolbar</interface> shows the number 
+	      This number 
 	      of possible matches you can make.
 	    </para>
 	  </listitem>
@@ -437,8 +433,11 @@
 		    <menuchoice>
 		      <guimenuitem>New game with seed&hellip;</guimenuitem>
 		    </menuchoice> &mdash; 
-		    This item brings up a dialog asking for a new seed.
-
+	      This button prompts you for a seed for the random number
+	      generator and then starts a new game. This lets you
+	      replay games you have played in the past (the seed of
+	      the current game is displayed in the title-bar of the
+	      window).
 		    <figure id="seed-fig">
 		      <title>Select Game seed</title>
 		      <screenshot>
@@ -462,6 +461,15 @@
 		      <guimenuitem>Restart game</guimenuitem>
 		    </menuchoice> &mdash; 
 		    This item restarts the game with a predefined seed.
+		  </para>
+		</listitem>
+		<listitem>
+		  <para>
+		    <menuchoice>
+		      <guimenuitem>Pause game</guimenuitem>
+		    </menuchoice> &mdash; 
+                    This pauses the game, stopping the clock and
+		    hiding the tiles.
 		  </para>
 		</listitem>
 		<listitem>
@@ -518,21 +526,6 @@
 		    time it took to complete the game, and the date the game was 
 		    completed.
 
-		    <figure id="scores-fig">
-		      <title>Top Ten Scores Dialog</title>
-		      <screenshot>
-			 <mediaobject> 
- 			   <imageobject>
-			  <imagedata fileref="figures/scores.png" format="PNG"
-				 srccredit="Eric Baudais"/>
-			</imageobject>
- 			   <textobject> 
- 			     <phrase>Scores Dialog.</phrase> 
- 			   </textobject> 
- 			 </mediaobject>
-		      </screenshot>
-		    </figure>
-
 		  </para>
 		</listitem>
 		<listitem>
@@ -560,13 +553,13 @@
 		<listitem>
 		  <para>
 		    <menuchoice>
-		      <guimenuitem>Show Tool Bar</guimenuitem>
+		      <guimenuitem>Toolbar</guimenuitem>
 		    </menuchoice> &mdash; 
 		    This item determines whether the <link linkend="toolbar">
 		    <interface>toolbar</interface></link> 
-		    is shown or not.  If the box is depressed, the <link linkend="toolbar">
+		    is shown or not.  If the item is checked, the <link linkend="toolbar">
 		    <interface>toolbar</interface></link> is shown in the 
-		    last place you put it.  If the box is raised, the 
+		    last place you put it.  If the item is unchecked, the 
 		    <link linkend="toolbar"><interface>toolbar</interface>
 		    </link> is not shown.
 		  </para>
@@ -592,20 +585,23 @@
 	      <itemizedlist mark="opencircle">
 		<listitem>
 		  <para>
+                      <shortcut>
+			<keysym>F1</keysym>
+		      </shortcut>
+		    <menuchoice>
+		      <guimenuitem>Contents</guimenuitem>
+		    </menuchoice> &mdash; 
+		    This item shows this manual.
+		  </para>
+		</listitem>
+		<listitem>
+		  <para>
 		    <menuchoice>
 		      <guimenuitem>About&hellip;</guimenuitem>
 		    </menuchoice> &mdash; 
 		    This item gives you some basic information about 
 		    <application>GNOME Mahjongg</application>, such as 
 		    the author's names and the application version number.
-		  </para>
-		</listitem>
-		<listitem>
-		  <para>
-		    <menuchoice>
-		      <guimenuitem>Manual</guimenuitem>
-		    </menuchoice> &mdash; 
-		    This item shows this manual.
 		  </para>
 		</listitem>
 	      </itemizedlist>
@@ -643,13 +639,7 @@
     </figure>
 
     <para>
-      The box labeled <guilabel>Make it the default</guilabel> can be toggled to 
-      make the option above it the default.  This will make your customized settings appear 
-      everytime you start <application>GNOME Mahjongg</application>.  If the 
-      box is depressed and you click the <guibutton>OK</guibutton> button, the 
-      option will become the default setting.  When you enter the <interface>
-      Preferences&hellip;</interface> dialog again, the box will be raised.  
-      If the box is raised, the default settings do not change.
+      All the options are applied and saved immediately.
     </para>
     
     <para>
@@ -683,24 +673,8 @@
 	  <para>
 	    <guilabel>Background:</guilabel> &mdash; 
 	    This item lets you change the color of the background 
-	    by bringing up the <link linkend="color-fig"><interface>
-	    color</interface> dialog</link> to choose a custom color.
-
-	    <figure id="color-fig">
-	      <title>Color Dialog</title>
-	      <screenshot>
-		 <mediaobject> 
-    <imageobject>
-  <imagedata fileref="figures/color.png" format="PNG"
-			 srccredit="Eric Baudais"/>
-		</imageobject>
-    <textobject> 
-      <phrase>Color dialog.</phrase> 
-    </textobject> 
-  </mediaobject>
-	      </screenshot>
-	    </figure>
-
+	    by bringing up the <interface>
+	    color</interface> dialog to choose a custom color.
 	  </para>
 	</listitem>
 	<listitem>
@@ -713,35 +687,6 @@
 	    If the box is raised, a message appears in the lower left 
 	    corner of the <interface>Main Window</interface> saying, 
 	    <quote>Tiles don't match !</quote>
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>
-	    <guilabel>Confirm before quitting game</guilabel> &mdash; 
-	    This box toggles whether you see a <link linkend="confirm-fig">
-	    <interface>Confirmation</interface> dialog</link>, when you 
-	    try to quit the game.  If the box is depressed, the <interface>
-	    Confirmation</interface> dialog appears asking you, 
-	    <quote>Really exit GNOME Mahjongg?</quote>  If the box is raised, 
-	    you exit the game automatically when you click the 
-	    <link linkend="quit"><guimenuitem>Exit</guimenuitem> menu 
-	    item</link>.
-
-	  <figure id="confirm-fig">
-	    <title>Confirmation Dialog</title>
-	    <screenshot>
-	       <mediaobject> 
-    <imageobject>
-  <imagedata fileref="figures/confirm.png" format="PNG"
-		       srccredit="Eric Baudais"/>
-	      </imageobject>
-    <textobject> 
-      <phrase>Confirmation dialog.</phrase> 
-    </textobject> 
-  </mediaobject>
-	    </screenshot>
-	  </figure>
-
 	  </para>
 	</listitem>
       </itemizedlist>
