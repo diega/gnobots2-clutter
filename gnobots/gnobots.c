@@ -695,7 +695,7 @@ gpointer  data
                                      GNOME_STOCK_BUTTON_NO,
                                      NULL);
         gnome_dialog_set_default (GNOME_DIALOG(box), 0);
-        gnome_dialog_set_modal (GNOME_DIALOG(box));
+        gtk_window_set_modal (GTK_WINDOW(box), TRUE);
         gtk_signal_connect (GTK_OBJECT(box), "clicked",
                            GTK_SIGNAL_FUNC(really_new_cb), NULL);
         gtk_widget_show(box);
@@ -720,7 +720,7 @@ gpointer  data
                                      GNOME_STOCK_BUTTON_NO,
                                      NULL);
         gnome_dialog_set_default (GNOME_DIALOG(box), 0);
-        gnome_dialog_set_modal (GNOME_DIALOG(box));
+        gtk_window_set_modal (GTK_WINDOW(box), TRUE);
         gtk_signal_connect (GTK_OBJECT(box), "clicked",
                            GTK_SIGNAL_FUNC(really_quit_cb), NULL);
         gtk_widget_show(box);
@@ -1216,7 +1216,7 @@ int safe
 								GNOME_MESSAGE_BOX_INFO, 
 								GNOME_STOCK_BUTTON_OK, NULL);
 	}
-	gnome_dialog_set_modal(GNOME_DIALOG(box));
+	gtk_window_set_modal(GTK_WINDOW(box), TRUE);
 
 	gtk_widget_show(box);
 }
@@ -1232,7 +1232,7 @@ void show_rollover_message(
 _("Congratulations, you have defeated the Robots!\nBut can you do it again?"), 
 								GNOME_MESSAGE_BOX_INFO, 
 								GNOME_STOCK_BUTTON_OK, NULL);
-	gnome_dialog_set_modal(GNOME_DIALOG(box));
+	gtk_window_set_modal(GTK_WINDOW(box), TRUE);
 
 	gtk_widget_show(box);
 }
