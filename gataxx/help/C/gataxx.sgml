@@ -1,4 +1,4 @@
-<!DOCTYPE Article PUBLIC "-//GNOME//DTD DocBook PNG Variant V1.0//EN"[
+<!DOCTYPE Article PUBLIC "-//GNOME//DTD DocBook PNG Variant V1.1//EN"[
       <!ENTITY version "1.2.0">
 ]>
 
@@ -33,8 +33,7 @@
     by the Free Software Foundation with no Invariant Sections, no
     Front-Cover Texts, and no Back-Cover Texts. You may obtain a copy
     of the <citetitle>GNU Free Documentation License</citetitle> from
-    the Free Software Foundation by visiting <ulink type="http"
-    url="http://www.fsf.org">their Web site</ulink> or by writing to
+    the Free Software Foundation by visiting <ulink url="http://www.fsf.org" type="http">their Web site</ulink> or by writing to
     <address>
      Free Software Foundation, Inc.
      <street>59 Temple Place</street> - Suite 330
@@ -87,7 +86,7 @@
  <!-- This section should describe basic usage of the application. -->
 
   <sect1 id="usage">
-    <title>Using Gataxx</title>
+    <title>Playing Gataxx</title>
     <para>
       The basic rules of <application>Gataxx</application> are quite
       easy to learn, especially if you are familiar with other
@@ -97,7 +96,7 @@
       at all on the board.
     </para>
     <para>
-      Although <application>Gataxx</application>is a two player game,
+      Although <application>Gataxx</application> is a two player game,
       one or both players can be controlled by the computer.
   </para>
 
@@ -117,8 +116,7 @@
      <title>Gataxx Main Window</title>
      <screenshot>
       <screeninfo>Gataxx Main Window</screeninfo>
-      <graphic fileref="user-guide-images/gataxx-startgame" format="png"
-       srccredit="aaron weber">
+      <graphic fileref="fig/gataxx-startgame" format="png" srccredit="aaron weber">
       </graphic>
      </screenshot>
     </figure>
@@ -171,8 +169,7 @@
      <title>Available Moves</title>
      <screenshot>
       <screeninfo>Gataxx Main Window</screeninfo>
-      <graphic fileref="user-guide-images/gataxx-legalmoves" format="png"
-       srccredit="aaron weber">
+      <graphic fileref="fig/gataxx-legalmoves" format="png" srccredit="aaron weber">
       </graphic>
      </screenshot>
     </figure>
@@ -196,29 +193,34 @@
      <listitem>
       <para>
        This menu contains three items:
+      <itemizedlist>	
+	<listitem>
+	  <para>
+            <menuchoice> 
+	       <shortcut><keysym>Ctrl-N</keysym></shortcut>
+               <guimenuitem>New Game</guimenuitem>
+	    </menuchoice>
+           </para>
+         </listitem>     
+       
+	<listitem>
+	  <para>
+            <menuchoice>
+               <shortcut><keysym>Ctrl-Z</keysym></shortcut>
+               <guimenuitem>Undo Move</guimenuitem>
+            </menuchoice>
+        </para>
+       </listitem>
 
-       <menuchoice> 
-	<shortcut>
-         <keysym>Ctrl-N</keysym>
-        </shortcut>
-        <guimenuitem>New Game</guimenuitem>
-         </menuchoice>
-, 
-      
-        <menuchoice>
-        <shortcut>
-         <keysym>Ctrl-Z</keysym>
-        </shortcut>
-        <guimenuitem>Undo Move</guimenuitem>
-       </menuchoice>
-, and
-       <menuchoice>
-        <shortcut>
-         <keysym>Ctrl-Q</keysym>
-        </shortcut>
-        <guimenuitem>Exit</guimenuitem>
-       </menuchoice>
-, all of which are quite self-explanatory.
+       	<listitem>
+	<para>
+          <menuchoice>
+            <shortcut><keysym>Ctrl-Q</keysym></shortcut>
+            <guimenuitem>Exit</guimenuitem>
+          </menuchoice>
+        </para>
+       </listitem>
+     </itemizedlist>
       </para>
      </listitem>
     </varlistentry>
@@ -248,14 +250,14 @@
        <itemizedlist>
         <listitem>
          <para>
-          <guimenuitem>Manual</guimenuitem> &mdash;
+          <guimenuitem>Manual</guimenuitem>&mdash;
           shows this manual.
          </para>
         </listitem>
 
         <listitem>
          <para>
-          <guimenuitem>About</guimenuitem> &mdash; shows
+          <guimenuitem>About</guimenuitem>&mdash; shows
           basic information about
           <application>Gataxx</application>, such as
           the author's name and the application version number.
@@ -278,15 +280,14 @@
    To change the application settings, select
    <guimenuitem>Preferences&hellip;</guimenuitem> from the
    <guimenu>Settings</guimenu> menu. This opens the
-   <interface>Preferences</interface> dialog, shown in <xref
-   linkend="preferences-fig">.
+   <interface>Preferences</interface> dialog, shown in <xref linkend="preferences-fig">.
   </para>
 
   <figure id="preferences-fig">
    <title>Preferences Dialog</title>
    <screenshot>
     <screeninfo>Preferences dialog</screeninfo>
-    <graphic fileref="user-guide-images/gataxx-prefs" format="png">
+    <graphic fileref="fig/gataxx-prefs" format="png">
     </graphic>
    </screenshot>
   </figure>
@@ -329,22 +330,22 @@
 
     <listitem>
      <para>
-      None&mdash; If this button is checked, there will be no
-      animation when discs change hands.
+      <guilabel>None</guilabel>&mdash; If this button is checked,
+      there will be no animation when discs change hands.
      </para>
     </listitem>
 
     <listitem>
      <para>
-      Partial &mdash; If this button is checked, there will be some
-      animation when discs change hands.
+      <guilabel>Partial</guilabel>&mdash; If this button is checked,
+      there will be some animation when discs change hands.
      </para>
     </listitem>
 
     <listitem>
      <para>
-      Complete &mdash; Select this button if you want to see the discs
-      turn over as they are captured.
+      <guilabel>Complete</guilabel>&mdash; Select this button if you
+      want to see the discs turn over as they are captured.
      </para>
     </listitem>
 
@@ -375,7 +376,7 @@
     <guibutton>OK</guibutton> to apply the changes and close the
     <interface>Properties</interface> dialog. To cancel the changes
     and return to previous values, click the
-    <guibutton>Cancel</guibutton> button.
+    <guibutton>Close</guibutton> button.
   </para>
 
   </sect1>
@@ -402,13 +403,11 @@
   <para>
    <application>Gataxx</application> was written by Chris Rogers
    (<email>gandalf@darkcorner.net</email>). To find more information about
-   <application>Gataxx</application>, please visit the <ulink
-   url="http://www.darkcorner.net/projects/gataxx/" type="http">Gataxx Web
+   <application>Gataxx</application>, please visit the <ulink url="http://www.darkcorner.net/projects/gataxx/" type="http">Gataxx Web
    page</ulink>.  Please send all comments, suggestions, and bug
    reports to the <ulink url="http://bugs.gnome.org" type="http">GNOME
    bug tracking database</ulink>. (Instructions for submitting bug
-   reports can be found <ulink
-   url="http://bugs.gnome.org/Reporting.html" type="http">
+   reports can be found <ulink url="http://bugs.gnome.org/Reporting.html" type="http">
    on-line</ulink>.) If you are using
    GNOME 1.1 or later, you can also use <application>Bug Report
    Tool</application> (<command>bug-buddy</command>), available in the
@@ -419,11 +418,9 @@
   <para>
    This manual was written by Aaron Weber
    (<email>aaron@helixcode.com</email>). Please send all comments and
-   suggestions regarding this manual to the <ulink type="http"
-   url="http://www.gnome.org/gdp">GNOME Documentation Project</ulink> 
+   suggestions regarding this manual to the <ulink url="http://www.gnome.org/gdp" type="http">GNOME Documentation Project</ulink> 
    by sending an email to <email>docs@gnome.org</email>. You can also
-   add your comments online by using the <ulink type="http"
-   url="http://www.gnome.org/gdp/doctable/">GNOME Documentation Status
+   add your comments online by using the <ulink url="http://www.gnome.org/gdp/doctable/" type="http">GNOME Documentation Status
    Table</ulink>.
   </para>
 
@@ -462,8 +459,7 @@
    included as an appendix to the <citetitle>GNOME Users
    Guide</citetitle>.  You may also obtain a copy of the
    <citetitle>GNU General Public License</citetitle> from the Free
-   Software Foundation by visiting <ulink type="http"
-   url="http://www.fsf.org">their Web site</ulink> or by writing to
+   Software Foundation by visiting <ulink url="http://www.fsf.org" type="http">their Web site</ulink> or by writing to
    <address>
     Free Software Foundation, Inc.
     <street>59 Temple Place</street> - Suite 330
