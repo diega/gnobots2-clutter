@@ -1,3 +1,9 @@
+2003-03-07  Ross Burton  <ross@burtonini.com>
+
+	* Makefile.am: Link to the shared games library.
+
+	* tetris.cpp: Add a GConf sanity check.
+
 2003-02-19  Alex Duggan  <aldug@astrolinux.com>
 
 	* tetris.cpp: use a close button in the preferences dialog

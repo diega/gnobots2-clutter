@@ -25,6 +25,7 @@
 #include "preview.h"
 #include "scoreframe.h"
 
+#include <games-gconf.h>
 #include <gdk/gdkkeysyms.h>
 #include <config.h>
 #include <dirent.h>
@@ -120,8 +121,11 @@ Tetris::Tetris(int cmdlLevel):
 
 	/* init gconf */
 	gconf_client = gconf_client_get_default ();
+	if (!games_gconf_sanity_check_string (gconf_client, "")) {
+		exit(1);
+	}
 	gconf_client_add_dir (gconf_client_get_default (), "/apps/gnometris/options", GCONF_CLIENT_PRELOAD_NONE, NULL);
-        gconf_client_notify_add (gconf_client_get_default (), "/apps/gnometris/options", gconfNotify, this, NULL, NULL);
+	gconf_client_notify_add (gconf_client_get_default (), "/apps/gnometris/options", gconfNotify, this, NULL, NULL);
 
 	initOptions ();
 

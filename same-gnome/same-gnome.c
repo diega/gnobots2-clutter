@@ -21,6 +21,7 @@
 #include <libgnomeui/gnome-window-icon.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gconf/gconf-client.h>
+#include <games-gconf.h>
 
 
 #define STONE_SIZE 40
@@ -839,6 +840,9 @@ main (int argc, char *argv [])
 
 	/* Get the default GConfClient */
 	conf_client = gconf_client_get_default ();
+	if (!games_gconf_sanity_check_string (conf_client, "/apps/same-gnome/tileset")) {
+		return 1;
+	}
 
 	srand (time (NULL));
 

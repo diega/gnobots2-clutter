@@ -1,3 +1,7 @@
+2003-03-07  Ross Burton  <ross@burtonini.com>
+
+	* gataxx.c: Add a GConf sanity check.
+
 2003-02-09  Ross Burton  <ross@burtonini.com>
 
 	* properties.c (load_properties): g_strdup() a literal string so

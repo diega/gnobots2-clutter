@@ -5,6 +5,7 @@ Gamesdir = $(datadir)/applications
 SUBDIRS = help
 
 INCLUDES = -I.. -I$(srcdir)/..		\
+	-I$(top_srcdir)/libgames-support                \
 	$(GNOME_GAMES_CFLAGS) \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	-DDATADIR=\""$(datadir)"\"		   \
@@ -18,6 +19,7 @@ same_gnome_SOURCES = 	\
 	same-gnome.c
 
 same_gnome_LDADD =		\
+	../libgames-support/libgames-support.la \
 	$(GNOME_GAMES_LIBS)      \
 	$(INTLLIBS)
 

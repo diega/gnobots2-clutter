@@ -1,3 +1,9 @@
+2003-03-07  Ross Burton  <ross@burtonini.com>
+
+	* Makefile.am: Link to the shared games library.
+
+	* same-gnome.c (main): Add GConf sanity check.
+
 2002-12-19  Ross Burton  <ross@burtonini.com>
 
 	* same-gnome.c: Fix a typo.

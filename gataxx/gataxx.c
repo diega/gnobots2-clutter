@@ -30,6 +30,7 @@
 #include <string.h>
 #include <games-clock.h>
 #include <gconf/gconf-client.h>
+#include <games-gconf.h>
 
 #include "gataxx.h"
 #include "ataxx.h"
@@ -903,6 +904,9 @@ int main(int argc, char **argv) {
 
     gconf_init(argc, argv, NULL);
     gataxx_gconf_client = gconf_client_get_default();
+    if (!games_gconf_sanity_check_string (gataxx_gconf_client, "/apps/gataxx/tileset")) {
+      return 1;
+    }
     gconf_client_add_dir(gataxx_gconf_client, "/apps/gataxx",
                          GCONF_CLIENT_PRELOAD_NONE, NULL);
     gconf_client_notify_add(gataxx_gconf_client, "/apps/gataxx",
