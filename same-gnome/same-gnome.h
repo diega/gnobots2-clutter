@@ -24,7 +24,7 @@
 
 #define THEME_VERSION "2.10"
 
-#define MAX_COLOURS 5
+#define MAX_COLOURS 4
 
 #define GCONF_THEME_KEY "/apps/same-gnome/tileset"
 #define GCONF_SIZE_KEY  "/apps/same-gnome/size"

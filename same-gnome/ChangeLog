@@ -1,3 +1,8 @@
+2005-01-10  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* stones.png: Expand to have four colours. Also pad out to have 16
+	frames. There is still a glitch in the animation though.
+
 2005-01-09  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* same-gnome.c:
