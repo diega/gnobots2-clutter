@@ -663,7 +663,7 @@ mapset_changed_cb (GConfClient *client,
 		g_free (mapset_tmp);
 	
 	dialog = gtk_message_dialog_new (
-		NULL,
+		GTK_WINDOW (window),
 		GTK_DIALOG_MODAL,
 		GTK_MESSAGE_INFO,
 		GTK_BUTTONS_CLOSE,

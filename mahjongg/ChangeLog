@@ -1,3 +1,8 @@
+2002-06-24  Ross Burton  <ross@burtonini.com>
+
+	* mahjongg.c (mapset_changed_cb): Tell the dialog that it has a
+	parent.
+
 2002-06-05  Bastien Nocera  <hadess@hadess.net>
 
 	* mahjongg.c: (set_map_selection): thingo might get double-freed
