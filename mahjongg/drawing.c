@@ -283,7 +283,8 @@ static void recreate_tile_images (void)
       tilepreimage = NULL;
 
       g_free (warning_message);
-      warning_message = g_strdup (_("This image may be corrupt."));
+      warning_message = g_strdup (_("The selected theme failed to render.\n\n"
+                                    "Please check that Mahjongg is installed correctly."));
     }  
   
   } 
@@ -425,9 +426,11 @@ void load_images (gchar * file)
 					  "mahjongg/postmodern.svg", TRUE, NULL);
 
     if (!filename) {
-      warning_message = g_strdup_printf (_("Unable to locate file: '%s'\n\nAlso, the default tile set could not be found."), file);
+      warning_message = g_strdup_printf (_("Unable to locate file:\n'%s'\n\n"
+                                           "Please check that Mahjongg is installed correctly."), file);
     } else {
-      warning_message = g_strdup_printf (_("Unable to locate file: '%s'\n\nThe default tile set will be loaded instead."), file);
+      warning_message = g_strdup_printf (_("Unable to locate file:\n'%s'\n\n"
+                                           "The default tile set will be loaded instead."), file);
     }
 
   }
@@ -443,7 +446,8 @@ void load_images (gchar * file)
     /* This usually happens with bad images or a missing image loader. */
     if (!tilepreimage) {
       g_free (warning_message);
-      warning_message = g_strdup_printf (_("Unable to load file: '%s'\n\nThis tile set was found but did not load."), file);
+      warning_message = g_strdup_printf (_("Unable to render file:\n'%s'\n\n"
+                                           "Please check that Mahjongg is installed correctly."), file);
     }
 
   }

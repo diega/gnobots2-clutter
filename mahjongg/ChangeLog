@@ -1,3 +1,8 @@
+2005-03-17  Richard Hoelscher  <rah@rahga.com>
+
+	* drawing.c (load_images), (recreate_tile_images): 
+	Make image warnings more consistent among gnome-games.
+
 2005-03-07  Richard Hoelscher  <rah@rahga.com>
 
 	* mahjongg.c (mapset_changed_cb): Switch tilesets without the dialog
