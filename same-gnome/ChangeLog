@@ -1,3 +1,9 @@
+2002-04-22  Bastien Nocera  <hadess@hadess.net>
+
+	* same-gnome.c: (mark_balls), (set_score):
+	fix two mem leaks in gtk_label_set_text stuff
+	patch by Jorgen Viksell <jorgen.viksell@telia.com>
+
 2002-04-19  Bastien Nocera  <hadess@hadess.net>
 
 	* same-gnome.c: (mark_balls), (set_score), (set_selection), (main):

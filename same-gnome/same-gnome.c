@@ -182,6 +182,7 @@ mark_balls (int x, int y)
 		ball_timeout_id = gtk_timeout_add (100, move_tagged_balls, 0);
 		b = g_strdup_printf ("%.2d", tagged_count);
 		gtk_label_set_text (GTK_LABEL(markedw), b);
+		g_free (b);
 	} else
 		gtk_label_set_text (GTK_LABEL(markedw), "00");
 }
@@ -252,6 +253,7 @@ set_score (int new_score)
 	score = new_score;
 	b = g_strdup_printf ("%.5d", score);
 	gtk_label_set_text (GTK_LABEL(scorew), b);
+	g_free (b);
 }
 
 static void
