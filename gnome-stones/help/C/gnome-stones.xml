@@ -1,4 +1,6 @@
-<!DOCTYPE Article PUBLIC "-//GNOME//DTD DocBook PNG Variant V1.1//EN"[
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+    "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 <!ENTITY version "1.2.0">
 <!-- Template Version: 1.0.1 (do not remove this line) -->
 ]>
@@ -6,7 +8,7 @@
 
 <article id="index">
 
- <artheader>
+ <articleinfo>
   <title>GNOME Stones manual</title>
   <copyright>
    <year>2000</year>
@@ -25,7 +27,7 @@ Permission is granted to copy, distribute and/or modify this document under the 
 </legalnotice>
 
   <releaseinfo>This is version 1.0 of GNOME Stones manual.  </releaseinfo>
- </artheader>
+ </articleinfo>
 
  <sect1 id="intro">
   <title>Introduction</title>
@@ -87,15 +89,21 @@ Permission is granted to copy, distribute and/or modify this document under the 
     <para> 
       Starting <application>GNOME Stones</application> opens the 
       <interface>Main window</interface>, shown in 
-      <xref linkend="mainwindow-fig">. The window is initially full of
+      <xref linkend="mainwindow-fig"/>. The window is initially full of
       little squares.
      </para>
 
      <figure id="mainwindow-fig">
       <title>GNOME Stones Main Window</title> 
       <screenshot>
-       <screeninfo>GNOME Stones Main Window</screeninfo> 
-       <graphic fileref="figures/main-start" format="png" srccredit="ME"></graphic>
+	 <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/main-start.png" format="PNG" srccredit="ME"/>
+      </imageobject>
+    <textobject> 
+      <phrase>GNOME Stones Main Window.</phrase> 
+    </textobject> 
+  </mediaobject>
       </screenshot> 
      </figure>
 
@@ -105,13 +113,19 @@ Permission is granted to copy, distribute and/or modify this document under the 
         <guisubmenu>Game</guisubmenu> 
         <guimenuitem>New Game</guimenuitem>
        </menuchoice>, the window will then change to look something
-       like <xref linkend="playing-fig">
+       like <xref linkend="playing-fig"/>
 
       <figure id="playing-fig">
        <title>A GNOME Stones Game</title> 
        <screenshot> 
-        <screeninfo>A GNOME Stones Game</screeninfo> 
-        <graphic fileref="figures/main-game" format="png" srccredit="ME"></graphic> 
+        <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/main-game.png" format="PNG" srccredit="ME"/>
+      </imageobject>
+    <textobject> 
+      <phrase>A GNOME Stones Game.</phrase> 
+    </textobject> 
+  </mediaobject>
        </screenshot>
       </figure>
 
@@ -233,15 +247,20 @@ Permission is granted to copy, distribute and/or modify this document under the 
      <guimenuitem>Preferences...</guimenuitem>
     </menuchoice>.  
     This opens the <interface>Preferences</interface> dialog, shown 
-    in <xref linkend="preferences-fig">.
+    in <xref linkend="preferences-fig"/>.
   </para>
 
   <figure id="preferences-fig">
    <title>Preferences Dialog</title>
    <screenshot>
-    <screeninfo>Preferences Dialog</screeninfo> 
-    <graphic fileref="figures/preferences-main" format="png" srccredit="ME"> 
-    </graphic>
+     <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/preferences-main.png" format="PNG" srccredit="ME"/> 
+       </imageobject>
+    <textobject> 
+      <phrase>Preferences Dialog.</phrase> 
+    </textobject> 
+  </mediaobject>
    </screenshot>
   </figure>
 
@@ -270,7 +289,7 @@ Permission is granted to copy, distribute and/or modify this document under the 
    </variablelist> 
   </para>
   <para> 
-    The properties in the <guilabel>Joystick</guilabel> (shown in <xref linkend="joystick-preferences-fig"> preferences tab are:
+    The properties in the <guilabel>Joystick</guilabel> (shown in <xref linkend="joystick-preferences-fig"/> preferences tab are:
   </para>
    <variablelist>
     <varlistentry> 
@@ -297,8 +316,14 @@ Permission is granted to copy, distribute and/or modify this document under the 
    <title>Joystick Preferences</title>
    <screenshot>
     <screeninfo>Joystick Preferences</screeninfo> 
-    <graphic fileref="figures/preferences-joystick" format="png" srccredit="ME"> 
-    </graphic>
+     <mediaobject> 
+    <imageobject>
+  <imagedata fileref="figures/preferences-joystick.png" format="PNG" srccredit="ME"/> 
+       </imageobject>
+    <textobject> 
+      <phrase>Joystick Preferences.</phrase> 
+    </textobject> 
+  </mediaobject>
    </screenshot>
   </figure>
   <para>
