@@ -37,7 +37,7 @@ mahjongg_LDADD =					\
 	../libgames-support/libgames-support.la		\
 	$(INTLLIBS)
 
-map_DATA = 
+map_DATA = mahjongg.map
 
 pixmap_DATA = smooth.png postmodern.svg
 

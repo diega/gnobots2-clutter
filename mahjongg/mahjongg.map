@@ -1,0 +1,93 @@
+<!-- Coordinates are for the top left corner of the tile.
+     All axes count from 0.
+     x/height is vertically down the screen.
+     y/width is horizontally across the screen.
+     z/depth is vertically out of the screen. 
+     top, bottom, left and right refer to the screen, not a physical board. -->
+
+<!-- Layer is optional, it is there to save repeating z= attributes
+     everywhere -->
+
+<!-- You can have any number of maps under a mahjongg element (you can 
+     also have any number of mahjongg elements between other XML, but
+     that isn't elegant. -->
+
+<!-- This isn't really XML, it is what g_markup will parse. -->
+
+<mahjongg>
+  <map name="The Ziggurat" scorename="ziggurat">
+    <layer z="0">
+      <column x="0" top="0" bottom="7"/>
+      <block left="1" right="3" top="3" bottom="4"/>
+      <column x="2.5" top="0" bottom="2"/>
+      <column x="2.5" top="5" bottom="7"/>
+      <row y="0" left="3.5" right="10.5"/>
+      <row y="7" left="3.5" right="10.5"/>
+      <block left="6.5" right="7.5" top="1" bottom="2"/>
+      <block left="6.5" right="7.5" top="5" bottom="6"/>
+      <column x="11.5" top="0" bottom="2"/>
+      <column x="11.5" top="5" bottom="7"/>
+      <block left="11" right="13" top="3" bottom="4"/>
+      <column x="14" top="0" bottom="7"/>
+    </layer>
+    <layer z="1">
+      <tile x="3" y="0.5"/>
+      <tile x="11" y="0.5"/>
+      <row y="1" left="6.5" right="7.5"/>
+      <block left="1" right="3" top="3" bottom="4"/>
+      <block left="11" right="13" top="3" bottom="4"/>
+      <row y="6" left="6.5" right="7.5"/>
+      <tile x="3" y="6.5"/>
+      <tile x="11" y="6.5"/>
+    </layer>
+    <layer z="2">
+      <tile x="3" y="0.5"/>
+      <tile x="11" y="0.5"/>
+      <tile y="1" x="7"/>
+      <block left="2" right="4" top="3" bottom="4"/>
+      <block left="10" right="12" top="3" bottom="4"/>
+      <tile y="6" x="7"/>
+      <tile x="3" y="6.5"/>
+      <tile x="11" y="6.5"/>      
+    </layer>
+    <block z="3" left="3" right="11" top="3" bottom="4"/>
+    <block z="4" left="4" right="10" top="3" bottom="4"/>
+    <block z="5" left="5" right="9" top="3" bottom="4"/>
+  </map>
+  <map name="Four Bridges" scorename="bridges">
+    <layer z="0">
+      <row y="0" left="1" right="11"/>
+      <row y="1" left="2" right="5"/>
+      <row y="1" left="7" right="10"/>
+      <row y="2" left="2" right="10"/>
+      <row y="3" left="0" right="12"/>
+      <row y="4" left="1.5" right="3.5"/>
+      <row y="4" left="8.5" right="10.5"/>
+      <row y="5" left="0" right="12"/>
+      <row y="6" left="2" right="10"/>
+      <row y="7" left="2" right="5"/>
+      <row y="7" left="7" right="10"/>
+      <row y="8" left="1" right="11"/>
+    </layer>
+    <layer z="1">
+      <block left="2.5" right="4.5" top="0.5" bottom="2.5"/>
+      <block left="7.5" right="9.5" top="0.5" bottom="2.5"/>
+      <block left="2.5" right="4.5" top="5.5" bottom="7.5"/>
+      <block left="7.5" right="9.5" top="5.5" bottom="7.5"/>
+    </layer>
+    <layer z="2">
+      <block left="3" right="4" top="1" bottom="2"/>
+      <block left="8" right="9" top="1" bottom="2"/>
+      <block left="3" right="4" top="6" bottom="7"/>
+      <block left="8" right="9" top="6" bottom="7"/>
+    </layer>
+    <layer z="3">
+      <tile x="3.5" y="1.5"/>
+      <tile x="8.5" y="1.5"/>
+      <tile x="3.5" y="6.5"/>
+      <tile x="8.5" y="6.5"/>
+    </layer>
+  </map>
+
+</mahjongg>
+
