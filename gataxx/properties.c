@@ -61,20 +61,33 @@ gchar * gataxx_gconf_get_string (gchar *key);
 gint gataxx_gconf_get_int (gchar *key, gint default_int);
 gboolean gataxx_gconf_get_bool (gchar *key, gint default_bool);
 
+gint clamp_int (gint input, gint low, gint high)
+{
+	if (input < low)
+		input = low;
+	if (input > high)
+		input = high;
+
+	return input;
+}
+
 void 
 load_properties (void)
 {
 	black_computer_level =
 		gataxx_gconf_get_int ("/apps/gataxx/blacklevel", 0);
+	black_computer_level = clamp_int (black_computer_level, 0, 3);
 
 	white_computer_level =
 		gataxx_gconf_get_int ("/apps/gataxx/whitelevel", 0);
-
+	white_computer_level = clamp_int (white_computer_level, 0, 3);
+	
 	tile_set = gataxx_gconf_get_string ("/apps/gataxx/tileset");
 	if (tile_set == NULL)
 		tile_set = g_strdup("classic.png");
 
 	animate = gataxx_gconf_get_int ("/apps/gataxx/animate", 2);
+	animate = clamp_int (animate, 0, 2);
 
 	if ((quick_moves =
 	     gataxx_gconf_get_bool ("/apps/gataxx/quickmoves", FALSE)))
@@ -529,33 +542,16 @@ show_properties_dialog (void)
 
 }	
 
-/* First checks gconf, then schema, then defaults to the value passed. */
 gint
 gataxx_gconf_get_int (gchar *key, gint default_int)
 {
-	GConfValue *value = NULL;
-	GConfValue *schema_value = NULL;
+	GError *error = NULL;
 	gint retval;
 
-	value = gconf_client_get (gataxx_gconf_client, key, NULL);
-	if (value == NULL)
+	retval = gconf_client_get_int (gataxx_gconf_client, key, &error);
+	if (error != NULL) {
+		g_error_free (error);
 		return default_int;
-
-	if (value->type == GCONF_VALUE_INT) {
-		retval = gconf_value_get_int (value);
-		gconf_value_free (value);
-	}
-	else {
-		schema_value = gconf_client_get_default_from_schema
-			(gataxx_gconf_client, key, NULL);
-		if (schema_value == NULL) {
-			retval = default_int;
-		}
-		else {
-			retval = gconf_value_get_int (schema_value);
-		}
-		gconf_value_free (value);
-		gconf_value_free (schema_value);
 	}
 
 	return retval;
@@ -564,62 +560,30 @@ gataxx_gconf_get_int (gchar *key, gint default_int)
 gboolean
 gataxx_gconf_get_bool (gchar *key, gboolean default_bool)
 {
-	GConfValue *value = NULL;
-	GConfValue *schema_value = NULL;
+	GError *error = NULL;
 	gboolean retval;
 
-	value = gconf_client_get (gataxx_gconf_client, key, NULL);
-	if (value == NULL)
+	retval = gconf_client_get_bool (gataxx_gconf_client, key, &error);
+	if (error != NULL) {
+		g_error_free (error);
 		return default_bool;
-
-	if (value->type == GCONF_VALUE_BOOL) {
-		retval = gconf_value_get_bool (value);
-		gconf_value_free (value);
-	}
-	else {
-		schema_value = gconf_client_get_default_from_schema
-			(gataxx_gconf_client, key, NULL);
-		if (schema_value == NULL) {
-			retval = default_bool;
-		}
-		else {
-			retval = gconf_value_get_bool (schema_value);
-		}
-		gconf_value_free (value);
-		gconf_value_free (schema_value);
 	}
 
 	return retval;
 }
 
-/* Returns gchar* you should free with g_free(). */
-/* First checks gconf, then schema. Returns NULL if not found in either. */
+/* Returns gchar* you should free with g_free(). Returns NULL on not-found
+ * or other error. */
 gchar *
 gataxx_gconf_get_string (gchar *key)
 {
-	GConfValue *value = NULL;
-	GConfValue *schema_value = NULL;
-	gchar *retval = NULL;
+	GError *error = NULL;
+	gchar *retval;
 
-	value = gconf_client_get (gataxx_gconf_client, key, NULL);
-	if (value == NULL)
+	retval = gconf_client_get_string (gataxx_gconf_client, key, &error);
+	if (error != NULL) {
+		g_error_free (error);
 		return NULL;
-
-	if (value->type == GCONF_VALUE_STRING) {
-		retval = g_strdup (gconf_value_get_string (value));
-		gconf_value_free (value);
-	}
-	else {
-		schema_value = gconf_client_get_default_from_schema
-			(gataxx_gconf_client, key, NULL);
-		if (schema_value == NULL) {
-			retval = NULL;
-		}
-		else {
-			retval = g_strdup (gconf_value_get_string (schema_value));
-		}
-		gconf_value_free (value);
-		gconf_value_free (schema_value);
 	}
 
 	return retval;

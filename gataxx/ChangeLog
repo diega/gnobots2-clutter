@@ -1,3 +1,9 @@
+2003-08-04  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* properties.c: Clean up the gataxx_gconf_get_* code to use the
+	gconf_client_get_* functions. Also do some range checking on
+	results from gconf.
+
 2003-08-03  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* properties.c: 
