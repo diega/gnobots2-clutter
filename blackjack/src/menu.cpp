@@ -103,7 +103,6 @@ on_help_contents_activate (GtkAction *action,
 {
 #ifdef HAVE_GNOME
         GError *error = NULL;
-        g_message ("Display help");
         gnome_help_display_desktop_on_screen (NULL, "blackjack", "blackjack", NULL,
                                               gtk_widget_get_screen (toplevel_window), &error);
 #endif

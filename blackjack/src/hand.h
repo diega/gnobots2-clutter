@@ -33,7 +33,7 @@ gint                    bj_get_hand_results (gint, gint);
 void                    bj_hand_show_dealer_probabilities (void);
 void                    bj_hand_show_options (void);
 
-gchar *                 bj_hand_get_best_option_string (void);
+char  *                 bj_hand_get_best_option_string (char **secondary_message);
 
 void                    bj_deal_card_to_player (void);
 void                    bj_deal_card_to_dealer (gboolean);

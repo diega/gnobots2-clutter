@@ -39,24 +39,32 @@
 #include <iostream>
 using namespace std;
 
-static GtkWidget *hint_dlg = NULL;
-static GtkWidget * deck_edit = NULL;
+static GtkWidget *hint_dlg  = NULL;
+static GtkWidget *deck_edit = NULL;
 
 gboolean
-get_insurance_choice ()
+get_insurance_choice (void)
 {
-        GtkWidget* dialog;
-        gchar* message;
-        gboolean choice = false;
+        GtkWidget  *dialog;
+        const char *message;
+        const char *secondary_message;
+        gboolean    choice = FALSE;
 
         message = _("Would you like insurance?");
+        secondary_message = _("Insurance is a side wager of 50%% of the original wager"
+                              " that the dealer has a natural 21 (aka blackjack) that is"
+                              " offered when the dealer's face up card is an ace. If the"
+                              " dealer has a natural 21 then the player is paid double.");
+        
+        dialog = gtk_message_dialog_new (GTK_WINDOW (toplevel_window),
+                                         GTK_DIALOG_MODAL,
+                                         GTK_MESSAGE_QUESTION,
+                                         GTK_BUTTONS_YES_NO,
+                                         message);
 
-        dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (toplevel_window),
-                                                     GTK_DIALOG_MODAL,
-                                                     GTK_MESSAGE_QUESTION,
-                                                     GTK_BUTTONS_YES_NO,
-                                                     "<span weight=\"bold\" size=\"larger\">%s</span>",
-                                                     message);
+        gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+                                                  secondary_message);
+
         gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
 
         gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_NO);
@@ -64,12 +72,13 @@ get_insurance_choice ()
         /* add a stock icon? */ 
         switch (gtk_dialog_run (GTK_DIALOG (dialog))) {
         case GTK_RESPONSE_YES: 
-                choice = true;
+                choice = TRUE;
                 break;
         default:
-                choice = false;
+                choice = FALSE;
                 break;
         }
+
         gtk_widget_destroy (dialog);
 
         return choice;
@@ -82,26 +91,33 @@ hint_destroy_callback (void)
 }
 
 void
-show_hint_dialog ()
+show_hint_dialog (void)
 {
-        gchar *gmessage;
+        char *message           = NULL;
+        char *secondary_message = NULL;
 
-        if (bj_game_is_first_hand ())
-                gmessage = g_strdup (_("Set your wager and click in the white outline to deal a new hand."));
-        else if (! bj_game_is_active ())
-                gmessage = g_strdup (_("Set your wager or click on the cards to deal a new hand."));
-        else
-                gmessage = bj_hand_get_best_option_string ();
+        if (bj_game_is_first_hand ()) {
+                message = g_strdup (_("Deal a new hand"));
+                secondary_message = g_strdup (_("Set your wager and click in the white outline to deal a new hand."));
+        } else if (! bj_game_is_active ()) {
+                message = g_strdup (_("Deal a new hand"));
+                secondary_message = g_strdup (_("Set your wager or click on the cards to deal a new hand."));
+        } else {
+                message = bj_hand_get_best_option_string (&secondary_message);
+        }
   
         if (hint_dlg)
                 gtk_widget_destroy (GTK_WIDGET (hint_dlg));
 
-        hint_dlg = gtk_message_dialog_new_with_markup (GTK_WINDOW (toplevel_window),
-                                                       GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                       GTK_MESSAGE_INFO,
-                                                       GTK_BUTTONS_OK,
-                                                       "<span weight=\"bold\" size=\"larger\">%s</span>",
-                                                       gmessage);
+        hint_dlg = gtk_message_dialog_new (GTK_WINDOW (toplevel_window),
+                                           GTK_DIALOG_DESTROY_WITH_PARENT,
+                                           GTK_MESSAGE_INFO,
+                                           GTK_BUTTONS_OK,
+                                           message);
+
+        gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (hint_dlg),
+                                                  secondary_message);
+
         gtk_container_set_border_width (GTK_CONTAINER (hint_dlg), 6);
 
         if (hint_dlg)
@@ -113,7 +129,8 @@ show_hint_dialog ()
 	gtk_dialog_run (GTK_DIALOG (hint_dlg));
 	gtk_widget_destroy (hint_dlg);
 
-        g_free (gmessage);
+        g_free (message);
+        g_free (secondary_message);
 }
 
 void 
@@ -184,7 +201,7 @@ reset_button_cb (GtkWidget *widget, gpointer data)
 }
 
 void
-show_preferences_dialog () 
+show_preferences_dialog (void) 
 {
         static GtkWidget* pref_dialog = NULL;
         GtkWidget *frame;

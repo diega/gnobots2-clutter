@@ -1,5 +1,12 @@
 2004-11-12  William Jon McCann  <mccann@jhu.edu>
 
+	* src/dialog.cpp (show_hint_dialog): 
+	* src/hand.cpp (bj_hand_get_best_option_string):
+	Add helpful secondary text to hint dialog and insurance
+	confirmation dialog.
+
+2004-11-12  William Jon McCann  <mccann@jhu.edu>
+
 	* data/Ameristar.rules: 
 	* data/Atlantic_City.rules: 
 	* data/Vegas_Downtown.rules: 
