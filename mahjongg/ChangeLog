@@ -1,3 +1,7 @@
+2000-04-26  Ian Peters  <itp@gnu.org>
+
+	* mahjongg.c: use GNOME_STOCK_BUTTON_OK like a good little gnome program
+
 2000-02-22  Chema Celorio <chema_gnome@celorio.com>
 
 	* solubility.c: Undefine CHEAT_DEBUG for release

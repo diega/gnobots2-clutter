@@ -879,7 +879,7 @@ void no_match (void)
 	if (popup_config.warn.popup) {
                 mb = gnome_message_box_new (_("Tiles don't match!"),
                                             GNOME_MESSAGE_BOX_INFO,
-                                            _("Ok"), NULL);
+                                            GNOME_STOCK_BUTTON_OK, NULL);
                 GTK_WINDOW (mb)->position = GTK_WIN_POS_MOUSE;
                 gtk_window_set_modal (&GNOME_MESSAGE_BOX(mb)->dialog.window, TRUE);
                 
@@ -912,7 +912,7 @@ void check_free (void)
                 if (!game_over) {
                         mb = gnome_message_box_new (_("No more moves"), 
                                                     GNOME_MESSAGE_BOX_INFO, 
-                                                    _("Ok"), NULL); 
+                                                    GNOME_STOCK_BUTTON_OK, NULL); 
                         GTK_WINDOW (mb)->position = GTK_WIN_POS_MOUSE; 
                         gtk_window_set_modal (&GNOME_MESSAGE_BOX (mb)->dialog.window, TRUE);
                         gnome_dialog_set_parent(&GNOME_MESSAGE_BOX (mb)->dialog, GTK_WINDOW (window));
@@ -1952,7 +1952,7 @@ void shuffle_tiles_callback (GtkWidget *widget, gpointer data)
                 gtk_clock_stop (GTK_CLOCK (chrono));
                 mb = gnome_message_box_new (_("Sorry, I can't find\na playable configuration."), 
                                             GNOME_MESSAGE_BOX_INFO, 
-                                            _("Ok"), NULL); 
+                                            GNOME_STOCK_BUTTON_OK, NULL); 
                 GTK_WINDOW (mb)->position = GTK_WIN_POS_MOUSE; 
                 gtk_window_set_modal (&GNOME_MESSAGE_BOX (mb)->dialog.window, TRUE);
                 gnome_dialog_set_parent(&GNOME_MESSAGE_BOX (mb)->dialog, GTK_WINDOW (window));
