@@ -680,7 +680,7 @@ set_map_selection (GtkWidget *widget, void *data)
 	struct _maps *map = (struct _maps*) data;
 
 	g_free (mapset);
-	mapset = map->name;
+	mapset = g_strdup (map->name);
 
 	gconf_client_set_string (conf_client,
 				 "/apps/mahjongg/mapset",
