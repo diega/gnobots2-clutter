@@ -1098,7 +1098,7 @@ static gint startup_function (gpointer data)
   
   startup_sequence[index].function ();
   
-  gnome_appbar_set_progress (GNOME_APPBAR (statusbar),
+  gnome_appbar_set_progress_percentage (GNOME_APPBAR (statusbar),
 			     (gfloat) (index+1)/(gfloat) max);
   index++;
 

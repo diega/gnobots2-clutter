@@ -143,7 +143,7 @@ static gfloat maxtimer;
 void
 status_set_timer (guint time)
 {
-  gnome_appbar_set_progress (GNOME_APPBAR (statusbar), (gfloat) time/maxtimer);
+  gnome_appbar_set_progress_percentage (GNOME_APPBAR (statusbar), (gfloat) time/maxtimer);
 }
 
 
@@ -152,7 +152,7 @@ status_set_maxtimer (guint time)
 {
   maxtimer= time;
   
-  gnome_appbar_set_progress (GNOME_APPBAR (statusbar), 0.0);
+  gnome_appbar_set_progress_percentage (GNOME_APPBAR (statusbar), 0.0);
 }
 
 
@@ -213,7 +213,7 @@ status_set_cave (char *cave)
 void
 status_set_time (gfloat time)
 {
-  gnome_appbar_set_progress (GNOME_APPBAR (statusbar), time);
+  gnome_appbar_set_progress_percentage (GNOME_APPBAR (statusbar), time);
 }
 
 /* Setting text line information.  */
