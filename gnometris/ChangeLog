@@ -1,3 +1,11 @@
+2004-02-12  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* tetris.cpp: Replaced a really crufty way of getting the widgets
+	to resize themselves with gtk_widget_queue_resize(). This fixes
+	bug #120444. Also disabled resizing of the window since it wasn't
+	meaningful and aesthetically unpleasing when the block size was
+	reduced.
+
 2004-02-11  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* tetris.cpp (gameAbout): translator_credits ->

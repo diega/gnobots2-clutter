@@ -95,6 +95,7 @@ Tetris::Tetris(int cmdlLevel):
 	
 	w = gnome_app_new("gnometris", _("Gnometris"));
 	g_signal_connect (w, "delete_event", G_CALLBACK (gameQuit), this);
+	gtk_window_set_resizable (GTK_WINDOW (w), FALSE);
 
 	static GnomeUIInfo game_menu[] = 
 	{
@@ -384,24 +385,14 @@ Tetris::setupPixmap()
 	if (field)
 	{
 		field->updateSize (bgimage);
-		gtk_widget_queue_draw (field->getWidget());
+		gtk_widget_queue_resize (field->getWidget());
 	}
 	
 	if (preview)
 	{
 		preview->updateSize ();
-		gtk_widget_queue_draw (preview->getWidget());
+		gtk_widget_queue_resize (field->getWidget());
 	}
-
-	// FIXME: this really sucks, but I can't find a better way to resize 
-	// all widgets after the block pixmap change
-	if (scoreFrame)
-	{
-		int l = scoreFrame->getLevel();
-		scoreFrame->setLevel(l + 1);
-		scoreFrame->setLevel(l);
-	}
-	
 }
 
 void
