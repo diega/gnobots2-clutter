@@ -1,3 +1,7 @@
+2003-07-03  William Jon McCann  <mccann@jhu.edu>
+
+	* src/strategy.h: Removed dos line endings.
+
 2003-06-22  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* data/blackjack.schemas.in: Remove full-stop from the end of
