@@ -1,3 +1,6 @@
-@PREFIX@/share/pixmaps/gnothello/*
-@PREFIX@/share/apps/Games/gnothello.desktop
-@BINDIR@/gnothello
+@PREFIX@/share/pixmaps/iagno*
+@PREFIX@/share/pixmaps/iagno/*
+@PREFIX@/share/sounds/iagno/*
+@BINDIR@/iagno
+etc/sound/events/iagno.*
+@PREFIX@/share/gnome/apps/Games/iagno.*

@@ -136,17 +136,3 @@ do
        sed "s,%$debtype>,," | sed '/^%/d' > $tofile
 done
 
-for postinst in gnome-card-games$pkgsuffix
-do
-
-cat > $postinst.postinst <<EOF
-#! /bin/sh
-
-set -e
-ldconfig
-
-#DEBHELPER#
-EOF
-
-done
-

@@ -1,2 +1,2 @@
-@PREFIX@/share/apps/Games/gnomine.desktop
+@PREFIX@/share/gnome/apps/Games/gnomine.desktop
 @BINDIR@/gnomine

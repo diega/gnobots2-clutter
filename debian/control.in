@@ -1,23 +1,29 @@
 Source: gnome-games@SUFFIX@
 Section: games
 Priority: optional
-Maintainer: Jim Pick <jim@jimpick.com>
+Maintainer: James LewisMoss <dres@debian.org>
 Standards-Version: 2.4.0.0
 
 Package: gnome-games@SUFFIX@
 Architecture: all
-Depends: gnome-core@SUFFIX@ (>= ${Source-Version})
-Description: Common files for the Gnome game packages
+Depends: gnome-core@SUFFIX@ (>= 1.0.0-0), gnome-card-games@SUFFIX@ (= ${Source-Version}), gnome-gnomine@SUFFIX@ (= ${Source-Version}), gnome-stones@SUFFIX@ (= ${Source-Version}), gnome-gturing@SUFFIX@ (= ${Source-Version}), gnome-mahjongg@SUFFIX@ (= ${Source-Version}), gnome-same-gnome@SUFFIX@ (= ${Source-Version}), gnome-gnibbles@SUFFIX@ (= ${Source-Version}), gnome-gnometris@SUFFIX@ (= ${Source-Version}), gnome-gnotravex@SUFFIX@ (= ${Source-Version}), gnome-metatris@SUFFIX@ (= ${Source-Version}), gnome-gyahtzee@SUFFIX@ (= ${Source-Version}), gnome-gnobots@SUFFIX@ (= ${Source-Version}), gnome-gnobots2@SUFFIX@ (= ${Source-Version}), gnome-gnothello@SUFFIX@  (= ${Source-Version})
+Description: Empty package that requires the installation of all gnome-games packages.
  Gnome is the "GNU Network Object Model Environment"
  .
  It is a project to build a complete, user-friendly desktop based
  entirely on free software.
+
+Package: gnome-games-locale
+Architecture: all
+Description: The locale databasese for the gnome-games packages.
+ Gnome is the "GNU Network Object Model Environment"
  .
- Common files for the Gnome game packages.
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
 
 Package: gnome-card-games@SUFFIX@
 Architecture: any
-Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), gnome-guile@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
 Description: Gnome card games - Solitaire games (FreeCell, Klondike, Spider, etc)
  Gnome is the "GNU Network Object Model Environment"
  .
@@ -29,7 +35,7 @@ Description: Gnome card games - Solitaire games (FreeCell, Klondike, Spider, etc
 
 Package: gnome-gnomine@SUFFIX@
 Architecture: any
-Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
 Description: Classic find the mines in the minefield game (from Gnome)
  Gnome is the "GNU Network Object Model Environment"
  .
@@ -38,9 +44,34 @@ Description: Classic find the mines in the minefield game (from Gnome)
  .
  Classic find the mines in the minefield game.
 
+Package: gnome-stones@SUFFIX@
+Architecture: any
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
+Description: Stones games
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+
+Package: gnome-gturing@SUFFIX@
+Architecture: any
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
+Description: Turing game
+ Gnome-Gturing is a Turing Machine simulator for Gnome. A turing
+ machine is a simple theoritical machine that should be able to solve
+ any problem that a more complex machine can, and hence, is used in
+ proofs on complexity theory. Gnome-Gturing is a basic Turing
+ machine, designed for play and experiment, instead of scientifc
+ study.
+ .
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+
 Package: gnome-mahjongg@SUFFIX@
 Architecture: any
-Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
 Description: Classic Chinese Tile Game (from Gnome)
  Gnome is the "GNU Network Object Model Environment"
  .
@@ -51,7 +82,7 @@ Description: Classic Chinese Tile Game (from Gnome)
 
 Package: gnome-same-gnome@SUFFIX@
 Architecture: any
-Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
 Description: The "Same Game" puzzle (from Gnome)
  Gnome is the "GNU Network Object Model Environment"
  .
@@ -60,9 +91,53 @@ Description: The "Same Game" puzzle (from Gnome)
  .
  The "Same Game" puzzle.
 
-Package: gnome-scottfree@SUFFIX@
+Package: gnome-gnibbles@SUFFIX@
 Architecture: any
-Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
+Description: A cute little game that has no description
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+
+Package: gnome-gnometris@SUFFIX@
+Architecture: any
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
+Description: A tetris clone.
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+
+Package: gnome-gnotravex@SUFFIX@
+Architecture: any
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
+Description: A game based on Tetravex.
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+ .
+ The goal of the game is to place all squares so that the numbers
+ on their sides match. It is impossible to place a square beside 
+ another square without the numbers matching. When all squares are 
+ placed, the game is won, and over. 
+ .
+ It's possible to choose different sizes on the board from 2x2 to
+ 6x6. 
+
+Package: gnome-metatris@SUFFIX@
+Architecture: any
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
+Description: A tetris clone with theme support.
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+
+Package: gnome-scottfree@SUFFIX@
+Architecture: ignore
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
 Description: A Scott Adams game player (from Gnome)
  Gnome is the "GNU Network Object Model Environment"
  .
@@ -73,7 +148,7 @@ Description: A Scott Adams game player (from Gnome)
 
 Package: gnome-gyahtzee@SUFFIX@
 Architecture: any
-Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
 Description: Gnome version of Yahtzee Dice Game
  Gnome is the "GNU Network Object Model Environment"
  .
@@ -84,7 +159,7 @@ Description: Gnome version of Yahtzee Dice Game
 
 Package: gnome-gnobots@SUFFIX@
 Architecture: any
-Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
 Description: Gnome version of text based robots game for BSD games collection
  Gnome is the "GNU Network Object Model Environment"
  .
@@ -98,9 +173,25 @@ Description: Gnome version of text based robots game for BSD games collection
  scenarios, as well as providing a safe teleport feature so you are not
  totally at the mercy of your computer's random number generator.
 
+Package: gnome-gnobots2@SUFFIX@
+Architecture: any
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
+Description: Second Gnome version of robots game for BSD games collection
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+ .
+ Gnome Robots 2 is a version of the text based robots game which can be
+ found on a number of UNIX systems, and comes with the BSD games
+ package on Linux systems.
+ This version allows you to select a number of animated graphics
+ scenarios, as well as providing a safe teleport feature so you are not
+ totally at the mercy of your computer's random number generator.
+
 Package: gnome-gnothello@SUFFIX@
 Architecture: any
-Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Depends: gnome-games-locale@SUFFIX@ (= ${Source-Version}), ${shlibs:Depends}
 Description: Gnome version of Othello (Reversi) board game
  Gnome is the "GNU Network Object Model Environment"
  .

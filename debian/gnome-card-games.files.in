@@ -2,8 +2,10 @@
 @PREFIX@/lib/libgdkcardimage.so.[0-9]
 @PREFIX@/include/gdkcardimage/*
 @PREFIX@/share/pixmaps/cards/*
-@PREFIX@/share/apps/Games/freecell.desktop
-@PREFIX@/share/apps/Games/sol.desktop
+@PREFIX@/share/pixmaps/gnome-aisleriot.*
+@PREFIX@/share/gnome/apps/Games/freecell.desktop
+@PREFIX@/share/gnome/apps/Games/sol.desktop
 @PREFIX@/share/sol-games/*
-@BINDIR@/freecell
+@PREFIX@/share/gnome/help/aisleriot/*
+@BINDIR@/gnome-freecell
 @BINDIR@/sol

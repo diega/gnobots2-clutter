@@ -1,4 +1,4 @@
-@PREFIX@/share/pixmaps/gnome-gyahtzee.png
-@PREFIX@/share/apps/Games/gyahtzee.desktop
-@BINDIR@/gyahtzee
-@BINDIR@/cyahtzee
+@PREFIX@/share/pixmaps/gnome-gtali.png
+@PREFIX@/share/gnome/apps/Games/gtali.desktop
+@BINDIR@/gtali
+@BINDIR@/ctali

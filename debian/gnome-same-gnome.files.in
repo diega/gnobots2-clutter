@@ -1,3 +1,4 @@
 @PREFIX@/share/pixmaps/same-gnome/*
-@PREFIX@/share/apps/Games/same-gnome.desktop
+@PREFIX@/share/gnome/apps/Games/same-gnome.desktop
 @BINDIR@/same-gnome
+@PREFIX@/share/gnome/help/samegnome/*
