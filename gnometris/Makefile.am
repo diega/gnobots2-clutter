@@ -54,3 +54,4 @@ install-data-local:
 	-chmod 664 $(DESTDIR)$(scoredir)/gnometris.scores
 	-chgrp games $(DESTDIR)$(bindir)/gnometris && chmod 2555 $(DESTDIR)$(bindir)/gnometris
 
+CLEANFILES = $(Games_DATA) $(schema_DATA)

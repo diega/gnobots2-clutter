@@ -59,6 +59,8 @@ soundlist_DATA = $(soundlist_in_files:.soundlist.in=.soundlist)
 
 SUBDIRS = sounds help
 
+CLEANFILES = $(Games_DATA) $(schema_DATA) $(soundlist_DATA)
+
 install-data-local:
 	GCONF_CONFIG_SOURCE=$(GCONF_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
 

@@ -41,3 +41,5 @@ install-data-local:
 	-chown games.games $(DESTDIR)$(scoredir)/same-gnome.scores
 	-chmod 664 $(DESTDIR)$(scoredir)/same-gnome.scores
 	-chgrp games $(DESTDIR)$(bindir)/same-gnome && chmod 2555 $(DESTDIR)$(bindir)/same-gnome
+
+CLEANFILES = $(Games_DATA) $(schema_DATA)

@@ -89,9 +89,4 @@ install-data-local:
 gnome-stones.keys: gnome-stones.keys.in Makefile
 	sed -e 's^\@icondir\@^$(Pixmapdir)^g' < $(srcdir)/gnome-stones.keys.in > gnome-stones.keys
 
-
-
-
-
-
-
+CLEANFILES = $(Games_DATA) $(caves_DATA) gnome-stones.keys

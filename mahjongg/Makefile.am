@@ -7,6 +7,8 @@ appicondir=$(datadir)/pixmaps
 schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_in_files = mahjongg.schemas.in
 schema_DATA = $(schema_in_files:.schemas.in=.schemas)
+@INTLTOOL_SCHEMAS_RULE@
+
 INCLUDES =						\
 	-I$(top_srcdir)/libgames-support		\
 	-I..						\
@@ -45,7 +47,6 @@ EXTRA_DIST = mahjongg.desktop.in $(pixmap_DATA) $(appicon_DATA) $(bg_DATA) \
 Games_in_files = mahjongg.desktop.in
 Games_DATA = $(Games_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
-@INTLTOOL_SCHEMAS_RULE@
 
 SUBDIRS = help
 
@@ -59,5 +60,4 @@ install-data-local:
 	-chgrp games $(DESTDIR)$(bindir)/mahjongg && chmod 2555 $(DESTDIR)$(bindir)/mahjongg
 	$(mkinstalldirs) $(DESTDIR)$(Gamesdir)
 
-
-
+CLEANFILES = $(Games_DATA) $(schema_DATA)

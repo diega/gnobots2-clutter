@@ -37,3 +37,4 @@ install-data-local:
 	-chmod 664 $(DESTDIR)$(scoredir)/gnome-xbill.scores
 	-chgrp games $(DESTDIR)$(bindir)/gnome-xbill && chmod 2555 $(DESTDIR)$(bindir)/gnome-xbill
 
+CLEANFILES = $(Games_DATA)
