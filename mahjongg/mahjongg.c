@@ -719,8 +719,6 @@ GtkWidget *tiles_label;
 gint selected_tile, visible_tiles;
 gint sequence_number;
 
-guint current_seed, next_seed;
-
 static gint windowwidth, windowheight;
 
 GList * tileset_list = NULL;
@@ -771,7 +769,6 @@ gboolean new_map = TRUE;
 
 typedef enum {
 	NEW_GAME,
-	NEW_GAME_WITH_SEED,
 	RESTART_GAME,
 	QUIT_GAME
 } game_state;
@@ -796,23 +793,20 @@ void show_tb_callback      (GtkWidget *widget, gpointer data);
 void sound_on_callback     (GtkWidget *widget, gpointer data);
 void scores_callback       (GtkWidget *widget, gpointer data);
 gboolean delete_event_callback (GtkWidget *widget, GdkEventAny *any, gpointer data);
-void confirm_action       (GtkWidget *widget, gpointer data);
 void shuffle_tiles_callback   (GtkWidget *widget, gpointer data);
 void ensure_pause_off (void);
 void pause_callback (void);
-void new_game (gboolean with_seed);
+void new_game_cb (GtkWidget *widget, gpointer data);
+void restart_game_cb (GtkWidget *widget, gpointer data);
+gboolean quit_cb (GtkWidget *widget, GdkEventAny *e, gpointer data);
+void new_game (void);
 void restart_game (void);
 void select_game (GtkWidget *widget, gpointer data);
 
 GnomeUIInfo gamemenu [] = {
-         GNOMEUIINFO_MENU_NEW_GAME_ITEM(confirm_action, NEW_GAME),
+         GNOMEUIINFO_MENU_NEW_GAME_ITEM(new_game_cb, NULL),
 
-         {GNOME_APP_UI_ITEM, N_("New game with _seed..."),
-		 N_("Start a new game giving a seed number..."),
-		 select_game, NULL, NULL, GNOME_APP_PIXMAP_STOCK,
-		 GTK_STOCK_NEW, 0, 0, NULL},
-
-	 GNOMEUIINFO_MENU_RESTART_GAME_ITEM(confirm_action, RESTART_GAME),
+	 GNOMEUIINFO_MENU_RESTART_GAME_ITEM(restart_game_cb, NULL),
 
 	 GNOMEUIINFO_MENU_PAUSE_GAME_ITEM (pause_callback, NULL),
 	 
@@ -828,7 +822,7 @@ GnomeUIInfo gamemenu [] = {
          GNOMEUIINFO_MENU_SCORES_ITEM(scores_callback, NULL),
 
 	 GNOMEUIINFO_SEPARATOR,
-         GNOMEUIINFO_MENU_QUIT_ITEM(confirm_action, QUIT_GAME),
+         GNOMEUIINFO_MENU_QUIT_ITEM(quit_cb, NULL),
 
 	 GNOMEUIINFO_END
 };
@@ -857,12 +851,12 @@ GnomeUIInfo mainmenu [] = {
 };
 
 GnomeUIInfo toolbar_uiinfo [] = {
-	{GNOME_APP_UI_ITEM, N_("New"), N_("New game"), confirm_action,
-		(gpointer)NEW_GAME, NULL,
+	{GNOME_APP_UI_ITEM, N_("New"), N_("New game"), new_game_cb,
+		NULL, NULL,
 		GNOME_APP_PIXMAP_STOCK, GTK_STOCK_NEW, 0, 0, NULL},
 
-        {GNOME_APP_UI_ITEM, N_("Restart"), N_("Restart game"), confirm_action,
-		(gpointer)RESTART_GAME, NULL,
+        {GNOME_APP_UI_ITEM, N_("Restart"), N_("Restart game"), restart_game_cb,
+		NULL, NULL,
 		GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REFRESH, 0, 0, NULL},
 
         /* If you change the place for this button, change the index in
@@ -887,7 +881,7 @@ GnomeUIInfo toolbar_uiinfo [] = {
 };
 
 #define PAUSE_BUTTON GTK_TOGGLE_BUTTON(toolbar_uiinfo[2].widget)
-#define HIGHSCORE_WIDGET gamemenu[10].widget
+#define HIGHSCORE_WIDGET gamemenu[8].widget
 
 /* At the end of the game, hint, shuffle and pause all become unavailable. */
 /* Undo and Redo are handled elsewhere. */
@@ -897,26 +891,26 @@ static void set_menus_sensitive (void)
 	
 	/* Pause */
 	state = game_over != GAME_WON;
-	gtk_widget_set_sensitive (gamemenu[3].widget, state);
+	gtk_widget_set_sensitive (gamemenu[2].widget, state);
 	gtk_widget_set_sensitive (toolbar_uiinfo[2].widget, state);
 	
 	/* Hint */
 	state = moves_left > 0;
-	gtk_widget_set_sensitive (gamemenu[7].widget, state);
+	gtk_widget_set_sensitive (gamemenu[6].widget, state);
 	gtk_widget_set_sensitive (toolbar_uiinfo[6].widget, state);
 
 	/* Restart */
 	state = sequence_number != 1;
-	gtk_widget_set_sensitive (gamemenu[2].widget, state);
+	gtk_widget_set_sensitive (gamemenu[1].widget, state);
 	gtk_widget_set_sensitive (toolbar_uiinfo[1].widget, state);
 }
 
 /* Undo and redo sensitivity functionality. */
 static void set_undoredo_sensitive (gboolean undo, gboolean redo)
 {
-	gtk_widget_set_sensitive(gamemenu[5].widget, undo);
+	gtk_widget_set_sensitive(gamemenu[4].widget, undo);
 	gtk_widget_set_sensitive(toolbar_uiinfo[4].widget, undo);
-	gtk_widget_set_sensitive(gamemenu[6].widget, redo);
+	gtk_widget_set_sensitive(gamemenu[5].widget, redo);
 	gtk_widget_set_sensitive(toolbar_uiinfo[5].widget, redo);
 }
 
@@ -1097,7 +1091,7 @@ mapset_changed_cb (GConfClient *client,
 					 GTK_RESPONSE_ACCEPT);
 	response = gtk_dialog_run (GTK_DIALOG (dialog));
 	if (response == GTK_RESPONSE_ACCEPT)
-		new_game (FALSE);
+		new_game ();
 	gtk_widget_destroy (dialog);
 }
 
@@ -1765,31 +1759,21 @@ init_game (void)
         chrono_start();
 }
 
-void
-confirm_action (GtkWidget *widget, gpointer data)
+void new_game_cb (GtkWidget *widget, gpointer data)
 {
-	switch (GPOINTER_TO_INT(data)) {
-	case NEW_GAME:
-	case NEW_GAME_WITH_SEED:
-		ensure_pause_off ();
-		new_game (GPOINTER_TO_INT(data) == NEW_GAME);
-		break;
-	case RESTART_GAME:
-		restart_game ();
-		break;
-	case QUIT_GAME:
-		gtk_main_quit ();
-		break;
-	default:
-		break;
-	}
+	ensure_pause_off ();
+	new_game ();
 }
 
-gboolean
-delete_event_callback (GtkWidget *widget, GdkEventAny *any, gpointer data)
+void restart_game_cb (GtkWidget *widget, gpointer data)
 {
-        confirm_action (widget, data);
-        return TRUE;
+	restart_game ();
+}
+
+gboolean quit_cb (GtkWidget *widget, GdkEventAny *e, gpointer data)
+{
+	gtk_main_quit ();
+	return TRUE;
 }
 
 void
@@ -1889,53 +1873,6 @@ undo_tile_callback (GtkWidget *widget, gpointer data)
 }
 
 void
-select_game (GtkWidget *widget, gpointer data)
-{
-	GtkWidget *dialog, *entry, *label;
-	GtkWidget *box;
-	gint response;
-
-	dialog = gtk_dialog_new_with_buttons (_("Select Game"),
-						 GTK_WINDOW (window),
-						 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_STOCK_CANCEL,
-						 GTK_RESPONSE_CANCEL,
-						 GTK_STOCK_OK,
-						 GTK_RESPONSE_OK,
-						 NULL);
-	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
-	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
-	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-	box = GTK_DIALOG (dialog)->vbox;
-
-	gtk_box_set_spacing (GTK_BOX (box), 8);
-	gtk_container_set_border_width (GTK_CONTAINER (dialog), 8);
-
-	label = gtk_label_new (_("Game Number:"));
-	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-	gtk_box_pack_start_defaults (GTK_BOX(box), label);
-	
-	entry = gtk_entry_new ();
-	gtk_box_pack_start_defaults (GTK_BOX(box), entry);
-	
-	gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
-	gtk_window_set_focus (GTK_WINDOW (dialog), entry);
-
-	gtk_widget_show_all (dialog);
-	
-	response = gtk_dialog_run (GTK_DIALOG (dialog));
-	
-	if (response == GTK_RESPONSE_OK) {
-		next_seed = atoi (gtk_entry_get_text (GTK_ENTRY (entry)));
-		gtk_widget_destroy (dialog);
-		confirm_action (widget, (gpointer) NEW_GAME_WITH_SEED);
-	} else {
-              	gtk_widget_destroy (dialog);
-	}
-}
-
-void
 sound_on_callback (GtkWidget *widget, gpointer data)
 {
 	printf ("mer\n");
@@ -1986,16 +1923,9 @@ load_map (void)
 static void
 do_game (void)
 {
-	char *str;
-
-	current_seed = next_seed;
-	str = g_strdup_printf ("%s (%d)",_("Mahjongg"), current_seed);
-	gtk_window_set_title (GTK_WINDOW (window), str);
-	g_free (str);
-
 	if (new_map)
 		load_map ();
-	generate_game (current_seed); /* puts in the positions of the tiles */
+	generate_game (g_random_int ()); /* puts in the positions of the tiles */
 }
 
 /* Record any changes to our window size. */
@@ -2047,15 +1977,6 @@ load_preferences (void)
 	load_images (selected_tileset);
 }
 
-static void
-new_seed ()
-{
-	struct timeval t;
-	gettimeofday (&t, NULL);
-
-	next_seed = (guint) (t.tv_sec ^ t.tv_usec);
-}
-
 static void set_score_file (gchar * mapset)
 {
 	int i;
@@ -2071,11 +1992,8 @@ static void set_score_file (gchar * mapset)
 }
 
 void
-new_game (gboolean re_seed)
+new_game (void)
 {
-	if (re_seed)
-		new_seed ();
-
 	do_game ();
 
 	draw_all_tiles ();
@@ -2162,11 +2080,10 @@ main (int argc, char *argv [])
 	}
 	load_preferences ();
 	
-	new_seed ();
-
 	window = gnome_app_new (APPNAME, _(APPNAME_LONG));
 	gtk_window_set_default_size (GTK_WINDOW (window), windowwidth,
 				     windowheight);
+	gtk_window_set_title (GTK_WINDOW (window), _("Mahjongg"));
 	g_signal_connect (G_OBJECT (window), "configure_event",
 			  G_CALLBACK (window_configure_cb), NULL);
 	
@@ -2213,7 +2130,7 @@ main (int argc, char *argv [])
 	gnome_app_create_toolbar (GNOME_APP (window), toolbar_uiinfo);
 
 	g_signal_connect (G_OBJECT (window), "delete_event",
-			  G_CALLBACK (delete_event_callback), (gpointer)QUIT_GAME);
+			  G_CALLBACK (quit_cb), NULL);
 
 	board = create_mahjongg_board ();
 	gnome_app_set_contents (GNOME_APP (window), board);

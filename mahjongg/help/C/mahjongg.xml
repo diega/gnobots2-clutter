@@ -120,8 +120,7 @@
       the difficulty level, among other things, in the 
       <link linkend="prefs">Preferences&hellip;</link> dialog.  
       Other features, like the <link linkend="pause"><guibutton>Pause
-      </guibutton> button</link> and the ability to set the game from a 
-      <link linkend="seed">user defined seed</link>, make the game more 
+      </guibutton> button</link>, make the game more 
       competitive when you play against the clock. This document describes 
       <application>Mahjongg</application>.
     </para>
@@ -414,34 +413,7 @@
 		      </shortcut>
 		      <guimenuitem>New game</guimenuitem>
 		    </menuchoice> &mdash; 
-		    This item starts a new game with a predefined seed.
-		  </para>
-		</listitem>
-		<listitem id="seed">
-		  <para>
-		    <menuchoice>
-		      <guimenuitem>New game with seed&hellip;</guimenuitem>
-		    </menuchoice> &mdash; 
-	      This button prompts you for a seed for the random number
-	      generator and then starts a new game. This lets you
-	      replay games you have played in the past (the seed of
-	      the current game is displayed in the title-bar of the
-	      window).
-		    <figure id="seed-fig">
-		      <title>Select Game seed</title>
-		      <screenshot>
-			 <mediaobject> 
-   			 <imageobject>
-  			<imagedata fileref="figures/seed.png" format="PNG"
-				 srccredit="Eric Baudais"/>
-			</imageobject>
-  			  <textobject> 
-    			  <phrase>Select Game Dialog.</phrase> 
-  			  </textobject> 
- 			 </mediaobject>
-		      </screenshot>
-		    </figure>
-
+		    This item starts a new game.
 		  </para>
 		</listitem>
 		<listitem>
@@ -449,7 +421,7 @@
 		    <menuchoice>
 		      <guimenuitem>Restart game</guimenuitem>
 		    </menuchoice> &mdash; 
-		    This item restarts the game with a predefined seed.
+		    This item resets the current game to the start.
 		  </para>
 		</listitem>
 		<listitem>
