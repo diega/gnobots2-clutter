@@ -1,3 +1,8 @@
+1998-11-28  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* preferences.c (preferences_dialog_new): Show the 'scrolled'
+ 	widget.
+
 Mon Nov 23 15:10:07 EST 1998 Gregory McLean <gregm@comstar.net>
 
 	* preferences.c : gtk_clist updates to match the new api.

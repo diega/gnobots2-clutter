@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1998/11/22 17:45:26 carsten>
+ * Time-stamp: <1998/11/28 09:11:56 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -502,6 +502,7 @@ preferences_dialog_new (void)
 		      prdata);
 
   gtk_widget_show (list);
+  gtk_widget_show (scrolled);
   gtk_widget_show (box);
 
   label= gtk_label_new (_("Game"));
