@@ -1,3 +1,8 @@
+2004-01-12  William Jon McCann  <mccann@jhu.edu>
+
+	* src/card.cpp (bj_card_load_pixmaps): Added error checking and
+	report dialog.
+
 2003-12-28  William Jon McCann  <mccann@jhu.edu>
 
 	* src/hand.cpp (bj_hand_show_options):
