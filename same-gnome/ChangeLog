@@ -1,3 +1,10 @@
+2005-02-18  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* ui.c (build_gui): Set the size menu item correctly at start-up.
+
+	* help/C/same-gnome.xml: Start to rewrite the manual for the new
+	version.
+
 2005-02-14  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* ui.c: Patch from Nickolay V. Shmyrev to get l12n working

@@ -513,11 +513,9 @@ void build_gui (void)
   gtk_action_group_set_translation_domain (action_group, GETTEXT_PACKAGE);
   gtk_action_group_add_actions (action_group, actions, G_N_ELEMENTS (actions),
 				NULL);
-	/* FIXME: This doesn't set the radio button correctly. Try setting the
-	 * game to medium, relaunching and then looking at the size menu. */
   gtk_action_group_add_radio_actions (action_group, radio_actions, 
 				      G_N_ELEMENTS (radio_actions), 
-				      game_size - SMALL, 
+				      game_size, 
 				      G_CALLBACK (size_change_cb), 
 				      NULL);
   gtk_action_group_add_toggle_actions (action_group, toggle_actions,
