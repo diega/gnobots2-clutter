@@ -1,3 +1,10 @@
+2004-09-08  callum  <callum@spooky-possum.org>
+
+	* gataxx.c (restore_state): Fix a goof with colouring the squares
+	which are valid moves.
+
+	* help/C/gataxx.xml: Gataxx -> Ataxx and updates for 2.8.
+
 2004-05-26  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gataxx.c:

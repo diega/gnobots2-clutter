@@ -234,7 +234,7 @@ void do_select(int x, int y) {
 		for (_y=MAX(0, y-2); _y<MIN(BHEIGHT, y+3); _y++) {
 			if (gtk_gridboard_get_piece(gridboard, _x, _y)==EMPTY) {
 				gtk_gridboard_set_selection(gridboard, 
-					SELECTED_B, _x, _y);
+					SELECTED_A, _x, _y);
 			}
 		}
 	}

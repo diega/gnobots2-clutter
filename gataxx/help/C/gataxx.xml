@@ -3,11 +3,11 @@
     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 <!ENTITY version "2.4">
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY appversion "2.6">
-  <!ENTITY manrevision "2.6">
-  <!ENTITY date "March 2002">
-  <!ENTITY app "<application>Gataxx</application>">
-  <!ENTITY appname "Gataxx">
+  <!ENTITY appversion "2.8">
+  <!ENTITY manrevision "2.8">
+  <!ENTITY date "September 2004">
+  <!ENTITY app "<application>Ataxx</application>">
+  <!ENTITY appname "Ataxx">
 ]>
 <!-- 
       (Do not remove this comment block.)
@@ -105,7 +105,7 @@
  </articleinfo>
 
   <indexterm zone="index"> 
-    <primary>Gataxx</primary> 
+    <primary>Ataxx</primary> 
   </indexterm>
 
  <!-- ============= Document Body ============================= -->
@@ -115,27 +115,27 @@
   <title>Introduction</title>
 
   <para>
-   <application>Gataxx</application>, part of the GNOME-games suite of
+   <application>Ataxx</application>, part of the GNOME-games suite of
    games, is a relative of other disc-flipping games such as
    <application>Iagno</application>.
-   <application>Gataxx</application>, however, begins at the corners,
+   <application>Ataxx</application>, however, begins at the corners,
    rather than at the center of the board, and has slightly different
    rules for adding and moving discs.
   </para>
 
   <para>
-   To run <application>Gataxx</application>, select
-   <guimenuitem>Gataxx</guimenuitem> from the
+   To run <application>Ataxx</application>, select
+   <guimenuitem>Ataxx</guimenuitem> from the
    <guisubmenu>Games</guisubmenu> submenu of the <guimenu>Main
    Menu</guimenu>, or type <command>gataxx</command> on the
    command line. 
   </para>
 
   <para>
-   <application>Gataxx</application> is included in the
+   <application>Ataxx</application> is included in the
    <filename>GNOME-games</filename> package, which is part of the
    GNOME desktop environment. This document describes version
-   &version; of <application>Gataxx</application>.
+   &version; of <application>Ataxx</application>.
   </para>
 
  </sect1>
@@ -145,9 +145,9 @@
  <!-- This section should describe basic usage of the application. -->
 
   <sect1 id="usage">
-    <title>Playing Gataxx</title>
+    <title>Playing Ataxx</title>
     <para>
-      The basic rules of <application>Gataxx</application> are quite
+      The basic rules of <application>Ataxx</application> are quite
       easy to learn, especially if you are familiar with other
       disc-flipping games.  The object of the game is to have more
       discs of your color on the board than your opponent does.  The
@@ -155,7 +155,7 @@
       at all on the board.
     </para>
     <para>
-      Although <application>Gataxx</application> is a two player game,
+      Although <application>Ataxx</application> is a two player game,
       one or both players can be controlled by the computer.
   </para>
 
@@ -164,7 +164,7 @@
   <sect2 id="mainwin">
    <title>Basic usage</title>
    <para>
-    Starting <application>Gataxx</application> presents you with the
+    Starting <application>Ataxx</application> presents you with the
     <interface>game board</interface>, which is seven squares on a
     side.  You can start a game by selecting <guimenuitem>New
     Game</guimenuitem> from the <guimenu>Game</guimenu> menu.  A new
@@ -174,7 +174,7 @@
   
 
   <figure id="mainwindow-fig">
-     <title>Gataxx Main Window</title>
+     <title>Ataxx Main Window</title>
      <screenshot>
        <mediaobject>
          <imageobject>
@@ -192,7 +192,7 @@
     <sect2 id="rules"> 
       <title>Basic Rules</title>
       <para>
-        A game of <application>Gataxx</application> begins with four
+        A game of <application>Ataxx</application> begins with four
         pieces on the board: a dark colored piece in the upper left
         and lower right corners, and a light colored piece in the
         lower left and upper right corners.  Dark moves first; by
@@ -327,7 +327,7 @@
          <para>
           <guimenuitem>About</guimenuitem>&mdash; shows
           basic information about
-          <application>Gataxx</application>, such as
+          <application>Ataxx</application>, such as
           the author's name and the application version number.
          </para>
         </listitem>
@@ -468,9 +468,9 @@
  <sect1 id="authors">
   <title>Authors</title>
   <para>
-   <application>Gataxx</application> was written by Chris Rogers
+   <application>Ataxx</application> was written by Chris Rogers
    (<email>gandalf@darkcorner.net</email>). To find more information about
-   <application>Gataxx</application>, please visit the <ulink url="http://www.darkcorner.net/projects/gataxx/" type="http">Gataxx Web
+   <application>Ataxx</application>, please visit the <ulink url="http://www.darkcorner.net/projects/gataxx/" type="http">Ataxx Web
    page</ulink>.  Please send all comments, suggestions, and bug
    reports to the <ulink url="http://bugs.gnome.org" type="http">GNOME
    bug tracking database</ulink>. (Instructions for submitting bug
