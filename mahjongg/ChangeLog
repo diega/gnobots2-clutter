@@ -1,3 +1,7 @@
+1998-26-28  Erik Troan  <ewt@redhat.com>
+
+	* mahjongg.c: use gnome_color_picker instead of gnome_color_selector
+
 1998-10-18  Tuomas Kuosmanen  <tigert@gimp.org>
 
 	* added gnome-mahjongg.png: mahjongg icon

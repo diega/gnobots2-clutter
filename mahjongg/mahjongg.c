@@ -752,12 +752,13 @@ void you_won (void)
 	gtk_widget_show (mb);
 }
 
-void colour_changed_cb( GnomeColorSelector *widget, gchar **color )
+void colour_changed_cb (GtkWidget *w, int r1, int g1, int b1, int a1, 
+			gchar ** color)
 {
   static char tmp[24] = "" ;
-  int r,g,b;
+  guint8 r,g,b,a;
 
-  gnome_color_selector_get_color_int(widget, &r, &g, &b, 255 );
+  gnome_color_picker_get_i8(GNOME_COLOR_PICKER(w), &r, &g, &b, &a);
   
   sprintf( tmp, "#%02x%02x%02x", r, g, b ) ;
 
@@ -770,7 +771,7 @@ void properties_callback (GtkWidget *widget, gpointer data)
 	GtkDialog *d;
 	GtkWidget *button;
 	GtkWidget *tmenu, *mmenu, *otmenu, *ommenu, *l, *hb, *cb, *f, *fv;
-	GnomeColorSelector *bcolour_gcs ;
+	GtkWidget *bcolour_gcs ;
 
 	if (pref_dialog)
 		return;
@@ -853,16 +854,17 @@ void properties_callback (GtkWidget *widget, gpointer data)
 
 	{
 	  int ur,ug,ub ;
-	  bcolour_gcs  = gnome_color_selector_new( (SetColorFunc)colour_changed_cb,
-						   &backgnd.name) ;
+	  bcolour_gcs  = gnome_color_picker_new();
 	  sscanf( backgnd.name, "#%02x%02x%02x", &ur,&ug,&ub );
-	  gnome_color_selector_set_color_int( bcolour_gcs, ur, ug, ub, 255) ;
+	  gnome_color_picker_set_i8( GNOME_COLOR_PICKER(bcolour_gcs), ur, 
+				     ug, ub, 0);
+	  gtk_signal_connect(GTK_OBJECT(bcolour_gcs), "color_set", 
+			GTK_SIGNAL_FUNC(colour_changed_cb), &backgnd.name);
 	}
 
 	l = gtk_label_new (_("Background colour")) ;
 	gtk_box_pack_start_defaults (GTK_BOX(f), l) ;
-	gtk_box_pack_start_defaults (GTK_BOX(f),
-				     gnome_color_selector_get_button(bcolour_gcs)) ;
+	gtk_box_pack_start_defaults (GTK_BOX(f), bcolour_gcs);
 	gtk_widget_show(l) ;
 	gtk_box_pack_start_defaults (GTK_BOX(d->vbox), f) ;
 	gtk_widget_show(f) ;
