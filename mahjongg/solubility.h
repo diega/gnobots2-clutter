@@ -9,12 +9,7 @@
  * michael@ximian.com
  */
 
-/* If defined this allows graphical placement debugging.
- * define, then run and hit new game. Then press keys as
- * in keyPress to change things */
-/* #define PLACE_DEBUG */
-
 extern int  tile_free             (int);
 extern void generate_game         (guint seed);
-extern void generate_dependancies (void);
+extern void generate_dependencies (void);
 
