@@ -17,7 +17,7 @@ GnomeScott_LDADD = \
 	$(top_builddir)/libgnome/libgnome.la		\
 	../gemvt/libgemvt.la				\
 	$(GTK_LIBS)					\
-        $(X_LIBS) $(x_libs)
+        $(X_LIBS) $(x_libs) $(INTLLIBS)
 
 EXTRA_DIST = 	\
 	down.xpm	\

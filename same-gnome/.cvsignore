@@ -1,5 +1,6 @@
 Makefile
 .deps
 _libs
+.libs
 samegnome
 Makefile.in
