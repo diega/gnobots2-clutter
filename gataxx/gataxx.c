@@ -475,16 +475,30 @@ gint button_press_event(GtkWidget *widget, GdkEventButton *event)
 
 void gui_draw_selected(gint x, gint y, gint on) {
 
-
   GdkGC * gc;
-  
+  GdkGC * sgc;
+  static GdkColor newc = { 12345, 30208, 41216, 33792};
+	int test_x=0;
+  int test_y=0;
+	
+	sgc = gdk_gc_new(window->window);
+	gdk_gc_set_foreground(sgc, &newc);
+	gdk_gc_set_background(sgc, &newc);
+
   if (on) gc = window->style->white_gc;
   else gc = window->style->black_gc;
-	    
-  gdk_draw_line(drawing_area->window, gc, x * TILEWIDTH, y * TILEHEIGHT, (x) * TILEWIDTH, (y+1) * TILEHEIGHT);
-  gdk_draw_line(drawing_area->window, gc, x * TILEWIDTH, y * TILEHEIGHT, (x+1) * TILEWIDTH, (y) * TILEHEIGHT);
-  gdk_draw_line(drawing_area->window, gc, (x+1) * TILEWIDTH, y * TILEHEIGHT, (x+1) * TILEWIDTH, (y+1) * TILEHEIGHT);
-  gdk_draw_line(drawing_area->window, gc, x * TILEWIDTH, (y+1) * TILEHEIGHT, (x+1) * TILEWIDTH, (y+1) * TILEHEIGHT);
+	
+	
+  for (test_x=0;test_x<7;test_x++) {
+    for (test_y=0;test_y<7;test_y++) {
+      if (is_valid_move(test_x,test_y,x,y,on))
+        gdk_draw_rectangle(drawing_area->window, gc, FALSE, test_x * TILEWIDTH, test_y * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
+    }
+  }
+	if (on) 
+	gdk_draw_rectangle(drawing_area->window, sgc, FALSE, x * TILEWIDTH, y * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
+	else 
+	gdk_draw_rectangle(drawing_area->window, gc, FALSE, x * TILEWIDTH, y * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
 }
 
 void gui_draw_pixmap(gint which, gint x, gint y) {
