@@ -258,7 +258,7 @@ show_scores ( gchar *title, guint pos )
 void 
 game_top_ten_callback(GtkWidget *widget, gpointer data)
 {
-	show_scores(_("The Same Gnome: High Scores"), 0);
+	show_scores(_("The Same Gnome"), 0);
 }
 
 void
@@ -290,10 +290,10 @@ check_game_over (void)
 		}
 	if (cleared){
 		set_score (score+1000);
-		end_of_game (_("The Same Gnome: you win!"));
+		end_of_game (_("You win!"));
 	}
 	else
-		end_of_game(_("The Same Gnome: the Game Is Over"));
+		end_of_game(_("The Game Is Over"));
 }
 
 void
