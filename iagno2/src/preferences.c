@@ -361,7 +361,7 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
   preferences_dialog = gnome_property_box_new ();
   gnome_dialog_set_parent (GNOME_DIALOG (preferences_dialog), GTK_WINDOW (app));
   gtk_window_set_title (GTK_WINDOW (preferences_dialog),
-                        _("Iagno2 Preferences"));
+                        _("Iagno II Preferences"));
   gtk_signal_connect (GTK_OBJECT (preferences_dialog), "destroy",
                       GTK_SIGNAL_FUNC (gtk_widget_destroyed),
                       &preferences_dialog);

@@ -78,7 +78,7 @@ iagno2_tileset_load ()
   g_free (tmp_path);
 
   if (!g_file_exists (filename)) {
-    g_print (_("Could not find \'%s\' tileset for Iagno2\n"), filename);
+    g_print (_("Could not find \'%s\' tileset for Iagno II\n"), filename);
     exit (1);
   }
 
@@ -251,7 +251,7 @@ iagno2_appbar_init ()
 
   gnome_app_set_statusbar (GNOME_APP (app), GTK_WIDGET (appbar));
 
-  gnome_appbar_set_status (GNOME_APPBAR (appbar), _(" Welcome to Iagno2!"));
+  gnome_appbar_set_status (GNOME_APPBAR (appbar), _(" Welcome to Iagno II!"));
 }
 
 void

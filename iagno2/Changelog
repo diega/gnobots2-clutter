@@ -1,5 +1,10 @@
 2000-04-09  Ian Peters  <itp@gnu.org>
 
+	* src/iagno2.c, src/preferences.c: Changed some occurances of Iagno2 in
+	  strings to Iagno II for consitancy.
+
+2000-04-09  Ian Peters  <itp@gnu.org>
+
 	* src/preferences.c: Now you can choose which plugins play what player.
 	* src/plugin.c, src/plugin.h: Tweaked the interface
 	* plugins/random/random.c: Filled out more functions to demonstrate the
