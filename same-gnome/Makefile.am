@@ -20,7 +20,8 @@ same_gnome_LDADD = \
 	$(GTK_LIBS)					\
         $(X_LIBS) $(x_libs) $(INTLLIBS) $(DL_LIB)
 
-pixmap_DATA = planets.xpm blink-sync.xpm puyonew2-sync.xpm stones.xpm rotate.xpm
+pixmap_DATA = planets.xpm blink-sync.xpm puyonew2-sync.xpm \
+	stones.xpm rotate.xpm
 EXTRA_DIST = same-gnome.desktop $(pixmap_DATA)
 
 install-data-local:
@@ -30,5 +31,4 @@ install-data-local:
 	touch $(scoredir)/same-gnome.scores
 	-chown games.games $(scoredir)/same-gnome.scores
 	-chmod 664 $(scoredir)/same-gnome.scores
-	-chgrp games $(bindir)/same-gnome
-	-chmod 2111 $(bindir)/same-gnome
+	-chgrp games $(bindir)/same-gnome && chmod 2111 $(bindir)/same-gnome
