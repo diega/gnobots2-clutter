@@ -1,6 +1,7 @@
 [Desktop Entry]
+Name=Phaser Chess
+Comment=Gnome Phaser Chess
 Exec=phaser_chess
 Icon=
-Info=Gnome Phaser Chess
 Terminal=0
 Type=Application
