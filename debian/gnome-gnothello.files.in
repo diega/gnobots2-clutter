@@ -1,0 +1,3 @@
+@PREFIX@/share/pixmaps/gnothello/*
+@PREFIX@/share/apps/Games/gnothello.desktop
+@BINDIR@/gnothello

@@ -1,0 +1,3 @@
+?package(gnome-mahjongg@SUFFIX@):needs=X11 section=Games/Board\
+  title="Gnome Mahjongg" command="/@BINDIR@/mahjongg"
+

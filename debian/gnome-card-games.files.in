@@ -1,0 +1,9 @@
+@PREFIX@/lib/libgdkcardimage.so.[0-9].[0-9]*
+@PREFIX@/lib/libgdkcardimage.so.[0-9]
+@PREFIX@/include/gdkcardimage/*
+@PREFIX@/share/pixmaps/cards/*
+@PREFIX@/share/apps/Games/freecell.desktop
+@PREFIX@/share/apps/Games/sol.desktop
+@PREFIX@/share/sol-games/*
+@BINDIR@/freecell
+@BINDIR@/sol

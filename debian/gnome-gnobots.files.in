@@ -1,0 +1,5 @@
+@PREFIX@/share/pixmaps/gnobots/*
+@PREFIX@/share/pixmaps/gnome-gnobots*
+@PREFIX@/share/apps/Games/gnobots.desktop
+@PREFIX@/share/gnome/help/gnobots/*
+@BINDIR@/gnobots

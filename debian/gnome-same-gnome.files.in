@@ -1,0 +1,3 @@
+@PREFIX@/share/pixmaps/same-gnome/*
+@PREFIX@/share/apps/Games/same-gnome.desktop
+@BINDIR@/same-gnome

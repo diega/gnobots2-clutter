@@ -1,0 +1,3 @@
+@PREFIX@/share/pixmaps/mahjongg/*
+@PREFIX@/share/apps/Games/mahjongg.desktop
+@BINDIR@/mahjongg

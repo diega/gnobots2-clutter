@@ -1,0 +1,13 @@
+#! /bin/sh
+
+for scorefile in mahjongg.scores; do
+	if [ ! -f /@LOCALSTATEDIR@/games/$scorefile ]; then
+		touch /@LOCALSTATEDIR@/games/$scorefile
+	fi
+	chown root.games /@LOCALSTATEDIR@/games/$scorefile
+	chmod 664 /@LOCALSTATEDIR@/games/$scorefile
+done
+
+#DEBHELPER#
+
+

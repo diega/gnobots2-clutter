@@ -1,0 +1,3 @@
+?package(phaser-chess@SUFFIX@):needs=X11 section=Games/Board\
+  title="Phaser Chess" command="/@BINDIR@/phaser_chess"
+

@@ -1,0 +1,29 @@
+gnome-games (0.27-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Jim Pick <jim@jimpick.com>  Sat, 15 Aug 1998 20:36:34 -0700
+
+gnome-games (0.25-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Jim Pick <jim@jimpick.com>  Sat,  8 Aug 1998 12:16:43 -0700
+
+gnome-games (0.20-2) unstable; urgency=low
+
+  * Fixed score file location - Bug #24027 (Thanks to Ray Dassen)
+  * Moved games to /usr/games - Bug #24030 (Thanks to Ray Dassen)
+  * Fixed gnomine menu - Bug #25142 (Thanks to Joel Rosdahl)
+
+ -- Jim Pick <jim@jimpick.com>  Mon,  3 Aug 1998 20:14:54 -0700
+
+gnome-games (0.20-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Jim Pick <jim@jimpick.com>  Wed, 17 Jun 1998 23:12:17 -0700
+
+Local variables:
+mode: debian-changelog
+End:

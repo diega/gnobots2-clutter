@@ -1,0 +1,4 @@
+@PREFIX@/share/pixmaps/gnome-gyahtzee.png
+@PREFIX@/share/apps/Games/gyahtzee.desktop
+@BINDIR@/gyahtzee
+@BINDIR@/cyahtzee

@@ -1,0 +1,5 @@
+?package(gnome-card-games@SUFFIX@):needs=X11 section=Games/Card\
+  title="Gnome Solitaire Games" command="/@BINDIR@/sol"
+?package(gnome-card-games@SUFFIX@):needs=X11 section=Games/Card\
+  title="Gnome FreeCell" command="/@BINDIR@/freecell"
+

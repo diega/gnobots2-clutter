@@ -1,0 +1,3 @@
+?package(gnome-gnothello@SUFFIX@):needs=X11 section=Games/Board\
+  title="Gnothello" command="/@BINDIR@/gnothello"
+

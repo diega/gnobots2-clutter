@@ -1,0 +1,110 @@
+Source: gnome-games@SUFFIX@
+Section: games
+Priority: optional
+Maintainer: Jim Pick <jim@jimpick.com>
+Standards-Version: 2.4.0.0
+
+Package: gnome-games@SUFFIX@
+Architecture: all
+Depends: gnome-core@SUFFIX@ (>= ${Source-Version})
+Description: Common files for the Gnome game packages
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+ .
+ Common files for the Gnome game packages.
+
+Package: gnome-card-games@SUFFIX@
+Architecture: any
+Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), gnome-guile@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Description: Gnome card games - Solitaire games (FreeCell, Klondike, Spider, etc)
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+ .
+ FreeCell + the Aisleriot solitaire games (Camelot, Klondike, Odessa,
+ Osmosis, Spider)
+
+Package: gnome-gnomine@SUFFIX@
+Architecture: any
+Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Description: Classic find the mines in the minefield game (from Gnome)
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+ .
+ Classic find the mines in the minefield game.
+
+Package: gnome-mahjongg@SUFFIX@
+Architecture: any
+Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Description: Classic Chinese Tile Game (from Gnome)
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+ .
+ Classic Chinese Tile Game.
+
+Package: gnome-same-gnome@SUFFIX@
+Architecture: any
+Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Description: The "Same Game" puzzle (from Gnome)
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+ .
+ The "Same Game" puzzle.
+
+Package: gnome-scottfree@SUFFIX@
+Architecture: any
+Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Description: A Scott Adams game player (from Gnome)
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+ .
+ A Scott Adams game player.
+
+Package: gnome-gyahtzee@SUFFIX@
+Architecture: any
+Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Description: Gnome version of Yahtzee Dice Game
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+ .
+ Yahtzee dice game.
+
+Package: gnome-gnobots@SUFFIX@
+Architecture: any
+Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Description: Gnome version of text based robots game for BSD games collection
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+ .
+ Gnome Robots is a version of the text based robots game which can be
+ found on a number of UNIX systems, and comes with the BSD games
+ package on Linux systems.
+ This version allows you to select a number of animated graphics
+ scenarios, as well as providing a safe teleport feature so you are not
+ totally at the mercy of your computer's random number generator.
+
+Package: gnome-gnothello@SUFFIX@
+Architecture: any
+Depends: gnome-games@SUFFIX@ (>= ${Source-Version}), ${shlibs:Depends}
+Description: Gnome version of Othello (Reversi) board game
+ Gnome is the "GNU Network Object Model Environment"
+ .
+ It is a project to build a complete, user-friendly desktop based
+ entirely on free software.
+ .
+ Classic Othello (Reversi) board game.

@@ -1,0 +1,152 @@
+#! /bin/sh
+#
+# debconfigure
+#
+# A script to generate a debian/rules file, with options.
+#
+# By Jim Pick <jim@jimpick.com>, GPL'd of course.
+#
+
+if [ ! -r rules.in ]; then
+	echo "Please run the debconfigure script in the debian directory" 1>&2
+	exit 1
+fi
+
+debtype='official'
+prefix='/usr'
+gtkprefix='/usr'
+bindir='/usr/games'
+localstatedir='/var/lib'
+
+pkgsuffix=''
+
+for dc_option
+do
+    case "$dc_option" in
+	-*=*) dc_optarg=`echo "$dc_option" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+	*) dc_optarg= ;;
+    esac
+
+    case "$dc_option" in
+
+	--clean)
+	    rm -f control rules *~ core *files *menu *substvars *.postinst *.debhelper
+	    exit ;;
+
+	--prefix=*)
+	    prefix="$dc_optarg" ;;
+
+	--pkgsuffix=*)
+	    pkgsuffix="$dc_optarg" ;;
+
+	--bindir=*)
+	    bindir="$dc_optarg" ;;
+
+        --localstatedir=*)
+            localstatedir="$dc_optarg" ;;
+
+	--debtype=*)
+	    debtype="$dc_optarg" ;;
+
+	*)
+	    cat <<EOF 1>&2
+Usage: debconfigure [options]
+Options: [defaults in brackets after descriptions]
+  --help                  print this message
+  --clean		  remove generated files
+  --prefix=PREFIX         install files under under PREFIX dir [/usr]
+  --pkgsuffix=SUFFIX      append SUFFIX onto package names []
+  --bindir=DIR            put binaries in DIR [/usr/games]
+  --localstatedir=DIR     put score files in DIR/games [/var/lib]
+  --debtype=DEBTYPE       enable macros with the name of DEBTYPE [official]
+EOF
+	    exit ;;
+
+    esac
+done
+
+# Strip leading slash
+prefix=`expr $prefix : '/\(.*\)'`
+gtkprefix=`expr $gtkprefix : '/\(.*\)'`
+bindir=`expr $bindir : '/\(.*\)'`
+localstatedir=`expr $localstatedir : '/\(.*\)'`
+
+for infile in `ls control.in rules.in`
+do
+    tofile=`expr $infile : '\(.*\)\.in'`
+    cat $infile | \
+       sed "s,@SUFFIX@,$pkgsuffix,g" | \
+       sed "s,@PREFIX@,$prefix,g" | \
+       sed "s,@GTKPREFIX@,$gtkprefix,g" | \
+       sed "s,@BINDIR@,$bindir,g" | \
+       sed "s,@LOCALSTATEDIR@,$localstatedir,g" | \
+       sed "s,%$debtype>,," | sed '/^%/d' > $tofile
+done
+chmod +x rules
+
+for filesfile in `ls *.files.in`
+do
+    tofile=`expr $filesfile : '\(.*\)\.files\.in'`
+    tofile=`echo $tofile$pkgsuffix.files`
+    cat $filesfile | \
+       sed "s,@SUFFIX@,$pkgsuffix,g" | \
+       sed "s,@PREFIX@,$prefix,g" | \
+       sed "s,@GTKPREFIX@,$gtkprefix,g" | \
+       sed "s,@BINDIR@,$bindir,g" | \
+       sed "s,@LOCALSTATEDIR@,$localstatedir,g" | \
+       sed "s,%$debtype>,," | sed '/^%/d' > $tofile
+done
+
+#for conffilesfile in `ls *.conffiles.in`
+#do
+#    tofile=`expr $conffilesfile : '\(.*\)\.conffiles\.in'`
+#    tofile=`echo $tofile$pkgsuffix.conffiles`
+#    cat $conffilesfile | \
+#       sed "s,@SUFFIX@,$pkgsuffix,g" | \
+#       sed "s,@PREFIX@,$prefix,g" | \
+#       sed "s,@GTKPREFIX@,$gtkprefix,g" | \
+#       sed "s,@BINDIR@,$bindir,g" | \
+#       sed "s,@LOCALSTATEDIR@,$localstatedir,g" | \
+#       sed "s,%$debtype>,," | sed '/^%/d' > $tofile
+#done
+
+for menufile in `ls *.menu.in`
+do
+    tofile=`expr $menufile : '\(.*\)\.menu\.in'`
+    tofile=`echo $tofile$pkgsuffix.menu`
+    cat $menufile | \
+       sed "s,@SUFFIX@,$pkgsuffix,g" | \
+       sed "s,@PREFIX@,$prefix,g" | \
+       sed "s,@GTKPREFIX@,$gtkprefix,g" | \
+       sed "s,@BINDIR@,$bindir,g" | \
+       sed "s,@LOCALSTATEDIR@,$localstatedir,g" | \
+       sed "s,%$debtype>,," | sed '/^%/d' > $tofile
+done
+
+for postinstfile in `ls *.postinst.in`
+do
+    tofile=`expr $postinstfile : '\(.*\)\.postinst\.in'`
+    tofile=`echo $tofile$pkgsuffix.postinst`
+    cat $postinstfile | \
+       sed "s,@SUFFIX@,$pkgsuffix,g" | \
+       sed "s,@PREFIX@,$prefix,g" | \
+       sed "s,@GTKPREFIX@,$gtkprefix,g" | \
+       sed "s,@BINDIR@,$bindir,g" | \
+       sed "s,@LOCALSTATEDIR@,$localstatedir,g" | \
+       sed "s,%$debtype>,," | sed '/^%/d' > $tofile
+done
+
+for postinst in gnome-card-games$pkgsuffix
+do
+
+cat > $postinst.postinst <<EOF
+#! /bin/sh
+
+set -e
+ldconfig
+
+#DEBHELPER#
+EOF
+
+done
+
