@@ -1,5 +1,8 @@
 2003-12-18  William Jon McCann  <mccann@jhu.edu>
 
+	* src/menu.cpp (help_about_callback): Remove email addresses from main
+	screen for space reasons.  Use angle brackets around email in credits.
+
 	* src/game.cpp (bj_game_new): Fix leaks.
 
 2003-12-12  Callum McKenzie  <callum@physics.otago.ac.nz>
