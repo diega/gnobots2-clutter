@@ -155,7 +155,6 @@ bj_card_load_pixmaps (GtkWidget* app, GdkCardDeckOptions deck_options)
                                              "<b>%s</b>\n\n%s",
                                              _("Could not load the card deck images."),
                                              _("Blackjack will now exit."));
-      gtk_dialog_set_has_separator (GTK_DIALOG (error_dialog), FALSE);
       gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (error_dialog)->label), TRUE);
       gtk_dialog_run (GTK_DIALOG (error_dialog));
       gtk_widget_destroy (error_dialog);

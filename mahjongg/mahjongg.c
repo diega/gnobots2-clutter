@@ -1075,7 +1075,6 @@ mapset_changed_cb (GConfClient *client,
 		GTK_BUTTONS_OK,
 		_("This new mapset will take effect when you start "
 		  "a new game, or when Mahjongg is restarted."));
-	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (dialog);
 }
@@ -1327,7 +1326,6 @@ no_match (void)
 				GTK_MESSAGE_INFO,
 				GTK_BUTTONS_OK,
 				_("These tiles don't match."));
-		gtk_dialog_set_has_separator (GTK_DIALOG (mb), FALSE);
 		gtk_dialog_run (GTK_DIALOG (mb));
 		gtk_widget_destroy (mb);
         } else
@@ -1373,7 +1371,6 @@ check_free (void)
 						NULL);
 			gtk_dialog_set_default_response (GTK_DIALOG (mb),
 							 GTK_RESPONSE_ACCEPT);
-			gtk_dialog_set_has_separator (GTK_DIALOG (mb), FALSE);
 			if (gtk_dialog_run (GTK_DIALOG (mb)) == GTK_RESPONSE_REJECT)
 				shuffle_tiles_callback (NULL, NULL);
 			gtk_widget_destroy (mb);
@@ -2062,7 +2059,6 @@ shuffle_tiles_callback (GtkWidget *widget, gpointer data)
 					     GTK_MESSAGE_ERROR,
 					     GTK_BUTTONS_OK,
 					     (_("Sorry, I was unable to find a playable configuration.")));
-		gtk_dialog_set_has_separator (GTK_DIALOG (mb), FALSE);
 		gtk_dialog_run (GTK_DIALOG (mb));
 		gtk_widget_destroy (mb);
 

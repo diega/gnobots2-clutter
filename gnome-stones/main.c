@@ -130,7 +130,6 @@ load_image_from_path (const char *relative_name)
                                       GTK_MESSAGE_ERROR, 
                                       GTK_BUTTONS_OK, 
                                       buffer);
-      gtk_dialog_set_has_separator (GTK_DIALOG (widget), FALSE);
       gtk_dialog_run(GTK_DIALOG(widget));
 
       gtk_widget_destroy(widget);

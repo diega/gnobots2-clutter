@@ -461,7 +461,6 @@ preferences_restore (void)
                                              _("Neither your chosen game nor the default game could be loaded."),
                                              _("Please make sure that GNOME Stones is correctly installed."),
                                              _("You may be able to select a different game from the preferences dialog."));
-            gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
             gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (dialog)->label),
                                       TRUE);
             gtk_dialog_run (GTK_DIALOG (dialog));

@@ -396,7 +396,6 @@ bj_game_eval_installed_file (gchar *file)
                                              GTK_BUTTONS_CLOSE,
                                              "<span weight=\"bold\" size=\"larger\">%s</span>\n\n%s",
                                              message, message2);
-      gtk_dialog_set_has_separator (GTK_DIALOG (w), FALSE);
       gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (w)->label), TRUE);
       gtk_dialog_run (GTK_DIALOG (w));
       gtk_widget_destroy (w);

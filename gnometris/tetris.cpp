@@ -316,7 +316,6 @@ Tetris::setupPixmap()
 						       GTK_MESSAGE_ERROR,
 						       GTK_BUTTONS_OK,
 						       _("Could not find the theme: \n%s\n\nPlease check your gnome-games installation"), fullpixname);
-		gtk_dialog_set_has_separator (GTK_DIALOG (w), FALSE);
 		gtk_dialog_run (GTK_DIALOG (w));
 		exit(1);
 	}
@@ -332,7 +331,6 @@ Tetris::setupPixmap()
 						       GTK_MESSAGE_ERROR,
 						       GTK_BUTTONS_OK,
 						       _("Can't load the image: \n%s\n\nPlease check your gnome-games installation"), fullpixname);
-		gtk_dialog_set_has_separator (GTK_DIALOG (w), FALSE);
 		gtk_dialog_run (GTK_DIALOG (w));
 		exit (1);
 	}

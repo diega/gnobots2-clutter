@@ -1,3 +1,10 @@
+2004-02-14  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* src/game.cpp: 
+	* src/dialog.cpp: 
+	* src/card.cpp: Removed the has_separator call from the message
+	dialogs.
+
 2004-02-12  William Jon McCann  <mccann@jhu.edu>
 
 	* data/Makefile.am: Don't install binary cache file.

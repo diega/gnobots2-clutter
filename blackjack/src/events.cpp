@@ -230,6 +230,8 @@ handle_slot_pressed (GdkEventButton *event, hslot_type hslot, gint cardid)
 {
   gboolean double_click;
 
+  g_print ("%d, %d\n", hslot, cardid);
+
   /* We can't let Gdk do the double-click detection since the entire playing
    * area is one big widget it can't distinguish between single-clicks on two
    * cards and a double-click on one. */

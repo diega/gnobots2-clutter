@@ -55,7 +55,6 @@ get_insurance_choice ()
                                    GTK_BUTTONS_YES_NO,
                                    "<span weight=\"bold\" size=\"larger\">%s</span>",
                                    message);
-  gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 
   gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (dialog)->label),
                             TRUE);
@@ -109,7 +108,6 @@ show_hint_dialog ()
                                      "<span weight=\"bold\" size=\"larger\">%s</span>",
 	                                   gmessage);
 
-  gtk_dialog_set_has_separator (GTK_DIALOG (hint_dlg), FALSE);
   gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (hint_dlg)->label), TRUE);
   if (hint_dlg)
     {
