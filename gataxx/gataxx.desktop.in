@@ -1,8 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
 Icon=gataxx.png
-_Name=Gataxx
-_Comment=Ataxx game
+_Name=Ataxx
+_Comment=Compete to dominate the board in a Reversi-like game
 Exec=gataxx
 Terminal=false
 Type=Application

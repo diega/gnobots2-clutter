@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-_Name=GNOME Stones
-_Comment=GNOME Stones game
+_Name=Stones
+_Comment=Collect diamonds while avoiding falling boulders
 Exec=gnome-stones
 Icon=gnome-stones.png
 Terminal=false

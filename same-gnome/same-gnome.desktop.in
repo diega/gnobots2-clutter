@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 _Name=Same GNOME
-_Comment=GNOME SameGame
+_Comment=Remove groups of balls to try and clear the screen
 Exec=same-gnome
 Icon=gnome-gsame.png
 Terminal=false
