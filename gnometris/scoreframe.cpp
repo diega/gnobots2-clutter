@@ -48,7 +48,7 @@ ScoreFrame::ScoreFrame(int cmdlLevel)
 	hbLevel = gtk_hbox_new(FALSE, 0);
 
 	gtk_container_add(GTK_CONTAINER(w), vb);
-  gtk_container_border_width(GTK_CONTAINER(vb), 10);
+	gtk_container_set_border_width(GTK_CONTAINER(vb), 10);
 
 	gtk_box_pack_start(GTK_BOX(vb), hbScore, 0, 0, 0);
 	gtk_box_pack_start(GTK_BOX(vb), hbLines, 0, 0, 0);
@@ -86,7 +86,7 @@ ScoreFrame::setScore(int s)
 	score = s;
 	
 	sprintf(b, "%7d", score);
-	gtk_label_set(GTK_LABEL(scorew), b);
+	gtk_label_set_text(GTK_LABEL(scorew), b);
 }
 
 void
@@ -95,7 +95,7 @@ ScoreFrame::incScore(int s)
 	score += s;
 	
 	sprintf(b, "%7d", score);
-	gtk_label_set(GTK_LABEL(scorew), b);
+	gtk_label_set_text(GTK_LABEL(scorew), b);
 }
 
 void
@@ -104,8 +104,8 @@ ScoreFrame::resetLines()
 	lines = 0;
 	score = 0;
 	sprintf(b, "%7d", lines);
-	gtk_label_set(GTK_LABEL(scorew), b);
-	gtk_label_set(GTK_LABEL(linesw), b);
+	gtk_label_set_text(GTK_LABEL(scorew), b);
+	gtk_label_set_text(GTK_LABEL(linesw), b);
 }
 
 void 
@@ -131,7 +131,7 @@ ScoreFrame::incLines(int newlines)
 	}
 	incScore(linescore * level);
 	sprintf(b, "%7d", lines);
-	gtk_label_set(GTK_LABEL(linesw), b);
+	gtk_label_set_text(GTK_LABEL(linesw), b);
 }
 
 void 
@@ -142,7 +142,7 @@ ScoreFrame::checkLevel()
 	{
 		level = l;
 		sprintf(b, "%7d", level);
-		gtk_label_set(GTK_LABEL(levelw), b);
+		gtk_label_set_text(GTK_LABEL(levelw), b);
 	}
 }
 
@@ -151,7 +151,7 @@ ScoreFrame::setLevel(int l)
 {
 	level = l;
 	sprintf(b, "%7d", level);
-	gtk_label_set(GTK_LABEL(levelw), b);
+	gtk_label_set_text(GTK_LABEL(levelw), b);
 }
 
 void
