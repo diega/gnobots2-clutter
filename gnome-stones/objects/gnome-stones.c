@@ -163,7 +163,7 @@ empty_animate (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
   if (empty->open_door_animation)
     return empty->open_door_animation;
   else if (empty->extra_life_animation)
-    return 4+random () % 4;
+    return 4+g_random_int_range (0, INT_MAX) % 4;
   else
     return 0;
 }
@@ -293,12 +293,12 @@ amoeba_scanned (GStonesCave *cave, guint x, guint y,
  
   
   /* Is this amoeba willing to grow?  */
-  if (random () % (amoeba->slow_time ? 128 : 16) < 4)
+  if (g_random_int_range (0, INT_MAX) % (amoeba->slow_time ? 128 : 16) < 4)
     {
       GStonesObject *type;
       
       /* We randomly take one direction.  */
-      m= random () % 4;
+      m= g_random_int_range (0, INT_MAX) % 4;
       
       type= cave->entry[x+x_diff[m]][y+y_diff[m]].object;
       
@@ -491,7 +491,7 @@ gnome_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 	      (cave->entry[xn][yn].state == 0) &&
 	      (cave->entry[xn+cave->player_x_direction][yn].object == OBJECT_EMPTY))
 	    { 
-	      if (random () % 5 == 0)
+	      if (g_random_int_range (0, INT_MAX) % 5 == 0)
 		{
 		  moved= TRUE;
 		  
@@ -578,7 +578,7 @@ gnome_animate (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
       {
 	if (anim.sequence == 0)
 	  {
-	    int rnd= random () % 100;
+	    int rnd = g_random_int_range (0, INT_MAX) % 100;
 	    
 	    for (anim.sequence = sizeof (gnome_anim)/sizeof (gnome_anim[1]);
 		 anim.sequence > 0; anim.sequence--)
@@ -600,7 +600,7 @@ gnome_animate (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 	      {
 		anim.offset= 0;
 
-		if ((random () % 100) >=
+		if ((g_random_int_range (0, INT_MAX) % 100) >=
 		    gnome_anim [anim.sequence-1].repeat_prob)
 		  anim.sequence= 0;
 	      }

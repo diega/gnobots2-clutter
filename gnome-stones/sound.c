@@ -84,11 +84,11 @@ gint sound_register( char *name )
 
  sample_id = gnome_sound_sample_load( name, fullname );
 
- if( sample_id<0 )
-   g_print( "gnome-stones: cannot register sound %s\n", buf );
- else
+ if (sample_id >= 0)
    samples[numsamples++]=sample_id;
-   
+/* else
+   g_print( "gnome-stones: cannot register sound %s\n", buf ); */
+
  g_free( fullname );
 #endif
  return sample_id;

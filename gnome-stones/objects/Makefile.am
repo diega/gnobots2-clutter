@@ -8,10 +8,12 @@ INCLUDES = 						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" 	\
 	-DG_DISABLE_DEPRECATED                          \
 	-DGTK_DISABLE_DEPRECATED 			\
-	-I$(includedir)					
-#       -DGDK_DISABLE_DEPRECATED 			\
-#       -DGNOME_DISABLE_DEPRECATED 			\
-	
+	-I$(includedir)					\
+	-DG_DISABLE_DEPRECATED				\
+	-DGDK_DISABLE_DEPRECATED 			\
+	-DGTK_DISABLE_DEPRECATED			\
+	-DGNOME_DISABLE_DEPRECATED
+
 object_LTLIBRARIES = libgnome-stones.la libgnomekoban.la
 
 libgnome_stones_la_SOURCES = gnome-stones.c

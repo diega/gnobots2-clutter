@@ -99,7 +99,7 @@ empty_animate (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
   if (empty->open_door_animation)
     return empty->open_door_animation;
   else if (empty->extra_life_animation)
-    return 9+random () % 4;
+    return 9+g_random_int_range (0, INT_MAX) % 4;
   else
     return 0;
 }
@@ -403,7 +403,7 @@ gnome_animate (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
       {
 	if (anim.sequence == 0)
 	  {
-	    int rnd= random () % 100;
+	    int rnd = g_random_int_range (0, INT_MAX) % 100;
 	    
 	    for (anim.sequence = sizeof (gnome_anim)/sizeof (gnome_anim[1]);
 		 anim.sequence > 0; anim.sequence--)
@@ -425,7 +425,7 @@ gnome_animate (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 	      {
 		anim.offset= 0;
 
-		if ((random () % 100) >=
+		if ((g_random_int_range (0, INT_MAX) % 100) >=
 		    gnome_anim [anim.sequence-1].repeat_prob)
 		  anim.sequence= 0;
 	      }

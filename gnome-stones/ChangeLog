@@ -1,3 +1,13 @@
+2002-05-10  Bastien Nocera  <hadess@hadess.net>
+
+	* objects/Makefile.am: add deprecation defines
+	* objects/gnome-stones.c: (empty_animate), (amoeba_scanned),
+	(gnome_scanned), (gnome_animate):
+	* objects/gnomekoban.c: (empty_animate), (gnome_animate):
+	replace random() with g_random_int_range (0, INT_MAX)
+	(Closes: #60426)
+	* sound.c: (sound_register): don't print stuff, we don't care
+
 2002-05-07  Bastien Nocera  <hadess@hadess.net>
 
 	* Makefile.am:
