@@ -37,7 +37,6 @@ blackjack_SOURCES = 		\
 	chips.cpp
 
 blackjack_LDADD = $(GNOME_GAMES_LIBS) \
-	../../gdk-card-image/libgdkcardimage.la \
 	../../libgames-support/libgames-support.la \
 	@UCB_LDFLAGS@
 
