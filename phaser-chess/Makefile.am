@@ -61,7 +61,7 @@ phaser_chess_LDADD = \
 	$(top_builddir)/libgnome/libgnome.la		\
 	$(top_builddir)/obgtk/libobgtk.la		\
         $(X_LIBS)					\
-	-lobjc
+	-lobjc $(PTHREAD_LIB)
 	
 EXTRA_DIST = phaser-chess.desktop
 
