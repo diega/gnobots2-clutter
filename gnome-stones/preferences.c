@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1999/01/17 15:14:25 carsten>
+ * Time-stamp: <1999/03/02 18:53:16 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -27,6 +27,12 @@
 
 /*****************************************************************************/
 /* Global Variables */
+
+/* The default game, that should be loaded, if no client state is to
+   be restored.  If this variables value is NULL, than 'default.cave'
+   will be used instead.  */
+
+gchar *default_game= NULL;
 
 /* This variable specifies the currently played game.  If 'game' is
    equal to 'NULL', than no game is loaded.  */
@@ -328,8 +334,13 @@ preferences_restore (void)
   filename= gnome_config_get_string_with_default ("Preferences/Game", &def);
 
   cave= gnome_config_get_int ("Preferences/Start cave=0");
-  if (def || !load_game_by_name (filename, cave))
-    load_game_by_name (CAVESDIR"/default.caves", 0);
+  if (!default_game || !load_game_by_name (default_game, 0))
+    {
+      if (def || !load_game_by_name (filename, cave))
+	{
+	  load_game_by_name (CAVESDIR"/default.caves", 0);
+	}
+    }
 
   g_free (filename);
 

@@ -1,5 +1,10 @@
 1999-03-02  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
+	* preferences.c: Added variable 'default_game'.
+	(preferences_restore): Load 'default_game' if specified.
+
+	* main.c: Added 'game' command line option.
+
 	* README: Updated the cave file description.
 
 1999-02-23  Changwoo Ryu  <cwryu@adam.kaist.ac.kr>

@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <1999/02/07 12:11:01 carsten>
+ * Time-stamp: <1999/03/02 18:47:40 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -91,9 +91,10 @@ static char *default_message= N_("Gnome-Stones (c) 1998 Carsten Schaar");
 /****************************************************************************/
 /* Commandline options.  */
 
-
 /* Command-line arguments understood by this module.  */
 static const struct poptOption options[] = {
+  {"game", 'g', POPT_ARG_STRING, &default_game, 0,
+   N_("Game to play"), N_("FILENAME")},
   {NULL, '\0', 0, NULL, 0}
 };
 

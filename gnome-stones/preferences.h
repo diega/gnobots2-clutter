@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1999/01/17 15:14:36 carsten>
+ * Time-stamp: <1999/03/02 18:48:54 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -28,6 +28,12 @@
 
 /*****************************************************************************/
 /* Global Variables */
+
+/* The default game, that should be loaded, if no client state is to
+   be restored.  If this variables value is NULL, than 'default.cave'
+   will be used instead.  */
+
+extern gchar *default_game;
 
 /* This variable specifies the currently played game.  If 'game' is
    equal to 'NULL', than no game is loaded.  */
