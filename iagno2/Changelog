@@ -1,4 +1,9 @@
-2000-04-10  Ian Peters  <itp@gnu.org>
+2000-04-11  Ian Peters  <itp@gnu.org>
+
+	* src/main.c (end_game_cb): Need to recreate board and board_pixmaps, or
+	  else changing the tileset after we've ended a game leads to BOOM.
+
+2000-04-11  Ian Peters  <itp@gnu.org>
 
 	* src/iagno2.c: switched from threads to fork and pipe to do computer
 	  player trickery

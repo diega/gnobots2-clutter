@@ -138,6 +138,11 @@ clean_up (gboolean full)
     computer_thread = 0;
   }
 
+  if (game_over_flip_id) {
+    gtk_timeout_remove (game_over_flip_id);
+    game_over_flip_id = 0;
+  }
+
   if (board) {
     reversi_destroy_board (board);
     board = NULL;
@@ -148,24 +153,21 @@ clean_up (gboolean full)
     board_pixmaps = NULL;
   }
 
-  if (game_over_flip_id) {
-    gtk_timeout_remove (game_over_flip_id);
-    game_over_flip_id = 0;
+  if (!full) {
+    return;
   }
 
-  if (full) {
-    if (properties) {
-      iagno2_properties_destroy (properties);
-      properties = NULL;
-    }
-
-    if (buffer_pixmap) {
-      gdk_pixmap_unref (buffer_pixmap);
-      buffer_pixmap = NULL;
-    }
-
-    gdk_colormap_free_colors (gdk_colormap_get_system (), colors, 2);
+  if (properties) {
+    iagno2_properties_destroy (properties);
+    properties = NULL;
   }
+
+  if (buffer_pixmap) {
+    gdk_pixmap_unref (buffer_pixmap);
+    buffer_pixmap = NULL;
+  }
+
+  gdk_colormap_free_colors (gdk_colormap_get_system (), colors, 2);
 }
 
 static gint
@@ -180,6 +182,9 @@ end_game_cb (GtkWidget *widget, gpointer data)
   game_in_progress = 0;
 
   clean_up (FALSE);
+
+  board = reversi_init_board ();
+  board_pixmaps = g_new0 (gchar, BOARDSIZE * BOARDSIZE);
 
   for (i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
     iagno2_render_tile_to_buffer (0, i);
