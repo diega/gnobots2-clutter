@@ -87,11 +87,11 @@ gchar *game_variation = NULL;
 #define DEFAULT_VARIATION      "Vegas_Strip.rules"
 
 void
-bj_make_window_title (gchar *game_name, gint seed) 
+bj_make_window_title (gchar *game_name, gint lseed) 
 {
         char *title;
 
-        title = g_strdup_printf (_("Blackjack: %s (%d)"), game_name, seed);
+        title = g_strdup_printf (_("Blackjack: %s (%d)"), game_name, lseed);
 
         gtk_window_set_title (GTK_WINDOW (app), title); 
 
@@ -222,7 +222,8 @@ create_main_window ()
         /* This is the prefix used to retrieve the state when NOT restarted: */
         const gchar* prefix = 
                 gnome_client_get_global_config_prefix (gnome_master_client ());
-        GConfClient * gconf_client = gconf_client_get_default ();
+	if (!gconf_client)
+        	gconf_client = gconf_client_get_default ();
         gint width, height;
 
         width = gconf_client_get_int (gconf_client, GCONF_KEY_WIDTH, NULL);
@@ -383,10 +384,10 @@ static void
 bj_gconf_card_style_cb (GConfClient *client, guint cnxn_id, 
                         GConfEntry *entry, gpointer user_data)
 {
-        gchar *card_style;
+        gchar *lcard_style;
 
-        card_style = bj_get_card_style ();
-        bj_card_set_theme (card_style);
+        lcard_style = bj_get_card_style ();
+        bj_card_set_theme (lcard_style);
         bj_draw_refresh_screen ();
 }
 
@@ -412,21 +413,21 @@ static void
 bj_gconf_show_toolbar_cb (GConfClient *client, guint cnxn_id, 
                           GConfEntry *entry, gpointer user_data)
 {
-        gboolean show_toolbar;
+        gboolean lshow_toolbar;
 
-        show_toolbar = gconf_client_get_bool (client, GCONF_KEY_SHOW_TOOLBAR, NULL);
-        bj_gui_show_toolbar (show_toolbar);
+        lshow_toolbar = gconf_client_get_bool (client, GCONF_KEY_SHOW_TOOLBAR, NULL);
+        bj_gui_show_toolbar (lshow_toolbar);
 }
 
 gchar *
 bj_get_card_style ()
 {
-        gchar *card_style;
+        gchar *lcard_style;
 
-        card_style = gconf_client_get_string (bj_gconf_client (), 
+        lcard_style = gconf_client_get_string (bj_gconf_client (), 
                                               GCONF_KEY_CARD_STYLE,
                                               NULL);
-        return card_style;
+        return lcard_style;
 }
 
 void

@@ -328,12 +328,12 @@ Tetris::setupPixmap()
 
 	if (!g_file_test (fullpixname, G_FILE_TEST_EXISTS))
 	{
-		GtkWidget *w = gtk_message_dialog_new (NULL,
+		GtkWidget *widget = gtk_message_dialog_new (NULL,
 						       GTK_DIALOG_DESTROY_WITH_PARENT,
 						       GTK_MESSAGE_ERROR,
 						       GTK_BUTTONS_OK,
 						       _("Could not find the theme: \n%s\n\nPlease check your gnome-games installation"), fullpixname);
-		gtk_dialog_run (GTK_DIALOG (w));
+		gtk_dialog_run (GTK_DIALOG (widget));
 		exit(1);
 	}
 
@@ -343,12 +343,12 @@ Tetris::setupPixmap()
 	image = gdk_pixbuf_new_from_file(fullpixname, NULL);
 
 	if (image == NULL) {
-		GtkWidget *w = gtk_message_dialog_new (NULL,
+		GtkWidget *widget= gtk_message_dialog_new (NULL,
 						       GTK_DIALOG_DESTROY_WITH_PARENT,
 						       GTK_MESSAGE_ERROR,
 						       GTK_BUTTONS_OK,
 						       _("Can't load the image: \n%s\n\nPlease check your gnome-games installation"), fullpixname);
-		gtk_dialog_run (GTK_DIALOG (w));
+		gtk_dialog_run (GTK_DIALOG (widget));
 		exit (1);
 	}
 	g_free (fullpixname);

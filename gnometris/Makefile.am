@@ -4,11 +4,16 @@ SUBDIRS=pix help
 
 Gamesdir=$(datadir)/applications
 
-INCLUDES=\
-	$(GNOME_GAMES_CXXFLAGS)	\
+AM_CPPFLAGS=\
 	-I$(top_srcdir)/libgames-support \
 	-DDATADIR=\""$(datadir)"\"		   \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"
+
+AM_CXXFLAGS=\
+	$(GNOME_GAMES_CXXFLAGS)
+
+AM_CFLAGS=\
+	$(GNOME_GAMES_CFLAGS)
 
 bin_PROGRAMS=gnometris
 

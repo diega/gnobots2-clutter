@@ -1,3 +1,14 @@
+2004-06-08  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* card.cpp:
+	* menu.cpp:
+	* blackjack.cpp:
+	* game.cpp:
+	* player.cpp:
+	* strategy.cpp: Rename locals to avoid warnings about
+	shadowing. Generally I just prepended an l. Hopefully this
+	hasn't introduced too many bugs.
+
 2004-06-06  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* draw.cpp: Don't use a gc for drawing the chips. draw_gc

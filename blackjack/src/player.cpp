@@ -73,12 +73,12 @@ Card::value ()
         return (rank < 10 ? rank : 10);
 }
 
-Shoe::Shoe (int numDecks)
+Shoe::Shoe (int lnumDecks)
 {
-        this->numDecks = numDecks;
-        cards = new Card[52*numDecks];
+        numDecks = lnumDecks;
+        cards = new Card[52*lnumDecks];
         numCards = 0;
-        for (int deck = 0; deck < numDecks; deck++)
+        for (int deck = 0; deck < lnumDecks; deck++)
                 for (int rank = 1; rank <= 13; rank++)
                         for (int suit = 1; suit <= 4; suit++) {
                                 cards[numCards].rank = rank;
@@ -225,18 +225,18 @@ PlayerHand::showOption (int option)
 {
 }
 
-Player::Player (int numDecks, BJRules *rules, BJStrategy & strategy,
+Player::Player (int lnumDecks, BJRules *lrules, BJStrategy & lstrategy,
                 Progress & progress)
-        : BJPlayer(BJShoe(numDecks), *rules, strategy, progress)
+        : BJPlayer(BJShoe(lnumDecks), *lrules, lstrategy, progress)
 {
-        this->rules = rules;
+        rules = lrules;
 }
 
-Player::Player (const int numDecks[], BJRules *rules, BJStrategy & strategy,
+Player::Player (const int lnumDecks[], BJRules *lrules, BJStrategy & lstrategy,
                 Progress & progress)
-        : BJPlayer(BJShoe(numDecks), *rules, strategy, progress)
+        : BJPlayer(BJShoe(lnumDecks), *lrules, lstrategy, progress)
 {
-        this->rules = rules;
+        rules = lrules;
 }
 
 void
@@ -245,7 +245,7 @@ Player::reset ()
 }
 
 int
-Player::showOptions (Hand *player, int upCard, int numHands)
+Player::showOptions (Hand *lplayer, int upCard, int lnumHands)
 {
         int bestOption, num_options, bestOptionNumber;
         double value, bestValue;
@@ -261,7 +261,7 @@ Player::showOptions (Hand *player, int upCard, int numHands)
 
         // Player can always stand.
 
-        bestValue = value = getValueStand (*player, upCard);
+        bestValue = value = getValueStand (*lplayer, upCard);
         mark_list[num_options++] = g_strdup_printf ("  %s     %8.2lf%%\n", 
                                                     _("Stand"), value * 100);
         bestOption = KEY_S;
@@ -269,7 +269,7 @@ Player::showOptions (Hand *player, int upCard, int numHands)
 
         // Player can't hit split aces.
         if (bj_hand_can_be_hit ()) {
-                value = getValueHit (*player, upCard);
+                value = getValueHit (*lplayer, upCard);
                 
                 mark_list[num_options++] = g_strdup_printf ("  %s       %8.2lf%%\n", 
                                                             _("Hit"), value * 100);
@@ -281,7 +281,7 @@ Player::showOptions (Hand *player, int upCard, int numHands)
       
                 // Check if player can double down.
                 if (bj_hand_can_be_doubled ()) {
-                        value = getValueDoubleDown (*player, upCard);
+                        value = getValueDoubleDown (*lplayer, upCard);
                         mark_list[num_options++] = g_strdup_printf ("  %s    %8.2lf%%\n", 
                                                                     _("Double"), value * 100);
                         if (value > bestValue) {
@@ -295,7 +295,7 @@ Player::showOptions (Hand *player, int upCard, int numHands)
         // Check if player can split a pair.
 
         if (bj_hand_can_be_split ()) {
-                value = getValueSplit(player->cards[0].value (), upCard);
+                value = getValueSplit(lplayer->cards[0].value (), upCard);
                 mark_list[num_options++] = g_strdup_printf ("  %s     %8.2lf%%\n", 
                                                             _("Split"), value * 100);
                 if (value > bestValue) {
@@ -363,7 +363,7 @@ Player::showOptions (Hand *player, int upCard, int numHands)
 }
 
 int
-Player::getBestOption (Hand *player, int upCard, int numHands)
+Player::getBestOption (Hand *lplayer, int upCard, int lnumHands)
 {
         int bestOption;
         double value, bestValue;
@@ -372,12 +372,12 @@ Player::getBestOption (Hand *player, int upCard, int numHands)
 
         // Player can always stand.
 
-        bestValue = value = getValueStand (*player, upCard);
+        bestValue = value = getValueStand (*lplayer, upCard);
         bestOption = KEY_S;
 
         // Player can't hit split aces.
         if (bj_hand_can_be_hit ()) {
-                value = getValueHit (*player, upCard);
+                value = getValueHit (*lplayer, upCard);
                 if (value > bestValue) {
                         bestValue = value;
                         bestOption = KEY_H;
@@ -385,7 +385,7 @@ Player::getBestOption (Hand *player, int upCard, int numHands)
       
                 // Check if player can double down.
                 if (bj_hand_can_be_doubled ()) {
-                        value = getValueDoubleDown (*player, upCard);
+                        value = getValueDoubleDown (*lplayer, upCard);
                         if (value > bestValue) {
                                 bestValue = value;
                                 bestOption = KEY_D;
@@ -396,7 +396,7 @@ Player::getBestOption (Hand *player, int upCard, int numHands)
         // Check if player can split a pair.
         
         if (bj_hand_can_be_split ()) {
-                value = getValueSplit(player->cards[0].value (), upCard);
+                value = getValueSplit(lplayer->cards[0].value (), upCard);
                 if (value > bestValue) {
                         bestValue = value;
                         bestOption = KEY_P;
@@ -414,7 +414,7 @@ Player::getBestOption (Hand *player, int upCard, int numHands)
         return bestOption;
 }
 
-Probabilities::Probabilities (bool hitSoft17) : BJDealer(hitSoft17)
+Probabilities::Probabilities (bool lhitSoft17) : BJDealer(lhitSoft17)
 {
 }
 
@@ -424,26 +424,26 @@ Probabilities::reset ()
 }
 
 void
-Probabilities::showProbabilities (BJShoe *distribution, int upCard,
+Probabilities::showProbabilities (BJShoe *ldistribution, int lupCard,
                                   bool condition)
 {
         gchar *markup;
         gchar *mark_list[7];
   
-        computeProbabilities (*distribution);
+        computeProbabilities (*ldistribution);
         double notBlackjack;
         if (condition)
-                notBlackjack = (double)1 - getProbabilityBlackjack (upCard);
+                notBlackjack = (double)1 - getProbabilityBlackjack (lupCard);
         else
                 notBlackjack = 1;
         reset ();
 
         mark_list[0] = g_strdup_printf ("<b>%s</b>\n", _("Dealer hand probabilities"));
         mark_list[1] = g_strdup_printf ("  %s         %5.2lf%%\n", _("Bust"),
-                                        getProbabilityBust (upCard) * 100.0 / notBlackjack);
+                                        getProbabilityBust (lupCard) * 100.0 / notBlackjack);
         for (int count = 17; count <= 21; count++) {
                 mark_list[count-15] = g_strdup_printf ("  %2d           %5.2lf%%\n", count,
-                                                       getProbabilityCount (count, upCard)
+                                                       getProbabilityCount (count, lupCard)
                                                        * 100.0 / notBlackjack);
         }
 
@@ -460,9 +460,9 @@ Probabilities::showProbabilities (BJShoe *distribution, int upCard,
 
 const int allTens[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 4};
 
-LoadablePlayer::LoadablePlayer (int numDecks, BJRules *rules, BJStrategy & strategy,
+LoadablePlayer::LoadablePlayer (int lnumDecks, BJRules *lrules, BJStrategy & lstrategy,
                                 Progress & progress, const char *filename = NULL)
-        : Player (allTens, rules, strategy, progress)
+        : Player (allTens, lrules, lstrategy, progress)
 {
         gint ret = FALSE;
 
@@ -470,7 +470,7 @@ LoadablePlayer::LoadablePlayer (int numDecks, BJRules *rules, BJStrategy & strat
                 ret = reset (filename);
 
         if (!ret)
-                BJPlayer::reset (BJShoe(numDecks), *rules, strategy, progress);
+                BJPlayer::reset (BJShoe(lnumDecks), *lrules, lstrategy, progress);
 }
 
 gint
@@ -681,32 +681,32 @@ LoadablePlayer::load (const char *filename)
         // load numHands, playerHandCount, etc.
         // now load the playerHands array
 
-        gzFile fp;
+        gzFile flp;
 
-        fp = gzopen (filename, "rb");
-        if (! fp) {
+        flp = gzopen (filename, "rb");
+        if (! flp) {
                 cerr << "Could not open required file: " << filename << endl;
                 return FALSE;
         }
 
-        gzread (fp, &playerHandCount, sizeof (playerHandCount));
-        gzread (fp, &valueSplit, sizeof (valueSplit));
-        gzread (fp, &resplit, sizeof (resplit));
-        gzread (fp, &overallValues, sizeof (overallValues));
-        gzread (fp, &overallValue, sizeof (overallValue));
+        gzread (flp, &playerHandCount, sizeof (playerHandCount));
+        gzread (flp, &valueSplit, sizeof (valueSplit));
+        gzread (flp, &resplit, sizeof (resplit));
+        gzread (flp, &overallValues, sizeof (overallValues));
+        gzread (flp, &overallValue, sizeof (overallValue));
 
-        while (! gzeof (fp)) {
-                gzread (fp, &i, sizeof (i));
-                gzread (fp, &playerHands[i].cards, sizeof (playerHands[i].cards));
-                gzread (fp, &playerHands[i].hitHand, sizeof (playerHands[i].hitHand));
-                gzread (fp, &playerHands[i].nextHand, sizeof (playerHands[i].nextHand));
-                gzread (fp, &playerHands[i].valueStand[0], sizeof (playerHands[i].valueStand[0]));
-                gzread (fp, &playerHands[i].valueHit[0], sizeof (playerHands[i].valueHit[0]));
-                gzread (fp, &playerHands[i].valueDoubleDown[0], sizeof (playerHands[i].valueDoubleDown[0]));
+        while (! gzeof (flp)) {
+                gzread (flp, &i, sizeof (i));
+                gzread (flp, &playerHands[i].cards, sizeof (playerHands[i].cards));
+                gzread (flp, &playerHands[i].hitHand, sizeof (playerHands[i].hitHand));
+                gzread (flp, &playerHands[i].nextHand, sizeof (playerHands[i].nextHand));
+                gzread (flp, &playerHands[i].valueStand[0], sizeof (playerHands[i].valueStand[0]));
+                gzread (flp, &playerHands[i].valueHit[0], sizeof (playerHands[i].valueHit[0]));
+                gzread (flp, &playerHands[i].valueDoubleDown[0], sizeof (playerHands[i].valueDoubleDown[0]));
                 
         }
 
-        gzclose (fp);
+        gzclose (flp);
         return TRUE;
 }
 

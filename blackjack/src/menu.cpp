@@ -225,7 +225,7 @@ bj_menu_create ()
 }
 
 void
-bj_menu_install_hints (GnomeApp *app)
+bj_menu_install_hints (GnomeApp *lapp)
 {
-        gnome_app_install_menu_hints (GNOME_APP (app), top_menu);
+        gnome_app_install_menu_hints (GNOME_APP (lapp), top_menu);
 }

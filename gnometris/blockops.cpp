@@ -23,12 +23,12 @@
 #include "field.h"
 #include "gnome-canvas-pimage.h"
 
-GnomeCanvasItem *BlockOps::generateItem(int x, int y, int color)
+GnomeCanvasItem *BlockOps::generateItem(int x, int y, int colour)
 {
 	GnomeCanvasItem *	it = gnome_canvas_item_new(
   			gnome_canvas_root(GNOME_CANVAS(fieldDisplay->getWidget())),
   			gnome_canvas_pimage_get_type(),
-  			"image", pic[color],
+  			"image", pic[colour],
   			"x", (double) x * BLOCK_SIZE,
   			"y", (double) y * BLOCK_SIZE,
 			"width", (double) BLOCK_SIZE,

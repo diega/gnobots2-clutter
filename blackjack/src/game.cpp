@@ -73,19 +73,19 @@ gboolean         first_hand = true;
 
 GList *rules_list = NULL;
 
-BJGameRules::BJGameRules (bool hitSoft17, bool doubleAnyTotal, 
-                          bool double9, bool doubleSoft, 
-                          bool doubleAfterHit, bool doubleAfterSplit,
-                          bool resplit, bool resplitAces, 
-                          bool lateSurrender, int numDecks, int dealerSpeed)
-        : BJRules (hitSoft17, doubleAnyTotal, 
-                   double9, doubleSoft, 
-                   doubleAfterHit, doubleAfterSplit,
-                   resplit, resplitAces, 
-                   lateSurrender)
+BJGameRules::BJGameRules (bool lhitSoft17, bool ldoubleAnyTotal, 
+                          bool ldouble9, bool ldoubleSoft, 
+                          bool ldoubleAfterHit, bool ldoubleAfterSplit,
+                          bool lresplit, bool lresplitAces, 
+                          bool llateSurrender, int lnumDecks, int ldealerSpeed)
+        : BJRules (lhitSoft17, ldoubleAnyTotal, 
+                   ldouble9, ldoubleSoft, 
+                   ldoubleAfterHit, ldoubleAfterSplit,
+                   lresplit, lresplitAces, 
+                   llateSurrender)
 {
-        this->numDecks = numDecks;
-        this->dealerSpeed = dealerSpeed;
+        numDecks = lnumDecks;
+        dealerSpeed = ldealerSpeed;
 }
 
 int
@@ -227,13 +227,13 @@ bj_game_read_rules (gchar *filename)
                 resplit,
                 resplitAces,
                 lateSurrender;
-        gint numDecks,
-                dealerSpeed;
+        gint lnumDecks,
+                ldealerSpeed;
   
         gnome_config_pop_prefix ();
         gnome_config_push_prefix (g_strdup_printf ("=%s=", filename));
 
-        numDecks = gnome_config_get_int_with_default 
+        lnumDecks = gnome_config_get_int_with_default 
                 ("General/Number Of Decks=6",
                  &used_default);
         hitSoft17 = gnome_config_get_bool_with_default 
@@ -263,7 +263,7 @@ bj_game_read_rules (gchar *filename)
         lateSurrender = gnome_config_get_bool_with_default
                 ("House Rules/Surrender Allowed=true",
                  &used_default);
-        dealerSpeed = gnome_config_get_int_with_default
+        ldealerSpeed = gnome_config_get_int_with_default
                 ("House Rules/Dealer Speed=500",
                  &used_default);
 
@@ -272,7 +272,7 @@ bj_game_read_rules (gchar *filename)
                                    double9, doubleSoft, 
                                    doubleAfterHit, doubleAfterSplit,
                                    resplit, resplitAces, 
-                                   lateSurrender, numDecks, dealerSpeed);
+                                   lateSurrender, lnumDecks, ldealerSpeed);
   
         return ruleset;
 }

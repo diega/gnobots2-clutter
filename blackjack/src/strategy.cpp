@@ -37,8 +37,8 @@ BJHand::BJHand() {
     reset();
 }
 
-BJHand::BJHand(const int cards[]) {
-    reset(cards);
+BJHand::BJHand(const int lcards[]) {
+    reset(lcards);
 }
 
 int BJHand::getCards(int card) const {
@@ -65,14 +65,14 @@ void BJHand::reset() {
     soft = false;
 }
 
-void BJHand::reset(const int cards[]) {
+void BJHand::reset(const int lcards[]) {
     numCards = count = 0;
     for (int card = 1; card <= 10; card++) {
-        this->cards[card - 1] = cards[card - 1];
-        numCards += cards[card - 1];
-        count += card*cards[card - 1];
+        cards[card - 1] = lcards[card - 1];
+        numCards += lcards[card - 1];
+        count += card*lcards[card - 1];
     }
-    if (count < 12 && cards[0]) {
+    if (count < 12 && lcards[0]) {
         count += 10;
         soft = true;
     } else {
@@ -115,8 +115,8 @@ BJShoe::BJShoe(int numDecks) {
     reset(numDecks);
 }
 
-BJShoe::BJShoe(const int cards[]) {
-    reset(cards);
+BJShoe::BJShoe(const int lcards[]) {
+    reset(lcards);
 }
 
 int BJShoe::getCards(int card) const {
@@ -155,11 +155,11 @@ void BJShoe::reset(int numDecks) {
     numCards = 52*numDecks;
 }
 
-void BJShoe::reset(const int cards[]) {
+void BJShoe::reset(const int lcards[]) {
     numCards = 0;
     for (int card = 1; card <= 10; card++) {
-        this->cards[card - 1] = totalCards[card - 1] = cards[card - 1];
-        numCards += cards[card - 1];
+        cards[card - 1] = totalCards[card - 1] = lcards[card - 1];
+        numCards += lcards[card - 1];
     }
 }
 
@@ -178,8 +178,8 @@ void BJShoe::undeal(int card) {
 // BJDealer
 //
 
-BJDealer::BJDealer(bool hitSoft17) {
-    this->hitSoft17 = hitSoft17;
+BJDealer::BJDealer(bool lhitSoft17) {
+    hitSoft17 = lhitSoft17;
     for (int count = 17; count <= 21; count++) {
         dealerHandCount[count - 17].numHands = 0;
     }
@@ -307,33 +307,33 @@ void BJDealer::computeProbabilities(const BJShoe & shoe) {
     }
 }
 
-double BJDealer::getProbabilityBust(int upCard) const {
-    return probabilityBust[upCard - 1];
+double BJDealer::getProbabilityBust(int lupCard) const {
+    return probabilityBust[lupCard - 1];
 }
 
 double BJDealer::getProbabilityBust() const {
     double p = 0;
-    for (int upCard = 1; upCard <= 10; upCard++) {
-        p += probabilityBust[upCard - 1]*probabilityCard[upCard - 1];
+    for (int lupCard = 1; lupCard <= 10; lupCard++) {
+        p += probabilityBust[lupCard - 1]*probabilityCard[lupCard - 1];
     }
     return p;
 }
 
-double BJDealer::getProbabilityCount(int count, int upCard) const {
-    return probabilityCount[count - 17][upCard - 1];
+double BJDealer::getProbabilityCount(int count, int lupCard) const {
+    return probabilityCount[count - 17][lupCard - 1];
 }
 
 double BJDealer::getProbabilityCount(int count) const {
     double p = 0;
-    for (int upCard = 1; upCard <= 10; upCard++) {
-        p += probabilityCount[count - 17][upCard - 1]
-                *probabilityCard[upCard - 1];
+    for (int lupCard = 1; lupCard <= 10; lupCard++) {
+        p += probabilityCount[count - 17][lupCard - 1]
+                *probabilityCard[lupCard - 1];
     }
     return p;
 }
 
-double BJDealer::getProbabilityBlackjack(int upCard) const {
-    return probabilityBlackjack[upCard - 1];
+double BJDealer::getProbabilityBlackjack(int lupCard) const {
+    return probabilityBlackjack[lupCard - 1];
 }
 
 double BJDealer::getProbabilityBlackjack() const {
@@ -403,18 +403,18 @@ BJRules::BJRules() {
     lateSurrender = false;
 }
 
-BJRules::BJRules(bool hitSoft17, bool doubleAnyTotal, bool double9,
-                 bool doubleSoft, bool doubleAfterHit, bool doubleAfterSplit,
-                 bool resplit, bool resplitAces, bool lateSurrender) {
-    this->hitSoft17 = hitSoft17;
-    this->doubleAnyTotal = doubleAnyTotal;
-    this->double9 = double9;
-    this->doubleSoft = doubleSoft;
-    this->doubleAfterHit = doubleAfterHit;
-    this->doubleAfterSplit = doubleAfterSplit;
-    this->resplit = resplit;
-    this->resplitAces = resplitAces;
-    this->lateSurrender = lateSurrender;
+BJRules::BJRules(bool lhitSoft17, bool ldoubleAnyTotal, bool ldouble9,
+                 bool ldoubleSoft, bool ldoubleAfterHit, bool ldoubleAfterSplit,
+                 bool lresplit, bool lresplitAces, bool llateSurrender) {
+    hitSoft17 = lhitSoft17;
+    doubleAnyTotal = ldoubleAnyTotal;
+    double9 = ldouble9;
+    doubleSoft = ldoubleSoft;
+    doubleAfterHit = ldoubleAfterHit;
+    doubleAfterSplit = ldoubleAfterSplit;
+    resplit = lresplit;
+    resplitAces = lresplitAces;
+    lateSurrender = llateSurrender;
 }
 
 BJRules::~BJRules() {
@@ -515,23 +515,23 @@ void BJProgress::indicate(int percentComplete) {
 // BJPlayer
 //
 
-BJPlayer::BJPlayer(const BJShoe & shoe, BJRules & rules, BJStrategy & strategy,
+BJPlayer::BJPlayer(const BJShoe & lshoe, BJRules & rules, BJStrategy & strategy,
                    BJProgress & progress) {
-    reset(shoe, rules, strategy, progress);
+    reset(lshoe, rules, strategy, progress);
 }
 
-void BJPlayer::reset(const BJShoe & shoe, BJRules & rules,
+void BJPlayer::reset(const BJShoe & lshoe, BJRules & rules,
                      BJStrategy & strategy, BJProgress & progress) {
 
 // Forget about any cards already dealt from the shoe, so shoe.reset(hand) will
 // work.
 
-    this->shoe = shoe;
+    shoe = lshoe;
     numHands = 0;
     for (int card = 1; card <= 10; card++) {
         playerHands[numHands].cards[card - 1] =
         playerHands[numHands].hitHand[card - 1] = 0;
-        this->shoe.totalCards[card - 1] = shoe.cards[card - 1];
+        shoe.totalCards[card - 1] = lshoe.cards[card - 1];
     }
 
 // Remember resplit rules when enumerating player hands.
@@ -801,11 +801,11 @@ void BJPlayer::computeStandCount(int count, bool soft, bool split,
                 hand.valueStand[split][upCard - 1] =
                         hand.probabilityBust[upCard - 1]
                         - hand.probabilityBlackjack[upCard - 1];
-                for (int count = 17; count <= 21; count++) {
-                    if (currentHand.count > count) {
+                for (int cnt = 17; cnt <= 21; cnt++) {
+                    if (currentHand.count > cnt) {
                         hand.valueStand[split][upCard - 1] +=
                             hand.probabilityCount[count - 17][upCard - 1];
-                    } else if (currentHand.count < count) {
+                    } else if (currentHand.count < cnt) {
                         hand.valueStand[split][upCard - 1] -=
                             hand.probabilityCount[count - 17][upCard - 1];
                     }
