@@ -42,11 +42,11 @@ static void read_spaces(FILE *fd)
 	ungetc(buff, fd);
 }
 
-static tape *new_cell(void)
+static turing_tape *new_cell(void)
 {
-	tape *temp;
+	turing_tape *temp;
 	
-	temp = malloc(sizeof(tape));
+	temp = malloc(sizeof(turing_tape));
 	temp->value = BLANK;
 	temp->next = NULL;
 	temp->prev = NULL;
@@ -54,11 +54,11 @@ static tape *new_cell(void)
 	return temp;
 }
 
-static state *new_state(void)
+static turing_state *new_state(void)
 {
-	state *temp;
+	turing_state *temp;
 	
-	temp = malloc(sizeof(state));
+	temp = malloc(sizeof(turing_state));
 	
 	temp->no = temp->read = temp->write = temp->move = temp->new = 0;
 	temp->next = NULL;
@@ -66,7 +66,7 @@ static state *new_state(void)
 	return temp;
 }
 
-turing *new_turing(void)
+turing *turing_new(void)
 {
 	turing *machine;
 	
@@ -81,7 +81,7 @@ turing *new_turing(void)
 	
 static void turing_free_tape(turing *machine)
 {
-	tape *temp, *next;
+	turing_tape *temp, *next;
 	
 	for (temp = machine->tapehead; temp; temp = next)
 		{
@@ -95,7 +95,7 @@ static void turing_free_tape(turing *machine)
 /* Gets the tape from tape_string. */
 void turing_set_tape(turing *machine, char *ptr)
 {
-	tape *temp, *last;
+	turing_tape *temp, *last;
 	char buff;
 	
 	turing_free_tape(machine);
@@ -122,7 +122,7 @@ void turing_set_tape(turing *machine, char *ptr)
 char *turing_get_tape(turing *machine)
 {
 	char *buff, *tmpbuff;
-	tape *temp;
+	turing_tape *temp;
 	int i;
 	
 	i = 1;
@@ -145,7 +145,7 @@ char *turing_get_tape(turing *machine)
 int turing_fread_states(turing *machine, char *filename)
 {
 	FILE *fd;
-	state *temp;
+	turing_state *temp;
 	int count;
 	char *token;
 	char  line[1000];
@@ -264,9 +264,9 @@ char *turing_fread_comments(char *filename) {
 
 /* Search the next state to execute depending on what we are reading and the
  * state field of the turing *machine. */
-static state *turing_search_state(turing *machine)
+static turing_state *turing_search_state(turing *machine)
 {
-	state *temp;
+	turing_state *temp;
 	
 	for (temp = machine->actualstate; temp; temp = temp->next)
 		if (temp->no == machine->state)
@@ -329,3 +329,54 @@ int turing_run_state(turing *machine)
 	
 	return 0;
 }
+
+/* add or modify a state to the list. 
+   Returns the position where the state was added and -position where the state was set. */
+extern int turing_set_state(turing *machine, turing_state state)
+{
+	turing_state *temp, *node, *last;
+	int i, pos;
+	
+	last = node = NULL;
+	for (i = 0, temp = machine->statehead; temp; i++, last = temp, temp = temp->next)
+		if (temp->no == state.no)
+	  {
+			pos = i;
+			node = temp;
+			
+			if (temp->new == state.new)
+			 {
+				 temp->read = state.read;
+				 temp->write = state.write;
+				 temp->move = state.move;
+				 break;
+			 }
+		}
+
+	if (!temp) /* Values were not substituted: insert new state. */
+	{
+		temp = malloc (sizeof (turing_state));
+		
+		*temp = state;
+		if (!node) /* A completly new state number. Add at the bottom. */
+		{
+			temp->next = NULL;
+			
+			if (!last) /* No bottom: the states list is empty. */
+			{
+				machine->statehead = temp;
+			  return 0;
+			}
+			
+			last->next = temp;
+			return i + 1;
+		}
+		
+		temp->next = node->next;
+		node->next = temp;
+		return pos + 1;
+	}
+	
+	return - (pos + 1);
+}
+

@@ -24,7 +24,7 @@ typedef struct _tape
 	struct _tape *next;
 	struct _tape *prev;
 }
-tape;
+turing_tape;
 
 /* The machine contains a list of states... maybe it could have been faster if
  * I had implemented a graph. */
@@ -38,27 +38,28 @@ typedef struct _state
 	
 	struct _state *next;
 }
-state;
+turing_state;
 
 typedef struct
 {
 	int state;
 	int pos;
 	
-	state *statehead;
-	state *actualstate;
-	tape *tapehead;
-	tape *actualtape;
+	turing_state *statehead;
+	turing_state *actualstate;
+	turing_tape *tapehead;
+	turing_tape *actualtape;
 }
 turing;
 
 extern char states_fname[1024];
 extern char tape_string[1024];
 
-extern turing *new_turing(void);
+extern turing *turing_new(void);
 extern int turing_fread_states(turing *machine, char *filename);
 extern char *turing_fread_comments(char *filename);
 extern int turing_run_state(turing *machine);
+extern int turing_set_state(turing *machine, turing_state state);
 
 extern void turing_set_tape(turing *machine, char *ptr);
 extern char *turing_get_tape(turing *machine);
