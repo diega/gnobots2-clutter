@@ -1041,7 +1041,7 @@ bg_colour_callback (GtkWidget *widget, gpointer data)
 
 	gtk_color_button_get_color (GTK_COLOR_BUTTON (widget), &colour);
 
-	tmp = g_strdup_printf ("#%02x%02x%02x", colour.red,
+	tmp = g_strdup_printf ("#%04x%04x%04x", colour.red,
 			       colour.green, colour.blue);
 
 	gconf_client_set_string (conf_client,
