@@ -1,3 +1,9 @@
+1999-06-20  Tuomas Kuosmanen  <tigert@gimp.org>
+
+	* Makefile.am: add the new file (bg4.png) so it gets installed
+	* bg1.png bg2.png bg3.png bg4.png: Changed the backgrounds a bit
+	(added 2 new ones)
+
 1999-04-17  Francisco Bustamante  <pancho@nuclecu.unam.mx>
 
 	* mahjongg.c: Now it is possible to change the background of the

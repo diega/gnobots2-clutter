@@ -25,7 +25,7 @@ mahjongg_LDADD = \
 
 pixmap_DATA = default.png seta.png
 
-bg_DATA = bg1.png bg2.png bg3.png
+bg_DATA = bg1.png bg2.png bg3.png bg4.png
 
 appicon_DATA = gnome-mahjongg.png
 
@@ -41,5 +41,6 @@ install-data-local:
 	-chmod 664 $(DESTDIR)$(scoredir)/mahjongg.scores
 	-chgrp games $(DESTDIR)$(bindir)/mahjongg && chmod 2111 $(DESTDIR)$(bindir)/mahjongg
 	$(mkinstalldirs) $(DESTDIR)$(Gamesdir)
+
 
 
