@@ -833,8 +833,13 @@ main (int argc, char *argv [])
         vb = gtk_vbox_new (FALSE, 0);
 	gnome_app_set_contents (GNOME_APP (app), vb);
 
-	if (!fname)
-		fname = g_strdup ("stones.png");
+	if (!fname) {
+//		fname = g_strdup ("stones.png");
+		fname = gnome_config_get_string ("/same-gnome/Preferences/Scenario");
+	}
+
+	printf ("%s\n", fname);
+
 	create_same_board (fname);
 
 	label = gtk_label_new (_("Score: "));

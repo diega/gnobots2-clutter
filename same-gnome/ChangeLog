@@ -1,3 +1,8 @@
+1999-02-13  Ian Peters  <ipeters@acm.org>
+
+	* same-gnome.c (main): Instead of defaulting to marbles.png, actually
+	checks stored value for png file.
+
 1999-02-03  Arturo Espinosa <arturo@nuclecu.unam.mx>
 
 	* Makefile.am: SUBDIRS = help
