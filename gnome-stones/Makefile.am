@@ -10,9 +10,9 @@ INCLUDES =					\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	-DGNOMEPIXMAPDIR=\""$(datadir)/pixmaps"\"	\
 	-DCAVESDIR=\""$(Cavesdir)"\"			\
-	-I$(includedir)					\
-	$(GNOME_INCLUDEDIR) $(GDK_PIXBUF_CFLAGS)
-
+	$(GNOME_GAMES_CFLAGS)				\
+	-I$(includedir)					
+	
 
 bin_PROGRAMS = gnome-stones
 
@@ -38,9 +38,7 @@ gnome_stones_SOURCES =				\
 	view.h
 
 gnome_stones_LDADD =				\
-	$(GNOME_LIBDIR)				\
-	$(GNOMEUI_LIBS)				\
-	$(GDK_PIXBUF_LIBS)			\
+	$(GNOME_GAMES_LIBS) \
 	$(INTLLIBS)
 
 

@@ -25,7 +25,7 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <libart_lgpl/art_misc.h>
 #include <libart_lgpl/art_pixbuf.h>
-#include <libgnomeui/gnome-canvas.h>
+#include <libgnomecanvas/gnome-canvas.h>
 
 
 BEGIN_GNOME_DECLS

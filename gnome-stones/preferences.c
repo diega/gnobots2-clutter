@@ -56,8 +56,11 @@ guint start_cave= 0;
 /* If you use a joystick as input device, this variable holds the
    device's id.  Setting it to GDK_CORE_POINTER disables the Joystick
    support.  */
-
-guint32  joystick_deviceid    = GDK_CORE_POINTER;
+#if 0
+  guint32  joystick_deviceid    = GDK_CORE_POINTER;
+#else
+  guint32 joystick_deviceid = 0;
+#endif
 gfloat   joystick_switch_level= 0.5;
 
 /* The game can be in different states.  These state decides, how to
@@ -204,10 +207,10 @@ preferences_save (gboolean global)
   GList    *devices;
 
   gnome_config_clean_section ("Preferences");
-
-  for (devices= gdk_input_list_devices (); devices; devices= devices->next)
+#if 0
+  for (devices= gdk_devices_list (); devices; devices= devices->next)
     {
-      GdkDeviceInfo *info = (GdkDeviceInfo *) devices->data;
+      GdkDevice *info =  devices->data;
       
       if (joystick_deviceid == info->deviceid)
 	{
@@ -215,7 +218,7 @@ preferences_save (gboolean global)
 	  break;
 	}
     }
-  
+#endif  
   if (devicename)
     gnome_config_set_string ("Preferences/Joystick device",  devicename);
   gnome_config_set_float ("Preferences/Joytick switch level", 
@@ -295,7 +298,7 @@ preferences_restore (void)
   guint        cave;
 
   gnome_config_push_prefix (gnome_client_get_config_prefix (client));
-
+#if 0
   devicename= gnome_config_get_string ("Preferences/Joystick device=");
   if (devicename)
     {
@@ -315,7 +318,7 @@ preferences_restore (void)
     }
   if (joystick_deviceid != GDK_CORE_POINTER)
     gdk_input_set_mode (joystick_deviceid, GDK_MODE_SCREEN);
-
+#endif
 
   joystick_switch_level= 
     gnome_config_get_float ("Preferences/Joytick switch level=0.5");
@@ -443,7 +446,7 @@ preferences_set_joystick_device (GtkWidget *widget, gpointer data)
     (PreferencesData *) gtk_object_get_user_data (GTK_OBJECT (widget));
 
   prdata->joystick_deviceid= deviceid;
-  
+#if 0  
   if (deviceid == GDK_CORE_POINTER)
     {
       gtk_widget_set_sensitive (prdata->level_frame, FALSE);
@@ -452,7 +455,7 @@ preferences_set_joystick_device (GtkWidget *widget, gpointer data)
     {
       gtk_widget_set_sensitive (prdata->level_frame, TRUE);
     }
-
+#endif
   gnome_property_box_changed (prdata->property_box);
 }
 
@@ -601,12 +604,15 @@ preferences_dialog_new (void)
     /* We definatly have a "disable" entry.  */
     menuitem= gtk_menu_item_new_with_label (_("disabled"));
     gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
+#if 0
     gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
 			(GtkSignalFunc) preferences_set_joystick_device,
 			GUINT_TO_POINTER (GDK_CORE_POINTER));
+#endif
     gtk_menu_append (GTK_MENU (device_menu), menuitem);
     gtk_widget_show (menuitem);
-    
+
+#if 0    
     for (devices= gdk_input_list_devices (), i= 1; devices; 
 	 devices= devices->next, i++)
       {
@@ -628,7 +634,7 @@ preferences_dialog_new (void)
 	if (info->deviceid == prdata->joystick_deviceid)
 	  gtk_menu_set_active (GTK_MENU (device_menu), i);
       }
-    
+#endif    
     optionmenu= gtk_option_menu_new ();
     gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu), device_menu);
     gtk_box_pack_start (GTK_BOX (hbox), optionmenu, FALSE, FALSE, 2);
@@ -665,12 +671,12 @@ preferences_dialog_new (void)
     gtk_scale_set_digits (GTK_SCALE (scale), 2);
     gtk_box_pack_start (GTK_BOX (hbox), scale, FALSE, FALSE, GNOME_PAD_SMALL);
     gtk_widget_show (scale);
-    
+#if 0    
     if (prdata->joystick_deviceid == GDK_CORE_POINTER)
       {
 	gtk_widget_set_sensitive (GTK_WIDGET (frame), FALSE);
       }
-
+#endif
     prdata->level_frame= frame;
   }
   

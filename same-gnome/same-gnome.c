@@ -420,7 +420,7 @@ load_scenario (char *fname)
 	if (image)
 		gdk_pixbuf_unref (image);
 
-	image = gdk_pixbuf_new_from_file (fn);
+	image = gdk_pixbuf_new_from_file (fn, NULL);
 
 	if (image == NULL) {
 		char *message = g_strdup_printf (
@@ -631,13 +631,19 @@ game_about_callback (GtkWidget *widget, void *data)
 		"Horacio J. Peña.",
 		NULL
 	};
+	gchar *documenters[] = {
+                NULL
+        };
+        /* Translator credits */
+        gchar *translator_credits = _("");
 
 	about = gnome_about_new (_("The Same Gnome"), VERSION,
 				 "(C) 1997-1998 the Free Software Foundation",
-				 (const char **)authors,
 				 _("Original idea from KDE's same game program."),
-				 /*"gnome-same-gnome.xpm"*/
-				 NULL);
+				 (const char **)authors,
+				 (const char **)documenters,
+                                 (const char *)translator_credits,
+                                 NULL);
 	gnome_dialog_set_parent(GNOME_DIALOG(about), GTK_WINDOW(app));
 	gtk_widget_show (about);
 

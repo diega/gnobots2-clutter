@@ -129,7 +129,7 @@ load_image_from_path (const char *relative_name)
 
   filename= gnome_pixmap_file (relative_name);
   if (filename)
-    image= gdk_pixbuf_new_from_file (filename);
+    image= gdk_pixbuf_new_from_file (filename, NULL);
 
   g_free (filename);
   
@@ -248,7 +248,9 @@ game_update_title (void)
       GdkFont *font;
       GList   *tmp= g_list_nth (game->start_caves, start_cave);
 
+#if 0
       font = gdk_font_ref (gstones_view->style->font);
+#endif
       if (!font)
 	font= gdk_font_load ("fixed");
 
@@ -636,9 +638,10 @@ void
 joystick_set_properties (guint32 deviceid, gfloat switch_level)
 {
   joystick_deviceid= deviceid;
+#if 0
   if (joystick_deviceid != GDK_CORE_POINTER)
     gdk_input_set_mode (joystick_deviceid, GDK_MODE_SCREEN);
-
+#endif
   joystick_switch_level= switch_level;
 }
 
@@ -648,6 +651,7 @@ joystick_get_information (gint *x_direction, gint *y_direction)
 {
   /* FIXME: This function should only return a joystick movement, if
      the game_widget has focus.  */
+#if 0
   if (joystick_deviceid != GDK_CORE_POINTER && joystick_has_focus)
     {
       gdouble x;
@@ -686,6 +690,7 @@ joystick_get_information (gint *x_direction, gint *y_direction)
       if (x_direction) *x_direction= xdir;
       if (y_direction) *y_direction= ydir;
     }
+#endif
 }
 
 
@@ -936,11 +941,17 @@ about_cb (GtkWidget *widget, gpointer data)
     "Carsten Schaar <nhadcasc@fs-maphy.uni-hannover.de>",
     NULL
   };
-  
+  gchar *documenters[] = {
+                          NULL
+                         };
+  /* Translator credits */
+  gchar *translator_credits = _("");
   about= gnome_about_new (_("Gnome-Stones"), VERSION,
 			  "(C) 1998 Carsten Schaar",
-			  authors,
 			  _("A game."),
+			  (const char **)authors,
+                          (const char **)documenters,
+                          (const char *)translator_credits,
 			  NULL);
   gtk_widget_show (about);
 }

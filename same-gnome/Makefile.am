@@ -5,9 +5,9 @@ Gamesdir = $(datadir)/gnome/apps/Games
 SUBDIRS = help
 
 INCLUDES = -I.. -I$(srcdir)/..		\
+	$(GNOME_GAMES_CFLAGS) \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
-	-I$(includedir)			\
-	$(GNOME_INCLUDEDIR) $(GDK_PIXBUF_CFLAGS)
+	-I$(includedir)			
 
 bin_PROGRAMS = same-gnome
 
@@ -15,9 +15,7 @@ same_gnome_SOURCES = 	\
 	same-gnome.c
 
 same_gnome_LDADD =		\
-	$(GNOME_LIBDIR)         \
-	$(GNOMEUI_LIBS)		\
-	$(GDK_PIXBUF_LIBS)	\
+	$(GNOME_GAMES_LIBS)      \
 	$(INTLLIBS)
 
 pixmap_DATA = planets.png blink-sync.png marbles.png \

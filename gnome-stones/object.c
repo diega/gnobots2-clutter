@@ -236,7 +236,7 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
 
   filename= g_strconcat ("gnome-stones/", description->image_name, NULL);
   pathname= gnome_pixmap_file (filename);
-  image   = gdk_pixbuf_new_from_file (pathname);
+  image   = gdk_pixbuf_new_from_file (pathname, NULL);
   g_free (pathname);
   g_free (filename);
   

@@ -530,9 +530,11 @@ void message (gchar *message)
 
 void chrono_start ()
 {
+#if 0
   gtk_clock_stop (GTK_CLOCK (chrono));
   gtk_clock_set_seconds (GTK_CLOCK (chrono), 0);
   gtk_clock_start (GTK_CLOCK (chrono));
+#endif
 }
 
 int update_moves_left ()
@@ -655,7 +657,9 @@ tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
                                                   gtk_label_set (GTK_LABEL(moves_label), tmpchar);
 
                                                   if (visible_tiles <= 0) {
+                                                  	  #if 0
                                                           gtk_clock_stop(GTK_CLOCK(chrono));
+                                                          #endif
                                                           you_won ();
                                                   }
                                           }
@@ -953,8 +957,11 @@ void you_won (void)
         gchar message[80];
 
         game_over = GAME_WON;
-        
+#if 0        
         seconds = GTK_CLOCK (chrono)->stopped;
+#else
+	seconds = 100;
+#endif
         score = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
         if ( pos = gnome_score_log (score, mapset, FALSE) ) {
                 gnome_scores_display (_(APPNAME_LONG), APPNAME, mapset, pos);
@@ -1388,10 +1395,12 @@ void hint_callback (GtkWidget *widget, gpointer data)
                 timer = gtk_timeout_add (250, (GtkFunction) hint_timeout, NULL);
                 
                 /* 30s penalty */
+                #if 0
                 gtk_clock_stop (GTK_CLOCK(chrono));
                 seconds = GTK_CLOCK(chrono)->stopped;
                 gtk_clock_set_seconds(GTK_CLOCK(chrono), (int) (seconds+30));
                 gtk_clock_start (GTK_CLOCK(chrono));
+                #endif
 }
 
 void about_callback (GtkWidget *widget, gpointer data)
@@ -1407,15 +1416,22 @@ void about_callback (GtkWidget *widget, gpointer data)
 		"       Max Watson",
 		NULL
 	};
+	gchar *documenters[] = {
+                NULL
+        };
+        /* Translator credits */
+        gchar *translator_credits = _("");
 
 	about = gnome_about_new (_("Gnome Mahjongg"), MAH_VERSION,
 				 "(C) 1998 The Free Software Foundation",
-				 (const char **)authors,
-				 _("Send comments and bug reports to:\n"
+				  _("Send comments and bug reports to:\n"
 				   "        pancho@nuclecu.unam.mx or\n"
 				   "        mmeeks@gnu.org\n\n"
 				   "Tiles under the General Public License."),
-				 NULL);
+				 (const char **)authors,
+				 (const char **)documenters,
+                                 (const char *)translator_credits,
+				NULL);
 
        	gnome_dialog_set_parent(GNOME_DIALOG(about),GTK_WINDOW(window));
 	gtk_widget_show (about);
@@ -1436,7 +1452,9 @@ void pause_callback()
         }
         paused = !paused;
         if (paused) {
+        	#if 0
                 gtk_clock_stop (GTK_CLOCK (chrono));
+                #endif
                 for (i = 0; i < MAX_TILES; i++) 
                         if (tiles[i].visible) 
                                 gnome_canvas_item_hide (tiles[i].image_item);
@@ -1447,7 +1465,9 @@ void pause_callback()
                         if (tiles[i].visible) 
                                 gnome_canvas_item_show (tiles[i].image_item);
                 message ("");
+                #if 0
                 gtk_clock_start (GTK_CLOCK(chrono));
+                #endif
         }
 }
 
@@ -1686,7 +1706,9 @@ void select_game ()
 
 void show_tb_callback (GtkWidget *widget, gpointer data)
 {
+#if 0
     GnomeDockItem *gdi;
+
     GtkWidget *toolbar;
 
     gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
@@ -1703,6 +1725,7 @@ void show_tb_callback (GtkWidget *widget, gpointer data)
         gtk_widget_hide(GTK_WIDGET(gdi));
 	gtk_widget_queue_resize (window);
     }
+#endif
 }
 
 void sound_on_callback (GtkWidget *widget, gpointer data)
@@ -1866,14 +1889,14 @@ void load_tiles (char *fname, char *bg_fname)
 	tileset = g_strdup(fname);
 	
 	if (tiles_image)
-		gdk_pixbuf_finalize (tiles_image);
+		gdk_pixbuf_unref (tiles_image);
 
 	if (bg_image)
-		gdk_pixbuf_finalize (bg_image);
+		gdk_pixbuf_unref (bg_image);
 
-	tiles_image = gdk_pixbuf_new_from_file (fn);
+	tiles_image = gdk_pixbuf_new_from_file (fn, NULL);
 
-        bg_image = gdk_pixbuf_new_from_file (bg_fn);
+        bg_image = gdk_pixbuf_new_from_file (bg_fn, NULL);
         
 	g_free (bg_fn);
 	g_free (fn);
@@ -1976,7 +1999,9 @@ void shuffle_tiles_callback (GtkWidget *widget, gpointer data)
         if (num_shuffle >= visible_tiles) {
                 GtkWidget *mb;
                 game_over = GAME_DEAD;
+                #if 0
                 gtk_clock_stop (GTK_CLOCK (chrono));
+                #endif
                 mb = gnome_message_box_new (_("Sorry, I can't find\na playable configuration."), 
                                             GNOME_MESSAGE_BOX_INFO, 
                                             GNOME_STOCK_BUTTON_OK, NULL); 
@@ -1997,16 +2022,20 @@ void shuffle_tiles_callback (GtkWidget *widget, gpointer data)
                 game_over = GAME_RUNNING;
 
                 /* 60s penalty */
+                #if 0
                 gtk_clock_stop (GTK_CLOCK(chrono));
                 seconds = GTK_CLOCK(chrono)->stopped;
                 gtk_clock_set_seconds(GTK_CLOCK(chrono), (int) (seconds+60));
                 gtk_clock_start (GTK_CLOCK(chrono));
+                #endif
         }
 }
 
 int main (int argc, char *argv [])
 {
+#if 0
         GnomeDockItem *gdi;
+#endif
 	GtkWidget *toolbar;
         gboolean show=TRUE;
 
@@ -2026,10 +2055,14 @@ int main (int argc, char *argv [])
 	chrono_box = gtk_hbox_new(0, FALSE);
 	chrono_label = gtk_label_new (_("Time:"));
 	gtk_box_pack_start (GTK_BOX(chrono_box), chrono_label, FALSE, FALSE, 0);
+#if 0
 	chrono = gtk_clock_new (GTK_CLOCK_INCREASING);
 	gtk_box_pack_start (GTK_BOX(chrono_box), chrono, FALSE, FALSE, 0);
+#endif
 	gtk_widget_show (chrono_label);
+#if 0
 	gtk_widget_show (chrono);
+#endif	
 	gtk_widget_show (chrono_box);
 
 	appbar = gnome_appbar_new (FALSE, TRUE, GNOME_PREFERENCES_USER);
@@ -2040,9 +2073,11 @@ int main (int argc, char *argv [])
 	gnome_app_install_menu_hints(GNOME_APP (window), mainmenu);
 
         gnome_app_create_toolbar (GNOME_APP (window), toolbar_uiinfo);
+#if 0
 	gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
 	toolbar = gnome_dock_item_get_child (gdi);
         gtk_toolbar_set_space_size(GTK_TOOLBAR (toolbar), 25);
+#endif
         
         tiles_label = gtk_label_new(_("Tiles Left: "));
         gtk_widget_show(tiles_label);
@@ -2078,8 +2113,10 @@ int main (int argc, char *argv [])
             gtk_check_menu_item_set_state(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), TRUE);
         else {
                 gtk_check_menu_item_set_state(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), FALSE);
+#if 0
                 gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
                 gtk_widget_hide(GTK_WIDGET(gdi)) ;
+#endif
                 gtk_widget_queue_resize (window);
         }
 

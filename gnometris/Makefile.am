@@ -3,8 +3,9 @@ scoredir=$(localstatedir)/games
 Gamesdir=$(datadir)/gnome/apps/Games
 
 INCLUDES=\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
-	$(GNOME_INCLUDEDIR) $(GDK_PIXBUF_CFLAGS)
+	$(GNOME_GAMES_CFLAGS)		\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" 
+	
 
 bin_PROGRAMS=gnometris
 
@@ -26,9 +27,7 @@ gnometris_SOURCES=\
 	gnome-canvas-pimage.c
 
 gnometris_LDADD=\
-	$(GNOME_LIBDIR) \
-	$(GNOMEUI_LIBS) \
-	$(GDK_PIXBUF_LIBS) \
+	$(GNOME_GAMES_LIBS) \
 	$(INTLLIBS)
 
 

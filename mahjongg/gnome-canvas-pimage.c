@@ -21,7 +21,7 @@
 #include <config.h>
 #include <math.h>
 #include "gnome-canvas-pimage.h"
-#include "libgnomeui/gnome-canvas-util.h"
+#include "libgnomecanvas/gnome-canvas-util.h"
 #include "libgnomeui/gnometypebuiltins.h"
 
 
@@ -109,7 +109,9 @@ gnome_canvas_pimage_class_init (GnomeCanvasPImageClass *class)
 	item_class->unrealize = gnome_canvas_pimage_unrealize;
 	item_class->draw = gnome_canvas_pimage_draw;
 	item_class->point = gnome_canvas_pimage_point;
+#if 0
 	item_class->translate = gnome_canvas_pimage_translate;
+#endif
 	item_class->bounds = gnome_canvas_pimage_bounds;
 	item_class->render = gnome_canvas_pimage_render;
 }
@@ -215,8 +217,9 @@ recalc_bounds (GnomeCanvasPImage *image)
 	item->y1 = image->cy;
 	item->x2 = image->cx + image->cwidth;
 	item->y2 = image->cy + image->cheight;
-
+#if 0
 	gnome_canvas_group_child_bounds (GNOME_CANVAS_GROUP (item->parent), item);
+#endif
 }
 
 static void
