@@ -244,31 +244,30 @@ set_score (int new_score)
 void
 show_scores ( gchar *level, gchar *title, guint pos )
 {
- GtkWidget *hs;
- GdkColor ctitle = {0, 0, 0, 65535};
- GdkColor col = {0, 65535, 0, 0};
- gchar **names = NULL;
- gfloat *scores = NULL;
- time_t *scoretimes = NULL;
- gint top;
- int i;
-
- top = gnome_score_get_notable("samegnome",level, &names, &scores, &scoretimes);
- hs = gnome_scores_new(top, names, scores, scoretimes, 0);
- gnome_scores_set_logo_label (GNOME_SCORES(hs), _("The Same Gnome"), 0,
-       &ctitle);
- gtk_window_set_title (GTK_WINDOW (hs), title);
-
- if(pos)
-   gnome_scores_set_color(hs, pos-1, &col);
-
- gtk_widget_show (hs);
+	GtkWidget *hs;
+	GdkColor ctitle = {0, 0, 0, 65535};
+	GdkColor col = {0, 65535, 0, 0};
+	gchar **names = NULL;
+	gfloat *scores = NULL;
+	time_t *scoretimes = NULL;
+	gint top;
+	int i;
+	
+	top = gnome_score_get_notable("samegnome",level, &names, &scores, &scoretimes);
+	hs = gnome_scores_new(top, names, scores, scoretimes, 0);
+	gnome_scores_set_logo_label (GNOME_SCORES(hs), _("The Same Gnome"), 0, &ctitle);
+	gtk_window_set_title (GTK_WINDOW (hs), title);
+	
+	if (pos)
+		gnome_scores_set_color(hs, pos-1, &col);
+	
+	gtk_widget_show (hs);
 }
 
 void 
 game_top_ten_callback(GtkWidget *widget, gpointer data)
 {
-show_scores(scenario, _("High Scores"), 0);
+	show_scores(scenario, _("High Scores"), 0);
 }
 
 void
@@ -283,23 +282,27 @@ end_of_game (char *title)
 void
 check_game_over (void)
 {
-int cleared=1;
-int x,y;
-
-for(x=0;x<STONE_COLS;x++)
-   for(y=0;y<STONE_LINES;y++) {
-	if(!field[x][y].color) continue;
-	cleared=0;
-	if( x+1 < STONE_COLS ) 
-		if(field[x][y].color == field[x+1][y].color) return;
-	if( y+1 < STONE_LINES ) 
-		if(field[x][y].color == field[x][y+1].color) return;
-   	}
-if(cleared) {
-	set_score(score+1000);
-	end_of_game(_("You win!"));
+	int cleared=1;
+	int x,y;
+	
+	for(x = 0; x < STONE_COLS; x++)
+		for(y = 0 ; y < STONE_LINES; y++) {
+			if (!field [x][y].color)
+				continue;
+			cleared = 0;
+			if(x+1 < STONE_COLS) 
+				if(field[x][y].color == field[x+1][y].color)
+					return;
+			if(y+1 < STONE_LINES) 
+				if(field[x][y].color == field[x][y+1].color)
+					return;
+		}
+	if (cleared){
+		set_score (score+1000);
+		end_of_game (_("You win!"));
 	}
-else end_of_game(_("The Game Is Over"));
+	else
+		end_of_game(_("The Game Is Over"));
 }
 
 void
