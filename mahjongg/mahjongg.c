@@ -266,13 +266,13 @@ GnomeUIInfo filemenu [] = {
 	{GNOME_APP_UI_ITEM, N_("New"), NULL, new_game_callback, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Restart..."), NULL, restart_game_callback, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("Restart"), NULL, restart_game_callback, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Select game"), NULL, select_game_callback, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("Select game..."), NULL, select_game_callback, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Properties"), NULL, NULL, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("Properties..."), NULL, NULL, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
 
 	{GNOME_APP_UI_ITEM, N_("Exit"), NULL, quit_game_callback, NULL, NULL,
@@ -539,6 +539,8 @@ void select_game_callback (GtkWidget *widget, gpointer data)
 	dialog = gtk_dialog_new ();
 	GTK_WINDOW (dialog)->position = GTK_WIN_POS_MOUSE;
 	gtk_window_set_title (GTK_WINDOW (dialog), _("Select Game"));
+	gtk_container_border_width (GTK_CONTAINER (dialog), 5);
+	        
 	gtk_signal_connect (GTK_OBJECT (dialog), "delete_event",
 			    GTK_SIGNAL_FUNC (cancel_callback),
 			    (gpointer)dialog);
