@@ -1,3 +1,11 @@
+1999-01-09  Nat Friedman  <nat@nat.org>
+
+	* gnobots.c (main): Turn the appbar on.  Install menu hints.
+  	Fixed the function definition format which was defeating emacs's
+ 	function-name finder.
+
+	Standardized the menus.
+
 1998-12-06  Jay Painter <jpaint@serv.net>
 
 	* gnobots.c: added support to move with the standard

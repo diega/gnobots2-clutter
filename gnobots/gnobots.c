@@ -122,48 +122,53 @@ static struct poptOption options[] = {
 };
 
 /*
+ * The File menu
+ */
+GnomeUIInfo filemenu[] = {
+  GNOMEUIINFO_MENU_EXIT_ITEM(quit_cb, NULL),
+  GNOMEUIINFO_END
+};
+
+
+/*
+ * The Settings menu
+ */
+GnomeUIInfo settingsmenu[] = {
+  GNOMEUIINFO_MENU_PREFERENCES_ITEM(properties_cb, NULL),
+  GNOMEUIINFO_END
+};
+
+/*
  * Game menu entries
  */
 GnomeUIInfo gamemenu[] = {
-    {GNOME_APP_UI_ITEM, N_("_New"), NULL, new_cb, NULL, NULL,
-        GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 'n', GDK_CONTROL_MASK, NULL},
+    GNOMEUIINFO_MENU_NEW_GAME_ITEM(new_cb, NULL),
 
-    {GNOME_APP_UI_ITEM, N_("_Properties..."), NULL, properties_cb, NULL, NULL,
-        GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
+    GNOMEUIINFO_SEPARATOR,
 
-    {GNOME_APP_UI_ITEM, N_("_Scores"), NULL, game_scores_cb, NULL, NULL,
-        GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SCORES, 0, 0, NULL},
+    GNOMEUIINFO_MENU_SCORES_ITEM(game_scores_cb, NULL),
 
-    {GNOME_APP_UI_ITEM, N_("E_xit"), NULL, quit_cb, NULL, NULL,
-        GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 'q', GDK_CONTROL_MASK, NULL},
-
-    {GNOME_APP_UI_ENDOFINFO}
+    GNOMEUIINFO_END
 };
 
 /*
  * Help menu entries
  */
 GnomeUIInfo helpmenu[] = {
-    {GNOME_APP_UI_ITEM, N_("_About Gnobots"), NULL, about_cb, NULL, NULL,
-        GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
-
-    {GNOME_APP_UI_HELP, NULL, NULL, "gnobots", NULL, NULL,
-        GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-
-    {GNOME_APP_UI_ENDOFINFO}        
+    GNOMEUIINFO_HELP("gnobots"),
+    GNOMEUIINFO_MENU_ABOUT_ITEM(about_cb, NULL),
+    GNOMEUIINFO_END
 };
 
 /*
  * Main menu
  */
 GnomeUIInfo mainmenu[] = {
-    {GNOME_APP_UI_SUBTREE, N_("_Game"), NULL, gamemenu, NULL, NULL,
-        GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-
-    {GNOME_APP_UI_SUBTREE, N_("_Help"), NULL, helpmenu, NULL, NULL,
-        GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-        
-    {GNOME_APP_UI_ENDOFINFO}
+    GNOMEUIINFO_MENU_FILE_TREE(filemenu),
+    GNOMEUIINFO_MENU_GAME_TREE(gamemenu),
+    GNOMEUIINFO_MENU_SETTINGS_TREE(settingsmenu),
+    GNOMEUIINFO_MENU_HELP_TREE(helpmenu),
+    GNOMEUIINFO_END
 };
 
 
@@ -1248,10 +1253,9 @@ _("Congratulations, you have defeated the Robots!\nBut can you do it again?"),
 /*
  * It all starts here!
  */
-int main(
-int argc,
-char *argv[]
-){
+int
+main(int argc, char *argv[])
+{
     GtkWidget *sttbl;
     GtkWidget *label;
     GtkWidget *appbar;
@@ -1340,10 +1344,13 @@ char *argv[]
     
     gtk_widget_show(sttbl);
 
-    appbar = gnome_appbar_new(FALSE, FALSE, FALSE);
+    appbar = gnome_appbar_new(FALSE, TRUE, GNOME_PREFERENCES_USER);
+
     gtk_box_pack_start(GTK_BOX(appbar), sttbl, FALSE, FALSE, 0);
     
     gnome_app_set_statusbar(GNOME_APP(app), appbar);
+
+    gnome_app_install_menu_hints(GNOME_APP (app), mainmenu);
 
     load_bubble_pixmaps();
 
