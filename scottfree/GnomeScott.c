@@ -173,7 +173,7 @@ static char *ReadString(FILE *f)
 	char *t;
 	int c,nc;
 	int ct=0;
-oops:	do
+	do
 	{
 		c=fgetc(f);
 	}
@@ -218,7 +218,7 @@ void LoadDatabase(FILE *f, int loud)
 /* Load the header */
 	
 	if(fscanf(f,"%*d %d %d %d %d %d %d %d %d %d %d %d",
-		&ni,&na,&nw,&nr,&mc,&pr,&tr,&wl,&lt,&mn,&trm,&ct)<10)
+		  &ni, &na,&nw,&nr,&mc,&pr,&tr,&wl,&lt,&mn,&trm,&ct)<10)
 		Fatal(GNOME_MESSAGEBOX_ERROR, "Invalid database(bad header)");
 	GameHeader.NumItems=ni;
 	Items=(Item *)MemAlloc(sizeof(Item)*(ni+1));
@@ -1086,7 +1086,7 @@ static int PerformActions(int vb,int no)
 					if(f2==2)
 						doagain=1;
 					if(vb!=0 && doagain==0)
-						return;
+						return 0;
 				}
 			}
 		}
@@ -1193,25 +1193,25 @@ static int PerformActions(int vb,int no)
 						ct++;
 					}
 					if(f==0)
-						Output("Nothing dropped.\n");
+						Output(N_("Nothing dropped.\n"));
 					return(0);
 				}
 				if(no==-1)
 				{
-					Output("What ? ");
+					Output(N_("What ? "));
 					return(0);
 				}
 				i=MatchUpItem(NounText,CARRIED);
 				if(i==-1)
 				{
 					if(Options&YOUARE)
-						Output("It's beyond your power to do that.\n");
+						Output(N_("It's beyond your power to do that.\n"));
 					else
-						Output("It's beyond my power to do that.\n");
+						Output(N_("It's beyond my power to do that.\n"));
 					return(0);
 				}
 				Items[i].Location=MyLoc;
-				Output("O.K. ");
+				Output(N_("OK"));
 				Redraw=1;
 				return(0);
 			}
@@ -1222,7 +1222,6 @@ static int PerformActions(int vb,int no)
 
 static void Input_Complete(void)
 {
-	char buf[256];
 	char verb[10],noun[10];
 	int vc,nc;
 	int num;
@@ -1265,16 +1264,16 @@ static void Input_Complete(void)
 	}
 	if(vc==-1)
 	{
-		Output("You use word(s) I don't know! ");
+		Output(N_("You use word(s) I don't know! "));
 		Input_Begin(0);
 		return;
 	}
 	strcpy(NounText,noun);	/* Needed by GET/DROP hack */
 	switch(PerformActions(vc,nc))
 	{
-		case -1:Output("I don't understand your command. ");
+		case -1:Output(N_("I don't understand your command. "));
 			break;
-		case -2:Output("I can't do that yet. ");
+		case -2:Output(N_("I can't do that yet. "));
 			break;
 	}
 	/* Brian Howarth games seem to use -1 for forever */
@@ -1288,9 +1287,9 @@ static void Input_Complete(void)
 				Items[LIGHT_SOURCE].Location==MyLoc)
 			{
 				if(Options&SCOTTLIGHT)
-					Output("Light has run out! ");
+					Output(N_("Light has run out! "));
 				else
-					Output("Your light has run out. ");
+					Output(N_("Your light has run out. "));
 			}
 			if(Options&PREHISTORIC_LAMP)
 				Items[LIGHT_SOURCE].Location=DESTROYED;
@@ -1303,14 +1302,14 @@ static void Input_Complete(void)
 	
 				if(Options&SCOTTLIGHT)
 				{
-					Output("Light runs out in ");
+					Output(N_("Light runs out in "));
 					OutputNumber(GameHeader.LightTime);
-					Output(" turns. ");
+					Output(N_(" turns. "));
 				}
 				else
 				{
 					if(GameHeader.LightTime%5==0)
-						Output("Your light is growing dim. ");
+						Output(N_("Your light is growing dim. "));
 				}
 			}
 		}
@@ -1428,8 +1427,6 @@ static void TypeSave(GtkWidget *w, gpointer *spare)
 
 static void LoadThis(GtkWidget *w, gpointer data)
 {
-	int ct;
-	FILE *f;
 	int load_this=(int)data;
 	
 	if(load_this)
@@ -1481,54 +1478,79 @@ static void AboutScottFree(GtkWidget *w, gpointer *spare)
 {
 	GtkWidget *mb=gnome_messagebox_new(
 		"ScottFree v1.15, (c) 1997 Alan Cox",
-		GNOME_MESSAGEBOX_INFO, "OK", NULL, NULL);
+		GNOME_MESSAGEBOX_INFO, N_("OK"), NULL, NULL);
 	gnome_messagebox_set_modal(GNOME_MESSAGEBOX(mb));
 	gnome_messagebox_set_default(GNOME_MESSAGEBOX(mb),0);
 	gtk_widget_show(mb);
 }
 
-static GnomeToolbarInfo toolbar[]=
+static GnomeUIInfo toolbar[]=
 {
-	{GNOME_APP_TOOLBAR_ITEM, "North","Go North", 
-		GNOME_APP_PIXMAP_DATA, north_xpm, TypeNorth},
-	{GNOME_APP_TOOLBAR_ITEM, "East","Go East", 
-		GNOME_APP_PIXMAP_DATA, east_xpm, TypeEast},
-	{GNOME_APP_TOOLBAR_ITEM, "South","Go South", 
-		GNOME_APP_PIXMAP_DATA, south_xpm, TypeSouth},
-	{GNOME_APP_TOOLBAR_ITEM, "West","Go West", 
-		GNOME_APP_PIXMAP_DATA, west_xpm, TypeWest},
-	{GNOME_APP_TOOLBAR_ITEM, "Up","Go Up", 
-		GNOME_APP_PIXMAP_DATA, up_xpm, TypeUp},
-	{GNOME_APP_TOOLBAR_ITEM, "Down","Go Down", 
-		GNOME_APP_PIXMAP_DATA, down_xpm, TypeDown},
-	{GNOME_APP_TOOLBAR_ITEM, "List","What am I carrying", 
-		GNOME_APP_PIXMAP_DATA, inventory_xpm, TypeInventory},
-	{GNOME_APP_TOOLBAR_ENDOFINFO, NULL, NULL, 0, NULL, NULL}
+	{GNOME_APP_UI_ITEM, N_("North"), NULL, TypeNorth,
+	 GNOME_APP_PIXMAP_DATA, north_xpm, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("East"), NULL, TypeEast,
+	 GNOME_APP_PIXMAP_DATA, east_xpm, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("South"), NULL, TypeSouth,
+	 GNOME_APP_PIXMAP_DATA, south_xpm, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("West"), NULL, TypeWest,
+	 GNOME_APP_PIXMAP_DATA, west_xpm, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("Up"), NULL, TypeUp,
+	 GNOME_APP_PIXMAP_DATA, up_xpm, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("Down"), NULL, TypeDown,
+	 GNOME_APP_PIXMAP_DATA, down_xpm, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("List"),N_("What am I carrying"), TypeInventory,
+	 GNOME_APP_PIXMAP_DATA, inventory_xpm, 0, 0, NULL},
+
+	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL,
+	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
 };
 
-static GnomeMenuInfo file_menu[]={
-	{GNOME_APP_MENU_ITEM, "New", NewGame, NULL},
-	{GNOME_APP_MENU_ITEM, "Load...", LoadAGame, NULL},
-	{GNOME_APP_MENU_ITEM, "Save...", TypeSave, NULL},
-	{GNOME_APP_MENU_ITEM, "Exit", gtk_main_quit, NULL},
-	{GNOME_APP_MENU_ENDOFINFO, NULL, NULL, NULL}
+static GnomeUIInfo file_menu[]={
+	{GNOME_APP_UI_ITEM, N_("New"), NULL, NewGame,
+	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("Load..."), NULL, LoadAGame, 
+	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_OPEN, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("Save..."), NULL, TypeSave, 
+	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SAVE, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("Exit"), NULL, gtk_main_quit,
+	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 0, 0, NULL},
+
+	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL,
+	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
 };
 
-static GnomeMenuInfo help_menu[]={
-	{GNOME_APP_MENU_ITEM, "About", AboutScottFree, NULL},
-	{GNOME_APP_MENU_ENDOFINFO, NULL, NULL, NULL}
+static GnomeUIInfo help_menu[]={
+	{GNOME_APP_UI_HELP, NULL, NULL, NULL,
+	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("About..."), NULL, AboutScottFree,
+	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
+
+	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL,
+	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
 };
 
-static GnomeMenuInfo menu[]={
-	{GNOME_APP_MENU_SUBMENU, "File", file_menu, NULL},
-	{GNOME_APP_MENU_SUBMENU, "Help", help_menu, NULL},
-	{GNOME_APP_MENU_ENDOFINFO, NULL, NULL, NULL}
+static GnomeUIInfo menu[]={
+	{GNOME_APP_UI_SUBTREE, "File", NULL, file_menu,
+	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+	{GNOME_APP_UI_SUBTREE, "Help", NULL, help_menu,
+	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL,
+	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
 };
 
 int main(int argc, char *argv[])
 {
 	FILE *f;
-	int vb,no;
 	GtkWidget *divider;
 	GdkFont *font;
 	GtkWidget *hbox;
@@ -1668,5 +1690,6 @@ Distributed under the GNU software license\n\n");
 	Look();
 	Input_Begin(1);	
 	gtk_main();
+	return 0;
 }
 	

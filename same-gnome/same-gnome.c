@@ -325,8 +325,8 @@ area_event (GtkWidget *widget, GdkEvent *event, void *d)
 	
 	case GDK_BUTTON_PRESS: {
 		int x, y;
-		
 		gtk_widget_get_pointer (widget, &x, &y);
+		g_print("Got a button press at %d x %d\n", x, y);
 		kill_balls (x / STONE_SIZE, y / STONE_SIZE);
 		old_x = -1;
 		old_y = -1;
