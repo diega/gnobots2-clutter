@@ -27,7 +27,8 @@ bg_DATA=\
 	gnometris-bg.jpg \
 	rhinoceros-bg.jpg \
 	scrcow-bg.jpg \
-	trees-bg.jpg
+	trees-bg.jpg \
+	st-basil-cathedral-bg.jpg
 
 EXTRA_DIST=$(pixmap_DATA) $(appicon_DATA) $(bg_DATA)
 

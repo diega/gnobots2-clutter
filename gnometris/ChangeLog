@@ -1,3 +1,9 @@
+2003-06-19  William Jon McCann  <mccann@jhu.edu>
+
+	* tetris.cpp: #define all the gconf keys for convenience.
+
+	* scoreframe.cpp (ScoreFrame): Convert to gconf.
+
 2003-06-17  William Jon McCann  <mccann@jhu.edu>
 
 	* gnome-canvas-pimage.c: Removed unused vars.

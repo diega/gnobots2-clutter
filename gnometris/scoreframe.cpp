@@ -22,15 +22,29 @@
 
 #include <config.h>
 #include <gnome.h>
+#include <games-gconf.h>
 #include <games-frame.h>
 
 #include "scoreframe.h"
 
+// FIXME: This is also defined in tetris.cpp
+#define KEY_STARTING_LEVEL "/apps/gnometris/options/starting_level"
+
 ScoreFrame::ScoreFrame(int cmdlLevel)
 	: score(0), lines(0)
 {
-        startingLevel = cmdlLevel ? cmdlLevel
-          : gnome_config_get_int_with_default ("/gnometris/Properties/StartingLevel=1", 0);
+	if (cmdlLevel) 
+		startingLevel = cmdlLevel;
+	else {
+		GConfClient *gconf_client = gconf_client_get_default ();
+		startingLevel = gconf_client_get_int (gconf_client,
+						      KEY_STARTING_LEVEL,
+						      NULL);
+		g_object_unref (gconf_client);
+	}
+	if (startingLevel < 1)
+		startingLevel = 1;
+
 	level = startingLevel;
 	
 	w = games_frame_new (_("Game Status"));

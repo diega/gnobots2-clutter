@@ -61,6 +61,16 @@ bool rotateCounterClockWise = true;
 
 #define TETRIS_OBJECT "gnometris-tetris-object"
 
+#define KEY_OPTIONS_DIR "/apps/gnometris/options"
+#define KEY_BLOCK_PIXMAP "/apps/gnometris/options/block_pixmap"
+#define KEY_BACKGROUND_PIXMAP "/apps/gnometris/options/background_pixmap"
+#define KEY_STARTING_LEVEL "/apps/gnometris/options/starting_level"
+#define KEY_DO_PREVIEW "/apps/gnometris/options/do_preview"
+#define KEY_RANDOM_BLOCK_COLORS "/apps/gnometris/options/random_block_colors"
+#define KEY_ROTATE_COUNTER_CLOCKWISE "/apps/gnometris/options/rotate_counter_clock_wise"
+#define KEY_LINE_FILL_HEIGHT "/apps/gnometris/options/line_fill_height"
+#define KEY_LINE_FILL_PROBABILITY "/apps/gnometris/options/line_fill_probability"
+
 Tetris::Tetris(int cmdlLevel): 
 	blockPixmap(0),
 	bgPixmap(0),
@@ -126,10 +136,10 @@ Tetris::Tetris(int cmdlLevel):
 
 	/* init gconf */
 	gconf_client = gconf_client_get_default ();
-	games_gconf_sanity_check_string (gconf_client, "/apps/gnometris/options/block_pixmap");
+	games_gconf_sanity_check_string (gconf_client, KEY_BLOCK_PIXMAP);
 
-	gconf_client_add_dir (gconf_client, "/apps/gnometris/options", GCONF_CLIENT_PRELOAD_NONE, NULL);
-	gconf_client_notify_add (gconf_client, "/apps/gnometris/options", gconfNotify, this, NULL, NULL);
+	gconf_client_add_dir (gconf_client, KEY_OPTIONS_DIR, GCONF_CLIENT_PRELOAD_NONE, NULL);
+	gconf_client_notify_add (gconf_client, KEY_OPTIONS_DIR, gconfNotify, this, NULL, NULL);
 
 	initOptions ();
 
@@ -325,7 +335,7 @@ Tetris::setupPixmap()
 		g_object_unref (G_OBJECT (bgimage));
 
 	if (g_file_test (fullpixname, G_FILE_TEST_EXISTS)) 
-		bgimage = gdk_pixbuf_new_from_file(fullpixname, NULL);
+		bgimage = gdk_pixbuf_new_from_file (fullpixname, NULL);
 	else {
                 /* If we can't find a .png look for a .jpg, this is
                  * especially pertinant since a lot of the original
@@ -333,24 +343,24 @@ Tetris::setupPixmap()
                 s = g_strrstr(fullpixname, ".png");
                 g_strlcpy(s, ".jpg", 5);
                 if (g_file_test (fullpixname, G_FILE_TEST_EXISTS)) {
-                        bgimage = gdk_pixbuf_new_from_file(fullpixname, NULL);
+                        bgimage = gdk_pixbuf_new_from_file (fullpixname, NULL);
                         s = g_strrstr (bgPixmap, ".png");
                         g_strlcpy (s, ".jpg", 5);
-                        gconf_client_set_string (gconf_client, "/apps/gnometris/options/background_pixmap", bgPixmap, NULL);
+                        gconf_client_set_string (gconf_client, KEY_BACKGROUND_PIXMAP, bgPixmap, NULL);
                 } else
                         bgimage = 0;
         }
 
 	if (field)
 	{
-		field->updateSize(bgimage);
-		gtk_widget_queue_draw(field->getWidget());
+		field->updateSize (bgimage);
+		gtk_widget_queue_draw (field->getWidget());
 	}
 	
 	if (preview)
 	{
-		preview->updateSize();
-		gtk_widget_queue_draw(preview->getWidget());
+		preview->updateSize ();
+		gtk_widget_queue_draw (preview->getWidget());
 	}
 
 	// FIXME: this really sucks, but I can't find a better way to resize 
@@ -381,7 +391,7 @@ Tetris::initOptions ()
 	if (blockPixmap)
 		free (blockPixmap);
 
-	blockPixmap = gconf_client_get_string (gconf_client, "/apps/gnometris/options/block_pixmap", &error);
+	blockPixmap = gconf_client_get_string (gconf_client, KEY_BLOCK_PIXMAP, &error);
 	if (error) {
 		g_warning ("gconf error: %s\n", error->message);
 		g_error_free (error);
@@ -393,7 +403,7 @@ Tetris::initOptions ()
 	if (bgPixmap)
 		free (bgPixmap);
 
-	bgPixmap = gconf_client_get_string (gconf_client, "/apps/gnometris/options/background_pixmap", &error);
+	bgPixmap = gconf_client_get_string (gconf_client, KEY_BACKGROUND_PIXMAP, &error);
 	if (error) {
 		g_warning ("gconf error: %s\n", error->message);
 		g_error_free (error);
@@ -402,7 +412,7 @@ Tetris::initOptions ()
         if (bgPixmap == NULL)
           bgPixmap = g_strdup ("gnometris-bg.jpg");
 
-	startingLevel = gconf_client_get_int (gconf_client, "/apps/gnometris/options/starting_level", &error);
+	startingLevel = gconf_client_get_int (gconf_client, KEY_STARTING_LEVEL, &error);
 	if (error) {
 		g_warning ("gconf error: %s\n", error->message);
 		g_error_free (error);
@@ -411,35 +421,35 @@ Tetris::initOptions ()
         if (startingLevel < 1) 
           startingLevel = 1;
 
-	do_preview = gconf_client_get_bool (gconf_client, "/apps/gnometris/options/do_preview", &error);
+	do_preview = gconf_client_get_bool (gconf_client, KEY_DO_PREVIEW, &error);
 	if (error) {
 		g_warning ("gconf error: %s\n", error->message);
 		g_error_free (error);
 		error = NULL;
 	}
 
-	random_block_colors = gconf_client_get_bool (gconf_client, "/apps/gnometris/options/random_block_colors", &error);
+	random_block_colors = gconf_client_get_bool (gconf_client, KEY_RANDOM_BLOCK_COLORS, &error);
 	if (error) {
 		g_warning ("gconf error: %s\n", error->message);
 		g_error_free (error);
 		error = NULL;
 	}
 	
-	rotateCounterClockWise = gconf_client_get_bool (gconf_client, "/apps/gnometris/options/rotate_counter_clock_wise", &error);
+	rotateCounterClockWise = gconf_client_get_bool (gconf_client, KEY_ROTATE_COUNTER_CLOCKWISE, &error);
 	if (error) {
 		g_warning ("gconf error: %s\n", error->message);
 		g_error_free (error);
 		error = NULL;
 	}
 
-	line_fill_height = gconf_client_get_int (gconf_client, "/apps/gnometris/options/line_fill_height", &error);
+	line_fill_height = gconf_client_get_int (gconf_client, KEY_LINE_FILL_HEIGHT, &error);
 	if (error) {
 		g_warning ("gconf error: %s\n", error->message);
 		g_error_free (error);
 		error = NULL;
 	}
 
-	line_fill_prob = gconf_client_get_int (gconf_client, "/apps/gnometris/options/line_fill_probability", &error);
+	line_fill_prob = gconf_client_get_int (gconf_client, KEY_LINE_FILL_PROBABILITY, &error);
 	if (error) {
 		g_warning ("gconf error: %s\n", error->message);
 		g_error_free (error);
@@ -468,21 +478,24 @@ void
 Tetris::setSelectionPreview(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
-	gconf_client_set_bool (t->gconf_client, "/apps/gnometris/options/do_preview", GTK_TOGGLE_BUTTON(widget)->active, NULL);
+	gconf_client_set_bool (t->gconf_client, KEY_DO_PREVIEW,
+			       GTK_TOGGLE_BUTTON (widget)->active, NULL);
 }
 
 void 
 Tetris::setSelectionBlocks(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
-	gconf_client_set_bool (t->gconf_client, "/apps/gnometris/options/random_block_colors", GTK_TOGGLE_BUTTON(widget)->active, NULL);
+	gconf_client_set_bool (t->gconf_client, KEY_RANDOM_BLOCK_COLORS,
+			       GTK_TOGGLE_BUTTON (widget)->active, NULL);
 }
 
 void 
 Tetris::setRotateCounterClockWise(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
-	gconf_client_set_bool (t->gconf_client, "/apps/gnometris/options/rotate_counter_clock_wise", GTK_TOGGLE_BUTTON(widget)->active, NULL);
+	gconf_client_set_bool (t->gconf_client, KEY_ROTATE_COUNTER_CLOCKWISE,
+			       GTK_TOGGLE_BUTTON (widget)->active, NULL);
 }
 
 void
@@ -491,7 +504,8 @@ Tetris::setSelection(GtkWidget *widget, void *data)
 	Tetris *t;
 
       	t = (Tetris *)g_object_get_data (G_OBJECT (widget), TETRIS_OBJECT);
-	gconf_client_set_string (t->gconf_client, "/apps/gnometris/options/block_pixmap", (char *)data, NULL);
+	gconf_client_set_string (t->gconf_client, KEY_BLOCK_PIXMAP,
+				 (char *)data, NULL);
 }
 
 void
@@ -500,7 +514,8 @@ Tetris::setBGSelection(GtkWidget *widget, void *data)
 	Tetris *t;
        
 	t = (Tetris *)g_object_get_data (G_OBJECT (widget), TETRIS_OBJECT);
-	gconf_client_set_string (t->gconf_client, "/apps/gnometris/options/background_pixmap", (char *)data, NULL);
+	gconf_client_set_string (t->gconf_client, KEY_BACKGROUND_PIXMAP,
+				 (char *)data, NULL);
 }
 
 void
@@ -514,7 +529,8 @@ Tetris::lineFillHeightChanged (GtkWidget *spin, gpointer data)
 {
 	Tetris *t = (Tetris *)data;
 	gint value = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin));
-	gconf_client_set_int (t->gconf_client, "/apps/gnometris/options/line_fill_height", value, NULL);
+	gconf_client_set_int (t->gconf_client, KEY_LINE_FILL_HEIGHT,
+			      value, NULL);
 }
 
 void
@@ -522,7 +538,8 @@ Tetris::lineFillProbChanged (GtkWidget *spin, gpointer data)
 {
 	Tetris *t = (Tetris *)data;
 	gint value = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin));
-	gconf_client_set_int (t->gconf_client, "/apps/gnometris/options/line_fill_probability", value, NULL);
+	gconf_client_set_int (t->gconf_client, KEY_LINE_FILL_PROBABILITY,
+			      value, NULL);
 }
 
 void
@@ -530,7 +547,8 @@ Tetris::startingLevelChanged (GtkWidget *spin, gpointer data)
 {
 	Tetris *t = (Tetris *)data;
 	gint value = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin));
-	gconf_client_set_int (t->gconf_client, "/apps/gnometris/options/starting_level", value, NULL);
+	gconf_client_set_int (t->gconf_client, KEY_STARTING_LEVEL,
+			      value, NULL);
 }
 
 void
