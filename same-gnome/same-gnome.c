@@ -698,6 +698,7 @@ GnomeUIInfo mainmenu[] = {
 
 #define ELEMENTS(x) (sizeof (x) / sizeof (x [0]))
 
+
 static int
 save_state (GnomeClient *client,
 	    gint phase,
@@ -707,125 +708,63 @@ save_state (GnomeClient *client,
 	    gint fast,
 	    gpointer client_data)
 {
-	gchar *sess;
-	gchar *buf;
-	gchar *buf2;
-	struct ball *f = (struct ball*) field;
-	int i;
-
-	gchar *argv[3];
-
-	if (debugging)
-		g_print ("Saving state\n");
-
-	sess = g_copy_strings ("Saved-Session-",
-			       gnome_client_get_id (client),
-			       NULL);
-
-	buf = g_copy_strings ("/same-gnome/",
-			      sess, 
-			      "/Score",
-			      NULL);
-	gnome_config_set_int (buf, score);
-	g_free(buf);
-
-	buf = g_copy_strings ("/same-gnome/",
-			      sess, 
-			      "/nstones",
-			      NULL);
-	gnome_config_set_int (buf, sync_stones ? 1 : nstones);
-	g_free(buf);
-
-	buf = g_copy_strings ("/same-gnome/",
-			      sess, 
-			      "/Field",
-			      NULL);
-
-	buf2 = g_malloc(STONE_COLS*STONE_LINES+1);
-	for ( i=0 ; i < (STONE_COLS*STONE_LINES) ; i++ ) 
-		buf2[i]  =f[i].color + 'a';
-	buf2[STONE_COLS*STONE_LINES] = '\0';
-
-	gnome_config_set_string (buf, buf2);
-	g_free(buf);
-	g_free(buf2);
-
-	gnome_config_sync();
-	g_free(sess);
-
-	argv[0] = (char*) client_data;
-	argv[1] = "--delete-sess";
-	argv[2] = gnome_client_get_id (client);
-	gnome_client_set_discard_command (client, 3, argv);
-	
-	return TRUE;
+  gchar *prefix= gnome_client_get_config_prefix (client);
+  gchar *argv[]= { "rm", "-r", NULL };
+  gchar *buf;
+  struct ball *f = (struct ball*) field;
+  int i;  
+  
+  if (debugging)
+    g_print ("Saving state\n");
+  
+  gnome_config_push_prefix (prefix);
+  
+  gnome_config_set_int ("Game/Score", score);
+  gnome_config_set_int ("Game/NStones", sync_stones ? 1 : nstones);
+  
+  buf= g_malloc(STONE_COLS*STONE_LINES+1);
+  for (i=0 ; i < (STONE_COLS*STONE_LINES) ; i++ )
+    {
+      buf[i]= f[i].color + 'a';
+    }
+  buf[STONE_COLS*STONE_LINES]= '\0';
+  gnome_config_set_string ("Game/Field", buf);
+  g_free(buf);
+  
+  gnome_config_pop_prefix ();
+  gnome_config_sync();
+  
+  argv[2]= gnome_config_get_real_path (prefix);
+  gnome_client_set_discard_command (client, 3, argv);
+  
+  return TRUE;
 }
 
-static void
-delete_session (gchar *id)
-{
-	gchar *sess;
-
-	if (debugging)
-		g_print ("Deleting info from session %s\n", id);
-
-	sess = g_copy_strings ("/same-gnome/Saved-Session-",
-			       id,
-			       NULL);
-
-	gnome_config_clean_section (sess);
-	gnome_config_sync ();
-
-	g_free (sess);
-	return;
-}
 
 static void
-restart (gchar *id)
+restart (void)
 {
-	gchar *sess;
-	gchar *buf;
-	gchar *buf2;
-	struct ball *f = (struct ball*) field;
-	int i;
-
-	if (debugging)
-		g_print ("Retrieving state\n");
-
-	sess = g_copy_strings ("Saved-Session-",
-			       id,
-			       NULL);
-
-	buf = g_copy_strings ("/same-gnome/",
-			      sess, 
-			      "/Score",
-			      NULL);
-	score = gnome_config_get_int_with_default (buf, 0);
-	g_free(buf);
-
-	buf = g_copy_strings ("/same-gnome/",
-			      sess, 
-			      "/nstones",
-			      NULL);
-	nstones = gnome_config_get_int_with_default (buf, 0);
-	g_free(buf);
-
-	buf = g_copy_strings ("/same-gnome/",
-			      sess, 
-			      "/Field",
-			      NULL);
-	buf2 = gnome_config_get_string_with_default (buf, NULL);
-
-	if (buf2)
-		for ( i=0 ; i < (STONE_COLS*STONE_LINES) ; i++ ) {
-			f[i].color = buf2[i] - 'a';
-			f[i].tag   = 0;
-			f[i].frame = nstones ? (rand () % nstones) : 0;
-		}
-	g_free(buf2);
-	g_free(buf);
-
-	g_free(sess);
+  gchar *buf;
+  struct ball *f = (struct ball*) field;
+  int i;
+  
+  if (debugging)
+    g_print ("Retrieving state\n");
+  
+  score  = gnome_config_get_int_with_default ("Game/Score", 0);
+  nstones= gnome_config_get_int_with_default ("Game/NStones", 0);
+  
+  buf    = gnome_config_get_string_with_default ("Game/Field", NULL);  
+  if (buf)
+    {
+      for (i= 0; i < (STONE_COLS*STONE_LINES); i++) 
+	{
+	  f[i].color= buf[i] - 'a';
+	  f[i].tag  = 0;
+	  f[i].frame= nstones ? (rand () % nstones) : 0;
+	}
+      g_free (buf);
+    }
 }
 
 static gint
@@ -836,14 +775,19 @@ client_die (GnomeClient *client, gpointer client_data)
 	return FALSE;
 }
 
-static char *session_id = NULL;
-
 static const struct poptOption options[] = {
   {NULL, 'd', POPT_ARG_NONE, &debugging, 0, N_("Debugging mode"), NULL},
-  {"discard-session", 'D', POPT_ARG_STRING, &session_id, 0, N_("Discard session"), N_("ID")},
   {"scenario", 's', POPT_ARG_STRING, &fname, 0, N_("Set game scenario"), N_("NAME")},
   {NULL, '\0', 0, NULL, 0}
 };
+
+#ifndef GNOME_CLIENT_RESTARTED
+#define GNOME_CLIENT_RESTARTED(client) \
+(GNOME_CLIENT_CONNECTED (client) && \
+ (gnome_client_get_previous_id (client) != NULL) && \
+ (strcmp (gnome_client_get_id (client), \
+  gnome_client_get_previous_id (client)) == 0))
+#endif /* GNOME_CLIENT_RESTARTED */
 
 int
 main (int argc, char *argv [])
@@ -857,10 +801,6 @@ main (int argc, char *argv [])
 	gnome_score_init("same-gnome");
 
 	gnome_init_with_popt_table ("same-gnome", VERSION, argc, argv, options, 0, NULL);
-	if(session_id) {
-	  delete_session (session_id);
-	  exit(0);
-	}
 
 	client= gnome_master_client ();
 
@@ -869,15 +809,14 @@ main (int argc, char *argv [])
 	gtk_signal_connect (GTK_OBJECT (client), "die",
 			    GTK_SIGNAL_FUNC (client_die), NULL);
 
-	if (GNOME_CLIENT_CONNECTED (client))
+	if (GNOME_CLIENT_RESTARTED (client))
 	  {
-	    GnomeClient *cloned= gnome_cloned_client ();
+	    gnome_config_push_prefix (gnome_client_get_config_prefix (client));
 	    
-	    if (cloned)
-	      {
-		restarted= 1;
-		restart (gnome_client_get_id (cloned));
-	      }
+	    restart ();
+	    restarted= 1;
+	    
+	    gnome_config_pop_prefix ();
 	  }
 
 	srand (time (NULL));
