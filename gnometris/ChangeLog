@@ -1,4 +1,23 @@
-1999-01-20  Marcin Gorycki  <mgo@olicom.dk>
+1999-02-01  Marcin Gorycki  <mgo@olicom.dk>
+
+	* tetris.h, tetris.cpp, scoreframe.cpp, preview.cpp, main.cpp, blockops.h, blockops.cpp, TODO, Makefile.am, ChangeLog:
+	lots of changes for ver 0.2.0
+
+	* changes in pix subdir
+
+1999-01-27  Marcin Gorycki  <mgo@olicom.dk>
+
+	* TODO: updated
+
+	* tetris.h, tetris.cpp, scoreframe.cpp: i18n support fixed
+
+1999-01-20  pablo  <pablo@???>
+
+	* gnometris.desktop: updated *.desktop whith es and fr descriptions
+
+1999-01-20  Marcin Gorycki  <mgo@popeye.pl.olicom.com>
+
+	* ChangeLog: *** empty log message ***
 
 	* COPYING: initial rev.
 
