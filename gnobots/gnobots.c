@@ -126,7 +126,7 @@ static struct poptOption options[] = {
  */
 GnomeUIInfo gamemenu[] = {
     {GNOME_APP_UI_ITEM, N_("_New"), NULL, new_cb, NULL, NULL,
-        GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
+        GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 'n', GDK_CONTROL_MASK, NULL},
 
     {GNOME_APP_UI_ITEM, N_("_Properties..."), NULL, properties_cb, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
@@ -134,8 +134,8 @@ GnomeUIInfo gamemenu[] = {
     {GNOME_APP_UI_ITEM, N_("_Scores..."), NULL, game_scores_cb, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SCORES, 0, 0, NULL},
 
-    {GNOME_APP_UI_ITEM, N_("E_xit"), NULL, quit_cb, NULL, NULL,
-        GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 0, 0, NULL},
+    {GNOME_APP_UI_ITEM, N_("_Quit"), NULL, quit_cb, NULL, NULL,
+        GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 'q', GDK_CONTROL_MASK, NULL},
 
     {GNOME_APP_UI_ENDOFINFO}
 };

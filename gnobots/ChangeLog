@@ -1,3 +1,7 @@
+1998-09-24  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* gnobots.c: Added shortcut support.
+	
 Thu Nov 19  Richard Hestilow  <hestgray@ionet.net>
 
 	* gnobots.c: Added underscore accelerators for menus. Also do not 
