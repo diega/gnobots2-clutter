@@ -21,9 +21,95 @@
 
 jmp_buf unsolvable ;
 
+/* If defined this cooks the sequence no.s,
+   press redo in a new game */
+#define CHEAT_DEBUG
+
 #ifdef PLACE_DEBUG
 int global_wait = 0 ;
 #endif
+
+struct _typeinfo {
+  int type;
+  int placed;
+  int image[2];
+};
+typedef struct _typeinfo typeinfo;
+
+typeinfo type_info [MAX_TILES/2] = {
+  	{ 0, 0, {0, 0} },
+	{ 0, 0, {0, 0} },
+	{ 1, 0, {1, 1} },
+	{ 1, 0, {1, 1} },
+	{ 2, 0, {2, 2} },
+	{ 2, 0, {2, 2} },
+	{ 3, 0, {3, 3} },
+	{ 3, 0, {3, 3} },
+	{ 4, 0, {4, 4} },
+	{ 4, 0, {4, 4} },
+	{ 5, 0, {5, 5} },
+	{ 5, 0, {5, 5} },
+	{ 6, 0, {6, 6} },
+	{ 6, 0, {6, 6} },
+	{ 7, 0, {7, 7} },
+	{ 7, 0, {7, 7} },
+	{ 8, 0, {8, 8} },
+	{ 8, 0, {8, 8} },
+	{ 9, 0, {9, 9} },
+	{ 9, 0, {9, 9} },
+	{ 10, 0, {10, 10} },
+	{ 10, 0, {10, 10} },
+	{ 11, 0, {11, 11} },
+	{ 11, 0, {11, 11} },
+	{ 12, 0, {12, 12} },
+	{ 12, 0, {12, 12} },
+	{ 13, 0, {13, 13} },
+	{ 13, 0, {13, 13} },
+	{ 14, 0, {14, 14} },
+	{ 14, 0, {14, 14} },
+	{ 15, 0, {15, 15} },
+	{ 15, 0, {15, 15} },
+	{ 16, 0, {16, 16} },
+	{ 16, 0, {16, 16} },
+	{ 17, 0, {17, 17} },
+	{ 17, 0, {17, 17} },
+	{ 18, 0, {18, 18} },
+	{ 18, 0, {18, 18} },
+	{ 19, 0, {19, 19} },
+	{ 19, 0, {19, 19} },
+	{ 20, 0, {20, 20} },
+	{ 20, 0, {20, 20} },
+	{ 21, 0, {21, 21} },
+	{ 21, 0, {21, 21} },
+	{ 22, 0, {22, 22} },
+	{ 22, 0, {22, 22} },
+	{ 23, 0, {23, 23} },
+	{ 23, 0, {23, 23} },
+	{ 24, 0, {24, 24} },
+	{ 24, 0, {24, 24} },
+	{ 25, 0, {25, 25} },
+	{ 25, 0, {25, 25} },
+	{ 26, 0, {26, 26} },
+	{ 26, 0, {26, 26} },
+	{ 27, 0, {27, 27} },
+	{ 27, 0, {27, 27} },
+	{ 28, 0, {28, 28} },
+	{ 28, 0, {28, 28} },
+	{ 29, 0, {29, 29} },
+	{ 29, 0, {29, 29} },
+	{ 30, 0, {30, 30} },
+	{ 30, 0, {30, 30} },
+	{ 31, 0, {31, 31} },
+	{ 31, 0, {31, 31} },
+	{ 32, 0, {32, 32} },
+	{ 32, 0, {32, 32} },
+	{ 33, 0, {33, 34} },
+	{ 33, 0, {35, 36} },
+	{ 34, 0, {37, 37} },
+	{ 34, 0, {37, 37} },
+	{ 35, 0, {38, 39} },
+	{ 35, 0, {40, 41} }
+};
 
 struct _dep_tree {
   int turn_dep[4] ;	/* Turning dependancies all must be clear */
@@ -314,7 +400,6 @@ void validate_tile (int t)
   if ((lfilled) || (rfilled))
     dep_tree[t].free = 1 ;
 }
-
 /* Place tile in map at position f, with pic & type from t */
 void place_tile (int f, int t, int idx)
 {
@@ -324,10 +409,6 @@ void place_tile (int f, int t, int idx)
 #endif
   tiles[f].visible = 1;
   tiles[f].selected = 0;
-
-  tiles[f].x = pos[f].x * (HALF_WIDTH-0) + xpos_offset + (5 * pos[f].layer);
-  tiles[f].y = pos[f].y * (HALF_HEIGHT-0) + ypos_offset - (4 * pos[f].layer);
-  tiles[f].layer = pos[f].layer;
 
   /*  if (tiles[f].layer>0)
       tiles[f].visible = 0 ;
@@ -540,7 +621,7 @@ void generate_game (void)
   /* Check we really got them all ? : very important for algorithem ! */
   for (lp=0;lp<MAX_TILES;lp++)
     {
-	if (tiles[lp].layer==0 && 
+	if (pos[lp].layer==0 && 
 	    ok_free_validate_line (lp))
 	    dep_tree[lp].free = 1 ;
     }

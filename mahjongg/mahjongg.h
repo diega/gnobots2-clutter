@@ -10,57 +10,26 @@
  * pancho@nuclecu.unam.mx
  *
  */
-
-/* If defined this cooks the sequence no.s,
-   press redo in a new game */
-#define CHEAT_DEBUG
+#include <gnome.h>
 
 #define MAX_TILES 144
 #define MAX_TILES_STR "144"
-
-#define AREA_WIDTH 600
-#define AREA_HEIGHT 480
-#define TILE_WIDTH 40
-#define TILE_HEIGHT 56
-#define HALF_WIDTH 18
-#define HALF_HEIGHT 26
-#define MAH_VERSION "0.99.2"
-
-/* #defines for the tile selection code. */
-#define SELECTED_FLAG   1
-#define HINT_FLAG       16
-
-#include <gnome.h>
-
-extern int xpos_offset;
-extern int ypos_offset;
-
-typedef struct _tilepos tilepos;     
-typedef struct _tile tile;
-typedef struct _typeinfo typeinfo;
-
-struct _typeinfo {
-  int type;
-  int placed;
-  int image[2];
-};
-
-extern typeinfo type_info[] ;
 
 struct _tilepos {
 	int x;
 	int y;
 	int layer;
 };
+typedef struct _tilepos tilepos;     
 
 extern tilepos *pos;
+
+
+typedef struct _tile tile;
 
 struct _tile{
   int type;
   int image;
-  int layer;
-  int x;
-  int y;
   int visible;
   int selected;
   int sequence;
