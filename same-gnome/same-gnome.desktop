@@ -1,7 +1,6 @@
 [Desktop Entry]
 Name=Same Gnome
-Comment[pt_BR]=Programa SameGame Gnome
-Name[da]=Same Gnome
+Name[da]=Samme Gnome
 Name[de]=Same Gnome
 Name[es]=Same Gnome
 Name[et]=Same Gnome
@@ -25,6 +24,7 @@ Comment[ja]=╓╣╓АGnome
 Comment[ko]=╠вЁП ╪╪юс╠вЁП ╟тюс
 Comment[no]=Gnome klone av SameGame
 Comment[pt]=Variante Gnome do jogo SameGame
+Comment[pt_BR]=Programa SameGame Gnome
 Comment[ru]=Та же игра для Game
 Exec=same-gnome
 Icon=gnome-gsame.png
