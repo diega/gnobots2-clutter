@@ -781,7 +781,6 @@ restart (gchar *id)
 	g_free(buf);
 
 	g_free(sess);
-	return(1);
 }
 
 gchar *
