@@ -1,3 +1,16 @@
+1999-01-14  Chris Lahey  <clahey@umich.edu>
+
+	* metatris.c: Redesigned theming a bit.
+
+	* metatris.theme: Added a third color to the default theme.
+
+	* metatris-bg.png: Switched to a green fractal background from
+	tigert to better fit with the blue & yellow pieces.
+
+	* Makefile.am: Added the yellow image set.
+
+	* .cvsignore: Changed the name from tetris-g to metatris.
+
 1999-01-13  Chris Lahey  <clahey@umich.edu>
 
 	* metatris.desktop (Name, Comment, Exec): Switched from Tetris-G

@@ -27,13 +27,14 @@ gint window_count;
 
 #define GRID_ENTRY( window, x, y ) ( (window)->grid[ (x) + (y) * (window)->width ] )
 #define PIECE_COUNT 7
-#define COLOR_COUNT PIECE_COUNT
 
 /* #define AA_METATRIS 1 */
 /* #define SHOW_SCORE 1 */
 
-GdkImlibImage *metatris_images[256][COLOR_COUNT];
+GdkImlibImage **metatris_images;
 GdkImlibImage *metatris_bg;
+gchar *current_look_theme_path;
+gint color_count;
 
 typedef struct
 {
@@ -49,6 +50,7 @@ typedef struct
 typedef struct
 {
   MetatrisEntry **entries;
+  gint entry_count;
 } MetatrisPiece;
 
 typedef struct
@@ -139,29 +141,52 @@ metatris_entry_destroy( MetatrisWindow *metatris, MetatrisEntry *entry )
 }
 
 static void
-metatris_init()
+metatris_init_themes()
 {
+  gchar *current_look_theme_short;
   gint i;
   gint j;
-  for ( j = 0; j < COLOR_COUNT; j++ )
+
+  gnome_config_push_prefix( "/metatris/Themes/");
+  current_look_theme_short = gnome_config_get_string_with_default( "look-theme=" DATADIR "/metatris/default-theme/", NULL );
+  gnome_config_pop_prefix();
+  gnome_config_sync();
+
+  current_look_theme_path = g_strdup_printf( "=%smetatris.theme=/", current_look_theme_short );
+
+  g_free( current_look_theme_short );
+  
+  gnome_config_push_prefix( current_look_theme_path );
+  color_count = gnome_config_get_int_with_default( "Map/color_count=7", NULL );
+  gnome_config_pop_prefix();
+  gnome_config_sync();
+
+  metatris_images = g_new( GdkImlibImage *, 256 * color_count );
+  for ( j = 0; j < color_count; j++ )
     {
-      for ( i = 0; i < 16; i++ )
+      for ( i = 0; i < 256; i++ )
 	{
-	  metatris_images[i][j] = NULL;
+	  metatris_images[i + 256 * j] = NULL;
 	}
     }
+}
+
+static void
+metatris_init()
+{
   srand( time( NULL ) );
 #if AA_METATRIS
   metatris_bg = gnome_canvas_load_alpha( MYDATADIR "/metatris-bg.png" );
 #else
   metatris_bg = gdk_imlib_load_image( MYDATADIR "/metatris-bg.png" );
 #endif
+  metatris_init_themes();
 }
 
 static GdkImlibImage *
 get_image_invalid( gint which, gint color )
 {
-  if ( metatris_images[ which ][ color ] == NULL )
+  if ( metatris_images[ which + 256 *  color ] == NULL )
     {
       gchar *path, *short_path;
       gchar name[17];
@@ -207,21 +232,21 @@ get_image_invalid( gint which, gint color )
       
       path = g_strdup_printf( MYDATADIR "/%s", short_path );
 #if AA_METATRIS
-      metatris_images[which][color] = gnome_canvas_load_alpha( path );
+      metatris_images[which + 256 * color] = gnome_canvas_load_alpha( path );
 #else
-      metatris_images[which][color] = gdk_imlib_load_image( path );
+      metatris_images[which + 256 * color] = gdk_imlib_load_image( path );
 #endif
       g_free( path );
 
       gnome_config_pop_prefix();
       gnome_config_sync();
-      if ( metatris_images[which][color] == NULL )
+      if ( metatris_images[which + 256 * color] == NULL )
 	g_error( "Can't find images.\n" );
     }
-  return metatris_images[which][color];
+  return metatris_images[which+ 256 * color];
 }
 
-#define get_image( which, color ) ( metatris_images[(which)][(color)] != NULL ? metatris_images[(which)][(color)] : get_image_invalid( (which), (color) ) )
+#define get_image( which, color ) ( metatris_images[(which) + 256 * (color)] != NULL ? metatris_images[(which) + 256 * (color)] : get_image_invalid( (which), (color) ) )
 
 static void file_new_window_callback( GtkWidget *widget, gpointer data )
 {
@@ -234,7 +259,8 @@ create_metatris_piece( MetatrisWindow *metatris )
   MetatrisPiece *piece = g_new( MetatrisPiece, 1 );
   int i;
   piece->entries = g_new( MetatrisEntry *, 4 );
-  for ( i = 0; i < 4; i++ )
+  piece->entry_count = 4;
+  for ( i = 0; i < piece->entry_count; i++ )
     {
       piece->entries[i] = g_new( MetatrisEntry, 1 );
       piece->entries[i]->item = NULL;
@@ -259,7 +285,7 @@ show_metatris_piece( MetatrisWindow *metatris, MetatrisPiece *piece )
   GnomeCanvasGroup *root = gnome_canvas_root (GNOME_CANVAS (metatris->canvas));
   int i;
 
-  for( i = 0; i < 4; i++ )
+  for( i = 0; i < piece->entry_count; i++ )
     {
       piece->entries[i]->item
 	= gnome_canvas_item_new (root,
@@ -280,7 +306,7 @@ check_piece_existance_possibility( MetatrisWindow *metatris, MetatrisPiece *piec
   if ( piece )
     {
       int i;
-      for ( i = 0; i < 4; i++ )
+      for ( i = 0; i < piece->entry_count; i++ )
 	{
 	  MetatrisEntry *entry = piece->entries[i];
 	  if ( entry->y >= metatris->height ||
@@ -452,9 +478,9 @@ add_piece( MetatrisWindow *metatris )
       break;
     }
 
-  for( i = 0; i < 4; i++ )
+  for( i = 0; i < piece->entry_count; i++ )
     {
-      piece->entries[i]->color = which % COLOR_COUNT;
+      piece->entries[i]->color = which % color_count;
     }
   
   if ( ! check_piece_existance_possibility( metatris, piece ) )
@@ -467,7 +493,7 @@ add_piece( MetatrisWindow *metatris )
       show_metatris_piece( metatris, piece );
       if ( metatris->timeout )
 	gtk_timeout_remove( metatris->timeout );
-      metatris->timeout = gtk_timeout_add( 1000 / metatris->level, drop_piece_callback, metatris );
+      metatris->timeout = gtk_timeout_add( 000 / metatris->level, drop_piece_callback, metatris );
     }
 }
 
@@ -563,7 +589,7 @@ land_piece( MetatrisWindow *metatris )
   if ( metatris->current_piece )
     {
       int i;
-      for ( i = 0; i < 4; i++ )
+      for ( i = 0; i < metatris->current_piece->entry_count; i++ )
 	{
 	  MetatrisEntry *entry = metatris->current_piece->entries[ i ];
 	  GRID_ENTRY( metatris, entry->x, entry->y ) = entry;
@@ -583,7 +609,7 @@ move_piece( MetatrisWindow *metatris, gint x, gint y )
   if ( metatris->current_piece )
     {
       int i;
-      for ( i = 0; i < 4; i++ )
+      for ( i = 0; i < metatris->current_piece->entry_count; i++ )
 	{
 	  MetatrisEntry *entry = metatris->current_piece->entries[i];
 	  if ( entry->x + x >= metatris->width ||
@@ -595,7 +621,7 @@ move_piece( MetatrisWindow *metatris, gint x, gint y )
 	      return FALSE;
 	    }
 	}
-      for ( i = 0; i < 4; i++ )
+      for ( i = 0; i < metatris->current_piece->entry_count; i++ )
 	{
 	  MetatrisEntry *entry = metatris->current_piece->entries[i];
 	  entry->x += x;
@@ -714,7 +740,7 @@ rotate_piece( MetatrisWindow *metatris )
     {
       int i;
       MetatrisEntry *rot = piece->entries[0];
-      for ( i = 0; i < 4; i++ )
+      for ( i = 0; i < piece->entry_count; i++ )
 	{
 	  MetatrisEntry *entry = piece->entries[i];
 	  gint newx = new_x( entry->x, entry->y, rot->x, rot->y, 1 );
@@ -728,7 +754,7 @@ rotate_piece( MetatrisWindow *metatris )
 	      return;
 	    }
 	}
-      for ( i = 1; i < 4; i++ )
+      for ( i = 1; i < piece->entry_count; i++ )
 	{
 	  MetatrisEntry *entry = metatris->current_piece->entries[i];
 	  gint newx = new_x( entry->x, entry->y, rot->x, rot->y, 1 );
@@ -737,7 +763,7 @@ rotate_piece( MetatrisWindow *metatris )
 	  entry->x = newx;
 	  entry->y = newy;
 	}
-      for ( i = 0; i < 4; i++ )
+      for ( i = 0; i < piece->entry_count; i++ )
 	{
 	  MetatrisEntry *entry = metatris->current_piece->entries[i];
 	  gint newtype = new_type( entry->type, 1 );
@@ -804,7 +830,7 @@ static void start_game( MetatrisWindow *metatris )
   metatris->level = 1;
   if ( metatris->current_piece )
     {
-      for ( i = 0; i < 4; i++ )
+      for ( i = 0; i < metatris->current_piece->entry_count; i++ )
 	{
 	  metatris_entry_destroy( metatris, metatris->current_piece->entries[i] );
 	  metatris->current_piece->entries[i] = NULL;

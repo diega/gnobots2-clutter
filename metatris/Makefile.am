@@ -60,6 +60,30 @@ mydata_DATA =	\
 	metatris-piece-e3-01.png	\
 	metatris-piece-f8-01.png	\
 	metatris-piece-ff-01.png	\
+	metatris-piece-00-yellow.png	\
+	metatris-piece-02-yellow.png	\
+	metatris-piece-08-yellow.png	\
+	metatris-piece-0a-yellow.png	\
+	metatris-piece-0e-yellow.png	\
+	metatris-piece-20-yellow.png	\
+	metatris-piece-22-yellow.png	\
+	metatris-piece-28-yellow.png	\
+	metatris-piece-2a-yellow.png	\
+	metatris-piece-38-yellow.png	\
+	metatris-piece-3e-yellow.png	\
+	metatris-piece-80-yellow.png	\
+	metatris-piece-82-yellow.png	\
+	metatris-piece-83-yellow.png	\
+	metatris-piece-88-yellow.png	\
+	metatris-piece-8a-yellow.png	\
+	metatris-piece-8f-yellow.png	\
+	metatris-piece-a0-yellow.png	\
+	metatris-piece-a2-yellow.png	\
+	metatris-piece-a8-yellow.png	\
+	metatris-piece-e0-yellow.png	\
+	metatris-piece-e3-yellow.png	\
+	metatris-piece-f8-yellow.png	\
+	metatris-piece-ff-yellow.png	\
 	metatris-bg.png		\
 	metatris.png
 
