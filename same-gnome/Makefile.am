@@ -25,7 +25,7 @@ EXTRA_DIST = same-gnome.desktop $(pixmap_DATA)
 install-data-local:
 	$(mkinstalldirs) $(Gamesdir)
 	$(INSTALL_DATA) $(srcdir)/same-gnome.desktop $(Gamesdir)/same-gnome.desktop
-	touch $(scoredir)/samegnome.scores
-	chown games.games $(scoredir)/samegnome.scores
-	chmod 664 $(scoredir)/samegnome.scores
+	-touch $(scoredir)/samegnome.scores
+	-chown games.games $(scoredir)/samegnome.scores
+	-chmod 664 $(scoredir)/samegnome.scores
 
