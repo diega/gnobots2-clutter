@@ -1,6 +1,7 @@
 scoredir=$(localstatedir)/games
 pixmapdir = $(datadir)/pixmaps/mahjongg
 Gamesdir = $(datadir)/apps/Games
+appicondir=$(datadir)/pixmaps
 
 INCLUDES = -I.. -I$(srcdir)/..		\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
@@ -23,7 +24,9 @@ mahjongg_LDADD = \
 
 pixmap_DATA = default.png seta.png
 
-EXTRA_DIST = mahjongg.desktop $(pixmap_DATA)
+appicon_DATA = gnome-mahjongg.png
+
+EXTRA_DIST = mahjongg.desktop $(pixmap_DATA) $(appicon_DATA)
 
 Games_DATA = mahjongg.desktop
 
