@@ -8,7 +8,7 @@
 
 #include <gnome.h>
 
-#include "globals.h"
+#include "same-gnome.h"
 
 #include "drawing.h"
 #include "game.h"

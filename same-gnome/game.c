@@ -6,7 +6,9 @@
  *
  */
 
-#include "globals.h"
+#include <gnome.h>
+
+#include "same-gnome.h"
 
 #include "drawing.h"
 #include "game.h"
@@ -42,6 +44,10 @@ GList *urlist = NULL;
  * The next pointer points to the future, the prev pointer to
  * the past. */
 GList *urptr;
+
+const gchar *scorenames[] = {N_("Small"),
+														 N_("Medium"),
+														 N_("Large")};
 
 int calculate_score (gint nballs)
 {
@@ -151,6 +157,8 @@ void redo (void)
 
 void set_sizes (gint size)
 {
+	game_size = size;
+
 	board_width = board_sizes[size][0];
 	board_height = board_sizes[size][1];
 	ncolours = board_sizes[size][2];
@@ -331,6 +339,8 @@ gboolean mark_shifting_balls (void)
 
 static void game_over (void)
 {
+	gnome_score_log (score, scorenames[game_size - SMALL], TRUE);
+
 	/* FIXME: High score stuff. */
 	game_over_dialog ();
 }

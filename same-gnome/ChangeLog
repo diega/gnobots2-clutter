@@ -1,3 +1,22 @@
+2005-01-06  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* input.c: 
+	* game.c:
+	* ui.c:
+	* same-gnome.c:
+	* drawing.c:
+	* globals.h:
+	* same-gnome.h: globals.h -> same-gnome.h .
+
+2005-01-04  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* game.c: Make sure we update game_size properly. 
+
+	* same-gnome.c: 	
+	* game.c:
+	* game.h:
+	* ui.c: Add support for the high scores dialog.
+
 2005-01-01  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* ui.c: Add quit and new game buttons to the game over

@@ -11,10 +11,11 @@
 #include <gnome.h>
 
 #include <games-gridframe.h>
+#include <games-scores-dialog.h>
 
 #include "config.h"
 
-#include "globals.h"
+#include "same-gnome.h"
 
 #include "drawing.h"
 #include "game.h"
@@ -182,7 +183,24 @@ static void window_state_cb (GtkWidget *widget, GdkEventWindowState *event)
 
 static void scores_cb (void)
 {
+	GtkWidget *dialog;
+	gint i;
 
+	dialog = games_scores_dialog_new (APPNAME, _("Same GNOME Scores"));
+	for (i=0; i <= (LARGE - SMALL); i++) {
+		games_scores_dialog_add_category (GAMES_SCORES_DIALOG (dialog),
+																			scorenames[i],
+																			_(scorenames[i]));
+	}
+	games_scores_dialog_set_category (GAMES_SCORES_DIALOG (dialog), 
+																		scorenames[game_size - SMALL]);
+	
+	games_scores_dialog_set_category_description (GAMES_SCORES_DIALOG (dialog),
+																								_("Size:"));
+
+	gtk_dialog_run (GTK_DIALOG (dialog));
+
+	gtk_widget_destroy (dialog);
 }
 
 static void undo_cb (void)
@@ -331,6 +349,8 @@ void build_gui (void)
   gtk_action_group_set_translation_domain (action_group, GETTEXT_PACKAGE);
   gtk_action_group_add_actions (action_group, actions, G_N_ELEMENTS (actions),
 				NULL);
+	/* FIXME: This doesn't set the radio button correctly. Try setting the
+	 * game to medium, relaunching and then looking at the size menu. */
   gtk_action_group_add_radio_actions (action_group, radio_actions, 
 				      G_N_ELEMENTS (radio_actions), 
 				      game_size - SMALL, 

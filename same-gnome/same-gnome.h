@@ -1,6 +1,6 @@
 /* -*- mode: C; indent-tabs-mode: t; tab-width: 2; c-basic-offset: 2; -*- */
 
-/* globals.h : The global state of the game.
+/* same-gnome.h : The global state of the game.
  *
  * Copyright (c) 2004 by Callum McKenzie
  *
@@ -36,6 +36,7 @@ extern GConfClient *gcclient;
 /* We start at 1 so we can distinguish the gconf "unset" from a valid
  * value. */
 enum {
+  UNSET  = 0,
   CUSTOM = 1, /* FIXME: Are we going to use this. */
   SMALL,
   MEDIUM,
@@ -59,6 +60,6 @@ extern gint window_height;
 
 extern gchar *theme;
 
-extern gint   game_size;
+extern gint  game_size;
 
 #endif /* GLOBALS_H */

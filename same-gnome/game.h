@@ -70,6 +70,9 @@ extern gint count;
 /* The actual game board. */
 extern game_cell *board;
 
+/* The names of the various board sizes. */
+extern const gchar *scorenames[];
+
 void new_game (void);
 void restore_game_state (void);
 void undo (void);

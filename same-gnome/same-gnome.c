@@ -13,7 +13,7 @@
 #include <games-gconf.h>
 #include <games-gridframe.h>
 
-#include "globals.h"
+#include "same-gnome.h"
 
 #include "drawing.h"
 #include "game.h"
@@ -31,7 +31,7 @@
 #define MAXIMUM_CUSTOM_WIDTH 100
 
 gchar *theme;
-gint   game_size;
+gint   game_size = UNSET;
 
 GConfClient *gcclient;
 
@@ -120,6 +120,9 @@ int main (int argc, char *argv[])
     { "size", 'z', POPT_ARG_INT, &requested_size, 0, 
       N_("Game size (1=small, 3=large)"), N_("NUMBER") },
     { NULL, '\0', 0, NULL, 0, NULL, NULL }};
+
+	/* Initialise the scoring system. */
+	gnome_score_init (APPNAME);
 
   /* Initialise i18n. */
   bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
