@@ -1923,7 +1923,7 @@ void shuffle_tiles_callback (GtkWidget *widget, gpointer data)
         tile temp;
         time_t seconds;
 
-        if (paused || game_over == GAME_DEAD) return;
+        if (paused || game_over == GAME_DEAD || game_over == GAME_WON) return;
 
         do {
                 num_shuffle++;

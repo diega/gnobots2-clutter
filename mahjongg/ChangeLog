@@ -1,3 +1,10 @@
+2000-02-22  Chema Celorio <chema_gnome@celorio.com>
+
+	* mahjongg.c (shuffle_tiles_callback): Fix bugs #4555 and #4490.
+	Need to check for game_over == GAME_WON as well.
+
+	* seta.png: Fixed the PNG file to fix #3458
+
 1999-08-31  David Mansergh  <djm54@hermes.cam.ac.uk>
 
 	* mahjongg.c (you_won): typo fix
