@@ -60,9 +60,9 @@ phaser_chess_LDADD = \
 	$(top_builddir)/libgnomeui/libgnomeui.la 	\
 	$(top_builddir)/libgnome/libgnome.la		\
 	$(top_builddir)/obgtk/libobgtk.la		\
-        $(X_LIBS)					\
+        $(X_LIBS) $(x_libs)				\
 	-lobjc $(PTHREAD_LIB)
-	
+
 EXTRA_DIST = phaser-chess.desktop
 
 install-data-local:
