@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <1998/11/28 13:39:56 hvr>
+ * Time-stamp: <1999/01/09 16:45:59 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -412,7 +412,6 @@ game_widget_key_press_callback (GtkWidget   *widget,
 	    {
 	      start_cave++;
 	      game_update_title ();
-	      preferences_save ();
 	    }
 	  return TRUE;
 	}
@@ -448,7 +447,6 @@ game_widget_key_press_callback (GtkWidget   *widget,
 	    {
 	      start_cave--;
 	      game_update_title ();
-	      preferences_save ();
 	    }
 	  return TRUE;
 	}
@@ -1123,13 +1121,15 @@ game_start_cb (GtkWidget *widget, gpointer data)
 static void
 preferences_cb (GtkWidget *widget, gpointer data)
 {
-  gtk_widget_show (preferences_dialog_new ());
+  preferences_dialog_show ();
 }
 
 
 static void
 quit_cb (GtkWidget *widget, gpointer data)
 {
+  preferences_save_global ();
+
   exit (0);
 }
 
@@ -1349,7 +1349,8 @@ main (int argc, char *argv[])
 
   /* That's what a gnome application needs:  */
   app= gnome_app_new ("gnome-stones", _("Gnome-Stones"));
-  gtk_window_set_policy (GTK_WINDOW (app), FALSE, FALSE, TRUE);
+  gtk_window_set_policy  (GTK_WINDOW (app), FALSE, FALSE, TRUE);
+  gtk_window_set_wmclass (GTK_WINDOW (app), "gnome-stones", "main");
 
   /* ... a menu line, ... */
   gnome_app_create_menus   (GNOME_APP (app), main_menu);
@@ -1383,8 +1384,7 @@ main (int argc, char *argv[])
   
   gnome_app_set_contents (GNOME_APP (app), vbox);
   
-  gtk_widget_set_events (app, gtk_widget_get_events (app) | 
-			 GAME_EVENTS);
+  gtk_widget_set_events (app, gtk_widget_get_events (app) | GAME_EVENTS);
 
   gtk_signal_connect (GTK_OBJECT (app), "key_press_event",
 		      GTK_SIGNAL_FUNC (game_widget_key_press_callback), 0);

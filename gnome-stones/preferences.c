@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1999/01/08 18:01:33 carsten>
+ * Time-stamp: <1999/01/09 17:19:28 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -58,6 +58,11 @@ gfloat   joystick_switch_level= 0.5;
    react if some events occur.  */
 
 GameState state= STATE_TITLE;
+
+
+/* The preferences dialog.  */
+GtkWidget *preferences_dialog= NULL;
+
 
 
 
@@ -185,25 +190,13 @@ load_game_by_name (const char *filename, guint cave)
 /* Save preferences.  */
 
 
-gint 
-_preferences_save (GnomeClient        *client,
-		   gint                phase,
-		   GnomeSaveStyle      save_style,
-		   gint                shutdown,
-		   GnomeInteractStyle  interact_style,   
-		   gpointer            client_data)
+void 
+preferences_save (gboolean global)
 {
-  gboolean  global    = GPOINTER_TO_INT (client_data);
   gchar    *devicename= NULL;
   GList    *devices;
 
-  if (global)
-    gnome_config_push_prefix (gnome_client_get_global_config_prefix (client));
-  else
-    gnome_config_push_prefix (gnome_client_get_config_prefix (client));
-
   gnome_config_clean_section ("Preferences");
-
 
   for (devices= gdk_input_list_devices (); devices; devices= devices->next)
     {
@@ -227,29 +220,56 @@ _preferences_save (GnomeClient        *client,
       gnome_config_set_int ("Preferences/Start cave", start_cave);
     }
   
-  gnome_config_pop_prefix ();
-  gnome_config_sync ();
+  gnome_config_clean_section ("Windows");
 
   if (!global)
     {
-      gchar *prefix= gnome_client_get_config_prefix (client);
-      gchar *argv[3]= {"rm", "-r", NULL };
-      
-      argv[2]= gnome_config_get_real_path (prefix);
-      gnome_client_set_discard_command (client, 3, argv);
+      /* Information about open windows is only stored, if a session
+         manager issued a save.  */
+      gnome_config_set_bool ("Windows/Preferences", 
+			     preferences_dialog != NULL);
     }
+  
 
-  return TRUE;
+  gnome_config_sync ();
 }
 
 
 void
-preferences_save (void)
+preferences_save_global (void)
 {
-  /* By setting the last parameter to 'TRUE', we indicate, that we
-     want our data to the global config file.  */
-  _preferences_save (gnome_master_client (), 1, GNOME_SAVE_GLOBAL, 
-		     FALSE, GNOME_INTERACT_NONE, GINT_TO_POINTER (TRUE));
+  gnome_config_push_prefix 
+    (gnome_client_get_global_config_prefix (gnome_master_client ()));
+
+  preferences_save (TRUE);
+
+  gnome_config_pop_prefix ();
+  gnome_config_sync ();
+}
+
+
+gint
+preferences_save_local (GnomeClient        *client,
+			gint                phase,
+			GnomeSaveStyle      save_style,
+			gint                shutdown,
+			GnomeInteractStyle  interact_style,   
+			gpointer            client_data)
+{
+  gchar *prefix= gnome_client_get_config_prefix (client);
+  gchar *argv[3]= {"rm", "-r", NULL };
+      
+  gnome_config_push_prefix (prefix);
+    
+  preferences_save (FALSE);
+
+  gnome_config_pop_prefix ();
+  gnome_config_sync ();
+
+  argv[2]= gnome_config_get_real_path (prefix);
+  gnome_client_set_discard_command (client, 3, argv);
+
+  return TRUE;
 }
 
 
@@ -302,6 +322,10 @@ preferences_restore (void)
 
   g_free (filename);
 
+  if (gnome_config_get_bool ("Windows/Preferences=0"))
+    {
+      preferences_dialog_show ();
+    }
 
   gnome_config_pop_prefix ();
 
@@ -354,9 +378,20 @@ preferences_apply_cb (GtkWidget *w, gint page, gpointer data)
     default:
       /* After setting all needed values, we can save the programs
          state to disc.  */
-      preferences_save ();
+      preferences_save_global ();
       break;
     }
+}
+
+
+static gint
+preferences_destroy_cb (GtkWidget *w, gpointer data)
+{
+  g_free (data);
+
+  preferences_dialog= NULL;
+
+  return FALSE;
 }
 
 
@@ -368,15 +403,6 @@ preferences_changed_cb (GtkWidget *w, gpointer data)
   g_return_if_fail (prdata != NULL);
 
   gnome_property_box_changed (prdata->property_box);
-}
-
-
-static gint
-preferences_delete_cb (GtkWidget *w, GdkEventAny *event, gpointer data)
-{
-  g_free (data);
-
-  return FALSE;
 }
 
 
@@ -431,7 +457,7 @@ preferences_set_joystick_switch_level (GtkAdjustment *adjust, gpointer data)
 }
 
 
-GtkWidget *
+static GtkWidget *
 preferences_dialog_new (void)
 {
   GtkWidget *propbox;
@@ -658,11 +684,23 @@ preferences_dialog_new (void)
 			    (GNOME_PROPERTY_BOX (propbox)->notebook), 
 			    box, label);
 
-  gtk_signal_connect (GTK_OBJECT (propbox), "delete_event",
-		      GTK_SIGNAL_FUNC (preferences_delete_cb), prdata);
+  gtk_signal_connect (GTK_OBJECT (propbox), "destroy",
+		      GTK_SIGNAL_FUNC (preferences_destroy_cb), prdata);
   gtk_signal_connect (GTK_OBJECT (propbox), "apply",
 		      GTK_SIGNAL_FUNC (preferences_apply_cb), prdata);
   return propbox;
+}
+
+
+void
+preferences_dialog_show (void)
+{
+  if (!preferences_dialog)
+    {
+      preferences_dialog= preferences_dialog_new ();
+    }
+  
+  gtk_widget_show (preferences_dialog);
 }
 
 
@@ -704,7 +742,7 @@ session_management_init (void)
   GnomeClient *client= gnome_master_client ();
   
   gtk_signal_connect (GTK_OBJECT (client), "save_yourself",
-		      GTK_SIGNAL_FUNC (_preferences_save), 
+		      GTK_SIGNAL_FUNC (preferences_save_local), 
 		      GINT_TO_POINTER (FALSE));
   gtk_signal_connect (GTK_OBJECT (client), "die",
 		      GTK_SIGNAL_FUNC (gstones_exit), NULL);

@@ -1,3 +1,19 @@
+1999-01-10  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* preferences.c (preferences_dialog_show): New function.
+	(preferences_save): Store whether the preferences
+ 	dialog is opened or not.
+	(preferences_restore): Open the preferences dialog, if it has been
+ 	opened when saving the session.
+
+	* main.c (preferences_cb): Uses preferences_dialog_show.
+	(quit_cb): Added call to 'preferences_save_global'.
+	(main): Set the window class information on the main
+ 	window.
+
+	* preferences.h: Replaced 'preferences_dialog_new' declaration
+ 	with 'preferences_dialog_show'.
+
 1999-01-08  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
 	* preferences.c (preferences_dialog_new): Set the window class

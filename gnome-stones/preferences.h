@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1998/11/22 15:42:49 carsten>
+ * Time-stamp: <1999/01/09 16:35:02 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -86,16 +86,16 @@ game_directory_scan (const char *directory);
 /*****************************************************************************/
 
 
-/* The following function returns a new preferences dialog box.  */
+/* The following opens the preferences dialog box.  */
 
-GtkWidget *
-preferences_dialog_new (void);
+void
+preferences_dialog_show (void);
 
 
 /* Save preferences.  */
 
 void
-preferences_save (void);
+preferences_save_global (void);
 
 
 /* Restores the preferences from disc.  */
