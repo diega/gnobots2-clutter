@@ -169,7 +169,7 @@ bj_draw_chips ()
 	
                                 if (image)
                                         gdk_draw_pixbuf (surface,
-                                                         draw_gc,
+                                                         NULL,
                                                          image,
                                                          0, 0, 
                                                          x, y, 
