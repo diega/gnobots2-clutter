@@ -838,8 +838,6 @@ main (int argc, char *argv [])
 		fname = gnome_config_get_string ("/same-gnome/Preferences/Scenario");
 	}
 
-	printf ("%s\n", fname);
-
 	create_same_board (fname);
 
 	label = gtk_label_new (_("Score: "));
