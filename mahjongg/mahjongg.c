@@ -1388,7 +1388,6 @@ int main (int argc, char *argv [])
 	gtk_window_set_policy (GTK_WINDOW (window), FALSE, FALSE, TRUE);
 
 	gnome_app_create_menus (GNOME_APP (window), mainmenu);
-	gtk_menu_item_right_justify (GTK_MENU_ITEM(mainmenu[2].widget));
 
         gnome_app_create_toolbar (GNOME_APP (window), toolbar);
         gtk_toolbar_set_space_size(GTK_TOOLBAR(GNOME_APP(window)->toolbar), 25);
