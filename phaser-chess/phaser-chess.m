@@ -16,7 +16,7 @@
 
   int listen_port = 6000 + (getpid () % 23000);
 
-  [super initApp:argcp :argvp];
+  self = [super initApp:argcp :argvp];
 
   /*  local game...
   lb = [[Logical_Board alloc] init_logical_board];
