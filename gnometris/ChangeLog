@@ -1,3 +1,7 @@
+1999-03-16  Janusz Marcin Gorycki  <mgo@spiderman.pl.olicom.com>
+
+	* tetris.h, tetris.cpp: patches from Ian applied
+
 1999-03-15  Janusz Marcin Gorycki  <mgo@spiderman.pl.olicom.com>
 
 	* tetris.h, tetris.cpp:
