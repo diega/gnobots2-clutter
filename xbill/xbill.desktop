@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Gnome xBill
+Comment=Gnome version of the popular xBill game
+Icon=xbill.png
+Exec=gnome-xbill
+Terminal=0
+Type=Application

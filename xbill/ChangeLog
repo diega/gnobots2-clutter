@@ -1,0 +1,8 @@
+1999-06-03  James Henstridge  <james@daa.com.au>
+
+	* Makefile.am (Games_DATA): install the xbill desktop entry.
+
+	* xbill.desktop: added a desktop entry for xbill.
+
+	* ChangeLog: actually start using the change log.
+
