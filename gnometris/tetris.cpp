@@ -30,6 +30,8 @@
 #include <games-gconf.h>
 #include <games-frame.h>
 
+#include <libgnomevfs/gnome-vfs.h>
+
 #include <gdk/gdkkeysyms.h>
 #include <config.h>
 #include <dirent.h>
@@ -69,6 +71,9 @@ bool rotateCounterClockWise = true;
 #define KEY_LINE_FILL_HEIGHT "/apps/gnometris/options/line_fill_height"
 #define KEY_LINE_FILL_PROBABILITY "/apps/gnometris/options/line_fill_probability"
 
+#define URI_LIST 0
+#define TEXT_PLAIN 1
+
 Tetris::Tetris(int cmdlLevel): 
 	blockPixmap(0),
 	bgPixmap(0),
@@ -88,9 +93,9 @@ Tetris::Tetris(int cmdlLevel):
 	double x1, y1, x2, y2;
 	double width;
 	double pts;
-	GtkTargetEntry targets[] = {{"text/uri-list", 0, 0}, 
-				    {"text/plain", 0, 1},
-				    {"STRING", 0, 2}};
+	GtkTargetEntry targets[] = {{"text/uri-list", 0, URI_LIST}, 
+				    {"text/plain", 0, TEXT_PLAIN},
+				    {"STRING", 0, TEXT_PLAIN}};
 
 	pic = new GdkPixbuf*[tableSize];
 	for (int i = 0; i < tableSize; ++i)
@@ -1007,20 +1012,88 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 	return (keyEvent == true);
 }
 
+gchar * 
+Tetris::decodeDropData(gchar * data, gint type)
+{
+	gchar *start, *end;
+
+	if (data == NULL)
+		return NULL;
+
+	if (type == TEXT_PLAIN)
+		return g_strdup (data);
+
+	if (type == URI_LIST) {
+		start = data;
+		/* Skip any comments. */
+		if (*start == '#') {
+			while (*start != '\n') {
+				start++;
+				if (*start == '\0')
+					return NULL;
+			}
+			start++;
+			if (*start == '\0')
+				return NULL;
+		}
+
+		/* Now extract the first URI. */
+		end = start;
+		while ((*end != '\0') && (*end != '\r'))
+			end++;
+		*end = '\0';
+
+		return g_strdup (start);
+	}
+
+	return NULL;
+}
+
 void
 Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 		 gint x, gint y, GtkSelectionData *data, guint info, 
 		 guint time, gpointer userdata)
 {
-	
+	gchar * fileuri;
+	GnomeVFSHandle *vfshandle;
+	GnomeVFSResult result;
+	GnomeVFSFileInfo fileinfo;
+
 	if (data->length < 0) {
 		gtk_drag_finish (context, FALSE, FALSE, time);
 		return;
 	}
 
 	gtk_drag_finish (context, TRUE, FALSE, time);
-	g_print ("Dropped: ");
+
+	g_print ("Dropped (%d): ", info);
 	g_print ("%s", data->data);
+
+	fileuri = decodeDropData ((gchar *)data->data, info);
+	/* Silently ignore bad data. */
+	if (fileuri == NULL)
+		return;
+	
+	g_print ("Using: %s\n", fileuri);
+
+	
+	result = gnome_vfs_open (&vfshandle, fileuri, GNOME_VFS_OPEN_READ);
+	if (result != GNOME_VFS_OK)
+		return;
+
+	result = gnome_vfs_get_file_info_from_handle (vfshandle, &fileinfo,
+						      GNOME_VFS_FILE_INFO_FOLLOW_LINKS);
+	if (result != GNOME_VFS_OK)
+		return;
+
+	g_print ("%lld\n", fileinfo.size);
+
+	if (!(fileinfo.valid_fields & GNOME_VFS_FILE_INFO_FIELDS_SIZE))
+		return;
+
+	gnome_vfs_close (vfshandle);
+
+	g_free (fileuri);
 
 	return;
 }

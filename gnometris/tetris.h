@@ -106,6 +106,7 @@ private:
 	void generateTimer(int level);
 	
 	static gint eventHandler(GtkWidget *widget, GdkEvent *event, void *d);
+	static gchar *decodeDropData(gchar * data, gint type);
 	static void dragDrop(GtkWidget *widget, GdkDragContext *context,
 			     gint x, gint y, GtkSelectionData *data, 
 			     guint info, guint time, gpointer userdata);
