@@ -1,5 +1,10 @@
 2000-04-09  Ian Peters  <itp@gnu.org>
 
+	* src/plugin.c: plugin_busy_message is a mandatory symbol
+	* src/plugin.h: documented the expected symbols a plugin should provide
+
+2000-04-09  Ian Peters  <itp@gnu.org>
+
 	* plugins/random/Makefile.am: Added versioning
 	* plugins/random/random.c: Updated to new plugin interface
 	* reversi-iagno2/reversi.c, reversi-iagno2/reversi.h: Added ReversiBoard

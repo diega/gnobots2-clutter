@@ -34,9 +34,12 @@ iagno2_plugin_open (const gchar *plugin_file)
     return NULL;
   }
 
-  tmp->plugin_busy_message = NULL;
-  g_module_symbol (tmp->module, "plugin_busy_message",
-                   ((gpointer)&(tmp->plugin_busy_message)));
+  if (!g_module_symbol (tmp->module, "plugin_busy_message",
+                        ((gpointer)&(tmp->plugin_busy_message)))) {
+    g_module_close (tmp->module);
+    printf ("Loading plugin %s failed.\n", plugin_file);
+    return NULL;
+  }
 
   tmp->plugin_preferences = NULL;
   g_module_symbol (tmp->module, "plugin_preferences",
