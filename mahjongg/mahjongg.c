@@ -1427,7 +1427,6 @@ int main (int argc, char *argv [])
 	gnome_app_set_contents (GNOME_APP (window), mbox);
 	create_mahjongg_board ();
 
-	gtk_widget_realize (window);
 	gtk_widget_show (window);
 	gtk_main ();
 	
