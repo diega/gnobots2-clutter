@@ -47,10 +47,14 @@ Pixmap_DATA= gnome-stones.png
 Games_DATA = gnome-stones.desktop
 Caves_DATA = default.caves tutorial.caves gnomekoban.caves
 
-EXTRA_DIST    = 				\
+gtkrcdir = $(datadir)
+gtkrc_DATA = gnome-stonesrc gnome-stonesrc.ko
+
+EXTRA_DIST    =					\
 	$(Pixmap_DATA)				\
 	$(Games_DATA)				\
 	$(Caves_DATA)				\
+	$(gtkrc_DATA)				\
 	TODO					\
 	README
 
