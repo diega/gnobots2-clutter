@@ -1,3 +1,14 @@
+2001-12-31  Josh Barrow  <drleary@mac.com>
+
+	* gataxx.c: (set_bg_color): 
+	Fix compile time warning.
+
+	* properties.c: (save_properties), (apply_changes),
+	(black_computer_level_select), (white_computer_level_select),
+	(quick_moves_select), (flip_final_select), (animate_select),
+	(apply_cb), (fill_menu), (show_properties_dialog):
+	Simply the code a bit.
+
 2001-12-29  Josh Barrow  <drleary@mac.com>
 
 	* Makefile.am:

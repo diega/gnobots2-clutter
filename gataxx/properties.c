@@ -98,6 +98,21 @@ void reset_properties ()
 	t_flip_final = flip_final;
 }
 
+void save_properties ()
+{
+	gnome_config_set_int ("/gataxx/Preferences/blacklevel",
+			black_computer_level);
+	gnome_config_set_int ("/gataxx/Preferences/whitelevel",
+			white_computer_level);
+	gnome_config_set_int ("/gataxx/Preferences/quickmoves",
+			t_quick_moves);
+	gnome_config_set_string ("/gataxx/Preferences/tileset",
+			tile_set_tmp);
+	gnome_config_set_int ("/gataxx/Preferences/animate", animate);
+	gnome_config_set_int ("/gataxx/Preferences/flipfinal", flip_final);
+	
+	gnome_config_sync ();
+}
 
 void apply_changes ()
 {
@@ -166,22 +181,7 @@ void apply_changes ()
 	flip_final = t_flip_final;
 	
 	check_computer_players ();
-}
-
-void save_properties ()
-{
-	gnome_config_set_int ("/gataxx/Preferences/blacklevel",
-			black_computer_level);
-	gnome_config_set_int ("/gataxx/Preferences/whitelevel",
-			white_computer_level);
-	gnome_config_set_int ("/gataxx/Preferences/quickmoves",
-			t_quick_moves);
-	gnome_config_set_string ("/gataxx/Preferences/tileset",
-			tile_set_tmp);
-	gnome_config_set_int ("/gataxx/Preferences/animate", animate);
-	gnome_config_set_int ("/gataxx/Preferences/flipfinal", flip_final);
-	
-	gnome_config_sync ();
+	save_properties ();
 }
 
 void black_computer_level_select (GtkWidget *widget, gpointer data)
@@ -191,7 +191,6 @@ void black_computer_level_select (GtkWidget *widget, gpointer data)
 		t_black_computer_level = (guint) data;
 	}
 	apply_changes ();
-	save_properties ();
 }
 
 void white_computer_level_select (GtkWidget *widget, gpointer data)
@@ -201,7 +200,6 @@ void white_computer_level_select (GtkWidget *widget, gpointer data)
 		t_white_computer_level = (guint) data;
 	}
 	apply_changes ();
-	save_properties ();
 }
 
 void quick_moves_select (GtkWidget *widget, gpointer data)
@@ -212,7 +210,6 @@ void quick_moves_select (GtkWidget *widget, gpointer data)
 		t_quick_moves = 0;
 
 	apply_changes ();
-	save_properties ();
 }
 
 void flip_final_select (GtkWidget *widget, gpointer data)
@@ -222,7 +219,6 @@ void flip_final_select (GtkWidget *widget, gpointer data)
 	else
 		t_flip_final = 0;
 	apply_changes ();
-	save_properties ();
 }
 
 
@@ -232,14 +228,11 @@ void animate_select (GtkWidget *widget, gpointer data)
 		t_animate = (gint) data;
 	}
 	apply_changes ();
-	save_properties ();
 }
 
 void apply_cb (GtkWidget *widget, gpointer data)
 {
 	apply_changes();
-	
-	save_properties ();
 }
 
 void destroy_cb (GtkWidget *widget, gpointer data)
@@ -273,7 +266,7 @@ void fill_menu(GtkWidget *menu)
 
         while((e = readdir(dir)) != NULL) {
                 GtkWidget *item;
-                char *s = strdup(e->d_name);
+                char *s = GINT_TO_POINTER (g_strdup(e->d_name));
                 if(!strstr(e->d_name, ".png")) {
                         free(s);
                         continue;
@@ -457,7 +450,7 @@ void show_properties_dialog ()
 	gtk_container_set_border_width (GTK_CONTAINER (table), GNOME_PAD_SMALL);
 	gtk_widget_show (table);
 	
-	frame = gtk_frame_new (NULL);
+	frame = gtk_frame_new ("Animation");
 	gtk_widget_show (frame);
 	
 	vbox = gtk_vbox_new (TRUE, 0);

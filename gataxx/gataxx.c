@@ -808,7 +808,7 @@ void set_bg_color() {
   GdkImage *tmpimage;
   GdkColor bgcolor;
   
-  tmpimage = gdk_image_get(tiles_pixmap, 0, 0, 1, 1);
+  tmpimage = gdk_drawable_get_image (tiles_pixmap, 0, 0, 1, 1);
   bgcolor.pixel = gdk_image_get_pixel(tmpimage, 0, 0);
   gdk_window_set_background(drawing_area->window, &bgcolor);
   gdk_image_unref(tmpimage);
