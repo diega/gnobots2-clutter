@@ -1,3 +1,10 @@
+2003-06-18  William Jon McCann  <mccann@jhu.edu>
+
+	* properties.c: Included string.h.
+
+	* gataxx.c (main): Changed gtk_widget_set_uposition to
+	gtk_window_move.
+
 2003-06-17  William Jon McCann  <mccann@jhu.edu>
 
 	* gataxx.c: 

@@ -2,7 +2,7 @@
 
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <2003/06/17 20:13:22 mccannwj>
+ * Time-stamp: <2003/06/18 10:12:28 mccannwj>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -33,6 +33,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "sound.h"
 

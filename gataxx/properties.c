@@ -24,6 +24,7 @@
 
 #include "config.h"
 #include <gnome.h>
+#include <string.h>
 #include <dirent.h>
 #include <games-clock.h>
 #include <games-frame.h>
@@ -237,19 +238,6 @@ animate_select (GtkWidget *widget, gpointer data)
 
 	save_properties ();
 	apply_changes ();
-}
-
-static void
-apply_cb (GtkWidget *widget, gpointer data)
-{
-	save_properties ();
-	apply_changes();
-}
-
-static void
-destroy_cb (GtkWidget *widget, gpointer data)
-{
-	mapped = 0;
 }
 
 void

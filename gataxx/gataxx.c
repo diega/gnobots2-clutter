@@ -988,7 +988,7 @@ main (int argc, char **argv)
   load_pixmaps ();
     
   if (session_xpos >= 0 && session_ypos >= 0) {
-    gtk_widget_set_uposition (window, session_xpos, session_ypos);
+    gtk_window_move (GTK_WINDOW (window), session_xpos, session_ypos);
   }
     
   gtk_widget_show (window);
