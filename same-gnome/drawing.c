@@ -38,6 +38,8 @@ GdkPixmap *blank_pixmap = NULL;
 /* FIXME: Can we make this not global ? (redraw is the problem) */
 GtkWidget *canvaswidget;
 
+gint drawing_area_width = 0;;
+
 gint cursor_x = -1;
 gint cursor_y = -1;
 gboolean draw_cursor = FALSE;
@@ -477,13 +479,11 @@ static gboolean render_cb (GtkWidget *canvas)
 	return TRUE;
 }
 
-gboolean configure_cb (GtkWidget *canvas, GdkEventConfigure *event)
+void resize_graphics (void)
 {
 	int size;
 
-	canvaswidget = canvas;
-
-	size = event->width/board_width;
+	size = drawing_area_width/board_width;
 
 	if (tile_size != size) {
 
@@ -492,12 +492,20 @@ gboolean configure_cb (GtkWidget *canvas, GdkEventConfigure *event)
 		pixmaps_ready = FALSE;
 
 		if (idle_id == 0)
-			g_idle_add ((GSourceFunc)render_cb, canvas);
+			g_idle_add ((GSourceFunc)render_cb, canvaswidget);
 
 		if (resize_timeout_id != 0)
 			g_source_remove (resize_timeout_id);
-		resize_timeout_id = g_timeout_add (300, (GSourceFunc)redraw_cb, canvas);
+		resize_timeout_id = g_timeout_add (300, (GSourceFunc)redraw_cb, 
+																			 canvaswidget);
 	}
+}
+
+gboolean configure_cb (GtkWidget *canvas, GdkEventConfigure *event)
+{
+	canvaswidget = canvas;
+	drawing_area_width = event->width;
+	resize_graphics ();
 
   return FALSE;
 }

@@ -32,8 +32,10 @@
 #define MAXIMUM_CUSTOM_HEIGHT 100
 #define MAXIMUM_CUSTOM_WIDTH 100
 
+/* FIXME: The UI stuff should be split out into its own file. */
 GtkWidget *application;
 GtkWidget *scorewidget;
+GtkWidget *gridframe = NULL;
 
 gchar *theme;
 gint   game_size;
@@ -64,7 +66,7 @@ gint board_sizes[MAX_SIZE][3] = {{-1, -1, -1}, /* This is a dummy entry. */
 																 {-1, -1, -1}, /* Space for the custom size. */
 																 {15, 10, 3},
 																 {30, 20, 4},
-																 {40, 40, 4}};
+																 {45, 30, 4}};
 
 gint board_width;
 gint board_height;
@@ -78,6 +80,13 @@ static void set_sizes (gint size)
 	board_width = board_sizes[size][0];
 	board_height = board_sizes[size][1];
 	ncolours = board_sizes[size][2];
+	
+	gconf_client_set_int (gcclient, GCONF_SIZE_KEY, size, NULL);
+
+	/* FIXME: The flow should avoid the need for this test. */
+	if (gridframe)
+		games_grid_frame_set (GAMES_GRID_FRAME (gridframe), board_width, 
+													board_height);
 }
 
 static void initialise_options (gint requested_size, gchar *requested_theme)
@@ -189,30 +198,16 @@ static void quit_cb (void)
 	gtk_main_quit ();
 }
 
-static void small_cb (void)
+static void size_change_cb (GtkRadioAction *action, gpointer data)
 {
-	set_sizes (SMALL);
+	set_sizes (gtk_radio_action_get_current_value (action));
+	resize_graphics ();
 	new_game ();
-	/* FIXME: Save to gconf. */
-}
-
-static void medium_cb (void)
-{
-	set_sizes (MEDIUM);
-	new_game ();
-	/* FIXME: Save to gconf. */
-}
-
-static void large_cb (void)
-{
-	set_sizes (LARGE);
-	new_game ();
-	/* FIXME: Save to gconf. */
 }
 
 static void help_cb (void)
 {
-
+	gnome_help_display ("same-gnome.xml", NULL, NULL);
 }
 
 static void about_cb (GtkWidget *widget)
@@ -283,15 +278,16 @@ const GtkActionEntry actions[] = {
   { "Fullscreen", NULL, N_("_Fullscreen"), NULL, NULL, G_CALLBACK (fullscreen_cb) },
   { "Theme", NULL, N_("_Theme..."), NULL, NULL, G_CALLBACK (theme_cb) },
 
-  { "SizeSmall", NULL, N_("_Small"), NULL, NULL, G_CALLBACK (small_cb) },
-  { "SizeMedium", NULL, N_("_Medium"), NULL, NULL, G_CALLBACK (medium_cb) },
-  { "SizeLarge", NULL, N_("_Large"), NULL, NULL, G_CALLBACK (large_cb) },
-
-
   { "Contents", GTK_STOCK_HELP, N_("_Contents"), "F1", NULL, G_CALLBACK (help_cb) },
   {"About", GTK_STOCK_ABOUT, NULL, NULL, NULL, G_CALLBACK (about_cb)
 }
 
+};
+
+const GtkRadioActionEntry radio_actions[] = {
+  { "SizeSmall", NULL, N_("_Small"), NULL, NULL, SMALL },
+  { "SizeMedium", NULL, N_("_Medium"), NULL, NULL, MEDIUM },
+  { "SizeLarge", NULL, N_("_Large"), NULL, NULL, LARGE }
 };
 
 const char *ui_description =
@@ -325,7 +321,6 @@ const char *ui_description =
 static void build_gui (void)
 {
   GtkWidget *appbar;
-  GtkWidget *gridframe;
   GtkWidget *canvas;
 	GtkWidget *vbox;
 	GtkUIManager *ui_manager;
@@ -333,6 +328,8 @@ static void build_gui (void)
 
 	/* FIXME: Will need to initialise the pixmap array to zero. */
 	init_pixmaps ();
+
+	/* FIXME: Set the icon. */
 
   application = gnome_app_new (APPNAME, _(APPNAME_LONG));
   gtk_window_set_default_size (GTK_WINDOW (application), window_width,
@@ -349,6 +346,11 @@ static void build_gui (void)
 	gtk_action_group_set_translation_domain (action_group, GETTEXT_PACKAGE);
 	gtk_action_group_add_actions (action_group, actions, G_N_ELEMENTS (actions),
 																NULL);
+	gtk_action_group_add_radio_actions (action_group, radio_actions, 
+																			G_N_ELEMENTS (radio_actions), 
+																			game_size - SMALL, 
+																			G_CALLBACK (size_change_cb), 
+																			NULL);
 	
 	ui_manager = gtk_ui_manager_new ();
 	gtk_ui_manager_insert_action_group (ui_manager, action_group, 1);
@@ -418,8 +420,9 @@ int main (int argc, char *argv[])
 
   /* Initialise GNOME. */
   gnome_program_init (APPNAME, VERSION, LIBGNOMEUI_MODULE, argc, argv,
-		      GNOME_PARAM_POPT_TABLE, options,  
-		      NULL);
+											GNOME_PARAM_APP_DATADIR, DATADIR,
+											GNOME_PARAM_POPT_TABLE, options,  
+											NULL);
 
   initialise_options (requested_size, requested_theme);
 

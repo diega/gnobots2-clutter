@@ -11,6 +11,7 @@ INCLUDES = -I.. -I$(srcdir)/..		\
 	-I$(top_srcdir)/libgames-support                \
 	$(GNOME_GAMES_CFLAGS) \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
+	-DDATADIR=\""$(datadir)"\" \
 	-DTHEMEDIR=\""$(pixmapdir)"\"
 
 bin_PROGRAMS = same-gnome

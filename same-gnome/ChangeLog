@@ -1,6 +1,12 @@
 2004-12-23  Callum McKenzie  <callum@physics.otago.ac.nz>
 
-	* Makefile.am: Remvoe setgid bit from the binary for now.
+	* Makefile.am: 
+	* same-gnome.c: Get online help working.
+
+	* same-gnome.c: 
+	* drawing.c: Allow resizing of the board.
+
+	* Makefile.am: Remove setgid bit from the binary for now.
 
 2004-12-22  Callum McKenzie  <callum@physics.otago.ac.nz>
 
