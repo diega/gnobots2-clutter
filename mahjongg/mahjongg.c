@@ -247,17 +247,21 @@ GtkWidget *hint_dialog;
 GtkWidget *mbox;
 GtkWidget *canvas;
 GtkWidget *tiles_label;
-GdkPixmap *tiles_pix, *mask;
 int selected_tile, visible_tiles;
 int sequence_number;
 
-static GdkImlibImage *tiles_image;
+static GdkImlibImage *tiles_image, *bg_image;
 static gchar *tileset = 0 ;
 
 static struct {
   char *tileset;
   int make_it_default;
 } selected_tileset = {0,0};
+
+static struct {
+  char *bg;
+  int make_it_default;
+} selected_bg = {0,0};
 
 static gchar *mapset = 0 ;
 
@@ -291,7 +295,7 @@ void you_won (void);
 void no_match (void);
 void check_free (void);
 void set_map (char *name) ;
-void load_tiles (char *fname);
+void load_tiles (char *fname, char *bg_fname);
 void quit_game_callback (GtkWidget *widget, gpointer data);
 void new_game_callback (GtkWidget *widget, gpointer data);
 void restart_game_callback (GtkWidget *widget, gpointer data);
@@ -415,9 +419,21 @@ set_tile_selection (GtkWidget *widget, void *data)
 }
 
 static void
+set_bg_selection (GtkWidget *widget, void *data)
+{
+	selected_bg.bg = data;
+}
+
+static void
 set_tile_selection_def (GtkWidget *widget, gpointer *data)
 {
 	selected_tileset.make_it_default = GTK_TOGGLE_BUTTON (widget)->active;
+}
+
+static void
+set_bg_selection_def (GtkWidget *widget, gpointer *data)
+{
+        selected_bg.make_it_default = GTK_TOGGLE_BUTTON (widget)->active;
 }
 
 static void
@@ -476,7 +492,7 @@ void set_backgnd_colour (char *str)
 
 static void
 change_tile_image (tile *tile_inf) {
-	GdkImlibImage *new_image;
+	GdkImlibImage *new_image, *new_bg;
 	gint orig_x, orig_y;
 
 	orig_x = (tile_inf->image % 21) * TILE_WIDTH;
@@ -487,9 +503,14 @@ change_tile_image (tile *tile_inf) {
 	}
 
 	gdk_imlib_destroy_image (tile_inf->current_image);
+	gdk_imlib_destroy_image (tile_inf->current_bg);
 	
 	tile_inf->current_image = new_image = gdk_imlib_crop_and_clone_image (tiles_image, orig_x, orig_y, TILE_WIDTH, TILE_HEIGHT);
-
+        tile_inf->current_bg = new_bg = gdk_imlib_crop_and_clone_image (bg_image, pos[tile_inf->number].layer * TILE_WIDTH,
+                                                                        (tile_inf->selected != 0 ? 1 : 0) * TILE_HEIGHT,
+                                                                        TILE_WIDTH, TILE_HEIGHT);
+        
+	gnome_canvas_item_set (tile_inf->bg_item, "image", new_bg, NULL);
 	gnome_canvas_item_set (tile_inf->image_item, "image", new_image, NULL);
 }
 
@@ -513,8 +534,8 @@ tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
 		    tile_inf->visible = 0;
 		    tiles[selected_tile].selected &= ~SELECTED_FLAG;
 		    change_tile_image (&tiles[selected_tile]);
-		    gnome_canvas_item_hide (tiles[selected_tile].image_item);
-		    gnome_canvas_item_hide (tile_inf->image_item);
+		    gnome_canvas_item_hide (tiles[selected_tile].canvas_item);
+		    gnome_canvas_item_hide (tile_inf->canvas_item);
 		    clear_undo_queue ();
 		    tiles[selected_tile].sequence = tile_inf->sequence = sequence_number;
 		    sequence_number ++;
@@ -552,10 +573,13 @@ pref_cancel (GtkWidget *widget, void *data)
 static void
 apply_preferences (void)
 {
+  char *buf, *buf2 = selected_tileset.tileset;
+  
   int redraw = 0, sync = 0 ;
   if (selected_tileset.tileset)
     {
-      load_tiles (selected_tileset.tileset);
+      buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/bg=bg1.png", NULL);
+      load_tiles (selected_tileset.tileset, buf);
       redraw = 1 ;
       if (selected_tileset.make_it_default)
 	{
@@ -564,6 +588,24 @@ apply_preferences (void)
 	  sync = 1 ;
 	}
       selected_tileset.tileset = 0 ;
+    }
+  if (selected_bg.bg)
+    {
+      if (buf2) {
+        load_tiles (buf2, selected_bg.bg);
+      }
+      else {
+        buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/tileset=default.png", NULL);
+        load_tiles (buf, selected_bg.bg);
+      }
+      redraw = 1 ;
+      if (selected_bg.make_it_default)
+	{
+	  gnome_config_set_string ("/gmahjongg/Preferences/bg", 
+				   selected_bg.bg);
+	  sync = 1 ;
+	}
+      selected_bg.bg = 0 ;
     }
   if (selected_mapset.mapset)
     {
@@ -598,13 +640,13 @@ apply_preferences (void)
 }
 
 static void
-fill_tile_menu (GtkWidget *menu)
+fill_tile_menu (GtkWidget *menu, char *sdir, int is_tile)
 {
 	struct dirent *e;
-	char *dname = gnome_unconditional_pixmap_file ("mahjongg");
 	DIR *dir;
         int itemno = 0;
-	
+        char *dname = gnome_unconditional_pixmap_file (sdir);
+        
 	dir = opendir (dname);
 
 	if (!dir)
@@ -626,11 +668,19 @@ fill_tile_menu (GtkWidget *menu)
 		item = gtk_menu_item_new_with_label (s);
 		gtk_widget_show (item);
 		gtk_menu_append (GTK_MENU(menu), item);
- 		gtk_signal_connect (GTK_OBJECT(item), "activate",
-				    (GtkSignalFunc)set_tile_selection, s); 
- 		gtk_signal_connect (GTK_OBJECT(item), "destroy",
-				    (GtkSignalFunc) free_str, s); 
-	  
+                if (is_tile) {
+                        gtk_signal_connect (GTK_OBJECT(item), "activate",
+                                            (GtkSignalFunc)set_tile_selection, s); 
+                        gtk_signal_connect (GTK_OBJECT(item), "destroy",
+                                            (GtkSignalFunc) free_str, s);
+                }
+                else {
+                        gtk_signal_connect (GTK_OBJECT(item), "activate",
+                                            (GtkSignalFunc)set_bg_selection, s); 
+                        gtk_signal_connect (GTK_OBJECT(item), "destroy",
+                                            (GtkSignalFunc) free_str, s);
+                }
+                
  	        if (!strcmp(tileset, s)) 
  	        { 
  		  gtk_menu_set_active(GTK_MENU(menu), itemno); 
@@ -789,7 +839,7 @@ void properties_callback (GtkWidget *widget, gpointer data)
 	/* The Tile sub-menu */
 	otmenu = gtk_option_menu_new ();
 	tmenu = gtk_menu_new ();
-	fill_tile_menu (tmenu);
+	fill_tile_menu (tmenu, "mahjongg", 1);
 	gtk_widget_show (otmenu);
 	gtk_option_menu_set_menu (GTK_OPTION_MENU(otmenu), tmenu);
 
@@ -808,6 +858,40 @@ void properties_callback (GtkWidget *widget, gpointer data)
 	cb = gtk_check_button_new_with_label ( _("Make it the default") );
  	gtk_signal_connect (GTK_OBJECT(cb), "clicked",
 			    (GtkSignalFunc)set_tile_selection_def, NULL);
+	gtk_widget_show (cb);
+
+	fv = gtk_vbox_new (0, 5);
+	gtk_container_border_width (GTK_CONTAINER (fv), 5);
+	gtk_widget_show (fv);
+	
+	gtk_box_pack_start_defaults (GTK_BOX(fv), hb);
+	gtk_box_pack_start_defaults (GTK_BOX(fv), cb);
+	gtk_box_pack_start_defaults (GTK_BOX(d->vbox), f);
+	gtk_container_add (GTK_CONTAINER (f), fv);
+	gtk_widget_show (f);
+
+	/* The Tile Background sub-menu */
+	otmenu = gtk_option_menu_new ();
+	tmenu = gtk_menu_new ();
+	fill_tile_menu (tmenu, "mahjongg/bg", 0);
+	gtk_widget_show (otmenu);
+	gtk_option_menu_set_menu (GTK_OPTION_MENU(otmenu), tmenu);
+
+	f = gtk_frame_new (_ ("Tile Background:"));
+	gtk_container_border_width (GTK_CONTAINER (f), 5);
+
+	hb = gtk_hbox_new (FALSE, FALSE);
+	gtk_widget_show (hb);
+	
+	l = gtk_label_new (_("Select Background Tiles:"));
+	gtk_widget_show (l);
+	    
+	gtk_box_pack_start_defaults (GTK_BOX(hb), l);
+	gtk_box_pack_start_defaults (GTK_BOX(hb), otmenu);
+
+	cb = gtk_check_button_new_with_label ( _("Make it the default") );
+  	gtk_signal_connect (GTK_OBJECT(cb), "clicked", */
+ 			    (GtkSignalFunc)set_bg_selection_def, NULL); 
 	gtk_widget_show (cb);
 
 	fv = gtk_vbox_new (0, 5);
@@ -927,7 +1011,7 @@ void properties_callback (GtkWidget *widget, gpointer data)
 	/* The Tile sub-menu */
 	otmenu = gtk_option_menu_new ();
 	tmenu = gtk_menu_new ();
-	fill_tile_menu (tmenu);
+	fill_tile_menu (tmenu, "mahjongg", 1);
 	gtk_option_menu_set_menu (GTK_OPTION_MENU(otmenu), tmenu);
 
 	f = gtk_frame_new (_ ("Tiles"));
@@ -943,6 +1027,34 @@ void properties_callback (GtkWidget *widget, gpointer data)
 	cb = gtk_check_button_new_with_label ( _("Make it the default") );
  	gtk_signal_connect (GTK_OBJECT(cb), "clicked",
 			    (GtkSignalFunc)set_tile_selection_def, NULL);
+
+	fv = gtk_vbox_new (0, 5);
+	gtk_container_border_width (GTK_CONTAINER (fv), 5);
+	
+	gtk_box_pack_start_defaults (GTK_BOX(fv), hb);
+	gtk_box_pack_start_defaults (GTK_BOX(fv), cb);
+	gtk_box_pack_start_defaults (GTK_BOX(d->vbox), f);
+	gtk_container_add (GTK_CONTAINER (f), fv);
+
+	/* The Tile Background sub-menu */
+	otmenu = gtk_option_menu_new ();
+	tmenu = gtk_menu_new ();
+	fill_tile_menu (tmenu, "mahjongg/bg", 0);
+	gtk_option_menu_set_menu (GTK_OPTION_MENU(otmenu), tmenu);
+
+	f = gtk_frame_new (_ ("Tile Background"));
+	gtk_container_border_width (GTK_CONTAINER (f), 5);
+
+	hb = gtk_hbox_new (FALSE, FALSE);
+	
+	l = gtk_label_new (_("Select Tile Background:"));
+	    
+	gtk_box_pack_start_defaults (GTK_BOX(hb), l);
+	gtk_box_pack_start_defaults (GTK_BOX(hb), otmenu);
+
+	cb = gtk_check_button_new_with_label ( _("Make it the default") );
+  	gtk_signal_connect (GTK_OBJECT(cb), "clicked", 
+ 			    (GtkSignalFunc)set_bg_selection_def, NULL); 
 
 	fv = gtk_vbox_new (0, 5);
 	gtk_container_border_width (GTK_CONTAINER (fv), 5);
@@ -1144,7 +1256,7 @@ void restart_game_callback (GtkWidget *widget, gpointer data)
 	if (i == selected_tile)
 	  change_tile_image (&tiles[selected_tile]);
 	  
-	gnome_canvas_item_show (tiles[i].image_item);
+	gnome_canvas_item_show (tiles[i].canvas_item);
     }
     init_game ();
 }
@@ -1168,7 +1280,7 @@ void redo_tile_callback (GtkWidget *widget, gpointer data)
 	{
 	  tiles[i].selected = 0 ;
 	  tiles[i].visible = 0 ;
-	  gnome_canvas_item_hide (tiles[i].image_item);
+	  gnome_canvas_item_hide (tiles[i].canvas_item);
 	  visible_tiles-- ;
 	  change = 1 ;
 	}
@@ -1204,7 +1316,7 @@ void undo_tile_callback (GtkWidget *widget, gpointer data)
 	  tiles[i].selected = 0 ;
 	  tiles[i].visible = 1 ;
 	  visible_tiles++ ;
-	  gnome_canvas_item_show (tiles[i].image_item);
+	  gnome_canvas_item_show (tiles[i].canvas_item);
 	}
 
     sprintf(tmpchar,"%d",visible_tiles) ;
@@ -1338,7 +1450,7 @@ void load_images (void)
 
 void create_canvas_items (void)
 {
-  GdkImlibImage *image;
+  GdkImlibImage *image, *bg_cimage;
   gint orig_x, orig_y, i;
   
   /* It's essential that the tiles are already sorted into layer order (lowest first) */
@@ -1352,7 +1464,19 @@ void create_canvas_items (void)
 	tiles[i].number = i;
 	
 	tiles[i].current_image = image = gdk_imlib_crop_and_clone_image (tiles_image, orig_x, orig_y, TILE_WIDTH, TILE_HEIGHT);
+	tiles[i].current_bg = bg_cimage = gdk_imlib_crop_and_clone_image (bg_image, pos[i].layer * TILE_WIDTH,
+                                                                          0, TILE_WIDTH, TILE_HEIGHT);
 	
+        tiles[i].bg_item = gnome_canvas_item_new (GNOME_CANVAS_GROUP (tiles[i].canvas_item),
+						      gnome_canvas_image_get_type(),
+						      "image", bg_cimage,
+						     "x", (double)canvas_x(i),
+						     "y", (double)canvas_y(i),
+						      "width", (double)TILE_WIDTH,
+						      "height", (double)TILE_HEIGHT,
+						      "anchor", GTK_ANCHOR_NW,
+						      NULL);
+
 	tiles[i].image_item = gnome_canvas_item_new (GNOME_CANVAS_GROUP (tiles[i].canvas_item),
 						      gnome_canvas_image_get_type(),
 						      "image", image,
@@ -1369,9 +1493,9 @@ void create_canvas_items (void)
     }
 }
 
-void load_tiles (char *fname)
+void load_tiles (char *fname, char *bg_fname)
 {
-	char *tmp, *fn;
+	char *tmp, *fn, *bg_fn;
 	int i;
 
 	tmp = g_strconcat ("mahjongg/", fname, NULL);
@@ -1379,8 +1503,22 @@ void load_tiles (char *fname)
 	fn = gnome_unconditional_pixmap_file (tmp);
 	g_free (tmp);
 
+	tmp = g_strconcat ("mahjongg/bg/", bg_fname, NULL);
+
+	bg_fn = gnome_unconditional_pixmap_file (tmp);
+	g_free (tmp);
+
 	if (!g_file_exists (fn)) {
 		char *s = g_strdup_printf (_("Could not find file %s"), fn);
+		GtkWidget *box;
+		
+		box = gnome_message_box_new (s, GNOME_MESSAGE_BOX_ERROR, GNOME_STOCK_BUTTON_OK, NULL);
+		gnome_dialog_run (GNOME_DIALOG (box));
+		exit (1);
+	}
+
+	if (!g_file_exists (bg_fn)) {
+		char *s = g_strdup_printf (_("Could not find file %s"), bg_fn);
 		GtkWidget *box;
 		
 		box = gnome_message_box_new (s, GNOME_MESSAGE_BOX_ERROR, GNOME_STOCK_BUTTON_OK, NULL);
@@ -1396,11 +1534,15 @@ void load_tiles (char *fname)
 	if (tiles_image)
 		gdk_imlib_destroy_image (tiles_image);
 
+	if (bg_image)
+		gdk_imlib_destroy_image (bg_image);
+
 	tiles_image = gdk_imlib_load_image (fn);
 	gdk_imlib_render (tiles_image, tiles_image->rgb_width, tiles_image->rgb_height);
-	
-	tiles_pix = gdk_imlib_move_image (tiles_image);
 
+        bg_image = gdk_imlib_load_image (bg_fn);
+        gdk_imlib_render (bg_image, bg_image->rgb_width, bg_image->rgb_height);
+        
 	for (i = 0; i < MAX_TILES; i++) {
 	  change_tile_image (&tiles[i]);
 	}
@@ -1410,7 +1552,7 @@ void load_tiles (char *fname)
 
 void create_mahjongg_board (void)
 {
-	gchar *buf;
+	gchar *buf, *buf2;
 	
 	gtk_widget_push_visual (gdk_imlib_get_visual ());
 	gtk_widget_push_colormap (gdk_imlib_get_colormap ());
@@ -1437,12 +1579,14 @@ void create_mahjongg_board (void)
 	g_free (buf);
 
 	buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/tileset=default.png", NULL);
-
+        buf2 = gnome_config_get_string_with_default ("/gmahjongg/Preferences/bg=bg1.png", NULL);
+        
 	load_map (); /* assigns pos, and calculates dependencies */
 	generate_game (); /* puts in the positions of the tiles */
 	create_canvas_items ();
 
-	load_tiles (buf);
+	load_tiles (buf, buf2);
+        g_free (buf2);
 	g_free (buf);
 	init_game ();
 }
@@ -1457,7 +1601,7 @@ void new_game (void)
 
   for (i = 0; i < MAX_TILES; i++) {
     change_tile_image (&tiles[i]);
-    gnome_canvas_item_show (tiles[i].image_item);
+    gnome_canvas_item_show (tiles[i].canvas_item);
   }
   
   init_game ();

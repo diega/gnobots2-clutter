@@ -1,5 +1,6 @@
 scoredir=$(localstatedir)/games
 pixmapdir = $(datadir)/pixmaps/mahjongg
+bgdir = $(datadir)/pixmaps/mahjongg/bg
 Gamesdir = $(datadir)/gnome/apps/Games
 appicondir=$(datadir)/pixmaps
 
@@ -24,14 +25,17 @@ mahjongg_LDADD = \
 
 pixmap_DATA = default.png seta.png
 
+bg_DATA = bg1.png bg2.png bg3.png
+
 appicon_DATA = gnome-mahjongg.png
 
-EXTRA_DIST = mahjongg.desktop $(pixmap_DATA) $(appicon_DATA)
+EXTRA_DIST = mahjongg.desktop $(pixmap_DATA) $(appicon_DATA) $(bg_DATA)
 
 Games_DATA = mahjongg.desktop
 
 install-data-local:
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
+	$(mkinstalldirs) $(DESTDIR)$(bgdir)
 	touch $(DESTDIR)$(scoredir)/mahjongg.scores
 	-chown games.games $(DESTDIR)$(scoredir)/mahjongg.scores
 	-chmod 664 $(DESTDIR)$(scoredir)/mahjongg.scores

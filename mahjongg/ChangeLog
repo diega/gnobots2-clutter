@@ -1,3 +1,12 @@
+1999-04-17  Francisco Bustamante  <pancho@nuclecu.unam.mx>
+
+	* mahjongg.c: Now it is possible to change the background of the
+	tiles without changing the images on the tiles. At the same time I
+	added the option to have different tile backgrounds for each
+	layer, to make it easier to distinguish between them. The
+	background can be changed in the preferences dialog (also added)
+	* bg[123].png: Some backgrounds to show the new capabilities.
+
 Tue Apr  6 10:45:22 1999  ape@lrdpf.spacetec.no  (Asbjorn Pettersen)
 
 	* mahjongg.c: use g_strcasecmp instead of strcasecmp.

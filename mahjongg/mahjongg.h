@@ -35,8 +35,10 @@ struct _tile{
   int sequence;
   int number;
   GdkImlibImage *current_image;
+  GdkImlibImage *current_bg;
   GnomeCanvasItem *canvas_item;
   GnomeCanvasItem *image_item;
+  GnomeCanvasItem *bg_item;
 };
 
 extern tile tiles[MAX_TILES];
