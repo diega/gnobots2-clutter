@@ -231,6 +231,35 @@ int turing_fread_states(turing *machine, char *filename)
 	return 0;
 }
 
+char *turing_fread_comments(char *filename) {
+	int c;
+	int size;
+	char line[1000];
+	char *ret, *tmp;
+	FILE *fd;
+	
+	if ((fd = fopen(filename, "r")) == NULL)
+		return NULL;
+	
+	ret = malloc(1);
+	*ret = 0;
+	size = 1;
+
+	while ((c = fgetc(fd)) != EOF) {
+		
+		fgets(line, 1000, fd);
+		
+		if (c == '#') {
+			ret = realloc(ret, size + strlen(line));
+			tmp = ret + size - 1;
+			size += strlen(line);
+			strcpy (tmp, line);
+		}
+	}
+
+	return ret;
+}
+
 /* Search the next state to execute depending on what we are reading and the
  * state field of the turing *machine. */
 static state *turing_search_state(turing *machine)

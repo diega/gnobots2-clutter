@@ -115,11 +115,23 @@ void set_states_fname(char *str)
 
 void states_fname_callback(GtkWidget *ok_button, gpointer data)
 {
-	set_states_fname(gtk_file_selection_get_filename(GTK_FILE_SELECTION(dialog)));
-
+	char *fname, *message;
+	GtkWidget *w;
+	
+	fname = g_strdup(gtk_file_selection_get_filename(GTK_FILE_SELECTION(dialog)));
 	gtk_widget_destroy(dialog);
 	dialog = NULL;
 	
+	set_states_fname(fname);
+	message = turing_fread_comments(fname);
+	w = gnome_message_box_new(message, GNOME_MESSAGE_BOX_INFO,
+														GNOME_STOCK_BUTTON_OK, NULL);
+	GTK_WINDOW(w)->position = GTK_WIN_POS_MOUSE;
+	gtk_widget_show(w);
+	
+	free(message);
+	g_free(fname);
+
 	gnome_config_set_string("/gTuring/Options/program", states_fname);
 }
 
@@ -617,6 +629,8 @@ int main (int argc, char *argv[])
         bindtextdomain(PACKAGE, GNOMELOCALEDIR);
         textdomain(PACKAGE);
 
+		chdir(GTURING_EXAMPLES_DIR);
+		
 	init_globals();
 	init_interface(argc, argv);
 	

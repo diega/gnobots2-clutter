@@ -57,6 +57,7 @@ extern char tape_string[1024];
 
 extern turing *new_turing(void);
 extern int turing_fread_states(turing *machine, char *filename);
+extern char *turing_fread_comments(char *filename);
 extern int turing_run_state(turing *machine);
 
 extern void turing_set_tape(turing *machine, char *ptr);

@@ -1,3 +1,11 @@
+1999-01-31  Arturo Espinosa <arturo@nuclecu.unam.mx>
+
+	* turing.c: (turing_fread_comments) New function that returns all the 
+	  comment lines in a .tur file.
+	* gturing.c: (states_fname_callback) Show a message_box with the comments
+    in the file.
+	* Makefile.am: install all .tur examples in $(datadir)/gturing/examples
+
 1999-01-10  Nat Friedman  <nat@nat.org>
 
 	* gturing.c: Standardized the menus.

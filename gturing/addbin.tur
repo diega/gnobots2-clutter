@@ -1,6 +1,6 @@
-# addbin.tur: suma dos numeros binarios.
+# addbin.tur: sum two binary numbers.
 #
-# Formato de la cinta: "<n1> <n2>" donde n1 y n2 son numeros binarios.
+# Tape format: "<n1> <n2>" where n1 and n2 are binary numbers.
 #
 0 1 1 r 0 Recorrer hacia la derecha hasta llegar al segundo numero.
 0 0 0 r 0

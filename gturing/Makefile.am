@@ -1,10 +1,12 @@
 Gamesdir = $(datadir)/apps/Games
+examplesdir = $(datadir)/gturing/examples
 
 INCLUDES = 			\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	-I$(includedir)				 \
 	$(GNOME_INCLUDEDIR)			 \
-	-DVERSION=\""$(VERSION)"\"
+	-DVERSION=\""$(VERSION)"\" \
+	-DGTURING_EXAMPLES_DIR=\""$(datadir)/gturing"\"
 
 bin_PROGRAMS = gturing
 
@@ -18,9 +20,11 @@ gturing_LDADD = \
 	$(GNOMEUI_LIBS)	\
 	$(INTLLIBS)
 
+examples_DATA = 3ones2zeroes.tur add.tur addbin.tur bin2dec.tur dec2bin.tur \
+	subst.tur dashnumbers.tur bb2.tur bb3.tur bb5.tur
+
 EXTRA_DIST = play.xpm power.xpm step.xpm stop.xpm \
-	3ones2zeroes.tur add.tur addbin.tur bin2dec.tur dec2bin.tur subst.tur \
-	dashnumbers.tur README CREDITS
+	README CREDITS $(examples_DATA)
 
 install-data-local:
 	-$(mkinstalldirs)

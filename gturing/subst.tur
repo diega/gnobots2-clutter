@@ -1,8 +1,7 @@
-# subst.tur: ejemplo clasico de la resta de dos numeros.
+# subst.tur: classical example of the substraction of two numbers.
 #
-# Formato de la cinta: "0111..1101...10" donde el numero de unos en la primera
-# serie es el minuendo y el numero de unos en la segunda serie es el
-# substraendo.
+# Tape format: "0111..1101...10" where the number of 1's in the first set
+# is the minuend and the number of 1's in the second set is the substractor.
 #
 0 0 0 r 1 Mover hacia la derecha hasta encontrar el cero central.
 1 1 1 r 1

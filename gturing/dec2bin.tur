@@ -1,10 +1,10 @@
-# dec2bin.tur: convierte un numero decimal a notacion binaria.
+# dec2bin.tur: converts a decimal number to binary notation. 
 #
-# Este programa de hecho suma al numero binario de la izquierda el decimal de
-# la derecha.
+# This program in fact sums the decimal number on the right to the binary 
+# number on the left
 #
-# Formato de la cinta: "<n1> <n2>" donde n1 es binario y n2 es un numero 
-# decimal.
+# Tape format: "<n1> <n2>" where n1 is the binary number and n2 is the
+# decimal one.
 #
 0 0 0 r 0 Recorrer hacia la derecha hasta llegar al segundo numero
 0 1 1 r 0
