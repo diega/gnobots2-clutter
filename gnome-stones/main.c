@@ -429,8 +429,6 @@ game_widget_key_release_callback (GtkWidget   *widget,
 {
   if (last_keyval == event->keyval)
     {
-      player_x_direction=  0;
-      player_y_direction=  0;
       last_keyval       =  GDK_VoidSymbol;
       return TRUE;
     }
@@ -808,10 +806,8 @@ iteration_timeout_function (gpointer data)
   
   cave_iterate (cave, player_x_direction, player_y_direction, player_push);
 
-#ifndef USE_KEY_RELEASE
   player_x_direction= 0;
   player_y_direction= 0;
-#endif 
   
   if (!(flags & CAVE_FINISHED) && (cave->flags & CAVE_FINISHED))
     {
@@ -1356,12 +1352,3 @@ main (int argc, char *argv[])
 
   return 0;
 }
-
-
-/* Local Variables: */
-/* mode:c */
-/* eval:(load-library "time-stamp") */
-/* eval:(make-local-variable 'write-file-hooks) */
-/* eval:(add-hook 'write-file-hooks 'time-stamp) */
-/* eval:(setq time-stamp-format '(time-stamp-yyyy/mm/dd time-stamp-hh:mm:ss user-login-name)) */
-/* End: */
