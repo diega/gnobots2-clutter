@@ -210,7 +210,6 @@ static void
 recalc_bounds (GnomeCanvasPImage *image)
 {
 	GnomeCanvasItem *item;
-	double wx, wy;
 
 	item = GNOME_CANVAS_ITEM (image);
 
@@ -321,7 +320,6 @@ static void
 gnome_canvas_pimage_update (GnomeCanvasItem *item, double *affine, ArtSVP *clip_path, int flags)
 {
 	GnomeCanvasPImage *image;
-	double x1, y1, x2, y2;
 	ArtDRect i_bbox, c_bbox;
 	int w, h;
 
