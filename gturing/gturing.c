@@ -500,7 +500,7 @@ void create_machine(void)
 	GtkWidget *frame;
 	
 	frame = rootw;
-	tapelabel = gtk_label_new((*tape_string != 0)? tape_string : _("Wellcome to gTuring."));
+	tapelabel = gtk_label_new((*tape_string != 0)? tape_string : _("Welcome to gTuring."));
 	headlabel = gtk_label_new("^                   ");
 	headlabel->style = tapelabel->style = gtk_style_copy(tapelabel->style);
 	tapelabel->style->font = gdk_font_load(TAPE_FONT);
@@ -557,7 +557,7 @@ static void init_stock(void)
 	}
 }
 
-void init_interfase(int argc, char *argv[])
+void init_interface(int argc, char *argv[])
 {
 	GtkWidget *app;
 	
@@ -632,7 +632,7 @@ int main (int argc, char *argv[])
 	parse_args(argc, argv);
 	gnome_init("gnomecard", NULL, argc, argv, 0, NULL);
 	init_globals();
-	init_interfase(argc, argv);
+	init_interface(argc, argv);
 	
 	if (*states_fname != 0)
 		set_states_fname(states_fname);

@@ -198,7 +198,7 @@ int turing_fread_states(turing *machine, char *filename)
 						break;
 				} /* switch */
 
-				token = strtok(NULL, " ");
+				token = strtok(NULL, TOKEN_SEPARATOR);
 
 				if (count == 4)
 					break;

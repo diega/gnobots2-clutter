@@ -19,7 +19,7 @@ gturing_LDADD = \
 
 EXTRA_DIST = play.xpm power.xpm step.xpm stop.xpm \
 	3ones2zeroes.tur add.tur addbin.tur bin2dec.tur dec2bin.tur subst.tur \
-	README
+	dashnumbers.tur README CREDITS
 
 install-data-local:
 	-$(mkinstalldirs)
