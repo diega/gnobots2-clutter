@@ -1,3 +1,12 @@
+2004-08-25  Richard Hoelscher  <rah@rahga.com>
+
+	* pixmaps/chip-100.svg: SVG cleanup and font tracing.
+	* pixmaps/chip-25.svg:  "
+	* pixmaps/chip-5.svg:   "
+	* pixmaps/chip-1.svg:   "
+	* pixmaps/white-outline.svg: Slightly smaller to conceal bilevel
+	transparency of cards, with cleanup.
+
 2004-07-20  William Jon McCann  <mccann@jhu.edu>
 
 	* data/blackjack.schemas.in: Use toolbar and not show_toolbar.
