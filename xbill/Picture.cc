@@ -3,7 +3,7 @@
 #include "objects.h"
 
 void Picture::load(const char *name, int index) {
-	static char *dir = gnome_datadir_file("xbill/pixmaps");
+	char *logo;
 	char file[255];
 	GdkBitmap *mask;
 	gint gcmask;
@@ -14,11 +14,14 @@ void Picture::load(const char *name, int index) {
 	gcval.foreground.pixel = ui.black.pixel;
 	gcval.background.pixel = ui.white.pixel;
 	if (index>=0)
-		sprintf (file, "%s/%s_%d.xpm", dir, name, index);
+		sprintf (file, "xbill/pixmaps/%s_%d.xpm", name, index);
 	else
-	        sprintf(file, "%s/%s.xpm", dir, name);
+	        sprintf(file, "xbill/pixmaps/%s.xpm", name);
+	logo = gnome_datadir_file(file);
 	pix = gdk_pixmap_colormap_create_from_xpm(ui.display, ui.colormap,
-						  &mask, &ui.white, file);
+						  &mask, &ui.white, logo);
+	g_free(logo);
+
 	if (pix == NULL) {
 		printf ("cannot open %s\n", file);
 		exit(1);
