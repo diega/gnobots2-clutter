@@ -1,3 +1,5 @@
+/* -*- mode:C; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*-
+
 /*
  * Same-Gnome: the game.
  * (C) 1997 the Free Software Foundation
@@ -397,14 +399,17 @@ configure_sync (char *fname)
 static void
 load_scenario (char *fname)
 {
-	char *tmp, *fn;
+	gchar *tmp, *fn;
         GdkColor bgcolor;
         GdkImage *tmpimage;
-	int i, j;
+	gint i, j;
     
 	g_return_if_fail (fname != NULL);
 
-	fn = g_strconcat ( PIXMAPDIR, "/", fname, NULL);
+	if (g_path_is_absolute (fname))
+		fn = g_strdup (fname);
+	else
+		fn = g_build_filename ( PIXMAPDIR, fname, NULL);
 
 	if (!g_file_test (fn, G_FILE_TEST_EXISTS)) {
 		GtkWidget *box = gtk_message_dialog_new (GTK_WINDOW (app),
@@ -546,18 +551,20 @@ fill_list (GtkListStore *list)
 	while ((filename = g_strdup (g_dir_read_name (dir))) != NULL){
 		gchar *name;
                 gchar *suffix;
-                
-                if (!g_file_test (filename, G_FILE_TEST_IS_REGULAR)) {
-                        g_free(filename);
+                gchar *path = NULL;
+                path = g_build_filename (PIXMAPDIR, filename, NULL);
+                if (!g_file_test (path, G_FILE_TEST_IS_REGULAR)) {
+                        g_free (filename);
+			g_free (path);
                         continue;
                 }
 
                 /* We strip any trailing suffix, any -sync suffix
                  * and convert '_' to ' '. This is brutal code. */
-                name = g_strdup(filename);
-                suffix = g_strrstr(name,".");
+                name = g_strdup (filename);
+                suffix = g_strrstr (name,".");
                 if (suffix) *suffix = '\0';
-                suffix = g_strrstr(name,"-sync");
+                suffix = g_strrstr (name,"-sync");
                 if (suffix) *suffix = '\0';
                 suffix = name;
                 while (*suffix) {
@@ -634,9 +641,8 @@ game_preferences_callback (GtkWidget *widget, void *data)
         gtk_container_add (GTK_CONTAINER(scroll), listview);
         gtk_widget_set (scroll, "border-width", GNOME_PAD, NULL);
         
-        frame = gtk_frame_new (_("Theme"));
+        frame = games_frame_new (_("Theme"));
         gtk_container_add (GTK_CONTAINER (frame), scroll);
-        gtk_widget_set (frame, "border-width", GNOME_PAD_SMALL, NULL);
 
         gtk_box_pack_start (GTK_BOX (GTK_DIALOG(pref_dialog)->vbox),
                             frame, TRUE, TRUE, GNOME_PAD_SMALL);
