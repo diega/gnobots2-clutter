@@ -1,3 +1,7 @@
+2004-02-20  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* Makefile.am: Added the maya.png tileset from Gonzalo Odiard.
+
 2004-02-19  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am:
