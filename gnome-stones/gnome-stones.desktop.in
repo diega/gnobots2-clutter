@@ -11,3 +11,4 @@ X-GNOME-Bugzilla-Bugzilla=GNOME
 X-GNOME-Bugzilla-Product=gnome-games
 X-GNOME-Bugzilla-Component=gnome-stones
 StartupNotify=true
+MimeType=application/x-gnome-stones;
