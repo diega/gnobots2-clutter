@@ -21,7 +21,7 @@
 #include <config.h>
 #include "tetris.h"
 
-int nr_of_colors;
+int nr_of_colors = 0;
 
 int
 main(int argc, char *argv[])
