@@ -949,11 +949,9 @@ void you_won (void)
         gchar message[80];
 
         game_over = GAME_WON;
-#if 0        
-        seconds = GAMES_CLOCK (chrono)->stopped;
-#else
-	seconds = 100;
-#endif
+
+	seconds = GAMES_CLOCK (chrono)->stopped;
+
         score = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
         if ( pos = gnome_score_log (score, mapset, FALSE) ) {
                 gnome_scores_display (_(APPNAME_LONG), APPNAME, mapset, pos);
