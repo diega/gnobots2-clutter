@@ -5,7 +5,7 @@ SUBDIRS=pix
 Gamesdir=$(datadir)/applications
 
 INCLUDES=\
-	$(GNOME_GAMES_CFLAGS)	\
+	$(GNOME_GAMES_CXXFLAGS)	\
 	-I$(top_srcdir)/libgames-support \
 	-DDATADIR=\""$(datadir)"\"		   \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"

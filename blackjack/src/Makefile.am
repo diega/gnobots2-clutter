@@ -2,7 +2,7 @@ INCLUDES =  \
 	-I$(top_srcdir)/gdk-card-image             \
 	-I$(top_srcdir)/libgames-support           \
 	-DDATADIR=\""$(datadir)"\"		   \
-	$(GNOME_GAMES_CFLAGS)			   \
+	$(GNOME_GAMES_CXXFLAGS)			   \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"
 
 bin_PROGRAMS = blackjack

@@ -1,3 +1,12 @@
+2003-12-12  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* src/strategy.cpp: Removed the #include of <iostream> since it
+	doesn't seem to be used and was causing some people compile
+	problems. Fixes bug #128729.
+
+	* src/Makefile.am (INCLUDES): Use GNOME_GAMES_CXXFLAGS rather than
+	GNOME_GAMES_CFLAGS.
+
 2003-11-19  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* data/Makefile.am (CLEANFILES): Make sure we clean up after
