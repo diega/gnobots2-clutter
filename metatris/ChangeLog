@@ -1,3 +1,7 @@
+2000-05-12  Andreas Hyden  <a.hyden@cyberpoint.se>
+
+	* metatris.desktop: Added Swedish translation.
+
 1999-08-09  Robert Brady  <rwb197@ecs.soton.ac.uk
 
 	* Makefile.am : applied Irix compiling fix from David Kaelbling 
