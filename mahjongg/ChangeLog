@@ -1,3 +1,10 @@
+2002-05-11  Bastien Nocera  <hadess@hadess.net>
+
+	* mahjongg.c: (update_moves_left), (tile_event),
+	(colour_changed_cb), (init_game), (redo_tile_callback),
+	(undo_tile_callback), (main): s/sprintf/g_strdup_printf and some
+	cleanups
+
 2002-05-10  Bastien Nocera  <hadess@hadess.net>
 
 	* mahjongg.c: add shuffle tiles to the toolbar (Closes: #80714)

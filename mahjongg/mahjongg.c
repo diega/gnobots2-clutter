@@ -295,9 +295,18 @@ static struct {
         popup_type confirm;
 } popup_config = {{1,0,0}, {1,0,0}};
 
-typedef enum { NEW_GAME, RESTART_GAME, QUIT_GAME } game_state;
+typedef enum {
+	NEW_GAME,
+	RESTART_GAME,
+	QUIT_GAME
+} game_state;
 
-enum { GAME_RUNNING, GAME_WON, GAME_LOST, GAME_DEAD } game_over;
+enum {
+	GAME_RUNNING,
+	GAME_WON,
+	GAME_LOST,
+	GAME_DEAD
+} game_over;
 
 static void change_tiles (void);
 static void change_tile_image (tile *tile_inf);
@@ -327,9 +336,10 @@ void select_game (GtkWidget *widget, gpointer data);
 GnomeUIInfo gamemenu [] = {
          GNOMEUIINFO_MENU_NEW_GAME_ITEM(confirm_action, NEW_GAME),
 
-         {GNOME_APP_UI_ITEM, N_("New game with _seed..."), N_("Start a new game giving a seed number..."),
-	  select_game, NULL, NULL, GNOME_APP_PIXMAP_STOCK,
-	  GTK_STOCK_NEW, 0, 0, NULL},
+         {GNOME_APP_UI_ITEM, N_("New game with _seed..."),
+		 N_("Start a new game giving a seed number..."),
+		 select_game, NULL, NULL, GNOME_APP_PIXMAP_STOCK,
+		 GTK_STOCK_NEW, 0, 0, NULL},
 
 	 GNOMEUIINFO_MENU_RESTART_GAME_ITEM(confirm_action, RESTART_GAME),
 
@@ -341,8 +351,8 @@ GnomeUIInfo gamemenu [] = {
 	 GNOMEUIINFO_MENU_HINT_ITEM(hint_callback, NULL),
 
          {GNOME_APP_UI_ITEM, N_("Shu_ffle tiles"), N_("Shuffle tiles"),
-	  shuffle_tiles_callback, NULL, NULL, GNOME_APP_PIXMAP_STOCK,
-	  NULL, 0, 0, NULL},
+		 shuffle_tiles_callback, NULL, NULL, GNOME_APP_PIXMAP_STOCK,
+		 NULL, 0, 0, NULL},
 
 	 GNOMEUIINFO_SEPARATOR,
 
@@ -385,32 +395,39 @@ GnomeUIInfo mainmenu [] = {
 };
 
 GnomeUIInfo toolbar_uiinfo [] = {
-	{GNOME_APP_UI_ITEM, N_("New"), N_("New game"), confirm_action, (gpointer)NEW_GAME, NULL,
-         GNOME_APP_PIXMAP_STOCK, GTK_STOCK_NEW, 0, 0, NULL},
+	{GNOME_APP_UI_ITEM, N_("New"), N_("New game"), confirm_action,
+		(gpointer)NEW_GAME, NULL,
+		GNOME_APP_PIXMAP_STOCK, GTK_STOCK_NEW, 0, 0, NULL},
 
-        {GNOME_APP_UI_ITEM, N_("Restart"), N_("Restart game"), confirm_action, (gpointer)RESTART_GAME, NULL,
-         GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REFRESH, 0, 0, NULL},
+        {GNOME_APP_UI_ITEM, N_("Restart"), N_("Restart game"), confirm_action,
+		(gpointer)RESTART_GAME, NULL,
+		GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REFRESH, 0, 0, NULL},
 
-        {GNOME_APP_UI_ITEM, N_("Hint"), N_("Get a hint"), hint_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GTK_STOCK_HELP, GDK_H, GDK_CONTROL_MASK, NULL},
+        {GNOME_APP_UI_ITEM, N_("Hint"), N_("Get a hint"), hint_callback,
+		NULL, NULL, GNOME_APP_PIXMAP_STOCK, GTK_STOCK_HELP, GDK_H,
+		GDK_CONTROL_MASK, NULL},
 
-        {GNOME_APP_UI_ITEM, N_("Undo"), N_("Undo previous move"), undo_tile_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GTK_STOCK_UNDO, 0, 0, NULL},
+        {GNOME_APP_UI_ITEM, N_("Undo"), N_("Undo previous move"),
+		undo_tile_callback, NULL, NULL,
+		GNOME_APP_PIXMAP_STOCK, GTK_STOCK_UNDO, 0, 0, NULL},
 
-        {GNOME_APP_UI_ITEM, N_("Redo"), N_("Redo"), redo_tile_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REDO, 0, 0, NULL},
+        {GNOME_APP_UI_ITEM, N_("Redo"), N_("Redo"), redo_tile_callback,
+		NULL, NULL, GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REDO, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Shuffle"), N_("Shuffle tiles"), shuffle_tiles_callback, NULL, NULL,
-	 GNOME_APP_PIXMAP_STOCK, GTK_STOCK_EXECUTE, 0, 0, NULL},
+	{GNOME_APP_UI_ITEM, N_("Shuffle"), N_("Shuffle tiles"),
+		shuffle_tiles_callback, NULL, NULL,
+		GNOME_APP_PIXMAP_STOCK, GTK_STOCK_EXECUTE, 0, 0, NULL},
 
         /* If you change the place for this button, change the index in
            the definition of PAUSE_BUTTON below */
-        {GNOME_APP_UI_TOGGLEITEM, N_("Pause"), N_("Pause game"), pause_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GTK_STOCK_STOP, 0, 0, NULL},
+        {GNOME_APP_UI_TOGGLEITEM, N_("Pause"), N_("Pause game"),
+		pause_callback, NULL, NULL,
+		GNOME_APP_PIXMAP_STOCK, GTK_STOCK_STOP, 0, 0, NULL},
 
 #ifdef SOUND_SUPPORT_FINISHED
-        {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), N_("Toggle sound"), sound_on_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_DATA, mini_sound_xpm, 0, 0, NULL},
+        {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), N_("Toggle sound"),
+		sound_on_callback, NULL, NULL,
+		GNOME_APP_PIXMAP_DATA, mini_sound_xpm, 0, 0, NULL},
 #endif
 
 	{GNOME_APP_UI_ENDOFINFO}
@@ -469,11 +486,11 @@ void chrono_start ()
 
 gint update_moves_left ()
 {
-        gchar tmpgchar[16];
+        char *tmpstr;
 
         check_free();
-        sprintf(tmpgchar, "%2d", moves_left);
-        gtk_label_set_text (GTK_LABEL(moves_label), tmpgchar);
+	tmpstr = g_strdup_printf ("%2d", moves_left);
+        gtk_label_set_text (GTK_LABEL(moves_label), tmpstr);
         return moves_left;
 }
 
@@ -555,7 +572,7 @@ void unselect_tile (tile *tile_inf)
 static void
 tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
 {
-  gchar tmpgchar[16];
+  char *tmpstr;
 
   if (paused) return; 
 
@@ -580,11 +597,11 @@ tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
                                                   sequence_number ++;
                                                   selected_tile = MAX_TILES + 1;
                                                   visible_tiles -= 2;
-                                                  sprintf(tmpgchar, "%3d", visible_tiles);
-                                                  gtk_label_set_text (GTK_LABEL(tiles_label), tmpgchar);
+                                                  tmpstr = g_strdup_printf("%3d", visible_tiles);
+                                                  gtk_label_set_text (GTK_LABEL(tiles_label), tmpstr);
                                                   check_free();
-                                                  sprintf(tmpgchar, "%2d", moves_left);
-                                                  gtk_label_set_text (GTK_LABEL(moves_label), tmpgchar);
+                                                  tmpstr = g_strdup_printf("%2d", moves_left);
+                                                  gtk_label_set_text (GTK_LABEL(moves_label), tmpstr);
 
                                                   if (visible_tiles <= 0) {
                                                           games_clock_stop(GAMES_CLOCK(chrono));
@@ -927,12 +944,12 @@ void you_won (void)
 void colour_changed_cb (GtkWidget *w, gint r1, gint g1, gint b1, gint a1,
 			gchar ** color)
 {
-  static gchar tmp[24] = "" ;
+  static gchar *tmp = "" ;
   guint8 r,g,b,a;
 
   gnome_color_picker_get_i8(GNOME_COLOR_PICKER(w), &r, &g, &b, &a);
 
-  sprintf( tmp, "#%02x%02x%02x", r, g, b ) ;
+  tmp = g_strdup_printf ("#%02x%02x%02x", r, g, b);
 
   *color = tmp ;
   backgnd.set = 1 ;
@@ -1271,7 +1288,7 @@ void scores_callback(GtkWidget *widget, gpointer data)
 
 void init_game (void)
 {
-        gchar tmpgchar[16] ;
+        gchar tmpstr[16] ;
         
         gtk_label_set_text(GTK_LABEL(tiles_label), MAX_TILES_STR);
         update_moves_left ();
@@ -1369,7 +1386,7 @@ void restart_game ()
 void redo_tile_callback (GtkWidget *widget, gpointer data)
 {
         gint i, change ;
-        gchar tmpgchar[16] ;
+        char *tmpstr;
         
         if (paused) 
                 return; 
@@ -1396,8 +1413,8 @@ void redo_tile_callback (GtkWidget *widget, gpointer data)
         }
         else
                   	gnome_app_flash (GNOME_APP (window), "No more redo!");
-        sprintf(tmpgchar,"%3d",visible_tiles) ;
-        gtk_label_set_text(GTK_LABEL (tiles_label), tmpgchar);
+        tmpstr = g_strdup_printf ("%3d",visible_tiles);
+        gtk_label_set_text(GTK_LABEL (tiles_label), tmpstr);
         
         update_moves_left ();
         gnome_canvas_update_now (GNOME_CANVAS (canvas));
@@ -1406,7 +1423,7 @@ void redo_tile_callback (GtkWidget *widget, gpointer data)
 void undo_tile_callback (GtkWidget *widget, gpointer data)
 {
         gint i;
-        gchar tmpgchar[16] ;
+        char *tmpstr;
         
         if (paused || game_over == GAME_WON) 
                 return;
@@ -1431,8 +1448,8 @@ void undo_tile_callback (GtkWidget *widget, gpointer data)
                         gnome_canvas_item_show (tiles[i].canvas_item);
                 }
 
-        sprintf (tmpgchar, "%3d", visible_tiles) ;
-        gtk_label_set_text (GTK_LABEL(tiles_label), tmpgchar);
+        tmpstr = g_strdup_printf ("%3d", visible_tiles);
+        gtk_label_set_text (GTK_LABEL(tiles_label), tmpstr);
         gnome_canvas_update_now (GNOME_CANVAS (canvas));
 
         update_moves_left ();
@@ -1854,7 +1871,7 @@ int main (int argc, char *argv [])
         gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-mahjongg.png");
 	srand (time (NULL));
 	conf_client = gconf_client_get_default ();
-	
+
 	window = gnome_app_new (APPNAME, _(APPNAME_LONG));
 	gtk_window_set_resizable (GTK_WINDOW (window), FALSE);
 
