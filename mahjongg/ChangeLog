@@ -1,3 +1,10 @@
+2004-08-26  callum  <callum@spooky-possum.org>
+
+	* mahjongg.c: Be explicit about the game_over enumeration starting
+	at 0, we make assumptions about this and while most modern
+	compilers should be OK, I have a bug (#145543) which I think is a
+	result of this assumption failing.
+
 2004-08-24  Richard Hoelscher  <rahga@localhost.localdomain>
 
 	* drawing.c (configure_pixmaps): Recreate tile images only when 

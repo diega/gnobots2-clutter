@@ -777,7 +777,7 @@ typedef enum {
 } game_state;
 
 enum {
-	GAME_RUNNING,
+	GAME_RUNNING = 0,
 	GAME_WON,
 	GAME_LOST,
 	GAME_DEAD
