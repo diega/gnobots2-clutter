@@ -71,11 +71,14 @@ void UI::make_mainwin() {
 	gtk_widget_ensure_style(field);
 	style = field->style;
 	colormap = style->colormap;
+	gdk_color_parse ("white", &white);
 
 	/* try to alloc color */
 	if (colormap)
-		gdk_color_white(colormap, &white);
-	else if (gdk_color_white(gdk_colormap_get_system(), &white)) {
+		gdk_colormap_alloc_color (colormap, &white,
+				FALSE, FALSE);
+	else if (gdk_colormap_alloc_color (gdk_colormap_get_system(),
+				&white, FALSE, FALSE)) {
 		style = gtk_style_copy(gtk_widget_get_style(GTK_WIDGET(field)));
 
 		/* set new style */
@@ -197,13 +200,13 @@ void UI::clear() {
 }
 
 void UI::refresh() {
-        gdk_draw_pixmap(window, stdgc, offscreen, 0,0, 0,0,
+        gdk_draw_drawable(window, stdgc, offscreen, 0,0, 0,0,
 			game.scrwidth, game.scrheight);
 }
 
 void UI::draw (Picture pict, int x, int y) {
         gdk_gc_set_clip_origin(pict.gc, x, y);
-	gdk_draw_pixmap(offscreen, pict.gc, pict.pix, 0,0, x,y,
+	gdk_draw_drawable(offscreen, pict.gc, pict.pix, 0,0, x,y,
 			pict.width, pict.height);
 }
 
