@@ -1343,6 +1343,7 @@ Tetris::endOfGame()
 	color_next = -1;
 	blocknr_next = -1;
 	rot_next = -1;
+	gtk_widget_queue_draw(preview->getWidget());
         gnome_canvas_item_hide (pauseMessage);
         gnome_canvas_item_show (gameoverMessage);
         gnome_canvas_item_raise_to_top (gameoverMessage);

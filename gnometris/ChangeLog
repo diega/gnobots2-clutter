@@ -1,3 +1,7 @@
+2005-02-22  Richard Hoelscher  <rah@rahga.com>
+
+	* tetris.cpp (endOfGame): Update the preview window when game ends.
+
 2005-01-19  Richard Hoelscher  <rah@rahga.com>
 
 	* tetris.cpp (timeoutHandler): Don't award fast fall points on a
