@@ -333,6 +333,10 @@ static void board_click (GtkWidget * w, GdkEventButton * e, gpointer data)
 {
   gint tileno;
 
+  /* Ignore the 2BUTTON and 3BUTTON events. */
+  if (e->type != GDK_BUTTON_PRESS)
+    return;
+
   tileno = find_tile (e->x, e->y);
 
   if (tileno < 0) return;

@@ -1,3 +1,9 @@
+2004-01-10  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* drawing.c (board_click): Ignore double click and triple click
+	events, we were treating them as single click events and therefore
+	were getting duplicates. Fixes bug #130856.
+
 2003-12-29  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c:	
