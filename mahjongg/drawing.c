@@ -50,8 +50,8 @@ GdkColor bgcolour;
 
 GdkPixbuf * tilepixbuf = NULL;
 
-gint windowwidth;
-gint windowheight;
+static gint windowwidth;
+static gint windowheight;
 gint tilebasewidth = 0;
 gint tilebaseheight = 0;
 gint tileoffsetx;

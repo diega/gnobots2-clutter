@@ -695,7 +695,7 @@ gint sequence_number;
 
 guint current_seed, next_seed;
 
-gint windowwidth, windowheight;
+static gint windowwidth, windowheight;
 
 GList * tileset_list = NULL;
 
@@ -2090,6 +2090,7 @@ shuffle_tiles_callback (GtkWidget *widget, gpointer data)
                 games_clock_set_seconds(GAMES_CLOCK(chrono), (gint) (seconds+60));
                 games_clock_start (GAMES_CLOCK(chrono));
 
+		update_moves_left ();
 		/* Disable undo/redo after a shuffle. */
 		sequence_number = 1;
 		clear_undo_queue ();
