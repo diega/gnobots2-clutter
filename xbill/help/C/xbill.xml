@@ -5,8 +5,8 @@
   <!ENTITY appversion "2.0">
   <!ENTITY manrevision "2.0">
   <!ENTITY date "March 2002">
-  <!ENTITY app "<application>Gnome xBill</application>">
-  <!ENTITY appname "Gnome xBill">
+  <!ENTITY app "<application>GNOME xBill</application>">
+  <!ENTITY appname "GNOME xBill">
   <!ENTITY version "2.0">
  ]
 >
@@ -101,13 +101,13 @@
    </articleinfo>
 
   <indexterm zone="index"> 
-    <primary>Gnome xBill</primary> 
+    <primary>GNOME xBill</primary> 
   </indexterm>
 
 <!-- ============= Document Body ============================= -->
 <!-- ============= Introduction ============================== -->
   <sect1 id="intro"> <title>Introduction</title>
-    <para>Gnome xBill is a port of the original xBill to the GNOME desktop
+    <para>GNOME xBill is a port of the original xBill to the GNOME desktop
     environment.
     </para>
     <sect2 id="origstory">
@@ -136,12 +136,12 @@
     <sect2 id="overview">
       <title>Overview</title>
       <para>
-	<application>Gnome xBill </application> is included in the
+	<application>GNOME xBill </application> is included in the
 	<filename>GNOME-games </filename> package, which is part of the
 	GNOME desktop environment. This document describes version
-	&version; of <application>Gnome xBill</application>.
+	&version; of <application>GNOME xBill</application>.
       </para>
-      <para>Simply stated, your mission in Gnome xBill is to maintain the
+      <para>Simply stated, your mission in GNOME xBill is to maintain the
 	stability of your computer systems. To do this you must splat the
 	<link linkend="microbill">micro-Bills</link>; restore any removed
 	<link linkend="fallenos">operating systems </link>; and dowse any
@@ -150,8 +150,8 @@
     </sect2>
   </sect1>
   <sect1 id="images">
-    <title>Entities you will see in Gnome xBill</title>
-    <para>Playing Gnome xBill requires interacting with a number of different
+    <title>Entities you will see in GNOME xBill</title>
+    <para>Playing GNOME xBill requires interacting with a number of different
     items, in this section you will be introduced to each of them. </para>
     <para>The overall goal is to maintain the stability of your computer system,
     therefore it makes sense that the first entity you are introduced is a
@@ -191,7 +191,7 @@
       </screenshot>
     </figure>
     <para><xref linkend="microbill"/> shows your enemies in
-    <application>Gnome-xBill</application>. The swarming micro-Bills.  <xref
+    <application>GNOME-xBill</application>. The swarming micro-Bills.  <xref
     linkend="attacks"/> describes the various tactics they'll use against your
     network.  In the event that a computer is infected and it sends a network
     spark (see <xref linkend="attacks"/>) you'll need to use the bucket of <xref
@@ -227,31 +227,31 @@
   <sect1 id="usage">
     <title>How to Play</title>
     <para>
-      To run <application>Gnome xBill</application>, select
+      To run <application>GNOME xBill</application>, select
       <menuchoice>
 	<guisubmenu>Games</guisubmenu>
-	<guimenuitem>Gnome xBill</guimenuitem>
+	<guimenuitem>GNOME xBill</guimenuitem>
       </menuchoice>
       from the 
       <guimenu>Main Menu</guimenu>, or type
       <command>gnome-xbill</command> on the command line.
-      When <application>Gnome xBill</application> starts you will be presented
+      When <application>GNOME xBill</application> starts you will be presented
       with the main window shown in  <xref linkend="mainwindow-fig"/>.
     </para>
     <figure id="mainwindow-fig">
-      <title>Gnome xBill Main Window</title>
+      <title>GNOME xBill Main Window</title>
       <screenshot>
 	 <mediaobject> 
     <imageobject>
   <imagedata fileref="figures/mainwin.png" format="PNG" srccredit="Michael Koziarski"/>
 	</imageobject>
     <textobject> 
-      <phrase>Gnome xBill Main Window.</phrase> 
+      <phrase>GNOME xBill Main Window.</phrase> 
     </textobject> 
   </mediaobject>
       </screenshot>
     </figure>
-    <para>To start a new game of Gnome xBill select 
+    <para>To start a new game of GNOME xBill select 
       <menuchoice>
 	<shortcut>
 	  <keycombo>
@@ -276,14 +276,14 @@
       period of time <link linkend="microbill"> micro-Bills </link> will begin
     to attack your network. 
       <figure id="start-game">
-	<title>Start of Gnome xBill</title>
+	<title>Start of GNOME xBill</title>
 	<screenshot>
 	   <mediaobject> 
     <imageobject>
   <imagedata fileref="figures/startgame.png" format="PNG" srccredit="Michael Koziarski"/>
 	 </imageobject>
     <textobject> 
-      <phrase>Start of Gnome xBill.</phrase> 
+      <phrase>Start of GNOME xBill.</phrase> 
     </textobject> 
   </mediaobject>
 	</screenshot>
@@ -460,8 +460,8 @@
 
     </sect2>
     <sect2 id="scoring">
-      <title>Gnome xBill Scoring system</title>
-      <para>Your score in <application>Gnome-xBill</application> is based on
+      <title>GNOME xBill Scoring system</title>
+      <para>Your score in <application>GNOME-xBill</application> is based on
       total uptime and the number of micro-Bills you kill. <xref
       linkend="scoreboard"/> shows the scoreboard.</para> 
       <figure id="scoreboard">
@@ -533,7 +533,7 @@
     </sect2>
     <sect2 id="help">
       <title> Accessing Help </title>
-      <para>To access help for <application>Gnome xBill</application> select 
+      <para>To access help for <application>GNOME xBill</application> select 
 	<menuchoice>
 	  <guimenu>Help</guimenu>
 	  <guimenuitem>Manual</guimenuitem>
@@ -551,7 +551,7 @@
   <sect1 id="authors">
     <title>Authors</title>
     <para>
-      <application>Gnome xBill</application> was written by James Henstridge
+      <application>GNOME xBill</application> was written by James Henstridge
       (<email>james@daa.com.au</email>).  Please send all comments, suggestions, and bug
       reports to the <ulink url="http://bugs.gnome.org" type="http">GNOME
       bug tracking database</ulink>. (Instructions for submitting bug
