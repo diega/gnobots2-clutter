@@ -23,34 +23,12 @@
 #include <config.h>
 #endif
 
+#include "main.h"
 #include "view.h"
 #include "object.h"
 #include "types.h"
 #include "preferences.h"
 
-
-
-/*****************************************************************************/
-/* Some definitions */
-
-
-#define GAME_COLS  20
-#define GAME_ROWS 12
-#define GAME_SCROLL_MAX 3
-#define GAME_SCROLL_MIN 6
-
-#define CURTAIN_DELAY 50
-
-#ifdef USE_KEY_RELEASE
-#define GAME_EVENTS (GDK_KEY_PRESS_MASK             |\
-		     GDK_KEY_RELEASE_MASK)
-;
-#else
-#define GAME_EVENTS (GDK_KEY_PRESS_MASK)
-#endif
-
-
-
 /*****************************************************************************/
 /* Some declarations */
 

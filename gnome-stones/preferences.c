@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <2003/06/10 14:57:48 mccannwj>
+ * Time-stamp: <2003/06/16 10:33:49 mccannwj>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -24,12 +24,22 @@
 #endif
 
 #include "preferences.h"
+#include <games-frame.h>
 #include "status.h"
 #include "main.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
 #include <unistd.h>
+
+#include "sound.h"
+
+#define KEY_SCROLL_METHOD "/apps/gnome-stones/preferences/scroll_method"
+#define KEY_GAME_NAME "/apps/gnome-stones/preferences/game_name"
+#define KEY_START_CAVE "/apps/gnome-stones/preferences/start_cave"
+#define KEY_JOYSTICK_DEVICE "/apps/gnome-stones/preferences/joystick_device"
+#define KEY_JOYSTICK_SWITCH "/apps/gnome-stones/preferences/joystick_switch_level"
+#define KEY_SOUND_ENABLED "/apps/gnome-stones/preferences/sound_enabled"
 
 
 /*****************************************************************************/
@@ -105,6 +115,7 @@ void joystick_set_properties (guint32 deviceid, gfloat switch_level);
 void load_game (const char *filename, guint cave);
 
 
+
 /****************************************************************************/
 /* Stuff for managing the list of avaiable games.  */
 
@@ -164,7 +175,8 @@ add_game (const char *filename)
 }
 
 
-gboolean caves_suffix (char *name)
+gboolean
+caves_suffix (char *name)
 {
  int l=strlen (name); 
  if (l<7) return FALSE;
@@ -232,7 +244,8 @@ load_game_by_name (const char *filename, guint cave)
 /* string<-->scroll_method conversion  */
 
 
-gchar *scroll_method_name (void)
+gchar *
+scroll_method_name (void)
 {
   if (view_scroll_method==atari_scroll)
     return "atari_scroll";
@@ -245,7 +258,8 @@ gchar *scroll_method_name (void)
 
 }
 
-void set_scroll_method (gchar *name)
+void
+set_scroll_method (gchar *name)
 {
 
   if (!strcmp (name,"atari_scroll"))  view_scroll_method=atari_scroll;
@@ -260,64 +274,89 @@ void set_scroll_method (gchar *name)
 /*****************************************************************************/
 /* Save preferences.  */
 
+void
+gconf_set_scroll_method (gchar *value)
+{
+  gconf_client_set_string (get_gconf_client (), KEY_SCROLL_METHOD,
+                           value, NULL);
+}
+
+void
+gconf_set_game_name (gchar *value)
+{
+  gconf_client_set_string (get_gconf_client (), KEY_GAME_NAME,
+                           value, NULL);
+}
+
+void
+gconf_set_start_cave (gint value)
+{
+  gconf_client_set_int (get_gconf_client (), KEY_START_CAVE,
+                        value, NULL);
+}
+
+void
+gconf_set_sound_enabled (gboolean value)
+{
+  gconf_client_set_bool (get_gconf_client (), KEY_SOUND_ENABLED,
+                         value, NULL);
+}
+
+void
+gconf_set_joystick_device (gchar *value)
+{
+  gconf_client_set_string (get_gconf_client (), KEY_JOYSTICK_DEVICE,
+                           value, NULL);
+}
+
+
+void
+gconf_set_joystick_switch_level (gfloat value)
+{
+  gconf_client_set_float (get_gconf_client (), KEY_JOYSTICK_SWITCH,
+                          value, NULL);
+}
 
 void 
 preferences_save (gboolean global)
 {
-  gchar    *devicename= NULL;
-  GList    *devices;
+  gchar *devicename = NULL;
+  GList *devices;
 
-  gnome_config_clean_section ("Preferences");
 #if 0
-  for (devices= gdk_devices_list (); devices; devices= devices->next)
+  for (devices = gdk_devices_list (); devices; devices = devices->next)
     {
-      GdkDevice *info =  devices->data;
+      GdkDevice *info = devices->data;
       
       if (joystick_deviceid == info->deviceid)
 	{
-	  devicename= info->name;
+	  devicename = info->name;
 	  break;
 	}
     }
 #endif  
-  if (devicename)
-    gnome_config_set_string ("Preferences/Joystick device",  devicename);
-  gnome_config_set_float ("Preferences/Joystick switch level", 
-			  joystick_switch_level);
+  if (devicename) 
+    gconf_set_joystick_device (devicename);
 
-  gnome_config_set_string ("Preferences/Scroll method", scroll_method_name());
+  gconf_set_joystick_switch_level (joystick_switch_level);
+
+  gconf_set_scroll_method (scroll_method_name ());
 
   if (game)
     {
-      gnome_config_set_string ("Preferences/Game", game->filename);
-      gnome_config_set_int ("Preferences/Start cave", start_cave);
-    }
-  
-  gnome_config_clean_section ("Windows");
+      gconf_set_game_name (game->filename);
 
-  if (!global)
-    {
-      /* Information about open windows is only stored, if a session
-         manager issued a save.  */
-      gnome_config_set_bool ("Windows/Preferences", 
-			     preferences_dialog != NULL);
+      gconf_set_start_cave (start_cave);
     }
-  
 
-  gnome_config_sync ();
+  gconf_set_sound_enabled (get_sound_enabled ());
 }
 
 
 void
 preferences_save_global (void)
 {
-  gnome_config_push_prefix 
-    (gnome_client_get_global_config_prefix (gnome_master_client ()));
-
   preferences_save (TRUE);
-
-  gnome_config_pop_prefix ();
-  gnome_config_sync ();
 }
 
 
@@ -329,18 +368,7 @@ preferences_save_local (GnomeClient        *client,
 			GnomeInteractStyle  interact_style,   
 			gpointer            client_data)
 {
-  gchar *prefix= gnome_client_get_config_prefix (client);
-  gchar *argv[3]= {"rm", "-r", NULL };
-      
-  gnome_config_push_prefix (prefix);
-    
   preferences_save (FALSE);
-
-  gnome_config_pop_prefix ();
-  gnome_config_sync ();
-
-  argv[2]= gnome_config_get_real_path (prefix);
-  gnome_client_set_discard_command (client, 3, argv);
 
   return TRUE;
 }
@@ -350,17 +378,22 @@ preferences_save_local (GnomeClient        *client,
 /*****************************************************************************/
 /* Restoring the preferences from disc.  */
 
+gboolean
+pref_get_sound_enabled ()
+{
+  return gconf_client_get_bool (get_gconf_client (),
+                                KEY_SOUND_ENABLED, NULL);
+}
 
 gboolean
 preferences_restore (void)
 {
-  GnomeClient *client= gnome_master_client ();
   gchar       *devicename;
   char        *filename;
   gboolean     def;
   guint        cave;
+  gchar       *scroll_method;
 
-  gnome_config_push_prefix (gnome_client_get_config_prefix (client));
 #if 0
   devicename= gnome_config_get_string ("Preferences/Joystick device=");
   if (devicename)
@@ -383,16 +416,25 @@ preferences_restore (void)
     gdk_input_set_mode (joystick_deviceid, GDK_MODE_SCREEN);
 #endif
 
-  joystick_switch_level= 
-    gnome_config_get_float ("Preferences/Joystick switch level=0.5");
+  joystick_switch_level = gconf_client_get_float (get_gconf_client (),
+                                                  KEY_JOYSTICK_SWITCH,
+                                                  NULL);
 
-  set_scroll_method ( 
-    gnome_config_get_string ("Preferences/Scroll method=atari_scroll") );
+  set_sound_enabled (pref_get_sound_enabled ());
 
+  scroll_method = gconf_client_get_string (get_gconf_client (),
+                                           KEY_SCROLL_METHOD, NULL);
+  if (scroll_method == NULL)
+    scroll_method = g_strdup ("atari_scroll");
+  set_scroll_method (scroll_method);
+  g_free (scroll_method);
 
-  filename= gnome_config_get_string_with_default ("Preferences/Game", &def);
+  filename = gconf_client_get_string (get_gconf_client (),
+                                      KEY_GAME_NAME, NULL);
+  def = (filename == NULL);
 
-  cave= gnome_config_get_int ("Preferences/Start cave=0");
+  cave = gconf_client_get_int (get_gconf_client (),
+                               KEY_START_CAVE, NULL);
   if (!default_game || !load_game_by_name (default_game, 0))
     {
       if (def || !load_game_by_name (filename, cave))
@@ -402,13 +444,6 @@ preferences_restore (void)
     }
 
   g_free (filename);
-
-  if (gnome_config_get_bool ("Windows/Preferences=0"))
-    {
-      preferences_dialog_show ();
-    }
-
-  gnome_config_pop_prefix ();
 
   return TRUE;
 }
@@ -450,26 +485,14 @@ preferences_response_cb (GtkWidget *w, gint response_id, gpointer data)
 
   switch(response_id)
   {
-  case GTK_RESPONSE_DELETE_EVENT:
-  case GTK_RESPONSE_ACCEPT:
-       /* FIXME: Add some checks and warnings here.  */
-       if (prdata->selected_game > -1)
-            load_game_by_number (prdata->selected_game);
-       
+  default:
        joystick_set_properties (prdata->joystick_deviceid,
                                 prdata->joystick_switch_level);
-       set_scroll_method (prdata->scroll_method_name);
-       /* After setting all needed values, we can save the programs
-          state to disc.  */
-       preferences_save_global ();
        gtk_widget_destroy (preferences_dialog);
        preferences_dialog = NULL;
        break;
 
-  case GTK_RESPONSE_HELP:
-       break;
   }
-
 }
 
 static void 
@@ -485,15 +508,17 @@ game_selector_select_row (GtkTreeSelection * selection,
 
   view = gtk_tree_selection_get_tree_view(selection);
 
-  if(gtk_tree_selection_get_selected(selection, &model, &iter))
-  {
-       int index;
-       gtk_tree_model_get(model, &iter, 
+  if (gtk_tree_selection_get_selected (selection, &model, &iter))
+    {
+      int index;
+      gtk_tree_model_get (model, &iter, 
                           INDEX_INT, &index,
                           -1);
-       prdata->selected_game= index;
+      prdata->selected_game= index;
+      load_game_by_number (prdata->selected_game);
+      if (game)
+        gconf_set_game_name (game->filename);
   }
-
 }
 
 
@@ -502,7 +527,7 @@ game_selector_select_row (GtkTreeSelection * selection,
 static void
 preferences_set_joystick_device (GtkWidget *widget, gpointer data)
 {
-  guint32          deviceid= GPOINTER_TO_UINT(data);
+  guint32 deviceid= GPOINTER_TO_UINT (data);
   PreferencesData *prdata  = 
     (PreferencesData *) gtk_object_get_user_data (GTK_OBJECT (widget));
 
@@ -540,12 +565,23 @@ preferences_set_scroll_method (GtkWidget *widget, gpointer data)
 
   PreferencesData *prdata  = 
     (PreferencesData *) gtk_object_get_user_data (GTK_OBJECT (widget));
-
-  prdata->scroll_method_name= (gchar *)data;
-
+  
+  prdata->scroll_method_name = (gchar *)data;
+  set_scroll_method (prdata->scroll_method_name);
+  gconf_set_scroll_method (scroll_method_name ());
 }
 
 
+static void
+enable_sound_callback (GtkWidget *widget, gpointer *data)
+{
+  gboolean is_on = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+  gconf_client_set_bool (get_gconf_client (),
+                         KEY_SOUND_ENABLED,
+                         is_on, NULL);
+  set_sound_enabled (is_on);
+  gconf_set_sound_enabled (is_on);
+}
 
 
 static GtkWidget *
@@ -557,25 +593,28 @@ preferences_dialog_new (void)
   GtkWidget *list_view;
   GtkWidget *label;
   GtkWidget *scrolled;
+  GtkWidget *frame;
+  GtkWidget *fv;
+  GtkWidget *enable_sound_toggle_button;
   GtkListStore *list;
   GtkTreeIter iter;
   GtkTreeSelection *selection;
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
-  
+
   PreferencesData *prdata;
   
   prdata= g_malloc (sizeof (PreferencesData));
   
-  properties = gtk_dialog_new_with_buttons(_("GNOME Stones Preferences"),
-                                           GTK_WINDOW(app),
-                                           /*GTK_DIALOG_MODAL |*/ GTK_DIALOG_DESTROY_WITH_PARENT,
-                                           GTK_STOCK_HELP, GTK_RESPONSE_HELP,
-                                           GTK_STOCK_CLOSE, GTK_RESPONSE_ACCEPT,
-                                           NULL);
+  properties = gtk_dialog_new_with_buttons (_("GNOME Stones Preferences"),
+                                            GTK_WINDOW (app),
+                                            GTK_DIALOG_DESTROY_WITH_PARENT,
+                                            GTK_STOCK_CLOSE,
+                                            GTK_RESPONSE_ACCEPT,
+                                            NULL);
   gtk_dialog_set_has_separator (GTK_DIALOG (properties), FALSE);  
-  notebook = gtk_notebook_new();
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG(properties)->vbox), notebook, 
+  notebook = gtk_notebook_new ();
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (properties)->vbox), notebook, 
                       TRUE, TRUE, 0);
   
   /* The first page of our preferences dialog. */
@@ -600,7 +639,7 @@ preferences_dialog_new (void)
 	GameFile *file= (GameFile *)tmp->data;
 	gint      row;
 	
-        gtk_list_store_append(list, &iter);
+        gtk_list_store_append (list, &iter);
         gtk_list_store_set (list, &iter,
                             GAME_STRING, file->gametitle,
                             CAVES_INT, file->caves,
@@ -613,30 +652,32 @@ preferences_dialog_new (void)
   }
 
   /* Create view */
-  list_view = gtk_tree_view_new_with_model(GTK_TREE_MODEL(list));
+  list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list));
 
-  g_object_unref(list);
+  g_object_unref (list);
 
   prdata->game_list= list_view;
 
-  renderer = gtk_cell_renderer_text_new();
-  column = gtk_tree_view_column_new_with_attributes(_("Game title"), 
-                                                 renderer, 
-                                                 "text", 0, 
-                                                 NULL);
-  gtk_tree_view_append_column(GTK_TREE_VIEW(list_view), column);
+  renderer = gtk_cell_renderer_text_new ();
+  column = gtk_tree_view_column_new_with_attributes (_("Game title"), 
+                                                     renderer, 
+                                                     "text", 0, 
+                                                     NULL);
+  gtk_tree_view_append_column (GTK_TREE_VIEW (list_view), column);
   
-  renderer = gtk_cell_renderer_text_new();
-  column = gtk_tree_view_column_new_with_attributes(_("Caves"), renderer, 
-                                                 "text", 1, 
-                                                 NULL);
-  gtk_tree_view_append_column(GTK_TREE_VIEW(list_view), column);
+  renderer = gtk_cell_renderer_text_new ();
+  column = gtk_tree_view_column_new_with_attributes (_("Caves"), renderer, 
+                                                     "text", 1, 
+                                                     NULL);
+  gtk_tree_view_append_column (GTK_TREE_VIEW (list_view), column);
 
-  renderer = gtk_cell_renderer_text_new();
-  column = gtk_tree_view_column_new_with_attributes(_("Filename"), renderer, 
+  /*
+  renderer = gtk_cell_renderer_text_new ();
+  column = gtk_tree_view_column_new_with_attributes (_("Filename"), renderer, 
                                                  "text", 2, 
                                                  NULL);
-  gtk_tree_view_append_column(GTK_TREE_VIEW(list_view), column);
+  gtk_tree_view_append_column (GTK_TREE_VIEW (list_view), column);
+  */
 
   scrolled = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
@@ -646,33 +687,33 @@ preferences_dialog_new (void)
   gtk_container_add (GTK_CONTAINER (scrolled), list_view);
   gtk_box_pack_start (GTK_BOX (box), scrolled, TRUE, TRUE, GNOME_PAD_SMALL);
 
-  selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(list_view));
+  selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
   gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
 
   {
-       gboolean valid;
-       GtkTreeModel *model;
-       /* Get an iter associated with the view */
-  
-       model = gtk_tree_view_get_model(GTK_TREE_VIEW(list_view));
-       valid = gtk_tree_model_get_iter_first( model, &iter);
-  
-       while(valid)
-       {
-            /* Walk through list, testing each row */
-            gchar *filename;
-            int index;
-            gtk_tree_model_get(model, &iter,
-                               FILENAME_STRING, &filename,
-                               INDEX_INT, &index,
-                               -1 );
-            if (game && strcmp (filename, game->filename) == 0)
-            {
-                 gtk_tree_selection_select_iter (selection, &iter);
-                 prdata->selected_game= index;
-            }
-            valid = gtk_tree_model_iter_next (model, &iter);
-       }
+    gboolean valid;
+    GtkTreeModel *model;
+    /* Get an iter associated with the view */
+    
+    model = gtk_tree_view_get_model (GTK_TREE_VIEW (list_view));
+    valid = gtk_tree_model_get_iter_first (model, &iter);
+    while (valid)
+      {
+        /* Walk through list, testing each row */
+        gchar *filename;
+        int index;
+        gtk_tree_model_get (model, &iter,
+                            FILENAME_STRING, &filename,
+                            INDEX_INT, &index, -1);
+        if (game && strcmp (filename, game->filename) == 0)
+          {
+            gtk_tree_view_set_cursor (GTK_TREE_VIEW (list_view),
+                                      gtk_tree_path_new_from_indices (index, -1),
+                                      NULL, FALSE);
+            prdata->selected_game = index;
+          }
+        valid = gtk_tree_model_iter_next (model, &iter);
+      }
   }
 
   g_signal_connect ( selection, 
@@ -680,7 +721,7 @@ preferences_dialog_new (void)
                      GTK_SIGNAL_FUNC (game_selector_select_row),
                      prdata);
 
-  label= gtk_label_new (_("Game"));
+  label= gtk_label_new_with_mnemonic (_("_Game"));
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), 
 			    box, label);
 
@@ -702,6 +743,7 @@ preferences_dialog_new (void)
     GtkWidget *menuitem;
     GtkWidget *optionmenu;
     GtkWidget *device_menu;
+    GtkWidget *fv;
     GList     *devices;
 
     frame= games_frame_new (_("Device"));
@@ -786,20 +828,37 @@ preferences_dialog_new (void)
   }
   
 
-  label= gtk_label_new (_("Joystick"));
+  label= gtk_label_new_with_mnemonic (_("_Joystick"));
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), 
 			    box, label);
 
   /* The third page of our preferences dialog. */
 
-  box= gtk_vbox_new (FALSE, GNOME_PAD);
+  box = gtk_vbox_new (FALSE, GNOME_PAD);
   gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
   
 
-  label= gtk_label_new (_("Sound enable/disable. Not yet implemented!"));
-  gtk_box_pack_start (GTK_BOX (box), label, TRUE, FALSE, GNOME_PAD_SMALL);
+  frame = games_frame_new (_("Sound"));
+  fv = gtk_vbox_new (FALSE, FALSE);
+  gtk_box_set_spacing (GTK_BOX (fv), 6);
+  gtk_container_add (GTK_CONTAINER(frame), fv);
+  gtk_box_pack_start (GTK_BOX(box), frame, 
+                      FALSE, FALSE, 0);
   
-  label= gtk_label_new (_("Sound"));
+  enable_sound_toggle_button = 
+    gtk_check_button_new_with_label ( _("Enable sound") );
+  if (get_sound_enabled ()) 
+    {
+      gtk_toggle_button_set_active
+        (GTK_TOGGLE_BUTTON (enable_sound_toggle_button),
+         TRUE);
+    }
+  g_signal_connect (G_OBJECT(enable_sound_toggle_button), "clicked", 
+                    G_CALLBACK (enable_sound_callback), NULL);
+  
+  gtk_container_add (GTK_CONTAINER(fv), enable_sound_toggle_button);
+  
+  label = gtk_label_new_with_mnemonic (_("_Sound"));
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
 			    box, label);
 
@@ -847,11 +906,10 @@ preferences_dialog_new (void)
 			"atari_scroll");
     gtk_menu_shell_append (GTK_MENU_SHELL (scroll_method_menu), menuitem);
 
+
     if (!strcmp(prdata->scroll_method_name,"atari_scroll"))
       gtk_menu_set_active (GTK_MENU (scroll_method_menu), i++);
     ++i;
-
-
 
 
     menuitem= gtk_menu_item_new_with_label (_("Smooth scrolling"));
@@ -883,7 +941,7 @@ preferences_dialog_new (void)
     gtk_box_pack_start (GTK_BOX (hbox), optionmenu, FALSE, FALSE, 2);
   }
 
-  label= gtk_label_new (_("Misc."));
+  label = gtk_label_new_with_mnemonic (_("_Misc."));
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
 			    box, label);
 
@@ -935,8 +993,3 @@ session_management_init (void)
 /* eval:(add-hook 'write-file-hooks 'time-stamp) */
 /* eval:(setq time-stamp-format '(time-stamp-yyyy/mm/dd time-stamp-hh:mm:ss user-login-name)) */
 /* End: */
-
-
-
-
-

@@ -1,6 +1,6 @@
 /* gnome-stones - sound.c
  *
- * Time-stamp: <2002/05/02 17:01:50 dave>
+ * Time-stamp: <2003/06/15 18:47:00 mccannwj>
  *
  * Copyright (C) 2001 Michal Benes
  *
@@ -18,13 +18,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <esd.h>
+#include <gnome.h>
+#include "sound.h"
 
-
-
-#include<esd.h>
-#include<gnome.h>
-#include"sound.h"
-
+gboolean sound_enabled = TRUE;
 
 gint title_music = -1;
 gboolean playing_title_music = FALSE;
@@ -35,9 +33,23 @@ gint samples[MAX_SAMPLES];
 gint numsamples=0;
 
 
+gboolean
+get_sound_enabled ()
+{
+  return sound_enabled;
+}
+
+void
+set_sound_enabled (gboolean value)
+{
+  sound_enabled = value;
+  if (! sound_enabled)
+    stop_title_music ();
+}
+
 void sound_init( void )
 {
- numsamples=0; 
+ numsamples = 0; 
  /* g_print ( "gnome-stones: sound init\n" ); */
 }
 
@@ -46,20 +58,23 @@ void sound_close( void )
 #ifndef NO_ESD
  int i;
 
- stop_title_music();
+ stop_title_music ();
 
- for( i=0; i<numsamples; ++i )
-   esd_sample_free( gnome_sound_connection_get(), samples[i] );
+ for (i=0; i<numsamples; ++i)
+   esd_sample_free (gnome_sound_connection_get(), samples[i]);
  
  /* g_print ( "gnome-stones: sound close\n" ); */
- gnome_sound_shutdown();
+ gnome_sound_shutdown ();
 #endif /* NO_ESD */
 }
 
 void sound_play( gint sound_id )
 {
 #ifndef NO_ESD
- if( sound_id<0 ) return;
+ if (sound_id<0) return;
+
+ if (! sound_enabled)
+   return;
 
 /* we are waiting for the esound hackers to implement esd_sample_kill */
 /* FIXME: esd_sample_kill( gnome_sound_connection, sound_id );*/
@@ -98,13 +113,17 @@ gint sound_register( char *name )
 void play_title_music( void )
 {
 #ifndef NO_ESD
- if( title_music<0 ) title_music = sound_register( "title.wav" );
-
- if( !playing_title_music && title_music>=0 )
-   {
-     playing_title_music = TRUE; 
-     esd_sample_loop( gnome_sound_connection_get(), title_music );
-   }
+  if (! sound_enabled)
+    return;
+  
+  if (title_music<0)
+    title_music = sound_register( "title.wav" );
+  
+  if( !playing_title_music && title_music>=0 )
+    {
+      playing_title_music = TRUE; 
+      esd_sample_loop( gnome_sound_connection_get(), title_music );
+    }
 #endif
 }
 

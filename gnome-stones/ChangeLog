@@ -1,3 +1,32 @@
+2003-06-16  William Jon McCann  <mccann@jhu.edu>
+
+	* main.h: 
+	* main.c:
+	* view.c: Place defines in main.h and share with view.c.
+	Shorten delay times so that curtain effect is less tedious.
+
+	* preferences.c: Make preferences instant apply.  Use gconf.
+	Add sound disable preference.
+	(preferences_dialog_new): Add mnemonics to
+	notebook tabs.  Use set_cursor to select tree view iter,
+	it retains selection when the widget is focused by keyboard.
+
+	* main.c (title_image_load): Added optional replacement for title
+	graphic that uses simple text that is consistent with the other games
+	(eg. gnibbles) and uses the correct name.  It is not enabled by
+	default.
+	(update_score_state): Fix so that the correct menu item is
+	sensitized.
+	(load_game): Only display basename of game in status bar.  The
+	whole path often won't fit and isn't necessary.
+	(main): Only play title music when sound is enabled.  Have to
+	do this separately because playing starts before preferences
+	are restored.
+	(game_update_title): Use HIG style for game title
+	and start cave information on title screen.
+
+	* sound.c: Add sound disable support.
+
 2003-06-11  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* preferences.c : 

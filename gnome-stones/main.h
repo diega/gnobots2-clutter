@@ -1,6 +1,6 @@
 /* gnome-stones - sound.h
  *
- * Time-stamp: <2001/09/08 12:06:17 benes>
+ * Time-stamp: <2003/06/16 10:58:05 mccannwj>
  *
  * Copyright (C) 2001 Michal Benes
  *
@@ -23,9 +23,41 @@
 #define MAIN_H
 
 #include <gnome.h>
+#include <gconf/gconf-client.h>
+
+/* You should leave 'USE_GNOME_CANVAS' undefined, because this game
+   currently doesn't support all features with gnome_canvas stuff
+   enabled.  */
+#undef USE_GNOME_CANVAS
+
+#undef USE_KEY_RELEASE
+
+#define APP_NAME "gnome-stones"
+
+/* Definitions */
+
+#define START_DELAY 3000
+#define END_DELAY 3000
+#define CURTAIN_DELAY 20
+#define COUNTDOWN_DELAY 20
+
+#define GAME_COLS  20
+#define GAME_ROWS 12
+#define GAME_SCROLL_MAX 3
+#define GAME_SCROLL_MIN 6
+
+
+#ifdef USE_KEY_RELEASE
+#define GAME_EVENTS (GDK_KEY_PRESS_MASK             |\
+		     GDK_KEY_RELEASE_MASK)
+;
+#else
+#define GAME_EVENTS (GDK_KEY_PRESS_MASK)
+#endif
+
 
 void gstones_exit (GnomeClient *client, gpointer client_data);
-
+GConfClient *get_gconf_client (void);
 
 #endif /* MAIN_H */
 

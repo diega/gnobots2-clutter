@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <2001/09/08 18:03:52 benes>
+ * Time-stamp: <2003/06/16 10:04:48 mccannwj>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -88,7 +88,6 @@ extern GameState state;
 
 /*****************************************************************************/
 
-
 /* Scans a game directory for game files and adds them to an internal
    game list.  */
 
@@ -111,12 +110,20 @@ preferences_dialog_show (void);
 void
 preferences_save_global (void);
 
+void gconf_set_scroll_method (gchar *value);
+void gconf_set_game_name (gchar *value);
+void gconf_set_start_cave (gint value);
+void gconf_set_sound_enabled (gboolean value);
+void gconf_set_joystick_device (gchar *value);
+void gconf_set_joystick_switch_level (gfloat value);
 
 /* Restores the preferences from disc.  */
 
 gboolean
 preferences_restore (void);
 
+gboolean
+pref_get_sound_enabled (void);
 
 
 /*****************************************************************************/

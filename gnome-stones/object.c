@@ -1,6 +1,6 @@
-/* gnome-stones - object.h
+/* gnome-stones - object.c
  *
- * Time-stamp: <2002/10/31 08:24:27 ross>
+ * Time-stamp: <2003/06/14 16:19:52 mccannwj>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
