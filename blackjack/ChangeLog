@@ -1,3 +1,9 @@
+2003-08-12  William Jon McCann  <mccann@jhu.edu>
+
+	* help/C/figures/blackjack_start_window.png:
+	* help/C/figures/blackjack_win_window.png: Updated screenshots
+	to use crux theme.
+
 2003-07-10  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* data/blackjack.desktop.in: Update name to fit HIG (bug 116916).
