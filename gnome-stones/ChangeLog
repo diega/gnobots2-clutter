@@ -1,5 +1,6 @@
 2002-09-20  Ross Burton  <ross@burtonini.com>
 
+	* view.c: Protect abs() macro definition. Fixes #91513.
 	* view.h:
 	* types.h:
 	* preferences.h: Remove useless trailing comma in enum

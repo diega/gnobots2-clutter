@@ -515,7 +515,11 @@ atari_scroll (GStonesView *view, GStonesCave *cave)
 
 
 #define MAX_SCROLL_SPEED 0.9
+
+#ifndef abs
 #define abs(i) ((i)>0?(i):-(i))
+#endif
+
 void
 smooth_scroll (GStonesView *view, GStonesCave *cave)
 {
