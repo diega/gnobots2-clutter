@@ -1,4 +1,16 @@
-2003-06-04  William Jon McCann  <mccannwj@acs25>
+2003-06-04  William Jon McCann  <mccann@jhu.edu>
+
+	* src/dialog.cpp: Added all rule fields to tree view in pref
+	dialog so that rules should be mostly self documented.  Also
+	removed unused functions and HIGified alerts.
+
+	* src/game.h: 
+	* src/game.cpp: Added new functions to load rules from file.
+	Added new BJGameRules class derived from BJRules that holds
+	all rule attributes.
+
+	* src/strategy.h: 
+	* src/strategy.cpp: Added get methods for private variables.
 
 	* data/Vegas_Strip.rules: Change to allow double after split,
 	surrender, and resplitting aces.  This should not affect the

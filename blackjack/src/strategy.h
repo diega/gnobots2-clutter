@@ -314,6 +314,14 @@ public:
 
     virtual bool getHitSoft17();
 
+    virtual bool getDoubleAnyTotal ();
+    virtual bool getDouble9 ();
+    virtual bool getDoubleSoft ();
+    virtual bool getDoubleAfterHit ();
+    virtual bool getDoubleAfterSplit ();
+    virtual bool getResplit ();
+    virtual bool getResplitAces ();
+
 // getDoubleDown(hand) returns true iff doubling down is allowed on the given
 // blackjack hand.
 

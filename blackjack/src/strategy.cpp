@@ -443,6 +443,48 @@ bool BJRules::getLateSurrender() {
     return lateSurrender;
 }
 
+bool
+BJRules::getDoubleAnyTotal ()
+{
+  return doubleAnyTotal;
+}
+
+bool
+BJRules::getDouble9 ()
+{
+  return double9;
+}
+
+bool
+BJRules::getDoubleSoft ()
+{
+  return doubleSoft;
+}
+
+bool
+BJRules::getDoubleAfterHit ()
+{
+  return doubleAfterHit;
+}
+
+bool
+BJRules::getDoubleAfterSplit ()
+{
+  return doubleAfterSplit;
+}
+
+bool
+BJRules::getResplit ()
+{
+  return resplit;
+}
+
+bool
+BJRules::getResplitAces ()
+{
+  return resplitAces;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // BJStrategy
