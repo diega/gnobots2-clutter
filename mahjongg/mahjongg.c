@@ -1882,7 +1882,7 @@ int main (int argc, char *argv [])
 	gtk_widget_show (chrono_label);
 	gtk_box_pack_start (GTK_BOX(status_box), chrono_label, FALSE, FALSE, 0);
 
-	chrono_label = gtk_label_new (_("Time : "));
+	chrono_label = gtk_label_new (_("Time: "));
 	gtk_widget_show (chrono_label);
 	gtk_box_pack_start (GTK_BOX(status_box), chrono_label, FALSE, FALSE, 0);
 	chrono = games_clock_new ();
