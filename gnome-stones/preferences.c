@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <2003/05/26 22:44:23 callum>
+ * Time-stamp: <2003/05/29 20:01:36 callum>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -946,8 +946,8 @@ preferences_dialog_show (void)
     {
       preferences_dialog = preferences_dialog_new ();
     }
-  
-  gtk_widget_show (preferences_dialog);
+
+  gtk_window_present (GTK_WINDOW (preferences_dialog));
 }
 
 

@@ -296,6 +296,7 @@ gboolean popup_warn = FALSE, popup_confirm = FALSE;
 GtkWidget *warn_cb = NULL, *confirm_cb = NULL;
 GtkWidget *colour_well = NULL;
 GtkWidget *pref_dialog = NULL;
+GtkWidget *about = NULL;
 
 typedef enum {
 	NEW_GAME,
@@ -1319,10 +1320,14 @@ hint_callback (GtkWidget *widget, gpointer data)
 	games_clock_start (GAMES_CLOCK(chrono));
 }
 
+void about_destroy (GtkWidget * widget, gpointer data)
+{
+	about = NULL;
+}
+
 void
 about_callback (GtkWidget *widget, gpointer data)
 {
-	GtkWidget *about;
 	GdkPixbuf *pixbuf = NULL;
 	const gchar *authors [] = {
 		"Code: Francisco Bustamante",
@@ -1353,7 +1358,11 @@ about_callback (GtkWidget *widget, gpointer data)
 		}
 	}
 
-
+	if (about) {
+		gtk_window_present (GTK_WINDOW (about));
+		return;
+	}
+	
 	about = gnome_about_new (_("GNOME Mahjongg"), VERSION,
 				 "(C) 1998 The Free Software Foundation",
 				  _("Send comments and bug reports to:\n"
@@ -1364,6 +1373,9 @@ about_callback (GtkWidget *widget, gpointer data)
 				 (const gchar **)documenters,
 				 strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
 				pixbuf);
+
+	g_signal_connect (G_OBJECT (about), "destroy",
+			  G_CALLBACK (about_destroy), NULL);
 	
 	if (pixbuf != NULL)
 		gdk_pixbuf_unref (pixbuf);

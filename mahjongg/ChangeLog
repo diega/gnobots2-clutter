@@ -1,3 +1,7 @@
+2003-05-29  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c (about_callback): Correct about dialog behaviour.
+
 2003-05-10  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c: Made sure we can't have multiple score dialogs (bug
