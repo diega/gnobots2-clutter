@@ -1,5 +1,10 @@
 2002-04-19  Bastien Nocera  <hadess@hadess.net>
 
+	* same-gnome.c: (mark_balls), (set_score), (set_selection), (main):
+	couple of cleanups
+
+2002-04-19  Bastien Nocera  <hadess@hadess.net>
+
 	* Makefile.am:
 	* same-gnome.c: oooh, it's ported to gnome2 then ?
 

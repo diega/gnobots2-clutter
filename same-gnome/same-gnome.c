@@ -58,9 +58,6 @@ static int nstones;
 static int ncolors;
 static int sync_stones = 0;
 
-/* This is used only while parsing arguments.  */
-static gchar *fname;
-
 #define mapx(x) (x)
 #define mapy(y) (STONE_LINES-1-(y))
 
@@ -181,9 +178,9 @@ mark_balls (int x, int y)
 	tagged_count = flood_fill (x, y, field [x][y].color);
 	
 	if (tagged_count > 1) {
-		char b[3];
+		char *b;
 		ball_timeout_id = gtk_timeout_add (100, move_tagged_balls, 0);
-		sprintf (b, "%.2d", tagged_count);
+		b = g_strdup_printf ("%.2d", tagged_count);
 		gtk_label_set_text (GTK_LABEL(markedw), b);
 	} else
 		gtk_label_set_text (GTK_LABEL(markedw), "00");
@@ -250,10 +247,10 @@ compress_x ()
 static void
 set_score (int new_score)
 {
-	char b [20];
+	char *b = NULL;
 	
 	score = new_score;
-	sprintf (b, "%.5d", score);
+	b = g_strdup_printf ("%.5d", score);
 	gtk_label_set_text (GTK_LABEL(scorew), b);
 }
 
@@ -476,7 +473,7 @@ game_new_callback (GtkWidget *widget, void *data)
 }
 
 static void
-set_selection (GtkWidget *widget, void *data)
+set_selection (GtkWidget *widget, gpointer data)
 {
 	load_scenario (data);
 	gconf_client_set_string (conf_client, "/apps/same-gnome/tileset", data, NULL);
@@ -766,11 +763,6 @@ client_die (GnomeClient *client, gpointer client_data)
 	return FALSE;
 }
 
-static const struct poptOption options[] = {
-	{ "scenario", 's', POPT_ARG_STRING, &fname, 0, N_("Set game scenario"), N_("NAME") },
-	{ NULL, '\0', 0, NULL, 0 }
-};
-
 #ifndef GNOME_CLIENT_RESTARTED
 #define GNOME_CLIENT_RESTARTED(client) \
 (GNOME_CLIENT_CONNECTED (client) && \
@@ -782,6 +774,11 @@ static const struct poptOption options[] = {
 int
 main (int argc, char *argv [])
 {
+	static char *fname;
+	static const struct poptOption options[] = {
+		{ "scenario", 's', POPT_ARG_STRING, &fname, 0, N_("Set game scenario"), N_("NAME") },
+		{ NULL, '\0', 0, NULL, 0 }
+	};
 	GtkWidget *label, *separator;
 	GnomeClient *client;
 
