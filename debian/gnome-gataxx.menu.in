@@ -1,3 +1,0 @@
-?package(gnome-gataxx@SUFFIX@):needs=X11 section=Games/Arcade\
-  title="Gataxx" command="/@BINDIR@/gataxx"
-

@@ -1,3 +1,0 @@
-?package(gnome-gnibbles@SUFFIX@):needs=X11 section=Games/Puzzles\
-  title="Gnibbles" command="/@BINDIR@/gnibbles"
-

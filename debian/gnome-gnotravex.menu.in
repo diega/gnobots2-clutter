@@ -1,3 +1,0 @@
-?package(gnome-gnotravex@SUFFIX@):needs=X11 section=Games/Puzzles\
-  title="Gnome Tetravex" command="/@BINDIR@/gnotravex"
-

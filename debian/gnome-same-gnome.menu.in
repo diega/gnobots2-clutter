@@ -1,3 +1,0 @@
-?package(gnome-same-gnome@SUFFIX@):needs=X11 section=Games/Puzzles\
-  title="Same Gnome" command="/@BINDIR@/same-gnome"
-

@@ -1,4 +1,0 @@
-@PREFIX@/share/pixmaps/glines/*
-@PREFIX@/share/pixmaps/glines.*
-@PREFIX@/share/gnome/apps/Games/glines.desktop
-@BINDIR@/glines

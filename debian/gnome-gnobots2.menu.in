@@ -1,3 +1,0 @@
-?package(gnome-gnobots2@SUFFIX@):needs=X11 section=Games/Puzzles\
-  title="Gnobots2" command="/@BINDIR@/gnobots2"
-

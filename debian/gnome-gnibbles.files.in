@@ -1,7 +1,0 @@
-@PREFIX@/share/pixmaps/gnibbles/*
-@PREFIX@/share/pixmaps/gnome-gnibbles*
-@PREFIX@/share/gnome/apps/Games/gnibbles.desktop
-@PREFIX@/share/gnibbles/*
-@PREFIX@/share/sounds/gnibbles/*
-etc/sound/events/gnibbles.*
-@BINDIR@/gnibbles

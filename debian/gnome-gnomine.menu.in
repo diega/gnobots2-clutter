@@ -1,3 +1,0 @@
-?package(gnome-gnomine@SUFFIX@):needs=X11 section=Games/Puzzles\
-  title="Gnomine" command="/@BINDIR@/gnomine"
-

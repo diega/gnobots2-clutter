@@ -1,4 +1,0 @@
-@PREFIX@/share/pixmaps/gnometris/*
-@PREFIX@/share/pixmaps/gnome-gtetris*
-@PREFIX@/share/gnome/apps/Games/gnometris.desktop
-@BINDIR@/gnometris

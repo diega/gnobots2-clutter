@@ -1,8 +1,0 @@
-@PREFIX@/share/pixmaps/gnome-stones*
-@PREFIX@/share/gnome/apps/Games/gnome-stones.desktop
-@PREFIX@/share/gnome-stones/*
-@PREFIX@/share/gnome-stones*
-@PREFIX@/lib/gnome-stones/objects/*.so.[0-9]*
-@PREFIX@/lib/gnome-stones/objects/*.so
-@BINDIR@/gnome-stones
-@PREFIX@/share/mime-info/gnome-stones.*

@@ -1,4 +1,0 @@
-@PREFIX@/share/xbill/*
-@PREFIX@/share/pixmaps/xbill*
-@PREFIX@/share/gnome/apps/Games/xbill.desktop
-@BINDIR@/gnome-xbill

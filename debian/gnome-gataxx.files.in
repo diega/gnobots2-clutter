@@ -1,6 +1,0 @@
-@PREFIX@/share/pixmaps/gataxx/*
-@PREFIX@/share/pixmaps/gataxx.*
-@PREFIX@/share/gnome/apps/Games/gataxx.desktop
-@BINDIR@/gataxx
-etc/sound/events/gataxx.soundlist
-@PREFIX@/share/sounds/gataxx/*
