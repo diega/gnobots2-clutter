@@ -287,6 +287,8 @@ static void theme_cb (void)
 																					GTK_DIALOG_NO_SEPARATOR,
 																					GTK_STOCK_CLOSE, GTK_RESPONSE_ACCEPT,
 																					NULL);
+		gtk_container_set_border_width (GTK_CONTAINER (dialog), 5);
+		gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 2);
 		gtk_dialog_set_default_response (GTK_DIALOG (dialog),
 																		 GTK_RESPONSE_ACCEPT);
 		g_signal_connect (G_OBJECT (dialog), "response",
@@ -295,6 +297,7 @@ static void theme_cb (void)
 												G_CALLBACK (gtk_widget_hide), NULL);
 		
 		scroll = gtk_scrolled_window_new (NULL, NULL);
+		gtk_container_set_border_width (GTK_CONTAINER (scroll), 5);
 		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
 																		GTK_POLICY_AUTOMATIC,
 																		GTK_POLICY_AUTOMATIC);

@@ -1,3 +1,7 @@
+2005-03-23  Dennis Cranston  <dennis_cranston@yahoo.com>
+
+	* ui.c: Make theme dialog more HIG compliant.
+	
 2005-03-08  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* ui.c: Add a keyboard shortcut for fullscreen mode.

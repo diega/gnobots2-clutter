@@ -635,14 +635,17 @@ preferences_dialog_new (void)
                                             GTK_STOCK_CLOSE,
                                             GTK_RESPONSE_ACCEPT,
                                             NULL);
+  gtk_container_set_border_width (GTK_CONTAINER (properties), 5);
+  gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (properties)->vbox), 2);
   gtk_dialog_set_has_separator (GTK_DIALOG (properties), FALSE);  
   notebook = gtk_notebook_new ();
+  gtk_container_set_border_width (GTK_CONTAINER (notebook), 5);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (properties)->vbox), notebook, 
                       TRUE, TRUE, 0);
   
   /* The first page of our preferences dialog. */
-  box= gtk_vbox_new (FALSE, GNOME_PAD);
-  gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
+  box= gtk_vbox_new (FALSE, 6);
+  gtk_container_set_border_width (GTK_CONTAINER (box), 12);
 
   /* The list of game names.  */
   list= gtk_list_store_new (N_COLS, 
@@ -679,7 +682,7 @@ preferences_dialog_new (void)
   prdata->game_list= list_view;
 
   renderer = gtk_cell_renderer_text_new ();
-  column = gtk_tree_view_column_new_with_attributes (_("Game title"), 
+  column = gtk_tree_view_column_new_with_attributes (_("Game Title"), 
                                                      renderer, 
                                                      "text", 0, 
                                                      NULL);
@@ -700,12 +703,13 @@ preferences_dialog_new (void)
   */
 
   scrolled = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_set_size_request (scrolled, 250, 200);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
-                                  GTK_POLICY_ALWAYS,
+                                  GTK_POLICY_AUTOMATIC,
                                   GTK_POLICY_AUTOMATIC);
 
   gtk_container_add (GTK_CONTAINER (scrolled), list_view);
-  gtk_box_pack_start (GTK_BOX (box), scrolled, TRUE, TRUE, GNOME_PAD_SMALL);
+  gtk_box_pack_start (GTK_BOX (box), scrolled, TRUE, TRUE, 0);
 
   selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
   gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
@@ -741,7 +745,7 @@ preferences_dialog_new (void)
                      GTK_SIGNAL_FUNC (game_selector_select_row),
                      prdata);
 
-  label= gtk_label_new_with_mnemonic (_("_Game"));
+  label= gtk_label_new (_("Game"));
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), 
 			    box, label);
 
@@ -750,8 +754,8 @@ preferences_dialog_new (void)
   prdata->joystick_deviceid    = joystick_deviceid;
   prdata->joystick_switch_level= joystick_switch_level;
 
-  box= gtk_vbox_new (FALSE, GNOME_PAD);
-  gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
+  box= gtk_vbox_new (FALSE, 18);
+  gtk_container_set_border_width (GTK_CONTAINER (box), 12);
   
   {
     GtkObject *adjust;
@@ -764,21 +768,22 @@ preferences_dialog_new (void)
     GList     *devices;
 #endif
     frame= games_frame_new (_("Device"));
-    gtk_box_pack_start (GTK_BOX (box), frame, FALSE, FALSE, GNOME_PAD_SMALL);
+    gtk_box_pack_start (GTK_BOX (box), frame, FALSE, FALSE, 0);
 
-    vbox= gtk_vbox_new (FALSE, GNOME_PAD);
+    vbox= gtk_vbox_new (FALSE, 6);
     gtk_container_add (GTK_CONTAINER (frame), vbox);
 
-    hbox= gtk_hbox_new (FALSE, GNOME_PAD);
-    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, GNOME_PAD_SMALL);
+    hbox= gtk_hbox_new (FALSE, 12);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
-    label= gtk_label_new (_("Joystick device:"));
-    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, GNOME_PAD_SMALL);
+    label= gtk_label_new_with_mnemonic (_("_Joystick device:"));
+    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
     optionmenu= gtk_combo_box_new_text ();    
+    gtk_label_set_mnemonic_widget (GTK_LABEL (label), optionmenu);
 
     /* We definatly have a "disable" entry.  */
-    gtk_combo_box_append_text (GTK_COMBO_BOX (optionmenu), _("disabled"));
+    gtk_combo_box_append_text (GTK_COMBO_BOX (optionmenu), _("Disabled"));
 
 #if 0
     g_signal_connect (GTK_OBJECT (menuitem), "activate",
@@ -807,19 +812,19 @@ preferences_dialog_new (void)
 	  gtk_menu_set_active (GTK_MENU (device_menu), i);
       }
 #endif    
-    gtk_box_pack_start (GTK_BOX (hbox), optionmenu, FALSE, FALSE, 2);
+    gtk_box_pack_start (GTK_BOX (hbox), optionmenu, TRUE, TRUE, 0);
 
-    frame= games_frame_new (_("Digital joystick emulation"));
-    gtk_box_pack_start (GTK_BOX (box), frame, FALSE, FALSE, GNOME_PAD_SMALL);
+    frame= games_frame_new (_("Digital Joystick Emulation"));
+    gtk_box_pack_start (GTK_BOX (box), frame, FALSE, FALSE, 0);
 
-    vbox= gtk_vbox_new (FALSE, GNOME_PAD);
+    vbox= gtk_vbox_new (FALSE, 6);
     gtk_container_add (GTK_CONTAINER (frame), vbox);
 
-    hbox= gtk_hbox_new (FALSE, GNOME_PAD);
-    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, GNOME_PAD_SMALL);
+    hbox= gtk_hbox_new (FALSE, 12);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
-    label= gtk_label_new (_("Switch level:"));
-    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, GNOME_PAD_SMALL);
+    label= gtk_label_new_with_mnemonic (_("_Switch level:"));
+    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
     adjust= gtk_adjustment_new (prdata->joystick_switch_level,
 				0.0, 1.0, 0.02, 0.1, 0.0);
@@ -829,8 +834,9 @@ preferences_dialog_new (void)
 			NULL);
     
     scale= gtk_hscale_new (GTK_ADJUSTMENT (adjust));
+    gtk_label_set_mnemonic_widget (GTK_LABEL (label), scale);
     gtk_scale_set_digits (GTK_SCALE (scale), 2);
-    gtk_box_pack_start (GTK_BOX (hbox), scale, TRUE, TRUE, GNOME_PAD_SMALL);
+    gtk_box_pack_start (GTK_BOX (hbox), scale, TRUE, TRUE, 0);
 #if 0    
     if (prdata->joystick_deviceid == GDK_CORE_POINTER)
       {
@@ -841,14 +847,14 @@ preferences_dialog_new (void)
   }
   
 
-  label= gtk_label_new_with_mnemonic (_("_Joystick"));
+  label= gtk_label_new (_("Joystick"));
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), 
 			    box, label);
 
   /* The third page of our preferences dialog. */
 
-  box = gtk_vbox_new (FALSE, GNOME_PAD);
-  gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
+  box = gtk_vbox_new (FALSE, 18);
+  gtk_container_set_border_width (GTK_CONTAINER (box), 12);
   
 #if 0
   frame = games_frame_new (_("Sound"));
@@ -879,8 +885,8 @@ preferences_dialog_new (void)
 
   /* Fourth page is miscellaneous stuff */
   
-  box= gtk_vbox_new (FALSE, GNOME_PAD);
-  gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
+  box= gtk_vbox_new (FALSE, 18);
+  gtk_container_set_border_width (GTK_CONTAINER (box), 12);
   
 
   
@@ -891,14 +897,14 @@ preferences_dialog_new (void)
     GtkWidget *optionmenu;
 
 
-    frame= games_frame_new (_("Scroll method"));
-    gtk_box_pack_start (GTK_BOX (box), frame, FALSE, FALSE, GNOME_PAD_SMALL);
+    frame= games_frame_new (_("Scroll Method"));
+    gtk_box_pack_start (GTK_BOX (box), frame, FALSE, FALSE, 0);
 
-    vbox= gtk_vbox_new (FALSE, GNOME_PAD);
+    vbox= gtk_vbox_new (FALSE, 6);
     gtk_container_add (GTK_CONTAINER (frame), vbox);
 
-    hbox= gtk_hbox_new (FALSE, GNOME_PAD);
-    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, GNOME_PAD_SMALL);
+    hbox= gtk_hbox_new (FALSE, 12);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
     /*
     label= gtk_label_new (_("Scroll method:"));
@@ -928,10 +934,10 @@ preferences_dialog_new (void)
 			(GtkSignalFunc) preferences_set_scroll_method,
 			NULL);
    
-    gtk_box_pack_start (GTK_BOX (hbox), optionmenu, FALSE, FALSE, 2);
+    gtk_box_pack_start (GTK_BOX (hbox), optionmenu, TRUE, TRUE, 0);
   }
 
-  label = gtk_label_new_with_mnemonic (_("_Misc."));
+  label = gtk_label_new (_("Misc."));
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
 			    box, label);
 

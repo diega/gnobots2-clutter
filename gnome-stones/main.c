@@ -995,6 +995,10 @@ show_scores_dialog (gint pos)
   if (dialog != NULL) {
     gtk_window_set_transient_for (GTK_WINDOW(dialog), GTK_WINDOW(app));
     gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
+    gtk_dialog_set_has_separator (GTK_DIALOG(dialog), FALSE);
+    gtk_container_set_border_width (GTK_CONTAINER(dialog), 5);
+    gtk_box_set_spacing (GTK_BOX (GTK_DIALOG(dialog)->vbox), 2);
+    gtk_window_set_resizable (GTK_WINDOW(dialog), FALSE);
   }
 }
 
