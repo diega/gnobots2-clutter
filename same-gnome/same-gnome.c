@@ -244,29 +244,8 @@ set_score (int new_score)
 void
 show_scores ( gchar *title, guint pos )
 {
-	GtkWidget *hs;
-	GdkColor ctitle = {0, 0, 0, 65535};
-	GdkColor col = {0, 65535, 0, 0};
-	gchar **names = NULL;
-	gfloat *scores = NULL;
-	time_t *scoretimes = NULL;
-	gint top;
-	int i;
-	
-	top = gnome_score_get_notable("samegnome", NULL, &names, &scores, &scoretimes);
-	hs = gnome_scores_new(top, names, scores, scoretimes, 0);
-
-	gnome_scores_set_logo_label (GNOME_SCORES(hs), _("The Same Gnome"), 0, &ctitle);
-	gtk_window_set_title (GTK_WINDOW (hs), title);
-	
-	if (pos)
-		gnome_scores_set_color(GNOME_SCORES(hs), pos-1, &col);
-	
-	gtk_widget_show (hs);
-
-	gnome_string_array_free(names);
-	g_free(scores);
-	g_free(scoretimes);
+	gnome_scores_display (_("The Same Gnome", "samegnome", title, pos);
+}
 }
 
 void 
