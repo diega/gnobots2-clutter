@@ -175,6 +175,31 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_widget_set_sensitive(gameMenuPtr[1].widget, FALSE);
 	gtk_widget_set_sensitive(gameMenuPtr[4].widget, FALSE);
 	gtk_widget_set_sensitive(gameSettingsPtr[0].widget, TRUE);
+
+        pauseMessage = gnome_canvas_item_new (gnome_canvas_root(GNOME_CANVAS(field->getWidget())),
+                                              gnome_canvas_text_get_type(),
+                                              "fill_color",
+                                              "white",
+                                              "x", COLUMNS*BLOCK_SIZE/2.0,
+                                              "y", LINES*BLOCK_SIZE/2.0,
+                                              "text", _("Paused"),
+                                              "size_points", 36.0,
+                                              0
+                                              );
+        gnome_canvas_item_hide (pauseMessage);
+
+        gameoverMessage = gnome_canvas_item_new (gnome_canvas_root(GNOME_CANVAS(field->getWidget())),
+                                                 gnome_canvas_text_get_type(),
+                                                 "fill_color",
+                                                 "white",
+                                                 "x", COLUMNS*BLOCK_SIZE/2.0,
+                                                 "y", LINES*BLOCK_SIZE/2.0,
+                                                 "text", _("Game Over"),
+                                                 "size_points", 36.0,
+                                                 0
+                                                 );
+        gnome_canvas_item_hide (gameoverMessage);
+
 }
 
 Tetris::~Tetris()
@@ -911,6 +936,11 @@ void
 Tetris::togglePause()
 {
 	paused = !paused;
+        if (paused) {
+                gnome_canvas_item_show (pauseMessage);
+                gnome_canvas_item_raise_to_top (pauseMessage);
+        } else
+                gnome_canvas_item_hide (pauseMessage);
 }
 
 void
@@ -941,6 +971,8 @@ Tetris::endOfGame()
 	color_next = -1;
 	blocknr_next = -1;
 	rot_next = -1;
+        gnome_canvas_item_show (gameoverMessage);
+        gnome_canvas_item_raise_to_top (gameoverMessage);
 
 	preview->clear ();
 	
@@ -998,6 +1030,9 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 	gtk_widget_set_sensitive(t->gameMenuPtr[4].widget, TRUE);
 	gtk_widget_set_sensitive(t->gameSettingsPtr[0].widget, FALSE);
 
+        gnome_canvas_item_hide (t->pauseMessage);
+        gnome_canvas_item_hide (t->gameoverMessage);
+        
 	return TRUE;
 }
 

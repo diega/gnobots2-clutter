@@ -1,5 +1,8 @@
 2003-06-01  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* tetris.cpp: 
+	* tetris.h: Add indicators for the paused and "game over" states.
+
 	* tetris.cpp (eventHandler, eventHandler): Fix scoring
 	inconsistency and stop the block moving sideways after a drop. 
 
