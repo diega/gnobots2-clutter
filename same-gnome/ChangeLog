@@ -1,3 +1,7 @@
+2004-12-23  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* Makefile.am: Remvoe setgid bit from the binary for now.
+
 2004-12-22  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* *.c:
