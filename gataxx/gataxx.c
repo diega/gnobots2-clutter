@@ -772,7 +772,7 @@ create_window (void)
 
   GtkWidget *table;
   
-  window = gnome_app_new ("gataxx", _("gataxx"));
+  window = gnome_app_new ("gataxx", _("Ataxx"));
   
   gtk_widget_realize (window);
   gtk_window_set_resizable (GTK_WINDOW(window), FALSE);
