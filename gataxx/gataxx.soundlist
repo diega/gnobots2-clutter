@@ -4,7 +4,11 @@ description=gataxx
 [gameover]
 file=gataxx/gameover.wav
 description=Game over
+description[es]=Fin del juego
+description[fr]=Fin du jeu
 
 [flip-piece]
 file=gataxx/flip-piece.wav
 description=Piece flipping
+description[es]=Cambio de las piezas
+description[fr]=Changement des pièces
