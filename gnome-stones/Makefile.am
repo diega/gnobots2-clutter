@@ -1,4 +1,4 @@
-SUBDIRS  = objects graphics
+SUBDIRS  = objects graphics help
 
 Gamesdir = $(datadir)/gnome/apps/Games
 scoredir =$(localstatedir)/games
