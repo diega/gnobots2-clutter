@@ -23,8 +23,8 @@
 
 Preview::	Preview()
 {
-	gtk_widget_push_visual(gdk_imlib_get_visual());
-	gtk_widget_push_colormap(gdk_imlib_get_colormap());
+	gtk_widget_push_visual(gdk_rgb_get_visual());
+	gtk_widget_push_colormap(gdk_rgb_get_cmap());
 
 	w = gtk_drawing_area_new();
 

@@ -21,7 +21,9 @@ gnometris_SOURCES=\
 	tetris.cpp \
 	tetris.h \
 	scoreframe.cpp \
-	scoreframe.h
+	scoreframe.h	\
+	gnome-canvas-pimage.h \
+	gnome-canvas-pimage.c
 
 gnometris_LDADD=\
 	$(GNOME_LIBDIR) \

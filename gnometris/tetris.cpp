@@ -31,7 +31,7 @@
 
 GdkPixmap *pix;
 
-GdkImlibImage **pic;
+GdkPixbuf **pic;
 
 int LINES = 20;
 int COLUMNS = 11;
@@ -73,7 +73,7 @@ Tetris::Tetris(int cmdlLevel):
 	randomBlocksTmp(random_block_colors),
 	fastFall(false)
 {
-	pic = new GdkImlibImage*[tableSize];
+	pic = new GdkPixbuf*[tableSize];
 	for (int i = 0; i < tableSize; ++i)
 		pic[i] = 0;
 	
@@ -179,9 +179,9 @@ Tetris::~Tetris()
 	delete scoreFrame;
 
 	if (image)
-		gdk_imlib_destroy_image(image);
+		gdk_pixbuf_unref(image);
 	if (bgimage)
-		gdk_imlib_destroy_image(bgimage);
+		gdk_pixbuf_unref(bgimage);
 
 	if (blockPixmap)
 		g_free(blockPixmap);
@@ -221,9 +221,9 @@ Tetris::setupPixmap()
 	}
 
 	if(image)
-		gdk_imlib_destroy_image(image);
+		gdk_pixbuf_unref(image);
 
-	image = gdk_imlib_load_image(fullpixname);
+	image = gdk_pixbuf_new_from_file(fullpixname);
 
 	if (image == NULL) {
 		char *message = g_strdup_printf (
@@ -235,18 +235,21 @@ Tetris::setupPixmap()
 		exit (1);
 	}
 
-	gdk_imlib_render(image, image->rgb_width, image->rgb_height);
-	pix = gdk_imlib_move_image(image);
+	gdk_pixbuf_render_pixmap_and_mask(image, &pix, NULL, 127);
 	
-	BLOCK_SIZE = image->rgb_height;
-	nr_of_colors = image->rgb_width / BLOCK_SIZE;
+	BLOCK_SIZE = gdk_pixbuf_get_height(image);
+	nr_of_colors = gdk_pixbuf_get_width(image) / BLOCK_SIZE;
 
 	for (int i = 0; i < tableSize; ++i)
 	{
 		if (pic[i])
-			gdk_imlib_destroy_image(pic[i]);
-		pic[i] = gdk_imlib_crop_and_clone_image(image, (i % nr_of_colors) * 
-												BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE);
+			gdk_pixbuf_unref (pic[i]);
+
+		pic[i] = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, BLOCK_SIZE, BLOCK_SIZE);
+
+		gdk_pixbuf_copy_area (image, (i % nr_of_colors) * BLOCK_SIZE, 0,
+					BLOCK_SIZE, BLOCK_SIZE, pic[i], 0, 0);
+
 	}
 
 	pixname = g_copy_strings("gnometris/bg/", bgPixmap, 0);
@@ -254,10 +257,10 @@ Tetris::setupPixmap()
 	g_free(pixname);
 
 	if(bgimage)
-		gdk_imlib_destroy_image(bgimage);
+		gdk_pixbuf_unref(bgimage);
 
 	if (g_file_exists(fullpixname)) 
-		bgimage = gdk_imlib_load_image(fullpixname);
+		bgimage = gdk_pixbuf_new_from_file(fullpixname);
 	else
 		bgimage = 0;
 

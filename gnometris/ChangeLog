@@ -1,3 +1,13 @@
+2001-07-07  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	* blockops.cpp:
+	* field.cpp:
+	* field.h:
+	* preview.cpp:
+	* tetris.cpp:
+	* tetris.h: Good bye imlib, our old ugly friend.
+	* gnome-canvas-pimage.[ch]: Work around gnomecanvaspixbuf slowness.
+
 2001-07-05  Christian Rose  <menthos@menthos.com>
 
 	* gnometris.desktop: Modified Swedish translation.

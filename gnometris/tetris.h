@@ -23,6 +23,7 @@
 
 #include <config.h>
 #include <gnome.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #define TETRIS_VERSION "1.2.4"
 
@@ -46,7 +47,7 @@ struct Block
 };
 
 extern GdkPixmap *pix;
-extern GdkImlibImage **pic;
+extern GdkPixbuf **pic;
 
 extern int color_next;
 extern int blocknr_next;
@@ -119,8 +120,8 @@ private:
 	static char *blockPixmapTmp;
 	static char *bgPixmapTmp;
 
-	GdkImlibImage *image;
-	GdkImlibImage *bgimage;
+	GdkPixbuf *image;
+	GdkPixbuf *bgimage;
 
 	void fillMenu(GtkWidget *menu, char *pixname, char *dirname, GtkSignalFunc selectFunc, bool addnone = false);
 	

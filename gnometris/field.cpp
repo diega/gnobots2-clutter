@@ -20,12 +20,13 @@
 
 #include "field.h"
 #include "blocks.h"
+#include "gnome-canvas-pimage.h"
 
 Field::	Field()
 {
 	bg = 0;
-	gtk_widget_push_visual (gdk_imlib_get_visual ());
-	gtk_widget_push_colormap (gdk_imlib_get_colormap ());
+	gtk_widget_push_visual (gdk_rgb_get_visual ());
+	gtk_widget_push_colormap (gdk_rgb_get_cmap ());
 	w = gnome_canvas_new();
 	gtk_widget_pop_colormap ();
 	gtk_widget_pop_visual ();
@@ -41,7 +42,7 @@ Field::show()
 }
 
 void
-Field::updateSize(GdkImlibImage * bgImage)
+Field::updateSize(GdkPixbuf * bgImage)
 {
 	gtk_widget_set_usize(w, COLUMNS * BLOCK_SIZE, LINES * BLOCK_SIZE);
 	gnome_canvas_set_scroll_region(GNOME_CANVAS(w), 0.0, 0.0, COLUMNS * BLOCK_SIZE, LINES * BLOCK_SIZE);
@@ -52,13 +53,12 @@ Field::updateSize(GdkImlibImage * bgImage)
   	if (bgImage)
   		bg = gnome_canvas_item_new(
   			gnome_canvas_root(GNOME_CANVAS(w)),
-  			gnome_canvas_image_get_type(),
+  			gnome_canvas_pimage_get_type(),
   			"image", bgImage,
   			"x", (double) 0,
   			"y", (double) 0,
-  			"width", (double) COLUMNS * BLOCK_SIZE,
-  			"height", (double) LINES * BLOCK_SIZE,
-  			"anchor", GTK_ANCHOR_NW,
+			"width", (double) COLUMNS * BLOCK_SIZE,
+			"height", (double) LINES * BLOCK_SIZE,
   			0);
 		else
 			bg = gnome_canvas_item_new(
