@@ -1561,11 +1561,15 @@ hint_timeout (gpointer data)
 static void
 stop_hints (void)
 {
-	timeout_counter = HINT_BLINK_NUM;
+	if (timeout_counter > HINT_BLINK_NUM)
+		return;
+
+	timeout_counter = HINT_BLINK_NUM + 1;
 	tiles[hint_tiles[0]].selected &= ~HINT_FLAG;
 	tiles[hint_tiles[1]].selected &= ~HINT_FLAG;
 	draw_tile (hint_tiles[0]);
 	draw_tile (hint_tiles[1]);
+	g_source_remove (timer);
 }
 
 void
