@@ -1,3 +1,7 @@
+2000-05-12  Andreas Hyden  <a.hyden@cyberpoint.se>
+
+	* iagno2.desktop: Added Swedish translation.
+
 2000-04-17  Ian Peters  <itp@gnu.org>
 
 	* src/iagno2.c: Added motion_notify_event to possibly show valid moves
