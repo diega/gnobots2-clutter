@@ -1,3 +1,10 @@
+2003-06-13  William Jon McCann  <mccann@jhu.edu>
+
+	* data/blackjack.schemas.in: 
+	* data/Makefile.am (schemadir): Install gconf schemas.
+	
+	* src/blackjack.cpp: #define gconf key names.
+
 2003-06-11  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* src/menu.cpp: 
