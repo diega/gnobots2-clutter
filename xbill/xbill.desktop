@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Gnome xBill
+Name[no]=Gnome xBill
 Comment=Gnome version of the popular xBill game
+Comment=Gnome versjon av det populære xBill spillet
 Icon=xbill.png
 Exec=gnome-xbill
 Terminal=0
