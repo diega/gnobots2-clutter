@@ -1,0 +1,163 @@
+[General]
+Title=Tutorial caves
+Title[de]=Anleitungshöhlen
+New life score=500
+Lifes=1
+Frame rate=0.125
+Object size=1
+
+[Objects]
+_=empty
+.=dirt
+W=wall
+m=magic wall
+X=frame
+O=boulder
+V=diamond
+N=entrance
+D=closed exit
+q=firefly,0
+r=firefly,1
+Q=firefly,2
+R=firefly,3
+B=butterfly,0
+c=butterfly,1
+b=butterfly,2
+C=butterfly,3
+A=amoeba
+
+[Caves]
+Cave001=Tutorial 1
+Cave002=Tutorial 2
+Cave003=Tutorial 3
+Cave004=Tutorial 4
+Cave005=Tutorial 5
+Number=5
+
+[Start caves]
+Cave001=Tutorial 1
+Cave002=Tutorial 2
+Cave003=Tutorial 3
+Cave004=Tutorial 4
+Cave005=Tutorial 5
+Number=5
+
+[Tutorial 1]
+Diamonds needed=1
+Diamond score=10
+Extra diamond score=0
+Time=100
+Magic wall time=4
+Amoeba slow time=4
+Amoeba max size=200
+Next cave=Tutorial 2
+Height=12
+Width=20
+Line01=XXXXXXXXXXXXXXXXXXXX
+Line02=X..................X
+Line03=X..................X
+Line04=X..................X
+Line05=X..................X
+Line06=XN.......V........DX
+Line07=X..................X
+Line08=X..................X
+Line09=X..................X
+Line10=X..................X
+Line11=X..................X
+Line12=XXXXXXXXXXXXXXXXXXXX
+
+[Tutorial 2]
+Diamonds needed=1
+Diamond score=10
+Extra diamond score=20
+Time=100
+Magic wall time=4
+Amoeba slow time=4
+Amoeba max size=200
+Next cave=Tutorial 3
+Height=12
+Width=20
+Line01=XXXXXXXXXXXXXXXXXXXX
+Line02=X..................X
+Line03=X..................X
+Line04=X..................X
+Line05=X..................X
+Line06=XN.......VV.......DX
+Line07=X..................X
+Line08=X..................X
+Line09=X..................X
+Line10=X..................X
+Line11=X..................X
+Line12=XXXXXXXXXXXXXXXXXXXX
+
+[Tutorial 3]
+Diamonds needed=1
+Diamond score=10
+Extra diamond score=0
+Time=100
+Magic wall time=4
+Amoeba slow time=4
+Amoeba max size=200
+Next cave=Tutorial 4
+Height=12
+Width=20
+Line01=XXXXXXXXXXXXXXXXXXXX
+Line02=X........O.........X
+Line03=X........O.........X
+Line04=X........O.........X
+Line05=X........O.........X
+Line06=XN.......O........DX
+Line07=X........O.........X
+Line08=X........O.........X
+Line09=X........O.........X
+Line10=X........O.........X
+Line11=X........V.........X
+Line12=XXXXXXXXXXXXXXXXXXXX
+
+[Tutorial 4]
+Diamonds needed=1
+Diamond score=10
+Extra diamond score=0
+Time=100
+Magic wall time=4
+Amoeba slow time=4
+Amoeba max size=200
+Next cave=Tutorial 5
+Height=12
+Width=20
+Line01=XXXXXXXXXXXXXXXXXXXX
+Line02=X......  O  V......X
+Line03=X...... WWW .......X
+Line04=X...... W.W .......X
+Line05=X...... W.W .......X
+Line06=XN..... W.W ......DX
+Line07=X...... W.W .......X
+Line08=X...... W.W .......X
+Line09=X...... W.W .......X
+Line10=X...... W.W .......X
+Line11=X...... OOO .......X
+Line12=XXXXXXXXXXXXXXXXXXXX
+
+[Tutorial 5]
+Diamonds needed=1
+Diamond score=10
+Extra diamond score=0
+Time=100
+Magic wall time=4
+Amoeba slow time=4
+Amoeba max size=200
+Next cave=Tutorial 5
+Height=12
+Width=20
+Line01=XXXXXXXXXXXXXXXXXXXX
+Line02=X......     .......X
+Line03=X......     .......X
+Line04=X......     .......X
+Line05=X......     .......X
+Line06=XN.....  V  ......DX
+Line07=X......  .  .......X
+Line08=X......     .......X
+Line09=X......     .......X
+Line10=X......     .......X
+Line11=X......  q  .......X
+Line12=XXXXXXXXXXXXXXXXXXXX
