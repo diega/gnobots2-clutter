@@ -538,6 +538,11 @@ iagno2_flip_tiles ()
     if (board->board[i] == board_pixmaps[i]) {
       continue;
     }
+    if (!board->board[i]) {
+      board_pixmaps[i] = board->board[i];
+      iagno2_render_tile (board_pixmaps[i], i);
+      continue;
+    }
     if (!board_pixmaps[i]) {
       board_pixmaps[i] = board->board[i];
       iagno2_render_tile (board_pixmaps[i], i);
@@ -824,7 +829,7 @@ iagno2_game_over ()
     message = g_strdup_printf (_(" Dark player wins by a score of %d to %d"),
                                black_count, white_count);
   } else if (white_count > black_count) {
-    message = g_strdup_printf (_(" Light player wins by a score f %d to %d"),
+    message = g_strdup_printf (_(" Light player wins by a score of %d to %d"),
                                white_count, black_count);
   } else {
     message = g_strdup_printf (_(" The game was a tie at %d"), black_count);
