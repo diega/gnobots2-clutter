@@ -594,6 +594,7 @@ game_preferences_callback (GtkWidget *widget, void *data)
 static int
 game_about_callback (GtkWidget *widget, void *data)
 {
+	GdkPixbuf *pixbuf = NULL;
 	static GtkWidget *about = NULL;
 	const gchar *authors[] = {
 		"Miguel de Icaza.",
@@ -611,6 +612,19 @@ game_about_callback (GtkWidget *widget, void *data)
 		gtk_window_present (GTK_WINDOW (about));
 		return;
 	}
+
+	{
+		char *filename = NULL;
+
+		filename = gnome_program_locate_file (NULL,
+				GNOME_FILE_DOMAIN_PIXMAP,  ("gnome-gsame.png"),
+				TRUE, NULL);
+		if (filename != NULL)
+		{
+			pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+			g_free (filename);
+		}
+	}
 	
 	about = gnome_about_new (_("The Same Gnome"), VERSION,
 				 "(C) 1997-1998 the Free Software Foundation",
@@ -618,7 +632,7 @@ game_about_callback (GtkWidget *widget, void *data)
 				 (const char **)authors,
 				 (const char **)documenters,
 				 strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
-                                 NULL);
+                                 pixbuf);
 	gtk_window_set_transient_for (GTK_WINDOW (about), GTK_WINDOW (app));
 	gtk_widget_show (about);
 

@@ -1,5 +1,10 @@
 2002-04-19  Bastien Nocera  <hadess@hadess.net>
 
+	* same-gnome.c: (game_about_callback):
+	have a nice icon
+
+2002-04-19  Bastien Nocera  <hadess@hadess.net>
+
 	* Makefile.am:
 	* same-gnome.c: (set_selection), (pref_dialog_response),
 	(save_state), (restart), (main):
