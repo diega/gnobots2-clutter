@@ -24,7 +24,7 @@
 #include <config.h>
 #include <gnome.h>
 
-#define TETRIS_VERSION "0.99.3"
+#define TETRIS_VERSION "0.99.4"
 
 extern int LINES;
 extern int COLUMNS;
@@ -106,7 +106,6 @@ private:
 	static int gameQuit(GtkWidget *widget, void *d);
 	static int gameNew(GtkWidget *widget, void *d);
 	static int gamePause(GtkWidget *widget, void *d);
-	static int gameRestart(GtkWidget *widget, void *d);
 	static int gameEnd(GtkWidget *widget, void *d);
 	static int gameAbout(GtkWidget *widget, void *d);
 	static int gameTopTen(GtkWidget *widget, void *d);

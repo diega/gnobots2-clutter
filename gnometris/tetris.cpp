@@ -79,7 +79,6 @@ Tetris::Tetris(int cmdlLevel):
 	{
 		GNOMEUIINFO_MENU_NEW_GAME_ITEM(gameNew, this),
 		GNOMEUIINFO_MENU_PAUSE_GAME_ITEM(gamePause, this),
-		GNOMEUIINFO_MENU_RESTART_GAME_ITEM(gameRestart, this),
 		GNOMEUIINFO_SEPARATOR,
 		GNOMEUIINFO_MENU_SCORES_ITEM(gameTopTen, this),
 		GNOMEUIINFO_MENU_END_GAME_ITEM(gameEnd, this),
@@ -155,8 +154,7 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_widget_show(w);
 
 	gtk_widget_set_sensitive(gameMenuPtr[1].widget, FALSE);
-	gtk_widget_set_sensitive(gameMenuPtr[2].widget, FALSE);
-	gtk_widget_set_sensitive(gameMenuPtr[5].widget, FALSE);
+	gtk_widget_set_sensitive(gameMenuPtr[4].widget, FALSE);
 }
 
 Tetris::~Tetris()
@@ -302,14 +300,14 @@ void
 Tetris::setSelection(GtkWidget *widget, void *data)
 {
 	blockPixmapTmp = (char*) data;
-	g_print("s:bl: %s\n", blockPixmapTmp);
+//	g_print("s:bl: %s\n", blockPixmapTmp);
 }
 
 void
 Tetris::setBGSelection(GtkWidget *widget, void *data)
 {
 	bgPixmapTmp = (char*) data;
-	g_print("s:bg: %s\n", bgPixmapTmp);
+//	g_print("s:bg: %s\n", bgPixmapTmp);
 }
 
 void
@@ -491,18 +489,7 @@ int
 Tetris::gamePause(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
-	t->paused = true;
-	gtk_widget_set_sensitive(t->gameMenuPtr[1].widget, FALSE);
-	gtk_widget_set_sensitive(t->gameMenuPtr[2].widget, TRUE);
-}
-
-int
-Tetris::gameRestart(GtkWidget *widget, void *d)
-{
-	Tetris *t = (Tetris*) d;
-	t->paused = false;
-	gtk_widget_set_sensitive(t->gameMenuPtr[1].widget, TRUE);
-	gtk_widget_set_sensitive(t->gameMenuPtr[2].widget, FALSE);
+	t->togglePause();
 }
 
 int
@@ -672,8 +659,6 @@ void
 Tetris::togglePause()
 {
 	paused = !paused;
-	gtk_widget_set_sensitive(gameMenuPtr[1].widget, !paused);
-	gtk_widget_set_sensitive(gameMenuPtr[2].widget, paused);
 }
 
 void
@@ -698,14 +683,14 @@ Tetris::generate()
 void
 Tetris::endOfGame()
 {
-	int pos = gnome_score_log(scoreFrame->getScore(), NULL, TRUE);
-
-	gtk_widget_set_sensitive(gameMenuPtr[0].widget, TRUE);
 	gtk_widget_set_sensitive(gameMenuPtr[1].widget, FALSE);
-	gtk_widget_set_sensitive(gameMenuPtr[2].widget, FALSE);
-	gtk_widget_set_sensitive(gameMenuPtr[5].widget, FALSE);
+	gtk_widget_set_sensitive(gameMenuPtr[4].widget, FALSE);
 
-	showScores("Gnometris", pos);
+	if (scoreFrame->getScore() > 0) 
+	{
+		int pos = gnome_score_log(scoreFrame->getScore(), NULL, TRUE);
+		showScores("Gnometris", pos);
+	}
 }
 
 void
@@ -719,8 +704,14 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
 
-	if (t->timeoutId != -1)
-		return FALSE;
+	if (t->timeoutId) 
+	{
+		gtk_timeout_remove(t->timeoutId);
+		t->timeoutId = -1;
+
+		if (t->scoreFrame->getScore() > 0) 
+			gnome_score_log(t->scoreFrame->getScore(), NULL, TRUE);
+	}
 
 	t->fastFall = false;
 	
@@ -740,10 +731,8 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 	gtk_widget_draw(t->field->getWidget(), NULL);
 	gtk_widget_draw(t->preview->getWidget(), NULL);
 
-	gtk_widget_set_sensitive(t->gameMenuPtr[0].widget, FALSE);
 	gtk_widget_set_sensitive(t->gameMenuPtr[1].widget, TRUE);
-	gtk_widget_set_sensitive(t->gameMenuPtr[2].widget, FALSE);
-	gtk_widget_set_sensitive(t->gameMenuPtr[5].widget, TRUE);
+	gtk_widget_set_sensitive(t->gameMenuPtr[4].widget, TRUE);
 
 	return TRUE;
 }
