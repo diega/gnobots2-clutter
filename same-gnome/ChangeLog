@@ -1,3 +1,11 @@
+1999-01-10  Nat Friedman  <nat@nat.org>
+
+	* same-gnome.c (main): Added an AppBar.  Removed the 'hb' widget
+ 	and the 'frame' widgets.  Packed the score labels into the appbar
+ 	instead of the hb widget.  Added a friendly welcome message.
+
+	Standardized the menus.
+	
 1998-12-30  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
 	* same-gnome.c (main): Removed any reference to the cloned client.

@@ -30,7 +30,7 @@
 		     GDK_POINTER_MOTION_MASK)
 
 static GtkWidget *pref_dialog, *scorew;
-static GtkWidget *app, *draw_area, *vb;
+static GtkWidget *app, *draw_area, *vb, *appbar;
 static GdkImlibImage *image;
 static GdkPixmap *stones, *mask;
 static int tagged_count = 0;
@@ -659,41 +659,43 @@ game_quit_callback (GtkWidget *widget, void *data)
 	return TRUE;
 }
 
+GnomeUIInfo filemenu[] = {
+        GNOMEUIINFO_MENU_EXIT_ITEM(game_quit_callback, NULL),
+
+	GNOMEUIINFO_END
+};
+
 GnomeUIInfo gamemenu[] = {
-	{GNOME_APP_UI_ITEM, N_("_New"), NULL, game_new_callback, NULL, NULL,
-	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 'n', GDK_CONTROL_MASK, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("_Properties..."), NULL, game_preferences_callback, NULL, NULL,
-	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
+        GNOMEUIINFO_MENU_NEW_GAME_ITEM(game_new_callback, NULL),
 
-	{GNOME_APP_UI_ITEM, N_("_Scores"), NULL, game_top_ten_callback, NULL, NULL,
-	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SCORES, 0, 0, NULL},
+	GNOMEUIINFO_SEPARATOR,
 
-	{GNOME_APP_UI_ITEM, N_("E_xit"), NULL, game_quit_callback, NULL, NULL,
-	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 'q', GDK_CONTROL_MASK, NULL},
+	GNOMEUIINFO_MENU_SCORES_ITEM(game_top_ten_callback, NULL),
 
-	{GNOME_APP_UI_ENDOFINFO}
+	GNOMEUIINFO_END
+};
+
+GnomeUIInfo settingsmenu[] = {
+        GNOMEUIINFO_MENU_PREFERENCES_ITEM(game_preferences_callback, NULL),
+
+	GNOMEUIINFO_END
 };
 
 GnomeUIInfo helpmenu[] = {
-	{GNOME_APP_UI_HELP, NULL, NULL, "samegnome", NULL, NULL,
-	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+        GNOMEUIINFO_HELP("samegnome"),
 
-	{GNOME_APP_UI_ITEM, N_("_About Same Gnome"), NULL, game_about_callback, NULL, NULL,
-	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
+	GNOMEUIINFO_MENU_ABOUT_ITEM(game_about_callback, NULL),
 
-	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
-	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
+	GNOMEUIINFO_END
 };
 
 GnomeUIInfo mainmenu[] = {
-	{GNOME_APP_UI_SUBTREE, N_("_Game"), NULL, gamemenu, NULL, NULL,
-	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-
-	{GNOME_APP_UI_SUBTREE, N_("_Help"), NULL, helpmenu, NULL, NULL,
-	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-
-	{GNOME_APP_UI_ENDOFINFO}
+        GNOMEUIINFO_MENU_FILE_TREE(filemenu),
+	GNOMEUIINFO_MENU_GAME_TREE(gamemenu),
+	GNOMEUIINFO_MENU_SETTINGS_TREE(settingsmenu),
+	GNOMEUIINFO_MENU_HELP_TREE(helpmenu),
+	GNOMEUIINFO_END
 };
 
 #define ELEMENTS(x) (sizeof (x) / sizeof (x [0]))
@@ -792,7 +794,7 @@ static const struct poptOption options[] = {
 int
 main (int argc, char *argv [])
 {
-	GtkWidget *label, *hb, *frame;
+	GtkWidget *label;
 	GnomeClient *client;
 
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
@@ -822,41 +824,40 @@ main (int argc, char *argv [])
 	srand (time (NULL));
 
 	app = gnome_app_new("same-gnome", _("Same Gnome"));
+
         gtk_window_set_policy(GTK_WINDOW(app), FALSE, FALSE, TRUE);
 	gtk_signal_connect (GTK_OBJECT(app), "delete_event",
 			    (GtkSignalFunc)game_quit_callback, NULL);
+
+	appbar = gnome_appbar_new(FALSE, TRUE, GNOME_PREFERENCES_USER);
+	gnome_app_set_statusbar(GNOME_APP (app), GTK_WIDGET(appbar));
+
+	gnome_appbar_set_status(GNOME_APPBAR (appbar),
+				_("Welcome to Same Gnome!"));
+
 	gnome_app_create_menus(GNOME_APP(app), mainmenu);
+
+	gnome_app_install_menu_hints(GNOME_APP (app), mainmenu);
   
         vb = gtk_vbox_new (FALSE, 0);
-	hb = gtk_hbox_new (FALSE, 0);
-	gtk_container_border_width(GTK_CONTAINER(hb), 3);
 	gnome_app_set_contents (GNOME_APP (app), vb);
 
 	if (!fname)
 		fname = g_strdup ("stones.png");
 	create_same_board (fname);
 
-	frame = gtk_frame_new(NULL);
-	gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_OUT);
-	gtk_container_border_width(GTK_CONTAINER(frame), 0);
-	gtk_widget_show(frame);
-
 	label = gtk_label_new (_("Score: "));
 	scorew = gtk_label_new ("");
 	set_score (score);
 
-	gtk_container_add(GTK_CONTAINER(frame), hb);
-
-	gtk_box_pack_start(GTK_BOX(vb), frame, 1, 1, 0);
-	gtk_box_pack_end (GTK_BOX(hb), scorew, 0, 0, 0);
-	gtk_box_pack_end (GTK_BOX(hb), label,  0, 0, 0);
+	gtk_box_pack_start(GTK_BOX(appbar), label, FALSE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(appbar), scorew, FALSE, TRUE, 0);
 	
 	if (!restarted)
 		new_game ();
 	
 	g_free (fname);
 
-	gtk_widget_show (hb);
 	gtk_widget_show (vb);
 	gtk_widget_show (GTK_WIDGET(label));
 	gtk_widget_show (GTK_WIDGET(scorew));
