@@ -1,3 +1,8 @@
+2003-06-20  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gataxx.c: Only make the undo button sensitive when it has to
+	be.
+
 2003-06-18  William Jon McCann  <mccann@jhu.edu>
 
 	* properties.c: Included string.h.
