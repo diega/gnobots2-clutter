@@ -1409,7 +1409,7 @@ void create_mahjongg_board (void)
 			       600,
 			       480);
 
-	buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/tileset=default.xpm", NULL);
+	buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/tileset=default.png", NULL);
 	load_tiles (buf);
 
 	buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/mapset=easy", NULL);
