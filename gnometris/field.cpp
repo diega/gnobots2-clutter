@@ -24,7 +24,11 @@
 Field::	Field()
 {
 	bg = 0;
+	gtk_widget_push_visual (gdk_imlib_get_visual ());
+	gtk_widget_push_colormap (gdk_imlib_get_colormap ());
 	w = gnome_canvas_new();
+	gtk_widget_pop_colormap ();
+	gtk_widget_pop_visual ();
 }
 
 void 

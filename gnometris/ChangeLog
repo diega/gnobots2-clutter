@@ -1,3 +1,8 @@
+2000-04-19  Ian Peters  <itp@gnu.org>
+
+	* field.cpp: push the visual and colormap before creating the canvas,
+	  etc., to fix BadMatch on multi-depth displays.
+
 1999-12-07  Mitchell Perilstein  <mitch@enetis.net>
 
 	* blockops.h, blockops.cpp: Fixed crash in emptyField() wherein it
