@@ -28,11 +28,11 @@
 
 #include <sys/time.h>
 #include <string.h>
+#include <games-clock.h>
 
 #include "gataxx.h"
 #include "ataxx.h"
 #include "properties.h"
-#include "clock.h"
 
 GdkPixmap *buffer_pixmap = NULL;
 GdkPixmap *tiles_pixmap = NULL;
@@ -94,8 +94,7 @@ int session_xpos = -1;
 int session_ypos = -1;
 int session_position = 0;
 
-gchar tile_set[255];
-gchar tile_set_tmp[255];
+gchar *tile_set;
 
 guint selected_x;
 guint selected_y;
@@ -337,9 +336,9 @@ void undo_move_cb(GtkWidget *widget, gpointer data) {
   gui_status();
   
   if(timer_valid) {
-    clock_stop(CLOCK(time_display));
+    games_clock_stop(GAMES_CLOCK(time_display));
     gtk_widget_set_sensitive(time_display, FALSE);
-    clock_set_seconds(CLOCK(time_display), 0);
+    games_clock_set_seconds(GAMES_CLOCK(time_display), 0);
     timer_valid = 0;
   }
   
@@ -359,9 +358,9 @@ void black_level_cb(GtkWidget *widget, gpointer data) {
   black_computer_level = tmp;
   
   if(game_in_progress) {
-    clock_stop(CLOCK(time_display));
+    games_clock_stop(GAMES_CLOCK(time_display));
     gtk_widget_set_sensitive(time_display, FALSE);
-    clock_set_seconds(CLOCK(time_display), 0);
+    games_clock_set_seconds(GAMES_CLOCK(time_display), 0);
     timer_valid = 0;
   }
   
@@ -380,9 +379,9 @@ void white_level_cb(GtkWidget *widget, gpointer data)
   white_computer_level = tmp;
   
   if(game_in_progress) {
-    clock_stop(CLOCK(time_display));
+    games_clock_stop(GAMES_CLOCK(time_display));
     gtk_widget_set_sensitive(time_display, FALSE);
-    clock_set_seconds(CLOCK(time_display), 0);
+    games_clock_set_seconds(GAMES_CLOCK(time_display), 0);
     timer_valid = 0;
   }
   
@@ -546,7 +545,7 @@ void load_pixmaps() {
     g_print(_("Could not find \'%s\' pixmap file for gataxx\n"), fname);
     exit(1);
   }
-  
+
   image = gdk_pixbuf_new_from_file(fname, NULL);
   gdk_pixbuf_render_pixmap_and_mask (image, &tiles_pixmap, &tiles_mask, 127);
   
@@ -667,12 +666,12 @@ void init_new_game() {
   whose_turn = BLACK_TURN;
   gui_message(_("Dark's move"));
   
-  clock_stop(CLOCK(time_display));
-  clock_set_seconds(CLOCK(time_display), 0);
+  games_clock_stop(GAMES_CLOCK(time_display));
+  games_clock_set_seconds(GAMES_CLOCK(time_display), 0);
   
   if(black_computer_level ^ white_computer_level) {
     if(!black_computer_level)
-      clock_start(CLOCK(time_display));
+      games_clock_start(GAMES_CLOCK(time_display));
     gtk_widget_set_sensitive(time_display, TRUE);
     timer_valid = 1;
   } else {
@@ -743,7 +742,7 @@ void create_window() {
   
   gtk_table_attach(GTK_TABLE(table), sep, 6, 7, 0, 1, 0, GTK_FILL, 3, 3);
 
-  time_display = clock_new();
+  time_display = games_clock_new();
   gtk_widget_set_sensitive(time_display, FALSE);
   gtk_widget_show(time_display);
   
@@ -875,7 +874,7 @@ int main(int argc, char **argv) {
     g_signal_connect(G_OBJECT(client), "die", G_CALLBACK(quit_game_cb), argv[0]);
   
     create_window();
-    
+
     load_properties ();
     
     load_pixmaps();

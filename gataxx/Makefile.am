@@ -4,6 +4,7 @@ Gamesdir = $(datadir)/applications
 appicondir=$(datadir)/pixmaps
 
 INCLUDES = 			\
+	-I$(top_srcdir)/libgames-support \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	$(GNOME_GAMES_CFLAGS) \
 	-DG_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED \
@@ -17,11 +18,10 @@ gataxx_SOURCES = \
 	ataxx.c \
 	ataxx.h \
 	properties.c \
-	properties.h \
-	clock.c	\
-	clock.h
+	properties.h
 
-gataxx_LDADD = $(GNOME_GAMES_LIBS)
+gataxx_LDADD = $(GNOME_GAMES_LIBS) \
+	../libgames-support/libgames-support.la
 
 pixmap_DATA = \
 	blend.png \

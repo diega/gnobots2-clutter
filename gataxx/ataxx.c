@@ -25,7 +25,8 @@
 
 #include "ataxx.h"
 #include "gataxx.h"
-#include "clock.h"
+
+#include <games-clock.h>
 
 guint flip_final_id = 0;
 gint flip_final;
@@ -134,7 +135,7 @@ gint move_board(gint8 board[7][7], guint x, guint y, guint selected_x, guint sel
       gui_message(_("Dark's move"));
 
       if(!white_computer_level) {
-	clock_stop(CLOCK(time_display));
+	games_clock_stop(GAMES_CLOCK(time_display));
       }
 
     } else {
@@ -142,7 +143,7 @@ gint move_board(gint8 board[7][7], guint x, guint y, guint selected_x, guint sel
       gui_message(_("Light's move"));
 
       if(!black_computer_level) {
-	clock_stop(CLOCK(time_display));
+	games_clock_stop(GAMES_CLOCK(time_display));
       }
 
     }
@@ -194,10 +195,10 @@ gint move_board(gint8 board[7][7], guint x, guint y, guint selected_x, guint sel
     gui_status();
    
     if(not_me == BLACK_TURN && !black_computer_level && timer_valid) {
-      clock_start(CLOCK(time_display));
+      games_clock_start(GAMES_CLOCK(time_display));
     }
     if(not_me == WHITE_TURN && !white_computer_level && timer_valid) {
-      clock_start(CLOCK(time_display));
+      games_clock_start(GAMES_CLOCK(time_display));
     }
    
     tiles_to_flip = 1;
@@ -580,7 +581,7 @@ gint check_valid_moves()
   }
 
   if(!white_moves || !black_moves) {
-    clock_stop(CLOCK(time_display));
+    games_clock_stop(GAMES_CLOCK(time_display));
     white_moves = count_pieces(board, WHITE_TURN);
     black_moves = count_pieces(board, BLACK_TURN);
     if(white_moves > black_moves)
@@ -601,9 +602,9 @@ gint check_valid_moves()
     whose_turn = BLACK_TURN;
     if(white_computer_level ^ black_computer_level) {
       if(!black_computer_level && timer_valid)
-	clock_start(CLOCK(time_display));
+	games_clock_start(GAMES_CLOCK(time_display));
       else
-	clock_stop(CLOCK(time_display));
+	games_clock_stop(GAMES_CLOCK(time_display));
     }
     return(TRUE);
   }
@@ -613,9 +614,9 @@ gint check_valid_moves()
     whose_turn = WHITE_TURN;
     if(white_computer_level ^ black_computer_level) {
       if(!white_computer_level && timer_valid)
-	clock_start(CLOCK(time_display));
+	games_clock_start(GAMES_CLOCK(time_display));
       else
-	clock_stop(CLOCK(time_display));
+	games_clock_stop(GAMES_CLOCK(time_display));
     }
     return(TRUE);
   }

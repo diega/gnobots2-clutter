@@ -23,11 +23,12 @@
 #include "config.h"
 #include <gnome.h>
 #include <dirent.h>
+#include <games-clock.h>
 
 #include "properties.h"
 #include "gataxx.h"
 #include "ataxx.h"
-#include "clock.h"
+
 
 static GtkWidget *propbox = NULL;
 
@@ -39,18 +40,13 @@ extern guint computer_speed;
 extern gint timer_valid;
 extern guint black_computer_id;
 extern guint white_computer_id;
-extern gchar tile_set[255];
-extern gchar tile_set_tmp[255];
+extern gchar *tile_set;
 extern gint8 pixmaps[7][7];
 extern gint animate;
 extern gint flip_pixmaps_id;
 extern gint flip_final;
 
-guint t_black_computer_level;
-guint t_white_computer_level;
-gint t_animate;
-gint t_quick_moves;
-gint t_flip_final;
+gint quick_moves;
 gint response;
 
 int mapped = 0;
@@ -61,9 +57,9 @@ void load_properties ()
 		("/gataxx/Preferences/blacklevel=0");
 	white_computer_level = gnome_config_get_int
 		("/gataxx/Preferences/whitelevel=0");
-	strncpy (tile_set, gnome_config_get_string
-			("/gataxx/Preferences/tileset=classic.png"), 255);
+	tile_set = gnome_config_get_string ("/gataxx/Preferences/tileset=classic.png");
 	animate = gnome_config_get_int ("/gataxx/Preferences/animate=2");
+
 	if (gnome_config_get_int ("/gataxx/Preferences/quickmoves=0")) {
 		computer_speed = COMPUTER_MOVE_DELAY / 2;
 	}
@@ -85,19 +81,6 @@ void load_properties ()
 	}
 }
 
-void reset_properties ()
-{
-	t_black_computer_level = black_computer_level = gnome_config_get_int
-		("/gataxx/Preferences/blacklevel=0");
-	t_white_computer_level = white_computer_level = gnome_config_get_int
-		("/gataxx/Preferences/whitelevel=0");
-        strncpy (tile_set_tmp, tile_set, 255);
-	t_animate = animate;
-	t_quick_moves = gnome_config_get_int
-		("/gataxx/Preferences/quickmoves");
-	t_flip_final = flip_final;
-}
-
 void save_properties ()
 {
 	gnome_config_set_int ("/gataxx/Preferences/blacklevel",
@@ -105,9 +88,9 @@ void save_properties ()
 	gnome_config_set_int ("/gataxx/Preferences/whitelevel",
 			white_computer_level);
 	gnome_config_set_int ("/gataxx/Preferences/quickmoves",
-			t_quick_moves);
+			quick_moves);
 	gnome_config_set_string ("/gataxx/Preferences/tileset",
-			tile_set_tmp);
+			tile_set);
 	gnome_config_set_int ("/gataxx/Preferences/animate", animate);
 	gnome_config_set_int ("/gataxx/Preferences/flipfinal", flip_final);
 	
@@ -117,18 +100,14 @@ void save_properties ()
 void apply_changes ()
 {
 	guint i, j;
-	
-	if ((black_computer_level != t_black_computer_level) ||
-			(white_computer_level != t_white_computer_level)) {
-		clock_stop (CLOCK (time_display));
+
+	{	
+		games_clock_stop (GAMES_CLOCK (time_display));
 		gtk_widget_set_sensitive (time_display, FALSE);
-		clock_set_seconds (CLOCK (time_display), 0);
+		games_clock_set_seconds (GAMES_CLOCK (time_display), 0);
 		timer_valid = 0;
 	}
 
-	black_computer_level = t_black_computer_level;
-	white_computer_level = t_white_computer_level;
-	
 	if (black_computer_id) {
 		gtk_timeout_remove (black_computer_id);
 		black_computer_id = 0;
@@ -139,15 +118,14 @@ void apply_changes ()
 		white_computer_id = 0;
 	}
 	
-	if (t_quick_moves) {
+	if (quick_moves) {
 		computer_speed = COMPUTER_MOVE_DELAY / 2;
 	}
 	else {
 		computer_speed = COMPUTER_MOVE_DELAY;
 	}
 	
-	if (strcmp (tile_set, tile_set_tmp)) {
-		strncpy (tile_set, tile_set_tmp, 255);
+	{
 		load_pixmaps ();
 		for (i = 0; i < 7; i++)
 			for (j = 0; j < 7; j++)
@@ -159,8 +137,6 @@ void apply_changes ()
 					gui_draw_pixmap (0, i, j);
 				}
 	}
-	
-	animate = t_animate;
 	
 	if (flip_pixmaps_id) {
 		gtk_timeout_remove (flip_pixmaps_id);
@@ -181,27 +157,24 @@ void apply_changes ()
 			break;
 	}
 	
-
-	flip_final = t_flip_final;
-	
 	check_computer_players ();
 	save_properties ();
 }
 
 void black_computer_level_select (GtkWidget *widget, gpointer data)
 {
-	if (((guint) data != t_black_computer_level) &&
+	if (((guint) data != black_computer_level) &&
 		       (GTK_TOGGLE_BUTTON (widget)->active)) {
-		t_black_computer_level = (guint) data;
+		black_computer_level = (guint) data;
 	}
 	apply_changes ();
 }
 
 void white_computer_level_select (GtkWidget *widget, gpointer data)
 {
-	if (((guint) data != t_white_computer_level) &&
+	if (((guint) data != white_computer_level) &&
 		       (GTK_TOGGLE_BUTTON (widget)->active)) {
-		t_white_computer_level = (guint) data;
+		white_computer_level = (guint) data;
 	}
 	apply_changes ();
 }
@@ -209,10 +182,10 @@ void white_computer_level_select (GtkWidget *widget, gpointer data)
 void quick_moves_select (GtkWidget *widget, gpointer data)
 {
 	if (GTK_TOGGLE_BUTTON (widget)->active) {
-		t_quick_moves = 1;
+		quick_moves = 1;
 	}
 	else {
-		t_quick_moves = 0;
+		quick_moves = 0;
 	}
 
 	apply_changes ();
@@ -221,10 +194,10 @@ void quick_moves_select (GtkWidget *widget, gpointer data)
 void flip_final_select (GtkWidget *widget, gpointer data)
 {
 	if (GTK_TOGGLE_BUTTON (widget)->active) {
-		t_flip_final = 1;
+		flip_final = 1;
 	}
 	else {
-		t_flip_final = 0;
+		flip_final = 0;
 	}
 	apply_changes ();
 }
@@ -233,8 +206,9 @@ void flip_final_select (GtkWidget *widget, gpointer data)
 void animate_select (GtkWidget *widget, gpointer data)
 {
 	if (GTK_TOGGLE_BUTTON (widget)->active) {
-		t_animate = (gint) data;
+		animate = (gint) data;
 	}
+
 	apply_changes ();
 }
 
@@ -250,9 +224,12 @@ void destroy_cb (GtkWidget *widget, gpointer data)
 
 void set_selection(GtkWidget *widget, gpointer data)
 {
-	if (strcmp ((gchar *)data, tile_set_tmp)) {
-	        strncpy(tile_set_tmp, data, 255);
-	}
+	if (tile_set)
+		g_free (tile_set);
+
+	tile_set = g_strdup ((char *) data);
+        
+	apply_changes();
 }
 
 void free_str(GtkWidget *widget, void *data)
@@ -324,10 +301,6 @@ void show_properties_dialog ()
 
 	g_signal_connect (G_OBJECT (propbox), "delete_event",
 			  G_CALLBACK (gtk_widget_destroy), propbox);
-	
-	vbox = gtk_vbox_new (FALSE, 5);
-	gtk_container_add (GTK_CONTAINER (propbox), vbox);
-	gtk_widget_show (vbox);
 	
 	notebook = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_TOP);
@@ -514,7 +487,7 @@ void show_properties_dialog ()
 	gtk_widget_show (vbox);
 	
 	button = gtk_check_button_new_with_label (_("Flip final results"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), t_flip_final);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), flip_final);
 	g_signal_connect (G_OBJECT (button), "toggled",
 			  G_CALLBACK (flip_final_select), NULL);
 	gtk_widget_show (button);
