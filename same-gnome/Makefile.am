@@ -29,8 +29,7 @@ schema_in_files = same-gnome.schemas.in
 schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 @INTLTOOL_SCHEMAS_RULE@
 
-pixmap_DATA = planets.png blink-sync.png marbles.png \
-	stones.png rotate.png glass.png
+pixmap_DATA = planets.png stones.png
 sharedpixmap_DATA = gnome-gsame.png
 EXTRA_DIST = same-gnome.desktop.in $(pixmap_DATA) $(sharedpixmap_DATA) $(schema_in_files)
 

@@ -33,7 +33,7 @@ mahjongg_LDADD =					\
 	../libgames-support/libgames-support.la		\
 	$(INTLLIBS)
 
-pixmap_DATA = default.png smooth.png postmodern.svg maya.png
+pixmap_DATA = smooth.png postmodern.svg
 
 appicon_DATA = gnome-mahjongg.png
 

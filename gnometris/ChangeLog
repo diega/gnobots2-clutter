@@ -1,3 +1,13 @@
+2004-08-15  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* pix/5blocks.png:
+	* pix/5blocks-tig.png: 
+	* pix/5blocks-tim.png:
+	* pix/7blocks.png:
+	* pix/7stones2-gn.png:
+	* pix/7stones-gn.png: Moved these themes to the 
+	gnome-games-extra-data package.
+
 2004-08-05  William Jon McCann  <mccann@jhu.edu>
 
 	* tetris.cpp (keyPressHandler): Only play sound if action
