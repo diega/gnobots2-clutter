@@ -1,5 +1,8 @@
 2004-05-20  William Jon McCann  <mccann@jhu.edu>
 
+	* dialog.cpp (show_preferences_dialog): New preferences dialog
+	that doesn't use a tabbed notebook.
+
 	* dialog.cpp (get_insurance_choice, show_hint_dialog): 
 	* game.cpp (bj_game_eval_installed_file): 
 	Use gtk_message_dialog_new_with_markup and use HIG container
