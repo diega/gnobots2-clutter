@@ -68,7 +68,7 @@ EXTRA_DIST = phaser-chess.desktop
 
 install-data-local:
 	$(mkinstalldirs) $(Gamesdir)
-	$(INSTALL_DATA) $(srcdir)/phaser-chess.desktop $(datadir)/apps/Games/"Phaser Chess.desktop"
+	$(INSTALL_DATA) $(srcdir)/phaser-chess.desktop $(Gamesdir)/phaser-chess.desktop
 
 
 #phaser_chess_LDFLAGS = -version-info 0:0:0 -rpath $(libdir)
