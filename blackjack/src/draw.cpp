@@ -1,4 +1,5 @@
 // -*- mode:C++; tab-width:2; c-basic-offset:2; indent-tabs-mode:nil -*-
+
 /* Blackjack - draw.cpp
  * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
  * Copyright (C) 1998 Jonathan Blandford <jrb@mit.edu>
@@ -90,8 +91,8 @@ bj_draw_chips ()
        chip_stack = chip_stack->next) 
     {
       hstack_type hstack = (hstack_type) chip_stack->data;
-      
-      if (chip_list = hstack->chips)
+      chip_list = hstack->chips;
+      if (chip_list != NULL)
         {
           chip_list = g_list_nth (chip_list, hstack->length - hstack->exposed);
           

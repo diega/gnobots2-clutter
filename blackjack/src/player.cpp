@@ -1,4 +1,5 @@
 // -*- mode:C++; tab-width:2; c-basic-offset:2; indent-tabs-mode:nil -*-
+
 /* Blackjack - player.cpp
  * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
  *
@@ -54,12 +55,12 @@ Progress::Progress ()
 void
 Progress::indicate (int percentComplete)
 {
-  float initial_splash_progress = 0.5;
+  float initial_splash_progress = 0.0;
   float splash_progress;
   if (percentComplete != last)
     {
       last = percentComplete;
-      splash_progress = initial_splash_progress + (percentComplete/200.0);
+      splash_progress = initial_splash_progress + (percentComplete/100.0);
       splash_update (_("Computing basic strategy..."), splash_progress);
     }
 }
@@ -254,7 +255,8 @@ Player::showOptions (Hand *player, int upCard, int numHands)
 {
   int bestOption, num_options;
   double value, bestValue;
-  gchar *markup, *tmpstr;
+  gchar *markup = NULL;
+  gchar *tmpstr = NULL;
   gchar *mark_list[6];
 
   reset ();

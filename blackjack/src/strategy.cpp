@@ -1,3 +1,5 @@
+// -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*-
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Blackjack.cpp
@@ -1195,7 +1197,7 @@ void BJPlayer::computeOverall(BJRules & rules, BJStrategy & strategy) {
                         p *= shoe.getProbability(card2);
                         shoe.deal(card2); currentHand.deal(card2);
                         PlayerHand & hand = playerHands[findHand(currentHand)];
-                        double value;
+                        double value = 0;
                         BJHand testHand(hand.cards);
                         bool doubleDown = rules.getDoubleDown(testHand),
                             split = (card1 == card2

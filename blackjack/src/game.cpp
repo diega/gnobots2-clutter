@@ -1,4 +1,5 @@
 // -*- mode:C++; tab-width:2; c-basic-offset:2; indent-tabs-mode:nil -*-
+
 /* Blackjack - game.cpp
  * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
  *
@@ -24,6 +25,7 @@
 #include <alloca.h>
 #endif
 
+#include <gnome.h>
 #include <sys/types.h>
 #include <string.h>
 #include <stdlib.h>
@@ -35,11 +37,11 @@
 #include "events.h"
 #include "draw.h"
 #include "chips.h"
+#include "splash.h"
 
 #include "player.h"
 #include "hand.h"
 #include "game.h"
-#include <gnome.h>
 
 #include <iostream>
 using namespace std;
@@ -62,7 +64,6 @@ gint             dealerSpeed;
 
 gint             numHands;
 
-guint            n_games;
 struct dirent    **game_dents;
 gchar            *game_file = "";
 gchar            *game_name;
@@ -136,6 +137,7 @@ bj_game_find_rules (gchar *variation)
 {
   gint i, records;
   gchar* dir;
+  gint n_games;
 
   dir = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_DATADIR,
                                    BJ_RULES_DIR, FALSE, NULL);
@@ -143,10 +145,7 @@ bj_game_find_rules (gchar *variation)
   records = scandir (dir, &game_dents, bj_is_ruleset, alphasort);
   g_free (dir);
 
-  if (records >= 0)
-	  n_games = records;
-  else
-	  n_games = 0;
+  n_games = (records >= 0) ? records : 0;
 
   // Drop all previous rules
 
@@ -336,6 +335,9 @@ bj_game_eval_installed_file (gchar *file)
       gboolean use_cache = false;
       if (g_file_test (installed_filename, G_FILE_TEST_EXISTS))
         use_cache = true;
+
+      if (! use_cache)
+        splash_new ();
       strategy = new LoadablePlayer (numDecks, rules, 
                                      maxValueStrategy, 
                                      progress, 
@@ -346,7 +348,9 @@ bj_game_eval_installed_file (gchar *file)
         if (!use_cache)
         strategy->save (cache_filename);
       */
-    } 
+      if (! use_cache)
+        splash_destroy ();
+     } 
   else
     {
       gchar *message = g_strdup_printf ("%s\n %s", _("Blackjack can't load the requested file"),

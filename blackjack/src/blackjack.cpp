@@ -40,7 +40,6 @@
 #include "card.h"
 #include "menu.h"
 #include "dialog.h"
-#include "splash.h"
 
 #include "game.h"
 #include "hand.h"
@@ -294,15 +293,11 @@ main_prog(int argc, char *argv[])
   seed = time (NULL);
   g_random_set_seed (seed);
 
-  splash_update (_("Loading images..."), 0.20);
-
   create_main_window ();
 
   bj_card_load_pixmaps (app, bj_get_deck_options ());
   bj_slot_load_pixmaps ();
  
-  splash_update (_("Computing basic strategy..."), 0.50);
-
   bj_create_board ();
   bj_menu_create ();
 
@@ -349,8 +344,6 @@ main_prog(int argc, char *argv[])
   bj_menu_install_hints (GNOME_APP (app));
 
   bj_game_new (bj_get_game_variation (), &seed);
-
-  splash_destroy ();
 
   gtk_widget_show (app);
 
@@ -610,9 +603,6 @@ main (int argc, char *argv [])
   gtk_widget_push_colormap (gdk_rgb_get_colormap ());
 
   gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-blackjack.png");
-  splash_new ();
-
-  splash_update (_("Initializing..."), 0.10);
 
   g_signal_connect (GTK_OBJECT (gnome_master_client ()), "die",
                     GTK_SIGNAL_FUNC (bj_quit_app), NULL);

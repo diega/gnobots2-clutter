@@ -1,4 +1,5 @@
 // -*- mode:C++; tab-width:2; c-basic-offset:2; indent-tabs-mode:nil -*-
+
 /* Blackjack - hand.cpp
  * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
  *
@@ -72,7 +73,7 @@ bj_hand_show_dealer_probabilities ()
 gchar *
 bj_hand_get_best_option_string ()
 {
-  gchar *option_str;
+  gchar *option_str = NULL;
   gint bestOption;
 
   bestOption = strategy->getBestOption (player, 

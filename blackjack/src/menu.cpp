@@ -35,7 +35,6 @@ using namespace std;
 #include "dialog.h"
 #include "draw.h"
 #include "events.h"
-#include "splash.h"
 
 #include "game.h"
 #include "hand.h"
@@ -51,17 +50,13 @@ restart_game ()
 static void
 random_seed ()
 {
-  splash_new ();
   bj_game_new (bj_game_get_rules_file (), NULL);
-  splash_destroy ();
 };
 
 static void
 new_rules (GtkWidget* w, gchar* file) 
 {
-  splash_new ();
   bj_game_new (file, NULL);
-  splash_destroy ();
 };
 
 static void

@@ -30,7 +30,6 @@
 #include "dialog.h"
 #include "draw.h"
 #include "events.h"
-#include "splash.h"
 
 #include "game.h"
 #include "hand.h"
@@ -191,9 +190,7 @@ select_rule_cb (GtkTreeSelection *select, gpointer data)
         {
           if (data != NULL)
             gtk_widget_set_sensitive (GTK_WIDGET (data), FALSE);
-          splash_new ();
           bj_game_new (filename, &seed);
-          splash_destroy ();
           if (data != NULL)
             gtk_widget_set_sensitive (GTK_WIDGET (data), TRUE);
         }

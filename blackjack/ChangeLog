@@ -1,3 +1,20 @@
+2003-06-17  William Jon McCann  <mccann@jhu.edu>
+
+	* src/strategy.cpp: Fixed compiler warning and converted
+	to UNIX format line ending.
+
+	* src/splash.cpp (expose_event): 
+	* src/player.cpp (showOptions): 
+	* src/hand.cpp (bj_hand_get_best_option_string): 
+	* src/game.cpp (bj_game_find_rules): 
+	* src/draw.cpp (bj_draw_chips): Fixed compiler warnings.
+
+	* src/menu.cpp: 
+	* src/dialog.cpp: 
+	* src/blackjack.cpp: 
+	* src/game.cpp: Only use splash window when we aren't
+	using a cache file.
+
 2003-06-16  William Jon McCann  <mccann@jhu.edu>
 
 	* src/blackjack.h: Fix typo.

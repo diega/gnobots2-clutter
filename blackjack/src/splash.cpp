@@ -66,6 +66,7 @@ expose_event (GtkWidget *w, GdkEventExpose *event)
       waiting_for_expose = FALSE;
       gtk_main_quit ();
     }
+  return FALSE;
 }
 
 
