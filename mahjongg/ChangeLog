@@ -1,3 +1,7 @@
+2003-07-09  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.desktop.in: Update name to fit HIG (bug 116916). 
+
 2003-07-07  Steve Chaplin  <stevech1097@yahoo.com.au>
 
 	* mahjongg.c (update_moves_left): Fix a memory leak.
