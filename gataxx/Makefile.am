@@ -1,4 +1,4 @@
-pixmapdir=$(datadir)/pixmaps/gataxx
+pixmapdir=$(datadir)/pixmaps/iagno
 Gamesdir = $(datadir)/applications
 appicondir=$(datadir)/pixmaps
 
@@ -23,16 +23,6 @@ gataxx_SOURCES = \
 gataxx_LDADD = $(GNOME_GAMES_LIBS) \
 	../libgames-support/libgames-support.la
 
-pixmap_DATA = \
-	blend.png \
-	classic.png \
-	flipblend.png \
-	metal.png \
-	metal2.png \
-	shrink.png \
-	woodtrim.png \
-	sunmoon.png
-
 appicon_DATA = gataxx.png
 
 Games_in_files = gataxx.desktop.in
@@ -47,7 +37,6 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 EXTRA_DIST = AUTHORS \
 	gataxx.desktop.in 	\
 	gataxx.soundlist.in \
-	$(pixmap_DATA)	\
 	$(appicon_DATA) \
 	$(schema_in_files)
 

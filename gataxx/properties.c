@@ -264,9 +264,10 @@ void
 fill_menu (GtkWidget *menu)
 {
         struct dirent *e;
+	/* Note that we are sharing pixmaps with iagno here. */
 	gchar *dname = gnome_program_locate_file (NULL,
 						  GNOME_FILE_DOMAIN_APP_PIXMAP,
-						  ("gataxx"), FALSE, NULL);
+						  ("iagno"), FALSE, NULL);
         DIR *dir;
         int itemno = 0;
 

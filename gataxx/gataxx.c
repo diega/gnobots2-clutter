@@ -602,8 +602,9 @@ load_pixmaps (void)
   gchar *tmp;
   gchar *fname;
   GdkPixbuf *image;
-  
-  tmp = g_build_filename ("gataxx", tile_set, NULL);
+
+  /* We share pixmaps with iagno. */
+  tmp = g_build_filename ("iagno", tile_set, NULL);
   fname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
                                      (tmp), FALSE, NULL);
   g_free (tmp);
