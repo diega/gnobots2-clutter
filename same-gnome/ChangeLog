@@ -1,3 +1,7 @@
+2001-07-07  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	* same-gnome.c: Bye bye imlib.
+
 2001-07-05  Juan Pablo Mendoza <pablo_juan@yahoo.com>
 
 	* same-gnome.c (load_scenario): Fix typo.

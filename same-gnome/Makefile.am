@@ -7,7 +7,7 @@ SUBDIRS = help
 INCLUDES = -I.. -I$(srcdir)/..		\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	-I$(includedir)			\
-	$(GNOME_INCLUDEDIR)
+	$(GNOME_INCLUDEDIR) $(GDK_PIXBUF_CFLAGS)
 
 bin_PROGRAMS = same-gnome
 
@@ -17,6 +17,7 @@ same_gnome_SOURCES = 	\
 same_gnome_LDADD =		\
 	$(GNOME_LIBDIR)         \
 	$(GNOMEUI_LIBS)		\
+	$(GDK_PIXBUF_LIBS)	\
 	$(INTLLIBS)
 
 pixmap_DATA = planets.png blink-sync.png marbles.png \

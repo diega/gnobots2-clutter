@@ -18,7 +18,7 @@
 #include <config.h>
 #include <gnome.h>
 #include <libgnomeui/gnome-window-icon.h>
-#include <gdk_imlib.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 
 #define STONE_SIZE 40
@@ -32,7 +32,7 @@
 
 static GtkWidget *pref_dialog, *scorew, *markedw;
 static GtkWidget *app, *draw_area, *vb, *appbar;
-static GdkImlibImage *image;
+static GdkPixbuf *image;
 static GdkPixmap *stones, *mask;
 static int tagged_count = 0;
 static int ball_timeout_id = -1;
@@ -418,9 +418,9 @@ load_scenario (char *fname)
 	configure_sync (fname);
 
 	if (image)
-		gdk_imlib_destroy_image (image);
+		gdk_pixbuf_unref (image);
 
-	image = gdk_imlib_load_image (fn);
+	image = gdk_pixbuf_new_from_file (fn);
 
 	if (image == NULL) {
 		char *message = g_strdup_printf (
@@ -432,10 +432,7 @@ load_scenario (char *fname)
 		exit (1);
 	}
 
-	gdk_imlib_render (image, image->rgb_width, image->rgb_height);
-
-	stones = gdk_imlib_move_image (image);
-	mask = gdk_imlib_move_mask (image);
+	gdk_pixbuf_render_pixmap_and_mask (image, &stones, &mask, 127);
 
         tmpimage = gdk_image_get(stones, 0, 0, 1, 1);
         bgcolor.pixel = gdk_image_get_pixel(tmpimage, 0, 0);
@@ -444,7 +441,7 @@ load_scenario (char *fname)
   
 	g_free( fn );
 
-	nstones = image->rgb_width / STONE_SIZE;
+	nstones = gdk_pixbuf_get_width (image) / STONE_SIZE;
 /*	ncolors = image->rgb_height / STONE_SIZE; */
 	ncolors = 3;
 
@@ -470,8 +467,8 @@ set_selection_def (GtkWidget *widget, gpointer *data)
 static void
 create_same_board (char *fname)
 {
-	gtk_widget_push_visual (gdk_imlib_get_visual ());
-	gtk_widget_push_colormap (gdk_imlib_get_colormap ());
+	gtk_widget_push_visual (gdk_rgb_get_visual ());
+	gtk_widget_push_colormap (gdk_rgb_get_cmap ());
 
 	draw_area = gtk_drawing_area_new ();
 
