@@ -1,5 +1,10 @@
 2004-05-18  William Jon McCann  <mccann@jhu.edu>
 
+	* src/blackjack.cpp (main_prog): Use printf to format wager label.
+	Fixes #142750.  Also fix a string leak.
+
+2004-05-18  William Jon McCann  <mccann@jhu.edu>
+
 	* src/slot.cpp (bj_slot_get_scaled_pixbuf) 
 	(bj_slot_set_scaled_pixbuf, bj_slot_add, bj_slot_add_before_slot) 
 	(bj_slot_pressed, bj_slot_update_length): 

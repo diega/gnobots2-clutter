@@ -290,6 +290,7 @@ static void
 main_prog (int argc, char *argv[])
 {
         GtkWidget *wager_label, *balance_label, *balance_box, *group_box;
+        gchar *label_string;
 
         seed = time (NULL);
         g_random_set_seed (seed);
@@ -325,7 +326,9 @@ main_prog (int argc, char *argv[])
                             FALSE, FALSE, 0);
 
         wager_value = 5.0;
-        wager_value_label = gtk_label_new ("5.00");
+        label_string = g_strdup_printf ("%.2f", wager_value);
+        wager_value_label = gtk_label_new (label_string);
+        g_free (label_string);
         gtk_box_pack_start (GTK_BOX (group_box), wager_value_label, 
                             FALSE, FALSE, 0);
 
@@ -335,7 +338,9 @@ main_prog (int argc, char *argv[])
         balance_label = gtk_label_new (_("Balance:"));
         gtk_box_pack_start (GTK_BOX (group_box), balance_label, 
                             FALSE, FALSE, 0);
-        balance_value_label = gtk_label_new (g_strdup_printf ("%.2f", balance_value));
+        label_string = g_strdup_printf ("%.2f", balance_value);
+        balance_value_label = gtk_label_new (label_string);
+        g_free (label_string);
         gtk_box_pack_start (GTK_BOX (group_box), balance_value_label, 
                             FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (balance_box), group_box, FALSE, FALSE, 0);
