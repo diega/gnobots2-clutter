@@ -743,7 +743,7 @@ gpointer    data
     
     save_properties();
     
-//    gtk_widget_destroy(app);
+/*  gtk_widget_destroy(app); */
     gtk_main_quit();
 }
 
