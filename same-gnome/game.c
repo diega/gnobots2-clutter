@@ -98,7 +98,7 @@ static void record_game_state (void)
 	set_undoredo_sensitive (urptr->prev != NULL, urptr->next != NULL);
 }
 
-static void restore_game_state (void)
+void restore_game_state (void)
 {
 	game_cell *c;
 	gint8 *p;

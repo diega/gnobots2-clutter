@@ -120,13 +120,28 @@ static void scores_cb (void)
 
 static void undo_cb (void)
 {
-	undo ();
+	/* If we are in the middle of the animations we don't do a proper undo 
+	 * (because we haven't worked out the new state yet). Instead we reset
+	 * to the currently recorded state. */
+	if ((game_state == GAME_DESTROYING) ||
+			(game_state == GAME_MOVING_DOWN) ||
+			(game_state == GAME_MOVING_LEFT))
+		restore_game_state ();
+	else
+		undo ();
 	redraw ();
 	select_cells ();
 }
 
 static void redo_cb (void)
 {
+	/* FIXME: If we undo in the middle of the animation then we can't redo
+	 * that move. This is an artifact of how we work out the next state 
+	 * (during the animation) and our work-around so undo behaves sanely.
+	 * At the moment this is a trade-off. Ideally we work out the new state
+	 * immediately (this will also allow us to make te animation quicker
+	 * by allowing already fallen columns to collapse leftward). However
+	 * this would make the animation code more complicated. */
 	redo ();
 	redraw ();
 	select_cells ();

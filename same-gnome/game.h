@@ -71,6 +71,7 @@ extern gint count;
 extern game_cell *board;
 
 void new_game (void);
+void restore_game_state (void);
 void undo (void);
 void redo (void);
 void set_sizes (gint size);

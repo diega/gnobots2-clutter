@@ -1,5 +1,8 @@
 2004-12-30  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* ui.c:
+	* game.h: Tweaks for undo during an animation.
+
 	* drawing.c:
 	* ui.c: 
 	* ui.h:
