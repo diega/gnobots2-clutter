@@ -1,3 +1,8 @@
+2003-05-23  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* same-gnome.c (mark_balls): ngettextised with sane
+	defaults for those without ngettext.
+
 2003-05-18  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am:  Fixups so make distcheck works.

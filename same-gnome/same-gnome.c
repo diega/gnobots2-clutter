@@ -20,6 +20,11 @@
 #include <gconf/gconf-client.h>
 #include <games-gconf.h>
 
+/* Define a sensible alternative to ngettext if we don't have it. Note that
+ * this is only sensible in the context of same-gnome. */
+#ifndef HAVE_NGETTEXT
+#define ngettext(one,lots,n) gettext(lots)
+#endif
 
 #define STONE_SIZE 40
 #define STONE_COLS  15
