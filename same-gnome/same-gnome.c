@@ -138,6 +138,9 @@ flood_fill (int x, int y, int color)
 {
 	int c = 0;
 	
+	if (!color)
+		return c;
+	
 	if (field [x][y].color != color)
 		return c;
 	
@@ -192,8 +195,6 @@ mark_balls (int x, int y)
 
 	untag_all ();
 	disable_timeout ();
-	if (!field [x][y].color)
-		return;
 	
 	tagged_count = flood_fill (x, y, field [x][y].color);
 	
