@@ -621,9 +621,9 @@ void init_new_game() {
     for(j = 0; j < 7; j++)
       board[i][j] = 0;
   
-  board[0][0] = WHITE_TURN;
+  board[0][0] = BLACK_TURN;
   board[0][6] = WHITE_TURN;
-  board[6][0] = BLACK_TURN;
+  board[6][0] = WHITE_TURN;
   board[6][6] = BLACK_TURN;
   
   bcount = 2;
