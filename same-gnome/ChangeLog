@@ -1,3 +1,8 @@
+2005-02-14  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* ui.c: Patch from Nickolay V. Shmyrev to get l12n working
+	properly. Also some cleanups for code that it made redundant.
+
 2005-01-26  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* stones.png: Updated to use transparent backgrounds and to now

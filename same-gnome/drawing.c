@@ -267,7 +267,9 @@ static gboolean render_cb (GtkWidget *canvas)
 			filename = g_build_filename (THEMEDIR, theme, NULL);
 			if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
 				g_free (filename);
-				/* And finallyy fall back to the default. */
+				/* Now replace the suffix with .svg in case of an upgrade. */
+				/* FIXME: Do this and also the -sync case. */
+				/* And finally fall back to the default. */
 				filename = g_build_filename (THEMEDIR, DEFAULT_THEME, NULL);			
 			}
 		}

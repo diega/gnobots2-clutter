@@ -367,7 +367,7 @@ void show_properties_dialog (void) {
 	vbox2 = gtk_vbox_new (FALSE, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox2), 6);
 	
-	button=add_level(vbox2, NULL, "Human", 0, WHITE);
+	button=add_level(vbox2, NULL, _("Human"), 0, WHITE);
 	button=add_level(vbox2, button, _("Very Easy"), 1, WHITE);
 	button=add_level(vbox2, button, _("Easy"), 	2, WHITE);
 	button=add_level(vbox2, button, _("Medium"), 	3, WHITE);

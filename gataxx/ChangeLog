@@ -1,3 +1,9 @@
+2005-02-14  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* properties.c: Translate "Human". This is already translated
+	elsewhere so it doesn't count as a string-freeze break. Thanks to
+	Nickolay V. Shmyrev for the patch (bug #167175).
+
 2005-02-07  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gtkgridboard.h:

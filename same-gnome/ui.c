@@ -6,15 +6,14 @@
  *
  */
 
-/* FIXME: The original didn't have to include this, what has chagned ? */
-#include <libintl.h>
+#include "config.h"
+
 #include <gnome.h>
 
 #include <games-files.h>
 #include <games-gridframe.h>
 #include <games-scores-dialog.h>
 
-#include "config.h"
 
 #include "same-gnome.h"
 
