@@ -1,0 +1,13 @@
+ASAP:
+1. create stuff needed by automake/autoconf
+2. Clean up the code - remove global variables
+3. implement difficulty levels
+4. make code managing key presses more buletproof
+
+Next:
+1. user preferences (starting level, show next block etc.)
+2. remember preferences in configuration database - learn from same-gnome game how to do it
+3. Center the block shown in preview pane
+
+Would be Nice:
+1. configurable block shapes and colors
