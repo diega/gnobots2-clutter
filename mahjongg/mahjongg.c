@@ -385,35 +385,38 @@ GnomeUIInfo mainmenu [] = {
 };
 
 GnomeUIInfo toolbar_uiinfo [] = {
-	{GNOME_APP_UI_ITEM, N_("New"), N_("New"), confirm_action, (gpointer)NEW_GAME, NULL,
+	{GNOME_APP_UI_ITEM, N_("New"), N_("New game"), confirm_action, (gpointer)NEW_GAME, NULL,
          GNOME_APP_PIXMAP_STOCK, GTK_STOCK_NEW, 0, 0, NULL},
 
-        {GNOME_APP_UI_ITEM, N_("Restart"), N_("Restart"), confirm_action, (gpointer)RESTART_GAME, NULL,
+        {GNOME_APP_UI_ITEM, N_("Restart"), N_("Restart game"), confirm_action, (gpointer)RESTART_GAME, NULL,
          GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REFRESH, 0, 0, NULL},
 
-        {GNOME_APP_UI_ITEM, N_("Hint"), N_("Hint"), hint_callback, NULL, NULL,
+        {GNOME_APP_UI_ITEM, N_("Hint"), N_("Get a hint"), hint_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GTK_STOCK_HELP, GDK_H, GDK_CONTROL_MASK, NULL},
 
-        {GNOME_APP_UI_ITEM, N_("Undo"), N_("Undo"), undo_tile_callback, NULL, NULL,
+        {GNOME_APP_UI_ITEM, N_("Undo"), N_("Undo previous move"), undo_tile_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GTK_STOCK_UNDO, 0, 0, NULL},
 
         {GNOME_APP_UI_ITEM, N_("Redo"), N_("Redo"), redo_tile_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REDO, 0, 0, NULL},
 
+	{GNOME_APP_UI_ITEM, N_("Shuffle"), N_("Shuffle tiles"), shuffle_tiles_callback, NULL, NULL,
+	 GNOME_APP_PIXMAP_STOCK, GTK_STOCK_EXECUTE, 0, 0, NULL},
+
         /* If you change the place for this button, change the index in
            the definition of PAUSE_BUTTON below */
-        {GNOME_APP_UI_TOGGLEITEM, N_("Pause"), N_("Pause"), pause_callback, NULL, NULL,
+        {GNOME_APP_UI_TOGGLEITEM, N_("Pause"), N_("Pause game"), pause_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GTK_STOCK_STOP, 0, 0, NULL},
 
 #ifdef SOUND_SUPPORT_FINISHED
-        {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), N_("Sound"), sound_on_callback, NULL, NULL,
+        {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), N_("Toggle sound"), sound_on_callback, NULL, NULL,
          GNOME_APP_PIXMAP_DATA, mini_sound_xpm, 0, 0, NULL},
 #endif
 
 	{GNOME_APP_UI_ENDOFINFO}
 };
 
-#define PAUSE_BUTTON GTK_TOGGLE_BUTTON(toolbar_uiinfo[5].widget)
+#define PAUSE_BUTTON GTK_TOGGLE_BUTTON(toolbar_uiinfo[6].widget)
 
 static void
 set_tile_selection (GtkWidget *widget, void *data)

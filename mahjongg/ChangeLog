@@ -1,5 +1,10 @@
 2002-05-10  Bastien Nocera  <hadess@hadess.net>
 
+	* mahjongg.c: add shuffle tiles to the toolbar (Closes: #80714)
+	(idea from Fernando Herrera), make the tooltips more verbose
+
+2002-05-10  Bastien Nocera  <hadess@hadess.net>
+
 	* mahjongg.c: (main): s/Time\ :/Time:/ as per Nils' recommendation
 
 2002-05-09  Bastien Nocera  <hadess@hadess.net>
