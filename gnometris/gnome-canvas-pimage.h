@@ -21,14 +21,16 @@
 #ifndef GNOME_CANVAS_PIMAGE_H
 #define GNOME_CANVAS_PIMAGE_H
 
-#include <libgnome/gnome-defs.h>
+#ifdef __cplusplus 
+extern "C" {
+#endif /* __cplusplus */
+
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <libart_lgpl/art_misc.h>
 #include <libart_lgpl/art_pixbuf.h>
 #include <libgnomeui/gnome-canvas.h>
 
 
-BEGIN_GNOME_DECLS
 
 #define GNOME_TYPE_CANVAS_PIMAGE            (gnome_canvas_pimage_get_type ())
 #define GNOME_CANVAS_PIMAGE(obj)            (GTK_CHECK_CAST ((obj), GNOME_TYPE_CANVAS_PIMAGE, GnomeCanvasPImage))
@@ -68,7 +70,8 @@ struct _GnomeCanvasPImageClass {
 /* Standard Gtk function */
 GtkType gnome_canvas_pimage_get_type (void);
 
-
-END_GNOME_DECLS
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif
