@@ -1,3 +1,7 @@
+2004-07-11  William Jon McCann  <mccann@jhu.edu>
+
+	* src/strategy.cpp: Fix for bug #145586.
+
 2004-07-08  William Jon McCann  <mccann@jhu.edu>
 
 	* src/menu.cpp (help_about_callback): Update Eric Farmer's

@@ -804,10 +804,10 @@ void BJPlayer::computeStandCount(int count, bool soft, bool split,
                 for (int cnt = 17; cnt <= 21; cnt++) {
                     if (currentHand.count > cnt) {
                         hand.valueStand[split][upCard - 1] +=
-                            hand.probabilityCount[count - 17][upCard - 1];
+                            hand.probabilityCount[cnt - 17][upCard - 1];
                     } else if (currentHand.count < cnt) {
                         hand.valueStand[split][upCard - 1] -=
-                            hand.probabilityCount[count - 17][upCard - 1];
+                            hand.probabilityCount[cnt - 17][upCard - 1];
                     }
                 }
             }
