@@ -1,9 +1,18 @@
+#ifndef _IAGNO2_DEFINES_H_
+#define _IAGNO2_DEFINES_H_
+
 #define TILEWIDTH   60
 #define TILEHEIGHT  60
+/*
 #define GRIDWIDTH   1
+*/
 #define BOARDSIZE   8
+/*
 #define BOARDWIDTH  (TILEWIDTH + GRIDWIDTH) * BOARDSIZE - 1
 #define BOARDHEIGHT (TILEHEIGHT + GRIDWIDTH) * BOARDSIZE - 1
+*/
+#define BOARDWIDTH  TILEWIDTH * BOARDSIZE
+#define BOARDHEIGHT TILEHEIGHT * BOARDSIZE
 
 #define INDEX(r,c) ((r << 3) + c)
 #define ROW(x)     (x >> 3)
@@ -20,3 +29,5 @@
 #define DOWN		8
 #define DOWN_LEFT	7
 #define DOWN_RIGHT	9
+
+#endif

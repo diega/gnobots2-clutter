@@ -1,3 +1,6 @@
+#ifndef _IAGNO2_PLUGIN_H_
+#define _IAGNO2_PLUGIN_H_
+
 #include <glib.h>
 #include <gmodule.h>
 
@@ -12,3 +15,5 @@ typedef struct {
 Iagno2Plugin *iagno2_plugin_open (const gchar *plugin_file);
 
 void iagno2_plugin_close (Iagno2Plugin *plugin);
+
+#endif

@@ -13,38 +13,38 @@ extern gchar whose_turn;
 void
 plugin_init ()
 {
-	struct timeval tv;
+  struct timeval tv;
 
-	gettimeofday (&tv, NULL);
-	srand (tv.tv_usec);
+  gettimeofday (&tv, NULL);
+  srand (tv.tv_usec);
 }
 
 gint
 plugin_move (gchar *board)
 {
-	gint i;
-	gint moves[32];
-	gint nummoves = 0;
+  gint i;
+  gint moves[32];
+  gint nummoves = 0;
 
-	for (i = 0; i < 64; i++) {
-		if (is_valid_move (board, i, whose_turn)) {
-			moves[nummoves++] = i;
-		}
-	}
+  for (i = 0; i < 64; i++) {
+    if (is_valid_move (board, i, whose_turn)) {
+      moves[nummoves++] = i;
+    }
+  }
 
-	if (!nummoves) {
-		return TRUE;
-	}
+  if (!nummoves) {
+    return TRUE;
+  }
 
-	i = rand() % nummoves;
+  i = rand() % nummoves;
 
-	iagno2_move (moves[i]);
+  iagno2_move (moves[i]);
 
-	return FALSE;
+  return FALSE;
 }
 
 const gchar *
 plugin_name ()
 {
-	return "Random player for Iagno II";
+  return "Random player for Iagno II";
 }

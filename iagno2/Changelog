@@ -1,3 +1,12 @@
+2000-04-08  Ian Peters  <itp@gnu.org>
+
+	* src/iagno2.h, src/iagno2.c, src/main.c: Moved from the canvas back to
+	  a drawing_area method, because the canvas couldn't keep up.  Moved
+	  from imlib to gdk-pixbuf.
+
+	* src/*.c, src/*.h, plugins/random/*.c, reversi-iagno2/*.c,
+	  reversi-iagno2/*.h: stylistic changes (indentation, etc).
+
 1999-10-15  Ian Peters  <itp@gnu.org>
 
 	* First commit to CVS.
