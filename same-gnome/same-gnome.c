@@ -664,10 +664,10 @@ GnomeUIInfo gamemenu[] = {
 	{GNOME_APP_UI_ITEM, N_("_Properties..."), NULL, game_preferences_callback, NULL, NULL,
 	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("_Scores..."), NULL, game_top_ten_callback, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("_Scores"), NULL, game_top_ten_callback, NULL, NULL,
 	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SCORES, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("_Quit"), NULL, game_quit_callback, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("E_xit"), NULL, game_quit_callback, NULL, NULL,
 	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 'q', GDK_CONTROL_MASK, NULL},
 
 	{GNOME_APP_UI_ENDOFINFO}
@@ -677,7 +677,7 @@ GnomeUIInfo helpmenu[] = {
 	{GNOME_APP_UI_HELP, NULL, NULL, "samegnome", NULL, NULL,
 	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("_About..."), NULL, game_about_callback, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("_About Same Gnome"), NULL, game_about_callback, NULL, NULL,
 	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
 
 	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
