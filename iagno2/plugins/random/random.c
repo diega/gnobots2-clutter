@@ -34,7 +34,7 @@ gchar busy_message[2][50];
 gchar *new_message[2] = { NULL, NULL };
 
 void
-plugin_init_player (gchar player)
+plugin_init_player (gint player)
 {
   gchar *pref_file;
   gchar *tmp_message;
@@ -48,7 +48,7 @@ plugin_init_player (gchar player)
 }
 
 void
-plugin_deinit_player (gchar player)
+plugin_deinit_player (gint player)
 {
   if (new_message[player]) {
     g_free (new_message[player]);
@@ -57,7 +57,7 @@ plugin_deinit_player (gchar player)
 }
 
 void
-plugin_setup (gchar player)
+plugin_setup (gint player)
 {
   struct timeval tv;
 
@@ -66,7 +66,7 @@ plugin_setup (gchar player)
 }
 
 gint
-plugin_move (ReversiBoard *board, gchar player)
+plugin_move (ReversiBoard *board, gint player)
 {
   gint i;
   gint moves[32];
@@ -95,13 +95,13 @@ plugin_name ()
 }
 
 const gchar *
-plugin_busy_message (gchar player)
+plugin_busy_message (gint player)
 {
   return (busy_message[player]);
 }
 
 void
-plugin_about_window (GtkWindow *parent, gchar player)
+plugin_about_window (GtkWindow *parent, gint player)
 {
   GtkWidget *about;
   const gchar *authors[] = {
@@ -125,7 +125,7 @@ plugin_about_window (GtkWindow *parent, gchar player)
 }
 
 void
-plugin_preferences_window (GtkWidget *parent, gchar player)
+plugin_preferences_window (GtkWidget *parent, gint player)
 {
   GtkWidget *dialog;
   GtkWidget *entry;
@@ -177,7 +177,7 @@ plugin_preferences_window (GtkWidget *parent, gchar player)
 }
 
 void
-plugin_preferences_save (gchar player)
+plugin_preferences_save (gint player)
 {
   gchar *pref_file;
   
