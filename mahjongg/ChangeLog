@@ -1,3 +1,12 @@
+Tue Aug 25 17:45:00 BST 1998 Michael Meeks <michael@imaginator.com>
+	* mahjongg.c (load_callback): Fixed bug with duff pointers being
+	retained after being freed.
+	* mahjongg.c (set_backgnd_colour): (load_callback):
+	(colour_changes_cb): (properties_callback):
+	(create_mahjongg_board):
+	Background colour setting, major mangle / creation of all these.
+	* mahjongg.c (hint_callback): Added nicer prompt to the hint dialog.
+	
 Mon Aug 17 18:00:00 BST 1998 Michael Meeks <michael@imaginator.com>
 	* Major code mangle.
 	* Added extra map, renamed structures to acommodate

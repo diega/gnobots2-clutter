@@ -323,6 +323,12 @@ static struct {
   int make_it_default;
 } selected_mapset = {0,0} ;
 
+static struct {
+  GdkColor colour ;
+  char *name ;
+  int set ;
+} backgnd = {0,0,0} ;
+
 struct _maps
 {
   char *name ;
@@ -496,6 +502,39 @@ free_str (GtkWidget *widget, void *data)
 	free (data);
 }
 
+
+void clear_window ()
+{
+  int x, y, w, h, d ;
+  gdk_window_get_geometry (draw_area->window, &x, &y, &w, &h, &d) ;
+  gdk_window_clear_area(draw_area->window, 0, 0, 1000, 1000) ;
+}
+
+void set_backgnd_colour (char *str)
+{
+  /* backgnd.colour.red = 0;
+  backgnd.colour.green = 0x3040;
+  backgnd.colour.blue = 0x1030;
+  backgnd.colour.pixel = 0; */
+
+  GdkColormap *colourmap ;
+
+  if (str != backgnd.name)
+    {
+      if (backgnd.name)
+	free (backgnd.name) ;
+      backgnd.name = strdup (str) ;
+    }
+  colourmap = gtk_widget_get_colormap(draw_area) ;
+  gdk_color_parse (backgnd.name, &backgnd.colour) ;
+
+  gdk_color_alloc(colourmap, &backgnd.colour) ;
+
+  gdk_window_set_background (draw_area->window, &backgnd.colour);
+  clear_window() ;
+  gtk_widget_draw (draw_area, NULL);
+}
+
 static void
 load_callback (GtkWidget *widget, void *data)
 {
@@ -510,6 +549,7 @@ load_callback (GtkWidget *widget, void *data)
 				   selected_tileset.tileset);
 	  sync = 1 ;
 	}
+      selected_tileset.tileset = 0 ;
     }
   if (selected_mapset.mapset)
     {
@@ -521,9 +561,21 @@ load_callback (GtkWidget *widget, void *data)
 				   selected_mapset.mapset);
 	  sync = 1 ;
 	}
+      selected_mapset.mapset = 0 ;
+    }
+  if (backgnd.set)
+    {
+      set_backgnd_colour (backgnd.name) ;
+      gnome_config_set_string ("/gmahjongg/Preferences/bcolour",
+			       backgnd.name) ;
+      sync = 1 ;
+      backgnd.set = 0 ;
     }
   if (sync)
+    {
     gnome_config_sync();
+    printf ("Synced\n") ;
+    }
   if (redraw)
     gtk_widget_draw (draw_area, NULL);
   pref_cancel (0,0);
@@ -594,13 +646,6 @@ fill_map_menu (GtkWidget *menu)
 	  gtk_menu_set_active(GTK_MENU(menu), itemno); 
       itemno++ ;
     }
-}
-
-void clear_window ()
-{
-  int x, y, w, h, d ;
-  gdk_window_get_geometry (draw_area->window, &x, &y, &w, &h, &d) ;
-  gdk_window_clear_area(draw_area->window, 0, 0, 1000, 1000) ;
 }
 
 int find_tile_in_layer (int x, int y, int layer)
@@ -707,11 +752,25 @@ void you_won (void)
 	gtk_widget_show (mb);
 }
 
+void colour_changed_cb( GnomeColorSelector *widget, gchar **color )
+{
+  static char tmp[24] = "" ;
+  int r,g,b;
+
+  gnome_color_selector_get_color_int(widget, &r, &g, &b, 255 );
+  
+  sprintf( tmp, "#%02x%02x%02x", r, g, b ) ;
+
+  *color = tmp ;
+  backgnd.set = 1 ;
+}          
+
 void properties_callback (GtkWidget *widget, gpointer data)
 {
 	GtkDialog *d;
 	GtkWidget *button;
 	GtkWidget *tmenu, *mmenu, *otmenu, *ommenu, *l, *hb, *cb, *f, *fv;
+	GnomeColorSelector *bcolour_gcs ;
 
 	if (pref_dialog)
 		return;
@@ -788,6 +847,25 @@ void properties_callback (GtkWidget *widget, gpointer data)
 	gtk_box_pack_start_defaults (GTK_BOX(d->vbox), f);
 	gtk_container_add (GTK_CONTAINER (f), fv);
 	gtk_widget_show (f);
+
+	f = gtk_vbox_new (0, 5) ;
+	gtk_container_border_width (GTK_CONTAINER (f), 5);
+
+	{
+	  int ur,ug,ub ;
+	  bcolour_gcs  = gnome_color_selector_new( (SetColorFunc)colour_changed_cb,
+						   &backgnd.name) ;
+	  sscanf( backgnd.name, "#%02x%02x%02x", &ur,&ug,&ub );
+	  gnome_color_selector_set_color_int( bcolour_gcs, ur, ug, ub, 255) ;
+	}
+
+	l = gtk_label_new (_("Background colour")) ;
+	gtk_box_pack_start_defaults (GTK_BOX(f), l) ;
+	gtk_box_pack_start_defaults (GTK_BOX(f),
+				     gnome_color_selector_get_button(bcolour_gcs)) ;
+	gtk_widget_show(l) ;
+	gtk_box_pack_start_defaults (GTK_BOX(d->vbox), f) ;
+	gtk_widget_show(f) ;
 	
 	/* Misc bottom buttons */
         button = gnome_stock_button(GNOME_STOCK_BUTTON_OK);
@@ -802,14 +880,14 @@ void properties_callback (GtkWidget *widget, gpointer data)
 	gtk_box_pack_start(GTK_BOX(d->action_area), button, TRUE, TRUE, 5);
         gtk_widget_show(button);
 
-        gtk_widget_show (pref_dialog);
+        gtk_widget_show_all (pref_dialog);
 	
 }
 
 void hint_callback (GtkWidget *widget, gpointer data)
 {
   GtkDialog *d;
-  GtkWidget *button;
+  GtkWidget *button, *f, *t;
   int i, j, free=0, type ;
 
   if (hint_dialog)
@@ -845,6 +923,16 @@ void hint_callback (GtkWidget *widget, gpointer data)
   d = GTK_DIALOG(hint_dialog);
   gtk_signal_connect (GTK_OBJECT(hint_dialog), "delete_event",
 		      (GtkSignalFunc)hint_cancel, NULL); 
+
+  f = gtk_vbox_new (0, 5) ;
+  gtk_container_border_width (GTK_CONTAINER(f), 5) ;
+
+    t = gtk_label_new (_("Click to continue")) ;
+    gtk_box_pack_start_defaults (GTK_BOX(f), t) ;
+    gtk_widget_show (t) ;
+
+  gtk_box_pack_start_defaults (GTK_BOX(d->vbox), f) ;
+  gtk_widget_show (f) ;
 
   /* Misc bottom buttons */
   button = gnome_stock_button(GNOME_STOCK_BUTTON_OK);
@@ -1327,6 +1415,9 @@ void create_mahjongg_board (void)
 	buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/mapset=easy", NULL);
 	set_map (buf);
 
+	buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/bcolour=#003010", NULL) ;
+	set_backgnd_colour (buf) ;
+
 	my_gc = gdk_gc_new (draw_area->window);
 	gdk_gc_set_clip_mask (my_gc, mask);
 
@@ -1352,10 +1443,6 @@ void new_game ()
 
 int main (int argc, char *argv [])
 {
-	GdkColor color;
-	GdkColorContext *cc;
-	int x;
-	
 	argp_program_version = MAH_VERSION;
 
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
@@ -1404,22 +1491,8 @@ int main (int argc, char *argv [])
 	gnome_app_set_contents (GNOME_APP (window), mbox);
 	create_mahjongg_board ();
 
-	cc = gdk_color_context_new (gtk_widget_get_visual (draw_area),
-				    gtk_widget_get_colormap (draw_area));
-	color.red = 0;
-	color.green = 0x3040;
-	color.blue = 0x1030;
-	color.pixel = 0;
-	x = 0;
-	gdk_color_context_get_pixels (cc,
-				      &color.red,
-				      &color.green,
-				      &color.blue, 1,
-				      &color.pixel, &x);
-	gdk_window_set_background (draw_area->window, &color);
 	gtk_widget_show (window);
 	gtk_main ();
-	gdk_color_context_free (cc);
 	
 	return 0;
 }
