@@ -1,5 +1,8 @@
 2003-06-13  William Jon McCann  <mccann@jhu.edu>
 
+	* src/dialog.cpp (select_rule_cb): Make dialog insensitive
+	while loading new rules.
+
 	* data/blackjack.schemas.in: 
 	* data/Makefile.am (schemadir): Install gconf schemas.
 	

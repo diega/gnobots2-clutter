@@ -189,9 +189,13 @@ select_rule_cb (GtkTreeSelection *select, gpointer data)
       gtk_tree_model_get (model, &iter, FILENAME_STRING, &filename, -1);
       if (g_ascii_strcasecmp (filename, bj_game_get_rules_file ()))
         {
+          if (data != NULL)
+            gtk_widget_set_sensitive (GTK_WIDGET (data), FALSE);
           splash_new ();
           bj_game_new (filename, &seed);
           splash_destroy ();
+          if (data != NULL)
+            gtk_widget_set_sensitive (GTK_WIDGET (data), TRUE);
         }
     }
 }
@@ -360,7 +364,7 @@ show_preferences_dialog ()
                         GNOME_PAD_SMALL );
 
       g_signal_connect (G_OBJECT (select), "changed", 
-                        GTK_SIGNAL_FUNC (select_rule_cb), NULL);
+                        GTK_SIGNAL_FUNC (select_rule_cb), (gpointer) pref_dialog);
 
       gchar *current_rule;
       current_rule = bj_get_game_variation ();
