@@ -236,7 +236,8 @@ BlockOps::checkFullLines(ScoreFrame *s)
 							gtk_object_destroy(GTK_OBJECT(field[x][y1].item));
 							field[x][y1].item = 0;
 							if (y1 < y)
-								field[x][y1 + 1].item = generateItem(x, y1 + 1, field[x][y1 + 1].color);
+								field[x][y1 + 1].item = 
+									generateItem(x, y1 + 1, field[x][y1 + 1].color);
 						}
 						
 					}
@@ -261,7 +262,8 @@ BlockOps::generateFallingBlock()
 	
 	blocknr_next = rand() % tableSize;
 	rot_next = rand() % 4;
-	color_next = random_block_colors ? rand() % nr_of_colors : blocknr_next % nr_of_colors;
+	color_next = random_block_colors ? rand() % nr_of_colors : 
+		blocknr_next % nr_of_colors;
 	
 	if (!blockOkHere(posx, posy, blocknr, rot))
 		return false;
@@ -313,22 +315,29 @@ void
 BlockOps::putBlockInField(bool erase)
 {
 	for (int x = 0; x < 4; ++x)
+	{
 		for (int y = 0; y < 4; ++y)
+		{
 			if (blockTable[blocknr][rot][x][y])
 			{
 				field[posx - 2 + x][y + posy].what = erase ? EMPTY : FALLING;
 				if (erase)
 				{
-					gtk_object_destroy(GTK_OBJECT(field[posx - 2 + x][y + posy].item));
+					GnomeCanvasItem *o = field[posx - 2 + x][y + posy].item;
+					if (o)
+						gtk_object_destroy(GTK_OBJECT(o));
 					field[posx - 2 + x][y + posy].item = 0;
 				}
 				else
 				{
 					field[posx - 2 + x][y + posy].color = color;
-					field[posx - 2 + x][y + posy].item = generateItem(posx - 2 + x, y + posy, 
-																														field[posx - 2 + x][y + posy].color);
+					field[posx - 2 + x][y + posy].item = 
+						generateItem(posx - 2 + x, y + posy, 
+									 field[posx - 2 + x][y + posy].color);
 				}
 			}
+		}
+	}
 }
 
 

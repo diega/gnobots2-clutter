@@ -1,7 +1,11 @@
+2000-04-27  Marcin Gorycki  <Janusz.Gorycki@intel.com>
+
+	* 
+
 2000-04-19  Ian Peters  <itp@gnu.org>
 
-	* field.cpp: push the visual and colormap before creating the canvas,
-	  etc., to fix BadMatch on multi-depth displays.
+	* field.cpp: push the visual and colormap before creating the
+	  canvas, etc., to fix BadMatch on multi-depth displays.
 
 1999-12-07  Mitchell Perilstein  <mitch@enetis.net>
 
