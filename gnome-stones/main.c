@@ -139,29 +139,44 @@ load_image_from_path (const char *relative_name)
 }
 
 static void
-draw_text_centered (GdkDrawable *pixmap, gchar *markup, gint y)
+draw_text_centered (GdkDrawable *pixmap, gchar *text)
 {
   GdkGC *gc;
-
+  gchar *markup;
+  gchar *template = "<span size=\"%d\" weight=\"bold\" foreground=\"black\">%s</span>";
+  PangoRectangle extent;
+  gint text_size;
+  gint x,y;
   PangoLayout *layout;
-  if (pixmap)
-    {
-      gc = gstones_view->style->black_gc;
-      layout = gtk_widget_create_pango_layout (gstones_view, "");
-      pango_layout_set_alignment (layout, PANGO_ALIGN_CENTER);
-      pango_layout_set_width (layout, GAME_COLS * STONE_SIZE * PANGO_SCALE);
-      pango_layout_set_markup (layout, markup, -1);
-      gdk_draw_layout (pixmap, gc, 0, y, layout);
-      g_object_unref (layout);
-    }
+
+  g_return_if_fail (pixmap);
+  
+  /* FIXME: This involves an ugly, ugly hack. */
+
+  gc = gstones_view->style->black_gc;
+  layout = gtk_widget_create_pango_layout (gstones_view, "");
+  pango_layout_set_alignment (layout, PANGO_ALIGN_CENTER);
+  text_size = 36*PANGO_SCALE; /* A guess. */
+  markup = g_strdup_printf (template, text_size, text);
+  pango_layout_set_markup (layout, markup, -1);
+  pango_layout_get_extents (layout, &extent, NULL);
+  /* Now correct the guess. */
+  text_size = text_size*GAME_COLS*STONE_SIZE*0.8*PANGO_SCALE/extent.width;
+  g_free (markup);
+  markup = g_strdup_printf (template, text_size, text);
+  pango_layout_set_markup (layout, markup, -1);
+  pango_layout_get_extents (layout, NULL, &extent);
+  x = (GAME_COLS*STONE_SIZE - extent.width/PANGO_SCALE)/2;
+  y = (GAME_ROWS*STONE_SIZE - extent.height/PANGO_SCALE)/2;
+  
+  gdk_draw_layout (pixmap, gc, x, y, layout);
+  g_free (markup);
+  g_object_unref (layout);
 }
 
 static void
 title_image_load (void)
 {
-  gchar *markup;
-  gchar *title_text;
-  gint text_size;
   GdkPixbuf *image;
   GdkGC *gc;
   GdkPixmap *tile;
@@ -186,14 +201,7 @@ title_image_load (void)
                           TRUE, 0, 0, -1, -1);
     }
 
-  title_text = g_strdup (_("GNOME Stones"));
-  text_size = GAME_COLS * STONE_SIZE / (strlen (title_text)+1) * PANGO_SCALE;
-
-  markup = g_strdup_printf ("<span size=\"%d\" weight=\"bold\" foreground=\"black\">%s</span>", 
-                            text_size, title_text);
-  g_free (title_text);
-  draw_text_centered (title_template, markup, 128);
-  g_free (markup);
+  draw_text_centered (title_template, _("GNOME Stones"));
 
   title_image = gdk_pixmap_new (gstones_view->window,
                                 GAME_COLS * STONE_SIZE,
