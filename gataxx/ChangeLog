@@ -1,3 +1,12 @@
+2003-06-17  William Jon McCann  <mccann@jhu.edu>
+
+	* gataxx.c: 
+	* gataxx.h:
+	* properties.c:
+	* properties.h:
+	* ataxx.c:
+	* ataxx.h: Fixed compiler warnings.
+
 2003-06-13  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gataxx.c (quit_game_cb): Removed the last "are you sure"

@@ -24,18 +24,17 @@
 #define _ATAXX_H_
 
 #define MAX_DEPTH 4;
-gint is_valid_piece(guint, guint, guint);
-gint is_valid_piece_board(gint8[7][7], guint, guint, guint);
-gint is_valid_move(guint, guint, guint, guint, guint);
-gint is_valid_move_board(gint8[7][7], guint, guint, guint, guint, guint);
-gint move(guint, guint, guint, guint, guint);
-gint move_board(gint8[7][7], guint, guint, guint, guint, guint, gint);
-gint count_pieces(gint8[7][7],gint);
-gint flip_final_results();
-gint check_valid_moves();
-gint computer_move_1(guint);
-gint computer_move_2(guint);
-gint computer_move_3(guint);
+gint is_valid_piece (guint, guint, guint);
+gint is_valid_piece_board (gint8[7][7], guint, guint, guint);
+gint is_valid_move (guint, guint, guint, guint, guint);
+gint is_valid_move_board (gint8[7][7], guint, guint, guint, guint, guint);
+gint move (guint, guint, guint, guint, guint);
+gint move_board (gint8[7][7], guint, guint, guint, guint, guint, gint);
+gint count_pieces (gint8[7][7], gint);
+gint check_valid_moves (void);
+gint computer_move_1 (guint);
+gint computer_move_2 (guint);
+gint computer_move_3 (guint);
 
 
 #endif

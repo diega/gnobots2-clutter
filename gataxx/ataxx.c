@@ -22,6 +22,7 @@
 
 #include "config.h"
 #include <gnome.h>
+#include <string.h>
 
 #include "ataxx.h"
 #include "gataxx.h"
@@ -55,31 +56,40 @@ extern guint tiles_to_flip;
 
 /* Wrapper for is_valid_move_board, to maintain API for CORBA stuff */
 
-gint is_valid_piece(guint x, guint y, guint me) {
-  return is_valid_piece_board(board, x, y, me);
+gint
+is_valid_piece(guint x, guint y, guint me)
+{
+  return is_valid_piece_board (board, x, y, me);
 }
 
-gint is_valid_piece_board(gint8 board[7][7], guint x, guint y, guint me) {
-
-  if (board[x][y] == me) return TRUE;
+gint
+is_valid_piece_board (gint8 board[7][7], guint x, guint y, guint me)
+{
+  if (board[x][y] == me)
+    return TRUE;
   return FALSE;
 }
 
-gint is_valid_move(guint x, guint y, guint selected_x, guint selected_y, guint me) {
-  return is_valid_move_board(board, x, y, selected_x, selected_y, me);
+gint
+is_valid_move (guint x, guint y, guint selected_x, guint selected_y, guint me)
+{
+  return is_valid_move_board (board, x, y, selected_x, selected_y, me);
 }
 
 /* Check if a given square is a valid move for one of the players */
 
-gint is_valid_move_board(gint8 board[7][7], guint x, guint y, guint selected_x, guint selected_y, guint me){
+gint 
+is_valid_move_board (gint8 board[7][7], guint x, guint y,
+                     guint selected_x, guint selected_y, guint me)
+{
 
   guint not_me;
   
 
   not_me = (me == WHITE_TURN) ? BLACK_TURN : WHITE_TURN;
   
-  if(board[x][y] != 0)
-    return(FALSE);
+  if (board[x][y] != 0)
+    return (FALSE);
   
   /*basically make sure that the current and selected 
     positions are no more than 2 spaces away*/
@@ -90,25 +100,30 @@ gint is_valid_move_board(gint8 board[7][7], guint x, guint y, guint selected_x, 
   if ((abs(y-selected_y) <= 2) && (abs(x-selected_x) <= 2)) 
     return 2;
 
-  return(FALSE);
+  return (FALSE);
 }
 
 /* Wrapper for move_board, to maintain API for CORBA stuff */
 
-gint move(guint x, guint y, guint selected_x, guint selected_y, guint me) {
+gint
+move (guint x, guint y, guint selected_x, guint selected_y, guint me)
+{
 
   int retval;
   
-  retval = move_board(board, x, y, selected_x, selected_y, me, 1);
+  retval = move_board (board, x, y, selected_x, selected_y, me, 1);
   
-  check_valid_moves();
-  check_computer_players();
+  check_valid_moves ();
+  check_computer_players ();
   
   return retval;
 }
 
 
-gint move_board(gint8 board[7][7], guint x, guint y, guint selected_x, guint selected_y, guint me, gint real) {
+gint
+move_board (gint8 board[7][7], guint x, guint y,
+            guint selected_x, guint selected_y, guint me, gint real)
+{
   guint not_me;
   gint count = 1;
   gint take_count = 0;
@@ -118,50 +133,50 @@ gint move_board(gint8 board[7][7], guint x, guint y, guint selected_x, guint sel
 
   not_me = (me == WHITE_TURN) ? BLACK_TURN : WHITE_TURN;
  
-  if(real) {
+  if (real) {
     
     /* Copy the old board and move info to the undo buffer */
 
-    memcpy(game->board, board, sizeof(gint8) * 7 * 7);
+    memcpy (game->board, board, sizeof (gint8) * 7 * 7);
     game->x = x;
     game->y = y;
     game->me = me;
-    newentry = g_malloc(sizeof(MoveHistory));
+    newentry = g_malloc (sizeof (MoveHistory));
     newentry->prev = game;
     game = newentry;
     
-    if(whose_turn == WHITE_TURN) {
+    if (whose_turn == WHITE_TURN) {
       whose_turn = BLACK_TURN;
       gui_message(_("Dark's move"));
 
-      if(!white_computer_level) {
-	games_clock_stop(GAMES_CLOCK(time_display));
+      if (!white_computer_level) {
+	games_clock_stop (GAMES_CLOCK (time_display));
       }
 
     } else {
       whose_turn = WHITE_TURN;
       gui_message(_("Light's move"));
 
-      if(!black_computer_level) {
-	games_clock_stop(GAMES_CLOCK(time_display));
+      if (!black_computer_level) {
+	games_clock_stop (GAMES_CLOCK (time_display));
       }
 
     }
     
     
-    if (!((abs(y-selected_y) <= 1) && (abs(x-selected_x) <= 1))) 
+    if (!((abs (y-selected_y) <= 1) && (abs (x-selected_x) <= 1))) 
       {
 	pixmaps[selected_x][selected_y] = 0;
-	gui_draw_pixmap(0, selected_x, selected_y);
+	gui_draw_pixmap (0, selected_x, selected_y);
       }
     pixmaps[x][y] = me;
-    gui_draw_pixmap(me, x, y);
+    gui_draw_pixmap (me, x, y);
   }
   
  
   
   board[x][y] = me;
-  if (!((abs(y-selected_y) <= 1) && (abs(x-selected_x) <= 1))) 
+  if (!((abs (y-selected_y) <= 1) && (abs (x-selected_x) <= 1))) 
     {
       board[selected_x][selected_y] = 0;
       count--;
@@ -180,11 +195,11 @@ gint move_board(gint8 board[7][7], guint x, guint y, guint selected_x, guint sel
 
   /* More stuff for a ``real'' move */
 
-  if(real) {
+  if (real) {
     
     /* Update the statusbar counters */
     
-    if(me == BLACK_TURN) {
+    if (me == BLACK_TURN) {
       bcount = bcount + count + take_count;
       wcount -= take_count;
     } else {
@@ -194,21 +209,22 @@ gint move_board(gint8 board[7][7], guint x, guint y, guint selected_x, guint sel
     
     gui_status();
    
-    if(not_me == BLACK_TURN && !black_computer_level && timer_valid) {
-      games_clock_start(GAMES_CLOCK(time_display));
+    if (not_me == BLACK_TURN && !black_computer_level && timer_valid) {
+      games_clock_start (GAMES_CLOCK (time_display));
     }
-    if(not_me == WHITE_TURN && !white_computer_level && timer_valid) {
-      games_clock_start(GAMES_CLOCK(time_display));
+    if (not_me == WHITE_TURN && !white_computer_level && timer_valid) {
+      games_clock_start (GAMES_CLOCK (time_display));
     }
    
     tiles_to_flip = 1;
   }
   
-  return(FALSE);
+  return (FALSE);
 }
 
 
-gint computer_move_3(guint me)
+gint
+computer_move_3 (guint me)
 {
   guint xs[320], ys[320], xss[320], yss[320];
   guint weights[320];
@@ -220,17 +236,17 @@ gint computer_move_3(guint me)
   gint8 tboard[7][7];
   gint * tmplist;
   
-  for(i = 0; i < 7; i++)
-    for(j = 0; j < 7; j++)
-      if(is_valid_piece(i, j, me)) 
-	for(k = 0; k < 7; k++)
-	  for(l = 0; l < 7; l++)
-	    if(is_valid_move(k,l,i,j,me)){
+  for (i = 0; i < 7; i++)
+    for (j = 0; j < 7; j++)
+      if (is_valid_piece (i, j, me)) 
+	for (k = 0; k < 7; k++)
+	  for (l = 0; l < 7; l++)
+	    if (is_valid_move (k,l,i,j,me)){
 
-	      memcpy(tboard, board, sizeof(gint8) * 7 * 7);
-	      move_board(tboard, k, l, i, j, me, FALSE);
+	      memcpy (tboard, board, sizeof (gint8) * 7 * 7);
+	      move_board (tboard, k, l, i, j, me, FALSE);
 	      
-	      tmp = count_pieces(tboard,me);
+	      tmp = count_pieces (tboard,me);
 	      if (tmp == maxpieces) {
 		xss[num_moves] = i;
 		yss[num_moves] = j;
@@ -253,34 +269,36 @@ gint computer_move_3(guint me)
 	    }
 
 
-  if(num_moves) {
-    tmplist = g_malloc(sizeof(gint) * num_maxes);
+  if (num_moves) {
+    tmplist = g_malloc (sizeof (gint) * num_maxes);
     j = 0;
     for (i = 0; i < num_moves; i++) 
       if (weights[i] == maxpieces) {
 	tmplist[j++] = i;
       }
-    j = (rand()>>3) % num_maxes;
+    j = (rand ()>>3) % num_maxes;
     i = tmplist[j];
-    move(xs[i], ys[i], xss[i], yss[i], me);
-    g_free(tmplist);
+    move (xs[i], ys[i], xss[i], yss[i], me);
+    g_free (tmplist);
   }
   
-  return(FALSE);
+  return (FALSE);
 }
 
-gint computer_move_2(guint me) {
+gint
+computer_move_2(guint me)
+{
 
   guint xs[1000], ys[1000], xss[1000], yss[1000]; /*another canidate for linked lists*/
   gint weights[1000];
   gint maxpieces = 0;
   gint maxwhite = 0;
   gint maxwhite2 = -50;
-  gint tmp,tmp2, tmp3;
+  gint tmp, tmp2, tmp3;
   guint num_moves = 0;
   guint i, j, k, l;
   guint i2,j2,k2,l2;
-  gint8 tboard[7][7],t2board[7][7] ;
+  gint8 tboard[7][7], t2board[7][7];
   guint not_me;
 
  
@@ -290,29 +308,29 @@ gint computer_move_2(guint me) {
   
   not_me = (me == WHITE_TURN) ? BLACK_TURN : WHITE_TURN;
 
-  for(i = 0; i < 7; i++)
-    for(j = 0; j < 7; j++)
-      if(is_valid_piece(i, j, me)) 
-	for(k = 0; k < 7; k++)
-	  for(l = 0; l < 7; l++)
-	    if(is_valid_move(k,l,i,j,me)){
+  for (i = 0; i < 7; i++)
+    for (j = 0; j < 7; j++)
+      if (is_valid_piece (i, j, me)) 
+	for (k = 0; k < 7; k++)
+	  for (l = 0; l < 7; l++)
+	    if (is_valid_move (k,l,i,j,me)){
 
 	      maxpieces = 0;
-	      memcpy(tboard, board, sizeof(gint8) * 7 * 7);
-	      move_board(tboard, k, l, i, j, me, FALSE);
+	      memcpy (tboard, board, sizeof (gint8) * 7 * 7);
+	      move_board (tboard, k, l, i, j, me, FALSE);
 	      maxwhite = 0;
-	      for(i2 = 0; i2 < 7; i2++)
-		for(j2 = 0; j2 < 7; j2++)
-		  if(is_valid_piece(i2, j2, not_me)) 
-		    for(k2 = 0; k2 < 7; k2++)
-		      for(l2 = 0; l2 < 7; l2++)
-			if(is_valid_move(k2,l2,i2,j2,not_me)){
+	      for (i2 = 0; i2 < 7; i2++)
+		for (j2 = 0; j2 < 7; j2++)
+		  if (is_valid_piece (i2, j2, not_me)) 
+		    for (k2 = 0; k2 < 7; k2++)
+		      for (l2 = 0; l2 < 7; l2++)
+			if (is_valid_move (k2,l2,i2,j2,not_me)){
 
-			  memcpy(t2board, tboard, sizeof(gint8) * 7 * 7);
-			  move_board(t2board, k2, l2, i2, j2, not_me, FALSE);
+			  memcpy (t2board, tboard, sizeof (gint8) * 7 * 7);
+			  move_board (t2board, k2, l2, i2, j2, not_me, FALSE);
 			  
-			  tmp = count_pieces(t2board,not_me);
-			  tmp3 = count_pieces(t2board, me);
+			  tmp = count_pieces (t2board,not_me);
+			  tmp3 = count_pieces (t2board, me);
 			  
 			  /*			  g_print("maxblack:%d maxwhite:%d\n",tmp,tmp3);  */
 			  if (tmp > maxpieces) {
@@ -336,7 +354,7 @@ gint computer_move_2(guint me) {
 		num_moves++;
 		/*		g_print("num_moves:%d weight:%d\n",num_moves,maxwhite2);*/
 	      } 
-	      else if (tmp2> maxwhite2){
+	      else if (tmp2 > maxwhite2){
 		xss[num_moves] = i;
 		yss[num_moves] = j;
 		xs[num_moves] = k;
@@ -350,8 +368,8 @@ gint computer_move_2(guint me) {
 	      }
 	    }
   
-  if(num_moves) {
-    tmplist = g_malloc(sizeof(gint) * num_maxes);
+  if (num_moves) {
+    tmplist = g_malloc (sizeof (gint) * num_maxes);
    /* g_print("num_maxes:%d\n",num_maxes); */
     j = 0;
     for (i = 0; i < num_moves; i++) {
@@ -361,30 +379,32 @@ gint computer_move_2(guint me) {
       }
     }
 /*    g_print("maxes assigned:%d\n",j); */
-    j = (rand()>>3) % num_maxes;
+    j = (rand ()>>3) % num_maxes;
 /*    g_print("index into tmplist:%d\n",j); */
     i = tmplist[j];
 /*    g_print("i:%d\n",i); */
-    move(xs[i], ys[i], xss[i], yss[i], me);
-    g_free(tmplist);
+    move (xs[i], ys[i], xss[i], yss[i], me);
+    g_free (tmplist);
   }
 
-  return(FALSE);
+  return (FALSE);
 
 }
 
-gint computer_move_1(guint me) {
+gint
+computer_move_1 (guint me)
+{
 
   guint xs[1000], ys[1000], xss[1000], yss[1000]; /*another canidate for linked lists*/
   gint weights[1000];
   gint maxpieces = 0;
   gint maxwhite = 0;
   gint maxwhite2 = -50;
-  gint tmp,tmp2, tmp3;
+  gint tmp, tmp2, tmp3;
   guint num_moves = 0;
   guint i, j, k, l;
   guint i2,j2,k2,l2;
-  gint8 tboard[7][7],t2board[7][7] ;
+  gint8 tboard[7][7], t2board[7][7];
   guint not_me;
 
   gint * tmplist;
@@ -392,29 +412,29 @@ gint computer_move_1(guint me) {
 
   not_me = (me == WHITE_TURN) ? BLACK_TURN : WHITE_TURN;
 
-  for(i = 0; i < 7; i++)
-    for(j = 0; j < 7; j++)
-      if(is_valid_piece(i, j, me)) 
-	for(k = 0; k < 7; k++)
-	  for(l = 0; l < 7; l++)
-	    if(is_valid_move(k,l,i,j,me)){
+  for (i = 0; i < 7; i++)
+    for (j = 0; j < 7; j++)
+      if (is_valid_piece (i, j, me)) 
+	for (k = 0; k < 7; k++)
+	  for (l = 0; l < 7; l++)
+	    if (is_valid_move (k,l,i,j,me)){
 
 	      maxpieces = 0;
-	      memcpy(tboard, board, sizeof(gint8) * 7 * 7);
-	      move_board(tboard, k, l, i, j, me, FALSE);
+	      memcpy (tboard, board, sizeof (gint8) * 7 * 7);
+	      move_board (tboard, k, l, i, j, me, FALSE);
 	      maxwhite = 0;
-	      for(i2 = 0; i2 < 7; i2++)
-		for(j2 = 0; j2 < 7; j2++)
-		  if(is_valid_piece(i2, j2, not_me)) 
-		    for(k2 = 0; k2 < 7; k2++)
-		      for(l2 = 0; l2 < 7; l2++)
-			if(is_valid_move(k2,l2,i2,j2,not_me)){
+	      for (i2 = 0; i2 < 7; i2++)
+		for (j2 = 0; j2 < 7; j2++)
+		  if (is_valid_piece (i2, j2, not_me)) 
+		    for (k2 = 0; k2 < 7; k2++)
+		      for (l2 = 0; l2 < 7; l2++)
+			if (is_valid_move (k2,l2,i2,j2,not_me)){
 
-			  memcpy(t2board, tboard, sizeof(gint8) * 7 * 7);
-			  move_board(t2board, k2, l2, i2, j2, not_me, FALSE);
+			  memcpy (t2board, tboard, sizeof (gint8) * 7 * 7);
+			  move_board (t2board, k2, l2, i2, j2, not_me, FALSE);
 			  
-			  tmp = count_pieces(t2board,not_me);
-			  tmp3 = count_pieces(t2board, me);
+			  tmp = count_pieces (t2board,not_me);
+			  tmp3 = count_pieces (t2board, me);
 			  
 			  /*			  g_print("maxblack:%d maxwhite:%d\n",tmp,tmp3);  */
 			  if (tmp > maxpieces) {
@@ -453,8 +473,8 @@ gint computer_move_1(guint me) {
 	      }
 	    }
   
-  if(num_moves) {
-    tmplist = g_malloc(sizeof(gint) * num_maxes);
+  if (num_moves) {
+    tmplist = g_malloc (sizeof (gint) * num_maxes);
  /*   g_print("num_maxes:%d\n",num_maxes); */
     j = 0;
     for (i = 0; i < num_moves; i++) {
@@ -464,68 +484,72 @@ gint computer_move_1(guint me) {
       }
     }
    /* g_print("maxes assigned:%d\n",j); */
-    j = (rand()>>3) % num_maxes;
+    j = (rand ()>>3) % num_maxes;
    /* g_print("index into tmplist:%d\n",j); */
     i = tmplist[j];
 /*    g_print("i:%d\n",i); */
-    move(xs[i], ys[i], xss[i], yss[i], me);
-    g_free(tmplist);
+    move (xs[i], ys[i], xss[i], yss[i], me);
+    g_free (tmplist);
   }
 
-  return(FALSE);
+  return (FALSE);
 
 }
 
 
 
-gint count_pieces(gint8 board[7][7], gint me) {
+gint
+count_pieces (gint8 board[7][7], gint me)
+{
   guint tmp = 0;
   guint i, j;
   
-  for(i = 0; i < 7; i++)
-    for(j = 0; j < 7; j++)
-      if(board[i][j] == me)
+  for (i = 0; i < 7; i++)
+    for (j = 0; j < 7; j++)
+      if (board[i][j] == me)
 	tmp++;
   
   return(tmp);
 }
 
-gint flip_final_results()
+static gboolean
+flip_final_results (gpointer data)
 {
   guint i;
   guint white_pieces;
   guint black_pieces;
   guint adder = 0;
   
-  white_pieces = count_pieces(board, WHITE_TURN);
-  black_pieces = count_pieces(board, BLACK_TURN);
+  white_pieces = count_pieces (board, WHITE_TURN);
+  black_pieces = count_pieces (board, BLACK_TURN);
   
-  for(i = 0; i < black_pieces; i++) {
+  for (i = 0; i < black_pieces; i++) {
     board[i % 7][i / 7] = BLACK_TURN;
-    if(pixmaps[i % 7][i / 7] < 1)
+    if (pixmaps[i % 7][i / 7] < 1)
       pixmaps[i % 7][i / 7] = WHITE_TURN;
-    if(pixmaps[i % 7][i / 7] == WHITE_TURN) {
+    if (pixmaps[i % 7][i / 7] == WHITE_TURN) {
       pixmaps[i % 7][i / 7] += adder;
     }
   }
-  for(i = black_pieces; i < 49 - white_pieces; i++) {
+  for (i = black_pieces; i < 49 - white_pieces; i++) {
     board[i % 7][i / 7] = 0;
     pixmaps[i % 7][i / 7] = 100;
   }
-  for(i = 49 - white_pieces; i < 49; i++) {
+  for (i = 49 - white_pieces; i < 49; i++) {
     board[i % 7][i / 7] = WHITE_TURN;
-    if(pixmaps[i % 7][i / 7] == 0)
+    if (pixmaps[i % 7][i / 7] == 0)
       pixmaps[i % 7][i / 7] = BLACK_TURN;
-    if(pixmaps[i % 7][i / 7] == BLACK_TURN) {
+    if (pixmaps[i % 7][i / 7] == BLACK_TURN) {
       pixmaps[i % 7][i / 7] -= adder;
     }
   }
   
   tiles_to_flip = 1;
-  return(FALSE);
+  return (FALSE);
 }
 
-gint check_valid_moves()
+gint
+check_valid_moves (void)
 {
   
   guint i, j, k, l;
@@ -533,92 +557,92 @@ gint check_valid_moves()
   guint black_moves = 0;
 
 
-  if(!game_in_progress)
-    return(TRUE);
+  if (!game_in_progress)
+    return (TRUE);
 
   switch(whose_turn) {
   case WHITE_TURN:
-    for(i = 0; i < 7; i++)
-      for(j = 0; j < 7; j++)
-	if(is_valid_piece(i, j, WHITE_TURN)) 
-	  for(k = 0; k < 7; k++)
-	    for(l = 0; l < 7; l++)
-	      if(is_valid_move(k,l,i,j,WHITE_TURN))
-		return(TRUE);
+    for (i = 0; i < 7; i++)
+      for (j = 0; j < 7; j++)
+	if (is_valid_piece (i, j, WHITE_TURN)) 
+	  for (k = 0; k < 7; k++)
+	    for (l = 0; l < 7; l++)
+	      if (is_valid_move (k,l,i,j,WHITE_TURN))
+		return (TRUE);
     break;
   case BLACK_TURN:
-    for(i = 0; i < 7; i++)
-      for(j = 0; j < 7; j++)
-	if(is_valid_piece(i, j, BLACK_TURN)) 
-	  for(k = 0; k < 7; k++)
-	    for(l = 0; l < 7; l++)
-	      if(is_valid_move(k,l,i,j,BLACK_TURN))
-		return(TRUE);
+    for (i = 0; i < 7; i++)
+      for (j = 0; j < 7; j++)
+	if (is_valid_piece (i, j, BLACK_TURN)) 
+	  for (k = 0; k < 7; k++)
+	    for (l = 0; l < 7; l++)
+	      if (is_valid_move (k,l,i,j,BLACK_TURN))
+		return (TRUE);
     break;
   }
 
   switch(whose_turn) {
   case WHITE_TURN:
-    for(i = 0; i < 7; i++)
-      for(j = 0; j < 7; j++)
-	if(is_valid_piece(i, j, BLACK_TURN)) 
-	  for(k = 0; k < 7; k++)
-	    for(l = 0; l < 7; l++)
-	      if(is_valid_move(k,l,i,j,BLACK_TURN))
+    for (i = 0; i < 7; i++)
+      for (j = 0; j < 7; j++)
+	if (is_valid_piece (i, j, BLACK_TURN)) 
+	  for (k = 0; k < 7; k++)
+	    for (l = 0; l < 7; l++)
+	      if (is_valid_move (k,l,i,j,BLACK_TURN))
 		black_moves++;
     break;
   case BLACK_TURN:
-    for(i = 0; i < 7; i++)
-      for(j = 0; j < 7; j++)
-	if(is_valid_piece(i, j, WHITE_TURN)) 
-	  for(k = 0; k < 7; k++)
-	    for(l = 0; l < 7; l++)
-	      if(is_valid_move(k,l,i,j,WHITE_TURN))
+    for (i = 0; i < 7; i++)
+      for (j = 0; j < 7; j++)
+	if (is_valid_piece (i, j, WHITE_TURN)) 
+	  for (k = 0; k < 7; k++)
+	    for (l = 0; l < 7; l++)
+	      if (is_valid_move (k,l,i,j,WHITE_TURN))
 		white_moves++;
     break;
   }
 
-  if(!white_moves || !black_moves) {
-    games_clock_stop(GAMES_CLOCK(time_display));
-    white_moves = count_pieces(board, WHITE_TURN);
-    black_moves = count_pieces(board, BLACK_TURN);
-    if(white_moves > black_moves)
+  if (!white_moves || !black_moves) {
+    games_clock_stop (GAMES_CLOCK (time_display));
+    white_moves = count_pieces (board, WHITE_TURN);
+    black_moves = count_pieces (board, BLACK_TURN);
+    if (white_moves > black_moves)
       gui_message(_("Light player wins!"));
-    if(black_moves > white_moves)
+    if (black_moves > white_moves)
       gui_message(_("Dark player wins!"));
-    if(white_moves == black_moves)
+    if (white_moves == black_moves)
       gui_message(_("The game was a draw."));
     whose_turn = 0;
     game_in_progress = 0;
     if (flip_final)
-      flip_final_id = g_timeout_add(3000,flip_final_results, NULL);
-    return(TRUE);
+      flip_final_id = g_timeout_add (3000, flip_final_results, NULL);
+    return (TRUE);
   }
 
-  if(whose_turn == WHITE_TURN) {
-    gui_message(_("Light must pass, Dark's move"));
+  if (whose_turn == WHITE_TURN) {
+    gui_message (_("Light must pass, Dark's move"));
     whose_turn = BLACK_TURN;
-    if(white_computer_level ^ black_computer_level) {
-      if(!black_computer_level && timer_valid)
-	games_clock_start(GAMES_CLOCK(time_display));
+    if (white_computer_level ^ black_computer_level) {
+      if (!black_computer_level && timer_valid)
+	games_clock_start (GAMES_CLOCK (time_display));
       else
-	games_clock_stop(GAMES_CLOCK(time_display));
+	games_clock_stop (GAMES_CLOCK (time_display));
     }
-    return(TRUE);
+    return (TRUE);
   }
 
-  if(whose_turn == BLACK_TURN) {
-    gui_message(_("Dark must pass, Light's move"));
+  if (whose_turn == BLACK_TURN) {
+    gui_message (_("Dark must pass, Light's move"));
     whose_turn = WHITE_TURN;
-    if(white_computer_level ^ black_computer_level) {
-      if(!white_computer_level && timer_valid)
-	games_clock_start(GAMES_CLOCK(time_display));
+    if (white_computer_level ^ black_computer_level) {
+      if (!white_computer_level && timer_valid)
+	games_clock_start (GAMES_CLOCK (time_display));
       else
-	games_clock_stop(GAMES_CLOCK(time_display));
+	games_clock_stop (GAMES_CLOCK (time_display));
     }
-    return(TRUE);
+    return (TRUE);
   }
   
-  return(TRUE);
+  return (TRUE);
 }
 

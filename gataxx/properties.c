@@ -26,6 +26,7 @@
 #include <gnome.h>
 #include <dirent.h>
 #include <games-clock.h>
+#include <games-frame.h>
 #include <gconf/gconf-client.h>
 
 #include "properties.h"
@@ -59,7 +60,8 @@ gchar * gataxx_gconf_get_string (gchar *key);
 gint gataxx_gconf_get_int (gchar *key, gint default_int);
 gboolean gataxx_gconf_get_bool (gchar *key, gint default_bool);
 
-void load_properties ()
+void 
+load_properties (void)
 {
 	black_computer_level =
 		gataxx_gconf_get_int ("/apps/gataxx/blacklevel", 0);
@@ -95,7 +97,8 @@ void load_properties ()
 	}
 }
 
-void save_properties ()
+static void
+save_properties (void)
 {
 	gconf_client_set_int (gataxx_gconf_client, "/apps/gataxx/blacklevel",
 	                      black_computer_level, NULL);
@@ -111,7 +114,8 @@ void save_properties ()
 	                       flip_final, NULL);
 }
 
-void apply_changes ()
+static void
+apply_changes (void)
 {
 	guint i, j;
 
@@ -174,27 +178,30 @@ void apply_changes ()
 	check_computer_players ();
 }
 
-void black_computer_level_select (GtkWidget *widget, gpointer data)
+static void
+black_computer_level_select (GtkWidget *widget, gpointer data)
 {
-	if (((guint) data != black_computer_level) &&
-		       (GTK_TOGGLE_BUTTON (widget)->active)) {
+	if (((guint) data != black_computer_level) 
+	    && (GTK_TOGGLE_BUTTON (widget)->active)) {
 		black_computer_level = (guint) data;
 	}
 	save_properties ();
 	apply_changes ();
 }
 
-void white_computer_level_select (GtkWidget *widget, gpointer data)
+static void
+white_computer_level_select (GtkWidget *widget, gpointer data)
 {
-	if (((guint) data != white_computer_level) &&
-		       (GTK_TOGGLE_BUTTON (widget)->active)) {
+	if (((guint) data != white_computer_level) 
+	    && (GTK_TOGGLE_BUTTON (widget)->active)) {
 		white_computer_level = (guint) data;
 	}
 	save_properties ();
 	apply_changes ();
 }
 
-void quick_moves_select (GtkWidget *widget, gpointer data)
+static void
+quick_moves_select (GtkWidget *widget, gpointer data)
 {
 	if (GTK_TOGGLE_BUTTON (widget)->active) {
 		quick_moves = TRUE;
@@ -207,7 +214,8 @@ void quick_moves_select (GtkWidget *widget, gpointer data)
 	apply_changes ();
 }
 
-void flip_final_select (GtkWidget *widget, gpointer data)
+static void
+flip_final_select (GtkWidget *widget, gpointer data)
 {
 	if (GTK_TOGGLE_BUTTON (widget)->active) {
 		flip_final = TRUE;
@@ -220,7 +228,8 @@ void flip_final_select (GtkWidget *widget, gpointer data)
 }
 
 
-void animate_select (GtkWidget *widget, gpointer data)
+static void
+animate_select (GtkWidget *widget, gpointer data)
 {
 	if (GTK_TOGGLE_BUTTON (widget)->active) {
 		animate = (gint) data;
@@ -230,18 +239,21 @@ void animate_select (GtkWidget *widget, gpointer data)
 	apply_changes ();
 }
 
-void apply_cb (GtkWidget *widget, gpointer data)
+static void
+apply_cb (GtkWidget *widget, gpointer data)
 {
 	save_properties ();
 	apply_changes();
 }
 
-void destroy_cb (GtkWidget *widget, gpointer data)
+static void
+destroy_cb (GtkWidget *widget, gpointer data)
 {
 	mapped = 0;
 }
 
-void set_selection(GtkWidget *widget, gpointer data)
+void
+set_selection (GtkWidget *widget, gpointer data)
 {
 	if (tile_set)
 		g_free (tile_set);
@@ -252,50 +264,55 @@ void set_selection(GtkWidget *widget, gpointer data)
 	apply_changes();
 }
 
-void free_str(GtkWidget *widget, void *data)
+void
+free_str (GtkWidget *widget, void *data)
 {
         free(data);
 }
 
-void fill_menu(GtkWidget *menu)
+void
+fill_menu (GtkWidget *menu)
 {
         struct dirent *e;
-	char *dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, ("gataxx"), FALSE, NULL);
+	gchar *dname = gnome_program_locate_file (NULL,
+						  GNOME_FILE_DOMAIN_APP_PIXMAP,
+						  ("gataxx"), FALSE, NULL);
         DIR *dir;
         int itemno = 0;
 
-        dir = opendir(dname);
+        dir = opendir (dname);
 
-        if(!dir) {
+        if (! dir) {
                 return;
 	}
 
-        while((e = readdir(dir)) != NULL) {
+        while ((e = readdir (dir)) != NULL) {
                 GtkWidget *item;
-                char *s = GINT_TO_POINTER (g_strdup(e->d_name));
-                if(!strstr(e->d_name, ".png")) {
-                        free(s);
+                char *s = GINT_TO_POINTER (g_strdup (e->d_name));
+                if(! g_strrstr (e->d_name, ".png")) {
+                        g_free (s);
                         continue;
                 }
 
-                item = gtk_menu_item_new_with_label(s);
-                gtk_widget_show(item);
+                item = gtk_menu_item_new_with_label (s);
+                gtk_widget_show (item);
                 gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-                g_signal_connect(G_OBJECT(item), "activate",
-				 G_CALLBACK (set_selection), s);
-                g_signal_connect(G_OBJECT(item), "destroy",
-				 G_CALLBACK (free_str), s);
+                g_signal_connect (G_OBJECT (item), "activate",
+				  G_CALLBACK (set_selection), s);
+                g_signal_connect (G_OBJECT (item), "destroy",
+				  G_CALLBACK (free_str), s);
 
-                if (!strcmp(tile_set, s)) {
-                        gtk_menu_set_active(GTK_MENU(menu), itemno);
+                if (! strcmp (tile_set, s)) {
+                        gtk_menu_set_active (GTK_MENU (menu), itemno);
                 }
 
                 itemno++;
         }
-        closedir(dir);
+        closedir (dir);
 }
 
-void show_properties_dialog ()
+void
+show_properties_dialog (void)
 {
 	GtkWidget *notebook;
 	GtkWidget *frame;
@@ -617,7 +634,8 @@ gataxx_gconf_get_string (gchar *key)
 	return retval;
 }
 
-void reload_properties ()
+void
+reload_properties (void)
 {
 	g_free (tile_set);
 	tile_set = NULL;
