@@ -20,9 +20,7 @@ gataxx_SOURCES = \
 	clock.c	\
 	clock.h
 
-gataxx_LDADD = \
-	$(GNOME_GAMES_LIBS) \
-	$(INTLLIBS)
+gataxx_LDADD = $(GNOME_GAMES_LIBS)
 
 pixmap_DATA = \
 	blend.png \

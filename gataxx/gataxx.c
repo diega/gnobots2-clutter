@@ -220,65 +220,67 @@ GnomeUIInfo mainmenu[] = {
 	GNOMEUIINFO_END
 };
 
-void quit_game_maybe(GtkWidget *widget, gint button)
+gboolean quit_game_cb(GtkWidget *widget, gpointer data)
 {
-	if(button == 0) {
-		if (flip_pixmaps_id)
-			gtk_timeout_remove(flip_pixmaps_id);
-		if (black_computer_id)
-			gtk_timeout_remove(black_computer_id);
-		if (white_computer_id)
-			gtk_timeout_remove(white_computer_id);
+  if(game_in_progress) {
+    GtkWidget *box;
+    gint response;
 
-		if(buffer_pixmap)
-			gdk_pixmap_unref(buffer_pixmap);
-		if(tiles_pixmap)
-			gdk_pixmap_unref(tiles_pixmap);
-		if(tiles_mask)
-			gdk_pixmap_unref(tiles_mask);
+    box = gtk_message_dialog_new (GTK_WINDOW (window),
+                                 GTK_DIALOG_DESTROY_WITH_PARENT,
+                                 GTK_MESSAGE_QUESTION,
+                                 GTK_BUTTONS_YES_NO,
+                                 _("Do you really want to quit?"));
+    gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_YES);
 
-		gtk_main_quit();
-	}
-}
+    response = gtk_dialog_run (GTK_DIALOG (box));
+    gtk_widget_destroy (box);
 
-void quit_game_cb(GtkWidget *widget, gpointer data)
-{
-	GtkWidget *box;
-
-	if(game_in_progress) {
-		box = gnome_message_box_new(_("Do you really want to quit?"), GNOME_MESSAGE_BOX_QUESTION, GNOME_STOCK_BUTTON_YES, GNOME_STOCK_BUTTON_NO, NULL);
-		gnome_dialog_set_parent(GNOME_DIALOG(box), GTK_WINDOW(window));
-		gnome_dialog_set_default(GNOME_DIALOG(box), 0);
-		gtk_window_set_modal(GTK_WINDOW(box), TRUE);
-		gtk_signal_connect(GTK_OBJECT(box), "clicked", (GtkSignalFunc)quit_game_maybe, NULL);
-		gtk_widget_show(box);
-	} else {
-		quit_game_maybe(NULL, 0);
-	}
-}
-
-void new_game_maybe(GtkWidget *widget, int button)
-{
-  if (button == 0) {
-    /*network_new(); */
-    init_new_game();
+    if (response == GTK_RESPONSE_NO)
+      return TRUE;
   }
+
+  if (flip_pixmaps_id)
+    gtk_timeout_remove(flip_pixmaps_id);
+  if (black_computer_id)
+    gtk_timeout_remove(black_computer_id);
+  if (white_computer_id)
+    gtk_timeout_remove(white_computer_id);
+
+  if(buffer_pixmap)
+    gdk_pixmap_unref(buffer_pixmap);
+  if(tiles_pixmap)
+    gdk_pixmap_unref(tiles_pixmap);
+  if(tiles_mask)
+    gdk_pixmap_unref(tiles_mask);
+
+  gtk_main_quit();
+
+  return FALSE;
 }
 
 void new_game_cb(GtkWidget *widget, gpointer data) {
-  GtkWidget *box;
   
   if(game_in_progress) {
-    box = gnome_message_box_new(_("Do you really want to end this game?"), GNOME_MESSAGE_BOX_QUESTION, GNOME_STOCK_BUTTON_YES, GNOME_STOCK_BUTTON_NO, NULL);
-    gnome_dialog_set_parent(GNOME_DIALOG(box), GTK_WINDOW(window));
-    gnome_dialog_set_default(GNOME_DIALOG(box), 0);
-    gtk_window_set_modal(GTK_WINDOW(box), TRUE);
-    gtk_signal_connect(GTK_OBJECT(box), "clicked", (GtkSignalFunc)new_game_maybe, NULL);
-    gtk_widget_show(box);
-  } else {
-    /*network_new(); */
-    init_new_game();
+    GtkWidget *box;
+    gint response;
+
+    box = gtk_message_dialog_new (GTK_WINDOW (window),
+                                 GTK_DIALOG_DESTROY_WITH_PARENT,
+                                 GTK_MESSAGE_QUESTION,
+                                 GTK_BUTTONS_YES_NO,
+                                 _("Do you really want to end this game?"));
+    gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_YES);
+
+    response = gtk_dialog_run (GTK_DIALOG (box));
+    gtk_widget_destroy (box);
+
+    if (response == GTK_RESPONSE_NO)
+      return;
+
   }
+  /*network_new(); */
+  init_new_game();
 }
 
 void undo_move_cb(GtkWidget *widget, gpointer data) {
@@ -412,7 +414,7 @@ void about_cb(GtkWidget *widget, gpointer data) {
 			  NULL);
   gtk_signal_connect (GTK_OBJECT (about), "destroy", GTK_SIGNAL_FUNC
 		      (gtk_widget_destroyed), &about);
-  gnome_dialog_set_parent(GNOME_DIALOG(about), GTK_WINDOW(window));
+  gtk_window_set_transient_for (GTK_WINDOW (about), GTK_WINDOW(window));
   
   gtk_widget_show(about);
 }
