@@ -9,6 +9,7 @@
  * The idea is originally from KDE's same game program.
  *
  */
+
 #include <sys/types.h>
 #include <string.h>
 #include <stdlib.h>
@@ -433,7 +434,7 @@ load_scenario (char *fname)
 
 	gdk_pixbuf_render_pixmap_and_mask (image, &stones, &mask, 127);
 
-        tmpimage = gdk_image_get(stones, 0, 0, 1, 1);
+        tmpimage = gdk_drawable_get_image (stones, 0, 0, 1, 1);
         bgcolor.pixel = gdk_image_get_pixel(tmpimage, 0, 0);
         gdk_window_set_background (draw_area->window, &bgcolor);
 	gdk_image_unref (tmpimage);
@@ -451,11 +452,7 @@ load_scenario (char *fname)
 static void
 create_same_board (char *fname)
 {
-	gtk_widget_push_colormap (gdk_rgb_get_colormap ());
-
 	draw_area = gtk_drawing_area_new ();
-
-        gtk_widget_pop_colormap ();
 
 	gtk_widget_set_events (draw_area, gtk_widget_get_events (draw_area) | GAME_EVENTS);
 
@@ -469,7 +466,7 @@ create_same_board (char *fname)
 			       STONE_COLS  * STONE_SIZE,
 			       STONE_LINES * STONE_SIZE);
 	g_signal_connect (G_OBJECT (draw_area), "event",
-			  G_CALLBACK( area_event), 0);
+			  G_CALLBACK(area_event), 0);
 }
 
 static void

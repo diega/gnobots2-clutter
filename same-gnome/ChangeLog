@@ -1,3 +1,8 @@
+2002-01-03  Josh Barrow  <drleary@mac.com>
+
+	* same-gnome.c: (load_scenario), (create_same_board):
+	Use non-deprecated stuff.
+
 2001-12-19  Seth Nickell  <snickell@stanford.edu>
 
 	* Makefile.am:
