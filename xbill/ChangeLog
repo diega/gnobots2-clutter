@@ -1,3 +1,7 @@
+2001-07-27  Abel Cheung  <maddog@linux.org.hk>
+
+	* xbill.desktop: Added traditional Chinese translation.
+
 2001-07-13  Juan Pablo Mendoza <pablo_juan@yahoo.com>
 
 	* Makefile.am: Fix local/locale confusion.
