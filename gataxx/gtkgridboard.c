@@ -214,9 +214,9 @@ static void gtk_gridboard_destroy(GtkObject * object) {
 
         gridboard = GTK_GRIDBOARD(object);
 
-        free(gridboard->board);
-        free(gridboard->pixmaps);
-        free(gridboard->selected);
+        g_free(gridboard->board);
+        g_free(gridboard->pixmaps);
+        g_free(gridboard->selected);
 
         if (GTK_OBJECT_CLASS (parent_class)->destroy)
                 (* GTK_OBJECT_CLASS (parent_class)->destroy) (object);
@@ -585,8 +585,8 @@ gpointer gtk_gridboard_revert_state(GtkWidget * widget) {
 
 	data=thisstate->data;
 	gridboard->statelist=prevstate;
-	free(thisstate->board);
-	free(thisstate);
+	g_free(thisstate->board);
+	g_free(thisstate);
 	return data;
 }
 
@@ -598,9 +598,9 @@ void gtk_gridboard_clear_states(GtkWidget * widget) {
 	curstate=gridboard->statelist;
 
 	while (curstate!=NULL) {
-		free(curstate->board);
+		g_free(curstate->board);
 		prevstate=curstate->prev;
-		free(curstate);
+		g_free(curstate);
 		curstate=prevstate;
 	}
 	gridboard->statelist=NULL;
