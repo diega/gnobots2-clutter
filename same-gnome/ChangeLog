@@ -1,5 +1,7 @@
 Sat Mar 21 10:54:57 1998  Tom Tromey  <tromey@cygnus.com>
 
+	* same-gnome.c: Use gnome_message_box_*, not gnome_messagebox_*.
+
 	* same-gnome.c (game_maybe_quit): New function.
 	(game_quit_callback): Connect game_maybe_quit to "clicked" signal
 	of messagebox.
