@@ -1,3 +1,26 @@
+1999-07-14  Michael Meeks  <michael@edenproject.org>
+
+	* mahjongg.c (apply_preferences): Commented out 'Synced'
+
+1999-07-14  Philippe Chavin <Philippe.Chavin@wanadoo.fr>
+
+	* mahjongg.c: APPNAME support.
+	warn_popup, moves_*: New scoring system.
+	(scores_callback, pause_callback, ensure_pause_off):
+	New Scoring / Pause features.
+	(no_match): Added
+	(properties_callback): Added warning options.
+	(hint_callback): Added score / time penalty.
+	(redo_tile_callback, undo_tile_calback): Add available moves
+	left display.
+	(select_game_callback): Check for Pause.
+	(create_mahjongg_board): Load warning option.
+	(main): Create time dialog & new menu stuff
+
+1999-07-14  Michael Meeks  <michael@edenproject.org>
+
+	* mahjongg.c (about_callback): Added Philippe
+
 1999-07-11  Rosanna Yuen <rwsy@mit.edu>
 
 	* default.png: reversed the fortune character so that it isn't
