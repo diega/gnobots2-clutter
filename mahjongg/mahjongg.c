@@ -328,11 +328,7 @@ void pause_callback (void);
 void new_game (void);
 void restart_game (void);
 void select_game (GtkWidget *widget, gpointer data);
-void bg_colour_changed_cb (GConfClient *client, guint cnxn_id,
-		GConfEntry *entry, gpointer user_data);
-void bg_colour_callback (GtkWidget *widget, gpointer data);
-void  set_map_selection (GtkWidget *widget, void *data);
-
+void set_backgnd_colour (gchar *str);
 
 GnomeUIInfo gamemenu [] = {
          GNOMEUIINFO_MENU_NEW_GAME_ITEM(confirm_action, NEW_GAME),
@@ -569,6 +565,160 @@ popup_confirm_changed_cb (GConfClient *client,
 	}
 }
 
+void
+show_toolbar_changed_cb (GConfClient *client,
+		guint cnxn_id,
+		GConfEntry *entry,
+		gpointer user_data)
+{
+	BonoboDockItem *gdi;
+	gboolean shown;
+
+	shown = gconf_client_get_bool (conf_client,
+			"/apps/mahjongg/show-toolbar", NULL);
+
+	gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window),
+			GNOME_APP_TOOLBAR_NAME);
+
+	if (shown == TRUE)
+	{
+		gtk_check_menu_item_set_active
+			(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), TRUE);
+		gtk_widget_show(GTK_WIDGET(gdi));
+	} else {
+		gtk_check_menu_item_set_active
+			(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), FALSE);
+		gtk_widget_hide(GTK_WIDGET(gdi));
+		gtk_widget_queue_resize (window);
+	}
+}
+
+void
+show_tb_callback (GtkWidget *widget, gpointer data)
+{
+	if((GTK_CHECK_MENU_ITEM(widget))->active) {
+		gconf_client_set_bool(conf_client,
+				"/apps/mahjongg/show-toolbar", TRUE, NULL);
+	} else {
+		gconf_client_set_bool(conf_client,
+				"/apps/mahjongg/show-toolbar", FALSE, NULL);
+	}
+}
+
+void
+bg_colour_changed_cb (GConfClient *client,
+		guint cnxn_id,
+		GConfEntry *entry,
+		gpointer user_data)
+{
+	gchar *colour;
+
+	colour = gconf_client_get_string (conf_client,
+			"/apps/mahjongg/bgcolour", NULL);
+	set_backgnd_colour (colour);
+	if (colour_well != NULL)
+	{
+		gint ur,ug,ub ;
+
+		sscanf (backgnd.name, "#%02x%02x%02x", &ur,&ug,&ub);
+		gnome_color_picker_set_i8 (GNOME_COLOR_PICKER(colour_well),
+				ur, ug, ub, 0);
+	}
+}
+
+void bg_colour_callback (GtkWidget *widget, gpointer data)
+{
+	static char *tmp = "";
+	guint8 r, g, b, a;
+
+	gnome_color_picker_get_i8(GNOME_COLOR_PICKER(widget), &r, &g, &b, &a);
+
+	tmp = g_strdup_printf ("#%02x%02x%02x", r, g, b);
+
+	gconf_client_set_string (conf_client,
+			"/apps/mahjongg/bgcolour", tmp, NULL);
+}
+
+void
+mapset_changed_cb (GConfClient *client,
+		guint cnxn_id,
+		GConfEntry *entry,
+		gpointer user_data)
+{
+	GtkWidget *dialog;
+	char *mapset_tmp;
+
+	mapset_tmp = gconf_client_get_string (conf_client,
+			"/apps/mahjongg/mapset",
+			NULL);
+	if ((mapset != NULL) && (strcmp (mapset, mapset_tmp) != 0))
+	{
+		g_free (mapset);
+		mapset = mapset_tmp;
+	} else {
+		g_free (mapset_tmp);
+	}
+
+	dialog = gtk_message_dialog_new (NULL,
+			GTK_DIALOG_MODAL,
+			GTK_MESSAGE_INFO,
+			GTK_BUTTONS_CLOSE,
+			_("This new mapset will take effect when you start up"
+				"a new game, or when Mahjongg is restarted."));
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
+}
+
+void
+set_map_selection (GtkWidget *widget, void *data)
+{
+	struct _maps *map = (struct _maps*) data;
+
+	g_free (mapset);
+	mapset = map->name;
+
+	gconf_client_set_string (conf_client,
+			"/apps/mahjongg/mapset",
+			mapset, NULL);
+}
+
+void
+init_config (void)
+{
+	gconf_client_add_dir (conf_client,
+			"/apps/mahjongg", GCONF_CLIENT_PRELOAD_ONELEVEL,
+			NULL);
+	gconf_client_notify_add (conf_client,
+			"/apps/mahjongg/show-toolbar",
+			show_toolbar_changed_cb,
+			NULL, NULL, NULL);
+	gconf_client_notify_add (conf_client,
+			"/apps/mahjongg/bgcolour",
+			bg_colour_changed_cb,
+			NULL, NULL, NULL);
+	gconf_client_notify_add (conf_client,
+			"/apps/mahjongg/mapset",
+			mapset_changed_cb,
+			NULL, NULL, NULL);
+	gconf_client_notify_add (conf_client,
+			"/apps/mahjongg/confirm",
+			popup_confirm_changed_cb,
+			NULL, NULL, NULL);
+	gconf_client_notify_add (conf_client,
+			"/apps/mahjongg/warn",
+			popup_warn_changed_cb,
+			NULL, NULL, NULL);
+	gconf_client_notify_add (conf_client,
+			"/apps/mahjongg/tileset",
+			tileset_changed_cb,
+			NULL, NULL, NULL);
+	gconf_client_notify_add (conf_client,
+			"/apps/mahjongg/background",
+			bg_changed_cb,
+			NULL, NULL, NULL);
+}
+
+
 static void
 free_str (GtkWidget *widget, void *data)
 {
@@ -741,26 +891,22 @@ tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
 }
 
 static void
-pref_cancel (GtkWidget *widget, void *data)
-{
-	gtk_widget_destroy (pref_dialog);
-	pref_dialog = 0;
-	confirm_cb = NULL;
-	warn_cb = NULL;
-}
-
-static void
 fill_tile_menu (GtkWidget *menu, gchar *sdir, gint is_tile)
 {
 	struct dirent *e;
 	DIR *dir;
         gint itemno = 0;
-	gchar *dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP, (sdir), FALSE, NULL);
+	gchar *dname = NULL;
 
+	dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_PIXMAP,
+			(sdir), FALSE, NULL);
 	dir = opendir (dname);
 
-	if (!dir)
+	if (dir == NULL)
+	{
+		g_free (dname);
 		return;
+	}
 
 	while ((e = readdir (dir)) != NULL){
 		GtkWidget *item;
@@ -783,8 +929,7 @@ fill_tile_menu (GtkWidget *menu, gchar *sdir, gint is_tile)
                                           G_CALLBACK (tileset_callback), s); 
                         g_signal_connect (G_OBJECT(item), "destroy",
                                           G_CALLBACK (free_str), s);
-                }
-                else {
+                } else {
                         g_signal_connect (G_OBJECT(item), "activate",
                                           G_CALLBACK(bg_callback), s); 
                         g_signal_connect (G_OBJECT(item), "destroy",
@@ -792,19 +937,18 @@ fill_tile_menu (GtkWidget *menu, gchar *sdir, gint is_tile)
                 }
 
 		if (is_tile) {
-			if (!strcmp(tileset, s))
-			{
+			if (!strcmp(tileset, s)) {
 				gtk_menu_set_active(GTK_MENU(menu), itemno);
 			}
 		} else {
-			if (!strcmp(bg_tileset, s))
-			{
+			if (!strcmp(bg_tileset, s)) {
 				gtk_menu_set_active(GTK_MENU(menu), itemno);
 			}
 		}
 
 	        itemno++;
 	}
+
 	closedir (dir);
 	g_free (dname);
 }
@@ -832,41 +976,6 @@ fill_map_menu (GtkWidget *menu)
     }
 }
 
-#ifdef NEED_UNUSED_CODE
-gint find_tile_in_layer (gint x, gint y, gint layer)
-{
-	gint i, tile_num = MAX_TILES + 1;
-
-	for (i = 0; i < MAX_TILES; i ++) {
-	        gint tx = canvas_x(i), ty = canvas_y(i);
-		if ((tx < x) && ((tx + TILE_WIDTH - 1) > x)) {
-			if ((ty < y) && ((ty + TILE_HEIGHT - 1) > y)) {
-				if ((pos[i].layer == layer) && (tiles[i].visible == 1))
-					tile_num = i;
-			}
-		}
-	}
-	return tile_num;
-}
-	
-gint find_tile (gint x, gint y)
-{
-	gint i, tile_num = MAX_TILES + 1, layer = 0;
-
-	for (i = 0; i < MAX_TILES; i++) {
-	        gint tx = canvas_x(i), ty = canvas_y(i);
-		if ((tx < x) && ((tx + TILE_WIDTH - 1) > x) && (tiles[i].visible)) {
-			if ((ty < y) && ((ty + TILE_HEIGHT - 1) > y)) {
-				if ((pos[i].layer >= layer)) {
-					tile_num = i;
-					layer = pos[i].layer;
-				}
-			}
-		}
-	}
-	return tile_num;
-}
-#endif
 void no_match (void)
 {
 	if (popup_warn == TRUE) {
@@ -993,8 +1102,7 @@ void properties_callback (GtkWidget *widget, gpointer data)
 			GTK_WINDOW (window),
 			GTK_DIALOG_DESTROY_WITH_PARENT,
 			GTK_STOCK_HELP, GTK_RESPONSE_HELP,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OK, GTK_RESPONSE_OK,
+			GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 			NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (pref_dialog),
@@ -1496,122 +1604,6 @@ void select_game (GtkWidget *widget, gpointer data)
               	gtk_widget_destroy (dialog);
 }
 
-void
-show_toolbar_changed_cb (GConfClient *client,
-		guint cnxn_id,
-		GConfEntry *entry,
-		gpointer user_data)
-{
-	BonoboDockItem *gdi;
-	gboolean shown;
-
-	shown = gconf_client_get_bool (conf_client,
-			"/apps/mahjongg/show-toolbar", NULL);
-
-	gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window),
-			GNOME_APP_TOOLBAR_NAME);
-
-	if (shown == TRUE)
-	{
-		gtk_check_menu_item_set_active
-			(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), TRUE);
-		gtk_widget_show(GTK_WIDGET(gdi));
-	} else {
-		gtk_check_menu_item_set_active
-			(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), FALSE);
-		gtk_widget_hide(GTK_WIDGET(gdi));
-		gtk_widget_queue_resize (window);
-	}
-}
-
-void show_tb_callback (GtkWidget *widget, gpointer data)
-{
-    if((GTK_CHECK_MENU_ITEM(widget))->active) {
-        gconf_client_set_bool(conf_client,
-			"/apps/mahjongg/show-toolbar", TRUE, NULL);
-    } else {
-        gconf_client_set_bool(conf_client,
-			"/apps/mahjongg/show-toolbar", FALSE, NULL);
-    }
-}
-
-void
-bg_colour_changed_cb (GConfClient *client,
-		guint cnxn_id,
-		GConfEntry *entry,
-		gpointer user_data)
-{
-	gchar *colour;
-
-	colour = gconf_client_get_string (conf_client,
-			"/apps/mahjongg/bgcolour", NULL);
-	set_backgnd_colour (colour);
-	if (colour_well != NULL)
-	{
-		gint ur,ug,ub ;
-
-		sscanf (backgnd.name, "#%02x%02x%02x", &ur,&ug,&ub);
-		gnome_color_picker_set_i8 (GNOME_COLOR_PICKER(colour_well),
-				ur, ug, ub, 0);
-	}
-}
-
-void bg_colour_callback (GtkWidget *widget, gpointer data)
-{
-	static char *tmp = "";
-	guint8 r, g, b, a;
-
-	gnome_color_picker_get_i8(GNOME_COLOR_PICKER(widget), &r, &g, &b, &a);
-
-	tmp = g_strdup_printf ("#%02x%02x%02x", r, g, b);
-
-	gconf_client_set_string (conf_client,
-			"/apps/mahjongg/bgcolour", tmp, NULL);
-}
-
-void      
-mapset_changed_cb (GConfClient *client,
-		guint cnxn_id,
-		GConfEntry *entry,
-		gpointer user_data)
-{
-	GtkWidget *dialog;
-	char *mapset_tmp;
-
-	mapset_tmp = gconf_client_get_string (conf_client,
-			"/apps/mahjongg/mapset",
-			NULL);
-	if ((mapset != NULL) && (strcmp (mapset, mapset_tmp) != 0))
-	{
-		g_free (mapset);
-		mapset = mapset_tmp;
-	} else {
-		g_free (mapset_tmp);
-	}
-
-	dialog = gtk_message_dialog_new (NULL,
-			GTK_DIALOG_MODAL,
-			GTK_MESSAGE_INFO,
-			GTK_BUTTONS_CLOSE,
-			_("This new mapset will take effect when you start up"
-				"a new game, or when Mahjongg is restarted."));
-	gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (dialog);
-}
-
-void
-set_map_selection (GtkWidget *widget, void *data)
-{
-	struct _maps *map = (struct _maps*) data;
-
-	g_free (mapset);
-	mapset = map->name;
-
-	gconf_client_set_string (conf_client,
-			"/apps/mahjongg/mapset",
-			mapset, NULL);
-}
-
 void sound_on_callback (GtkWidget *widget, gpointer data)
 {
     printf("mer\n");
@@ -2006,37 +1998,7 @@ int main (int argc, char *argv [])
                 gtk_widget_queue_resize (window);
         }
 
-	gconf_client_add_dir (conf_client,
-			"/apps/mahjongg", GCONF_CLIENT_PRELOAD_ONELEVEL,
-			NULL);
-	gconf_client_notify_add (conf_client,
-			"/apps/mahjongg/show-toolbar",
-			show_toolbar_changed_cb,
-			NULL, NULL, NULL);
-	gconf_client_notify_add (conf_client,
-			"/apps/mahjongg/bgcolour",
-			bg_colour_changed_cb,
-			NULL, NULL, NULL);
-	gconf_client_notify_add (conf_client,
-			"/apps/mahjongg/mapset",
-			mapset_changed_cb,
-			NULL, NULL, NULL);
-	gconf_client_notify_add (conf_client,
-			"/apps/mahjongg/confirm",
-			popup_confirm_changed_cb,
-			NULL, NULL, NULL);
-	gconf_client_notify_add (conf_client,
-			"/apps/mahjongg/warn",
-			popup_warn_changed_cb,
-			NULL, NULL, NULL);
-	gconf_client_notify_add (conf_client,
-			"/apps/mahjongg/tileset",
-			tileset_changed_cb,
-			NULL, NULL, NULL);
-	gconf_client_notify_add (conf_client,
-			"/apps/mahjongg/background",
-			bg_changed_cb,
-			NULL, NULL, NULL);
+	init_config();
 
   	gnome_app_flash (GNOME_APP (window), 
   				_("Welcome to GNOME Mahjongg!")); 

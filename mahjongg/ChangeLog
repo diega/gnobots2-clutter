@@ -1,5 +1,14 @@
 2002-05-12  Bastien Nocera  <hadess@hadess.net>
 
+	* mahjongg.c: (show_toolbar_changed_cb), (show_tb_callback),
+	(bg_colour_changed_cb), (bg_colour_callback), (mapset_changed_cb),
+	(set_map_selection), (init_config), (fill_tile_menu),
+	(properties_callback), (main): more cleanups and stuff moved around,
+	only the drop-down menus need to reflect config changes, anybody know
+	how ?
+
+2002-05-12  Bastien Nocera  <hadess@hadess.net>
+
 	* mahjongg.c: (tileset_callback), (tileset_changed_cb),
 	(bg_callback), (bg_changed_cb), (popup_warn_callback),
 	(popup_warn_changed_cb), (popup_confirm_callback),
