@@ -21,42 +21,93 @@
  
  <chapter id="description"><title>Description</title>
   <para>
-	 A very simple turing machine simulator. If you want to know more about
+	 A very simple Turing Machine simulator. If you want to know more about
 	 Turing Machines, check this
 	 <ulink URL="http://obiwan.uvi.edu/computing/turing/ture.htm">Turing Machine
 	 Introduction</ulink>.
+	</para>
+	<para>
+	 This is a very intuitive program. It has four main buttons for resetting,
+	 stopping, playing and playing the machine by steps. When a program is
+	 load into the simulator, the user is given with indications of the format
+	 of the tape for that specific program, and it is possible to launch a
+	 States Viewer to see, and even debug, any program that is ran. A
+	 specification of the program file format is given as well in this
+	 document. Please send any programs you produce to Arturo Espinosa so that
+	 they are included in the next release.
   </para>
+	<para>
+	 The Turing Machine simulated by this program allows to read any kind of
+   available character, but does not have a way to express "else", so
+   programs that contemplate a large space of input may increase very easily.
+	</para>
  </chapter>
    
  <chapter id="display"><title>The Display</title>
    <para>
-	  The Display.
+	  Very typical controls for this applications will be found when launched:
+		a menu bar, a toolbar the main application display and a status display.
+		The status display shows at the left the name of the program file that
+		is currently loaded and the current state at the right.
+	 </para>
+	 <para>
+	  The main application display shows the contents of the machine's tape
+		and the position of the machine's read/write head, denoted by a
+		cyrcumflex accent (^). The display will animate as the machine runs
+		its program or the user presses the "Step" button in the toolbar.
    </para>
   <sect1 id="menubar"><title>The Menu Bar</title>
    <para>
-	  The Menu Bar
-    <itemizedlist>
-     <listitem override="File">
-      <para>Operation over files and exiting.</para>
-      <itemizedlist>
-       <listitem override="New">
-        <para>New</para>
-       </listitem>
-      </itemizedlist>
-     </listitem>
-    </itemizedlist>
-   </para>
+	  The "File" menu lets you load a program into the machine and exit the
+		application. You will have to choose a previously editted file when
+		loading a program. The examples directory will be open the first time
+		you choose this option.
+	 </para>
+	 <para>
+	  Set the tape's contents and the speed at which the machine will run with
+		the "Options" menu. There is an option to activate or deactivate the
+		States View here. Changing the tape's contents will reset the machine.
+	 </para>
   </sect1>
   <sect1 id="toolbar"><title>The Toolbar</title>
    <para>
-	  The Toolbar
+	  The toolbar is the central control for gTuring. It provides you with four
+		buttons for operating the machine. Each button gets activated or 
+		deactivated depending on the execution status of the machine, showing you
+		your options at the moment.
    </para>
+   <itemizedlist>
+    <listitem>
+     <para>Reset: Sets the machine at state 0 and puts the tape's contents
+      as it was originaly entered by the user. The machine's head is set at
+		  the leftmost character of the tape.</para>
+    </listitem>
+    <listitem>
+     <para>Stop: Pauses the machine.</para>
+    </listitem>
+    <listitem>
+     <para>Run: The machine starts transitioning from one state to the next,
+      according to the states that have been previously loaded in it. The
+			speed at which the transitions are executed is set in the "Options"
+			menu.</para>
+    </listitem>
+    <listitem>
+     <para>Step: Execute only one transition.</para>
+    </listitem>
+   </itemizedlist>
   </sect1>
-  <sect1 id="dialogs"><title>Dialogs</title>
+  <sect1 id="dialogs"><title>States View</title>
    <para>
-	  Dialogs
+	  The States View lets the user see the whole states table of the Turing
+		Machine through a column list. The state at which the machine is will be
+		the underlined row. As the machines goes from one transition to the other,
+		the underlined row will change to reflect the state that is just about to
+		be executed.
    </para>
   </sect1>
+ </chapter>
+ <chapter id="prgfmt"><title>Program File Format</title>
+  <para></para>
  </chapter>
 </book>
 
