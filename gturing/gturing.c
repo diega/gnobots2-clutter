@@ -172,8 +172,11 @@ void state_clist_select_state(turing *t)
 	int i, tmp;
 	char buff[20];
 
-	snprintf(buff, 20, _("State: %d"), t->actualstate->no);
-	gtk_label_set(GTK_LABEL(statusline), buff);
+	if (t->actualstate) {
+		snprintf(buff, 20, _("State: %d"), t->actualstate->no);
+		gtk_label_set(GTK_LABEL(statusline), buff);
+	} else 
+		gtk_label_set(GTK_LABEL(statusline), _("Stopped"));
 			
 	if (state_clist) {
 		tmp = i = (int) gtk_object_get_user_data(GTK_OBJECT(state_clist));
@@ -228,10 +231,8 @@ gint do_play(gpointer data)
 		
 		cont = next_state(tm);
 		
-		if (! cont)	{
+		if (! cont)
 			set_toolbar_sens(TRUE, FALSE, stop_flag, stop_flag);
-			gtk_label_set(GTK_LABEL(statusline), _("Stopped"));
-		}
 	}
 	
 	return cont;
