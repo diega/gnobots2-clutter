@@ -118,6 +118,7 @@ private:
 	static int timeoutHandler(void *d);
 	static int gameQuit(GtkWidget *widget, void *d);
 	static int gameNew(GtkWidget *widget, void *d);
+	static int focusOut(GtkWidget *widget, GdkEvent *e, Tetris *t);
 	static int gamePause(GtkWidget *widget, void *d);
 	static int gameEnd(GtkWidget *widget, void *d);
 	static int gameAbout(GtkWidget *widget, void *d);

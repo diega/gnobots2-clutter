@@ -143,6 +143,8 @@ Tetris::Tetris(int cmdlLevel):
 			   GDK_ACTION_MOVE);
 	g_signal_connect (G_OBJECT (w), "drag_data_received", 
 			  G_CALLBACK (dragDrop), this);
+	g_signal_connect (G_OBJECT (w), "focus_out_event",
+			  G_CALLBACK (focusOut), this);
 
 	static GnomeUIInfo game_menu[] = 
 	{
@@ -707,7 +709,9 @@ Tetris::fillMenu(GtkWidget *menu, char *pixname, char *dirname,
 	{
 		s = g_strdup(e->d_name);
 
-		if (!(strstr (e->d_name, ".png") || strstr (e->d_name, ".jpg"))) 
+		if (!(strstr (e->d_name, ".png") || 
+		      strstr (e->d_name, ".jpg") ||
+		      strstr (e->d_name, ".svg"))) 
 		{
 			free(s);
 			continue;
@@ -923,6 +927,14 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	
 	gtk_widget_show_all (t->setupdialog);
 	gtk_widget_set_sensitive(t->gameMenuPtr[0].widget, FALSE);
+	return TRUE;
+}
+
+int 
+Tetris::focusOut(GtkWidget *widget, GdkEvent *e, Tetris *t)
+{
+	if (t->inPlay && !t->paused)
+		t->togglePause();
 	return TRUE;
 }
 
