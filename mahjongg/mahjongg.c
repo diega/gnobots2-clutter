@@ -25,6 +25,7 @@
 #include <libgnomeui/gnome-window-icon.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <games-clock.h>
+#include <games-gconf.h>
 
 #include "mahjongg.h"
 #include "solubility.h"
@@ -1884,15 +1885,9 @@ create_mahjongg_board (GtkWidget *mbox)
 
 	mapset = gconf_client_get_string (conf_client,
 			"/apps/mahjongg/mapset", NULL);
-	if (mapset == NULL) {
-		mapset = g_strdup("easy");
-	}
 
 	buf = gconf_client_get_string (conf_client,
 			"/apps/mahjongg/bgcolour", NULL) ;
-	if (buf == NULL) {
-		buf = g_strdup("#34385B");
-	}
 	set_backgnd_colour (buf) ;
 	g_free (buf);
 
@@ -2016,40 +2011,6 @@ shuffle_tiles_callback (GtkWidget *widget, gpointer data)
         }
 }
 
-static void 
-gconf_sanity_check(void)
-{
-  gchar *tileset;
-  GError *error = NULL;
-  
-  tileset = gconf_client_get_string (conf_client,
-                                     "/apps/mahjongg/tileset", &error);
-  if (error) {
-    GtkWidget *dialog;
-    dialog = gtk_message_dialog_new (NULL,
-                                     0,
-                                     GTK_MESSAGE_ERROR,
-                                     GTK_BUTTONS_CLOSE,
-                                     _("There was an error accessing GConf: %s"),
-                                     error->message);
-    gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-    gtk_dialog_run(GTK_DIALOG(dialog));
-    exit(1);
-  } else if (!tileset) {
-    GtkWidget *dialog;
-    dialog = gtk_message_dialog_new (NULL,
-                                     0,
-                                     GTK_MESSAGE_ERROR,
-                                     GTK_BUTTONS_CLOSE,
-                                     _("The default configuration values could not be retrieved correctly. Please check your GConf configuration, specifically that the schemas are installed correctly"));
-    gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-    gtk_dialog_run(GTK_DIALOG(dialog));
-    exit(1);
-  } else {
-    g_free (tileset);
-  }
-}
-
 int
 main (int argc, char *argv [])
 {
@@ -2072,9 +2033,13 @@ main (int argc, char *argv [])
 			    NULL);
 
 	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-mahjongg.png");
-	new_seed ();
+
 	conf_client = gconf_client_get_default ();
-	gconf_sanity_check();
+	if (!games_gconf_sanity_check_string (conf_client, "/apps/mahjongg/tileset")) {
+		return 1;
+	}
+
+	new_seed ();
 
 	window = gnome_app_new (APPNAME, _(APPNAME_LONG));
 	gtk_window_set_resizable (GTK_WINDOW (window), FALSE);
