@@ -1,6 +1,8 @@
 // -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil -*-
-/* Blackjack - card.cpp
- * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
+/* 
+ * Blackjack - card.cpp
+ *
+ * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
  * Copyright (C) 1998 Jonathan Blandford <jrb@mit.edu>
  *
  * This game is free software; you can redistribute it and/or modify
@@ -75,15 +77,8 @@ GdkPixbuf *
 get_pixbuf (const char *filename)
 {
         GdkPixbuf *im;
-        char* fullname = gnome_program_locate_file (NULL,
-                                                    GNOME_FILE_DOMAIN_APP_PIXMAP,
-                                                    filename, TRUE, NULL);
 
-        if (fullname == NULL)
-                return NULL; 
-
-        im = gdk_pixbuf_new_from_file (fullname, NULL);
-        g_free (fullname);
+        im = gdk_pixbuf_new_from_file (filename, NULL);
 
         return im;
 }
@@ -93,22 +88,14 @@ get_pixmap (const char *filename)
 {
         GdkPixmap *ret;
         GdkPixbuf *im;
-        char *fullname = gnome_program_locate_file (NULL,
-                                                    GNOME_FILE_DOMAIN_APP_PIXMAP,
-                                                    filename, TRUE, NULL);
 
-        if (fullname == NULL)
-                return NULL; 
-
-        im = gdk_pixbuf_new_from_file (fullname, NULL);
+        im = gdk_pixbuf_new_from_file (filename, NULL);
         if (im != NULL) {
                 gdk_pixbuf_render_pixmap_and_mask (im, &ret, NULL, 127);
                 g_object_unref (im);
         } 
         else 
                 ret = NULL;
-
-        g_free (fullname);
 
         return ret;
 }

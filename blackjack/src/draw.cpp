@@ -1,7 +1,8 @@
 // -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil -*-
-
-/* Blackjack - draw.cpp
- * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
+/*
+ * Blackjack - draw.cpp
+ *
+ * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
  * Copyright (C) 1998 Jonathan Blandford <jrb@mit.edu>
  *
  * This game is free software; you can redistribute it and/or modify

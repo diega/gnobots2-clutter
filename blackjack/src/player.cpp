@@ -1,7 +1,8 @@
 // -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil -*-
-
-/* Blackjack - player.cpp
- * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
+/*
+ * Blackjack - player.cpp
+ *
+ * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
  *
  * This game is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +35,9 @@
 
 #include <libxml/tree.h>
 #include <libxml/parser.h>
+#include <glib/gi18n.h>
+#include <gdk/gdk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "blackjack.h"
 #include "events.h"
@@ -42,13 +46,9 @@
 #include "player.h"
 #include "hand.h"
 #include "game.h"
-#include <gnome.h>
-
-
 
 #include <iostream>
 using namespace std;
-
 
 Progress::Progress ()
 {

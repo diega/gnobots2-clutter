@@ -1,6 +1,8 @@
 // -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil -*-
-/* Blackjack - menu.cpp
- * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
+/*
+ * Blackjack - menu.cpp
+ *
+ * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
  *
  * This game is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,10 +29,15 @@
 #include <dirent.h>
 #include <ctype.h>
 #include <iostream>
+#include <glib/gi18n.h>
+
 using namespace std;
 
-#include "gnome.h"
 #include "blackjack.h"
+#ifdef HAVE_GNOME
+#include <gnome.h>
+#endif
+
 #include "menu.h"
 #include "dialog.h"
 #include "draw.h"
@@ -39,38 +46,73 @@ using namespace std;
 #include "game.h"
 #include "hand.h"
 
-static GtkWidget *about = NULL;
-
-static void
-restart_game ()
+void
+on_game_restart_activate (GtkAction *action,
+                          gpointer   data)
 {
         bj_game_new (bj_game_get_rules_file (), &seed);
-};
+}
 
-static void
-random_seed ()
+void
+on_game_new_activate (GtkAction *action,
+                      gpointer   data)
 {
         bj_game_new (bj_game_get_rules_file (), NULL);
-};
+}
+
+void
+on_game_hint_activate (GtkAction *action,
+                       gpointer   data)
+{
+        show_hint_dialog ();
+}
 
 #if 0
 static void
 new_rules (GtkWidget* w, gchar* file) 
 {
         bj_game_new (file, NULL);
-};
+}
 #endif
 
-static void
-about_destroy_callback (void)
+void
+on_game_quit_activate (GtkAction *action,
+                       gpointer   data)
 {
-        about = NULL;
+        bj_quit_app ();
 }
- 
-static void
-help_about_callback ()
+
+void
+on_toolbar_activate (GtkToggleAction *action,
+                     gpointer         data)
 {
-        GdkPixbuf *pixbuf = NULL;
+        gboolean value = gtk_toggle_action_get_active (action);
+        bj_set_show_toolbar (value);
+}
+
+void
+on_preferences_activate (GtkAction *action,
+                         gpointer   data)
+{
+        show_preferences_dialog ();
+}
+
+void
+on_help_contents_activate (GtkAction *action,
+                           gpointer   data)
+{
+#ifdef HAVE_GNOME
+        GError *error = NULL;
+        g_message ("Display help");
+        gnome_help_display_desktop_on_screen (NULL, "blackjack", "blackjack", NULL,
+                                              gtk_widget_get_screen (toplevel_window), &error);
+#endif
+}
+
+void
+on_help_about_activate (GtkAction *action,
+                        gpointer   data)
+{
         const gchar *authors[] = {
                 "William Jon McCann <mccann@jhu.edu>",
                 "Eric Farmer <erfarmer@comcast.net>",
@@ -83,149 +125,30 @@ help_about_callback ()
 
         const gchar *translator_credits = _("translator-credits");
 
-	char *filename = NULL;
-
-	filename = gnome_program_locate_file (NULL,
-                                              GNOME_FILE_DOMAIN_APP_PIXMAP,
-                                              ("gnome-blackjack.png"),
-                                              TRUE, NULL);
-	if (filename != NULL) {
-                pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
-                g_free (filename);
-        }
-  
         {
                 int i=0;
                 while (authors[i] != NULL) { authors[i]=_(authors[i]); i++; }
         }
 
-        if (about) {
-                gtk_window_present (GTK_WINDOW (about));
-                return;
+	char *filename = NULL;
+	filename = g_build_filename (PIXMAPDIR, "gnome-blackjack.png", NULL);
+
+        GdkPixbuf *pixbuf = NULL;
+        if (filename != NULL) {
+                pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+                g_free (filename);
         }
 
-        about = gnome_about_new ( _("Blackjack"), VERSION,
-                                  /* copyright notice */
-                                  "Copyright \xc2\xa9 2003-2004 "
-                                  "William Jon McCann, Eric Farmer",
-                                  _("Blackjack provides a casino-style "
-                                    "blackjack card game."),
-                                  (const char **)authors,
-                                  (const char **)documenters,
-                                  strcmp (translator_credits, "translator-credits") != 0
-                                  ? translator_credits :  NULL,
-                                  pixbuf);
-	
-	if (pixbuf != NULL)
-		gdk_pixbuf_unref (pixbuf);
+        gtk_show_about_dialog (GTK_WINDOW (toplevel_window),
+                               "logo", pixbuf,
+                               "authors", authors,
+                               "documenters", documenters,
+                               "version", VERSION,
+                               "copyright", "Copyright \xc2\xa9 2003-2004 William Jon McCann, Eric Farmer",
+                               "comments", _("Blackjack provides a casino-style blackjack card game."),
+                               NULL);
 
-        gtk_window_set_transient_for (GTK_WINDOW (about), GTK_WINDOW (app));
-        g_signal_connect (about,
-                          "destroy",
-                          G_CALLBACK (about_destroy_callback),
-                          NULL);
-
-        gtk_widget_show (about);
+        g_object_unref (pixbuf);
 
         return;
-}
-
-static void
-settings_toolbar_callback (GtkWidget *widget, gpointer data)
-{
-        BonoboDockItem *toolbar_gdi;
-
-        toolbar_gdi = gnome_app_get_dock_item_by_name (GNOME_APP (app), 
-                                                       GNOME_APP_TOOLBAR_NAME);
-  
-        gboolean do_toolbar = GTK_CHECK_MENU_ITEM (widget)->active;
-  
-        bj_set_show_toolbar (do_toolbar);
-}
-
-GnomeUIInfo rules_sub_menu[] = {
-        GNOMEUIINFO_END
-};
-
-GnomeUIInfo file_menu[] = {
-        GNOMEUIINFO_END
-};
-
-GnomeUIInfo settings_menu[] = {
-        GNOMEUIINFO_TOGGLEITEM_DATA (N_("_Toolbar"), 
-                                     N_("Show or hide the toolbar"), 
-                                     settings_toolbar_callback, NULL, NULL),
-
-        GNOMEUIINFO_MENU_PREFERENCES_ITEM (show_preferences_dialog, NULL),
-
-        GNOMEUIINFO_END
-};
-
-GnomeUIInfo help_menu[] = {
-        GNOMEUIINFO_HELP("blackjack"),
-
-        GNOMEUIINFO_MENU_ABOUT_ITEM (help_about_callback, NULL),
-
-        GNOMEUIINFO_END
-};
-
-GnomeUIInfo game_menu[] = {
-  
-        GNOMEUIINFO_MENU_NEW_GAME_ITEM (random_seed, NULL),
-
-        GNOMEUIINFO_MENU_RESTART_GAME_ITEM (restart_game, NULL),
-
-        GNOMEUIINFO_SEPARATOR,
-
-        GNOMEUIINFO_MENU_HINT_ITEM (show_hint_dialog, NULL),
-
-        GNOMEUIINFO_SEPARATOR,
-
-        GNOMEUIINFO_MENU_EXIT_ITEM (bj_quit_app, NULL),
-
-        GNOMEUIINFO_END
-};
-
-
-GnomeUIInfo top_menu[] = {
-
-        GNOMEUIINFO_MENU_GAME_TREE (game_menu),
-
-        GNOMEUIINFO_MENU_SETTINGS_TREE (settings_menu),
-
-        GNOMEUIINFO_MENU_HELP_TREE (help_menu),
-
-        GNOMEUIINFO_END
-};
-
-GnomeUIInfo toolbar[] =
-        {
-                GNOMEUIINFO_ITEM_STOCK (N_("New"), N_("Deal a new game"),
-                                        random_seed, GTK_STOCK_NEW),
-
-                GNOMEUIINFO_ITEM_STOCK (N_("Restart"), N_("Start this game over"),
-                                        restart_game, GTK_STOCK_REFRESH),
-
-                GNOMEUIINFO_SEPARATOR,
-                GNOMEUIINFO_ITEM_STOCK (N_("Hint"), N_("Suggest a move"),
-                                        show_hint_dialog, GTK_STOCK_HELP),
-                GNOMEUIINFO_END
-        };
-
-void
-bj_menu_create ()
-{
-        gnome_app_create_menus (GNOME_APP(app), top_menu);
-        gnome_app_create_toolbar (GNOME_APP(app), toolbar);
-
-        gboolean value = bj_get_show_toolbar ();
-        gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (settings_menu[0].widget),
-                                        value);
-        bj_gui_show_toolbar (value);
-}
-
-void
-bj_menu_install_hints (GnomeApp *lapp)
-{
-        gnome_app_install_menu_hints (GNOME_APP (lapp), top_menu);
 }

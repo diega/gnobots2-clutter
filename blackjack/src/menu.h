@@ -1,5 +1,5 @@
 /* Blackjack - menu.h
- * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
+ * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
  * Copyright (C) 1998 Jonathan Blandford <jrb@mit.edu>
  *
  * This game is free software; you can redistribute it and/or modify
@@ -18,10 +18,23 @@
  * USA
  */
 
-#ifndef MENU_H
-#define MENU_H
+#ifndef BJ_MENU_H
+#define BJ_MENU_H
 
-void bj_menu_create (void);
-void bj_menu_install_hints (GnomeApp *app);
-
+void on_help_contents_activate   (GtkAction *action,
+                                  gpointer   data);
+void on_help_about_activate      (GtkAction *action,
+                                  gpointer   data);
+void on_game_quit_activate       (GtkAction *action,
+                                  gpointer   data);
+void on_game_new_activate        (GtkAction *action,
+                                  gpointer   data);
+void on_game_restart_activate    (GtkAction *action,
+                                  gpointer   data);
+void on_game_hint_activate       (GtkAction *action,
+                                  gpointer   data);
+void on_toolbar_activate         (GtkToggleAction *action,
+                                  gpointer         data);
+void on_preferences_activate     (GtkAction *action,
+                                  gpointer   data);
 #endif

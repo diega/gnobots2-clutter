@@ -1,6 +1,8 @@
 // -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil -*-
-/* Blackjack - dialog.cpp
- * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
+/* 
+ * Blackjack - dialog.cpp
+ *
+ * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
  *
  * This game is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,13 +20,12 @@
  * USA
  */
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
 
 #include <stdlib.h>
 #include <dirent.h>
-#include <gnome.h>
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include <games-card-selector.h>
 #include "blackjack.h"
 #include "menu.h"
@@ -50,7 +51,7 @@ get_insurance_choice ()
 
         message = _("Would you like insurance?");
 
-        dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (app),
+        dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (toplevel_window),
                                                      GTK_DIALOG_MODAL,
                                                      GTK_MESSAGE_QUESTION,
                                                      GTK_BUTTONS_YES_NO,
@@ -95,7 +96,7 @@ show_hint_dialog ()
         if (hint_dlg)
                 gtk_widget_destroy (GTK_WIDGET (hint_dlg));
 
-        hint_dlg = gtk_message_dialog_new_with_markup (GTK_WINDOW (app),
+        hint_dlg = gtk_message_dialog_new_with_markup (GTK_WINDOW (toplevel_window),
                                                        GTK_DIALOG_DESTROY_WITH_PARENT,
                                                        GTK_MESSAGE_INFO,
                                                        GTK_BUTTONS_OK,
@@ -203,7 +204,7 @@ show_preferences_dialog ()
 
         if (!pref_dialog) {
                 pref_dialog = gtk_dialog_new_with_buttons (_("Blackjack Preferences"),
-                                                           GTK_WINDOW (app), 
+                                                           GTK_WINDOW (toplevel_window), 
                                                            GTK_DIALOG_DESTROY_WITH_PARENT,
                                                            GTK_STOCK_CLOSE, 
                                                            GTK_RESPONSE_CLOSE,
@@ -343,8 +344,7 @@ show_preferences_dialog ()
                                                 GTK_POLICY_AUTOMATIC,
                                                 GTK_POLICY_AUTOMATIC);
                 
-                gtk_box_pack_end (GTK_BOX (vbox), scrolled_window, TRUE, TRUE,
-                                  GNOME_PAD_SMALL );
+                gtk_box_pack_end (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 6);
                 
                 g_signal_connect (select, "changed", 
                                   G_CALLBACK (select_rule_cb), (gpointer) pref_dialog);

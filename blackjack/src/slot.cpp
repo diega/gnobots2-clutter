@@ -1,6 +1,8 @@
 // -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil -*-
-/* Blackjack - slot.cpp
- * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
+/*
+ * Blackjack - slot.cpp
+ *
+ * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
  * Copyright (C) 1998 Jonathan Blandford <jrb@mit.edu>
  *
  * This game is free software; you can redistribute it and/or modify
@@ -47,19 +49,14 @@ bj_slot_set_size (gint width,
                   gint height)
 {
         gchar *name;
-        gchar *fullname;
 
-        name = g_build_filename ("cards", "slots", SLOT_FILENAME, NULL);
-        fullname = gnome_program_locate_file (NULL,
-                                              GNOME_FILE_DOMAIN_APP_PIXMAP,
-                                              name, TRUE, NULL);
-        g_free (name);
+        name = g_build_filename (PIXMAPDIR, "cards", "slots", SLOT_FILENAME, NULL);
 
-        if (!fullname)
+        if (!name)
                 return;
 
         if (!slot_preimage)
-                slot_preimage = games_preimage_new_from_uri (fullname,
+                slot_preimage = games_preimage_new_from_uri (name,
                                                              NULL);
 
         if (slot_scaled_pixbuf)
@@ -69,7 +66,7 @@ bj_slot_set_size (gint width,
                                                     width,
                                                     height,
                                                     NULL);
-        g_free (fullname);
+        g_free (name);
 }
 
 GdkPixbuf *
@@ -83,7 +80,7 @@ bj_slot_load_pixmaps (void)
 {
         gchar *buffer;
 
-        buffer = g_build_filename ("blackjack", "baize.png", NULL);
+        buffer = g_build_filename (PIXMAPDIR, "blackjack", "baize.png", NULL);
         default_background_pixmap = get_pixmap (buffer);
         g_free (buffer);
 }

@@ -21,7 +21,7 @@
 #ifndef CARD_H
 #define CARD_H
 
-#include <gnome.h>
+#include <gdk/gdk.h>
 
 /*
  * Constants

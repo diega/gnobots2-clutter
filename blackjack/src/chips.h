@@ -28,7 +28,7 @@
 #include <iostream>
 using namespace std;
 
-#include <gnome.h>
+#include <gdk/gdk.h>
 
 /*
  * Data Structures

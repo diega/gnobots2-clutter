@@ -1,6 +1,8 @@
 // -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil -*-
-/* Blackjack - events.cpp
- * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
+/*
+ * Blackjack - events.cpp
+ *
+ * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
  *
  * This game is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +34,10 @@
 #include <ctype.h>
 #include <iostream>
 #include <math.h>
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
+
 using namespace std;
 
 #include "events.h"
@@ -183,10 +189,6 @@ waiting_for_mouse_up (void)
 }
 
 /* Button press statuses */
-
-void end_of_game_test ()
-{
-}
 
 static void
 drop_moving_cards (gint x, gint y)
@@ -341,7 +343,6 @@ handle_slot_pressed (GdkEventButton *event, hslot_type hslot, gint cardid)
         else if (double_click) {
                 press_data->status = STATUS_NONE;
                 //bj_draw_refresh_screen ();
-                //end_of_game_test ();
                 return TRUE;
         }
         return TRUE;

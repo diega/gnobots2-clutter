@@ -1,12 +1,14 @@
 INCLUDES =  \
-	-I$(top_srcdir)/libgames-support           \
-	-DDATADIR=\""$(datadir)"\"		   \
-	$(GNOME_GAMES_CXXFLAGS)			   \
+	-I$(top_srcdir)/libgames-support	\
+	-DPIXMAPDIR=\""$(datadir)/pixmaps"\"	\
+	-DDATADIR=\""$(datadir)/blackjack"\"	\
+	-DHAVE_GNOME				\
+	$(GNOME_GAMES_CXXFLAGS)			\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"
 
 bin_PROGRAMS = blackjack
 
-blackjack_SOURCES = 		\
+blackjack_SOURCES = 	\
 	strategy.h	\
 	strategy.cpp	\
 	player.h	\
@@ -36,7 +38,8 @@ blackjack_SOURCES = 		\
 	chips.h		\
 	chips.cpp
 
-blackjack_LDADD = $(GNOME_GAMES_LIBS) \
-	../../libgames-support/libgames-support.la \
+blackjack_LDADD = 					\
+	$(GNOME_GAMES_LIBS)				\
+	../../libgames-support/libgames-support.la	\
 	@UCB_LDFLAGS@
 

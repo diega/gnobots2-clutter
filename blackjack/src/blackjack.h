@@ -1,6 +1,8 @@
 // -*- mode:C++; tab-width:2; c-basic-offset:2; indent-tabs-mode:nil -*-
-/* Blackjack - blackjack.h
- * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
+/*
+ * Blackjack - blackjack.h
+ *
+ * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
  *
  * This game is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -19,6 +21,7 @@
 
 #ifndef BLACKJACK_H
 #define BLACKJACK_H
+
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 #include "press_data.h"
@@ -27,7 +30,7 @@
 
 // Constants
 
-#define BJ_RULES_DIR "blackjack"
+#define BJ_RULES_DIR DATADIR
 #define GAME_EVENTS (GDK_EXPOSURE_MASK        |\
 		                 GDK_BUTTON_PRESS_MASK    |\
 		                 GDK_BUTTON_RELEASE_MASK  |\
@@ -62,7 +65,7 @@
 
 // Global variables
 
-extern GtkWidget        *app;
+extern GtkWidget        *toplevel_window;
 extern GtkWidget        *playing_area;
 extern GtkWidget        *option_dialog;
 extern GdkGC            *draw_gc;
@@ -86,7 +89,7 @@ extern double           y_expanded_offset;
 
 extern gboolean         events_pending;
 
-gboolean                bj_quit_app (GtkMenuItem*);
+gboolean                bj_quit_app (void);
 void                    bj_make_window_title (gchar *game_name);
 
 void                    bj_show_balance (gfloat);

@@ -1,6 +1,8 @@
 // -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil -*-
-/* Blackjack
- * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
+/*
+ * Blackjack
+ *
+ * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
  *
  * This game is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,10 +31,15 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <ctype.h>
-#include <gnome.h>
-#include <libgnomeui/gnome-window-icon.h>
+#include <glib/gi18n.h>
+#include <librsvg/rsvg.h>
 
 #include "blackjack.h"
+
+#ifdef HAVE_GNOME
+#include <gnome.h>
+#endif
+
 #include "events.h"
 #include "draw.h"
 #include "slot.h"
@@ -48,8 +55,8 @@ using namespace std;
 
 // Global Variables
 
-GtkWidget        *app;
-GtkWidget        *playing_area;
+GtkWidget        *toplevel_window = NULL;
+GtkWidget        *playing_area = NULL;
 GtkWidget        *option_dialog = NULL;
 GdkGC            *draw_gc = NULL;
 GdkGC            *bg_gc = NULL;
@@ -61,6 +68,8 @@ gchar            *card_style;
 GtkWidget        *wager_value_label;
 
 static GtkWidget *shoe_value_label = NULL;
+
+GtkUIManager     *ui = NULL;
 
 GtkWidget        *status_bar;
 GtkWidget        *balance_value_label;
@@ -92,7 +101,7 @@ bj_make_window_title (gchar *game_name)
 
         title = g_strdup_printf (_("Blackjack: %s"), game_name);
 
-        gtk_window_set_title (GTK_WINDOW (app), title); 
+        gtk_window_set_title (GTK_WINDOW (toplevel_window), title); 
 
         g_free (title);
 }
@@ -100,16 +109,14 @@ bj_make_window_title (gchar *game_name)
 void
 bj_gui_show_toolbar (gboolean do_toolbar)
 {
-        BonoboDockItem *toolbar_gdi;
+        GtkWidget *widget = gtk_ui_manager_get_widget (ui, "/ToolBar");
 
-        toolbar_gdi = gnome_app_get_dock_item_by_name (GNOME_APP(app), 
-                                                       GNOME_APP_TOOLBAR_NAME);
         if (do_toolbar) {
-                gtk_widget_show (GTK_WIDGET(toolbar_gdi));
+                gtk_widget_show (widget);
         }
         else {
-                gtk_widget_hide (GTK_WIDGET(toolbar_gdi));
-                gtk_widget_queue_resize (app);
+                gtk_widget_hide (widget);
+                /*gtk_widget_queue_resize (toplevel_window);*/
         }
 }
 
@@ -134,7 +141,7 @@ bj_show_shoe_cards (gfloat value)
 }
 
 gdouble
-bj_get_wager () 
+bj_get_wager (void) 
 {
         return wager_value;
 }
@@ -163,14 +170,11 @@ bj_adjust_wager (gdouble offset)
 }
 
 static void
-bj_create_board ()
+bj_create_board (void)
 {
-        playing_area = gtk_drawing_area_new ();
         gtk_widget_set_events (playing_area, 
                                gtk_widget_get_events (playing_area) 
                                | GAME_EVENTS );
-
-        gnome_app_set_contents (GNOME_APP (app), playing_area);
 
         GTK_WIDGET_SET_FLAGS (playing_area, GTK_CAN_FOCUS);
         gtk_widget_grab_focus (playing_area);
@@ -192,7 +196,7 @@ bj_create_board ()
 }
 
 gboolean
-bj_quit_app (GtkMenuItem *menuitem)
+bj_quit_app (void)
 {
         delete rules;
         delete strategy;
@@ -208,44 +212,151 @@ bj_quit_app (GtkMenuItem *menuitem)
         g_object_unref (press_data->moving_cards);
 
         g_object_unref (gconf_client);
-        gtk_widget_destroy (app);
+        gtk_widget_destroy (toplevel_window);
         gtk_main_quit ();
 
         return TRUE;
 }
 
 static void
-create_main_window ()
+create_main_window (void)
 {
-        /* This is the prefix used to retrieve the state when NOT restarted: */
-        const gchar* prefix = 
-                gnome_client_get_global_config_prefix (gnome_master_client ());
-	if (!gconf_client)
-        	gconf_client = gconf_client_get_default ();
-        gint width, height;
+        GtkWidget    *vbox;
+        GtkWidget    *hbox;
+        GtkWidget    *group_box;
+        GtkWidget    *label;
+        GError       *error       = NULL;
+        gint          width, height;
+        char         *label_string;
+        GtkActionGroup *actions;
+        static const char *ui_definition =
+                "<ui>"
+                "  <menubar name='MenuBar'>"
+                "    <menu name='GameMenu' action='game-menu'>"
+                "      <menuitem name='New' action='new-game' />"
+                "      <menuitem name='Restart' action='restart-game' />"
+                "      <separator/>"
+                "      <menuitem name='Hint' action='show-hint' />"
+                "      <separator/>"
+                "      <menuitem name='Quit' action='quit-game' />"
+                "      <placeholder name='GameMenuAdditions' />"
+                "    </menu>"
+                "    <menu name='SettingsMenu' action='settings-menu'>"
+                "      <menuitem name='Toolbar' action='show-toolbar'/>"
+                "      <menuitem name='Preferences' action='show-preferences'/>"
+                "    </menu>"
+                "    <menu name='ActionsMenu' action='actions-menu'>"
+                "      <placeholder name='ActionsMenuAdditions' />"
+                "    </menu>"
+                "    <menu name='HelpMenu' action='help-menu'>"
+                "      <menuitem name='Contents' action='show-help-contents'/>"
+                "      <menuitem name='About' action='show-about'/>"
+                "    </menu>"
+                "  </menubar>"
+                "  <toolbar  name='ToolBar' action='toolbar'>"
+                "    <placeholder name='GameToolItems'>"
+                "      <toolitem name='New' action='new-game'/>"
+                "      <toolitem name='Restart' action='restart-game'/>"
+                "      <separator/>"
+                "      <toolitem name='Hint' action='show-hint'/>"
+                "    </placeholder>"
+                "  </toolbar>"
+                "</ui>";
+
+	static GtkActionEntry entries [] = {
+		{ "game-menu", NULL, "_Game" },
+		{ "new-game", GTK_STOCK_NEW, "_New game", "<Control>N", "Start a new game", G_CALLBACK (on_game_new_activate) },
+		{ "restart-game", GTK_STOCK_REFRESH, "_Restart game", "<Control>R", "Restart the current game", G_CALLBACK (on_game_restart_activate) },
+		{ "show-hint", GTK_STOCK_HELP, "_Hint", NULL, "Get a hint for the next action", G_CALLBACK (on_game_hint_activate) },
+		{ "quit-game", GTK_STOCK_QUIT, "_Quit", "<Control>Q", "Quit application", G_CALLBACK (on_game_quit_activate) },
+		{ "settings-menu", NULL, "_Settings" },
+                { "show-preferences", GTK_STOCK_PREFERENCES, "_Preferences", NULL, "Show game preferences", G_CALLBACK (on_preferences_activate) },
+		{ "actions-menu", NULL, "_Actions" },
+		{ "help-menu", NULL, "_Help" },
+		{ "show-help-contents", GTK_STOCK_HELP, "_Contents", "F1", "Display help for this game", G_CALLBACK (on_help_contents_activate) },
+		{ "show-about", GTK_STOCK_ABOUT, "_About", NULL, "About this game", G_CALLBACK (on_help_about_activate) },
+	};
+
+	static GtkToggleActionEntry toggle_entries [] = {
+                { "show-toolbar", NULL, "_Toolbar", "<Control>T", "Show toolbar", G_CALLBACK (on_toolbar_activate), show_toolbar },
+        };
+
+        toplevel_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
+        ui = gtk_ui_manager_new ();
+        gtk_ui_manager_add_ui_from_string (ui, ui_definition, -1, &error);
+
+        actions = gtk_action_group_new ("Actions");
+        gtk_action_group_add_actions (actions, entries, G_N_ELEMENTS (entries), toplevel_window);
+        gtk_action_group_add_toggle_actions (actions, toggle_entries, G_N_ELEMENTS (toggle_entries), toplevel_window);
+        gtk_ui_manager_insert_action_group (ui, actions, 0);
+        gtk_window_add_accel_group (GTK_WINDOW (toplevel_window), gtk_ui_manager_get_accel_group (ui));
+    
+        vbox = gtk_vbox_new (FALSE, 0);
+        gtk_container_add (GTK_CONTAINER (toplevel_window), vbox);
+
+        gtk_box_pack_start (GTK_BOX (vbox), gtk_ui_manager_get_widget (ui, "/MenuBar"), FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (vbox), gtk_ui_manager_get_widget (ui, "/ToolBar"), FALSE, FALSE, 0);
+
+        playing_area = gtk_drawing_area_new ();
+        gtk_box_pack_start (GTK_BOX (vbox), playing_area, TRUE, TRUE, 0);
+
+        hbox = gtk_hbox_new (FALSE, 6);
+        gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+        group_box = gtk_hbox_new (FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (hbox), group_box, FALSE, FALSE, 0);
+
+        label = gtk_label_new (_("Cards left:"));
+        gtk_box_pack_start (GTK_BOX (group_box), label, FALSE, FALSE, 0);
+
+        shoe_value_label = gtk_label_new ("");
+        gtk_box_pack_start (GTK_BOX (group_box), shoe_value_label, FALSE, FALSE, 0);
+
+        group_box = gtk_hbox_new (FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (hbox), group_box, FALSE, FALSE, 0);
+
+        label = gtk_label_new (_("Wager:"));
+        gtk_box_pack_start (GTK_BOX (group_box), label, FALSE, FALSE, 0);
+
+        wager_value = 5.0;
+        label_string = g_strdup_printf ("%.2f", wager_value);
+        wager_value_label = gtk_label_new (label_string);
+        g_free (label_string);
+        gtk_box_pack_start (GTK_BOX (group_box), wager_value_label, FALSE, FALSE, 0);
+
+
+        group_box = gtk_hbox_new (FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (hbox), group_box, FALSE, FALSE, 0);
+
+        label = gtk_label_new (_("Balance:"));
+        gtk_box_pack_start (GTK_BOX (group_box), label, FALSE, FALSE, 0);
+        label_string = g_strdup_printf ("%.2f", balance_value);
+        balance_value_label = gtk_label_new (label_string);
+        g_free (label_string);
+        gtk_box_pack_start (GTK_BOX (group_box), balance_value_label, FALSE, FALSE, 0);
+
+
+        status_bar = gtk_statusbar_new ();
+        gtk_box_pack_start (GTK_BOX (hbox), status_bar, TRUE, TRUE, 0);
+
+        
+        if (!gconf_client)
+                gconf_client = gconf_client_get_default ();
 
         width = gconf_client_get_int (gconf_client, GCONF_KEY_WIDTH, NULL);
         height = gconf_client_get_int (gconf_client, GCONF_KEY_HEIGHT, NULL);
 
-        app = gnome_app_new ("blackjack", _("Blackjack"));
-        /* Use "prefix" as the default config location ... */
-        gnome_config_push_prefix (prefix);
-        /* ... and use it for the menubar and toolbar aw well: */
-        GNOME_APP (app)->prefix = (gchar*)prefix;
+        gtk_window_set_default_size (GTK_WINDOW (toplevel_window), width, height);
 
-        gtk_window_set_default_size (GTK_WINDOW (app), width, height);
-
-
-        gtk_widget_realize (app);
-
-        g_signal_connect (app, "delete_event", 
+        g_signal_connect (toplevel_window, "delete_event", 
                           G_CALLBACK (bj_quit_app), NULL);
-        g_signal_connect (app, "configure_event",
+        g_signal_connect (toplevel_window, "configure_event",
                           G_CALLBACK (bj_event_configure), NULL);
 }
 
 static void
-create_press_data ()
+create_press_data (void)
 {
         GdkWindowAttr attributes;
 
@@ -264,7 +375,7 @@ create_press_data ()
 }
 
 static void
-create_chip_stack_press_data ()
+create_chip_stack_press_data (void)
 {
         GdkWindowAttr attributes;
 
@@ -288,7 +399,6 @@ create_chip_stack_press_data ()
 static void
 main_prog (int argc, char *argv[])
 {
-        GtkWidget *wager_label, *balance_label, *status_box, *group_box;
         gchar *lcard_style;
         gchar *label_string;
         guint context_id;
@@ -298,59 +408,15 @@ main_prog (int argc, char *argv[])
         bj_slot_load_pixmaps ();
  
         bj_create_board ();
-        bj_menu_create ();
-
-        status_box = gtk_hbox_new (FALSE, GNOME_PAD);
-
-        group_box = gtk_hbox_new (FALSE, 0);
-        gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
-
-        GtkWidget *shoe_label = gtk_label_new (_("Cards left:"));
-        gtk_box_pack_start (GTK_BOX (group_box), shoe_label, FALSE, FALSE, 0);
-        shoe_value_label = gtk_label_new ("");
-        gtk_box_pack_start (GTK_BOX (group_box), shoe_value_label, FALSE, FALSE, 0);
-
-
-	group_box = gtk_hbox_new (FALSE, 0);
-        gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
-
-        wager_label = gtk_label_new (_("Wager:"));
-        gtk_box_pack_start (GTK_BOX (group_box), wager_label, FALSE, FALSE, 0);
-
-        wager_value = 5.0;
-        label_string = g_strdup_printf ("%.2f", wager_value);
-        wager_value_label = gtk_label_new (label_string);
-        g_free (label_string);
-        gtk_box_pack_start (GTK_BOX (group_box), wager_value_label, FALSE, FALSE, 0);
-
-
-	group_box = gtk_hbox_new (FALSE, 0);
-        gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
-
-        balance_label = gtk_label_new (_("Balance:"));
-        gtk_box_pack_start (GTK_BOX (group_box), balance_label, FALSE, FALSE, 0);
-        label_string = g_strdup_printf ("%.2f", balance_value);
-        balance_value_label = gtk_label_new (label_string);
-        g_free (label_string);
-        gtk_box_pack_start (GTK_BOX (group_box), balance_value_label, FALSE, FALSE, 0);
-
-
-        status_bar = gtk_statusbar_new ();
-        gtk_box_pack_start (GTK_BOX (status_box), status_bar, TRUE, TRUE, 0);
-        gnome_app_set_statusbar_custom (GNOME_APP (app), status_box, status_bar);
 
         context_id = gtk_statusbar_get_context_id (GTK_STATUSBAR (status_bar),
                                                    "help");
         gtk_statusbar_push (GTK_STATUSBAR (status_bar), context_id,
                             _("Place your wager or deal a hand"));
 
-        gtk_widget_show_all (status_box);
-
-        bj_menu_install_hints (GNOME_APP (app));
-
         bj_game_new (bj_get_game_variation (), NULL);
 
-        gtk_widget_show (app);
+        gtk_widget_show_all (toplevel_window);
 
         bj_gui_show_toolbar (show_toolbar);
 
@@ -578,47 +644,52 @@ bj_gconf_init (GConfClient *client)
 int
 main (int argc, char *argv [])
 {
-        gchar* variation = "";
-        struct poptOption blackjack_opts[] = {
-                {"variation", '\0', POPT_ARG_STRING, NULL, 0, NULL, NULL},
-                {NULL, '\0', 0, NULL, 0, NULL, NULL}
+        GOptionContext     *context;
+        GError             *error      = NULL;
+        char               *variation  = NULL;
+        gboolean            retval;
+        static GOptionEntry entries [] = {
+                { "variation", 0, 0, G_OPTION_ARG_STRING, &variation,
+                  N_("Blackjack rule set to use"), NULL },
+                { NULL }
         };
-
-        blackjack_opts[0].arg = &variation;
-        blackjack_opts[0].descrip = N_("Variation on game rules");
-        blackjack_opts[0].argDescrip = N_("NAME");
 
         bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
         bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
         textdomain (GETTEXT_PACKAGE);
 
-        gnome_program_init ("blackjack", VERSION,
-                            LIBGNOMEUI_MODULE, 
-                            argc, argv,
-                            GNOME_PARAM_POPT_TABLE, blackjack_opts,
-                            GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
+        context = g_option_context_new (NULL);
+        g_option_context_set_ignore_unknown_options (context, TRUE);
+        g_option_context_add_main_entries (context, entries, NULL);
+        retval = g_option_context_parse (context, &argc, &argv, &error);
+        if (!variation)
+                variation = g_strdup (DEFAULT_VARIATION);
 
+        gtk_init_with_args (&argc, &argv, NULL, NULL, NULL, &error);
+
+        rsvg_init ();
         gconf_init (argc, argv, NULL);
         gconf_client_add_dir (bj_gconf_client (), GCONF_KEY_DIR,
                               GCONF_CLIENT_PRELOAD_NONE, NULL);
 
+#ifdef HAVE_GNOME
+        gnome_program_init ("blackjack", VERSION,
+                            LIBGNOMEUI_MODULE,
+                            argc, argv,
+                            GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
+#endif
+
         gtk_widget_push_colormap (gdk_rgb_get_colormap ());
 
-        gchar *icon_path = g_build_filename (GNOME_ICONDIR,
-                                             "gnome-blackjack.png",
-                                             NULL);
-
-        gnome_window_icon_set_default_from_file (icon_path);
-        g_free (icon_path);
-
-        g_signal_connect (gnome_master_client (), "die",
-                          G_CALLBACK (bj_quit_app), NULL);
+        gtk_window_set_default_icon_name ("gnome-blackjack");
 
         bj_gconf_init (bj_gconf_client ());
 
         bj_game_find_rules (variation);
 
         main_prog (argc, argv);
+
+        g_free (variation);
 
         return 0;
 }

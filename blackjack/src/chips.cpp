@@ -1,6 +1,8 @@
 // -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil -*-
-/* Blackjack - chips.cpp
- * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
+/* 
+ * Blackjack - chips.cpp
+ *
+ * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
  *
  * This game is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,14 +67,9 @@ bj_chip_set_size (gint width,
                             CHIP_FILENAME_1 };
 
         for (gint i = 0; i < 4; i++) {
-                gchar *name;
                 gchar *fullname;
 
-                name = g_build_filename ("blackjack", names[i], NULL);
-                fullname = gnome_program_locate_file (NULL,
-                                                      GNOME_FILE_DOMAIN_APP_PIXMAP,
-                                                      name, TRUE, NULL);
-                g_free (name);
+                fullname = g_build_filename (PIXMAPDIR, "blackjack", names[i], NULL);
 
                 if (!fullname)
                         continue;

@@ -29,7 +29,7 @@
 #include <iostream>
 using namespace std;
 
-#include <gnome.h>
+#include <gdk/gdk.h>
 #include "card.h"
 
 /*

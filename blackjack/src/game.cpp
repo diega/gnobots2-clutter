@@ -1,7 +1,8 @@
 // -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil -*-
-
-/* Blackjack - game.cpp
- * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
+/*
+ * Blackjack - game.cpp
+ *
+ * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
  *
  * This game is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,14 +25,17 @@
 #ifdef HAVE_ALLOCA_H
 #include <alloca.h>
 #endif
-
-#include <gnome.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
 #include <dirent.h>
 #include <ctype.h>
+#include <glib/gi18n.h>
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
 
 #include "blackjack.h"
 #include "events.h"
@@ -128,29 +132,47 @@ bj_game_file_to_name (const gchar* file)
         return p;
 }
 
+/* copied from gnome-util.c */
+static const char *
+extension_pointer (const char * path)
+{
+        char * s, * t;
+        
+        g_return_val_if_fail (path != NULL, NULL);
+
+        /* get the dot in the last element of the path */
+        t = strrchr (path, G_DIR_SEPARATOR);
+        if (t != NULL)
+                s = strrchr (t, '.');
+        else
+                s = strrchr (path, '.');
+        
+        if (s == NULL)
+                return path + strlen (path); /* There is no extension. */
+        else {
+                ++s;      /* pass the . */
+                return s;
+        }
+}
+
+
 int
 bj_is_ruleset (const gchar *file_name)
 {
-        return (!strcmp (g_extension_pointer (file_name), "rules"));
+        return (!strcmp (extension_pointer (file_name), "rules"));
 }
 
 void
 bj_game_find_rules (gchar *variation)
 {
         GDir *dir;
-        gchar *dname;
         G_CONST_RETURN gchar* file_name;
         gint n_games = 0;
 
-        dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_DATADIR,
-                                           BJ_RULES_DIR, FALSE, NULL);
-
-        dir = g_dir_open (dname, 0, NULL);
+        dir = g_dir_open (BJ_RULES_DIR, 0, NULL);
         if (dir == NULL)
                 return;
   
-        g_free (dname);
-
         while ((file_name = g_dir_read_name (dir)) != NULL) {
                 if (! bj_is_ruleset (file_name))
                         continue;
@@ -212,12 +234,92 @@ bj_get_deal_delay ()
         return (bj_get_quick_deal ()) ? 1 : dealerSpeed;
 }
 
+static xmlXPathObjectPtr
+getnodeset (xmlDocPtr doc,
+            xmlChar  *xpath)
+{	
+	xmlXPathContextPtr context;
+	xmlXPathObjectPtr  result;
+
+	context = xmlXPathNewContext (doc);
+	result = xmlXPathEvalExpression (xpath, context);
+	if (xmlXPathNodeSetIsEmpty (result->nodesetval)) {
+                g_warning ("Node set is empty for %s", xpath);
+		return NULL;
+        }
+
+	xmlXPathFreeContext (context);
+
+	return result;
+}
+
+static xmlChar *
+get_first_xpath_value (xmlDocPtr doc,
+                       xmlChar  *xpath)
+{ 
+        xmlChar          *keyword = NULL;
+	xmlXPathObjectPtr result;
+	xmlNodeSetPtr     nodeset;
+
+	result = getnodeset (doc, xpath);
+        if (result) {
+		nodeset = result->nodesetval;
+                if (nodeset->nodeNr > 0)
+                        keyword = xmlGetProp (nodeset->nodeTab[0], (const xmlChar *) "value");
+	}
+
+        return keyword;
+}
+
+static gboolean
+get_xml_rule_boolean (xmlDocPtr   doc,
+                      const char *name,
+                      gboolean    default_value)
+{
+        xmlChar *str;
+        gboolean value;
+        xmlChar *xpath;
+
+        xpath = (xmlChar *)g_strdup_printf ("/BlackjackRuleDefinition/%s", name);
+
+        str = get_first_xpath_value (doc, xpath);
+        if (str)
+                value = (strcmp ((char *)str, "TRUE") == 0);
+        else
+                value = default_value;
+
+        xmlFree (str);
+
+        return value;
+}
+
+static int
+get_xml_rule_int (xmlDocPtr   doc,
+                  const char *name,
+                  gint        default_value)
+{
+        xmlChar *str;
+        gint     value;
+        xmlChar *xpath;
+
+        xpath = (xmlChar *)g_strdup_printf ("/BlackjackRuleDefinition/%s", name);
+
+        str = get_first_xpath_value (doc, xpath);
+        if (str)
+                value = atoi ((char *)str);
+        else
+                value = default_value;
+
+        xmlFree (str);
+
+        return value;
+}
 
 BJGameRules *
-bj_game_read_rules (gchar *filename)
+bj_game_read_rules (char *filename)
 {
         BJGameRules *ruleset;
-        gboolean used_default;
+        gboolean use_default = FALSE;
         gboolean hitSoft17,
                 doubleAnyTotal,
                 double9,
@@ -229,46 +331,62 @@ bj_game_read_rules (gchar *filename)
                 lateSurrender;
         gint lnumDecks,
                 ldealerSpeed;
-        gchar *prefix;
-  
-        gnome_config_pop_prefix ();
-        prefix = g_strdup_printf ("=%s=", filename);
-        gnome_config_push_prefix (prefix);
-        g_free (prefix);
+        char   *contents;
+        gsize   length;
+        GError *error = NULL;
 
-        lnumDecks = gnome_config_get_int_with_default 
-                ("General/Number Of Decks=6",
-                 &used_default);
-        hitSoft17 = gnome_config_get_bool_with_default 
-                ("House Rules/Dealer Hits Soft 17=false",
-                 &used_default);
-        doubleAnyTotal = gnome_config_get_bool_with_default 
-                ("House Rules/Double Down Any Total=true",
-                 &used_default);
-        double9 = gnome_config_get_bool_with_default 
-                ("House Rules/Double Down 9=true",
-                 &used_default);
-        doubleSoft = gnome_config_get_bool_with_default
-                ("House Rules/Double Down Soft=true",
-                 &used_default);
-        doubleAfterHit = gnome_config_get_bool_with_default
-                ("House Rules/Double Down After Hit=false",
-                 &used_default);
-        doubleAfterSplit = gnome_config_get_bool_with_default
-                ("House Rules/Double Down After Split=true",
-                 &used_default);
-        resplit = gnome_config_get_bool_with_default
-                ("House Rules/Resplit Allowed=true",
-                 &used_default);
-        resplitAces = gnome_config_get_bool_with_default
-                ("House Rules/Resplit Aces Allowed=true",
-                 &used_default);
-        lateSurrender = gnome_config_get_bool_with_default
-                ("House Rules/Surrender Allowed=true",
-                 &used_default);
-        ldealerSpeed = gnome_config_get_int_with_default
-                ("House Rules/Dealer Speed=500",
-                 &used_default);
+        lnumDecks = 6;
+        hitSoft17 = FALSE;
+        doubleAnyTotal = TRUE;
+        double9 = TRUE;
+        doubleSoft = TRUE;
+        doubleAfterHit = FALSE;
+        doubleAfterSplit = TRUE;
+        resplit = TRUE;
+        resplitAces = TRUE;
+        lateSurrender = TRUE;
+        ldealerSpeed = 500;
+
+        if (!g_file_get_contents (filename, &contents, &length, &error))
+                use_default = TRUE;
+
+        if (!use_default) {
+             	xmlDocPtr  doc;
+                xmlNodePtr node;
+
+                contents = (char *)g_realloc (contents, length + 1);
+                contents [length] = '\0';
+
+                doc = xmlParseMemory (contents, length);
+                if (doc == NULL)
+                        doc = xmlRecoverMemory (contents, length);
+
+                g_free (contents);
+
+                /* If the document has no root, or no name */
+                if (!doc || !doc->children || !doc->children->name) {
+                        if (doc != NULL)
+                                xmlFreeDoc (doc);
+                        use_default = TRUE;
+                } else {
+                        node = xmlDocGetRootElement (doc);
+
+                        lnumDecks = get_xml_rule_int (doc, "NumberOfDecks", lnumDecks);
+                        ldealerSpeed = get_xml_rule_int (doc, "DealerSpeed", ldealerSpeed);
+
+                        hitSoft17 = get_xml_rule_boolean (doc, "DealerHitsSoft17", hitSoft17);
+                        doubleAnyTotal = get_xml_rule_boolean (doc, "DoubleDownAnyTotal", doubleAnyTotal);
+                        double9 = get_xml_rule_boolean (doc, "DoubleDown9", double9);
+                        doubleSoft = get_xml_rule_boolean (doc, "DoubleDownSoft", doubleSoft);
+                        doubleAfterHit = get_xml_rule_boolean (doc, "DoubleDownAfterHit", doubleAfterHit);
+                        doubleAfterSplit = get_xml_rule_boolean (doc, "DoubleDownAfterSplit", doubleAfterSplit);
+                        resplit = get_xml_rule_boolean (doc, "ResplitAllowed", resplit);
+                        resplitAces = get_xml_rule_boolean (doc, "ResplitAcesAllowed", resplitAces);
+                        lateSurrender = get_xml_rule_boolean (doc, "SurrenderAllowed", lateSurrender);
+
+                        xmlFreeDoc (doc);
+                }
+        }
 
         // Compute basic strategy.
         ruleset = new BJGameRules (hitSoft17, doubleAnyTotal, 
@@ -285,20 +403,14 @@ BJGameRules *
 bj_game_find_and_read_rules (gchar *filename)
 {
         gchar *installed_filename;
-        gchar *relative;
         BJGameRules *ruleset = NULL;
 
-        relative = g_build_filename (BJ_RULES_DIR, filename, NULL);
-        installed_filename = gnome_program_locate_file (NULL, 
-                                                        GNOME_FILE_DOMAIN_APP_DATADIR,
-                                                        relative,
-                                                        FALSE, NULL);
+        installed_filename = g_build_filename (BJ_RULES_DIR, filename, NULL);
 
         if (g_file_test (installed_filename, G_FILE_TEST_EXISTS))
                 ruleset = bj_game_read_rules (installed_filename);
 
         g_free (installed_filename);
-        g_free (relative);
 
         return ruleset;
 }
@@ -306,9 +418,11 @@ bj_game_find_and_read_rules (gchar *filename)
 static gchar *
 bj_game_get_config_dir (void)
 {
+#define GNOME_DOT_GNOME            ".gnome2/"
         gchar *conf_dir = NULL;
 
-        conf_dir = g_build_filename (gnome_user_dir_get (),
+        conf_dir = g_build_filename (g_get_home_dir (),
+                                     GNOME_DOT_GNOME,
                                      "blackjack.d",
                                      NULL);
         return conf_dir;
@@ -331,16 +445,11 @@ static void
 bj_game_eval_installed_file (gchar *file)
 {
         char *installed_filename;
-        char *relative;
 
         if (g_file_test (file, G_FILE_TEST_EXISTS))
                 return;
   
-        relative = g_build_filename (BJ_RULES_DIR, file, NULL);
-        installed_filename = gnome_program_locate_file (NULL, 
-                                                        GNOME_FILE_DOMAIN_APP_DATADIR,
-                                                        relative,
-                                                        FALSE, NULL);
+        installed_filename = g_build_filename (BJ_RULES_DIR, file, NULL);
 
         if (g_file_test (installed_filename, G_FILE_TEST_EXISTS)) {
                 rules = bj_game_read_rules (installed_filename);
@@ -382,7 +491,7 @@ bj_game_eval_installed_file (gchar *file)
                 gchar *message = g_strdup_printf ("%s\n %s", _("Blackjack can't load the requested file"),
                                                   installed_filename);
                 gchar *message2 = _("Please check your Blackjack installation");
-                GtkWidget *w = gtk_message_dialog_new_with_markup (GTK_WINDOW (app),
+                GtkWidget *w = gtk_message_dialog_new_with_markup (GTK_WINDOW (toplevel_window),
                                                                    GTK_DIALOG_DESTROY_WITH_PARENT,
                                                                    GTK_MESSAGE_ERROR,
                                                                    GTK_BUTTONS_CLOSE,
@@ -396,7 +505,6 @@ bj_game_eval_installed_file (gchar *file)
                 exit (1);
         }
         g_free (installed_filename);
-        g_free (relative);
 }
 
 void 

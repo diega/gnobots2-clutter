@@ -1,3 +1,29 @@
+2004-11-12  William Jon McCann  <mccann@jhu.edu>
+
+	* data/Ameristar.rules: 
+	* data/Atlantic_City.rules: 
+	* data/Vegas_Downtown.rules: 
+	* data/Vegas_Strip.rules: Converted to XML.
+
+	* src/blackjack.cpp (create_main_window, main_prog, main): 
+	* src/card.cpp (get_pixbuf, get_pixmap): 
+	* src/chips.cpp (bj_chip_set_size): 
+	* src/dialog.cpp:
+	* src/events.cpp:
+	* src/game.cpp (bj_game_find_rules, bj_game_read_rules)
+	(bj_game_find_and_read_rules, bj_game_eval_installed_file): 
+	* src/hand.cpp: 
+	* src/menu.cpp (on_help_about_activate): 
+	* src/player.cpp: 
+	* src/slot.cpp (bj_slot_set_size, bj_slot_load_pixmaps): 
+	* src/splash.cpp (splash_new): Replace GNOME stuff with gtk+/gdk/glib.
+	Notably, GtkUIManager for menus and libxml2 for rule definitions.  The only
+	thing that we still need GNOME libs for is the help browser.
+
+2004-11-10  William Jon McCann  <mccann@jhu.edu>
+
+	* src/events.cpp: Removed unused end_of_game_test().
+
 2004-11-08  Richard Hoelscher  <rah@rahga.com>
 
 	* src/slot.cpp (bj_slot_set_size): Render slots with GamesPreimage.

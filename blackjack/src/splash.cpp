@@ -1,6 +1,8 @@
 // -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil -*-
-/* Blackjack - splash.cpp
- * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
+/*
+ * Blackjack - splash.cpp
+ *
+ * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
  * Copyright (C) 1998 Felix Bellaby <felix@pooh.u-net.com>
  *
  * This game is free software; you can redistribute it and/or modify
@@ -24,8 +26,8 @@
 #endif
 
 #include "splash.h"
-#include <gnome.h>
-#include <libgnomeui/gnome-window-icon.h>
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
 static GtkWidget *progress = NULL;
 static GtkWidget *label = NULL;
@@ -74,11 +76,7 @@ splash_new ()
         GtkWidget *splash_pixmap = NULL;
         GtkWidget *vbox;
 
-        image_file = gnome_program_locate_file (NULL,
-                                                GNOME_FILE_DOMAIN_APP_PIXMAP,
-                                                "blackjack/blackjack-splash.png",
-                                                TRUE,
-                                                NULL);
+        image_file = g_build_filename (PIXMAPDIR, "blackjack", "blackjack-splash.png", NULL);
 
         if (image_file != NULL)
                 splash_pixmap = gtk_image_new_from_file (image_file);
@@ -94,7 +92,8 @@ splash_new ()
                                  GTK_WIN_POS_CENTER);
         gtk_window_set_title (GTK_WINDOW (splash), _("Blackjack"));
         gtk_window_set_resizable (GTK_WINDOW (splash), FALSE);
-        gnome_window_icon_set_from_default (GTK_WINDOW (splash));
+        gtk_window_set_default_icon_name ("gnome-blackjack");
+
         g_signal_connect (splash, "destroy",
                           G_CALLBACK (splash_destroyed),
                           NULL);
@@ -104,9 +103,8 @@ splash_new ()
         gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 
         if (splash_pixmap != NULL)
-                gtk_box_pack_start (GTK_BOX (vbox), splash_pixmap, FALSE, FALSE, 
-                                    GNOME_PAD_SMALL);
-        gtk_box_pack_end (GTK_BOX (vbox), progress, FALSE, FALSE, GNOME_PAD_SMALL);
+                gtk_box_pack_start (GTK_BOX (vbox), splash_pixmap, FALSE, FALSE, 6);
+        gtk_box_pack_end (GTK_BOX (vbox), progress, FALSE, FALSE, 6);
         gtk_box_pack_end (GTK_BOX (vbox), label, FALSE, FALSE, 0);
   
         gtk_widget_show_all (splash);
