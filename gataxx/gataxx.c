@@ -834,8 +834,8 @@ int main(int argc, char **argv) {
     
     gnome_score_init("gataxx");
     
-    /*	bindtextdomain(PACKAGE, GNOMELOCALEDIR);
-	textdomain(PACKAGE);*/
+    bindtextdomain(PACKAGE, GNOMELOCALEDIR);
+    textdomain(PACKAGE);
     
     gettimeofday(&tv, NULL);
     srand(tv.tv_usec);

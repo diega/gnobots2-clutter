@@ -1,3 +1,7 @@
+1999-10-17  Martin Norbäck  <norpan@bigfoot.com>
+
+	* gataxx.c: Uncommented setting of gettext locale
+
 1999-04-14  Chris Rogers (gandalf@pobox.com)
 
 	* ataxx.c: Detect when players have won without filling the board.
