@@ -1,5 +1,7 @@
 1999-06-03  James Henstridge  <james@daa.com.au>
 
+	* Game.cc: small fix to the poptOption array.
+
 	* Makefile.am (Games_DATA): install the xbill desktop entry.
 
 	* xbill.desktop: added a desktop entry for xbill.
