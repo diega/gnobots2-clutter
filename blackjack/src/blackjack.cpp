@@ -687,7 +687,7 @@ main (int argc, char *argv [])
 
         gtk_widget_push_colormap (gdk_rgb_get_colormap ());
 
-        gtk_window_set_default_icon_name ("gnome-blackjack");
+        gtk_window_set_default_icon_from_file (PIXMAPDIR"/gnome-blackjack.png", NULL);
 
         bj_gconf_init (bj_gconf_client ());
 
