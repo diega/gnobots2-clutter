@@ -1,0 +1,3 @@
+?package(gnome-gnometris@SUFFIX@):needs=X11 section=Games/Tetris-like\
+  title="Gnometris" command="/@BINDIR@/gnometris"
+
