@@ -674,7 +674,7 @@ mapset_changed_cb (GConfClient *client,
 		GTK_BUTTONS_OK,
 		_("This new mapset will take effect when you start "
 		  "a new game, or when Mahjongg is restarted."));
-
+	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (dialog);
 }
@@ -1020,6 +1020,7 @@ no_match (void)
 				GTK_MESSAGE_INFO,
 				GTK_BUTTONS_OK,
 				_("These tiles don't match."));
+		gtk_dialog_set_has_separator (GTK_DIALOG (mb), FALSE);
 		gtk_dialog_run (GTK_DIALOG (mb));
 		gtk_widget_destroy (mb);
         } else
@@ -1056,6 +1057,7 @@ check_free (void)
 						     GTK_MESSAGE_INFO,
 						     GTK_BUTTONS_OK,
 						     (_("There are no more moves.")));
+			gtk_dialog_set_has_separator (GTK_DIALOG (mb), FALSE);
 			gtk_dialog_run (GTK_DIALOG (mb));
 			gtk_widget_destroy (mb);
                 }
@@ -1128,7 +1130,7 @@ properties_callback (GtkWidget *widget, gpointer data)
 			GTK_DIALOG_DESTROY_WITH_PARENT,
 			GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 			NULL);
-
+	gtk_dialog_set_has_separator (GTK_DIALOG (pref_dialog), FALSE);
 	gtk_window_set_resizable (GTK_WINDOW (pref_dialog), FALSE);
 	gtk_dialog_set_default_response (GTK_DIALOG (pref_dialog),
 					 GTK_RESPONSE_CLOSE);
@@ -1502,7 +1504,7 @@ confirm_action (GtkWidget *widget, gpointer data)
 		}
 
 		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
-
+		gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 		response = gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
 		
@@ -1642,7 +1644,7 @@ select_game (GtkWidget *widget, gpointer data)
 						 GTK_STOCK_OK,
 						 GTK_RESPONSE_OK,
 						 NULL);
-	
+	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
 	box = GTK_DIALOG (dialog)->vbox;
@@ -1822,7 +1824,7 @@ load_tiles (gchar *fname, gchar *bg_fname)
 					      GTK_MESSAGE_ERROR,
 					      GTK_BUTTONS_OK,
 					      s);
-	
+		gtk_dialog_set_has_separator (GTK_DIALOG (box), FALSE);
 		gtk_dialog_run (GTK_DIALOG (box));
 		
 		exit (1);
@@ -1837,6 +1839,7 @@ load_tiles (gchar *fname, gchar *bg_fname)
 					      GTK_MESSAGE_ERROR,
 					      GTK_BUTTONS_OK,
 					      s);
+		gtk_dialog_set_has_separator (GTK_DIALOG (box), FALSE);
 		gtk_dialog_run (GTK_DIALOG (box));
 
 		exit (1);
@@ -1996,6 +1999,7 @@ shuffle_tiles_callback (GtkWidget *widget, gpointer data)
 					     GTK_MESSAGE_ERROR,
 					     GTK_BUTTONS_OK,
 					     (_("Sorry, I was unable to find a playable configuration.")));
+		gtk_dialog_set_has_separator (GTK_DIALOG (mb), FALSE);
 		gtk_dialog_run (GTK_DIALOG (mb));
 		gtk_widget_destroy (mb);
 

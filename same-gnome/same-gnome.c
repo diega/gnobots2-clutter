@@ -415,6 +415,7 @@ load_scenario (char *fname)
 			"Please check your Same GNOME installation."), fn);
 
 		gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_OK);
+                gtk_dialog_set_has_separator (GTK_DIALOG (box), FALSE);
 		gtk_dialog_run (GTK_DIALOG (box));
 		gtk_widget_destroy (box);
                 /* We may not have called gtk_main yet, but if we do we want
@@ -444,6 +445,7 @@ load_scenario (char *fname)
 			 "Please check your Same GNOME installation"), fn);
 
 		gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_OK);
+                gtk_dialog_set_has_separator (GTK_DIALOG (box), FALSE);
 		gtk_dialog_run (GTK_DIALOG (box));
 		gtk_widget_destroy (box);
                 /* We may not have called gtk_main yet, but if we do we want
@@ -600,6 +602,7 @@ game_preferences_callback (GtkWidget *widget, void *data)
 
 	gtk_dialog_set_default_response (GTK_DIALOG (pref_dialog),
 					 GTK_RESPONSE_OK);
+        gtk_dialog_set_has_separator (GTK_DIALOG (pref_dialog), FALSE);
 	g_signal_connect (G_OBJECT (pref_dialog), "response",
 			  G_CALLBACK(pref_dialog_response), NULL);
 

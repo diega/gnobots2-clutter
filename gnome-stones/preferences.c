@@ -573,7 +573,7 @@ preferences_dialog_new (void)
                                            GTK_STOCK_HELP, GTK_RESPONSE_HELP,
                                            GTK_STOCK_CLOSE, GTK_RESPONSE_ACCEPT,
                                            NULL);
-  
+  gtk_dialog_set_has_separator (GTK_DIALOG (properties), FALSE);  
   notebook = gtk_notebook_new();
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG(properties)->vbox), notebook, 
                       TRUE, TRUE, 0);

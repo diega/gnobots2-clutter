@@ -56,8 +56,10 @@ get_insurance_choice ()
                                    GTK_BUTTONS_YES_NO,
                                    "<span weight=\"bold\" size=\"larger\">%s</span>",
                                    message);
+  gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 
-  gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (dialog)->label), TRUE);
+  gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (dialog)->label),
+                            TRUE);
   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
 
   /* add a stock icon? */ 
@@ -108,6 +110,7 @@ show_hint_dialog ()
                                      "<span weight=\"bold\" size=\"larger\">%s</span>",
 	                                   gmessage);
 
+  gtk_dialog_set_has_separator (GTK_DIALOG (hint_dlg), FALSE);
   gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (hint_dlg)->label), TRUE);
   if (hint_dlg)
     {
@@ -219,6 +222,7 @@ show_preferences_dialog ()
                                                  GTK_STOCK_CLOSE, 
                                                  GTK_RESPONSE_CLOSE,
                                                  NULL);
+      gtk_dialog_set_has_separator (GTK_DIALOG (pref_dialog), FALSE);
       notebook = gtk_notebook_new ();
       gtk_container_add (GTK_CONTAINER (GTK_DIALOG (pref_dialog)->vbox),
                          notebook);

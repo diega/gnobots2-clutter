@@ -237,7 +237,7 @@ gboolean quit_game_cb(GtkWidget *widget, gpointer data)
             GTK_STOCK_QUIT, GTK_RESPONSE_ACCEPT,
             NULL);
 
-    
+    gtk_dialog_set_has_separator (GTK_DIALOG (box), FALSE);
     gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_REJECT);
 
     response = gtk_dialog_run (GTK_DIALOG (box));
@@ -285,7 +285,7 @@ void new_game_cb(GtkWidget *widget, gpointer data) {
                      _("Are you sure you want to start a new game?"));
 
     gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_YES);
-
+    gtk_dialog_set_has_separator (GTK_DIALOG (box), FALSE);
     response = gtk_dialog_run (GTK_DIALOG (box));
     gtk_widget_destroy (box);
 

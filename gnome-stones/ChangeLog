@@ -1,3 +1,8 @@
+2003-06-09  William Jon McCann  <mccann@jhu.edu>
+
+	* main.c: 
+	* preferences.c: Removed separator from dialogs as in HIG.
+
 2003-06-03  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* main.c: Add a restart level menu item. It doesn't work with
