@@ -5,6 +5,8 @@ b=$(shell pwd)/debian/build
 
 DH_VERBOSE=1
 
+doc_dir = usr/share/doc
+
 configure: configure.in
 	@echo "--- Making configure script and configuring"
 	#chmod +x autogen.sh
@@ -143,17 +145,17 @@ gnome-card-games@SUFFIX@: install
 	dh_installchangelogs -p$@ -P$(b)/$@ \
 					ChangeLog
 	cp aisleriot/TODO \
-	    $(b)/$@/usr/doc/$@/TODO.aisleriot
+	    $(b)/$@/$(doc_dir)/$@/TODO.aisleriot
 	cp aisleriot/AUTHORS \
-	    $(b)/$@/usr/doc/$@/AUTHORS.aisleriot
+	    $(b)/$@/$(doc_dir)/$@/AUTHORS.aisleriot
 	cp freecell/TODO \
-	    $(b)/$@/usr/doc/$@/TODO.freecell
+	    $(b)/$@/$(doc_dir)/$@/TODO.freecell
 	cp freecell/AUTHORS \
-	    $(b)/$@/usr/doc/$@/AUTHORS.freecell
+	    $(b)/$@/$(doc_dir)/$@/AUTHORS.freecell
 	cp aisleriot/ChangeLog \
-	    $(b)/$@/usr/doc/$@/changelog.aisleriot
+	    $(b)/$@/$(doc_dir)/$@/changelog.aisleriot
 	cp freecell/ChangeLog \
-	    $(b)/$@/usr/doc/$@/changelog.freecell
+	    $(b)/$@/$(doc_dir)/$@/changelog.freecell
 	dh_movefiles         -p$@ -P$(b)/$@
 	dh_strip             -p$@ -P$(b)/$@ 
 	dh_compress          -p$@ -P$(b)/$@ 
@@ -161,12 +163,13 @@ gnome-card-games@SUFFIX@: install
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister      -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_installmenu       -p$@ -P$(b)/$@
 	dh_installdeb        -p$@ -P$(b)/$@
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ sol.1 gnome-freecell.1
+#	dh_undocumented      -p$@ -P$(b)/$@ sol.1 gnome-freecell.1
 	#sh debian/fix-desktop-file freecell $(b)/$@
 	#sh debian/fix-desktop-file sol $(b)/$@
 
@@ -192,12 +195,13 @@ gnome-gnomine@SUFFIX@: install
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_installmenu       -p$@ -P$(b)/$@
 	dh_installdeb        -p$@ -P$(b)/$@
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ \
+#	dh_undocumented      -p$@ -P$(b)/$@ \
 				gnomine.1
 	#sh debian/fix-desktop-file gnomine $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
@@ -222,12 +226,13 @@ gnome-stones@SUFFIX@: install
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_installmenu       -p$@ -P$(b)/$@
 	dh_installdeb        -p$@ -P$(b)/$@
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ gnome-stones.1
+#	dh_undocumented      -p$@ -P$(b)/$@ gnome-stones.1
 	#sh debian/fix-desktop-file gnome-stones $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
 	dh_builddeb          -p$@ -P$(b)/$@
@@ -251,12 +256,13 @@ gnome-gturing: install
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_installmenu       -p$@ -P$(b)/$@
 	dh_installdeb        -p$@ -P$(b)/$@
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ gturing.1
+#	dh_undocumented      -p$@ -P$(b)/$@ gturing.1
 	#sh debian/fix-desktop-file gturing $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
 	dh_builddeb          -p$@ -P$(b)/$@
@@ -280,12 +286,13 @@ gnome-mahjongg@SUFFIX@: install
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_installmenu       -p$@ -P$(b)/$@
 	dh_installdeb        -p$@ -P$(b)/$@
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ \
+#	dh_undocumented      -p$@ -P$(b)/$@ \
 				mahjongg.1
 	#sh debian/fix-desktop-file mahjongg $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
@@ -310,12 +317,13 @@ gnome-same-gnome@SUFFIX@: install
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_installmenu       -p$@ -P$(b)/$@
 	dh_installdeb        -p$@ -P$(b)/$@
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ \
+#	dh_undocumented      -p$@ -P$(b)/$@ \
 				same-gnome.1
 	#sh debian/fix-desktop-file same-gnome $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
@@ -339,11 +347,12 @@ gnome-scottfree@SUFFIX@: install
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ \
+#	dh_undocumented      -p$@ -P$(b)/$@ \
 				GnomeScott.1
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister      -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
 	dh_builddeb          -p$@ -P$(b)/$@
 
@@ -366,12 +375,13 @@ gnome-gyahtzee@SUFFIX@: install
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_installmenu       -p$@ -P$(b)/$@
 	dh_installdeb        -p$@ -P$(b)/$@
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ \
+#	dh_undocumented      -p$@ -P$(b)/$@ \
 					gtali.1 ctali.1
 	#sh debian/fix-desktop-file gyahtzee $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
@@ -396,12 +406,13 @@ gnome-gnobots@SUFFIX@: install
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_installmenu       -p$@ -P$(b)/$@
 	dh_installdeb        -p$@ -P$(b)/$@
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ \
+#	dh_undocumented      -p$@ -P$(b)/$@ \
 				gnobots.1
 	#sh debian/fix-desktop-file gnobots $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
@@ -426,12 +437,13 @@ gnome-gnobots2@SUFFIX@: install
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_installmenu       -p$@ -P$(b)/$@
 	dh_installdeb        -p$@ -P$(b)/$@
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ \
+#	dh_undocumented      -p$@ -P$(b)/$@ \
 				gnobots2.1
 	#sh debian/fix-desktop-file gnobots2 $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
@@ -454,12 +466,13 @@ gnome-gnibbles@SUFFIX@: install
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_installmenu       -p$@ -P$(b)/$@
 	dh_installdeb        -p$@ -P$(b)/$@
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ \
+#	dh_undocumented      -p$@ -P$(b)/$@ \
 				gnibbles.1
 	#sh debian/fix-desktop-file gnibbles $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
@@ -483,12 +496,13 @@ gnome-gnometris@SUFFIX@: install
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_installmenu       -p$@ -P$(b)/$@
 	dh_installdeb        -p$@ -P$(b)/$@
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ \
+#	dh_undocumented      -p$@ -P$(b)/$@ \
 				gnometris.1
 	#sh debian/fix-desktop-file gnometris $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
@@ -513,12 +527,13 @@ gnome-gnotravex@SUFFIX@: install
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_installmenu       -p$@ -P$(b)/$@
 	dh_installdeb        -p$@ -P$(b)/$@
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ \
+#	dh_undocumented      -p$@ -P$(b)/$@ \
 				gnotravex.1
 	#sh debian/fix-desktop-file gnotravex $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
@@ -542,12 +557,13 @@ gnome-metatris@SUFFIX@: install
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_installmenu       -p$@ -P$(b)/$@
 	dh_installdeb        -p$@ -P$(b)/$@
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ \
+#	dh_undocumented      -p$@ -P$(b)/$@ \
 				metatris.1
 	#sh debian/fix-desktop-file metatris $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@
@@ -570,12 +586,13 @@ gnome-gnothello@SUFFIX@: install
 	chmod 2755 $(b)/$@/@PREFIX@/games/* 
 	chown root.games  $(b)/$@/@PREFIX@/games/*
 	dh_suidregister	     -p$@ -P$(b)/$@
+	dh_fixperms          -p$@ -P$(b)/$@
 	dh_installmenu       -p$@ -P$(b)/$@
 	dh_installdeb        -p$@ -P$(b)/$@
 	dh_shlibdeps         -p$@ -P$(b)/$@
 	dh_gencontrol        -p$@ -P$(b)/$@
 	dh_makeshlibs        -p$@ -P$(b)/$@
-	dh_undocumented      -p$@ -P$(b)/$@ \
+#	dh_undocumented      -p$@ -P$(b)/$@ \
 				iagno.1
 	#sh debian/fix-desktop-file iagno $(b)/$@
 	dh_md5sums           -p$@ -P$(b)/$@

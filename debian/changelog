@@ -1,3 +1,25 @@
+gnome-games (1.0.2-9)  unstable; urgency=low
+
+  * Add an ugly patch to gnotravex that fixes a configure_event loop
+    causing new_game_cb to be called repeatedly. (Fixes bug #45030)
+  * Set permissions in packages correctly and let postinst handle setting
+    games to sgid games.
+
+ -- James LewisMoss <dres@debian.org>  Mon, 13 Sep 1999 20:16:09 -0400
+
+gnome-games (1.0.2-8)  unstable; urgency=low
+
+  * Fix doc directory copying in gnome-card-games build. (FHS problems)
+
+ -- James LewisMoss <dres@debian.org>  Sat, 11 Sep 1999 20:30:58 -0400
+
+gnome-games (1.0.2-7)  unstable; urgency=low
+
+  * Added replaces gnome-games (<< 1.0.1-4) to gnome-games-locale to get
+    rid of overwrite problem.
+
+ -- James LewisMoss <dres@debian.org>  Sun,  5 Sep 1999 09:57:45 -0400
+
 gnome-games (1.0.2-6)  unstable; urgency=low
 
   * Fix menu title for Gnome Tetravex. (Fixes bug #37921)

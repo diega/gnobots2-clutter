@@ -2,7 +2,7 @@ Source: gnome-games@SUFFIX@
 Section: games
 Priority: optional
 Maintainer: James LewisMoss <dres@debian.org>
-Standards-Version: 2.4.0.0
+Standards-Version: 3.0.0
 
 Package: gnome-games@SUFFIX@
 Architecture: all
@@ -15,6 +15,7 @@ Description: Empty package that requires the installation of all gnome-games pac
 
 Package: gnome-games-locale
 Architecture: all
+Replaces: gnome-games (<< 1.0.1-4)
 Description: The locale databasese for the gnome-games packages.
  Gnome is the "GNU Network Object Model Environment"
  .
