@@ -179,9 +179,9 @@ Tetris::~Tetris()
 	delete scoreFrame;
 
 	if (image)
-		gdk_pixbuf_unref(image);
+		g_object_unref (G_OBJECT (image));
 	if (bgimage)
-		gdk_pixbuf_unref(bgimage);
+		g_object_unref (G_OBJECT (bgimage));		
 
 	if (blockPixmap)
 		g_free(blockPixmap);
@@ -205,7 +205,7 @@ Tetris::setupPixmap()
 {
 	char *pixname, *fullpixname;
 	
-	pixname = g_copy_strings("gnometris/", blockPixmap, 0);
+	pixname = g_strdup_printf("gnometris/%s", blockPixmap);
 	fullpixname = gnome_unconditional_pixmap_file(pixname);
 	g_free(pixname);
 
@@ -221,9 +221,9 @@ Tetris::setupPixmap()
 	}
 
 	if(image)
-		gdk_pixbuf_unref(image);
+		g_object_unref (G_OBJECT (image));
 
-	image = gdk_pixbuf_new_from_file(fullpixname);
+	image = gdk_pixbuf_new_from_file(fullpixname, NULL);
 
 	if (image == NULL) {
 		char *message = g_strdup_printf (
@@ -243,7 +243,7 @@ Tetris::setupPixmap()
 	for (int i = 0; i < tableSize; ++i)
 	{
 		if (pic[i])
-			gdk_pixbuf_unref (pic[i]);
+			g_object_unref (G_OBJECT (pic[i]));
 
 		pic[i] = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, BLOCK_SIZE, BLOCK_SIZE);
 
@@ -252,15 +252,15 @@ Tetris::setupPixmap()
 
 	}
 
-	pixname = g_copy_strings("gnometris/bg/", bgPixmap, 0);
+	pixname = g_strdup_printf("gnometris/bg/%s", bgPixmap);
 	fullpixname = gnome_unconditional_pixmap_file(pixname);
 	g_free(pixname);
 
 	if(bgimage)
-		gdk_pixbuf_unref(bgimage);
+		g_object_unref (G_OBJECT (bgimage));
 
 	if (g_file_exists(fullpixname)) 
-		bgimage = gdk_pixbuf_new_from_file(fullpixname);
+		bgimage = gdk_pixbuf_new_from_file(fullpixname, NULL);
 	else
 		bgimage = 0;
 
@@ -449,9 +449,9 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 		"/gnometris/Properties/LineFillProbability=5",0);
 
 	t->setupdialog = gnome_dialog_new(_("Gnometris setup"), 
-									  GNOME_STOCK_BUTTON_OK, 
-									  GNOME_STOCK_BUTTON_CANCEL, 
-									  0);
+					  GTK_STOCK_CANCEL, 
+					  GTK_STOCK_OK,
+					  0);
 	gnome_dialog_set_parent(GNOME_DIALOG(t->setupdialog), GTK_WINDOW(t->w));
 
 	gtk_container_border_width(GTK_CONTAINER(t->setupdialog), 10);
@@ -479,13 +479,10 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	adj = gtk_adjustment_new(t->line_fill_height,0,LINES-1,1,5,0);
 	t->fill_height_spinner = gtk_spin_button_new(GTK_ADJUSTMENT(adj),10,0);
 	gtk_spin_button_set_update_policy(GTK_SPIN_BUTTON(t->fill_height_spinner),
-									  GTK_UPDATE_ALWAYS
-#ifndef HAVE_GTK_SPIN_BUTTON_SET_SNAP_TO_TICKS
-									  | GTK_UPDATE_SNAP_TO_TICKS
-#endif
-									  );
+					  GTK_UPDATE_ALWAYS);
+
 #ifdef HAVE_GTK_SPIN_BUTTON_SET_SNAP_TO_TICKS
-	gtk_spin_button_set_snap_to_ticks(GTK_SPIN_BUTTON(t->fill_height_spinner), 1);
+	gtk_spin_button_set_snap_to_ticks(GTK_SPIN_BUTTON(t->fill_height_spinner), TRUE);
 #endif
 	gtk_box_pack_end(GTK_BOX(box2), t->fill_height_spinner, 0, 0, 0);
 	gtk_widget_show(t->fill_height_spinner);	
@@ -500,13 +497,10 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	adj = gtk_adjustment_new(t->line_fill_prob,0,10,1,5,0);
 	t->fill_prob_spinner = gtk_spin_button_new(GTK_ADJUSTMENT(adj),10,0);
 	gtk_spin_button_set_update_policy(GTK_SPIN_BUTTON(t->fill_prob_spinner),
-									  GTK_UPDATE_ALWAYS
-#ifndef HAVE_GTK_SPIN_BUTTON_SET_SNAP_TO_TICKS
-									  | GTK_UPDATE_SNAP_TO_TICKS
-#endif
-									  );
+					  GTK_UPDATE_ALWAYS);
+
 #ifdef HAVE_GTK_SPIN_BUTTON_SET_SNAP_TO_TICKS
-	gtk_spin_button_set_snap_to_ticks(GTK_SPIN_BUTTON(t->fill_prob_spinner), 1);
+	gtk_spin_button_set_snap_to_ticks(GTK_SPIN_BUTTON(t->fill_prob_spinner), TRUE);
 #endif
 	gtk_box_pack_end(GTK_BOX(box2), t->fill_prob_spinner, 0, 0, 0);
 	gtk_widget_show(t->fill_prob_spinner);	
@@ -531,13 +525,10 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	adj = gtk_adjustment_new(t->startingLevel, 1, 10, 1, 5, 10);
 	t->sentry = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 10, 0);
 	gtk_spin_button_set_update_policy(GTK_SPIN_BUTTON(t->sentry),
-									  GTK_UPDATE_ALWAYS
-#ifndef HAVE_GTK_SPIN_BUTTON_SET_SNAP_TO_TICKS
-									  | GTK_UPDATE_SNAP_TO_TICKS
-#endif
-									  );
+					  GTK_UPDATE_ALWAYS);
+
 #ifdef HAVE_GTK_SPIN_BUTTON_SET_SNAP_TO_TICKS
-	gtk_spin_button_set_snap_to_ticks(GTK_SPIN_BUTTON(t->sentry), 1);
+	gtk_spin_button_set_snap_to_ticks(GTK_SPIN_BUTTON(t->sentry), TRUE);
 #endif
 	gtk_box_pack_end(GTK_BOX(box2), t->sentry, FALSE, 0, 0);
 	gtk_widget_show(t->sentry);
@@ -598,9 +589,9 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_widget_show(allBoxes);
 
 	gnome_dialog_button_connect(GNOME_DIALOG(t->setupdialog), 0, 
-								GTK_SIGNAL_FUNC(doSetup), d);
-	gnome_dialog_button_connect(GNOME_DIALOG(t->setupdialog), 1, 
 								GTK_SIGNAL_FUNC(setupdialogDestroy), d);
+	gnome_dialog_button_connect(GNOME_DIALOG(t->setupdialog), 1,
+								GTK_SIGNAL_FUNC(doSetup), d);
 	
 	gtk_widget_show(t->setupdialog);
 	return TRUE;
@@ -879,13 +870,17 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 	GtkWidget *about;
 
 	const gchar *authors[] = {"J. Marcin Gorycki", 0};
-
-	about = gnome_about_new("Gnometris", TETRIS_VERSION, "(C) 2000 J. Marcin Gorycki", 
-							(const char **)authors,
-							_("Written for my wife, Matylda\n"
-							  "Send comments and bug reports to: "
-							  "janusz.gorycki@intel.com"), 0);
-	gnome_dialog_set_parent(GNOME_DIALOG(about), GTK_WINDOW(t->w));
+	
+	about = gnome_about_new("Gnometris", 
+				TETRIS_VERSION, 
+				"(C) 2000 J. Marcin Gorycki",
+				_("Written for my wife, Matylda\n"
+				  "Send comments and bug reports to: "
+				  "janusz.gorycki@intel.com"),
+				(const char **)authors,
+				NULL,
+				NULL,
+				NULL);
 	gtk_window_set_modal(GTK_WINDOW(about), TRUE);
 
 	gtk_widget_show(about);
