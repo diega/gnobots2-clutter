@@ -1,3 +1,8 @@
+2004-12-14  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gataxx.c: Fall back to a default if the theme isn't found.
+	(Josselin Mouette, bug #160682.)
+
 2004-12-13  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gtkgridboard.c: gdk_pixbuf_render_pixmap_and_mask -> gdk_pixbuf_render_pixmap_and_mask_for_colormap.

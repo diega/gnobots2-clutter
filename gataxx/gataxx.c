@@ -509,6 +509,14 @@ char * get_tileset_path(char * tileset) {
 						 pathfrag, FALSE, NULL);
         g_free (pathfrag);
       
+	if (!g_file_test (tilesetpath, G_FILE_TEST_EXISTS)) {
+	  g_free (tilesetpath);
+	  tilesetpath = gnome_program_locate_file (NULL,
+	  					   GNOME_FILE_DOMAIN_PIXMAP,
+						   "iagno/classic.png",
+						   FALSE, NULL);
+	}
+
         return tilesetpath;
 }
 

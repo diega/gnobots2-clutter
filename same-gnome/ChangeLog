@@ -1,3 +1,8 @@
+2004-12-14  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* same-gnome.c: Fall back to a default theme if the selected one is
+	missing. (Josselin Mouette, bug #160685.)
+
 2004-09-09  callum  <callum@spooky-possum.org>
 
 	* help/C/same-gnome.xml: Bump the version number to 2.8.

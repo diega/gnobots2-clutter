@@ -359,6 +359,12 @@ Tetris::setupPixmap()
 
 	if (!g_file_test (fullpixname, G_FILE_TEST_EXISTS))
 	{
+		g_free (fullpixname);
+		fullpixname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, "gnometris/7blocks-gw.png", FALSE, NULL);
+	}
+	
+	if (!g_file_test (fullpixname, G_FILE_TEST_EXISTS))
+	{
 		GtkWidget *widget = gtk_message_dialog_new (NULL,
 						       GTK_DIALOG_DESTROY_WITH_PARENT,
 						       GTK_MESSAGE_ERROR,

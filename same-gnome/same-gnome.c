@@ -433,6 +433,11 @@ load_scenario (char *fname)
 		fn = g_build_filename (PIXMAPDIR, fname, NULL);
 
 	if (! g_file_test (fn, G_FILE_TEST_EXISTS)) {
+		g_free (fn);
+		fn = g_build_filename (PIXMAPDIR, "stones.png", NULL);
+	}
+
+	if (! g_file_test (fn, G_FILE_TEST_EXISTS)) {
 		GtkWidget *box = gtk_message_dialog_new 
 			(GTK_WINDOW (app),
 			 GTK_DIALOG_DESTROY_WITH_PARENT,
