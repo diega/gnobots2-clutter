@@ -24,7 +24,7 @@
 #define _GATAXX_H_
 
 #define BLACK_TURN 1
-#define WHITE_TURN 27
+#define WHITE_TURN 31
 #define PIXMAP_FLIP_DELAY 20
 #define PIXMAP_STAGGER_DELAY 3
 #define COMPUTER_MOVE_DELAY 1200

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
-<!ENTITY version "1.4.0.1">
+<!ENTITY version "2.4">
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY appversion "2.0">
-  <!ENTITY manrevision "2.0">
+  <!ENTITY appversion "2.4">
+  <!ENTITY manrevision "2.4">
   <!ENTITY date "March 2002">
   <!ENTITY app "<application>Gataxx</application>">
   <!ENTITY appname "Gataxx">
@@ -261,6 +261,8 @@
             <menuchoice> 
 	       <shortcut><keysym>Ctrl-N</keysym></shortcut>
                <guimenuitem>New Game</guimenuitem>
+               Start a new game. If a game is already being played, it will
+	       end.
 	    </menuchoice>
            </para>
          </listitem>     
@@ -270,6 +272,8 @@
             <menuchoice>
                <shortcut><keysym>Ctrl-Z</keysym></shortcut>
                <guimenuitem>Undo Move</guimenuitem>
+               Undoes the last move a human player made (including any
+               intervening computer moves).
             </menuchoice>
         </para>
        </listitem>
@@ -279,6 +283,7 @@
           <menuchoice>
             <shortcut><keysym>Ctrl-Q</keysym></shortcut>
             <guimenuitem>Exit</guimenuitem>
+            Stops play immediately and closes the program.
           </menuchoice>
         </para>
        </listitem>
@@ -312,7 +317,8 @@
        <itemizedlist>
         <listitem>
          <para>
-          <guimenuitem>Manual</guimenuitem>&mdash;
+          <shortcut><keysym>F1</keysym></shortcut>
+          <guimenuitem>Contents</guimenuitem>&mdash;
           shows this manual.
          </para>
         </listitem>
@@ -401,7 +407,9 @@
     <listitem>
      <para>
       <guilabel>Partial</guilabel>&mdash; If this button is checked,
-      there will be some animation when discs change hands.
+      there will be some animation when discs change hands. This is
+      only suitable for slow computers where using the
+      <guilabel>Complete</guilabel> setting takes too many resources.
      </para>
     </listitem>
 
@@ -414,7 +422,7 @@
 
     <listitem>
      <para>
-      Flip final results&mdash; Click this button if you want to see
+      <guilabel>Flip final results</guilabel>&mdash; Click this button if you want to see
       the results of your game displayed in an attractive visual
       format: all the dark pieces on the top and all the light ones on
       the bottom.
@@ -424,7 +432,7 @@
 
     <listitem>
      <para>
-      Tile Set &mdash; Choose from one of several appearances for the
+      <guilabel>Tile Set</guilabel> &mdash; Choose from one of several appearances for the
       game.  The default is "classic."
      </para>
     </listitem>
@@ -435,11 +443,7 @@
   </para>
 
   <para>
-    After you have made all the changes you want, click on
-    <guibutton>OK</guibutton> to apply the changes and close the
-    <interface>Properties</interface> dialog. To cancel the changes
-    and return to previous values, click the
-    <guibutton>Close</guibutton> button.
+    Any changes you make are saved and applied instantly.
   </para>
 
   </sect1>

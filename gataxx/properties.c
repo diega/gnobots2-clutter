@@ -85,7 +85,9 @@ load_properties (void)
 		computer_speed = COMPUTER_MOVE_DELAY;
 	}
 	flip_final = gataxx_gconf_get_bool ("/apps/gataxx/flipfinal", TRUE);
-	
+
+	if (flip_pixmaps_id)
+		g_source_remove (flip_pixmaps_id);
 	switch (animate) {
 		case 0:
 			flip_pixmaps_id = g_timeout_add (100, flip_pixmaps, NULL);

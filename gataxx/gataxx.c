@@ -560,14 +560,14 @@ gui_draw_pixmap (gint which, gint x, gint y)
   gdk_draw_drawable (drawing_area->window,
                      drawing_area->style->fg_gc[GTK_WIDGET_STATE (drawing_area)],
                      tiles_pixmap,
-                     (which % 7) * TILEWIDTH, (which / 7) * TILEHEIGHT,
+                     (which % 8) * TILEWIDTH, (which / 8) * TILEHEIGHT,
                      x * TILEWIDTH, y * TILEHEIGHT,
                      TILEWIDTH, TILEHEIGHT);
 
   gdk_draw_drawable (buffer_pixmap,
                      drawing_area->style->fg_gc[GTK_WIDGET_STATE (drawing_area)],
-                     tiles_pixmap, (which % 7) * TILEWIDTH,
-                     (which / 7) * TILEHEIGHT, x * TILEWIDTH,
+                     tiles_pixmap, (which % 8) * TILEWIDTH,
+                     (which / 8) * TILEHEIGHT, x * TILEWIDTH,
                      y * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
 
   gdk_draw_line (drawing_area->window, window->style->black_gc,
@@ -592,7 +592,7 @@ gui_draw_pixmap_buffer (gint which, gint x, gint y)
   gdk_draw_drawable (buffer_pixmap,
                      drawing_area->style->fg_gc[GTK_WIDGET_STATE(drawing_area)],
                      tiles_pixmap,
-                     (which % 7) * TILEWIDTH, (which / 7) * TILEHEIGHT,
+                     (which % 8) * TILEWIDTH, (which / 8) * TILEHEIGHT,
                      x * TILEWIDTH, y * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
 }
 
@@ -636,49 +636,31 @@ flip_pixmaps (gpointer data)
 	pixmaps[i][j] = 101;
 	gui_draw_pixmap(0, i, j);
 	flipped_tiles = 1;
-      } else if (pixmaps[i][j] < board[i][j]) {
+      } else if (pixmaps[i][j] < board[i][j]) { /* Black -> White */
 	if (animate == 0) {
 	  if (pixmaps[i][j] == BLACK_TURN)
 	    pixmaps[i][j] = board[i][j];
 	  else
 	    pixmaps[i][j]++;
 	} else if (animate == 1) {
-	  if (pixmaps[i][j] < 1)
-	    pixmaps[i][j] += 2;
-	  else if (pixmaps[i][j] >= 1 && pixmaps[i][j] < 8)
-	    pixmaps[i][j] = 8;
-	  else if (pixmaps[i][j] >= 8 && pixmaps[i][j] < 16)
-	    pixmaps[i][j] = 16;
-	  else if (pixmaps[i][j] >= 14 && pixmaps[i][j] < 23)
-	    pixmaps[i][j] = 23;
-	  else if (pixmaps[i][j] >= 23 && pixmaps[i][j] < 31)
-	    pixmaps[i][j] = 31;
-	  else if (pixmaps[i][j] > 31)
-	    pixmaps[i][j] = 31;
+          pixmaps[i][j] += 8;
+          if (pixmaps[i][j] > 31)
+            pixmaps[i][j] = 31;
 	} else if (animate == 2)
 	  pixmaps[i][j]++;
 	if (pixmaps[i][j] > 0)
 	  gui_draw_pixmap(pixmaps[i][j], i, j);
 	flipped_tiles = 1;
-      } else if (pixmaps[i][j] > board[i][j] && pixmaps[i][j] != 101) {
+      } else if (pixmaps[i][j] > board[i][j] && pixmaps[i][j] != 101) { /* White -> Black */
 	if (animate == 0) {
 	  if (pixmaps[i][j] == WHITE_TURN)
 	    pixmaps[i][j] = board[i][j];
 	  else
 	    pixmaps[i][j]--;
 	} else if (animate == 1) {
-	  if (pixmaps[i][j] > 31)
-	    pixmaps[i][j] -= 2;
-	  else if (pixmaps[i][j] <= 31 && pixmaps[i][j] > 23)
-	    pixmaps[i][j] = 23;
-	  else if (pixmaps[i][j] <= 23 && pixmaps[i][j] > 16)
-	    pixmaps[i][j] = 16;
-	  else if (pixmaps[i][j] <= 16 && pixmaps[i][j] > 8)
-	    pixmaps[i][j] = 8;
-	  else if (pixmaps[i][j] <= 8 && pixmaps[i][j] > 1)
-	    pixmaps[i][j] = 1;
-	  else if (pixmaps[i][j] < 1)
-	    pixmaps[i][j] = 1;
+          pixmaps[i][j] -= 8;
+          if (pixmaps[i][j] < 1)
+            pixmaps[i][j] = 1;
 	} else if (animate == 2)
 	  pixmaps[i][j]--;
 	if (pixmaps[i][j] < 32)

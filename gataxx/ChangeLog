@@ -1,3 +1,16 @@
+2003-08-02  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* properties.c: Make sure that timers are removed so that we don't
+	get odd speed-up effects when we change animation modes.
+
+	* gataxx.h: 
+	* gataxx.c: The code was set for an 7x4 array of pixmaps,
+	unfortunately the pixmaps are in an 8x4 array ... Also simplified
+	the "partial" animation.
+
+	* help/C/gataxx.xml: Updated the documentation (including the
+	images).
+
 2003-07-22  William Jon McCann  <mccann@jhu.edu>
 
 	* properties.c (show_properties_dialog): Use mnemonic in preferences
