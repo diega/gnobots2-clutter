@@ -3,7 +3,8 @@
 	* drawing.c
 	* mahjongg.schemas.in
 	* mahjongg.h
-	* mahjongg.c: Save and restore the window size.
+	* mahjongg.c: Save and restore the window size. Also make
+	auto-apply preferences work again.
 
 2003-09-30  Callum McKenzie  <callum@physics.otago.ac.nz>
 
