@@ -452,7 +452,7 @@ const GtkRadioActionEntry radio_actions[] = {
 };
 
 const GtkToggleActionEntry toggle_actions[] = {
-  { "Fullscreen", NULL, N_("_Fullscreen"), NULL, NULL, G_CALLBACK (fullscreen_cb) }
+  { "Fullscreen", NULL, N_("_Fullscreen"), "F11", NULL, G_CALLBACK (fullscreen_cb) }
 };
 
 const char *ui_description =

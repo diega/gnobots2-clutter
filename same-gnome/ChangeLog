@@ -1,5 +1,7 @@
 2005-03-08  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* ui.c: Add a keyboard shortcut for fullscreen mode.
+
 	* same-gnome.schemas.in: Fix typo in the schema file (bug
 	#167273).
 
