@@ -1,0 +1,133 @@
+/* gnome-stones - sound.c
+ *
+ * Time-stamp: <2001/09/08 14:01:03 benes>
+ *
+ * Copyright (C) 2001 Michal Benes
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+
+
+
+#include<esd.h>
+#include<gnome.h>
+#include"sound.h"
+
+
+gint title_music = -1;
+gboolean playing_title_music = FALSE;
+
+#define MAX_SAMPLES 1024
+
+gint samples[MAX_SAMPLES];
+gint numsamples=0;
+
+
+void sound_init( void )
+{
+ numsamples=0; 
+ /* g_print ( "gnome-stones: sound init\n" ); */
+}
+
+void sound_close( void )
+{
+ int i;
+
+ stop_title_music();
+
+ for( i=0; i<numsamples; ++i )
+   esd_sample_free( gnome_sound_connection_get(), samples[i] );
+ 
+ /* g_print ( "gnome-stones: sound close\n" ); */
+ gnome_sound_shutdown();
+
+}
+
+void sound_play( gint sound_id )
+{
+
+ if( sound_id<0 ) return;
+
+/* we are waiting for the esound hackers to implement esd_sample_kill */
+/* FIXME: esd_sample_kill( gnome_sound_connection, sound_id );*/
+ esd_sample_play( gnome_sound_connection_get(), sound_id );
+ 
+
+}
+
+
+gint sound_register( char *name )
+{
+
+ char *buf; 
+ char *fullname;
+ gint sample_id;
+
+
+ if( numsamples>=MAX_SAMPLES-1 ) return -1;
+
+ buf = g_strdup_printf( "gnome-stones/%s", name );
+ fullname = gnome_sound_file( buf );
+
+ sample_id = gnome_sound_sample_load( name, fullname );
+
+ if( sample_id<0 )
+   g_print( "gnome-stones: cannot register sound %s\n", buf );
+ else
+   samples[numsamples++]=sample_id;
+   
+ g_free( fullname );
+
+ return sample_id;
+
+}
+
+
+void play_title_music( void )
+{
+
+ if( title_music<0 ) title_music = sound_register( "title.wav" );
+
+ if( !playing_title_music && title_music>=0 )
+   {
+     playing_title_music = TRUE; 
+     esd_sample_loop( gnome_sound_connection_get(), title_music );
+   }
+
+}
+
+void stop_title_music( void )
+{
+
+ if( playing_title_music )
+   {
+     playing_title_music = FALSE; 
+
+     /* FIXME: we want esd_sample_kill once it is implemented */
+     esd_sample_stop( gnome_sound_connection_get(), title_music );
+   }
+
+}
+
+
+
+
+/* Local Variables: */
+/* mode:c */
+/* eval:(load-library "time-stamp") */
+/* eval:(make-local-variable 'write-file-hooks) */
+/* eval:(add-hook 'write-file-hooks 'time-stamp) */
+/* eval:(setq time-stamp-format '(time-stamp-yyyy/mm/dd time-stamp-hh:mm:ss user-login-name)) */
+/* End: */

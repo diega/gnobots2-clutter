@@ -1,5 +1,9 @@
 2002-04-17  Bastien Nocera  <hadess@hadess.net>
 
+	* main.h, sound.c, sound.h: forgot some files
+
+2002-04-17  Bastien Nocera  <hadess@hadess.net>
+
 	* Makefile.am:
 	* atari.caves.in:
 	* cave.c: (cave_new), (cave_iterate):
