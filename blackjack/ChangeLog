@@ -1,6 +1,8 @@
 2003-06-03  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* src/Makefile.am: 
+	Authors is in the next directory down, not here.
+
 	* src/dialog.cpp:
 	* src/game.cpp:
 	* src/hand.cpp:

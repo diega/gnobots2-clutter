@@ -40,8 +40,7 @@ blackjack_SOURCES = 		\
 	chips.cpp
 
 blackjack_LDADD = $(GNOME_GAMES_LIBS) \
-	$(top_srcdir)/gdk-card-image/libgdkcardimage.la \
-	$(top_srcdir)/libgames-support/libgames-support.la \
+	../../gdk-card-image/libgdkcardimage.la \
+	../../libgames-support/libgames-support.la \
 	@UCB_LDFLAGS@
 
-EXTRA_DIST = AUTHORS \
