@@ -2,3 +2,6 @@ gnome-xbill
 Makefile
 Makefile.in
 .deps
+CVS
+*.o
+*~
