@@ -178,6 +178,9 @@ Tetris::Tetris(int cmdlLevel):
 	setOptions ();
         setupScoreState ();
 
+	themeList = NULL;
+	bgThemeList = NULL;
+	
 	gtk_widget_show(hb);
 	gtk_widget_show(vb1);
 	gtk_widget_show(vb2);
@@ -338,14 +341,18 @@ Tetris::setupPixmap()
                  * especially pertinant since a lot of the original
                  * backgrounds have been converted for size reasons. */
                 s = g_strrstr(fullpixname, ".png");
-                g_strlcpy(s, ".jpg", 5);
-                if (g_file_test (fullpixname, G_FILE_TEST_EXISTS)) {
-                        bgimage = gdk_pixbuf_new_from_file (fullpixname, NULL);
-                        s = g_strrstr (bgPixmap, ".png");
-                        g_strlcpy (s, ".jpg", 5);
-                        gconf_client_set_string (gconf_client, KEY_BACKGROUND_PIXMAP, bgPixmap, NULL);
-                } else
-                        bgimage = 0;
+		if (s == NULL) { /* Not a .png. */
+			bgimage = 0;
+		} else {
+			g_strlcpy(s, ".jpg", 5);
+			if (g_file_test (fullpixname, G_FILE_TEST_EXISTS)) {
+				bgimage = gdk_pixbuf_new_from_file (fullpixname, NULL);
+				s = g_strrstr (bgPixmap, ".png");
+				g_strlcpy (s, ".jpg", 5);
+				gconf_client_set_string (gconf_client, KEY_BACKGROUND_PIXMAP, bgPixmap, NULL);
+			} else
+				bgimage = 0;
+		}
         }
 	g_free (fullpixname);
 
@@ -510,26 +517,30 @@ void
 Tetris::setSelection(GtkWidget *widget, void *data)
 {
 	Tetris *t;
+	GList * item;
 
       	t = (Tetris *)g_object_get_data (G_OBJECT (widget), TETRIS_OBJECT);
+
+	item = g_list_nth (t->themeList,
+			   gtk_combo_box_get_active (GTK_COMBO_BOX (widget)));
+
 	gconf_client_set_string (t->gconf_client, KEY_BLOCK_PIXMAP,
-				 (char *)data, NULL);
+				 (char *)item->data, NULL);
 }
 
 void
 Tetris::setBGSelection(GtkWidget *widget, void *data)
 {
 	Tetris *t;
-       
+	GList * item;
+	
 	t = (Tetris *)g_object_get_data (G_OBJECT (widget), TETRIS_OBJECT);
-	gconf_client_set_string (t->gconf_client, KEY_BACKGROUND_PIXMAP,
-				 (char *)data, NULL);
-}
 
-void
-Tetris::freeStr(GtkWidget *widget, void *data)
-{
-	free(data);
+	item = g_list_nth (t->bgThemeList,
+			   gtk_combo_box_get_active (GTK_COMBO_BOX (widget)));
+			   
+	gconf_client_set_string (t->gconf_client, KEY_BACKGROUND_PIXMAP,
+				 (char *)item->data, NULL);
 }
 
 void
@@ -561,12 +572,21 @@ Tetris::startingLevelChanged (GtkWidget *spin, gpointer data)
 
 void
 Tetris::fillMenu(GtkWidget *menu, char *pixname, char *dirname, 
-		 GtkSignalFunc selectFunc, bool addnone /*= false*/)
+		 GList ** listp, bool addnone /*= false*/)
 {
 	struct dirent *e;
 	char *dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, dirname, FALSE, NULL);
 	DIR *dir;
 	int itemno = 0;
+	GList * list;
+
+	list = *listp;
+
+	if (list) {
+		g_list_foreach (list, (GFunc) g_free, NULL);
+		g_list_free (list);
+		*listp = NULL;
+	}
 	
 	dir = opendir (dname);
 
@@ -585,30 +605,22 @@ Tetris::fillMenu(GtkWidget *menu, char *pixname, char *dirname,
 			free(s);
 			continue;
 		}
-			
-		item = gtk_menu_item_new_with_label(s);
-		gtk_widget_show(item);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect (item, "activate", G_CALLBACK (selectFunc), s);
-		g_signal_connect (item, "destroy", G_CALLBACK (freeStr), s);
-		g_object_set_data (G_OBJECT (item), TETRIS_OBJECT, this);
-	  
+
+		gtk_combo_box_append_text (GTK_COMBO_BOX (menu), s);
+		*listp = g_list_append (*listp, s);
+			  
 		if (!strcmp(pixname, s))
 		{
-		  gtk_menu_set_active(GTK_MENU(menu), itemno);
+		  gtk_combo_box_set_active(GTK_COMBO_BOX (menu), itemno);
 		}
 		itemno++;
 	}
 	
 	if (addnone)
 	{
-		s = g_strdup("<none>");
-		item = gtk_menu_item_new_with_label(s);
-		gtk_widget_show(item);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect (item, "activate", G_CALLBACK (selectFunc), s);
-		g_signal_connect (item, "destroy", G_CALLBACK (freeStr), s);
-		g_object_set_data (G_OBJECT (item), TETRIS_OBJECT, this);
+		s = g_strdup(_("<none>"));
+		gtk_combo_box_append_text (GTK_COMBO_BOX (menu), _("<none>"));
+		*listp = g_list_append (*listp, s);
 	}
 	
 	closedir(dir);
@@ -750,26 +762,23 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
 
-	GtkWidget *omenu = gtk_option_menu_new ();
-	GtkWidget *menu = gtk_menu_new ();
-	t->fillMenu (menu, t->blockPixmap, "gnometris",
-		     (GtkSignalFunc)setSelection);
-
-	gtk_option_menu_set_menu(GTK_OPTION_MENU (omenu), menu);
+	GtkWidget *omenu = gtk_combo_box_new_text ();
+	g_object_set_data (G_OBJECT (omenu), TETRIS_OBJECT, t);	
+	t->fillMenu (omenu, t->blockPixmap, "gnometris", &(t->themeList));
+	g_signal_connect (omenu, "changed", G_CALLBACK (setSelection), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 0, 1);
 
 	/* background pixmap */
 	label = gtk_label_new(_("Background image:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 1, 2);
-
-	omenu = gtk_option_menu_new ();
-	menu = gtk_menu_new ();
+	
+	omenu = gtk_combo_box_new_text ();	
+	g_object_set_data (G_OBJECT (omenu), TETRIS_OBJECT, t);	
 	gchar *tmp = g_build_filename ("gnometris", "bg", NULL);
-	t->fillMenu (menu, t->bgPixmap, tmp,
-		     (GtkSignalFunc)setBGSelection, true);
+	t->fillMenu (omenu, t->bgPixmap, tmp, &(t->bgThemeList), true);
 	g_free (tmp);
-	gtk_option_menu_set_menu(GTK_OPTION_MENU (omenu), menu);
+	g_signal_connect (omenu, "changed", G_CALLBACK (setBGSelection), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 1, 2);
 
 	gtk_container_add (GTK_CONTAINER (frame), table);

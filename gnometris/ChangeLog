@@ -1,3 +1,10 @@
+2003-10-19  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* tetris.h:
+	* tetris.cpp: Replaced deprecated gtk+ functions. Also fixed a
+	warning generated when the bg loading code struck a name that
+	wasn't a .png or a .jpg (like <none>).
+
 2003-08-09  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* tetris.cpp: 

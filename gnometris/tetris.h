@@ -80,10 +80,13 @@ public:
 	void generate();
 	void endOfGame();
 	void setupPixmap();
-	
+
 private:
 	GtkWidget * w;
 
+        GList * themeList;
+        GList * bgThemeList;
+        
 	char *blockPixmap;
 	char *bgPixmap;
 	
@@ -116,7 +119,6 @@ private:
 	static void setSelectionBlocks(GtkWidget *widget, void *d);
 	static void setSelection (GtkWidget *widget, void *data);
 	static void setBGSelection (GtkWidget *widget, void *data);
-	static void freeStr (GtkWidget *widget, void *data);
 
 	static void lineFillHeightChanged (GtkWidget *spin, gpointer data);
 	static void lineFillProbChanged (GtkWidget *spin, gpointer data);
@@ -131,7 +133,7 @@ private:
 	GdkPixbuf *image;
 	GdkPixbuf *bgimage;
 
-	void fillMenu(GtkWidget *menu, char *pixname, char *dirname, GtkSignalFunc selectFunc, bool addnone = false);
+	void fillMenu(GtkWidget *menu, char *pixname, char *dirname, GList ** list, bool addnone = false);
 	
 	GtkWidget *setupdialog;
 	GtkWidget *sentry;
