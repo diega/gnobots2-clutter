@@ -622,7 +622,7 @@ main (int argc, char *argv [])
                       GNOME_PARAM_POPT_TABLE, blackjack_opts,
                       GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
 
-  gconf_init(argc, argv, NULL);
+  gconf_init (argc, argv, NULL);
   gconf_client_add_dir (bj_gconf_client (), "/apps/blackjack",
                         GCONF_CLIENT_PRELOAD_NONE, NULL);
 

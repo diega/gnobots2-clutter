@@ -129,10 +129,6 @@ pref_dialog_response (GtkWidget *w, int response, gpointer data)
   GdkCardDeckOptions deck_options = NULL;
 
   gtk_widget_hide (w);
-
-  deck_options =
-    gtk_card_deck_options_edit_get (GTK_CARD_DECK_OPTIONS_EDIT (deck_edit));
-  bj_set_deck_options (deck_options);
 }
 
 void
@@ -142,12 +138,9 @@ card_deck_options_changed (GtkWidget *w, gpointer data)
 
   if (GTK_IS_CARD_DECK_OPTIONS_EDIT (deck_edit)) 
     {
-#if 0
-      // FIXME: why doesn't this work???
       deck_options = gtk_card_deck_options_edit_get
         (GTK_CARD_DECK_OPTIONS_EDIT (deck_edit));
       bj_set_deck_options (deck_options);
-#endif
     }
 }
 

@@ -1,3 +1,8 @@
+2003-06-07  William Jon McCann  <mccann@jhu.edu>
+
+	* src/dialog.cpp (pref_dialog_response): Make card
+	preferences instant apply.
+
 2003-06-07  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* src/dialog.cpp: Updated to use the revised
