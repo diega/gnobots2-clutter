@@ -1,3 +1,8 @@
+2004-01-23  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* main.c (main): "destroy_event" should be "delete_event". Bug
+	#132262.
+
 2004-01-20  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* main.h: 

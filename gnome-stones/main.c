@@ -1374,7 +1374,7 @@ main (int argc, char *argv[])
 		      GTK_SIGNAL_FUNC (game_widget_key_press_callback), 0);
   g_signal_connect (GTK_OBJECT (app), "key_release_event",
 		      GTK_SIGNAL_FUNC (game_widget_key_release_callback), 0);
-  g_signal_connect (GTK_OBJECT (app), "destroy_event",
+  g_signal_connect (GTK_OBJECT (app), "delete_event",
 		      GTK_SIGNAL_FUNC (quit_cb), 0);
 
   joystick_set_widget (app);
