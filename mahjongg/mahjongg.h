@@ -35,11 +35,10 @@ struct _tile{
   int selected;
   int sequence;
   int number;
-  GdkPixbuf *current_image;
-  GdkPixbuf *current_bg;
-  GnomeCanvasItem *canvas_item;
-  GnomeCanvasItem *image_item;
-  GnomeCanvasItem *bg_item;
 };
 
+void tile_event (gint tileno, gint button);
+
 extern tile tiles[MAX_TILES];
+extern gint paused;
+extern gchar * tileset;

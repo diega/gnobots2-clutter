@@ -1,3 +1,24 @@
+2003-09-30  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* Makefile.am: 
+	* mahjongg.c:
+	* mahjongg.h:
+	* drawing.c:
+	* drawing.h:
+	* *.png:
+	* mahjongg.schemas.in
+	* gnome-canvas-pimage.*
+	* default.svg: A brand-new drawing subsystem that supports
+	rescaling and all that crap. It is faster by about a factor of
+	five and takes up less memory. The old foreground/background
+	system has been dumped in favour of a monolithic tileset. SVG
+	graphics are also now supported (and preferred). All the old
+	graphics are now obsolete and have been removed. There is a new
+	version of the png based default theme. Unfortunately
+	there is only one svg graphics set and it isn't very good. Also
+	gnome-canvas-pimage.* has been removed and we have drawing.*
+	instead.
+
 Wed Aug 27 15:06:19 2003  Jonathan Blandford  <jrb@redhat.com>
 
 	* mahjongg.c (bg_changed_cb): if you're going to add -ansi to

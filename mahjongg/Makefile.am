@@ -2,7 +2,6 @@
 
 
 pixmapdir = $(datadir)/pixmaps/mahjongg
-bgdir = $(datadir)/pixmaps/mahjongg/bg
 Gamesdir = $(datadir)/applications
 appicondir=$(datadir)/pixmaps
 
@@ -25,25 +24,22 @@ bin_PROGRAMS = mahjongg
 
 mahjongg_SOURCES = 	\
 	mahjongg.c	\
+	drawing.c	\
+	drawing.h	\
 	solubility.c	\
 	solubility.h	\
-	mahjongg.h	\
-	button-images.h \
-	gnome-canvas-pimage.h \
-	gnome-canvas-pimage.c
+	mahjongg.h
 
 mahjongg_LDADD =					\
 	$(GNOME_GAMES_LIBS)				\
 	../libgames-support/libgames-support.la		\
 	$(INTLLIBS)
 
-pixmap_DATA = default.png seta.png
-
-bg_DATA = bg1.png bg2.png bg3.png bg4.png
+pixmap_DATA = default.png
 
 appicon_DATA = gnome-mahjongg.png
 
-EXTRA_DIST = mahjongg.desktop.in $(pixmap_DATA) $(appicon_DATA) $(bg_DATA) \
+EXTRA_DIST = mahjongg.desktop.in $(pixmap_DATA) $(appicon_DATA) \
 	$(schema_in_files)
 
 Games_in_files = mahjongg.desktop.in

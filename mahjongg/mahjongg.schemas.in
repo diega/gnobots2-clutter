@@ -14,18 +14,6 @@
       </schema>
 
       <schema>
-        <key>/schemas/apps/mahjongg/background</key>
-	<applyto>/apps/mahjongg/background</applyto>
-	<owner>mahjongg</owner>
-	<type>string</type>
-	<default>bg1.png</default>
-	<locale name="C">
-	  <short></short>
-	  <long></long>
-        </locale>
-      </schema>
-
-      <schema>
         <key>/schemas/apps/mahjongg/tileset</key>
 	<applyto>/apps/mahjongg/tileset</applyto>
 	<owner>mahjongg</owner>
