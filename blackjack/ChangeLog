@@ -18,7 +18,8 @@
 	(bj_draw_rescale_cards): 
 	* src/blackjack.cpp (bj_create_board, create_press_data):
 	Use normal coordinates and dynamically resize the board.  Chips
-	don't resize yet.
+	don't resize yet.  Almost entirely based on / stolen from Callum's
+	work on aisleriot.
 
 	* src/Makefile.am (INCLUDES): 
 	* data/blackjack.schemas.in: 
