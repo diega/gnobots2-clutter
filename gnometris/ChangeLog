@@ -1,3 +1,8 @@
+2004-07-06  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/gnometris.xml: New help file from Angela Boyle. Slightly
+	edited to provide info on setting the background.
+
 2004-06-08  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* blockops.cpp:

@@ -2,12 +2,12 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY appversion "2.6">
-  <!ENTITY manrevision "1.0">
-  <!ENTITY date "February 2004">
+  <!ENTITY appversion "2.7.1">
+  <!ENTITY manrevision "2.0">
+  <!ENTITY date "June 2004">
   <!ENTITY app "<application>Gnometris</application>">
   <!ENTITY appname "Gnometris">
-  <!ENTITY version "2.6"> 
+  <!ENTITY version "2.7.1"> 
 ]>
 
 <!-- 
@@ -27,7 +27,7 @@
     <title>&app; Manual V&manrevision;</title>
     <copyright>
       <year>2004</year>
-      <holder>Callum McKenzie</holder>
+      <holder>Angela Boyle</holder>
     </copyright>
 
   <!-- translators: uncomment this:
@@ -46,16 +46,17 @@
     </publisher> 
 
    &legal;
-   <!-- This file  contains link to license for the documentation (GNU FDL), and 
+   <!-- This file  contains link to license for the documentation (GNU FDL),
+and 
         other legal stuff such as "NO WARRANTY" statement. Please do not change 
 	any of this. -->
 	
     <authorgroup> 
       <author> 
-	<firstname>Callum</firstname> 
-	<surname>McKenzie</surname> 
+	<firstname>Angela</firstname> 
+	<surname>Boyle</surname> 
 	<affiliation> 
-	  <address> <email>callum@physics.otago.ac.nz</email> </address> 
+	  <address> <email>anjela@u.washington.edu</email> </address> 
 	</affiliation> 
       </author> 
 <!-- This is appropriate place for other contributors: translators,
@@ -77,8 +78,8 @@
 	<revnumber>&appname; Manual V&manrevision;</revnumber> 
 	<date>&date;</date> 
 	<revdescription> 
-	  <para role="author">Callum McKenzie
-	    <email>callum@physics.otago.ac.nz</email>
+	  <para role="author">Angela Boyle
+	    <email>anjela@u.washington.edu</email>
 	  </para>
 	  <para role="publisher">GNOME Documentation Project</para>
 	</revdescription> 
@@ -87,13 +88,14 @@
 
     <releaseinfo>This manual describes version &appversion; of &appname;.
     </releaseinfo>
-    <!-- The following feedback information only applies to appliactions
+    <!-- The following feedback information only applies to applications
     listed in bugzilla.gnome.org and bugzilla.ximian.com. For other
-    applications, please provide your own feedback info or remove thsi
+    applications, please provide your own feedback info or remove this
     section altogether -->
     <legalnotice> 
       <title>Feedback</title> 
-      <para>To report a bug or make a suggestion regarding the &app; application or
+      <para>To report a bug or make a suggestion regarding the &app;
+application or
 	this manual, follow the directions in the 
 	<ulink url="ghelp:gnome-feedback"
 	  type="help">GNOME Feedback Page</ulink>. 
@@ -107,156 +109,125 @@
     <primary>GNOME Tali</primary> 
   </indexterm>
 
- <!-- ============= Document Body ============================= -->
+<!-- ==============================Document Body==================-->
 
-  <sect1 id="intro">
-    <title>Introduction</title>
+<sect1 id="s1-intro">
+ <title>Introduction</title>
 
- <para>Gnometris is a variation on the classic falling blocks game:
- Tetris. The goal is to make full rows of blocks out of falling
- pieces. It is like a active, and somewhat random, jig-saw puzzle.</para>
+<!--synopsis of game-->
+  <para><application>Gnometris</application> comes from the classic falling-block game, <application>Tetris</application>. The goal of the game is to create complete horizontal lines of blocks, which will disappear. The blocks come in seven different shapes made from four blocks each: one straight, two L-shaped, one square, and two S-shaped. The blocks fall from the top center of the screen in a random order. You rotate the blocks and move them across the screen to drop them in complete lines. You score by dropping blocks fast and completing lines. As your score gets higher, you level up and the blocks fall faster.</para>
 
-<para>Each piece consists of four blocks arranged in various configurations. A
-random piece appears at the top of the screen and begins to fall. You
-can rotate it and move it from side to side. By stacking successive
-blocks you start filling up the screen. Once a full line is created it
-disappears and points are scored. If you fail to make full lines the
-blocks stack higher and higher until the reach the top of the
-screen. When they reach the top the game is over.</para>
+<!--running game-->
+   <para>To run <application>Gnometris</application>, select <menuchoice><guimenu>Applications</guimenu><guisubmenu>Games</guisubmenu><guimenuitem>Gnometris</guimenuitem></menuchoice>, or type <command>gnometris</command> in the command line.</para>
 
-  </sect1>
-  <sect1 id="playing">
-    <title>Playing Gnometris</title>
-
-<para>When play starts you are presented with a blank window. Pieces
-appear at the top, in the center. The left and right arrow keys shift
-the piece sideways. You use the up arrow key to rotate the block. You
-can also hurry the piece towards the bottom by either using the down
-arrow key, or by using the space bar. The down key speeds up the
-piece, while the space bar sends it directly to the bottom.</para>
-
-<para>If you need to pause the game then you can either select pause off the game menu or use the pause key itself. An option to end the game immediately is also available from the game menu.</para>
-
-<para>You score by one of two methods. Clearing rows is the main method, but you also score points by dropping pieces quickly (i.e. the space bar or the down arrow). This later method is a good way to score points quickly, but you run a high risk of making mistakes.</para>
-
-<para>When enough points have been scored the level goes up and the speed of the game increases. The highest level is 10, where you have just over a second to move each piece into position.</para>
-
-<para>To help with planning you placement of pieces, the box in the top right corner shows the next piece that will appear.</para>
-
-<para>If you need more of a challenge then you can elect to start at a high level or partially fill the playing area with random blocks to give yourself something to work on.</para>
-
+<!--part of gnome-games-->
+   <para><application>Gnometris</application> is included in the <filename>gnome-games</filename> package, which is part of the GNOME desktop environment. This document describes version &version; of <application>Gnometris</application>.</para>
 </sect1>
 
-<sect1 id="preferences">
-<title>Preferences</title>
-<para>The preferences dialog gives you three groups of options.</para>
-
-<sect2>
-<title>Setup</title>
-<para>These options are for making game-play more challenging. You can choose the number of rows to pre-fill, and the density you pre-fill them to. The starting level can also be changed here.</para>
-</sect2>
-
-<sect2>
-<title>Operation</title> <para>These check-boxes change the behaviour of the
-game. The preview next block option determines whether the preview box
-operates or not. Turning this off makes the game harder. Use random
-block colors can also make the game harder if you have learnt to
-associate the colours and the shapes. Whether you rotate the blocks
-counter-clockwise or clockwise is purely a matter of choice and will
-depend largely on any similar games you have become used to.</para>
-</sect2>
-
-<sect2>
-<title>Theme</title>
-<para>
-These options change the appearance of the game. Note that some of the
-blocks have a different size than the others. If you find the game too
-small (or too large) on your monitor try changing to a larger (or
-smaller) style of block.
-</para>
-</sect2>
-
-<para>Note that the preferences cannot be changed during the game.</para>
+<sect1 id="s1-playing">
+ <title>Playing <application>Gnometris</application></title>
+  <para>You can score through two actions: completing lines and dropping blocks quickly. </para>
+   <sect2 id="s2-block-moving">
+     <title> Moving the Blocks</title>
+      <para>To play the game, you only need the four arrow keys.</para>
+       <itemizedlist>
+        <listitem>
+         <para><keycap>Left</keycap> and <keycap>Right</keycap> move the block correspondingly across the screen.</para>
+        </listitem>
+        <listitem>
+         <para><keycap>Up</keycap> rotates the block. The default rotation is counterclockwise. You can change the rotation under <menuchoice><guimenu>Settings</guimenu><guimenuitem>Preferences</guimenuitem></menuchoice> and deselecting <guilabel>Rotate blocks counterclockwise</guilabel>.</para>
+        </listitem>
+        <listitem>
+         <para><keycap>Down</keycap> and the <keycap>Space Bar</keycap> move the block down the screen faster.<keycap>Down</keycap> moves the block down faster. <keycap>Space-bar</keycap> moves the block directly to the bottom.</para>
+        </listitem>
+       </itemizedlist> 
+   </sect2>
+   <sect2 id="s2-newgame">
+     <title>Starting a New Game</title>
+      <para>To begin a new game, go to <menuchoice><guimenu>Game</guimenu><guimenuitem>New Game</guimenuitem></menuchoice>. The game will begin dropping blocks from the center of the top of the window. The default start-up of the game has no blocks in the game window and shows the next block that will fall in the upper right hand corner. <guilabel>Score</guilabel> shows the number of points you have earned. <guilabel>Lines</guilabel> shows the number of lines you have completed. <guilabel>Level</guilabel> shows the level of difficulty you are on.</para>
+    </sect2>
+    <sect2 id="s2-pausegame">
+     <title>Pausing the Game</title>
+      <para>To pause your game, go to <menuchoice><guimenu>Game</guimenu><guimenuitem>Pause Game</guimenuitem></menuchoice>. You can only pause a game when you are playing. The time limit on pausing your game is unlimited. To unpause the game, go back to <menuchoice><guimenu>Game</guimenu><guimenuitem>Pause Game</guimenuitem></menuchoice>.</para>
+    </sect2>
+    <sect2 id="s2-endgame">
+     <title>Ending the Game</title>
+      <para>Go to <menuchoice><guimenu>Game</guimenu><guimenuitem>End Game</guimenuitem></menuchoice> to end your current game without quiting Gnometris.</para>
+    </sect2>
+    <sect2 id="s2-quitgame">
+     <title>Quiting the <application>Gnometris</application></title>
+      <para>To completely quit <application>Gnometris</application> go to <menuchoice><guimenu>Game</guimenu><guimenuitem>Quit</guimenuitem></menuchoice>. If you are in the middle of a game when you quit, you will end your game without saving your score.</para>
+    </sect2>
+    <sect2 id="s2-scoring">
+     <title>Scoring Points</title>
+     <para>You score points through two methods: dropping blocks faster and deleting complete lines of blocks. When you delete lines, you get more points, but dropping blocks faster will quickly add up. As you level up, the blocks will begin falling faster. The highest level is 10, at which point you will only have just over a second to manipulate each block.</para>
+    </sect2> 
+    <sect2 id="s2-pastscores">
+     <title>Viewing Past Scores</title>
+      <para>You can view the top ten scores played on your computer through <menuchoice><guimenu>Game</guimenu><guimenuitem>Scores</guimenuitem></menuchoice>. The names of the users are shown next the their score and the date they played.</para>
+    </sect2> 
 </sect1>
 
-
- <sect1 id="bugs">
-  <title>Known Bugs and Limitations</title>
-  <para>
-   This game has plenty of bugs. What program doesn't ? Please report any bugs you find in <ulink url="http://bugzilla.gnome.org" type="http">GNOME Bugzilla.</ulink> This is also the appropriate place for suggestions and feature requests.
-  </para>
- </sect1>
-
-
-<!-- ============= Authors ================================ -->
-
- <sect1 id="authors">
-  <title>Authors</title>
-  <para>
-   <application>Gnometris</application> was written by J. Marcin Gorycki
-   (<email>janusz.gorycki@intel.com</email>). Please send 
-   all comments, suggestions, and bug
-   reports to the <ulink url="http://bugzilla.gnome.org" type="http">GNOME
-   bug tracking database</ulink>.  (Instructions for submitting bug
-   reports can be found <ulink
-   url="http://bugs.gnome.org/Reporting.html" type="http">
-   on-line</ulink>.)  You can also use <application>Bug Report
-   Tool</application> (<command>bug-buddy</command>), available in the
-   <guisubmenu>Utilities</guisubmenu> submenu of <guimenu>Main
-   Menu</guimenu>, for submitting bug reports.
-  </para>
-
-  <para>
-   This manual was written by Callum McKenzie
-   (<email>callum@physics.otago.ac.nz</email>). Please
-   send all comments and suggestions regarding this manual to the
-   <ulink type="http"
-   url="http://developer.gnome.org/projects/gdp">GNOME Documentation
-   Project</ulink> by sending an email to
-   <email>docs@gnome.org</email>. You can also add your comments
-   online by using the <ulink type="http"
-   url="http://developer.gnome.org/projects/gdp/doctable/">GNOME
-   Documentation Status Table</ulink>.
-  </para>
-
-  <!-- For translations: uncomment this:
-
-  <para>
-   Latin translation was done by ME
-   (<email>MYNAME@MYADDRESS</email>). Please send all  comments  and
-   suggestions regarding this translation to SOMEWHERE.
-  </para>
-
-  -->
-
- </sect1>
-
+ 
+<sect1 id="s1-customizegame">
+ <title>Customizing <application>Gnometris</application></title>
+  <sect2 id="s2-customstartup">
+   <title>Customizing Game Start-up</title>
+    <para>By going to <menuchoice><guimenu>Settings</guimenu><guimenuitem>Preferences</guimenuitem></menuchoice>, you can customize a variety of features for the start-up of each Gnometris game: number and density of pre-filled rows, and starting level. "Pre-filled rows" refers to how many rows will already have blocks in them when you start each new game.</para>
+    <sect3 id="s3-numberpfr">
+     <title>Number of Pre-filled Rows</title>
+      <para>You can change the number of rows that already have blocks at the start-up of each new game by using the spin box. You can start with up to 19 rows pre-filled at the start-up of your game. The default number of pre-filled rows is zero.</para>
+     </sect3>
+     <sect3 id="s3-densitypfr">
+      <title>Density of Pre-filled Rows</title>
+       <para>You can change the density of the blocks in the pre-filled rows at the start-up of each game. You can choose a density up to 10 blocks. You should first choose how many rows you want pre-filled under <guilabel>Number of Pre-filled Rows</guilabel>. The default density of blocks is three.</para>
+     </sect3>
+     <sect3 id="s3-startlevel">
+      <title>Level to Start On</title>
+       <para>You can adjust the level of difficulty you start on. The highest level you can start on is 10, which is the highest level you can play to. The default starting level is one.</para>
+     </sect3>
+   </sect2>
+   <sect2 id="s3-customblocks">
+    <title>Customizing the Blocks</title>
+    <para>From <menuchoice><guimenu>Settings</guimenu><guimenuitem>Preferences</guimenuitem></menuchoice>, you can customize a variety of features related to the blocks: previewing the next block, block colors, and block rotation.</para>
+     <sect3 id="s3-nextblock">
+      <title>Preview Next Block</title>
+        <para>Choose this option if you want to see the next block that is going to fall. This feature helps you plan the placement of your blocks.</para>
+     </sect3>
+     <sect3 id="s3-blockcolors">
+      <title>Use Random Block Colors</title>
+       <para>Choose if you want the various block configurations to be color coded or randomly colored. If you use the colors to help you identify blocks, random colors will make the game more difficult.</para>
+     </sect3>
+     <sect3 id="s3-block-rotation">
+      <title>Rotate Blocks Counterclockwise</title>
+       <para>Choose this option if you want the blocks to rotate counterclockwise or not.</para>
+     </sect3>
+   </sect2>
+   <sect2 id="s2-customlook">
+    <title>Customizing the Look of <application>Gnometris</application></title>
+    <para>Under <menuchoice><guimenu>Settings</guimenu><guimenuitem>Preferences</guimenuitem></menuchoice>, you can customize the look of <application>Gnometris</application>: images for the blocks.</para>
+     <sect3 id="s3-blockimage">
+      <title>Block Image</title>
+       <para>You can change the style of the blocks, including image and size. There are a variety of pre-made styles.</para>
+     </sect3>
+     <sect3 id="s3-background">
+       <title>Background</title>
+       <para>If you drag your favorite image into
+       the <application>Gnometris</application> window it will be
+       used as the background.</para>
+     </sect3>
+    </sect2>
+   </sect1>
 
  <!-- ============= Application License ============================= -->
 
- <sect1 id="license">
+ <sect1 id="s1-license">
   <title>License</title>
-  <para>
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the  <ulink type="help" url="gnome-help:gpl">
-    <citetitle>GNU General Public License</citetitle></ulink> as
-   published by the Free Software Foundation; 
-   either version 2 of the License, or (at your option) any later
-   version.
+  <para>This program is free software; you can redistribute it and/or modify it under the terms of the  <ulink type="help" url="gnome-help:gpl"> <citetitle>GNU General Public License</citetitle></ulink> as published by the Free Software Foundation;  either version 2 of the License, or (at your option) any later version.
   </para>
-  <para>
-   This program is distributed in the hope that it will be useful, but
-   WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   <citetitle>GNU General Public License</citetitle> for more details.
+  <para>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the <citetitle>GNU General Public License</citetitle> for more details.
   </para>
-  <para>
-   A copy of the <citetitle>GNU General Public License</citetitle> is
-   included as an appendix to the <citetitle>GNOME Users
-   Guide</citetitle>.  You may also obtain a copy of the
-   <citetitle>GNU General Public License</citetitle> from the Free
-   Software Foundation by visiting <ulink type="http"
-   url="http://www.fsf.org">their Web site</ulink> or by writing to
+  <para>A copy of the <citetitle>GNU General Public License</citetitle> is included as an appendix to the <citetitle>GNOME Users Guide</citetitle>.  You may also obtain a copy of the <citetitle>GNU General Public License</citetitle> from the Free Software Foundation by visiting <ulink type="http" url="http://www.fsf.org">their Web site</ulink> or by writing to
    <address>
     Free Software Foundation, Inc.
     <street>59 Temple Place</street> - Suite 330
@@ -266,12 +237,3 @@ smaller) style of block.
   </para>
  </sect1>
 </article>
-
-
-
-
-
-
-
-
-
