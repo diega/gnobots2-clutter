@@ -1,6 +1,6 @@
 /* gnome-stones - io.c
  *
- * Time-stamp: <1998/11/21 23:56:08 carsten>
+ * Time-stamp: <1999/02/06 15:34:12 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -241,7 +241,8 @@ cave_load_object_options (GStonesCave *cave, GStonesObject *object)
 	{
 	  if (!def)
 	    {
-	      gchar *tmp= strchr (option->name, '=');
+	      gchar *name= g_strdup (option->name);
+	      gchar *tmp= strchr (name, '=');
 	      
 	      if (tmp)
 		{
@@ -249,9 +250,10 @@ cave_load_object_options (GStonesCave *cave, GStonesObject *object)
                      config file.  */
 
 		  *tmp='\0';		  
-		  cave_set_object_option (cave, object, option->name, value);
-		  *tmp='=';
+		  cave_set_object_option (cave, object, name, value);
 		}
+	      
+	      g_free (name);
 	    }
 
 	  g_free (value);

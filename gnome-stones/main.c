@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <1999/01/17 15:16:30 carsten>
+ * Time-stamp: <1999/02/07 12:11:01 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -30,6 +30,9 @@
 #include "player.h"
 #include "preferences.h"
 #include "io.h"
+#include "view.h"
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
 
 /* You should leave 'USE_GNOME_CANVAS' undefined, because this game
    currently doesn't support all features with gnome_canvas stuff
@@ -67,9 +70,7 @@
 /*****************************************************************************/
 /* Used widgets. */
 
-static GtkWidget     *game_widget;
-static GdkPixmap     *curtain_image;
-static GdkImlibImage *curtain_imlib_image;
+static GtkWidget     *gstones_view;
 static GdkPixmap     *title_image;
 static GdkPixmap     *title_template;
 
@@ -100,7 +101,7 @@ static const struct poptOption options[] = {
 
 /****************************************************************************/
 
-void
+static void
 curtain_start (GStonesCave *cave);
 
 
@@ -112,42 +113,56 @@ game_start_cb (GtkWidget *widget, gpointer data);
 /****************************************************************************/
 /* Image stuff  */
 
+static void
+my_exit (GtkWidget *widget, gpointer client_data)
+{
+  exit (1);
+}
+
+static GdkImlibImage *
+load_image_from_path (const char *relative_name)
+{
+  gchar         *filename;
+  GdkImlibImage *image= NULL;
+
+  filename= gnome_pixmap_file (relative_name);
+  if (filename)
+    image= gdk_imlib_load_image (filename);
+
+  g_free (filename);
+  
+  if (!image)
+    {
+      GtkWidget *widget;
+      char       buffer[1024];
+      g_snprintf (buffer, sizeof(buffer), 
+		  _("An error occured while loading the image file \"%s\".\n"
+		    "Please make sure, that Gnome-Stones is "
+		    "correctly installed!"), relative_name);
+					    
+      widget= gnome_error_dialog (buffer);
+      gtk_signal_connect (GTK_OBJECT (widget), "close",
+			  GTK_SIGNAL_FUNC (my_exit), NULL);
+
+      gtk_main ();
+    }
+  
+  return image;
+}
+
+
 
 static void
 title_image_load (void)
 {
-  gchar         *filename;
-  GdkImlibImage *image;
-
-  filename= gnome_pixmap_file ("gnome-stones/title.png");
-  image= gdk_imlib_load_image (filename);
-  g_free (filename);
+  GdkImlibImage *image= load_image_from_path ("gnome-stones/title.png");
 
   gdk_imlib_render (image, image->rgb_width, image->rgb_height);
   title_template= gdk_imlib_copy_image (image);
   title_image   = gdk_imlib_move_image (image);  
 
   /* Redraw the game widget.  */
-  gtk_widget_draw (game_widget, NULL);
-}
-
-
-gboolean
-curtain_image_load (void)
-{
-  gchar         *filename;
-
-  filename= gnome_pixmap_file ("gnome-stones/curtain.png");
-  curtain_imlib_image= gdk_imlib_load_image (filename);
-  g_free (filename);
-  
-  gdk_imlib_render (curtain_imlib_image, 
-		    curtain_imlib_image->rgb_width, 
-		    curtain_imlib_image->rgb_height);
-  
-  curtain_image= gdk_imlib_copy_image (curtain_imlib_image);
-
-  return TRUE;
+  gtk_widget_draw (gstones_view, NULL);
 }
 
 
@@ -156,98 +171,11 @@ curtain_image_load (void)
 
 /* Game widget handling.  */
 
-typedef enum
-{
-  GAME_DISPLAY_IMAGE,
-  GAME_DISPLAY_CAVE
-} GameDisplayMode;
-
-typedef enum
-{
-  GAME_CURTAIN_NONE,
-  GAME_CURTAIN_OPENING,
-  GAME_CURTAIN_CLOSING
-} GameCurtainMode;
-
-static GameDisplayMode display_mode= GAME_DISPLAY_IMAGE;
-static GameCurtainMode curtain_mode= GAME_CURTAIN_NONE;
-
-static guint x_offset= 0;
-static guint y_offset= 0;
-
-static guint curtain = 0;
-
 #ifdef USE_GNOME_CANVAS
 static GnomeCanvasItem *game_items[GAME_COLS][GAME_ROWS];
 static GdkImlibImage   *game_current_images[GAME_COLS][GAME_ROWS];
-#endif
-
-static gint
-game_widget_expose_event_cb (GtkWidget *widget, GdkEventExpose *event, 
-			     gpointer data)
-{
-  GdkRectangle *area;
-  int x1, y1, x2, y2, x, y;
-
-  area= &event->area;
-
-  if (state == STATE_TITLE)
-    {
-      gdk_draw_pixmap (widget->window,
-		       widget->style->black_gc, title_image,
-		       area->x, area->y, 
-		       area->x, area->y,
-		       area->width, area->height);
-      return TRUE;
-    }
-
-  x1 = area->x/STONE_SIZE+x_offset;
-  y1 = area->y/STONE_SIZE+y_offset;
-  x2 = (area->x+area->width )/STONE_SIZE+x_offset;
-  y2 = (area->y+area->height)/STONE_SIZE+y_offset;
-  
-  for (x = x1; x <= x2; x++)
-    for (y = y1; y <= y2; y++)
-      {
-	GdkPixmap *image= NULL;
-	
-	if ((curtain_mode == GAME_CURTAIN_CLOSING && 
-	     (x+y > curtain+x_offset+y_offset)) ||
-	    (curtain_mode == GAME_CURTAIN_OPENING && 
-	     (x+y < curtain+x_offset+y_offset)))
-	  {
-	    image= curtain_image;
-	  }
-	else if (display_mode == GAME_DISPLAY_IMAGE)
-	  {
-	  }
-	else if (cave)
-	  {
-	    image= cave_get_image (cave, x+1, y+1);
-	  }
-
-	if (image)
-	  gdk_draw_pixmap (widget->window,
-			   widget->style->black_gc, image,
-			   0, 0, 
-			   (x-x_offset)*STONE_SIZE, 
-			   (y-y_offset)*STONE_SIZE,
-			   STONE_SIZE, STONE_SIZE);
-	else
-	  gdk_draw_pixmap (widget->window,
-			   widget->style->black_gc, title_image,
-			   (x-x_offset)*STONE_SIZE, 
-			   (y-y_offset)*STONE_SIZE, 
-			   (x-x_offset)*STONE_SIZE, 
-			   (y-y_offset)*STONE_SIZE,
-			   STONE_SIZE, STONE_SIZE);
-      }
-
-  return TRUE;
-}
 
 
-#ifdef USE_GNOME_CANVAS
 static void
 game_update_image (GtkWidget *widget)
 {
@@ -304,7 +232,7 @@ game_update_title (void)
 {
   /* Replace image with template.  */
   gdk_draw_pixmap (title_image,
-		   game_widget->style->black_gc, title_template,
+		   gstones_view->style->black_gc, title_template,
 		   0, 0,
 		   0, 0, GAME_COLS*STONE_SIZE, GAME_ROWS*STONE_SIZE);
 
@@ -325,28 +253,28 @@ game_update_title (void)
 
       gdk_draw_text   (title_image,
 		       font,
-		       game_widget->style->black_gc,
+		       gstones_view->style->black_gc,
 		       30, GAME_ROWS*STONE_SIZE-30-height*3-height/2,
 		       _(gametitle),
 		       strlen (_(gametitle)));
 
       gdk_draw_text   (title_image,
 		       font,
-		       game_widget->style->black_gc,
+		       gstones_view->style->black_gc,
 		       30, GAME_ROWS*STONE_SIZE-30-height*2-height/2,
 		       game->title,
 		       strlen (game->title));
       
       gdk_draw_text   (title_image,
 		       font,
-		       game_widget->style->black_gc,
+		       gstones_view->style->black_gc,
 		       30, GAME_ROWS*STONE_SIZE-30-height,
 		       _(cavename),
 		       strlen (_(cavename)));
 
       gdk_draw_text   (title_image,
 		       font,
-		       game_widget->style->black_gc,
+		       gstones_view->style->black_gc,
 		       30, GAME_ROWS*STONE_SIZE-30,
 		       tmp->data,
 		       strlen (tmp->data));
@@ -355,7 +283,7 @@ game_update_title (void)
     }  
 
   /* Redraw the game widget.  */
-  gtk_widget_draw (game_widget, NULL);
+  gtk_widget_draw (gstones_view, NULL);
 }
 
 
@@ -482,56 +410,6 @@ game_widget_key_release_callback (GtkWidget   *widget,
 /* We need this variable to be global, because we can only fill this
    canvas after loading the needed images.  */
 GtkWidget *canvas;
-#endif
-
-
-static GtkWidget *
-game_widget_create (void)
-{
-  GtkWidget *widget;
-
-  gtk_widget_push_visual (gdk_imlib_get_visual ());
-  gtk_widget_push_colormap (gdk_imlib_get_colormap ());
-
-  widget= gtk_drawing_area_new ();
-#ifdef USE_GNOME_CANVAS
-  canvas= gnome_canvas_new ();
-#endif
-
-  gtk_widget_pop_colormap ();
-  gtk_widget_pop_visual ();
-  
-  gtk_widget_set_events (widget, gtk_widget_get_events (widget) | GAME_EVENTS);
-
-  gtk_drawing_area_size (GTK_DRAWING_AREA (widget),
-			 GAME_COLS * STONE_SIZE,
-			 GAME_ROWS * STONE_SIZE);
-
-#ifdef USE_GNOME_CANVAS
-  /* Now for some experimantal gnome canvas stuff.  */
-  gtk_widget_set_usize (canvas, GAME_COLS*STONE_SIZE, GAME_ROWS*STONE_SIZE);
-  gnome_canvas_set_scroll_region (GNOME_CANVAS (canvas),
-				  0, 0,
-				  GAME_COLS*STONE_SIZE,
-				  GAME_ROWS*STONE_SIZE);
-
-  gtk_widget_show (canvas);
-#endif
-
-  gtk_widget_show (widget);
-
-  gtk_signal_connect (GTK_OBJECT (widget), "expose_event", 
-		      (GtkSignalFunc) game_widget_expose_event_cb, 0);
-
-#ifdef USE_GNOME_CANVAS
-  return canvas;
-#else
-  return widget;
-#endif
-}
-
-
-#ifdef USE_GNOME_CANVAS
 
 /* This function need 'canvas' and 'curtain_imlib_image' to have well
    defined values.  */
@@ -565,69 +443,18 @@ game_widget_fill (void)
 #endif /* USE_GNOME_CANVAS */
 
 
-static void
-game_widget_caluculate_offset (GStonesCave *cave)
-{
-  static gboolean x_scrolling= TRUE;
-  static gboolean y_scrolling= TRUE;
-
-  gint x_rel;
-  gint y_rel;
-  
-  x_rel= cave->player_x-x_offset;
-  y_rel= cave->player_y-y_offset;
-  
-  x_scrolling= x_scrolling || (x_rel < 3) || (x_rel > GAME_COLS+1-3) || 
-    (x_offset+GAME_COLS > cave->width);
-  y_scrolling= y_scrolling || (y_rel < 3) || (y_rel > GAME_ROWS+1-3) || 
-    (y_offset+GAME_ROWS > cave->height);
-  
-  if (x_scrolling)
-    {
-      if (((x_rel < 7) || (x_offset+GAME_COLS > cave->width)) && (x_offset > 0))
-	{
-	  x_offset--;
-	}
-      else if ((x_rel > GAME_COLS+1-7) && (x_offset+GAME_COLS < cave->width))
-	{
-	  x_offset++;
-	}
-      else
-	x_scrolling= FALSE;
-    }
-
-  if (y_scrolling)
-    {      
-      if (((y_rel < 5) || (y_offset+GAME_ROWS > cave->height)) && (y_offset > 0))
-	{
-	  y_offset--;
-	}
-      else if ((y_rel > GAME_ROWS+1-5) && (y_offset+GAME_ROWS < cave->height))
-	{
-	  y_offset++;
-	}
-      else
-	y_scrolling= FALSE;
-    }
-}
-
-
 
 /****************************************************************************/
 /* Timeout stuff
 
    In the following, we list all needed timeout handles.  */
 
-static guint curtain_timeout= 0;
 static guint iteration_timeout= 0;
 static guint countdown_timeout= 0;
 
-
 /****************************************************************************/
-/* Curtain stuff
-   
-   The following function implement the opening and closing curtain
-   between the different caves.  */
+
+GStonesCave *curtain_cave;
 
 static gint
 start_cave_delay_timeout (gpointer data);
@@ -635,83 +462,51 @@ start_cave_delay_timeout (gpointer data);
 static void
 iteration_start (GStonesCave *cave);
 
-static gint
-curtain_open_timeout_function (gpointer data)
+void
+curtain_ready (ViewCurtainMode mode)
 {
-  GStonesCave *newcave= (GStonesCave *) data;
-
-  if (curtain > 0)
+  switch (mode)
     {
-      /* The curtain is still being opened.  */
-      
-      curtain--;
-      gtk_widget_draw (game_widget, NULL);
-      return TRUE;
-    }
-  
-  curtain_mode= GAME_CURTAIN_NONE;
-
-  if (newcave)
-    {
-      state= STATE_WAITING_TO_START;
-      gtk_timeout_add (START_DELAY, start_cave_delay_timeout, newcave);
-    }
-  else
-    state= STATE_TITLE;
-  
-  return FALSE;
-}
-
-
-static gint
-curtain_close_timeout_function (gpointer data)
-{
-  GStonesCave *newcave= (GStonesCave *) data;
-      
-  if (curtain > 0)
-    {
-      /* The curtain is not closed yet.  */
-      
-      curtain--;
-      gtk_widget_draw (game_widget, NULL);
-      return TRUE;
-    }
-  
-  /* If the iteration has been running, we stop it now.  */
-  gtk_timeout_remove (iteration_timeout);
-
-  /* An existing cave must be deleted.  */
-  if (cave)
-    {
-      cave_free (cave);
-      cave= NULL;
-    }
-  
-  if (newcave)
-    {
-      display_mode= GAME_DISPLAY_CAVE;
-      status_set_mode (STATUS_GAME_INFO);
-      
-      iteration_start (newcave);
-
-      /* Print message to screen.  */
-      if (newcave->message)
-	gnome_appbar_set_default (GNOME_APPBAR (statusbar), cave->message);
+    case VIEW_CURTAIN_OPEN:  
+      if (curtain_cave)
+	{
+	  state= STATE_WAITING_TO_START;
+	  gtk_timeout_add (START_DELAY, start_cave_delay_timeout, curtain_cave);
+	}
       else
-	gnome_appbar_set_default (GNOME_APPBAR (statusbar), _(default_message));
+	state= STATE_TITLE;
+      break;
+      
+
+    case VIEW_CURTAIN_CLOSED:
+      /* If the iteration has been running, we stop it now.  */
+      gtk_timeout_remove (iteration_timeout);
+      
+      /* An existing cave must be deleted.  */
+      if (cave)
+	{
+	  cave_free (cave);
+	  cave= NULL;
+	}
+      
+      if (curtain_cave)
+	{
+	  view_display_cave (GSTONES_VIEW (gstones_view), curtain_cave);
+	  status_set_mode (STATUS_GAME_INFO);
+	  
+	  iteration_start (curtain_cave);
+	  
+	  /* Print message to screen.  */
+	  if (curtain_cave->message)
+	    gnome_appbar_set_default (GNOME_APPBAR (statusbar), curtain_cave->message);
+	  else
+	    gnome_appbar_set_default (GNOME_APPBAR (statusbar), _(default_message));
+	}
+      else
+	view_display_image (GSTONES_VIEW (gstones_view), title_image);
+      
+      break;
     }
-  else
-    display_mode= GAME_DISPLAY_IMAGE;
-
-
-  /* We can now open curtain.  */
-  curtain_mode= GAME_CURTAIN_OPENING;
-  curtain     = GAME_COLS+GAME_ROWS;
-  
-  curtain_timeout= 
-    gtk_timeout_add (CURTAIN_DELAY, curtain_open_timeout_function, newcave);
-
-  return FALSE;
 }
 
 
@@ -725,12 +520,11 @@ curtain_close_timeout_function (gpointer data)
 void
 curtain_start (GStonesCave *cave)
 {
+  curtain_cave= cave;
   state       = STATE_CURTAIN;
-  curtain_mode= GAME_CURTAIN_CLOSING;
-  curtain     = GAME_COLS+GAME_ROWS;
 
-  curtain_timeout= 
-    gtk_timeout_add (CURTAIN_DELAY, curtain_close_timeout_function, cave);
+  view_set_curtain_mode (GSTONES_VIEW (gstones_view), 
+			 VIEW_CURTAIN_ANIMATE, curtain_ready);
 }
 
 
@@ -979,12 +773,12 @@ iteration_timeout_function (gpointer data)
     }
 
   /* Manage scrolling.  */
-  game_widget_caluculate_offset (cave);
+  view_calculate_offset (GSTONES_VIEW (gstones_view), cave);
 
 #ifdef USE_GNOME_CANVAS  
-  game_update_image (game_widget);
+  game_update_image (gstones_view);
 #else
-  gtk_widget_draw (game_widget, NULL);
+  gtk_widget_draw (gstones_view, NULL);
 #endif
   flags= cave->flags;
 
@@ -1035,13 +829,13 @@ load_game (const gchar *filename, guint _start_cave)
   if (newgame)
     {
       /* Remove all running timeouts.  */
-      gtk_timeout_remove (curtain_timeout);
       gtk_timeout_remove (iteration_timeout);
       gtk_timeout_remove (countdown_timeout);
 
       /* Set display into title mode.  */
-      display_mode= GAME_DISPLAY_IMAGE;
-      curtain_mode= GAME_CURTAIN_NONE;
+      view_display_image (GSTONES_VIEW (gstones_view), title_image);
+      view_set_curtain_mode (GSTONES_VIEW (gstones_view), 
+			     VIEW_CURTAIN_OPEN, NULL);
 
       /* Set program state into title state.  */
       state= STATE_TITLE;
@@ -1094,6 +888,21 @@ game_start_cb (GtkWidget *widget, gpointer data)
 
 
 static void
+game_pause_cb (GtkWidget *widget, gpointer data)
+{
+  if ((state == STATE_RUNNING) && cave)
+    {
+      cave_toggle_pause_mode (cave);
+      
+      if (cave->flags & CAVE_PAUSING)
+	    gnome_appbar_set_status (GNOME_APPBAR (statusbar), _("Pause"));
+      else
+	gnome_appbar_refresh (GNOME_APPBAR (statusbar));
+    }
+}
+
+
+static void
 preferences_cb (GtkWidget *widget, gpointer data)
 {
   preferences_dialog_show ();
@@ -1142,15 +951,12 @@ about_cb (GtkWidget *widget, gpointer data)
 
 static GnomeUIInfo game_menu[]= {
   GNOMEUIINFO_MENU_NEW_GAME_ITEM(game_start_cb, NULL),
-
   GNOMEUIINFO_SEPARATOR,
-
+  GNOMEUIINFO_MENU_PAUSE_GAME_ITEM (game_pause_cb, NULL),
+  GNOMEUIINFO_SEPARATOR,
   GNOMEUIINFO_MENU_SCORES_ITEM(show_scores_cb, NULL),
-
   GNOMEUIINFO_SEPARATOR,
-
   GNOMEUIINFO_MENU_EXIT_ITEM(quit_cb, NULL),
-
   GNOMEUIINFO_END
 };
 
@@ -1238,10 +1044,6 @@ typedef struct
 StartupSequence startup_sequence[]=
 {
   {
-    curtain_image_load,
-    N_("Loading curtain image...")
-  },
-  {
     scan_private_plugin_directory,
     N_("Scanning private object directory...")
   },
@@ -1318,9 +1120,7 @@ main (int argc, char *argv[])
 
   /* That's what a gnome application needs:  */
   app= gnome_app_new ("gnome-stones", _("Gnome-Stones"));
-  gtk_widget_realize(app);
   gtk_window_set_policy  (GTK_WINDOW (app), FALSE, FALSE, TRUE);
-  gtk_window_set_wmclass (GTK_WINDOW (app), "gnome-stones", "main");
 
   /* ... a menu line, ... */
   gnome_app_create_menus   (GNOME_APP (app), main_menu);
@@ -1338,13 +1138,13 @@ main (int argc, char *argv[])
 
   /* and, last but not least the game display.  */
   vbox = gtk_vbox_new (FALSE, 0);
-  
-  game_widget= game_widget_create ();
-  
+
+  gstones_view= view_new (load_image_from_path ("gnome-stones/curtain.png"));
+
   frame= gtk_frame_new (NULL);
   gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
   gtk_widget_show (frame);
-  gtk_container_add (GTK_CONTAINER (frame), game_widget);
+  gtk_container_add (GTK_CONTAINER (frame), gstones_view);
 
   gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
@@ -1367,9 +1167,14 @@ main (int argc, char *argv[])
 
   joystick_set_widget (app);
 
+  gtk_widget_realize (app);
+
   gtk_widget_show (app);
 
   title_image_load ();
+  gdk_pixmap_ref (title_image);
+  view_display_image (GSTONES_VIEW (gstones_view), title_image);
+
   session_management_init ();
 
   gtk_idle_add (startup_function, NULL);

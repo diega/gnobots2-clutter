@@ -1,3 +1,13 @@
+1999-02-07  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* main.c: Moved to game-widget stuff to the new files view.c and
+ 	view.h.
+
+	* io.c (cave_load_object_options): Fixed bug, that could lead to a
+ 	segfault.
+
+	* Makefile.am (gnome_stones_SOURCES): Added view.c and view.h.
+
 1999-01-26  Miguel de Icaza  <miguel@nuclecu.unam.mx>
 
 	* main.c (scan_private_game_directory): Kill file menu.

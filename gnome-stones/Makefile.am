@@ -33,7 +33,9 @@ gnome_stones_SOURCES =				\
 	io.c                                    \
 	io.h                                    \
 	preferences.c                           \
-	preferences.h
+	preferences.h                           \
+	view.c                                  \
+	view.h
 
 gnome_stones_LDADD =				\
 	$(GNOME_LIBDIR)				\
