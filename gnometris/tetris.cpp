@@ -1058,6 +1058,11 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	GnomeVFSHandle *vfshandle;
 	GnomeVFSResult result;
 	GnomeVFSFileInfo fileinfo;
+	GnomeVFSFileSize bytesread;
+	GdkPixbufLoader * loader;
+	GdkPixbuf * pixbuf;
+	guchar * buffer;
+
 
 	if (data->length < 0) {
 		gtk_drag_finish (context, FALSE, FALSE, time);
@@ -1072,30 +1077,62 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	fileuri = decodeDropData ((gchar *)data->data, info);
 	/* Silently ignore bad data. */
 	if (fileuri == NULL)
-		return;
-	
+		goto error_exit;
+
+	/* From here on in is test code for loading from a URI rather
+	 * than a straight file name. */
+
 	g_print ("Using: %s\n", fileuri);
 
 	
 	result = gnome_vfs_open (&vfshandle, fileuri, GNOME_VFS_OPEN_READ);
 	if (result != GNOME_VFS_OK)
-		return;
+		goto error_exit;
 
 	result = gnome_vfs_get_file_info_from_handle (vfshandle, &fileinfo,
 						      GNOME_VFS_FILE_INFO_FOLLOW_LINKS);
 	if (result != GNOME_VFS_OK)
-		return;
+		goto error_exit_handle;
+
+	if (!(fileinfo.valid_fields & GNOME_VFS_FILE_INFO_FIELDS_SIZE))
+		goto error_exit_handle;
 
 	g_print ("%lld\n", fileinfo.size);
 
-	if (!(fileinfo.valid_fields & GNOME_VFS_FILE_INFO_FIELDS_SIZE))
-		return;
+	buffer = (guchar *)g_malloc (fileinfo.size);
+	if (buffer == NULL)
+		goto error_exit_handle;
+	
+	result = gnome_vfs_read (vfshandle, buffer, fileinfo.size, &bytesread);
+	/* FIXME: We should reread if not enough was read. */
+	if ((result != GNOME_VFS_OK) || (bytesread != fileinfo.size))
+		goto error_exit_buffer;
 
+	loader = gdk_pixbuf_loader_new ();
+
+	if (!gdk_pixbuf_loader_write (loader, buffer, fileinfo.size, NULL))
+		goto error_exit_loader;
+
+	gdk_pixbuf_loader_close (loader, NULL);
+
+	pixbuf = gdk_pixbuf_loader_get_pixbuf (loader);
+	if (pixbuf == NULL)
+		goto error_exit_loader;
+
+	g_object_ref (pixbuf);
+
+	g_print ("Loaded ?\n");
+
+	g_object_unref (pixbuf);
+ error_exit_loader:
+	g_object_unref (loader);
+ error_exit_buffer:
+	g_free (buffer);
+ error_exit_handle:
 	gnome_vfs_close (vfshandle);
-
-	g_free (fileuri);
-
+ error_exit:
 	return;
+
 }
 
 void
