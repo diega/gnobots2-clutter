@@ -1047,6 +1047,8 @@ gpointer data
         case GDK_KP_Begin:
         case GDK_period:
         case GDK_space:
+        case GDK_S:
+        case GDK_s:        
             newx = player_xpos;
             newy = player_ypos;
             break;
