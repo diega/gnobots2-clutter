@@ -1,3 +1,7 @@
+2004-09-19  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gataxx.c: Set the light/dark's move correctly on an undo.
+
 2004-09-15  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gataxx.c (new_game): Swap the pieces so that the top left player
@@ -7,7 +11,7 @@
 	the tileset data.
 	Also update the counters after an undo (bug #152701).
 
-2004-09-08  callum  <callum@spooky-possum.org>
+2004-09-08  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gataxx.c (restore_state): Fix a goof with colouring the squares
 	which are valid moves.

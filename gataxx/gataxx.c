@@ -325,8 +325,9 @@ void undo_move_cb(GtkWidget * widget, gpointer data) {
 	if (!props_is_human(turn)) {
 		g_timeout_add(timeout, computer_move_cb, GINT_TO_POINTER(turn));
 	}
-	appbar_set_white(gtk_gridboard_count_pieces(gridboard, WHITE));
-	appbar_set_black(gtk_gridboard_count_pieces(gridboard, BLACK));
+	appbar_set_turn (turn);
+	appbar_set_white (gtk_gridboard_count_pieces(gridboard, WHITE));
+	appbar_set_black (gtk_gridboard_count_pieces(gridboard, BLACK));
 }
 
 /* menu: Game->Quit */
