@@ -68,19 +68,6 @@
     </authorgroup>
 
 
-<!-- According to GNU FDL, revision history is mandatory if you are -->
-<!-- modifying/reusing someone else's document.  If not, you can omit it. -->
-<!-- Remember to remove the &manrevision; entity from the revision entries other
--->
-<!-- than the current revision. -->
-<!-- The revision numbering system for GNOME manuals is as follows: -->
-<!-- * the revision number consists of two components -->
-<!-- * the first component of the revision number reflects the release version of the GNOME desktop. -->
-<!-- * the second component of the revision number is a decimal unit that is incremented with each revision of the manual. -->
-<!-- For example, if the GNOME desktop release is V2.x, the first version of the manual that -->
-<!-- is written in that desktop timeframe is V2.0, the second version of the manual is V2.1, etc. -->
-<!-- When the desktop release version changes to V3.x, the revision number of the manual changes -->
-<!-- to V3.0, and so on. -->  
     <revhistory>
       <revision> 
 		<revnumber>Same GNOME Manual V2.10</revnumber> 
@@ -116,6 +103,17 @@
   <sect1 id="introduction"> 
     <title>Playing &app;</title> 
     <para>&app; is a puzzle game. The goal is to remove as many objects as possible in as few moves as possible. Objects that are adjacent to each other get removed as a group, then the remaining objects collapse to fill in the gaps and make new groups. You can't remove single objects.</para>
+
+    <figure id="start-up">
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/start-up.png" format="PNG"/>
+	  </imageobject>
+	</mediaobject>
+      </screenshot>
+      <title>&app; at the beginning of a new game.</title>
+    </figure>
 
     <para>The board starts as a full grid of objects. Depending on the size of board you select, there are either three or four types of object. If a group of objects are adjacent and all the same type, then they can be removed simply by clicking them with the mouse (or by pressing the space bar). The objects in a group will start spinning when the mouse moves over them. The number of objects, and the points you will score for removing that group, is shown in the lower left corner of the window.  The more objects in the group, the more points you score. Once the group has been removed the objects above them fall down to fill the space. If an entire column is cleared then the objects slide leftward to fill the gap.</para>
 
@@ -174,36 +172,26 @@
 
   </sect1>
 
-
-
-<!-- ============= Bugs ================================== -->
-<!-- This section is optional and is commented out by default. 
-     You can use it to describe known bugs and limitations of the 
-	  program if there are any - please be frank and list all
-     problems you know of. 
-
   <sect1 id="same-gnome-strategy">
     <title>Strategy</title>
+
+    <para>Because the score increases quadratically, big groups of objects are always better. For example, the points difference between a six object group and a seven object group is nine points. This means that in a situation where you have a choice between merging two groups of two into four or just adding one more to a group of six then you should go with the later option, even though you may score no points from the other balls. On the other hand, if even one of the groups of two can be merged with five or more it is better to sacrifice the group of six.</para>
+
+    <para>The thousand point bonus for clearing all the balls is also worth pursuing. To beat 1000 points you have to form a group of 34 objects. You are very unlikley to be in a position where you will have to choose between the two options.</para>
   </sect1>
-  
-  <sect1 id="mayapp-bugs">
-  <title>Known Bugs and Limitations</title>
-  <para> </para>
- </sect1>
--->
+
 <!-- ============= About ================================== -->
 <!-- This section contains info about the program (not docs), such as
       author's name(s), web page, license, feedback address. This
       section is optional: primary place for this info is "About.." box of
       the program. However, if you do wish to include this info in the
       manual, this is the place to put it. Alternatively, you can put this information in the title page.-->
-  <sect1 id="myapp-about"> 
-    <title>About <application>MY-GNOME-APPLICATION</application></title> 
-    <para> <application>MY-GNOME-APPLICATION</application> was written by GNOME-HACKER
-      (<email>hacker@gnome.org</email>). To find more information about
-      <application>MY-GNOME-APPLICATION</application>, please visit the 
-      <ulink url="http://www.my-gnome-app.org" type="http">MY-GNOME-APP Web
-	page</ulink>. </para>
+  <sect1 id="same-gnome-about"> 
+    <title>About <application>&app;</application></title> 
+    <para> <application>&app;</application> was written by Callum McKenzie
+      (<email>callum@physics.otago.ac.nz</email>). To find more information about
+      <application>&app;</application>, please visit the 
+      <ulink url="http://www.gnome.org/projects/gnome-games/" type="http">GNOME Games Web page</ulink>. </para>
     <para>
       To report a bug or make a suggestion regarding this application or
       this manual, follow the directions in this 

@@ -214,6 +214,9 @@ static gboolean render_cb (GtkWidget *canvas)
 	guchar *p, *bp;
 	guint shift;
 	gchar *filename;
+	gchar *substring;
+	gchar *suffix;
+	gint length;
 	GtkWidget *dialog;
 
 	if (idle_state == INIT) {
@@ -266,14 +269,30 @@ static gboolean render_cb (GtkWidget *canvas)
 			/* Then look in the system directory. */
 			filename = g_build_filename (THEMEDIR, theme, NULL);
 			if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
-				g_free (filename);
-				/* Now replace the suffix with .svg in case of an upgrade. */
-				/* FIXME: Do this and also the -sync case. */
-				/* And finally fall back to the default. */
-				filename = g_build_filename (THEMEDIR, DEFAULT_THEME, NULL);			
+				/* Some old themes had a -sync just before the suffix. This was
+				 * hidden from the user and has been eliminated from the names
+				 * of reworked themes. Check in case we had one of this form. */
+				length = strlen (filename);
+				substring = g_strstr_len (filename, length, "-sync");
+				suffix = g_strrstr (filename, ".png");
+				if (substring && suffix) {
+					g_stpcpy (substring, suffix);
+				}
+				if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
+					/* We have changed some themes from .png to .svg, try that. */
+					suffix = g_strrstr (filename, ".png");
+					if (suffix) {
+						g_stpcpy (suffix, ".svg");
+					}
+					if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
+							/* And finally fall back to the default. */
+							g_free (filename);
+							filename = g_build_filename (THEMEDIR, DEFAULT_THEME, NULL);
+					}
+				}
 			}
 		}
-
+		
 		file_pixbuf = gdk_pixbuf_new_from_file_at_size (filename,
 																										ftile_size*NFRAMESSPIN,
 																										ftile_size*MAX_COLOURS,

@@ -1,3 +1,16 @@
+2005-02-25  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/same-gnome.xml: More work on the help file. Changed the
+	screenshot graphics files.
+
+	* drawing.c (render_cb): Added code to handle old theme names that
+	may have changed. Explicitly, the removal of the -sync magic and
+	the .png -> .svg changeover.
+
+2005-02-23  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/same-gnome-C.omf: Updated for the new document.
+
 2005-02-18  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* ui.c (build_gui): Set the size menu item correctly at start-up.
