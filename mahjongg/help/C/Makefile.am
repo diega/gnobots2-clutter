@@ -11,7 +11,7 @@ figs = \
 docname = mahjongg
 lang = C
 omffile = mahjongg-C.omf
-entities = 
+entities = legal.xml
 include $(top_srcdir)/xmldocs.make
 dist-hook: app-dist-hook
 
