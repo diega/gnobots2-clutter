@@ -67,7 +67,7 @@ void load_properties ()
 
 	tile_set = gataxx_gconf_get_string ("/apps/gataxx/tileset");
 	if (tile_set == NULL)
-		tile_set = "classic.png";
+		tile_set = g_strdup("classic.png");
 
 	animate = gataxx_gconf_get_int ("/apps/gataxx/animate", 2);
 
