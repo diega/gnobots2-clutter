@@ -387,11 +387,9 @@ gint computer_move_1(guint me) {
   gint8 tboard[7][7],t2board[7][7] ;
   guint not_me;
 
- 
   gint * tmplist;
   gint num_maxes = 0;
 
-  
   not_me = (me == WHITE_TURN) ? BLACK_TURN : WHITE_TURN;
 
   for(i = 0; i < 7; i++)
@@ -593,7 +591,7 @@ gint check_valid_moves()
     whose_turn = 0;
     game_in_progress = 0;
     if (flip_final)
-      flip_final_id = gtk_timeout_add(3000,flip_final_results, NULL);
+      flip_final_id = g_timeout_add(3000,flip_final_results, NULL);
     return(TRUE);
   }
 

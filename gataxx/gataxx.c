@@ -249,12 +249,18 @@ gboolean quit_game_cb(GtkWidget *widget, gpointer data)
       return TRUE;
   }
 
-  if (flip_pixmaps_id)
-    gtk_timeout_remove(flip_pixmaps_id);
-  if (black_computer_id)
-    gtk_timeout_remove(black_computer_id);
-  if (white_computer_id)
-    gtk_timeout_remove(white_computer_id);
+  if (flip_pixmaps_id) {
+    g_source_remove (flip_pixmaps_id);
+    flip_pixmaps_id = 0;
+  }
+  if (black_computer_id) {
+    g_source_remove (black_computer_id);
+    black_computer_id= 0;
+  }
+  if (white_computer_id) {
+    g_source_remove (white_computer_id);
+    white_computer_id = 0;
+  }
 
   if(buffer_pixmap)
     gdk_drawable_unref(buffer_pixmap);
@@ -302,7 +308,7 @@ void undo_move_cb(GtkWidget *widget, gpointer data) {
     return;
   
   if (flip_final_id) {
-    gtk_timeout_remove(flip_final_id);
+    g_source_remove (flip_final_id);
     flip_final_id = 0;
   }
   
@@ -354,6 +360,16 @@ void undo_move_cb(GtkWidget *widget, gpointer data) {
   }
   
   tiles_to_flip = 1;
+
+  /* Cancel impending computer moves. */
+  if (black_computer_id) {
+    g_source_remove (black_computer_id);
+    black_computer_id = 0;
+  }
+  if (white_computer_id) {
+    g_source_remove (white_computer_id);
+    white_computer_id = 0;
+  }
   
   check_computer_players ();
 }
@@ -374,7 +390,7 @@ void black_level_cb(GtkWidget *widget, gpointer data) {
     games_clock_set_seconds(GAMES_CLOCK(time_display), 0);
     timer_valid = 0;
   }
-  
+
   check_computer_players();
 }
 
@@ -395,7 +411,7 @@ void white_level_cb(GtkWidget *widget, gpointer data)
     games_clock_set_seconds(GAMES_CLOCK(time_display), 0);
     timer_valid = 0;
   }
-  
+
   check_computer_players();
 }
 
@@ -655,7 +671,7 @@ void init_new_game() {
   guint i, j;
 
   if (flip_final_id) {
-    gtk_timeout_remove(flip_final_id);
+    g_source_remove (flip_final_id);
     flip_final_id = 0;
   }
 
@@ -704,7 +720,7 @@ void init_new_game() {
     gtk_widget_set_sensitive(time_display, FALSE);
     timer_valid = 0;
   }
- 
+
   check_computer_players();
 }
 
@@ -797,33 +813,34 @@ void gui_message(gchar *message) {
 }
 
 guint check_computer_players() {
-
-
-  if(black_computer_level && whose_turn == BLACK_TURN)
+  
+  if(black_computer_level && whose_turn == BLACK_TURN) {
     switch(black_computer_level) {
     case 1:
-      black_computer_id = gtk_timeout_add(computer_speed, (GtkFunction)computer_move_1, (gpointer) BLACK_TURN);
+      black_computer_id = g_timeout_add(computer_speed, (GtkFunction)computer_move_1, (gpointer) BLACK_TURN);
       break;
     case 2:
-      black_computer_id = gtk_timeout_add(computer_speed, (GtkFunction)computer_move_2, (gpointer) BLACK_TURN);
+      black_computer_id = g_timeout_add(computer_speed, (GtkFunction)computer_move_2, (gpointer) BLACK_TURN);
       break;
     case 3:
-      black_computer_id = gtk_timeout_add(computer_speed, (GtkFunction)computer_move_3, (gpointer) BLACK_TURN);
+      black_computer_id = g_timeout_add(computer_speed, (GtkFunction)computer_move_3, (gpointer) BLACK_TURN);
       break;
     }
+  }
   
-  if(white_computer_level && whose_turn == WHITE_TURN)
+  if(white_computer_level && whose_turn == WHITE_TURN) {
     switch(white_computer_level) {
     case 1:
-      white_computer_id = gtk_timeout_add(computer_speed, (GtkFunction)computer_move_1, (gpointer) WHITE_TURN);
+      white_computer_id = g_timeout_add(computer_speed, (GtkFunction)computer_move_1, (gpointer) WHITE_TURN);
       break;
     case 2:
-      white_computer_id = gtk_timeout_add(computer_speed, (GtkFunction)computer_move_2, (gpointer) WHITE_TURN);
+      white_computer_id = g_timeout_add(computer_speed, (GtkFunction)computer_move_2, (gpointer) WHITE_TURN);
       break;
     case 3:
-      white_computer_id = gtk_timeout_add(computer_speed, (GtkFunction)computer_move_3, (gpointer) WHITE_TURN);
+      white_computer_id = g_timeout_add(computer_speed, (GtkFunction)computer_move_3, (gpointer) WHITE_TURN);
       break;
     }
+  }
   
   return(TRUE);
 }

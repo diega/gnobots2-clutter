@@ -83,12 +83,12 @@ void load_properties ()
 	
 	switch (animate) {
 		case 0:
-			flip_pixmaps_id = gtk_timeout_add (100, flip_pixmaps, NULL);
+			flip_pixmaps_id = g_timeout_add (100, flip_pixmaps, NULL);
 			break;
 		case 1:
-			flip_pixmaps_id = gtk_timeout_add (PIXMAP_FLIP_DELAY * 8, flip_pixmaps, NULL);
+			flip_pixmaps_id = g_timeout_add (PIXMAP_FLIP_DELAY * 8, flip_pixmaps, NULL);
 			break;
-		case 2: flip_pixmaps_id = gtk_timeout_add (PIXMAP_FLIP_DELAY, flip_pixmaps, NULL);
+		case 2: flip_pixmaps_id = g_timeout_add (PIXMAP_FLIP_DELAY, flip_pixmaps, NULL);
 			break;
 	}
 }
@@ -121,12 +121,12 @@ void apply_changes ()
 	}
 
 	if (black_computer_id) {
-		gtk_timeout_remove (black_computer_id);
+		g_source_remove (black_computer_id);
 		black_computer_id = 0;
 	}
 	
 	if (white_computer_id) {
-		gtk_timeout_remove (white_computer_id);
+		g_source_remove (white_computer_id);
 		white_computer_id = 0;
 	}
 	
@@ -151,20 +151,20 @@ void apply_changes ()
 	}
 	
 	if (flip_pixmaps_id) {
-		gtk_timeout_remove (flip_pixmaps_id);
+		g_source_remove (flip_pixmaps_id);
 		flip_pixmaps_id = 0;
 	}
 	
 	switch (animate) {
 		case 0:
-			flip_pixmaps_id = gtk_timeout_add (100, flip_pixmaps,
+			flip_pixmaps_id = g_timeout_add (100, flip_pixmaps,
 					NULL);
 			break;
 		case 1:
-			flip_pixmaps_id = gtk_timeout_add (PIXMAP_FLIP_DELAY *
+			flip_pixmaps_id = g_timeout_add (PIXMAP_FLIP_DELAY *
 					8, flip_pixmaps, NULL);
 			break;
-		case 2: flip_pixmaps_id = gtk_timeout_add (PIXMAP_FLIP_DELAY,
+		case 2: flip_pixmaps_id = g_timeout_add (PIXMAP_FLIP_DELAY,
 					flip_pixmaps, NULL);
 			break;
 	}
