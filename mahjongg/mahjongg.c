@@ -547,11 +547,11 @@ void no_match (void)
 {
 	GtkWidget *mb;
 
-	mb = gnome_messagebox_new (_("Tiles don't match!"),
-				   GNOME_MESSAGEBOX_INFO,
+	mb = gnome_message_box_new (_("Tiles don't match!"),
+				   GNOME_MESSAGE_BOX_INFO,
 				   _("Ok"), NULL);
 	GTK_WINDOW(mb)->position = GTK_WIN_POS_MOUSE;
-	gnome_messagebox_set_modal (GNOME_MESSAGEBOX (mb));
+	gnome_message_box_set_modal (GNOME_MESSAGE_BOX (mb));
 	gtk_widget_show (mb);
 }
 
@@ -559,11 +559,11 @@ void you_won (void)
 {
 	GtkWidget *mb;
 
-	mb = gnome_messagebox_new (_("You won!"),
-				   GNOME_MESSAGEBOX_INFO,
+	mb = gnome_message_box_new (_("You won!"),
+				   GNOME_MESSAGE_BOX_INFO,
 				   _("Ok"), NULL);
 	GTK_WINDOW(mb)->position = GTK_WIN_POS_MOUSE;
-	gnome_messagebox_set_modal (GNOME_MESSAGEBOX (mb));
+	gnome_message_box_set_modal (GNOME_MESSAGE_BOX (mb));
 	gtk_signal_connect_object (GTK_OBJECT(mb),
 				   "clicked",
 				   GTK_SIGNAL_FUNC (new_game_callback),
