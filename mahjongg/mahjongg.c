@@ -687,6 +687,7 @@ apply_preferences (void)
     {
       buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/bg=bg1.png", NULL);
       load_tiles (selected_tileset.tileset, buf);
+      g_free (buf);
       redraw = 1 ;
       if (selected_tileset.make_it_default)
 	{
@@ -704,6 +705,7 @@ apply_preferences (void)
       else {
         buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/tileset=default.png", NULL);
         load_tiles (buf, selected_bg.bg);
+	 g_free (buf);
       }
       redraw = 1 ;
       if (selected_bg.make_it_default)
@@ -817,6 +819,7 @@ fill_tile_menu (GtkWidget *menu, char *sdir, int is_tile)
 	        itemno++;
 	}
 	closedir (dir);
+	g_free (dname);
 }
 
 static void
@@ -1854,6 +1857,7 @@ void load_tiles (char *fname, char *bg_fname)
 	  change_tile_image (&tiles[i]);
 	}
 
+	g_free (bg_fn);
 	g_free (fn);
 }
 

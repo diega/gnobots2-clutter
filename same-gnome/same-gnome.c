@@ -518,6 +518,7 @@ fill_menu (GtkWidget *menu)
 	        itemno++;
 	}
 	closedir (dir);
+	g_free (dname);
 }
 
 static void

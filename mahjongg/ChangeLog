@@ -1,3 +1,8 @@
+2001-05-26  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	* mahjongg.c (apply_preferences), (fill_tile_menu),
+	  (load_tiles): Plug memory leaks.
+
 2001-05-23  Juan Pablo Mendoza <pablo_juan@yahoo.com>
 
 	* mahjongg.c (properties_callback): Connect to close signal

@@ -1,3 +1,7 @@
+2001-05-26  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	* same-gnome.c (fill_menu): Plug a memory leak.
+
 2001-05-23  Juan Pablo Mendoza <pablo_juan@yahoo.com>
 
 	* same-gnome.c (game_preferences_callback): Connect to close

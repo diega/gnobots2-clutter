@@ -136,6 +136,7 @@ GtkWidget *CreateDialog (char *title, int buttonmask, GdkPixmap *icon,
 	strcpy(ttext, text);
 	if (strlen(ttext)<12) strcat(ttext, "     ");
 	wid = gtk_label_new(ttext);
+	free (ttext);
 	gtk_object_set_user_data(GTK_OBJECT(win), wid);
 	gtk_box_pack_start(GTK_BOX(hbox), wid, FALSE, TRUE, 0);
 	gtk_widget_show(wid);
