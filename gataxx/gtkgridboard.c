@@ -34,7 +34,7 @@ static gint get_pixmap_num(int piece);
 static gint gtk_gridboard_button_press(GtkWidget *widget, GdkEventButton *event) ;
 static gint gtk_gridboard_expose(GtkWidget * widget, GdkEventExpose * event);
 static void gtk_gridboard_class_init(GtkGridBoardClass * class);
-static void gtk_gridboard_destroy(GtkObject * object);
+static void gtk_gridboard_finalize(GObject * object);
 static void gtk_gridboard_init(GtkGridBoard * gridboard);
 static void gtk_gridboard_realize(GtkWidget * widget);
 static void gtk_gridboard_size_allocate(GtkWidget * widget, GtkAllocation * allocation);
@@ -46,15 +46,15 @@ gint gtk_gridboard_flip_pixmaps(gpointer data);
 
 /* init structures and create signals */
 static void gtk_gridboard_class_init(GtkGridBoardClass * class) {
-        GtkObjectClass *object_class;
+        GObjectClass *object_class;
         GtkWidgetClass *widget_class;
 
-        object_class = (GtkObjectClass*) class;
+        object_class = (GObjectClass*) class;
         widget_class = (GtkWidgetClass*) class;
 
         parent_class = gtk_type_class (gtk_widget_get_type ());
 
-        object_class->destroy = gtk_gridboard_destroy;
+        object_class->finalize = gtk_gridboard_finalize;
         widget_class->realize = gtk_gridboard_realize;
         widget_class->expose_event = gtk_gridboard_expose;
         widget_class->size_request = gtk_gridboard_size_request;
@@ -206,7 +206,7 @@ static void gtk_gridboard_realize(GtkWidget * widget) {
         gtk_style_set_background (widget->style, widget->window, GTK_STATE_ACTIVE);
 }
 
-static void gtk_gridboard_destroy(GtkObject * object) {
+static void gtk_gridboard_finalize(GObject * object) {
         GtkGridBoard *gridboard;
 
         g_return_if_fail (object != NULL);
@@ -218,8 +218,8 @@ static void gtk_gridboard_destroy(GtkObject * object) {
         g_free(gridboard->pixmaps);
         g_free(gridboard->selected);
 
-        if (GTK_OBJECT_CLASS (parent_class)->destroy)
-                (* GTK_OBJECT_CLASS (parent_class)->destroy) (object);
+        if (G_OBJECT_CLASS (parent_class)->finalize)
+                (* G_OBJECT_CLASS (parent_class)->finalize) (object);
 }
 
 static void gtk_gridboard_size_request(GtkWidget * widget, GtkRequisition * req)

@@ -1,7 +1,8 @@
 2004-10-15  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gtkgridboard.c: Fix a 64-bit crasher and g_-ize some
-	libc-isms. See bug #153803 for details on the crasher.
+	libc-isms. See bug #153803 for details on the crasher.  Also call
+	the correct handler to free memory. Fixes bug #154271.
 
 2004-10-07  Callum McKenzie  <callum@physics.otago.ac.nz>
 
