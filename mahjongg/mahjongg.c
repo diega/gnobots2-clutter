@@ -1850,79 +1850,75 @@ int main (int argc, char *argv [])
 /*	gtk_window_set_policy (GTK_WINDOW (window), FALSE, FALSE, TRUE); */
 
 	/* Statusbar for a chrono */
-	chrono_box = gtk_hbox_new(ef addw), FALSE, FAronoog_new (GTK_Wge (&tile      (GNOME_I    
-         + 1; 
-     ronoog_new (GTK_CONTAINddwtype ;
-        time_t s=0;j<MAX_TILEk_check_buconfirm_text = _("Really(GNOME_I (GNOME_Iour_gcs  = gas unable to  if (!game_over) {
-			mb = gtk_message_dialog_new (GTK, I DOW (window),
-		show (aboutfname, ck_st)
-{
-    Bonobo		G_CALL_tile doit)
-me_canvas_update_noiles (gchar *fgint ihis pr = tch (void))    Gles[int i	    N
-	otmenu = gL);| GTKfname, ck_stddw   Reuldye <0, ym;
-	gtktch ?60);| GTK Public i	    Nf
-void no_);| GTK         IS AN ACRONY gfDAMNIT!ur reGTKfname, ck_stddw   Reuldye  if          tiles?60);| GTK Public i	    Ncols = g:t i	    Nstopped;
+	chrono_box = gtk_hbox_new(0, FALSE);
+	chrono_label = gtk_label_new (_("Time : "));
+	gtk_box_pack_start (GTK_BOX(chrono_box), chrono_label, FALSE, FALSE, 0);
+	chrono = games_clock_new ();
+	gtk_box_pack_start (GTK_BOX(chrono_box), chrono, FALSE, FALSE, 0);
+	gtk_widget_show (chrono_label);
+	gtk_widget_show (chrono);
+	gtk_widget_show (chrono_box);
 
- :t i	Kfname, ck_stddw   Reuldye0, ym;        ga?60)| GTK Public i	reports to i	Kfname, ck_stddw   Seriousbel
-      errob, )| GTK Public i	;
-		gtk__MENU(ommle<MAX}
+	appbar = gnome_appbar_new (FALSE, TRUE, GNOME_PREFERENCES_USER);
+	gtk_box_pack_end(GTK_BOX(appbar), chrono_box, FALSE, FALSE, 0);
+	gnome_app_set_statusbar (GNOME_APP (window), appbar);
 
-void undo_tile_callback (GtkWidget *widgef (inter data)
-{
-        gint i;
-        gchar tmpgchar[16f (ints) ;
-        gtk_labeilepoe_over *ommegsmenu[0fname, ck_steviouDESTRget *bo (p_get_ty  tilepLOST)
-  menu (Gegsmenu + (secondsX(how),
-					   N if (pau + (secondYES(how),
-					   YES(gsmenuTON, FALS, fn);
-		GtkWidget *box;
+	gnome_app_create_menus (GNOME_APP (window), mainmenu);
+	gnome_app_install_menu_hints(GNOME_APP (window), mainmenu);
 
-		box = gtk_mmenu (Gg_new (	doitith_WINDOW (window),
-					   YESg_new==1);
-	}
-	i  }
-  menu (GTKf (response doitith_1==ES;lplback(Gdoit
-       is pr = tf (t    Gles[nt i    Ncols = g:;| GT main (int argc, c )| GTESPONSE_was ;| GT Public i    N
-	otmenu = g);| GTG (mb));
-			gts ;| GT Public i    Nstopped;
+        gnome_app_create_toolbar (GNOME_APP (window), toolbar_uiinfo);
 
- :;| GT) 1998 AGE_ERR ;| GT Public i    Nf
-void no:t i	_MESSAGE_ERR)| GT Public ireports | GT Public i_labe}
+	gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
+	toolbar = bonobo_dock_item_get_child (gdi);
+#if 0
+        gtk_toolbar_set_space_size(GTK_TOOLBAR (toolbar), 25);
+#endif
+
+        tiles_label = gtk_label_new(_("Tiles Left: "));
+        gtk_widget_show(tiles_label);
+	gtk_toolbar_append_widget(GTK_TOOLBAR(toolbar), tiles_label,
+				  NULL, NULL);
+        tiles_label = gtk_label_new(MAX_TILES_STR);
+        gtk_widget_show(tiles_label);
+	gtk_toolbar_append_widget(GTK_TOOLBAR(toolbar), tiles_label,
+				  NULL, NULL);
+	gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
+
+        moves_label = gtk_label_new(_("Moves Left: "));
+        gtk_widget_show(moves_label);
+	gtk_toolbar_append_widget(GTK_TOOLBAR(toolbar), moves_label,
+				  NULL, NULL);
+        moves_label = gtk_label_new(MAX_TILES_STR);
+        gtk_widget_show(moves_label);
+	gtk_toolbar_append_widget(GTK_TOOLBAR(toolbar), moves_label,
+				  NULL, NULL);
+  	gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
+
+	g_signal_connect (G_OBJECT (window), "delete_event",
+			  G_CALLBACK (exit_game_callback_query), (gpointer)QUIT_GAME);
+
+	mbox = gtk_vbox_new (FALSE, 0);
+
+	gnome_app_set_contents (GNOME_APP (window), mbox);
+	create_mahjongg_board ();
+
+	gtk_widget_show (window);
+
+        if(gnome_config_get_bool_with_default("/gmahjongg/toolbar/show",&show))
+            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), TRUE);
+        else {
+                gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), FALSE);
+#if 0
+                gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
+                gtk_widget_hide(GTK_WIDGET(gdi)) ;
+#endif
+                gtk_widget_queue_resize (window);
+        }
+
+  	gnome_app_flash (GNOME_APP (window), 
+  				"Welcome to GNOME Mahjongg!"); 
+
+	gtk_main ();
+	
+	return 0;
 }
-
-int onds = GAMES_CLOC (i=0; i<MAX_TILES; i++)
-          ME, _(APPNAM_new (GTdumm  ifgv,
-			 (GNOME_I  if (!game_over) {
-			mb rintf :"));
-	 k_hbox_new (FAL        } 
-        else gnome_apfn);
-	DOW (window),
-		sho   FondE
-_gaESTRs   _startgtk_cOK
-_gafnams_item)curr   g s   faullog,    		Gabet
- _gaextda *en   fer ;
-t kack_WINDOW (wtmpgc_imaliles gi_shun (brhow),
-					   YES= v NOi;
- l_con("        } 
-        else(gam     l_con("ow),
-					   YES: %i\now),
-					   N : %i\nWINDOW (: %i caow),
-					   YES(how),
-					   N i_WINDOW (m  
-          GTK_WINDOW (window),
-					   YESgd_colour (buf) ;
-	g main (int argc, c )|;
-              ESPONSE_was   previouse}
-}
-
-intG (mb));
-			gtsME, _(Aon_set_activ  pre main (int argc, c )|;
-  extdomain (GETTEXT_PACKAGE, GNOMs penalty er data)
-{
-           time_t seconiles_callback (text opup (&(popak;ch s[sele_YES: ile apset=easy", 			caf = gnome_config_get_string_with_default ("      1;
-    }
-    returock_set_second                  LE,
-		e_app_new (ndow 
-
-int
- 
