@@ -311,8 +311,11 @@ drawing_area_configure_event_cb (GtkWidget *widget, GdkEventConfigure *event)
   gint i;
 
   if (buffer_pixmap != NULL) {
+    /*
     gdk_pixmap_unref (buffer_pixmap);
     buffer_pixmap = NULL;
+    */
+    return;
   }
 
   buffer_pixmap = gdk_pixmap_new (drawing_area->window,

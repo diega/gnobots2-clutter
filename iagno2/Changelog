@@ -1,5 +1,11 @@
 2000-04-11  Ian Peters  <itp@gnu.org>
 
+	* src/iagno2.c: only create the buffer pixmap on a configure event if it
+	  doesn't already exist.  Fixes the grid lines from turning funny colors
+	  if you drag the menu off and then back onto the window.
+
+2000-04-11  Ian Peters  <itp@gnu.org>
+
 	* src/main.c (end_game_cb): Need to recreate board and board_pixmaps, or
 	  else changing the tileset after we've ended a game leads to BOOM.
 
