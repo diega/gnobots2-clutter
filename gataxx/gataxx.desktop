@@ -37,3 +37,5 @@ Comment[zh_TW]=Gnome ataxx ¹CÀ¸
 Exec=gataxx
 Terminal=0
 Type=Application
+Categories=Application;Game;BoardGame;
+
