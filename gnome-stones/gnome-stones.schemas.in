@@ -9,7 +9,7 @@
       <default>atari_scroll</default>
       <locale name="C">
         <short>Scroll method</short>
-        <long>The scroll method, valid values are "atari-scroll", "smooth_scroll" and "center_scroll".</long>
+        <long>The scroll method, valid values are "atari_scroll", "smooth_scroll" and "center_scroll".</long>
       </locale>
       </schema>
 
