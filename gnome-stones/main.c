@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <1998/08/28 05:59:45 carsten>
+ * Time-stamp: <1998/09/07 22:50:52 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -23,15 +23,17 @@
 #include <stdlib.h>
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
-#include <dirent.h>
-#include <sys/stat.h>
-#include <unistd.h>
 #include "game.h"
 #include "cave.h"
 #include "status.h"
 #include "player.h"
+#include "preferences.h"
 
+/* You should leave 'USE_GNOME_CANVAS' undefined, because this game
+   currently doesn't support all features with gnome_canvas stuff
+   enabled.  */
 #undef USE_GNOME_CANVAS
+
 #undef USE_KEY_RELEASE
 
 
@@ -49,7 +51,6 @@
 #define GAME_ROWS 12
 #define GAME_SCROLL_MAX 3
 #define GAME_SCROLL_MIN 6
-#define STONE_SIZE  32
 
 
 #ifdef USE_KEY_RELEASE
@@ -62,61 +63,17 @@
 
 
 /*****************************************************************************/
-/* Global Variables */
+/* Used widgets. */
 
-/* This variable specifies the currently played game.  If 'game' is
-   equal to 'NULL', than no game is loaded.  */
+static GtkWidget     *game_widget;
+static GdkPixmap     *curtain_image;
+static GdkImlibImage *curtain_imlib_image;
+static GdkPixmap     *title_image;
+static GdkPixmap     *title_template;
 
-static GStonesGame *game= NULL;
-
-/* The currently played cave.  This cave must be a cave, that belongs
-   to the game 'game'.  */
-
-static GStonesCave *cave= NULL;
-
-/* The data about the player.  */
-
-static GStonesPlayer *player= NULL;
-
-/* You may start a game in different cavs.  'start_cave' decides, in
-   which cave the player will start.  */
-
-static guint start_cave= 0;
-
-/* If you use a joystick as input device, this variable holds the
-   device's id.  Setting it to GDK_CORE_POINTER disables the Joystick
-   support.  */
-
-static guint32 joystick_deviceid= GDK_CORE_POINTER;
-static gfloat  joystick_switch_level= 0.5;
-
-
-/* The game can be in different states.  These state decide, how to
-   react if some events occur.  */
-
-typedef enum
-{
-  STATE_STARTUP,
-  STATE_TITLE,
-  STATE_CURTAIN,
-  STATE_WAITING_TO_START,
-  STATE_RUNNING,
-  STATE_COUNTDOWN,
-} GameState;
-
-static GameState state= STATE_TITLE;
-
-
-/* Other stuff.  */
-
-static GtkWidget   *game_widget;
-static GdkPixmap   *stone_images;
-static GdkPixmap   *title_template;
-static GdkPixmap   *title_image;
-
-static gint         player_x_direction= 0;
-static gint         player_y_direction= 0;
-static gboolean     player_push       = FALSE;
+static gint           player_x_direction= 0;
+static gint           player_y_direction= 0;
+static gboolean       player_push       = FALSE;
 
 
 /****************************************************************************/
@@ -140,47 +97,18 @@ game_start_cb (GtkWidget *widget, gpointer data);
 
 
 /****************************************************************************/
-/* Image stuff
+/* Image stuff  */
 
-   The following function loads an image and cuts it into pieces.
-   These pieces are put into the 'image_table'.  */
-
-
-#ifdef USE_GNOME_CANVAS
-static GdkImlibImage *image_table[16][16];
-#endif
 
 static void
-load_images (void)
+title_image_load (void)
 {
   gchar         *filename;
   GdkImlibImage *image;
 
-#ifdef USE_GNOME_CANVAS
-  gint ix;
-  gint iy;
-#endif
-  
-  /* filename= gnome_unconditional_pixmap_file ("gnome-stones.png"); */
-  filename= gnome_pixmap_file ("gnome-stones/tiles.png");
-  
-  image= gdk_imlib_load_image (filename);
-#ifdef USE_GNOME_CANVAS
-  /* Now cut the image into small pieces of 'STONE_SIZE' size.  */
-  for (ix= 0; ix < 16; ix++)
-    for (iy= 0; iy < 16; iy++)
-      image_table[ix][iy]= 
-	gdk_imlib_crop_and_clone_image (image, ix*STONE_SIZE, iy*STONE_SIZE,
-					STONE_SIZE, STONE_SIZE);
-#endif
-  gdk_imlib_render (image, image->rgb_width, image->rgb_height);
-  
-  stone_images= gdk_imlib_move_image (image);
-
-  /* Now the title image.  */
   filename= gnome_pixmap_file ("gnome-stones/title.png");
-
   image= gdk_imlib_load_image (filename);
+  g_free (filename);
 
   gdk_imlib_render (image, image->rgb_width, image->rgb_height);
   title_template= gdk_imlib_copy_image (image);
@@ -189,6 +117,26 @@ load_images (void)
   /* Redraw the game widget.  */
   gtk_widget_draw (game_widget, NULL);
 }
+
+
+gboolean
+curtain_image_load (void)
+{
+  gchar         *filename;
+
+  filename= gnome_pixmap_file ("gnome-stones/curtain.png");
+  curtain_imlib_image= gdk_imlib_load_image (filename);
+  g_free (filename);
+  
+  gdk_imlib_render (curtain_imlib_image, 
+		    curtain_imlib_image->rgb_width, 
+		    curtain_imlib_image->rgb_height);
+  
+  curtain_image= gdk_imlib_copy_image (curtain_imlib_image);
+
+  return TRUE;
+}
+
 
 
 /****************************************************************************/
@@ -248,35 +196,27 @@ game_widget_expose_event_cb (GtkWidget *widget, GdkEventExpose *event,
   for (x = x1; x <= x2; x++)
     for (y = y1; y <= y2; y++)
       {
-	
-	gboolean cave_mode;
-	gint ix= 0;
-	gint iy= 0;
+	GdkPixmap *image= NULL;
 	
 	if ((curtain_mode == GAME_CURTAIN_CLOSING && 
 	     (x+y > curtain+x_offset+y_offset)) ||
 	    (curtain_mode == GAME_CURTAIN_OPENING && 
 	     (x+y < curtain+x_offset+y_offset)))
 	  {
-	    cave_mode= TRUE;
-	    ix= 4;
-	    iy= 0;
+	    image= curtain_image;
 	  }
 	else if (display_mode == GAME_DISPLAY_IMAGE)
 	  {
-	    cave_mode= FALSE;
 	  }
 	else if (cave)
 	  {
-	    cave_mode= TRUE;
-
-	    cave_get_image_index (cave, x+1, y+1, &ix, &iy);
+	    image= cave_get_image (cave, x+1, y+1);
 	  }
 
-	if (cave_mode)
+	if (image)
 	  gdk_draw_pixmap (widget->window,
-			   widget->style->black_gc, stone_images,
-			   ix*STONE_SIZE, iy*STONE_SIZE, 
+			   widget->style->black_gc, image,
+			   0, 0, 
 			   (x-x_offset)*STONE_SIZE, 
 			   (y-y_offset)*STONE_SIZE,
 			   STONE_SIZE, STONE_SIZE);
@@ -311,8 +251,6 @@ game_update_image (GtkWidget *widget)
       {
 	
 	gboolean cave_mode;
-	gint ix= 0;
-	gint iy= 0;
 	
 	if ((curtain_mode == GAME_CURTAIN_CLOSING && 
 	     (x+y > curtain+x_offset+y_offset)) ||
@@ -320,8 +258,7 @@ game_update_image (GtkWidget *widget)
 	     (x+y < curtain+x_offset+y_offset)))
 	  {
 	    cave_mode= TRUE;
-	    ix= 4;
-	    iy= 0;
+	    image= curtain_imlib_image;
 	  }
 	else if (display_mode == GAME_DISPLAY_IMAGE)
 	  {
@@ -331,9 +268,8 @@ game_update_image (GtkWidget *widget)
 	  {
 	    cave_mode= TRUE;
 
-	    cave_get_image_index (cave, x+1, y+1, &ix, &iy);
+	    image= cave_get_imlib_image (cave, x+1, y+1);
 	  }
-	image= image_table[ix][iy];
 	
 	if (image != game_current_images[x-x_offset][y-y_offset])
 	  {
@@ -438,6 +374,7 @@ game_widget_key_press_callback (GtkWidget   *widget,
 	    {
 	      start_cave++;
 	      game_update_title ();
+	      preferences_save ();
 	    }
 	  return TRUE;
 	}
@@ -473,6 +410,7 @@ game_widget_key_press_callback (GtkWidget   *widget,
 	    {
 	      start_cave--;
 	      game_update_title ();
+	      preferences_save ();
 	    }
 	  return TRUE;
 	}
@@ -529,13 +467,17 @@ game_widget_key_release_callback (GtkWidget   *widget,
 }
 
 
+#ifdef USE_GNOME_CANVAS
+/* We need this variable to be global, because we can only fill this
+   canvas after loading the needed images.  */
+GtkWidget *canvas;
+#endif
+
+
 static GtkWidget *
 game_widget_create (void)
 {
   GtkWidget *widget;
-#ifdef USE_GNOME_CANVAS
-  GtkWidget *canvas;
-#endif
 
   gtk_widget_push_visual (gdk_imlib_get_visual ());
   gtk_widget_push_colormap (gdk_imlib_get_colormap ());
@@ -548,8 +490,7 @@ game_widget_create (void)
   gtk_widget_pop_colormap ();
   gtk_widget_pop_visual ();
   
-  gtk_widget_set_events (widget, 
-			 gtk_widget_get_events (widget) | GAME_EVENTS);
+  gtk_widget_set_events (widget, gtk_widget_get_events (widget) | GAME_EVENTS);
 
   gtk_drawing_area_size (GTK_DRAWING_AREA (widget),
 			 GAME_COLS * STONE_SIZE,
@@ -565,32 +506,6 @@ game_widget_create (void)
 				  GAME_COLS*STONE_SIZE,
 				  GAME_ROWS*STONE_SIZE);
 
-  /* Now we fill our canvas with images.  */
-  {
-    GdkImlibImage *im;
-    guint x;
-    guint y;
-    
-    im= gdk_imlib_load_image ("frame.png");
-    for (x= 0; x < GAME_COLS ; x+= 1)
-      for (y= 0; y < GAME_COLS ;  y+= 1)
-	{
-	  game_items[x][y]=
-	    gnome_canvas_item_new (GNOME_CANVAS_GROUP (gnome_canvas_root 
-						       (GNOME_CANVAS 
-							(canvas))),
-				   gnome_canvas_image_get_type (),
-				   "image", im,
-				   "x", (double) x*STONE_SIZE,
-				   "y", (double) y*STONE_SIZE,
-				   "width", (double) im->rgb_width,
-				   "height", (double) im->rgb_height,
-				   "anchor", GTK_ANCHOR_NW,
-				   NULL);
-	  
-	}
-  }
-  
   gtk_widget_show (canvas);
 #endif
 
@@ -598,7 +513,6 @@ game_widget_create (void)
 
   gtk_signal_connect (GTK_OBJECT (widget), "expose_event", 
 		      (GtkSignalFunc) game_widget_expose_event_cb, 0);
-  gtk_widget_set_extension_events (widget, GDK_EXTENSION_EVENTS_ALL);
 
 #ifdef USE_GNOME_CANVAS
   return canvas;
@@ -606,6 +520,40 @@ game_widget_create (void)
   return widget;
 #endif
 }
+
+
+#ifdef USE_GNOME_CANVAS
+
+/* This function need 'canvas' and 'curtain_imlib_image' to have well
+   defined values.  */
+
+static gboolean
+game_widget_fill (void)
+{
+  guint x;
+  guint y;
+  
+  for (x= 0; x < GAME_COLS ; x+= 1)
+    for (y= 0; y < GAME_COLS ;  y+= 1)
+      {
+	game_items[x][y]=
+	  gnome_canvas_item_new (GNOME_CANVAS_GROUP (gnome_canvas_root 
+						     (GNOME_CANVAS 
+						      (canvas))),
+				 gnome_canvas_image_get_type (),
+				 "image", curtain_imlib_image,
+				 "x", (double) x*STONE_SIZE,
+				 "y", (double) y*STONE_SIZE,
+				 "width", (double) curtain_imlib_image->rgb_width,
+				 "height", (double) curtain_imlib_image->rgb_height,
+				 "anchor", GTK_ANCHOR_NW,
+				 NULL);
+	
+      }
+  
+  return TRUE;
+}
+#endif /* USE_GNOME_CANVAS */
 
 
 static void
@@ -656,110 +604,6 @@ game_widget_caluculate_offset (GStonesCave *cave)
 
 
 
-/****************************************************************************/
-/* Additional Games stuff.  */
-
-typedef struct _GameFile GameFile;
-
-struct _GameFile
-{
-  gchar *filename;
-  gchar *gametitle;
-  guint  caves;
-};
-
-GList *games= NULL;
-
-
-static gint
-compare_game_names (const GameFile *file, const char *name)
-{
-  return strcmp (file->filename, name);
-}
-
-
-static GameFile *
-add_game (const char *filename)
-{
-  char     *prefix= NULL;
-  GList    *tmp;
-  GameFile *file;
-  
-  /* Maybe this game is already in the games list.  */
-  tmp= g_list_find_custom (games, (gpointer) filename, 
-			   (GCompareFunc) compare_game_names);
-  if (tmp) return (GameFile *) tmp->data;
-  
-  /* FIXME: add some checks, if it's realy a Gnome-Stones game.  */
-  file= g_malloc (sizeof (GameFile));
-  
-  if (file)
-    {
-      file->filename = g_strdup (filename);
-
-      prefix= g_copy_strings ("=", filename, "=/", NULL);
-      gnome_config_push_prefix (prefix);
-      
-      file->gametitle= gnome_config_get_string ("General/Title");
-      file->caves    = gnome_config_get_int    ("Caves/Number");
-
-      gnome_config_pop_prefix ();
-      g_free (prefix);
-      
-      games= g_list_append (games, file);
-    }
-
-  return file;
-}
-
-
-static void
-scan_game_directories (const char *directory)
-{
-  DIR *dir;
-  
-  dir= opendir (directory);
-  if (dir)
-    {
-      struct dirent *entry;
-      
-      while ((entry = readdir (dir)) != NULL)
-	{
-	  char *filename= g_copy_strings (directory, "/", entry->d_name, NULL);
-	  struct stat sbuf;
-	  
-	  if ((stat (filename, &sbuf)== 0) && S_ISREG (sbuf.st_mode))
-	    add_game (filename);
-
-	  g_free (filename);
-	}
-      
-      closedir (dir);
-    }
-}
-
-
-static gboolean
-scan_public_game_directories (void)
-{
-  scan_game_directories (CAVESDIR);
-
-  return TRUE;
-}
-
-
-static gboolean
-scan_private_game_directories (void)
-{
-  char *path= gnome_util_home_file ("GnomeStonesGames");
-  
-  scan_game_directories (path);
-
-  g_free (path);
-  return TRUE;
-}
-
-
 /****************************************************************************/
 /* Timeout stuff
 
@@ -978,12 +822,31 @@ countdown_start (GStonesCave *cave)
 
 /*****************************************************************************/
 
+/* This widget will be used when querying the joystick device.  */
+static GtkWidget *joystick_widget   = NULL;
+
+/* The joystick should only be queried, if 'joystick_widget' has
+   focus.  This variable is used to store the focus information.  */
+static gboolean   joystick_has_focus= FALSE;
+
+
 void
+joystick_set_properties (guint32 deviceid, gfloat switch_level)
+{
+  joystick_deviceid= deviceid;
+  if (joystick_deviceid != GDK_CORE_POINTER)
+    gdk_input_set_mode (joystick_deviceid, GDK_MODE_SCREEN);
+
+  joystick_switch_level= switch_level;
+}
+
+
+static void
 joystick_get_information (gint *x_direction, gint *y_direction)
 {
   /* FIXME: This function should only return a joystick movement, if
      the game_widget has focus.  */
-  if (joystick_deviceid != GDK_CORE_POINTER)
+  if (joystick_deviceid != GDK_CORE_POINTER && joystick_has_focus)
     {
       gdouble x;
       gdouble y;
@@ -996,11 +859,16 @@ joystick_get_information (gint *x_direction, gint *y_direction)
       
       GdkModifierType mask;
       
-      gdk_input_window_get_pointer (GTK_WIDGET (game_widget)->window, 
+      gdk_input_window_get_pointer (GTK_WIDGET (joystick_widget)->window, 
 				    joystick_deviceid, 
 				    &x, &y, NULL, NULL, NULL, &mask);
-      gdk_window_get_origin (GTK_WIDGET (game_widget)->window, &xi, &yi);
+      gdk_window_get_origin (GTK_WIDGET (joystick_widget)->window, &xi, &yi);
       
+      /* Unfortunatly there is now way, to get the joystick values
+         directly.  So we have to revert the calculation that GDK does
+         here.  Propably one should extend GDK with an input mode like
+         GDK_MODE_RAW.  */
+
       x= ((gdouble) xi+x)/gdk_screen_width ()*100.0;
       y= ((gdouble) yi+y)/gdk_screen_height ()*100.0;
       
@@ -1017,6 +885,38 @@ joystick_get_information (gint *x_direction, gint *y_direction)
       if (y_direction) *y_direction= ydir;
     }
 }
+
+
+static gint
+joystick_focus_change_event (GtkWidget     *widget,
+			     GdkEventFocus *event,
+			     gpointer       client_data)
+{
+  joystick_has_focus= (event->in != 0);
+  
+  return TRUE;
+}
+
+static void
+joystick_set_widget (GtkWidget *widget)
+{
+  g_return_if_fail (widget);
+
+  gtk_widget_set_extension_events (widget, GDK_EXTENSION_EVENTS_ALL);
+  
+  gtk_widget_set_events (widget, gtk_widget_get_events (widget) | 
+			 GDK_FOCUS_CHANGE);
+  gtk_signal_connect (GTK_OBJECT (widget), "focus_in_event",
+		      (GtkSignalFunc) joystick_focus_change_event, 0);
+  gtk_signal_connect (GTK_OBJECT (widget), "focus_out_event",
+		      (GtkSignalFunc) joystick_focus_change_event, 0);
+
+  joystick_widget= widget;
+}
+
+
+
+/*****************************************************************************/
 
 
 CaveFlags flags= 0;
@@ -1106,25 +1006,25 @@ iteration_start (GStonesCave *newcave)
 /* Additional game stuff.  */
 
 
-static void
-load_game (GameFile *file)
+void
+load_game (const gchar *filename, guint _start_cave)
 {
   char         buffer[256];
   GStonesGame *newgame;
   
-  g_return_if_fail (file);
+  g_return_if_fail (filename);
   
   /* We don't need to load a game twice.  */
-  if (game && (strcmp (game->filename, file->filename) == 0))
+  if (game && (strcmp (game->filename, filename) == 0))
     {
       /* Give feedback in statusbar.  */
-      sprintf (buffer, "Game '%s' already loaded.", file->filename);
+      sprintf (buffer, "Game '%s' already loaded.", filename);
       gnome_app_flash (GNOME_APP (app), buffer);
       return;
     }
   
   /* Load game.  */
-  newgame= game_load (file->filename);
+  newgame= game_load (filename);
 
   if (newgame)
     {
@@ -1149,407 +1049,15 @@ load_game (GameFile *file)
          automatically, when starting a game.  */
       cave      = NULL;
       game      = newgame;
-      start_cave= 0;
+      start_cave= _start_cave;
 
       /* Update the title image.  */
       game_update_title ();
-
-      /* Store filename.  */
-      /* FIXME: should additionally use session management.  */
-      gnome_config_set_string ("GnomeStones/Preferences/Game", file->filename);
-      gnome_config_sync ();
-
+      
       /* Give feedback in statusbar.  */
-      sprintf (buffer, "Game '%s' loaded.", file->filename);
+      sprintf (buffer, "Game '%s' loaded.", filename);
       gnome_app_flash (GNOME_APP (app), buffer);
     }
-}
-
-
-static void
-load_game_by_number (guint n)
-{
-  GList *tmp= g_list_nth (games, n);
-
-  g_return_if_fail (tmp != NULL);
-  
-  load_game ((GameFile *) tmp->data);
-}
-
-
-static void
-load_game_by_name (const char *filename)
-{
-  GameFile *file= add_game (filename);
-  
-  if (file)
-    load_game (file);
-}
-
-
-static gboolean
-load_default_game (void)
-{
-  char     *filename;
-  gboolean  def;
-  
-  filename= gnome_config_get_string_with_default 
-    ("GnomeStones/Preferences/Game", &def);
-
-  if (def)
-    load_game_by_name (CAVESDIR"/default.caves");
-  else
-    load_game_by_name (filename);
-
-  g_free (filename);
-
-  return TRUE;
-}
-
-
-
-/****************************************************************************/
-/* Preferences dialog stuff.  */
-
-typedef struct _PreferencesData PreferencesData;
-
-struct _PreferencesData
-{
-  /* General information.  */
-  GnomePropertyBox *property_box;
-  
-  /* Page one.  */
-  GtkWidget        *game_list;
-  gint              selected_game;
-
-  /* Page two. */
-  GtkWidget        *level_frame;
-  
-  guint32           joystick_deviceid;
-  gfloat            joystick_switch_level;
-};
-
-
-static void
-preferences_apply_cb (GtkWidget *w, gint page, gpointer data)
-{
-  PreferencesData *prdata= (PreferencesData *) data;
-
-  g_return_if_fail (prdata != NULL);
-
-  switch (page)
-    {
-    case 0:
-      /* FIXME: Add some checks and warnings here.  */
-      if (prdata->selected_game > -1)
-	load_game_by_number (prdata->selected_game);
-      break;
-
-    case 1:
-      joystick_deviceid= prdata->joystick_deviceid;
-      if (joystick_deviceid != GDK_CORE_POINTER)
-	gdk_input_set_mode (joystick_deviceid, GDK_MODE_SCREEN);
-
-      joystick_switch_level= prdata->joystick_switch_level;
-      break;
-    default:
-      break;
-    }
-}
-
-
-static void
-preferences_changed_cb (GtkWidget *w, gpointer data)
-{
-  PreferencesData *prdata= (PreferencesData *) data;
-  
-  g_return_if_fail (prdata != NULL);
-
-  gnome_property_box_changed (prdata->property_box);
-}
-
-
-static gint
-preferences_delete_cb (GtkWidget *w, GdkEventAny *event, gpointer data)
-{
-  g_free (data);
-
-  return FALSE;
-}
-
-
-static void 
-game_selector_select_row (GtkCList * clist,
-			  gint row, gint column,
-			  GdkEvent * event, gpointer data)
-{
-  PreferencesData *prdata= (PreferencesData *) data;
-  
-  g_return_if_fail (prdata != NULL);
-
-  preferences_changed_cb (GTK_WIDGET (clist), data);
-
-  prdata->selected_game= row;
-}
-
-
-/* The joystick callbacks.  */
-
-static void
-preferences_set_joystick_device (GtkWidget *widget, gpointer data)
-{
-  guint32          deviceid= GPOINTER_TO_UINT(data);
-  PreferencesData *prdata  = 
-    (PreferencesData *) gtk_object_get_user_data (GTK_OBJECT (widget));
-
-  prdata->joystick_deviceid= deviceid;
-  
-  if (deviceid == GDK_CORE_POINTER)
-    {
-      gtk_widget_set_sensitive (prdata->level_frame, FALSE);
-    }
-  else
-    {
-      gtk_widget_set_sensitive (prdata->level_frame, TRUE);
-    }
-
-  gnome_property_box_changed (prdata->property_box);
-}
-
-
-static void
-preferences_set_joystick_switch_level (GtkAdjustment *adjust, gpointer data)
-{
-  PreferencesData *prdata  = 
-    (PreferencesData *) gtk_object_get_user_data (GTK_OBJECT (adjust));
-
-  prdata->joystick_switch_level= adjust->value;
-
-  gnome_property_box_changed (prdata->property_box);
-}
-
-
-GtkWidget *
-preferences_dialog_new (void)
-{
-  GtkWidget *propbox;
-  GtkWidget *box;
-  GtkWidget *label;
-  GtkWidget *list;
-  PreferencesData *prdata;
-
-  prdata= g_malloc (sizeof (PreferencesData));
-
-  propbox= gnome_property_box_new ();
-  prdata->property_box= GNOME_PROPERTY_BOX (propbox);
-  
-  gtk_window_set_title (GTK_WINDOW(&GNOME_PROPERTY_BOX(propbox)->dialog.window),
-			_("Gnome-Stones Preferences"));
-
-  /* The first page of our preferences dialog. */
-  box= gtk_vbox_new (TRUE, 4);
-
-  /* The list of game names.  */
-  list= gtk_clist_new (3);
-  prdata->game_list= list;
-
-  gtk_clist_set_column_title (GTK_CLIST (list), 0, _("Game title"));
-  gtk_clist_set_column_width (GTK_CLIST (list), 0, 250);
-  gtk_clist_set_column_title (GTK_CLIST (list), 1, _("Caves"));
-  gtk_clist_set_column_width (GTK_CLIST (list), 1, 50);
-  gtk_clist_set_column_justification (GTK_CLIST (list), 1, GTK_JUSTIFY_RIGHT);
-  gtk_clist_set_column_title (GTK_CLIST (list), 2, _("Filename"));
-  gtk_clist_column_titles_passive (GTK_CLIST (list));
-  gtk_clist_column_titles_show (GTK_CLIST (list));
-  gtk_widget_set_usize (list, -2, 200);
-  
-  gtk_clist_set_policy (GTK_CLIST (list), 
-			GTK_POLICY_ALWAYS, 
-			GTK_POLICY_AUTOMATIC);
-  gtk_clist_set_selection_mode (GTK_CLIST (list), GTK_SELECTION_SINGLE);
-  
-  gtk_box_pack_start (GTK_BOX (box), list, FALSE, FALSE, 0);
-
-  gtk_clist_freeze (GTK_CLIST (list));
-  prdata->selected_game= -1;
-  {
-    GList *tmp= games;
-    
-    while (tmp)
-      {
-	char buffer[10];
-	GameFile *file= (GameFile *)tmp->data;
-	char     *entry[3];
-	gint      row;
-	
-	entry[0]= file->gametitle;
-	sprintf (buffer, "%d", file->caves);
-	entry[1]= buffer;
-	entry[2]= g_basename (file->filename);
-	
-	row= gtk_clist_append (GTK_CLIST (list), entry);
-
-	if (game && strcmp (file->filename, game->filename) == 0)
-	  {
-	    gtk_clist_select_row (GTK_CLIST (list), row, 0);
-	    prdata->selected_game= row;
-	  }
-
-	tmp= tmp->next;
-      }
-  }
-  gtk_clist_thaw (GTK_CLIST (list));
-  gtk_signal_connect (GTK_OBJECT (list), "select_row", 
-		      GTK_SIGNAL_FUNC (game_selector_select_row),
-		      prdata);
-
-  gtk_widget_show (list);
-  gtk_widget_show (box);
-
-  label= gtk_label_new (_("Game"));
-  gtk_notebook_append_page (GTK_NOTEBOOK 
-			    (GNOME_PROPERTY_BOX (propbox)->notebook), 
-			    box, label);
-
-  /* The second page of our preferences dialog. */
-
-  prdata->joystick_deviceid    = joystick_deviceid;
-  prdata->joystick_switch_level= joystick_switch_level;
-
-  box= gtk_vbox_new (TRUE, 4);
-  
-  {
-    guint      i;
-    GtkObject *adjust;
-    GtkWidget *frame;
-    GtkWidget *scale;
-    GtkWidget *hbox;
-    GtkWidget *vbox;
-    GtkWidget *menuitem;
-    GtkWidget *optionmenu;
-    GtkWidget *device_menu;
-    GList     *tmp;
-    GList     *device_info= gdk_input_list_devices ();
-
-    frame= gtk_frame_new (_("Device"));
-    gtk_box_pack_start (GTK_BOX (box), frame, TRUE, FALSE, 0);
-    gtk_widget_show (frame);
-
-    vbox= gtk_vbox_new (FALSE, 2);
-    gtk_container_add (GTK_CONTAINER (frame), vbox);
-    gtk_widget_show (vbox);
-
-    hbox= gtk_hbox_new (FALSE, 2);
-    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 2);
-    gtk_widget_show (hbox);
-
-    label= gtk_label_new (_("Joystick device:"));
-    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 2);
-    gtk_widget_show (label);
-    
-    device_menu= gtk_menu_new ();
-
-    /* We definatly have a "disable" entry.  */
-    menuitem= gtk_menu_item_new_with_label (_("disabled"));
-    gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
-    gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
-			(GtkSignalFunc) preferences_set_joystick_device,
-			GUINT_TO_POINTER (GDK_CORE_POINTER));
-    gtk_menu_append (GTK_MENU (device_menu), menuitem);
-    gtk_widget_show (menuitem);
-    
-    for (tmp= device_info, i= 1; tmp; tmp= tmp->next, i++)
-      {
-	GdkDeviceInfo *info = (GdkDeviceInfo *) tmp->data;
-
-	if (info->deviceid != GDK_CORE_POINTER)
-	  {
-	    menuitem= gtk_menu_item_new_with_label (info->name);
-
-	    gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
-            gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
-                                (GtkSignalFunc) preferences_set_joystick_device,
-                                GUINT_TO_POINTER (info->deviceid));
-
-	    gtk_menu_append (GTK_MENU (device_menu), menuitem);
-	    gtk_widget_show (menuitem);
-	  }
-
-	if (info->deviceid == prdata->joystick_deviceid)
-	  gtk_menu_set_active (GTK_MENU (device_menu), i);
-      }
-    
-    optionmenu= gtk_option_menu_new ();
-    gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu), device_menu);
-    gtk_box_pack_start (GTK_BOX (hbox), optionmenu, FALSE, FALSE, 2);
-    gtk_widget_show (optionmenu);
-    
-    gtk_widget_show (label);
-    gtk_widget_show (hbox);
-    gtk_widget_show (optionmenu);
-
-    frame= gtk_frame_new (_("Binary joytick emulation"));
-    gtk_box_pack_start (GTK_BOX (box), frame, TRUE, FALSE, 0);
-    gtk_widget_show (frame);
-
-    vbox= gtk_vbox_new (FALSE, 2);
-    gtk_container_add (GTK_CONTAINER (frame), vbox);
-    gtk_widget_show (vbox);
-
-    hbox= gtk_hbox_new (FALSE, 2);
-    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 2);
-    gtk_widget_show (hbox);
-
-    label= gtk_label_new (_("Switch level:"));
-    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 2);
-    gtk_widget_show (label);
-
-    adjust= gtk_adjustment_new (prdata->joystick_switch_level,
-				0.0, 1.0, 0.02, 0.1, 0.0);
-    gtk_object_set_user_data (adjust, prdata);
-    gtk_signal_connect (adjust, "value_changed",
-			(GtkSignalFunc) preferences_set_joystick_switch_level,
-			NULL);
-    
-    scale= gtk_hscale_new (GTK_ADJUSTMENT (adjust));
-    gtk_scale_set_digits (GTK_SCALE (scale), 2);
-    gtk_box_pack_start (GTK_BOX (hbox), scale, FALSE, FALSE, 2);
-    gtk_widget_show (scale);
-    
-    if (prdata->joystick_deviceid == GDK_CORE_POINTER)
-      {
-	gtk_widget_set_sensitive (GTK_WIDGET (frame), FALSE);
-      }
-
-    prdata->level_frame= frame;
-  }
-  
-  gtk_widget_show (box);
-
-  label= gtk_label_new (_("Joystick"));
-  gtk_notebook_append_page (GTK_NOTEBOOK 
-			    (GNOME_PROPERTY_BOX (propbox)->notebook), 
-			    box, label);
-
-  /* The third page of our preferences dialog. */
-  box= gtk_vbox_new (TRUE, 4);
-
-  label= gtk_label_new (_("Not yet implemented!"));
-  gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
-
-  gtk_widget_show (label);
-  gtk_widget_show (box);
-
-  label= gtk_label_new (_("Sound"));
-  gtk_notebook_append_page (GTK_NOTEBOOK 
-			    (GNOME_PROPERTY_BOX (propbox)->notebook), 
-			    box, label);
-
-  gtk_signal_connect (GTK_OBJECT (propbox), "delete_event",
-		      GTK_SIGNAL_FUNC (preferences_delete_cb), prdata);
-  gtk_signal_connect (GTK_OBJECT (propbox), "apply",
-		      GTK_SIGNAL_FUNC (preferences_apply_cb), prdata);
-  return propbox;
 }
 
 
@@ -1683,6 +1191,28 @@ static GnomeUIInfo main_menu[]=
 /*****************************************************************************/
 /* Startup sequence.  */
 
+
+static gboolean
+scan_public_game_directories (void)
+{
+  game_directory_scan (CAVESDIR);
+
+  return TRUE;
+}
+
+
+static gboolean
+scan_private_game_directories (void)
+{
+  char *path= gnome_util_home_file ("GnomeStonesGames");
+  
+  game_directory_scan (path);
+
+  g_free (path);
+  return TRUE;
+}
+
+
 typedef struct
 {
   gboolean (*function)(void);
@@ -1692,6 +1222,16 @@ typedef struct
 
 StartupSequence startup_sequence[]=
 {
+  {
+    curtain_image_load,
+    N_("Loading curtain image...")
+  },
+#ifdef USE_GNOME_CANVAS
+  {
+    game_widget_fill,
+    N_("Filling game widget...")
+  },
+#endif /* USE_GNOME_CANVAS */
   {
     objects_register_all,
     N_("Registering game objects...")
@@ -1705,8 +1245,8 @@ StartupSequence startup_sequence[]=
     N_("Scanning public game directories...")
   },
   {
-    load_default_game,
-    N_("Loading the default game...")
+    preferences_restore,
+    N_("Restoring preferences...")
   }
 };
 
@@ -1758,7 +1298,7 @@ main (int argc, char *argv[])
   gnome_init (APP_NAME, NULL, argc, argv, 0, NULL);
 
   /* That's what a gnome application needs:  */
-  app= gnome_app_new ("GnomeStones", _("Gnome-Stones"));
+  app= gnome_app_new ("gnome-stones", _("Gnome-Stones"));
   gtk_window_set_policy (GTK_WINDOW (app), FALSE, FALSE, TRUE);
 
   /* ... a menu line, ... */
@@ -1791,7 +1331,8 @@ main (int argc, char *argv[])
   
   gnome_app_set_contents (GNOME_APP (app), vbox);
   
-  gtk_widget_set_events (app, gtk_widget_get_events (app) | GAME_EVENTS);
+  gtk_widget_set_events (app, gtk_widget_get_events (app) | 
+			 GAME_EVENTS);
 
   gtk_signal_connect (GTK_OBJECT (app), "key_press_event",
 		      GTK_SIGNAL_FUNC (game_widget_key_press_callback), 0);
@@ -1801,10 +1342,13 @@ main (int argc, char *argv[])
 		      GTK_SIGNAL_FUNC (gtk_widget_destroy), 0);
   gtk_signal_connect (GTK_OBJECT (app), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_main_quit), 0);
-  
+
+  joystick_set_widget (app);
+
   gtk_widget_show (app);
 
-  load_images ();
+  title_image_load ();
+  session_management_init ();
 
   gtk_idle_add (startup_function, NULL);
 
