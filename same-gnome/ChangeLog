@@ -1,5 +1,9 @@
 2004-12-31  Callum McKenzie  <callum@physics.otago.ac.nz>
-	
+
+	* game.c:
+	* ui.c:
+	* ui.h: Further tweaks to the message interface.
+
 	* ui.h:
 	* ui.c:
 	* input.c:

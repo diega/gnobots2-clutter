@@ -40,6 +40,8 @@ static void quit_cb (void)
   gtk_main_quit ();
 }
 
+/* FIXME: We should also do a general version of this for Game Over, 
+ * "n points" (during a destruction event) and the like. */
 void set_message (gint count)
 {
 	gchar *message;
@@ -52,12 +54,35 @@ void set_message (gint count)
 		part1 = g_strdup_printf (ngettext ("%d object selected", 
 																			 "%d objects selected", count), count);
 		part2 = g_strdup_printf (ngettext ("%d point", "%d points", s), s);
+		/* Translators: the previous messages get merged into this 
+		 * format string. */
 		message = g_strdup_printf (_("%s (%s)"), part1, part2);
 		gtk_label_set_text (GTK_LABEL (messagewidget), message);
 		g_free (message);
 	} else {
-		gtk_label_set_text (GTK_LABEL (messagewidget), _("No objects selected."));
+		gtk_label_set_text (GTK_LABEL (messagewidget), _("No objects selected"));
 	}
+}
+
+void set_message_destroyed (gint count)
+{
+	gchar *message;
+	gint s;
+
+	if (count < 3) {
+		gtk_label_set_text (GTK_LABEL (messagewidget), _("No points"));
+		return;
+	}
+
+	s = calculate_score (count);
+	message = g_strdup_printf (ngettext ("%d point !", "%d points !", s), s);
+	gtk_label_set_text (GTK_LABEL (messagewidget), message);
+	g_free (message);
+} 
+
+void set_message_general (gchar *message)
+{
+	gtk_label_set_text (GTK_LABEL (messagewidget), message);
 }
 
 void show_score (gint score)

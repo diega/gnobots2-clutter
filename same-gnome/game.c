@@ -251,6 +251,7 @@ void destroy_balls (void)
 
 	score += calculate_score (count);
 	show_score (score);
+	set_message_destroyed (count);
 
 	count = 0;
 
@@ -344,6 +345,7 @@ static void end_of_game_check (void)
 	if (p->colour == NONE) {
 		score += 1000;
 		show_score (score);
+		set_message_general (_("1000 point bonus !"));
 		game_over ();
 		return;
 	}
