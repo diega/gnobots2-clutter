@@ -1,0 +1,27 @@
+[Desktop Entry]
+Icon=iagno2.png
+Name=Iagno2
+Name[de]=Iagno2
+Name[es]=Iagno2
+Name[et]=Iagno2
+Name[fi]=Iagno2
+Name[fr]=Iagno2
+Name[ja]=Iagno2
+Name[ko]=Iagno2
+Name[no]=Iagno2
+Name[pt]=Iagno2
+Name[ru]=Iagno2
+Comment=Gnome Reversi game
+Comment[de]=Gnome-Reversi-Spiel
+Comment[es]=Juego Gnome Reversi
+Comment[et]=Reversi variant GNOME-le
+Comment[fi]=Gnome-othellopeli
+Comment[fr]=Jeu GNOME Reversi
+Comment[ja]=GNOME»«•™•ª•Ì
+Comment[ko]=Gnome ø¿µ®∑Œ
+Comment[no]=Reversi spill for GNOME
+Comment[pt]=Vers„o Gnome do jogo Reversi
+Comment[ru]=È«“¡ Ú≈◊≈“”… ƒÃ— Gnome
+Exec=iagno2
+Terminal=0
+Type=Application

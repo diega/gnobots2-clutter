@@ -1,0 +1,203 @@
+#include <gnome.h>
+
+#include "defines.h"
+
+gchar *board = NULL;
+/*gchar whose_turn = BLACK_TILE;*/
+
+void
+reversi_init_board (gchar **board)
+{
+	*board = g_new0 (gchar, BOARDSIZE * BOARDSIZE);
+}
+
+void
+reversi_destroy_board (gchar **board)
+{
+	g_free (*board);
+}
+
+gchar
+other_player (gchar player)
+{
+	gchar tmp_other_player;
+
+	tmp_other_player = (player == BLACK_TILE) ? WHITE_TILE : BLACK_TILE;
+
+	return (tmp_other_player);
+}
+
+static gboolean
+check_direction (gchar *board, gchar index, gchar player, gchar direction)
+{
+	gchar not_me;
+	gint i, j;
+	gint dx, dy;
+	gint possible;
+
+	not_me = other_player (player);
+
+	switch (direction) {
+		case UP:
+			dx = 0;
+			dy = -1;
+			break;
+		case DOWN:
+			dx = 0;
+			dy = 1;
+			break;
+		case LEFT:
+			dx = -1;
+			dy = 0;
+			break;
+		case RIGHT:
+			dx = 1;
+			dy = 0;
+			break;
+		case UP_LEFT:
+			dx = -1;
+			dy = -1;
+			break;
+		case UP_RIGHT:
+			dx = 1;
+			dy = -1;
+			break;
+		case DOWN_LEFT:
+			dx = -1;
+			dy = 1;
+			break;
+		case DOWN_RIGHT:
+			dx = 1;
+			dy = 1;
+			break;
+	}
+	
+	i = ROW(index) + dx;
+	j = COL(index) + dy;
+	possible = 0;
+
+	while ((i >= 0) && (i <= 7) && (j >= 0) && (j <= 7) &&
+			(board[INDEX(i,j)] == not_me)) {
+		possible = 1;
+		i += dx;
+		j += dy;
+	}
+
+	if ((i >= 0) && (i <= 7) && (j >= 0) && (j <= 7) && possible &&
+			(board[INDEX(i,j)] == player)) {
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+static void
+move_direction (gchar *board, gchar index, gchar player, gchar direction)
+{
+	gchar not_me;
+	gint i, j;
+	gint dx, dy;
+
+	switch (direction) {
+		case UP:
+			dx = 0;
+			dy = -1;
+			break;
+		case DOWN:
+			dx = 0;
+			dy = 1;
+			break;
+		case LEFT:
+			dx = -1;
+			dy = 0;
+			break;
+		case RIGHT:
+			dx = 1;
+			dy = 0;
+			break;
+		case UP_LEFT:
+			dx = -1;
+			dy = -1;
+			break;
+		case UP_RIGHT:
+			dx = 1;
+			dy = -1;
+			break;
+		case DOWN_LEFT:
+			dx = -1;
+			dy = 1;
+			break;
+		case DOWN_RIGHT:
+			dx = 1;
+			dy = 1;
+			break;
+	}
+
+	not_me = other_player (player);
+
+	i = ROW(index) + dx;
+	j = COL(index) + dy;
+
+	while ((i >= 0) && (i <= 7) && (j >= 0) && (j <= 7) &&
+			(board[INDEX(i,j)] == not_me)) {
+		board[INDEX(i,j)] = player;
+		i += dx;
+		j += dy;
+	}
+}
+
+gboolean
+is_valid_move (gchar *board, gchar index, gchar player)
+{
+	gboolean valid = FALSE;
+
+	if (board[index]) {
+		return FALSE;
+	}
+
+	valid = check_direction (board, index, player, UP)
+		|| check_direction (board, index, player, UP_LEFT)
+		|| check_direction (board, index, player, UP_RIGHT)
+		|| check_direction (board, index, player, LEFT)
+		|| check_direction (board, index, player, RIGHT)
+		|| check_direction (board, index, player, DOWN)
+		|| check_direction (board, index, player, DOWN_LEFT)
+		|| check_direction (board, index, player, DOWN_RIGHT);
+
+	return valid;
+}
+
+void
+move (gchar *board, gchar index, gchar player)
+{
+	if (check_direction (board, index, player, UP)) {
+		move_direction (board, index, player, UP);
+	}
+	if (check_direction (board, index, player, UP_LEFT)) {
+		move_direction (board, index, player, UP_LEFT);
+	}
+	if (check_direction (board, index, player, UP_RIGHT)) {
+		move_direction (board, index, player, UP_RIGHT);
+	}
+	if (check_direction (board, index, player, LEFT)) {
+		move_direction (board, index, player, LEFT);
+	}
+	if (check_direction (board, index, player, RIGHT)) {
+		move_direction (board, index, player, RIGHT);
+	}
+	if (check_direction (board, index, player, DOWN)) {
+		move_direction (board, index, player, DOWN);
+	}
+	if (check_direction (board, index, player, DOWN_LEFT)) {
+		move_direction (board, index, player, DOWN_LEFT);
+	}
+	if (check_direction (board, index, player, DOWN_RIGHT)) {
+		move_direction (board, index, player, DOWN_RIGHT);
+	}
+
+	board[index] = player;
+
+	/*
+	player = other_player (player);
+	*/
+}

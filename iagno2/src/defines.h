@@ -1,0 +1,22 @@
+#define TILEWIDTH   60
+#define TILEHEIGHT  60
+#define GRIDWIDTH   1
+#define BOARDSIZE   8
+#define BOARDWIDTH  (TILEWIDTH + GRIDWIDTH) * BOARDSIZE - 1
+#define BOARDHEIGHT (TILEHEIGHT + GRIDWIDTH) * BOARDSIZE - 1
+
+#define INDEX(r,c) ((r << 3) + c)
+#define ROW(x)     (x >> 3)
+#define COL(x)     (x & 0x7)
+
+#define WHITE_TILE 31
+#define BLACK_TILE 1
+
+#define UP		-8
+#define UP_LEFT		-9
+#define UP_RIGHT	-7
+#define LEFT		-1
+#define RIGHT		1
+#define DOWN		8
+#define DOWN_LEFT	7
+#define DOWN_RIGHT	9
