@@ -1,3 +1,9 @@
+2003-05-27  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* main.c (about_cb): Credits for Herman Mansilla.
+	* gnomekoban.caves.in: New levels for the Sokoban game. Ported by
+	Alberto Manuel Brandao Simoes from Herman Mansilla's Yakoban game.
+
 2003-05-26  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* preferences.c: Fixed bug #105135 (crash/warnings when opening

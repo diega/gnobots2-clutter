@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <2003-05-09 19:12:40 callum>
+ * Time-stamp: <2003-05-27 21:56:08 callum>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -1038,7 +1038,8 @@ about_cb (GtkWidget *widget, gpointer data)
   GdkPixbuf *pixbuf = NULL;
   
   const gchar *authors[]= {
-    "Carsten Schaar <nhadcasc@fs-maphy.uni-hannover.de>",
+    N_("Main program: Carsten Schaar <nhadcasc@fs-maphy.uni-hannover.de>"),
+    N_("Sokoban levels: Herman Mansilla"),
     NULL
   };
   gchar *documenters[] = {
