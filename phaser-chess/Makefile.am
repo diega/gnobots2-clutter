@@ -3,9 +3,6 @@ pixmapdir = $(datadipixmapdir = $(datadir)/pixmaps/phaser-chess
 Gamesdir  = $(datadir)/apps/Games
 
 INCLUDES = 			\
-	-I../.. 		\
-	-I$(srcdir)/../.. 	\
-	-I$(srcdir)/../../obgtk	\
 	-I$(includedir)		\
 	$(X_CFLAGS)
 
@@ -57,12 +54,8 @@ phaser_chess_SOURCES = 		\
 	meta_server.h
 
 phaser_chess_LDADD = \
-	$(top_builddir)/libgnomeui/libgnomeui.la 	\
-	$(top_builddir)/libgnome/libgnome.la		\
-	$(top_builddir)/obgtk/libobgtk.la		\
-        $(X_LIBS) $(x_libs)				\
-	$(GTK_LIBS)					\
-	-lobjc $(PTHREAD_LIB) $(INTLLIBS) $(DL_LIB)
+	$(OBGTK_LIBS) $(GNOMEUI_LIBS) \
+	-lobjc $(PTHREAD_LIB)
 
 EXTRA_DIST = phaser-chess.desktop
 

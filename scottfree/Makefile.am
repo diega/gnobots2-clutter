@@ -1,8 +1,4 @@
 INCLUDES = 			\
-	-I../.. 		\
-	-I../gemvt		\
-	-I$(srcdir)/../.. 	\
-	-I$(srcdir)/..	 	\
 	-I$(includedir)		\
 	$(X_CFLAGS)
 
@@ -13,11 +9,7 @@ GnomeScott_SOURCES = \
 	Scott.h
 
 GnomeScott_LDADD = \
-	$(top_builddir)/libgnomeui/libgnomeui.la 	\
-	$(top_builddir)/libgnome/libgnome.la		\
-	../gemvt/libgemvt.la				\
-	$(GTK_LIBS)					\
-        $(X_LIBS) $(x_libs) $(INTLLIBS) $(DL_LIB)
+	-lgemvt $(GNOMEUI_LIBS)
 
 EXTRA_DIST = 	\
 	down.xpm	\

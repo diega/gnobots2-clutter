@@ -3,8 +3,6 @@ pixmapdir = $(datadir)/pixmaps/same-gnome
 Gamesdir = $(datadir)/apps/Games
 
 INCLUDES = 			\
-	-I../.. 		\
-	-I$(srcdir)/../.. 	\
 	-I$(includedir)		\
 	$(X_CFLAGS)
 
@@ -14,11 +12,7 @@ same_gnome_SOURCES = 	\
 	same-gnome.c
 
 same_gnome_LDADD = \
-	$(top_builddir)/libgnomeui/libgnomeui.la 	\
-	$(top_builddir)/libgnome/libgnome.la		\
-	$(top_builddir)/support/libsupport.a		\
-	$(GTK_LIBS)					\
-        $(X_LIBS) $(x_libs) $(INTLLIBS) $(DL_LIB)
+	$(GNOMEUI_LIBS)
 
 pixmap_DATA = planets.xpm blink-sync.xpm puyonew2-sync.xpm \
 	stones.xpm rotate.xpm
