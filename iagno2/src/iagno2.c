@@ -1,6 +1,8 @@
 #include <gnome.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
+#include <pthread.h>
+
 #include "defines.h"
 #include "iagno2.h"
 #include "main.h"
@@ -550,27 +552,57 @@ iagno2_board_changed ()
   }
 }
 
+static gint
+iagno2_get_computer_move (int *index)
+{
+  if (*index != 64) {
+    iagno2_move (*index);
+    free (index);
+    return (FALSE);
+  }
+
+  return TRUE;
+}
+
+static void
+iagno2_computer_thread (int *index)
+{
+  int player = PLAYER (whose_turn);
+  
+  *index = players[player]->plugin_move (board);
+
+  _exit (0);
+}
+
+static gint
+iagno2_computer_player_wrapper ()
+{
+  pthread_t tid;
+  int *index = (int *) malloc (sizeof (int));
+
+  *index = 64;
+
+  pthread_create (&tid, NULL, iagno2_computer_thread, index);
+
+  computer_timeout_id = gtk_timeout_add (500, iagno2_get_computer_move, index);
+
+  return FALSE;
+}
+
 void
 iagno2_setup_current_player ()
 {
-  gchar player;
+  gchar player = PLAYER (whose_turn);
 
   computer_timeout_id = 0;
   
-  if (whose_turn - 1) {
-    player = 1;
-  } else {
-    player = 0;
-  }
-
   if (players[player] == NULL) {
     interactive = 1;
   } else {
     interactive = 0;
-    computer_timeout_id =
-      gtk_timeout_add (1000,
-          players[player]->plugin_move,
-          board);
+    computer_timeout_id = gtk_timeout_add (1000,
+                                           iagno2_computer_player_wrapper,
+                                           NULL);
   }
 }
 

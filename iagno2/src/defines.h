@@ -18,6 +18,8 @@
 #define ROW(x)     (x >> 3)
 #define COL(x)     (x & 0x7)
 
+#define PLAYER(x)  (x-1)?1:0
+
 #define WHITE_TILE 31
 #define BLACK_TILE 1
 

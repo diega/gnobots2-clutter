@@ -4,7 +4,7 @@ INCLUDES = \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	-I$(includedir) \
 	$(GNOME_INCLUDEDIR) \
-	$(GDK_PIXBUF_INCS) \
+	$(GDK_PIXBUF_CFLAGS) \
 	-I$(srcdir)/../libiagno2
 
 bin_PROGRAMS = iagno2
@@ -21,4 +21,5 @@ iagno2_LDADD = \
 	$(GNOME_LIBDIR) \
 	$(GNOMEUI_LIBS) \
 	$(GDK_PIXBUF_LIBS) \
+	$(PTHREAD_LIB) \
 	$(INTLLIBS)

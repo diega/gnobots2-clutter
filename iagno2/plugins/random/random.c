@@ -26,6 +26,8 @@ plugin_move (gchar *board)
   gint moves[32];
   gint nummoves = 0;
 
+  sleep (1);
+  
   for (i = 0; i < 64; i++) {
     if (is_valid_move (board, i, whose_turn)) {
       moves[nummoves++] = i;
@@ -36,11 +38,9 @@ plugin_move (gchar *board)
     return TRUE;
   }
 
-  i = rand() % nummoves;
+  i = rand () % nummoves;
 
-  iagno2_move (moves[i]);
-
-  return FALSE;
+  return moves[i];
 }
 
 const gchar *

@@ -1,5 +1,13 @@
 2000-04-08  Ian Peters  <itp@gnu.org>
 
+	* src/iagno2.c, plugins/random/random.c: Changed code to use a thread to
+	  handle moving the computer player, so that GUI won't block, updated
+	  reference plugin random to reflect the change.
+
+	* Makefile.am: Added PTHREAD_LIB
+
+2000-04-08  Ian Peters  <itp@gnu.org>
+
 	* src/iagno2.h, src/iagno2.c, src/main.c: Moved from the canvas back to
 	  a drawing_area method, because the canvas couldn't keep up.  Moved
 	  from imlib to gdk-pixbuf.
