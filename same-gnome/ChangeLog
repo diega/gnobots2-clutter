@@ -1,3 +1,7 @@
+1998-07-25  Nuno Ferreira  <nmrf@rnl.ist.utl.pt>
+
+	* same-gnome.desktop: Added Portuguese translation.
+
 Wed May 06 10:04:03 1998  Kjartan Maraas  <kmaraas@fib.hl.no>
 
 	* same-gnome.c: removed a compiler warning.

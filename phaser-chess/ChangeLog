@@ -1,3 +1,7 @@
+1998-07-25  Nuno Ferreira  <nmrf@rnl.ist.utl.pt>
+
+	* phaser-chess.desktop: Added Portuguese translations.
+
 1998-07-18  Raja R Harinath  <harinath@cs.umn.edu>
 
 	* Makefile.am (OBJCCOMPILE): Improve compile rules.
