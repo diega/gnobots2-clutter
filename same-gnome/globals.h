@@ -43,13 +43,16 @@ enum {
   MAX_SIZE,
 };
 
+/* A list of board sizes of the form: width, height, colours.  This has
+ * to be kept in sync with the above enum and so has some empty entries. */
 extern gint board_sizes[MAX_SIZE][3];
 
-extern gint ncolours;
-
+/* The parameters for the current game. */
 extern gint board_width;
 extern gint board_height;
+extern gint ncolours;
 
+/* The size of the window. These are the parameters we save with gconf. */
 extern gint window_width;
 extern gint window_height;
 

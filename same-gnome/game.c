@@ -122,15 +122,12 @@ void destroy_balls (void)
 	if ((game_state != GAME_SELECTED) || (count <= 1))
 		return;
 
-	g_print ("Destroying\n");
-
 	list = selected + count;
 
 	for (i=0; i<count; i++) {
 		pop (&list, &x, &y);
 		p = get_game_cell (x, y);
 		p->style = ANI_DESTROY;
-		g_print ("<%d, %d>\n", x, y);
 	}
 
 	game_state = GAME_DESTROYING;

@@ -22,6 +22,7 @@
 GtkWidget *application;
 GtkWidget *scorewidget;
 GtkWidget *gridframe = NULL;
+GtkToggleAction *fullscreenaction;
 
 static void quit_cb (void)
 {
@@ -91,17 +92,23 @@ static void theme_cb (void)
 
 }
 
-static void fullscreen_cb (GtkWidget *widget)
+static void fullscreen_cb (GtkToggleAction *action)
 {
-  GtkWidget * window;
-
-	/* FIMXE: Why doesn't this work. */
-  window = gtk_widget_get_toplevel (widget);
-  if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget))) {
-    gtk_window_fullscreen (GTK_WINDOW (window));
+  if (gtk_toggle_action_get_active (action)) {
+    gtk_window_fullscreen (GTK_WINDOW (application));
   } else {
-    gtk_window_unfullscreen (GTK_WINDOW (window));
+    gtk_window_unfullscreen (GTK_WINDOW (application));
   }
+}
+
+/* Just in case something else takes us to/from fullscreen. */
+static void window_state_cb (GtkWidget *widget, GdkEventWindowState *event)
+{
+  if (!(event->changed_mask & GDK_WINDOW_STATE_FULLSCREEN))
+    return;
+    
+  gtk_toggle_action_set_active (fullscreenaction,
+				event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN);
 }
 
 static void scores_cb (void)
@@ -161,19 +168,21 @@ const GtkActionEntry actions[] = {
   { "RedoMove", GTK_STOCK_REDO, N_("_Redo Move"), "<shift><control>Z", NULL, G_CALLBACK (redo_cb) },
   { "Quit", GTK_STOCK_QUIT, NULL, NULL, NULL, G_CALLBACK (quit_cb) },
 
-  { "Fullscreen", NULL, N_("_Fullscreen"), NULL, NULL, G_CALLBACK (fullscreen_cb) },
   { "Theme", NULL, N_("_Theme..."), NULL, NULL, G_CALLBACK (theme_cb) },
 
   { "Contents", GTK_STOCK_HELP, N_("_Contents"), "F1", NULL, G_CALLBACK (help_cb) },
   {"About", GTK_STOCK_ABOUT, NULL, NULL, NULL, G_CALLBACK (about_cb)
 }
-
 };
 
 const GtkRadioActionEntry radio_actions[] = {
   { "SizeSmall", NULL, N_("_Small"), NULL, NULL, SMALL },
   { "SizeMedium", NULL, N_("_Medium"), NULL, NULL, MEDIUM },
   { "SizeLarge", NULL, N_("_Large"), NULL, NULL, LARGE }
+};
+
+const GtkToggleActionEntry toggle_actions[] = {
+  { "Fullscreen", NULL, N_("_Fullscreen"), NULL, NULL, G_CALLBACK (fullscreen_cb) }
 };
 
 const char *ui_description =
@@ -224,6 +233,8 @@ void build_gui (void)
 		    G_CALLBACK (quit_cb), NULL);
   g_signal_connect (G_OBJECT (application), "configure_event",
 		    G_CALLBACK (window_resize_cb), NULL);
+  g_signal_connect (G_OBJECT (application), "window_state_event",
+		    G_CALLBACK (window_state_cb), NULL);
 
   vbox = gtk_vbox_new (FALSE, 0);
   gnome_app_set_contents (GNOME_APP (application), vbox);
@@ -237,6 +248,10 @@ void build_gui (void)
 				      game_size - SMALL, 
 				      G_CALLBACK (size_change_cb), 
 				      NULL);
+  gtk_action_group_add_toggle_actions (action_group, toggle_actions,
+				       G_N_ELEMENTS (toggle_actions), NULL);
+
+  fullscreenaction = GTK_TOGGLE_ACTION (gtk_action_group_get_action (action_group, "Fullscreen"));
   
   ui_manager = gtk_ui_manager_new ();
   gtk_ui_manager_insert_action_group (ui_manager, action_group, 1);

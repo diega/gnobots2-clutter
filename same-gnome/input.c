@@ -77,8 +77,6 @@ gboolean mouse_click_cb (GtkWidget *widget, GdkEventButton *e, gpointer data)
 	if (e->type != GDK_BUTTON_PRESS)
 		return FALSE;
 
-	g_print ("[[%d]]\n", game_state);
-
   destroy_balls ();
 
   return FALSE;

@@ -272,7 +272,6 @@ static gboolean render_cb (GtkWidget *canvas)
 		/* FIXME: No fallback if we fail to open the file. */
 	} else if (idle_state == DRAW) {
 		if (last_tile_size != tile_size) {
-			g_print ("Redraw\n");
 			idle_state = INIT;
 		} else {
 			if (pixmaps[n][m] != NULL)
@@ -471,7 +470,6 @@ static gboolean render_cb (GtkWidget *canvas)
 		g_object_unref (bg_pixbuf);
 		bg_pixbuf = NULL;
 		idle_state = INIT;
-		g_print ("Done ?\n");
 
 		if (pixmaps_ready) /* Just in case this was reset after the last idle call. */
 			return FALSE;

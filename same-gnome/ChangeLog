@@ -1,3 +1,12 @@
+2004-12-27  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* drawing.c:
+	* globals.h:
+	* game.c:
+	* input.c: Cleanups.
+
+	* ui.c: Fullscreen now works.
+
 2004-12-26  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am:
