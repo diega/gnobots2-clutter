@@ -414,9 +414,10 @@ load_tileset_callback (GtkWidget *widget, void *data)
 {
 	if (selected_tileset.tileset) {
 		load_tiles (selected_tileset.tileset);
+		gtk_widget_draw (draw_area, NULL);
 		if (selected_tileset.make_it_default) {
 			gnome_config_set_string (
-				"/mahjongg/Preferences/tileset", 
+				"/gmahjongg/Preferences/tileset", 
 				selected_tileset.tileset);
 			gnome_config_sync();
 		}
@@ -1023,13 +1024,13 @@ void load_tiles (char *fname)
 	mask = gdk_imlib_move_mask (tiles_image);
 
 	g_free (fn);
-	new_game ();
 }
 
 void create_mahjongg_board (void)
 {
  	GtkStyle *style;
-
+	gchar *buf;
+	
 	gtk_widget_push_visual (gdk_imlib_get_visual ());
 	gtk_widget_push_colormap (gdk_imlib_get_colormap ());
 
@@ -1051,13 +1052,15 @@ void create_mahjongg_board (void)
 			       600,
 			       480);
 
-	load_tiles ("default.xpm");
+	buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/tileset=default.xpm", NULL);
+	load_tiles (buf);
 	my_gc = gdk_gc_new (draw_area->window);
 	gdk_gc_set_clip_mask (my_gc, mask);
 
 	gtk_signal_connect (GTK_OBJECT (draw_area), "event", (GtkSignalFunc) area_event, 0);
 	
 	gtk_widget_draw (draw_area, NULL);
+	g_free (buf);
 	new_game ();
 }
 

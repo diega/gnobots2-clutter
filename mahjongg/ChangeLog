@@ -1,3 +1,9 @@
+Wed May 27 16:30:18 CDT 1998
+	* mahjongg.c: Added preferences dialog. Changed
+	gnome_message_box_set_modal to gnome_dialog_set_modal to avoid
+	warnings. Loads selected tileset at startup. Allows you to change
+	tileset without starting a new game.
+	
 Mon May 11 21:05:50 EDT 1998  Jonathan Blandford  <jrb@mit.edu>
 	* default.xpm:  Was less brain-dead and changed the highlighted dragon
 	to face the correct way as well... (:
