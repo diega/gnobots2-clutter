@@ -972,6 +972,12 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 
 	const gchar *authors[] = {"J. Marcin Gorycki", 0};
 
+	const gchar *documenters[] = {
+		NULL
+	};
+
+	const gchar *translator_credits = _("translator_credits");
+
 	{
 		char *filename = NULL;
 
@@ -993,8 +999,8 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 				  "Send comments and bug reports to: "
 				  "janusz.gorycki@intel.com"),
 				(const char **)authors,
-				NULL,
-				NULL,
+				(const char **)documenters,
+				strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
 				pixbuf);
 
 	gtk_widget_show(about);

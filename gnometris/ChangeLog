@@ -1,3 +1,7 @@
+2002-05-14  Abel Cheung  <maddog@linux.org.hk>
+
+	* tetris.cpp (Tetris::gameAbout): Added translator credits.
+
 2002-05-10  Bastien Nocera  <hadess@hadess.net>
 
 	* Makefile.am: nothing interesting
