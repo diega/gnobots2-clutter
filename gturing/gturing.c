@@ -371,7 +371,7 @@ void view_states_call(GtkWidget *widget, gpointer data)
 	
 	state_clist = gtk_clist_new_with_titles(5, text);
 	gtk_clist_set_selection_mode(GTK_CLIST(state_clist), GTK_SELECTION_SINGLE);
-//	gtk_clist_set_policy(GTK_CLIST(state_clist), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+/*	gtk_clist_set_policy(GTK_CLIST(state_clist), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC); */
 	gtk_clist_column_titles_passive(GTK_CLIST(state_clist));
 	for (i = 0; i < 5; i++)
 		gtk_clist_set_column_width(GTK_CLIST(state_clist), i, 60);
