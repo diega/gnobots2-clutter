@@ -1,5 +1,6 @@
 .deps
 .libs
-Makefile.am
+Makefile
 Makefile.in
 *.o
+iagno2
