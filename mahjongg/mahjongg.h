@@ -24,7 +24,7 @@
 #define TILE_HEIGHT 56
 #define HALF_WIDTH 18
 #define HALF_HEIGHT 26
-#define MAH_VERSION "0.99.0"
+#define MAH_VERSION "0.99.1"
 
 #include <gnome.h>
 
@@ -61,7 +61,9 @@ struct _tile{
   int selected;
   int sequence;
   int number;
+  GdkImlibImage *current_image;
   GnomeCanvasItem *canvas_item;
+  GnomeCanvasItem *image_item;
 };
 
 extern tile tiles[MAX_TILES];

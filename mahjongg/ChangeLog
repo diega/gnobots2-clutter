@@ -1,9 +1,17 @@
+1998-11-19  Francisco Bustamante <pancho@nuclecu.unam.mx>
+	* mahjongg.c: Changing the map works now. Memory leaking is
+	greatly reduced because images are destroyed after use. Changed
+	gnome_dialog_set_modal (or whatever) to
+	gtk_window_set_modal. Changing the tile images works
+	too. Compiling warnings are gone. Most warnings during the game
+	are gone too. Upped version to 0.99.1
+	
 1998-11-15  Francisco Bustamante <pancho@nuclecu.unam.mx>
 	* mahjongg.c: All the tile drawing is now done by
 	gnome-canvas. The code is somewhat cleaner, and the redraws are
 	definitely better. TODO: make changing map and changing tile
 	images work. When you use gnome_canvas_item_set to change the
-	image, do we need to destroy the old image? 
+	image, do we need to destroy the old image? Version 0.99.0
 	* default.png: Someone did something to the transparent parts of
 	the image, so I put them again. This is to make tiles nicer.
 	
