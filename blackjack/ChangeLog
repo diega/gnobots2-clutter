@@ -1,5 +1,7 @@
 2003-11-13  William Jon McCann  <mccann@jhu.edu>
 
+	* help/C/blackjack.xml: Document keyboard controls.
+
 	* src/hand.cpp (bj_hand_show_dealer_probabilities): Add a check
 	to make sure the dealer has a card first.
 

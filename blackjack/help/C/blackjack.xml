@@ -601,6 +601,10 @@
 	  <para> 
 	    <xref linkend="blackjack-usage-get-hint"/></para>
 	</listitem> 
+	<listitem> 
+	  <para> 
+	    <xref linkend="blackjack-usage-keyboard-control"/></para>
+	</listitem> 
       </itemizedlist> </para>
     <!-- ================ Usage Subsection ================================ -->
     <sect2 id="blackjack-usage-set-wager"> 
@@ -700,6 +704,26 @@
       </para>
     </sect2> 
 
+    <!-- ================ Usage Subsection ================================ -->
+    <sect2 id="blackjack-usage-keyboard-control"> 
+      <title>Keyboard control</title> 
+      <para>
+      Most of the operations in the game can be controlled from keyboard input.
+      <table><title>Control keys</title>
+      <tgroup cols="2" align="left" colsep="1" rowsep="1">
+      <thead><row><entry>Action</entry><entry>Key</entry></row></thead>
+      <tbody>
+      <row><entry>Deal new hand</entry><entry>ENTER</entry></row>
+      <row><entry>Hit / Add card</entry><entry>H</entry></row>
+      <row><entry>Stand / Finish hand</entry><entry>S</entry></row>
+      <row><entry>Double down</entry><entry>D</entry></row>
+      <row><entry>Split hand</entry><entry>P</entry></row>
+      <row><entry>Surrender hand</entry><entry>R</entry></row>
+      </tbody>
+      </tgroup>
+      </table>
+      </para>
+    </sect2> 
   </sect1>
 
   <!-- ============= Customization ============================= -->
