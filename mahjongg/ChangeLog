@@ -1,3 +1,10 @@
+2002-07-04  Ross Burton  <ross@burtonini.com>
+
+	* mahjongg.c: Created a new function gconf_sanity_check() which
+	checks that a known key is valid. If this looks good, I'll add it
+	to all of the GConf-based games. (yes, I am getting lots of bugs
+	which end up as "the schemas are not installed")
+
 2002-06-24  Ross Burton  <ross@burtonini.com>
 
 	* mahjongg.c (mapset_changed_cb): Tell the dialog that it has a
