@@ -23,7 +23,7 @@ jmp_buf unsolvable ;
 
 /* If defined this cooks the sequence no.s,
    press redo in a new game */
-#define CHEAT_DEBUG
+/* #define CHEAT_DEBUG */
 
 #ifdef PLACE_DEBUG
 int global_wait = 0 ;
