@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <1998/11/21 23:44:56 carsten>
+ * Time-stamp: <1998/11/22 16:29:51 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -85,6 +85,42 @@ static gboolean       player_push       = FALSE;
    specified in a game file.  */
 
 static char *default_message= N_("Gnome-Stones (c) 1998 Carsten Schaar");
+
+
+/****************************************************************************/
+/* Commandline options.  */
+
+
+static void 
+parse_func (poptContext ctx,
+	    enum poptCallbackReason reason,
+	    const struct poptOption *opt,
+	    const char *arg, void *data)
+{
+  int key = opt ? opt->val : 0;
+
+  printf ("Parsing commandline: key %i\n", key);
+
+  if (key == 1)
+    {
+      printf ("\"--discard-file %s\" found\n", arg);
+      /* Option: --discard-file  */
+      discard_session_file (arg);
+
+      exit (0);
+    }
+
+}
+
+
+/* Command-line arguments understood by this module.  */
+static const struct poptOption options[] = {
+  {NULL, '\0', POPT_ARG_CALLBACK, parse_func, 0, NULL, NULL},
+  {"discard-file", '\0', POPT_ARG_STRING, NULL, 1, 
+   N_("Config file to discard"), N_("CONFIG FILE")},
+  {NULL, '\0', 0, NULL, 0}
+};
+
 
 
 /****************************************************************************/
@@ -1326,7 +1362,7 @@ main (int argc, char *argv[])
 
   gnome_score_init (APP_NAME);
 
-  gnome_init (APP_NAME, VERSION, argc, argv);
+  gnome_init_with_popt_table (APP_NAME, VERSION, argc, argv, options, 0, NULL);
 
   /* That's what a gnome application needs:  */
   app= gnome_app_new ("gnome-stones", _("Gnome-Stones"));

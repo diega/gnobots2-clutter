@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1998/11/22 01:33:31 carsten>
+ * Time-stamp: <1998/11/22 17:45:26 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -202,7 +202,6 @@ _preferences_save (GnomeClient        *client,
   else
     gnome_config_push_prefix (gnome_client_get_config_prefix (client));
 
-
   gnome_config_clean_section ("Preferences");
 
 
@@ -216,7 +215,6 @@ _preferences_save (GnomeClient        *client,
 	  break;
 	}
     }
-
   
   if (devicename)
     gnome_config_set_string ("Preferences/Joystick device",  devicename);
@@ -261,7 +259,6 @@ preferences_restore (void)
   guint        cave;
 
   gnome_config_push_prefix (gnome_client_get_config_prefix (client));
-
 
   devicename= gnome_config_get_string ("Preferences/Joystick device=");
   if (devicename)
@@ -666,6 +663,25 @@ gstones_exit (GnomeClient *client, gpointer client_data)
 
 
 void
+discard_session_file (const gchar *file)
+{
+  gchar *file2= g_strdup (file);
+  gint   len  = strlen (file2);
+  
+  if (len && (file2[len-1]== '/'))
+    file2[len-1]= '\0';
+
+  gnome_config_push_prefix (file);
+  (void) gnome_config_get_int ("Dummy/Dummy=0");
+  gnome_config_pop_prefix ();
+  
+  /* All session information is written to the config file.  */
+  gnome_config_clean_file (file2);
+  gnome_config_sync ();
+}
+
+
+void
 session_management_init (void)
 {
   GnomeClient *client= gnome_master_client ();
@@ -675,6 +691,20 @@ session_management_init (void)
 		      GINT_TO_POINTER (FALSE));
   gtk_signal_connect (GTK_OBJECT (client), "die",
 		      GTK_SIGNAL_FUNC (gstones_exit), NULL);
+
+#if 0
+  /* Currently disabled, because gnome-session seems to have some bugs
+     concerning the discard_command.  */
+  if (GNOME_CLIENT_CONNECTED (client))
+    {
+      gchar *discard_command[3];
+      
+      discard_command[0]= program_invocation_name;
+      discard_command[1]= "--discard-file";
+      discard_command[2]= gnome_client_get_config_prefix (client);
+      gnome_client_set_discard_command (client, 3, discard_command);
+    }  
+#endif
 }
 
 

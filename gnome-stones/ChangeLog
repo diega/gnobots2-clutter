@@ -1,7 +1,18 @@
 1998-11-22  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
+	* main.c (parse_func): New function.
+
+	* preferences.c (discard_session_file): New function.
+	(session_management_init): Added code, to set the session
+ 	management's discard command.
+
+1998-11-22  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
 	* preferences.c (preferences_dialog_new): Used 'GNOME_PAD_*' for
  	padding.
+	(discard_session_file): New function.
+	(session_management_init): Added code, to set the session
+ 	management's discard command.
 
 	* types.h: Moved the declaration of 'TranslationEntry' to game.c.
 

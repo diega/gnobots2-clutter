@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1998/08/29 16:29:25 carsten>
+ * Time-stamp: <1998/11/22 15:42:49 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -106,6 +106,12 @@ preferences_restore (void);
 
 
 /*****************************************************************************/
+
+
+/* Discards a session file.  */
+
+void
+discard_session_file (const gchar *file);
 
 
 /* Initialize the session management stuff.  */
