@@ -11,6 +11,8 @@
  *
  */
 
+#include <config.h>
+
 #include <gtk/gtk.h>
 #include "gnome.h"
 
@@ -23,7 +25,7 @@
 #define TILE_SIZE 40
 #define MAX_TILES 146
 #define HALF_TILE 20
-#define VERSION "0.0.1 Pre Alpha"
+#define MAH_VERSION "0.0.1 Pre Alpha"
      
 typedef struct _tilepos tilepos;     
 typedef struct _tile tile;
@@ -607,7 +609,7 @@ void about_callback (GtkWidget *widget, gpointer data)
 		NULL
 	};
 
-	about = gnome_about_new (_("Gnome Mahjong"), VERSION,
+	about = gnome_about_new (_("Gnome Mahjong"), MAH_VERSION,
 				 "(C) 1998 The Free Software Foundation",
 				 authors,
 				 _("Send comments and bug reports to: pancho@nuclecu.unam.mx"),
