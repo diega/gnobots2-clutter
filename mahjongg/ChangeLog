@@ -1,3 +1,8 @@
+1998-12-14  Federico Mena Quintero  <federico@nuclecu.unam.mx>
+
+	* mahjongg.c (create_mahjongg_board): Use gtk_widget_set_usize()
+	instead of gnome_canvas_set_size().
+
 1998-11-19  Francisco Bustamante <pancho@nuclecu.unam.mx>
 	* mahjongg.c: Changing the map works now. Memory leaking is
 	greatly reduced because images are destroyed after use. Changed

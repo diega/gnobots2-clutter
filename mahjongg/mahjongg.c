@@ -1328,7 +1328,7 @@ void create_mahjongg_board (void)
 	
 	gtk_box_pack_start_defaults (GTK_BOX (mbox), canvas);
 
-	gnome_canvas_set_size(GNOME_CANVAS(canvas), AREA_WIDTH, AREA_HEIGHT);
+	gtk_widget_set_usize(canvas, AREA_WIDTH, AREA_HEIGHT);
 	gnome_canvas_set_pixels_per_unit (GNOME_CANVAS(canvas), 1);
 	gnome_canvas_set_scroll_region(GNOME_CANVAS(canvas), 0, 0, AREA_WIDTH, AREA_HEIGHT);
 	
