@@ -309,9 +309,9 @@ static struct {
         popup_type confirm;
 } popup_config = {{1,0,0}, {1,0,0}};
 
-typedef enum { NEW_GAME=1, RESTART_GAME=2, SELECT_GAME=3, QUIT_GAME=4 } game_state;
+typedef enum { NEW_GAME, RESTART_GAME, SELECT_GAME, QUIT_GAME } game_state;
 
-enum { GAME_RUNNING = 0, GAME_WON = 1, GAME_LOST = 1, GAME_DEAD = 1} game_over;
+enum { GAME_RUNNING, GAME_WON, GAME_LOST, GAME_DEAD } game_over;
 
 void clear_undo_queue ();
 void you_won (void);
@@ -415,6 +415,8 @@ GnomeUIInfo toolbar_uiinfo [] = {
         {GNOME_APP_UI_ITEM, N_("Redo"), NULL, redo_tile_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_REDO, 0, 0, NULL},
 
+        /* If you change the place for this button, change the index in 
+           the definition of PAUSE_BUTTON below */
         {GNOME_APP_UI_TOGGLEITEM, N_("Pause"), NULL, pause_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_TIMER, 0, 0, NULL},
 
@@ -434,7 +436,7 @@ GnomeUIInfo toolbar_uiinfo [] = {
 	{GNOME_APP_UI_ENDOFINFO}
 };
 
-#define PAUSE_BUTTON GTK_TOGGLE_BUTTON(toolbar_uiinfo[6].widget)
+#define PAUSE_BUTTON GTK_TOGGLE_BUTTON(toolbar_uiinfo[5].widget)
 
 #ifdef NEED_UNUSED_CODE
 static void
@@ -1467,7 +1469,10 @@ void exit_game_callback_query (GtkWidget *widget, gboolean *quit, gpointer data)
 {
         const char *confirm_text;
 
-        if (popup_config.confirm.popup && game_over != GAME_WON) {
+        if ( popup_config.confirm.popup 
+             && game_over != GAME_WON 
+             && game_over != GAME_DEAD
+             && sequence_number > 1 ) {
                 switch ((game_state)data) 
                         {
                         case RESTART_GAME : 
@@ -1920,10 +1925,11 @@ void shuffle_tiles_callback (GtkWidget *widget, gpointer data)
                 tiles[previous].image = temp.image;
         }
         while (!(update_moves_left ()) && num_shuffle < visible_tiles);
-                
+        
         if (num_shuffle >= visible_tiles) {
                 GtkWidget *mb;
                 game_over = GAME_DEAD;
+                gtk_clock_stop (GTK_CLOCK (chrono));
                 mb = gnome_message_box_new (_("Sorry, I can't find\na playable configuration."), 
                                             GNOME_MESSAGE_BOX_INFO, 
                                             _("Ok"), NULL); 
@@ -1931,23 +1937,24 @@ void shuffle_tiles_callback (GtkWidget *widget, gpointer data)
                 gtk_window_set_modal (&GNOME_MESSAGE_BOX (mb)->dialog.window, TRUE);
                 gnome_dialog_set_parent(&GNOME_MESSAGE_BOX (mb)->dialog, GTK_WINDOW (window));
                 gtk_widget_show (mb); 
-        }
-
-        for (i=0; i<MAX_TILES; i++) {
-                tiles[i].sequence = 0;
-                if (tiles[i].visible) {
-                        change_tile_image (&tiles[i]);
-                        gnome_canvas_item_show (tiles[i].canvas_item);
+        } else {
+                
+                for (i=0; i<MAX_TILES; i++) {
+                        tiles[i].sequence = 0;
+                        if (tiles[i].visible) {
+                                change_tile_image (&tiles[i]);
+                                gnome_canvas_item_show (tiles[i].canvas_item);
+                        }
                 }
-        }
-        
-        game_over = GAME_RUNNING;
+                
+                game_over = GAME_RUNNING;
 
-        /* 60s penalty */
-        gtk_clock_stop (GTK_CLOCK(chrono));
-        seconds = GTK_CLOCK(chrono)->stopped;
-        gtk_clock_set_seconds(GTK_CLOCK(chrono), (int) (seconds+60));
-        gtk_clock_start (GTK_CLOCK(chrono));
+                /* 60s penalty */
+                gtk_clock_stop (GTK_CLOCK(chrono));
+                seconds = GTK_CLOCK(chrono)->stopped;
+                gtk_clock_set_seconds(GTK_CLOCK(chrono), (int) (seconds+60));
+                gtk_clock_start (GTK_CLOCK(chrono));
+        }
 }
 
 int main (int argc, char *argv [])

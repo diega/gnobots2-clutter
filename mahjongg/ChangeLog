@@ -1,3 +1,12 @@
+1999-07-21  Philippe Chavin  <Philippe.Chavin@wanadoo.fr>
+
+	* mahjongg.c (PAUSE_BUTTON): fixed index.
+	(game_over): removed wrong affectations.
+	(exit_game_callback_query): precondition fixed:
+	game must not be dead and one move must have been done.
+	(shuffle_tiles_callback): fixed; game does not continue if no 
+	config have been found.
+
 1999-07-20  Michael Meeks  <michael@imaginator.com>
 
 	* mahjongg.c: Re-enabled preferences, killed 'seed'.
