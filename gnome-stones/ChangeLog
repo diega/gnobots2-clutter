@@ -1,5 +1,8 @@
 2003-05-31  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* main.c (main): Removed redundant gtk_widget_realize call. This
+	may help prevent a recurrence of bug #108483.
+
 	* Makefile.am (install-data-local): Implement setgid modifications
 	(see gnome-games/ChangeLog).
 

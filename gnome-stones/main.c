@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <2003-05-27 21:56:08 callum>
+ * Time-stamp: <2003-05-31 15:10:05 callum>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -1332,8 +1332,6 @@ main (int argc, char *argv[])
 		      GTK_SIGNAL_FUNC (gtk_main_quit), 0);
 
   joystick_set_widget (app);
-
-  gtk_widget_realize (app);
 
   gtk_widget_show (app);
 
