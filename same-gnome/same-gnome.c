@@ -425,7 +425,7 @@ load_scenario (char *fname)
 	if (image == NULL) {
 		char *message = g_strdup_printf (
 			_("Same Gnome can't load the image file:\n%s\n\n"
-			 "Please check you Same Gnome instalation"), fn);
+			 "Please check your Same Gnome installation"), fn);
 		GtkWidget *w = gnome_error_dialog (message);
 		gnome_dialog_run_and_close (GNOME_DIALOG(w));
 		g_free (message);
