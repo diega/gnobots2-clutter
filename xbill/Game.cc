@@ -215,7 +215,7 @@ static const struct poptOption options[] = {
   { NULL, '\0', POPT_ARG_CALLBACK,
     (void *) &parseAnArg, 0, NULL },
   { "warp", 'l', POPT_ARG_STRING, NULL, -1,
-    _("Start at a different level"), _("LEVEL") },
+    N_("Start at a different level"), N_("LEVEL") },
   POPT_AUTOHELP
   { NULL, '\0', 0, NULL, 0 }
 };
