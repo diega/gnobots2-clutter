@@ -6,3 +6,6 @@ _libs
 gnome-stones
 gnome-stones.keys
 gnome-stones.desktop
+default.caves
+gnomekoban.caves
+tutorial.caves
