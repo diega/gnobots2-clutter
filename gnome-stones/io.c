@@ -1,6 +1,6 @@
 /* gnome-stones - io.c
  *
- * Time-stamp: <1998/11/09 19:41:39 carsten>
+ * Time-stamp: <1998/11/21 23:56:08 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -22,6 +22,19 @@
 #include "cave.h"
 #include "game.h"
 
+
+
+/*****************************************************************************/
+/* The following struct is used to convert the ascii codes objects
+   into real objects.  */
+
+typedef struct _TranslationEntry    TranslationEntry;
+
+struct _TranslationEntry
+{
+  GStonesObject *object;
+  guint          state;
+};
 
 
 /*****************************************************************************/

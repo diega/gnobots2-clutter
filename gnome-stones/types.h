@@ -1,6 +1,6 @@
 /* gnome-stones - types.h
  *
- * Time-stamp: <1998/11/09 19:39:39 carsten>
+ * Time-stamp: <1998/11/21 23:56:13 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -39,7 +39,6 @@ typedef struct _GStonesObject       GStonesObject;
 typedef struct _GStonesObjectDesc   GStonesObjectDesc;
 typedef struct _GStonesObjectOption GStonesObjectOption;
 typedef guint                       GStonesSignal;
-typedef struct _TranslationEntry    TranslationEntry;
 typedef struct _GStonesObjContext   GStonesObjContext;
 
 
@@ -144,18 +143,6 @@ struct _GStonesObject
   guint               num_images;
   GdkPixmap         **image;
   GdkImlibImage     **imlib_image;
-};
-
-
-
-/*****************************************************************************/
-/* The following table is used to convert the ascii codes objects into
-   real objects.  */
-
-struct _TranslationEntry
-{
-  GStonesObject *object;
-  guint          state;
 };
 
 

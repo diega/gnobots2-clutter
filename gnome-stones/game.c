@@ -1,6 +1,6 @@
 /* gnome-stones - game.c
  *
- * Time-stamp: <1998/11/01 16:08:33 carsten>
+ * Time-stamp: <1998/11/21 23:53:18 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -105,132 +105,6 @@ game_add_plugin (GStonesGame *game, GStonesPlugin *plugin)
   return TRUE;
 }
 
-
-
-/*****************************************************************************/
-/* Cave definitions.  */
-
-#ifdef OBSOLET
-
-GStonesCave *
-cave_load (GStonesGame *game, const gchar *cavename)
-{
-  GStonesCave *cave= NULL;
-  GList       *tmp;
-  guint        x;
-  guint        y;
-
-  g_return_val_if_fail (game,  NULL);
-
-  if (cavename == NULL) 
-    return NULL;
-  
-  cave= cave_new ();
-  g_return_val_if_fail (cave, NULL);
-
-  cave->name         = g_strdup (cavename);
-  cave->config_prefix= g_copy_strings (game->config_prefix, 
-				       cavename, "/", NULL);
-
-  gnome_config_push_prefix (cave->config_prefix);
-
-  /* Now we load the cave data.  */
-  cave->next               = gnome_config_get_string ("Next cave=");
-  if (cave->next && (strlen (cave->next) == 0))
-    {
-      g_free (cave->next);
-      cave->next= NULL;
-    }
-  cave->game               = game;
-  cave->width              = gnome_config_get_int ("Width");
-  cave->height             = gnome_config_get_int ("Height");
-  cave->is_intermission    = gnome_config_get_bool ("Is intermission=false");
-  cave->diamond_score      = gnome_config_get_int ("Diamond score=0");
-  cave->extra_diamond_score= gnome_config_get_int ("Extra diamond score=0");
-  cave->diamonds_needed    = gnome_config_get_int ("Diamonds needed");
-  cave->level_time         = gnome_config_get_int ("Time")*1000;
-  cave->message            = gnome_config_get_translated_string ("Message");
-  if (cave->message && (strlen (cave->message) == 0))
-    {
-      g_free (cave->message);
-      cave->message= NULL;
-    }
-
-  cave->frame_rate         = game->frame_rate;
-
-  cave->timer              = gnome_config_get_int ("Time")*1000;
-
-  if ((cave->width > CAVE_MAX_WIDTH) || (cave->height > CAVE_MAX_HEIGHT))
-    {
-      /* This cave is to big to be played with gnome-stones.  */
-
-      gstone_error (_("The cave you are trying to load it to big for this game."));
-      
-      gnome_config_pop_prefix ();
-      cave_free (cave);
-      return NULL;
-    }
-
-  /* Now we set the fields according to the loaded cave */
-  for (y= 1 ; y <= cave->height; y++)
-    {
-      char *line;
-      char  buffer[8];
-      sprintf (buffer, "Line%.2d", y);
-
-      line= gnome_config_get_string (buffer);
-      
-      for (x= 1 ; x <= MIN (strlen (line), cave->width); x++)
-	{
-	  TranslationEntry *entry;
-	  char key[2]= { '\0', '\0'};
-	  
-	  key[0]= line[x-1];
-	  
-	  entry= g_hash_table_lookup (game->translation_table, key);
-							
-	  if (entry)
-	    {
-	      cave->entry[x][y].type = entry->type;
-	      cave->entry[x][y].state= entry->state;
-	    }
-	  else
-	    {
-	      /* An object was requested in this cave, that was not
-		 declared in the game file's Object section.  */
-	      
-	      gstone_error (_("The cave you are trying to load includes an object, that wasn't declared."));
-	      
-	      gnome_config_pop_prefix ();
-	      cave_free (cave);
-	      g_free (line);
-	      return NULL;
-	    }
-	}
-      g_free (line);
-    }
-
-  gnome_config_pop_prefix ();
-
-  /* Finally we call all the init cave functions.  */
-  tmp= game->objects;
-  while (tmp)
-    {
-      GStonesObject *objc= (GStonesObject *) tmp->data;
-      gpointer       data= (gpointer) TRUE;
-      
-      if (objc->init_cave_function)
-	data= objc->init_cave_function (cave);
-
-      g_hash_table_insert (cave->object_data, objc, data);
-
-      tmp= tmp->next;
-    };
-
-  return cave;
-}
-
-#endif
 
 
 /* Local Variables: */

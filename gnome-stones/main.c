@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <1998/11/01 16:49:25 carsten>
+ * Time-stamp: <1998/11/21 23:44:56 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -788,9 +788,6 @@ countdown_timeout_function (gpointer data)
 
 	  pos= gnome_score_log (player->score, NULL, TRUE);
 
-	  /* FIXME: somewhere is a bug, that makes this needed.  */
-	  if (pos > 10) pos= 0;
-
 	  gnome_scores_display ("Gnome-Stones", APP_NAME, NULL, pos);
 	  gnome_app_flash (GNOME_APP (app), _("Congratulations, you win!"));
 	}
@@ -1137,14 +1134,14 @@ about_cb (GtkWidget *widget, gpointer data)
 static GnomeUIInfo game_menu[]= {
   {
     GNOME_APP_UI_ITEM,
-    N_("New"), N_("Start a new game"),
+    N_("_New"), N_("Start a new game"),
     game_start_cb, NULL, NULL,
     GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW,
-    'N', GDK_CONTROL_MASK, NULL
+    GNOME_KEY_NAME_NEW, GNOME_KEY_MOD_NEW, NULL
   },
   {
     GNOME_APP_UI_ITEM,
-    N_("Scores"), N_("Show highscore table"),
+    N_("_Scores..."), N_("Show highscore table"),
     show_scores_cb, (gpointer) 0, NULL,
     GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SCORES,
     0, (GdkModifierType) 0, NULL
@@ -1152,7 +1149,7 @@ static GnomeUIInfo game_menu[]= {
   GNOMEUIINFO_SEPARATOR,
   {
     GNOME_APP_UI_ITEM,
-    N_("Preferences..."), N_("Change Gnome-Stones preferences"),
+    N_("_Preferences..."), N_("Change Gnome-Stones preferences"),
     preferences_cb, (gpointer) 0, NULL,
     GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PREF,
     0, (GdkModifierType) 0, NULL
@@ -1160,10 +1157,10 @@ static GnomeUIInfo game_menu[]= {
   GNOMEUIINFO_SEPARATOR,
   {
     GNOME_APP_UI_ITEM,
-    N_("Exit"), N_("Exit Gnome Stones"),
+    N_("E_xit"), N_("Exit Gnome Stones"),
     quit_cb, NULL, NULL,
     GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_QUIT,
-    'Q', GDK_CONTROL_MASK, NULL
+    GNOME_KEY_NAME_EXIT, GNOME_KEY_MOD_EXIT, NULL
   },
   GNOMEUIINFO_END
 };
@@ -1171,7 +1168,7 @@ static GnomeUIInfo game_menu[]= {
 static GnomeUIInfo help_menu[]= {
   {
     GNOME_APP_UI_ITEM,
-    N_("About Gnome-Stones"), N_("Info about Gnome Stones"),
+    N_("_About Gnome-Stones"), N_("Info about Gnome Stones"),
     about_cb, NULL, NULL,
     GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT,
     0, (GdkModifierType) 0, NULL
@@ -1183,8 +1180,8 @@ static GnomeUIInfo help_menu[]= {
 
 static GnomeUIInfo main_menu[]= 
 {
-  GNOMEUIINFO_SUBTREE(N_("Game"), game_menu),
-  GNOMEUIINFO_SUBTREE(N_("Help"), help_menu),
+  GNOMEUIINFO_SUBTREE(N_("_Game"), game_menu),
+  GNOMEUIINFO_SUBTREE(N_("_Help"), help_menu),
   GNOMEUIINFO_END
 };
 

@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1998/08/29 14:44:48 carsten>
+ * Time-stamp: <1998/11/22 01:33:31 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -443,7 +443,8 @@ preferences_dialog_new (void)
 			_("Gnome-Stones Preferences"));
 
   /* The first page of our preferences dialog. */
-  box= gtk_vbox_new (TRUE, 4);
+  box= gtk_vbox_new (FALSE, GNOME_PAD);
+  gtk_container_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
 
   /* The list of game names.  */
   list= gtk_clist_new (3);
@@ -464,7 +465,7 @@ preferences_dialog_new (void)
 			GTK_POLICY_AUTOMATIC);
   gtk_clist_set_selection_mode (GTK_CLIST (list), GTK_SELECTION_SINGLE);
   
-  gtk_box_pack_start (GTK_BOX (box), list, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box), list, FALSE, FALSE, GNOME_PAD_SMALL);
 
   gtk_clist_freeze (GTK_CLIST (list));
   prdata->selected_game= -1;
@@ -512,7 +513,8 @@ preferences_dialog_new (void)
   prdata->joystick_deviceid    = joystick_deviceid;
   prdata->joystick_switch_level= joystick_switch_level;
 
-  box= gtk_vbox_new (TRUE, 4);
+  box= gtk_vbox_new (FALSE, GNOME_PAD);
+  gtk_container_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
   
   {
     guint      i;
@@ -527,19 +529,19 @@ preferences_dialog_new (void)
     GList     *devices;
 
     frame= gtk_frame_new (_("Device"));
-    gtk_box_pack_start (GTK_BOX (box), frame, TRUE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (box), frame, FALSE, FALSE, GNOME_PAD_SMALL);
     gtk_widget_show (frame);
 
-    vbox= gtk_vbox_new (FALSE, 2);
+    vbox= gtk_vbox_new (FALSE, GNOME_PAD);
     gtk_container_add (GTK_CONTAINER (frame), vbox);
     gtk_widget_show (vbox);
 
-    hbox= gtk_hbox_new (FALSE, 2);
-    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 2);
+    hbox= gtk_hbox_new (FALSE, GNOME_PAD);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, GNOME_PAD_SMALL);
     gtk_widget_show (hbox);
 
     label= gtk_label_new (_("Joystick device:"));
-    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 2);
+    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, GNOME_PAD_SMALL);
     gtk_widget_show (label);
     
     device_menu= gtk_menu_new ();
@@ -584,20 +586,20 @@ preferences_dialog_new (void)
     gtk_widget_show (hbox);
     gtk_widget_show (optionmenu);
 
-    frame= gtk_frame_new (_("Binary joytick emulation"));
-    gtk_box_pack_start (GTK_BOX (box), frame, TRUE, FALSE, 0);
+    frame= gtk_frame_new (_("Digital joytick emulation"));
+    gtk_box_pack_start (GTK_BOX (box), frame, FALSE, FALSE, GNOME_PAD_SMALL);
     gtk_widget_show (frame);
 
-    vbox= gtk_vbox_new (FALSE, 2);
+    vbox= gtk_vbox_new (FALSE, GNOME_PAD);
     gtk_container_add (GTK_CONTAINER (frame), vbox);
     gtk_widget_show (vbox);
 
-    hbox= gtk_hbox_new (FALSE, 2);
-    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 2);
+    hbox= gtk_hbox_new (FALSE, GNOME_PAD);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, GNOME_PAD_SMALL);
     gtk_widget_show (hbox);
 
     label= gtk_label_new (_("Switch level:"));
-    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 2);
+    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, GNOME_PAD_SMALL);
     gtk_widget_show (label);
 
     adjust= gtk_adjustment_new (prdata->joystick_switch_level,
@@ -609,7 +611,7 @@ preferences_dialog_new (void)
     
     scale= gtk_hscale_new (GTK_ADJUSTMENT (adjust));
     gtk_scale_set_digits (GTK_SCALE (scale), 2);
-    gtk_box_pack_start (GTK_BOX (hbox), scale, FALSE, FALSE, 2);
+    gtk_box_pack_start (GTK_BOX (hbox), scale, FALSE, FALSE, GNOME_PAD_SMALL);
     gtk_widget_show (scale);
     
     if (prdata->joystick_deviceid == GDK_CORE_POINTER)
@@ -628,10 +630,11 @@ preferences_dialog_new (void)
 			    box, label);
 
   /* The third page of our preferences dialog. */
-  box= gtk_vbox_new (TRUE, 4);
+  box= gtk_vbox_new (FALSE, GNOME_PAD);
+  gtk_container_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
 
   label= gtk_label_new (_("Not yet implemented!"));
-  gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box), label, TRUE, FALSE, GNOME_PAD_SMALL);
 
   gtk_widget_show (label);
   gtk_widget_show (box);

@@ -1,3 +1,16 @@
+1998-11-22  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* preferences.c (preferences_dialog_new): Used 'GNOME_PAD_*' for
+ 	padding.
+
+	* types.h: Moved the declaration of 'TranslationEntry' to game.c.
+
+	* game.c: Removed obsolete definition of 'cave_load'.
+
+	* main.c (countdown_timeout_function): Removed check of the
+ 	'gnome_score_log' return value.
+	(game_menu): Uses GNOME_KEY_NAME_* and GNOME_KEY_MOD_*.
+
 1998-10-15  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
 	* status.h:
