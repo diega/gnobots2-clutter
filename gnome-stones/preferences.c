@@ -638,7 +638,7 @@ preferences_dialog_new (void)
     gtk_widget_show (hbox);
     gtk_widget_show (optionmenu);
 
-    frame= gtk_frame_new (_("Digital joytick emulation"));
+    frame= gtk_frame_new (_("Digital joystick emulation"));
     gtk_box_pack_start (GTK_BOX (box), frame, FALSE, FALSE, GNOME_PAD_SMALL);
     gtk_widget_show (frame);
 
