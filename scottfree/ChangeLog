@@ -1,3 +1,8 @@
+2000-05-09  Martin Baulig  <baulig@suse.de>
+
+	* GnomeScott.c (main): Call gnome_score_init () to fix security
+	exploit to group games.
+
 Wed Apr  7 20:02:35 1999  ape@lrdpf.spacetec.no  (Asbjorn Pettersen)
 
 	* GnomeScott.c: Use g_strcasecmp() instead of strcasecmp().

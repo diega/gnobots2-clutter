@@ -1539,6 +1539,8 @@ int main(int argc, char *argv[])
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
 
+	gnome_score_init ("GnomeScott");
+
 	gnome_init("GnomeScott", VERSION, argc, argv);
 	
 	while(argv[1])
