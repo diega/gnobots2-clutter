@@ -75,18 +75,26 @@ Preview::paint(GdkRectangle *area)
 	xoffs -= offsetTable[blocknr_next][rot_next][1] * BLOCK_SIZE;
 	yoffs -= offsetTable[blocknr_next][rot_next][0] * BLOCK_SIZE;
 
-	if (blocknr_next != -1)
+	if (do_preview)
 	{
-		for (int x = 0; x < 4; ++x)
+		if (blocknr_next != -1)
 		{
-			for (int y = 0; y < 4; ++y)
+			for (int x = 0; x < 4; ++x)
 			{
-				if (blockTable[blocknr_next][rot_next][x][y])	
-					gdk_draw_pixmap(w->window, w->style->black_gc, 
-													pix, color_next * BLOCK_SIZE, 0, 
-													x * BLOCK_SIZE + xoffs, y * BLOCK_SIZE + yoffs, BLOCK_SIZE, BLOCK_SIZE);
+				for (int y = 0; y < 4; ++y)
+				{
+					if (blockTable[blocknr_next][rot_next][x][y])	
+						gdk_draw_pixmap(w->window, w->style->black_gc, 
+														pix, color_next * BLOCK_SIZE, 0, 
+														x * BLOCK_SIZE + xoffs, y * BLOCK_SIZE + yoffs, BLOCK_SIZE, BLOCK_SIZE);
+				}
 			}
 		}
+	}
+	else
+	{
+		gdk_draw_line(w->window, w->style->white_gc, 0, 0, PREVIEW_SIZE * BLOCK_SIZE, PREVIEW_SIZE * BLOCK_SIZE);
+		gdk_draw_line(w->window, w->style->white_gc, 0, PREVIEW_SIZE * BLOCK_SIZE, PREVIEW_SIZE * BLOCK_SIZE, 0);
 	}
 }
 

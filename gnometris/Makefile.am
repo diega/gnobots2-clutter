@@ -38,7 +38,7 @@ install-data-local:
 	-$(mkinstalldirs) $(scoredir)
 	touch $(scoredir)/gnometris.scores
 	-chown games.games $(scoredir)/gnometris.scores
-	-chmod 664 $(scoredir)/gnometris.scores
+	-chmod 666 $(scoredir)/gnometris.scores
 	-chgrp games $(bindir)/gnometris && chmod 2111 $(bindir)/gnometris
 
 

@@ -24,12 +24,12 @@
 #include <config.h>
 #include <gnome.h>
 
-#define TETRIS_VERSION "0.1.1"
+#define TETRIS_VERSION "0.2.0"
 
-#define LINES   15
-#define COLUMNS 11
+extern int LINES;
+extern int COLUMNS;
 
-#define BLOCK_SIZE 40
+extern int BLOCK_SIZE;
 
 enum SlotType 
 {
@@ -58,6 +58,9 @@ extern int posx;
 extern int posy;
 
 extern int nr_of_colors;
+
+extern bool random_block_colors;
+extern bool do_preview;
 
 class	Field;
 class Preview;
@@ -96,11 +99,15 @@ private:
 	static int gameProperties(GtkWidget *widget, void *d);
 	static void setupdialogDestroy(GtkWidget *widget, void *d);
 	static void doSetup(GtkWidget *widget, void *d);
-	
+	static void setSelectionPreview(GtkWidget *widget, void *d);
+	static void setSelectionBlocks(GtkWidget *widget, void *d);
+		
 	GtkWidget *setupdialog;
 	GtkWidget *sentry;
 	int startingLevel;
 	int cmdlineLevel;
+	bool doPreviewTmp;
+	bool randomBlocksTmp;
 	
 	void manageFallen();
 	void showScores(gchar *title, guint pos);

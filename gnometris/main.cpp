@@ -46,7 +46,7 @@ main(int argc, char *argv[])
 	GnomeClient *client= gnome_master_client();
 	
 	char *pixname, *fullpixname;
-	pixname = g_copy_strings( "gnometris/", "5blocks.png", NULL);
+	pixname = g_copy_strings( "gnometris/", "7blocks.png", NULL);
 	fullpixname = gnome_unconditional_pixmap_file(pixname);
 	g_free(pixname);
 
@@ -60,6 +60,7 @@ main(int argc, char *argv[])
 	gdk_imlib_render(image, image->rgb_width, image->rgb_height);
 	pix = gdk_imlib_move_image(image);
 
+	BLOCK_SIZE = image->rgb_height;
 	nr_of_colors = image->rgb_width / BLOCK_SIZE;
 	
 	Tetris * t = new Tetris(cmdlineLevel);

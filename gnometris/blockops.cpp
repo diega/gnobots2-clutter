@@ -23,7 +23,20 @@
 
 BlockOps::BlockOps()
 {
+	field = new Block*[COLUMNS];
+	
+	for (int i = 0; i < COLUMNS; ++i)
+		field[i] = new Block[LINES];
+
 	emptyField();
+}
+
+BlockOps::~BlockOps()
+{
+	for (int i = 0; i < COLUMNS; ++i)
+		delete[] field[i];
+	
+	delete[] field;
 }
 
 bool 
@@ -181,14 +194,15 @@ BlockOps::generateFallingBlock()
 {
 	posx = COLUMNS / 2 + 1;
 	posy = 0;
-	
+
 	blocknr = blocknr_next == -1 ? rand() % tableSize : blocknr_next;
 	rot = rot_next == -1 ? rand() % 4 : rot_next;
-	color = color_next == -1 ? rand() % nr_of_colors : color_next;
+	int cn = random_block_colors ? rand() % nr_of_colors : blocknr % nr_of_colors;
+	color = color_next == -1 ? cn : color_next;
 	
 	blocknr_next = rand() % tableSize;
 	rot_next = rand() % 4;
-	color_next = rand() % nr_of_colors;
+	color_next = random_block_colors ? rand() % nr_of_colors : blocknr_next % nr_of_colors;
 	
 	if (!blockOkHere(posx, posy, blocknr, rot))
 		return false;

@@ -28,6 +28,7 @@ class BlockOps
 {
 public:
 	BlockOps();
+	~BlockOps();
 	
 	bool moveBlockLeft();
 	bool moveBlockRight();
@@ -45,7 +46,7 @@ public:
 private:
 	bool blockOkHere(int x, int y, int b, int r);
 	
-	Block field[COLUMNS][LINES];
+	Block **field;
 };
 
 #endif //__blockops_h__

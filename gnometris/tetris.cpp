@@ -30,6 +30,11 @@
 GdkImlibImage *image;
 GdkPixmap *pix;
 
+int LINES = 20;
+int COLUMNS = 11;
+
+int BLOCK_SIZE = 40;
+
 int posx = COLUMNS / 2;
 int posy = 0;
 
@@ -41,8 +46,12 @@ int blocknr_next = -1;
 int rot_next = -1;
 int color_next = -1;
 
+bool random_block_colors = false;
+bool do_preview = true;
+
 Tetris::Tetris(int cmdlLevel)
-	: paused(false), timeoutId(-1), onePause(false), setupdialog(NULL), cmdlineLevel(cmdlLevel)
+	: paused(false), timeoutId(-1), onePause(false), setupdialog(NULL), 
+		cmdlineLevel(cmdlLevel), doPreviewTmp(do_preview), randomBlocksTmp(random_block_colors)
 {
 	w = gnome_app_new("gnometris", _("Gnometris"));
   gtk_window_set_policy(GTK_WINDOW(w), FALSE, FALSE, TRUE);
@@ -86,27 +95,31 @@ Tetris::Tetris(int cmdlLevel)
 
 	gtk_widget_set_events(w, gtk_widget_get_events(w) | GDK_KEY_PRESS_MASK);
 	
-	gtk_box_pack_start_defaults(GTK_BOX(hb), field->getWidget());
+	GtkWidget *vb1 = gtk_vbox_new(FALSE, 0);
+  gtk_container_border_width(GTK_CONTAINER(vb1), 10);
+	gtk_box_pack_start_defaults(GTK_BOX(vb1), field->getWidget());
+	gtk_box_pack_start(GTK_BOX(hb), vb1, 0, 0, 0);
 	field->show();
-	
+
 	gtk_signal_connect(GTK_OBJECT(w), "event", (GtkSignalFunc)eventHandler, this);
   
-	GtkWidget *vb = gtk_vbox_new(FALSE, 0);
-  gtk_container_border_width(GTK_CONTAINER(vb), 10);
-	gtk_container_add(GTK_CONTAINER(hb), vb);
+	GtkWidget *vb2 = gtk_vbox_new(FALSE, 0);
+  gtk_container_border_width(GTK_CONTAINER(vb2), 10);
+	gtk_box_pack_end(GTK_BOX(hb), vb2, 0, 0, 0);
 	
 	preview = new Preview();
 	
-	gtk_box_pack_start(GTK_BOX(vb), preview->getWidget(), 0, 0, 0);
+	gtk_box_pack_start(GTK_BOX(vb2), preview->getWidget(), 0, 0, 0);
 	
 	preview->show();
 
 	scoreFrame = new ScoreFrame(cmdlineLevel);
 	
-	gtk_box_pack_end(GTK_BOX(vb), scoreFrame->getWidget(), 0, 0, 0);
+	gtk_box_pack_end(GTK_BOX(vb2), scoreFrame->getWidget(), 0, 0, 0);
 
 	gtk_widget_show(hb);
-	gtk_widget_show(vb);
+	gtk_widget_show(vb1);
+	gtk_widget_show(vb2);
 	scoreFrame->show();
 	gtk_widget_show(w);
 }
@@ -133,9 +146,30 @@ Tetris::doSetup(GtkWidget *widget, void *d)
 	Tetris *t = (Tetris*) d;
 	t->cmdlineLevel = 0;
   t->startingLevel = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(t->sentry));
+	do_preview = t->doPreviewTmp;
+	random_block_colors = t->randomBlocksTmp;
+	
 	gnome_config_set_int("/gnometris/Properties/StartingLevel", t->startingLevel);
+	gnome_config_set_int("/gnometris/Properties/DoPreview", do_preview);
+	gnome_config_set_int("/gnometris/Properties/RandomBlockColors", random_block_colors);
+	gnome_config_sync();
+	
 	t->scoreFrame->setLevel(t->startingLevel);
 	setupdialogDestroy(widget, d);
+}
+
+void 
+Tetris::setSelectionPreview(GtkWidget *widget, void *d)
+{
+	Tetris *t = (Tetris*) d;
+	t->doPreviewTmp = GTK_TOGGLE_BUTTON(widget)->active;
+}
+
+void 
+Tetris::setSelectionBlocks(GtkWidget *widget, void *d)
+{
+	Tetris *t = (Tetris*) d;
+	t->randomBlocksTmp = GTK_TOGGLE_BUTTON(widget)->active;
 }
 
 int 
@@ -180,6 +214,8 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_widget_show(label);
 
   t->startingLevel = gnome_config_get_int_with_default("/gnometris/Properties/StartingLevel=1", NULL);
+	random_block_colors = gnome_config_get_int_with_default("/gnometris/Properties/RandomBlockColors=0", NULL) != 0;
+	do_preview = gnome_config_get_int_with_default("/gnometris/Properties/DoPreview=0", NULL) != 0;
 
   adj = gtk_adjustment_new(t->startingLevel, 1, 10, 1, 5, 10);
 	t->sentry = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 10, 0);
@@ -195,6 +231,18 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
   gtk_box_pack_end(GTK_BOX(box2), t->sentry, FALSE, 0, 0);
 	gtk_widget_show(t->sentry);
 	gtk_widget_show(box2);
+
+	GtkWidget *cb = gtk_check_button_new_with_label(_("Preview next block"));
+	gtk_toggle_button_set_state(GTK_TOGGLE_BUTTON(cb), do_preview);
+	gtk_signal_connect(GTK_OBJECT(cb), "clicked", (GtkSignalFunc)setSelectionPreview, d);
+	gtk_box_pack_start(GTK_BOX(box), cb, 0, 0, 0);
+	gtk_widget_show(cb);
+
+	cb = gtk_check_button_new_with_label(_("Random block colors"));
+	gtk_toggle_button_set_state(GTK_TOGGLE_BUTTON(cb), random_block_colors);
+	gtk_signal_connect(GTK_OBJECT(cb), "clicked", (GtkSignalFunc)setSelectionBlocks, d);
+	gtk_box_pack_start(GTK_BOX(box), cb, 0, 0, 0);
+	gtk_widget_show(cb);
 
 	box = gtk_hbox_new(TRUE, 5);
 	gtk_box_pack_start(GTK_BOX(allBoxes), box, TRUE, TRUE, 0);
@@ -289,7 +337,7 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 	}
 	
 	if (t->paused)
-		return TRUE;
+		return FALSE;
 	
 	bool res = false;
 	bool keyEvent = false;
@@ -376,6 +424,8 @@ Tetris::gameNew(GtkWidget *widget, void *d)
   int level = t->cmdlineLevel ? t->cmdlineLevel :
 		gnome_config_get_int_with_default("/gnometris/Properties/StartingLevel=1", NULL);
 	t->scoreFrame->setLevel(level);
+	random_block_colors = gnome_config_get_int_with_default("/gnometris/Properties/RandomBlockColors=0", NULL) != 0;
+	do_preview = gnome_config_get_int_with_default("/gnometris/Properties/DoPreview=0", NULL) != 0;
 	
 	t->timeoutId = gtk_timeout_add(1000 - 100 * (level - 1), timeoutHandler, t);
 	t->ops->emptyField();

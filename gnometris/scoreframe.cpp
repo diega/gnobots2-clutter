@@ -28,7 +28,7 @@ ScoreFrame::ScoreFrame(int cmdlLevel)
   startingLevel = cmdlLevel ? cmdlLevel : gnome_config_get_int_with_default("/gnometris/Properties/StartingLevel=1", NULL);
 	level = startingLevel;
 	
-	w = gtk_frame_new("");
+	w = gtk_frame_new(_("Game Status"));
 
 	scoreLabel = gtk_label_new(_("Score: "));
 	sprintf(b, "%7d", 0);
