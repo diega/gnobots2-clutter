@@ -1,3 +1,14 @@
+2004-12-31  Callum McKenzie  <callum@physics.otago.ac.nz>
+	
+	* ui.h:
+	* ui.c:
+	* input.c:
+	* drawing.c: Provide a helpful "n objects selected" message.
+
+	* ui.h:
+	* ui.c: Rework the status bar so that it is no longer a
+	statusbar. It now looks like gnomine.
+
 2004-12-30  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* ui.c:

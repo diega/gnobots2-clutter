@@ -43,6 +43,14 @@ GList *urlist = NULL;
  * the past. */
 GList *urptr;
 
+int calculate_score (gint nballs)
+{
+	if (nballs < 3)
+		return 0;
+
+	return (nballs - 2)*(nballs - 2);
+}
+
 static void game_state_free (game_state_record *g)
 {
 	g_free (g->colours);
@@ -201,10 +209,10 @@ void find_connected_component (int x, int y)
 		return;
 
 	list = selected;
-
+	
 	stack = findstack;
 	push (&stack, x, y);
-
+	
 	while (stack > findstack) {
 		pop (&stack, &i, &j);
 		c = get_game_cell (i, j);
@@ -218,10 +226,7 @@ void find_connected_component (int x, int y)
 		}
 		c->visited = 1; 
 	}
-
 	game_state = GAME_SELECTED;
-
-	/* FIXME: Update the "x balls selected (n points)" message. */
 }
 
 void destroy_balls (void)
@@ -244,7 +249,7 @@ void destroy_balls (void)
 
 	game_state = GAME_DESTROYING;
 
-	score += (count - 2)*(count - 2);
+	score += calculate_score (count);
 	show_score (score);
 
 	count = 0;

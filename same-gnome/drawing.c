@@ -656,6 +656,8 @@ void start_spinning (void)
 	game_cell *p;
 	coordinates *list;
 	
+	set_message (count);
+
 	/* FIXME: Is this bit of policy distributed too far ? */
 	if (count <= 1)
 		return;

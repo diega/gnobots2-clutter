@@ -13,6 +13,7 @@
 #include "drawing.h"
 #include "game.h"
 #include "input.h"
+#include "ui.h"
 
 gint kb_xloc = 0;
 gint kb_yloc = 0;
@@ -77,6 +78,8 @@ gboolean mouse_click_cb (GtkWidget *widget, GdkEventButton *e, gpointer data)
 	if (e->type != GDK_BUTTON_PRESS)
 		return FALSE;
 
+	clear_message ();
+
   destroy_balls ();
 
   return FALSE;
@@ -84,7 +87,9 @@ gboolean mouse_click_cb (GtkWidget *widget, GdkEventButton *e, gpointer data)
 
 gboolean mouse_leave_cb (GtkWidget *widget, GdkEventCrossing *e, gpointer data)
 {
-	if (game_state == GAME_SELECTED) {
+	clear_message ();
+
+	if (game_state == GAME_SELECTED) {		
 		stop_spinning ();
 		game_state = GAME_IDLE;
 	}

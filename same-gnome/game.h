@@ -74,6 +74,7 @@ void new_game (void);
 void restore_game_state (void);
 void undo (void);
 void redo (void);
+int calculate_score (gint nballs);
 void set_sizes (gint size);
 game_cell * get_game_cell (int x, int y);
 void find_connected_component (int x, int y);

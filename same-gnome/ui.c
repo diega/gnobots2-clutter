@@ -6,6 +6,8 @@
  *
  */
 
+/* FIXME: The original didn't have to include this, what has chagned ? */
+#include <libintl.h>
 #include <gnome.h>
 
 #include <games-gridframe.h>
@@ -19,7 +21,14 @@
 #include "input.h"
 #include "ui.h"
 
+/* Define an alternative to ngettext if we don't have it. Of course it isn't
+ * a proper substitute for ngettext, but it is the best we can do. */
+#ifndef HAVE_NGETTEXT
+#define ngettext(one,lots,n) gettext(lots)
+#endif
+
 GtkWidget *application;
+GtkWidget *messagewidget;
 GtkWidget *scorewidget;
 GtkWidget *gridframe = NULL;
 GtkToggleAction *fullscreenaction;
@@ -29,6 +38,26 @@ GtkWidget *redo_widget;
 static void quit_cb (void)
 {
   gtk_main_quit ();
+}
+
+void set_message (gint count)
+{
+	gchar *message;
+	gchar *part1;
+	gchar *part2;
+	gint s;
+
+	if (count > 1) {
+		s = calculate_score (count);
+		part1 = g_strdup_printf (ngettext ("%d object selected", 
+																			 "%d objects selected", count), count);
+		part2 = g_strdup_printf (ngettext ("%d point", "%d points", s), s);
+		message = g_strdup_printf (_("%s (%s)"), part1, part2);
+		gtk_label_set_text (GTK_LABEL (messagewidget), message);
+		g_free (message);
+	} else {
+		gtk_label_set_text (GTK_LABEL (messagewidget), _("No objects selected."));
+	}
 }
 
 void show_score (gint score)
@@ -236,7 +265,7 @@ const char *ui_description =
 
 void build_gui (void)
 {
-  GtkWidget *appbar;
+  GtkWidget *hbox;
   GtkWidget *canvas;
   GtkWidget *vbox;
   GtkUIManager *ui_manager;
@@ -288,13 +317,7 @@ void build_gui (void)
   
   gtk_box_pack_start (GTK_BOX (vbox), 
 		      gtk_ui_manager_get_widget (ui_manager, "/MainMenu"),
-		      FALSE, FALSE, 0);
-  
-  appbar = gtk_statusbar_new ();
-  gtk_box_pack_end (GTK_BOX (vbox), appbar, FALSE, FALSE, 0);
-  scorewidget = gtk_label_new ("");
-  gtk_box_pack_end (GTK_BOX (appbar), scorewidget, TRUE, FALSE, 0);
-  
+		      FALSE, FALSE, 0);  
   
   gridframe = games_grid_frame_new (board_width, board_height);
   games_grid_frame_set_padding (GAMES_GRID_FRAME (gridframe), 1, 1);
@@ -321,6 +344,18 @@ void build_gui (void)
   gtk_widget_set_size_request (canvas, MINIMUM_CANVAS_WIDTH, 
 			       MINIMUM_CANVAS_HEIGHT);
   gtk_container_add (GTK_CONTAINER (gridframe), canvas);
+
+	gtk_box_pack_start (GTK_BOX (vbox), gtk_hseparator_new (), FALSE, FALSE, 0);
+
+  hbox = gtk_hbox_new (TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (vbox), hbox, FALSE, FALSE, GNOME_PAD);
+
+	messagewidget = gtk_label_new ("");
+	gtk_box_pack_start (GTK_BOX (hbox), messagewidget, TRUE, FALSE, 0);
+	clear_message ();
+
+  scorewidget = gtk_label_new ("");
+  gtk_box_pack_start (GTK_BOX (hbox), scorewidget, TRUE, FALSE, 0);
   
   gtk_widget_show_all (application);
   

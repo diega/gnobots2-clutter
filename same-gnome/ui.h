@@ -11,7 +11,10 @@
 
 #include <gnome.h>
 
+#define clear_message() set_message (0)
+
 void show_score (gint score);
+void set_message (gint count);
 void game_over_dialog (void);
 void new_frame_ratio (gint board_width, gint board_height);
 void build_gui (void);
