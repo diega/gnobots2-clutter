@@ -16,6 +16,7 @@ samegnome_SOURCES = 	\
 samegnome_LDADD = \
 	$(top_builddir)/libgnomeui/libgnomeui.la 	\
 	$(top_builddir)/libgnome/libgnome.la		\
+	$(top_builddir)/support/libsupport.a		\
 	$(GTK_LIBS)					\
         $(X_LIBS) $(x_libs) $(INTLLIBS) $(DL_LIB)
 
@@ -23,9 +24,10 @@ pixmap_DATA = planets.xpm blink-sync.xpm puyonew2-sync.xpm stones.xpm rotate.xpm
 EXTRA_DIST = same-gnome.desktop $(pixmap_DATA)
 
 install-data-local:
-	$(mkinstalldirs) $(Gamesdir)
+	-$(mkinstalldirs) $(Gamesdir)
 	$(INSTALL_DATA) $(srcdir)/same-gnome.desktop $(Gamesdir)/same-gnome.desktop
-	-touch $(scoredir)/samegnome.scores
+	-$(mkinstalldirs) $(scoredir)
+	touch $(scoredir)/samegnome.scores
 	-chown games.games $(scoredir)/samegnome.scores
 	-chmod 664 $(scoredir)/samegnome.scores
 
