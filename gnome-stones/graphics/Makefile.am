@@ -15,7 +15,8 @@ pixmap_DATA     = title.png			\
 	firefly.png				\
 	frame.png				\
 	gnome.png				\
-	wall.png
+	wall.png				\
+	animated_curtain.png
 
 EXTRA_DIST    = 				\
 	$(pixmap_DATA)

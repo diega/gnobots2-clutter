@@ -1,6 +1,6 @@
 /* gnome-stones - cave.c
  *
- * Time-stamp: <1998/11/09 21:54:11 carsten>
+ * Time-stamp: <2001/11/14 15:44:16 benesch>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -261,6 +261,9 @@ cave_new (void)
   cave= g_new0 (GStonesCave, 1);
   g_return_val_if_fail (cave, NULL);
 
+  cave->animated_curtain= object_find_object_by_name ("default:curtain");
+  /*  g_return_val_if_fail (cave->animated_curtain, NULL); */
+
   cave->is_intermission    = FALSE;
 
   cave->contexts           = g_hash_table_new (g_direct_hash, g_direct_equal);
@@ -383,9 +386,18 @@ cave_iterate (GStonesCave *cave,
 
   cave_emit_signal (cave, signal_cave_pre_scan);
 
-  /* Now we iterate through the hole cave.  */
+  x=cave->player_x;
+  y=cave->player_y;
+  if (cave->entry[x][y].object->description->scan_function)
+    {
+      cave->entry[x][y].object->description->scan_function 
+        (cave, x, y, cave_get_object_context (cave, cave->entry[x][y].object));
+      cave->entry[x][y].scanned=TRUE;
+    }
+
+  /* Now we iterate through the whole cave.  */
   for (y= 1 ; y <= CAVE_MAX_HEIGHT; y++)
-    for (x= CAVE_MAX_WIDTH ; x >= 1; x--)
+    for (x= 1 ; x<= CAVE_MAX_WIDTH ; x++)
       if (!cave->entry[x][y].scanned && 
 	  (cave->entry[x][y].object->description->scan_function))
 	cave->entry[x][y].object->description->scan_function 

@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <2000/05/09 18:20:21 martin>
+ * Time-stamp: <2001/09/08 14:57:37 benes>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -36,6 +36,7 @@
 #include "preferences.h"
 #include "io.h"
 #include "view.h"
+#include "sound.h"
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 
@@ -115,13 +116,15 @@ static void
 game_start_cb (GtkWidget *widget, gpointer data);
 
 
+
 
 /****************************************************************************/
 /* Image stuff  */
 
 static void
 my_exit (GtkWidget *widget, gpointer client_data)
-{
+{ 
+  sound_close(); 
   exit (1);
 }
 
@@ -163,13 +166,16 @@ title_image_load (void)
 {
   GdkPixbuf *image= load_image_from_path ("gnome-stones/title.png");
 
-  gdk_pixbuf_render_pixmap_and_mask (image, &title_template, NULL, 127);
 
-  title_image = title_template; /* FIXME */
-  gdk_pixmap_ref (title_template);
+  gdk_pixbuf_render_pixmap_and_mask (image, &title_template, NULL, 127);
+  gdk_pixbuf_render_pixmap_and_mask (image, &title_image, NULL, 127);
+
+  gdk_pixbuf_unref (image);
 
   /* Redraw the game widget.  */
   gtk_widget_draw (gstones_view, NULL);
+  
+  
 }
 
 
@@ -477,19 +483,27 @@ curtain_ready (ViewCurtainMode mode)
   switch (mode)
     {
     case VIEW_CURTAIN_OPEN:  
+
       if (curtain_cave)
 	{
+	  (GSTONES_VIEW (gstones_view))->curtain_display_mode= 
+	     CURTAIN_DISPLAY_NONE;
+
 	  state= STATE_WAITING_TO_START;
 	  gtk_timeout_add (START_DELAY, start_cave_delay_timeout, curtain_cave);
 	}
       else
-	state= STATE_TITLE;
+	{
+  	  play_title_music();
+	  state= STATE_TITLE;
+	}
       break;
       
 
     case VIEW_CURTAIN_CLOSED:
       /* If the iteration has been running, we stop it now.  */
-      gtk_timeout_remove (iteration_timeout);
+      if (iteration_timeout) gtk_timeout_remove (iteration_timeout);
+      iteration_timeout=0;
       
       /* An existing cave must be deleted.  */
       if (cave)
@@ -515,6 +529,7 @@ curtain_ready (ViewCurtainMode mode)
 	view_display_image (GSTONES_VIEW (gstones_view), title_image);
       
       break;
+      default:
     }
 }
 
@@ -600,7 +615,14 @@ countdown_timeout_function (gpointer data)
 
 	  gnome_scores_display ("Gnome-Stones", APP_NAME, NULL, pos);
 	  gnome_app_flash (GNOME_APP (app), _("Congratulations, you win!"));
+
+
 	}
+      else
+	{
+	  if (newcave->is_intermission) player_inc_lives (player, 1);
+	}
+
     }
   return FALSE;
 }
@@ -617,7 +639,8 @@ countdown_start (GStonesCave *cave)
 {
   /* When showing the countdown, there is no iteration in the
      background anymore.  */
-  gtk_timeout_remove (iteration_timeout);
+  if (iteration_timeout) gtk_timeout_remove (iteration_timeout);
+  iteration_timeout=0;
 
   state    = STATE_COUNTDOWN;
   
@@ -753,9 +776,16 @@ iteration_timeout_function (gpointer data)
   
   if (!(flags & CAVE_FINISHED) && (cave->flags & CAVE_FINISHED))
     {
+      
+      if (!(cave->flags & CAVE_PLAYER_EXISTS) )
+	{
+          player_inc_lives (player, -1);
+	  /* No score for extra time */
+	  cave->timer=0;
+	}
+
       if (!(cave->flags & CAVE_PLAYER_EXISTS) && !cave->is_intermission)
 	{
-	  player_inc_lives (player, -1);
 	  
 	  if (player->lives != 0)
 	    { 
@@ -821,9 +851,10 @@ iteration_start (GStonesCave *newcave)
 void
 load_game (const gchar *filename, guint _start_cave)
 {
+
   char         buffer[256];
   GStonesGame *newgame;
-  
+
   g_return_if_fail (filename);
   
   /* We don't need to load a game twice.  */
@@ -841,8 +872,10 @@ load_game (const gchar *filename, guint _start_cave)
   if (newgame)
     {
       /* Remove all running timeouts.  */
-      gtk_timeout_remove (iteration_timeout);
-      gtk_timeout_remove (countdown_timeout);
+      if (iteration_timeout) gtk_timeout_remove (iteration_timeout);
+      iteration_timeout=0;
+      if (countdown_timeout) gtk_timeout_remove (countdown_timeout);
+      countdown_timeout=0;
 
       /* Set display into title mode.  */
       view_display_image (GSTONES_VIEW (gstones_view), title_image);
@@ -870,6 +903,7 @@ load_game (const gchar *filename, guint _start_cave)
       sprintf (buffer, "Game '%s' loaded.", filename);
       gnome_app_flash (GNOME_APP (app), buffer);
     }
+
 }
 
 
@@ -884,6 +918,9 @@ game_start_cb (GtkWidget *widget, gpointer data)
   GList       *tmp = NULL;
   GStonesCave *cave= NULL;
   
+
+  stop_title_music();
+
   if (!game) return;
   
   /* Initialize the player information.  */
@@ -896,6 +933,13 @@ game_start_cb (GtkWidget *widget, gpointer data)
   
   if (cave)
     curtain_start (cave);
+}
+
+
+static void
+game_stop_cb (GtkWidget *widget, gpointer data)
+{
+    curtain_start (NULL);
 }
 
 
@@ -925,6 +969,7 @@ static void
 quit_cb (GtkWidget *widget, gpointer data)
 {
   preferences_save_global ();
+  sound_close();
 
   exit (0);
 }
@@ -969,6 +1014,7 @@ about_cb (GtkWidget *widget, gpointer data)
 
 static GnomeUIInfo game_menu[]= {
   GNOMEUIINFO_MENU_NEW_GAME_ITEM(game_start_cb, NULL),
+  GNOMEUIINFO_MENU_END_GAME_ITEM(game_stop_cb, NULL),
   GNOMEUIINFO_SEPARATOR,
   GNOMEUIINFO_MENU_PAUSE_GAME_ITEM (game_pause_cb, NULL),
   GNOMEUIINFO_SEPARATOR,
@@ -1087,6 +1133,8 @@ StartupSequence startup_sequence[]=
     preferences_restore,
     N_("Restoring preferences...")
   }
+
+
 };
 
 
@@ -1117,6 +1165,20 @@ static gint startup_function (gpointer data)
 }
 
 
+/************************************************************************/
+/* exit function */
+
+/* FIXME: too many different exit/quit functions */
+
+
+void
+gstones_exit (GnomeClient *client, gpointer client_data)
+{
+  sound_close (); 
+  exit (0);
+}
+
+
 
 /*****************************************************************************/
 /* Main function.  */
@@ -1125,6 +1187,7 @@ static gint startup_function (gpointer data)
 int
 main (int argc, char *argv[])
 {
+
   GtkWidget *frame= NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *table= NULL;
@@ -1191,14 +1254,20 @@ main (int argc, char *argv[])
   gtk_widget_show (app);
 
   title_image_load ();
-  gdk_pixmap_ref (title_image);
+
   view_display_image (GSTONES_VIEW (gstones_view), title_image);
 
   session_management_init ();
 
   gtk_idle_add (startup_function, NULL);
 
+  sound_init ();
+
+  play_title_music();
+
   gtk_main ();
+
+  sound_close ();
 
   return 0;
 }

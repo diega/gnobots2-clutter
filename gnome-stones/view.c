@@ -24,8 +24,9 @@
 #endif
 
 #include "view.h"
-
+#include "object.h"
 #include "types.h"
+#include "preferences.h"
 
 
 
@@ -69,8 +70,10 @@ static void
 view_class_init (GStonesViewClass *class)
 {
   GtkWidgetClass *widget_class;
-  
+ 
   widget_class= (GtkWidgetClass *) class;
+
+
 
 #ifndef USE_GNOME_CANVAS
   widget_class->expose_event= view_expose;
@@ -194,6 +197,9 @@ view_new (GdkPixbuf *curtain_image)
   gtk_widget_show (view->canvas);
 #endif
 
+
+  view->view_buffer = NULL;
+
   /* Initialize curtain stuff.  */
   gdk_pixbuf_render_pixmap_and_mask (curtain_image, &view->curtain_image, NULL, 127);
   
@@ -204,7 +210,26 @@ view_new (GdkPixbuf *curtain_image)
 }
 
 
+
 /*****************************************************************************/
+
+/* we want some cute cutain :-)*/
+
+#define CURTAIN_START_VALUE 31
+
+gboolean curtain_visible_test (int x, int y, int curtain)
+{
+
+  int a=(2*x*(x+y)+3*y*GAME_COLS);
+  return ((a*a)%CURTAIN_START_VALUE)
+            *CURTAIN_START_VALUE*CURTAIN_START_VALUE
+           >= curtain*curtain*curtain;
+}
+
+
+/*****************************************************************************/
+
+
 
 static gint
 view_expose (GtkWidget *widget, GdkEventExpose *event)
@@ -212,15 +237,27 @@ view_expose (GtkWidget *widget, GdkEventExpose *event)
   GStonesView  *view;
   GdkRectangle *area;
   int x1, y1, x2, y2, x, y;
+  int curtain_frames=1;
+  if( cave && cave->animated_curtain )
+    {
+      curtain_frames=cave->animated_curtain->num_images;
+    }
+
 
   view= GSTONES_VIEW (widget);
 
+  /* Initialize image buffer */
+
+  if (!view->view_buffer)
+    view->view_buffer = 
+      gdk_pixmap_new (widget->window, CAVE_MAX_WIDTH*STONE_SIZE,
+		                      CAVE_MAX_HEIGHT*STONE_SIZE, -1 );
   area= &event->area;
 
-  x1 = area->x/STONE_SIZE+view->x_offset;
-  y1 = area->y/STONE_SIZE+view->y_offset;
-  x2 = (area->x+area->width )/STONE_SIZE+view->x_offset;
-  y2 = (area->y+area->height)/STONE_SIZE+view->y_offset;
+  x1 = (area->x+view->x_offset)/STONE_SIZE;
+  y1 = (area->y+view->y_offset)/STONE_SIZE;
+  x2 = (area->x+area->width+view->x_offset+STONE_SIZE-1)/STONE_SIZE;
+  y2 = (area->y+area->height+view->y_offset+STONE_SIZE-1)/STONE_SIZE;
   
   for (x = x1; x <= x2; x++)
     for (y = y1; y <= y2; y++)
@@ -228,14 +265,22 @@ view_expose (GtkWidget *widget, GdkEventExpose *event)
 	GdkPixmap *image= NULL;
 	
 	if ((view->curtain_display_mode == CURTAIN_DISPLAY_CLOSING && 
-	     (x+y >= view->curtain+view->x_offset+view->y_offset)) ||
+	     curtain_visible_test (x, y, view->curtain)) ||
 	    (view->curtain_display_mode == CURTAIN_DISPLAY_OPENING && 
-	     (x+y < view->curtain+view->x_offset+view->y_offset)))
+	     !curtain_visible_test (x, y, view->curtain)))
 	  {
-	    image= view->curtain_image;
+	    if( cave && cave->animated_curtain )
+	      {
+	      image = 
+		object_get_image (cave->animated_curtain, 
+                      /*curtain_frames-1-*/(view->curtain)%curtain_frames);
+	      }
+	    else
+	      image= view->curtain_image;
 	  }
 	else if (view->display_mode == DISPLAY_IMAGE)
 	  {
+	    image= NULL;
 	  }
 	else if (cave)
 	  {
@@ -243,27 +288,49 @@ view_expose (GtkWidget *widget, GdkEventExpose *event)
 	  }
 
 	if (image)
-	  gdk_draw_pixmap (widget->window,
-			   widget->style->black_gc, image,
-			   0, 0, 
-			   (x-view->x_offset)*STONE_SIZE, 
-			   (y-view->y_offset)*STONE_SIZE,
-			   STONE_SIZE, STONE_SIZE);
+	  {
+	    if (image!=view->last_image[x][y])
+	      {
+		view->last_image[x][y]=image;
+		gdk_draw_pixmap (view->view_buffer,
+				 widget->style->black_gc, image,
+				 0, 0, 
+				 x*STONE_SIZE, 
+				 y*STONE_SIZE,
+				 STONE_SIZE, STONE_SIZE);
+	      }
+	  }
 	else
-	  gdk_draw_pixmap (widget->window,
-			   widget->style->black_gc, view->image,
-			   (x-view->x_offset)*STONE_SIZE, 
-			   (y-view->y_offset)*STONE_SIZE, 
-			   (x-view->x_offset)*STONE_SIZE, 
-			   (y-view->y_offset)*STONE_SIZE,
-			   STONE_SIZE, STONE_SIZE);
-      }
+	  {
+	    
+	    view->last_image[x][y]= view->image;
+	    gdk_draw_pixmap (view->view_buffer,
+			     widget->style->black_gc, view->image,
+			     x*STONE_SIZE-view->x_offset, 
+			     y*STONE_SIZE-view->y_offset, 
+			     x*STONE_SIZE, 
+			     y*STONE_SIZE,
+			     STONE_SIZE, STONE_SIZE);
+	  }
+ 
+     }
+
+  gdk_draw_pixmap (widget->window,
+		   widget->style->black_gc, view->view_buffer,
+		   area->x+view->x_offset, 
+		   area->y+view->y_offset, 
+		   area->x, 
+		   area->y,
+		   area->width, area->height);
+  
+
 
   return TRUE;
 }
 
-/*****************************************************************************/
 
+
+/*****************************************************************************/
 
 static gint
 view_curtain_timeout (gpointer data)
@@ -332,7 +399,7 @@ view_set_curtain_mode (GStonesView     *view,
       
     case VIEW_CURTAIN_ANIMATE:
       view->curtain_display_mode= CURTAIN_DISPLAY_CLOSING;
-      view->curtain             = GAME_COLS+GAME_ROWS;
+      view->curtain             = CURTAIN_START_VALUE;
       view->curtain_func        = func;
 
 
@@ -381,28 +448,32 @@ view_display_cave (GStonesView *view, GStonesCave *cave)
 
 
 void
-view_calculate_offset (GStonesView *view, GStonesCave *cave)
+atari_scroll (GStonesView *view, GStonesCave *cave)
 {
   gint x_rel;
   gint y_rel;
   
-  x_rel= cave->player_x-view->x_offset;
-  y_rel= cave->player_y-view->y_offset;
+  x_rel= cave->player_x-view->x_offset/STONE_SIZE;
+  y_rel= cave->player_y-view->y_offset/STONE_SIZE;
   
   view->x_scrolling= view->x_scrolling || (x_rel < 3) || (x_rel > GAME_COLS+1-3) || 
-    (view->x_offset+GAME_COLS > cave->width);
+    (view->x_offset+GAME_COLS*STONE_SIZE > cave->width*STONE_SIZE);
   view->y_scrolling= view->y_scrolling || (y_rel < 3) || (y_rel > GAME_ROWS+1-3) || 
-    (view->y_offset+GAME_ROWS > cave->height);
+    (view->y_offset+GAME_ROWS*STONE_SIZE > cave->height*STONE_SIZE);
   
   if (view->x_scrolling)
     {
-      if (((x_rel < 7) || (view->x_offset+GAME_COLS > cave->width)) && (view->x_offset > 0))
+      if (((x_rel < 7) || (view->x_offset+GAME_COLS*STONE_SIZE > cave->width*STONE_SIZE)))
 	{
-	  view->x_offset--;
+	  view->x_offset-=SCROLL_SPEED;
+	  if( view->x_offset<0 ) view->x_offset=0;
 	}
-      else if ((x_rel > GAME_COLS+1-7) && (view->x_offset+GAME_COLS < cave->width))
+      else if ((x_rel > GAME_COLS+1-7))
 	{
-	  view->x_offset++;
+	  view->x_offset+=SCROLL_SPEED;
+
+	  if( view->x_offset>(cave->width-GAME_COLS)*STONE_SIZE ) 
+	    view->x_offset=(cave->width-GAME_COLS)*STONE_SIZE;
 	}
       else
 	view->x_scrolling= FALSE;
@@ -410,16 +481,132 @@ view_calculate_offset (GStonesView *view, GStonesCave *cave)
 
   if (view->y_scrolling)
     {      
-      if (((y_rel < 5) || (view->y_offset+GAME_ROWS > cave->height)) && (view->y_offset > 0))
+      if (((y_rel < 5) || (view->y_offset+GAME_ROWS*STONE_SIZE > cave->height*STONE_SIZE)))
 	{
-	  view->y_offset--;
+	  view->y_offset-=SCROLL_SPEED;
+	  if( view->y_offset<0 ) view->y_offset=0;
 	}
-      else if ((y_rel > GAME_ROWS+1-5) && (view->y_offset+GAME_ROWS < cave->height))
+      else if ((y_rel > GAME_ROWS+1-5))
 	{
-	  view->y_offset++;
+	  view->y_offset+=SCROLL_SPEED;
+
+	  if( view->y_offset>(cave->height-GAME_ROWS)*STONE_SIZE ) 
+	    view->y_offset=(cave->height-GAME_ROWS)*STONE_SIZE;
+
 	}
       else
 	view->y_scrolling= FALSE;
     }
 }
 
+
+
+
+
+
+
+
+
+#define MAX_SCROLL_SPEED 0.9
+#define abs(i) ((i)>0?(i):-(i))
+void
+smooth_scroll (GStonesView *view, GStonesCave *cave)
+{
+  gint x_rel;
+  gint y_rel;
+  gint x_mov;
+  gint y_mov;
+  gint x_mid=GAME_COLS*STONE_SIZE/2;
+  gint y_mid=GAME_ROWS*STONE_SIZE/2;
+
+  x_rel= (STONE_SIZE*cave->player_x-view->x_offset)-STONE_SIZE/2;
+  x_mov= (x_rel-x_mid)*2/GAME_COLS;
+  x_mov+=(x_rel>x_mid)?1:-1;
+
+  y_rel= (STONE_SIZE*cave->player_y-view->y_offset)-STONE_SIZE/2;
+  y_mov= (y_rel-y_mid)*2/GAME_ROWS;
+  y_mov+=(y_rel>y_mid)?1:-1;
+
+  
+  view->x_scrolling= view->x_scrolling || abs(x_rel-x_mid) > 1;
+  view->y_scrolling= view->y_scrolling || abs(y_rel-y_mid) > 1;
+  
+
+  if (view->x_scrolling)
+    {
+
+      if (x_mov<-MAX_SCROLL_SPEED*STONE_SIZE) 
+        x_mov=-MAX_SCROLL_SPEED*STONE_SIZE;
+      if (x_mov>MAX_SCROLL_SPEED*STONE_SIZE) 
+        x_mov=MAX_SCROLL_SPEED*STONE_SIZE;
+ 
+      view->x_offset+=x_mov;
+      if (abs(x_rel-x_mid)<2) view->x_scrolling=FALSE;
+
+      
+      if( x_mov>0 && view->x_offset>(cave->width-GAME_COLS)*STONE_SIZE ) 
+	view->x_offset=(cave->width-GAME_COLS)*STONE_SIZE;
+
+      if( view->x_offset<0 ) view->x_offset=0;
+
+    }
+
+  if (view->y_scrolling)
+    {
+      if (y_mov<-MAX_SCROLL_SPEED*STONE_SIZE) 
+        y_mov=-MAX_SCROLL_SPEED*STONE_SIZE;
+      if (y_mov>MAX_SCROLL_SPEED*STONE_SIZE) 
+        y_mov=MAX_SCROLL_SPEED*STONE_SIZE;
+ 
+      view->y_offset+=y_mov;
+      if (abs(y_rel-y_mid)<2) view->y_scrolling=FALSE;
+
+      if( y_mov>0 && view->y_offset>(cave->height-GAME_ROWS)*STONE_SIZE ) 
+	view->y_offset=(cave->height-GAME_ROWS)*STONE_SIZE;
+
+      if( view->y_offset<0 ) view->y_offset=0;
+      
+    }
+
+
+
+}
+
+
+void
+center_scroll (GStonesView *view, GStonesCave *cave)
+{
+
+  view->x_offset= 
+     STONE_SIZE*cave->player_x-STONE_SIZE/2-GAME_COLS*STONE_SIZE/2;
+
+  view->y_offset= 
+     STONE_SIZE*cave->player_y-STONE_SIZE/2-GAME_ROWS*STONE_SIZE/2;
+
+
+
+  if( view->x_offset>(cave->width-GAME_COLS)*STONE_SIZE ) 
+    view->x_offset=(cave->width-GAME_COLS)*STONE_SIZE;
+
+  if( view->x_offset<0 ) view->x_offset=0;
+      
+
+
+
+  if( view->y_offset>(cave->height-GAME_ROWS)*STONE_SIZE ) 
+    view->y_offset=(cave->height-GAME_ROWS)*STONE_SIZE;
+
+  if( view->y_offset<0 ) view->y_offset=0;
+      
+
+
+}
+
+
+
+
+void
+view_calculate_offset (GStonesView *view, GStonesCave *cave)
+{
+  view_scroll_method (view, cave); 
+}

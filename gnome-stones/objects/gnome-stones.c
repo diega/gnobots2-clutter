@@ -1,6 +1,6 @@
 /* gnome-stones - objects/gnome-stones.c
  *
- * Time-stamp: <1998/11/09 21:47:08 carsten>
+ * Time-stamp: <2001/09/08 15:57:44 benes>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -22,6 +22,7 @@
 #include "player.h"
 #include "status.h"
 #include "object.h"
+#include "sound.h"
 
 
 /*****************************************************************************/
@@ -59,11 +60,47 @@ gint y_diff[4]={ 0,  1,  0, -1};
 
 
 /*****************************************************************************/
+/* sound events */
+
+enum {
+  GNOME_BORN_SOUND,
+  EXPLOSION_SOUND,
+  DIG_SOUND,
+  BOULDER_SOUND,
+  GET_DIAMOND_SOUND,
+  DOOR_OPEN_SOUND,
+  NUM_SOUNDS
+} sounds_types;
+
+
+gint sounds[NUM_SOUNDS];
+gboolean sound_played[NUM_SOUNDS];
+
+/*****************************************************************************/
 /* Some declarations */
 
 
 static void
 explosion_new (GStonesCave *cave, guint x, guint y, gboolean diamond);
+
+
+
+/*****************************************************************************/
+/* play sound */
+
+void stones_sound_play( gint sound )
+{
+ 
+  /* we want to play sounds max one-time per frame*/
+  if( !sound_played[sound] )
+    {
+      sound_played[sound]=TRUE;
+      sound_play (sounds[sound]);
+    }
+
+}
+
+
 
 
 
@@ -137,14 +174,18 @@ empty_signals (GStonesCave *cave, GStonesSignal signal,
 	       GStonesObjContext *context)
 {
   EmptyData *empty= (EmptyData *) object_context_private_data (context);
+  gint i;
   
   if (signal == SIGNAL_CAVE_PRE_SCAN)
     {
+
       if (empty->open_door_animation)
 	empty->open_door_animation--;
       
       if (empty->extra_life_animation)
 	empty->extra_life_animation--;
+
+      for( i=0; i<NUM_SOUNDS; ++i ) sound_played[i]=FALSE;
     }
   else if (signal == SIGNAL_DOOR_OPEN)
     {
@@ -339,6 +380,7 @@ gnome_init_cave (GStonesCave *cave, GStonesObjContext *context)
 {
   guint x;
   guint y;
+  gint i;
 
   for (y= 1 ; y <= CAVE_MAX_HEIGHT; y++)
     for (x= 1 ; x <= CAVE_MAX_WIDTH; x++)
@@ -347,6 +389,8 @@ gnome_init_cave (GStonesCave *cave, GStonesObjContext *context)
 	  cave->player_x= x;
 	  cave->player_y= y;
 	}
+
+  for( i=0; i<NUM_SOUNDS; ++i ) sound_played[i]=FALSE;
 
   return TRUE;
 }
@@ -382,6 +426,8 @@ gnome_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 	  else if (cave->player_x_direction < 0)
 	    state= 4;
 
+	  if (type == OBJECT_DIRT) stones_sound_play (DIG_SOUND);
+
 	  moved= TRUE;
 	}
       else if (type == OBJECT_DIAMOND)
@@ -393,6 +439,9 @@ gnome_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 	      
 	      cave->diamonds_collected++;
 	      
+	      if (cave->diamonds_collected != cave->diamonds_needed)
+		stones_sound_play (GET_DIAMOND_SOUND);
+
 	      if (cave->diamonds_collected <= cave->diamonds_needed)
 		{
 		  player_set_diamonds (cave->player, 
@@ -400,7 +449,10 @@ gnome_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 				       cave->diamonds_collected);
 
 		  if (cave->diamonds_collected == cave->diamonds_needed)
-		    cave_emit_signal (cave, SIGNAL_DOOR_OPEN);
+		    {
+		      cave_emit_signal (cave, SIGNAL_DOOR_OPEN);
+		      stones_sound_play (DOOR_OPEN_SOUND);
+		    }
 		  
 		  extra_life= player_inc_score (cave->player, 
 						cave->diamond_score);
@@ -439,7 +491,7 @@ gnome_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 	      (cave->entry[xn][yn].state == 0) &&
 	      (cave->entry[xn+cave->player_x_direction][yn].object == OBJECT_EMPTY))
 	    { 
-	      if (random () % 8 == 0)
+	      if (random () % 5 == 0)
 		{
 		  moved= TRUE;
 		  
@@ -460,7 +512,7 @@ gnome_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 	      cave->entry[xn][yn].object = OBJECT_GNOME;
 	      cave->entry[xn][yn].scanned= TRUE;
 	      cave_set_entry (cave, x, y, OBJECT_EMPTY, 0);
-	      
+
 	      cave->player_x= xn;
 	      cave->player_y= yn;
 
@@ -881,7 +933,8 @@ static GStonesObjectDesc butterfly_object=
 static void
 boulder_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 {
-  if (cave->entry[x][y+1].object == OBJECT_EMPTY)
+  if (cave->entry[x][y+1].object == OBJECT_EMPTY 
+       && !cave->entry[x][y+1].scanned)
     {
       cave_set_entry (cave, x, y, OBJECT_EMPTY, 0);
       cave_set_entry (cave, x, y+1, OBJECT_BOULDER, 1);
@@ -892,22 +945,24 @@ boulder_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *context
 	     (cave->entry[x][y+1].object == OBJECT_DIAMOND)) &&
 	    cave->entry[x][y+1].state == 0))
 	      {
-		if (cave->entry[x+1][y].object   == OBJECT_EMPTY &&
-		    cave->entry[x+1][y+1].object == OBJECT_EMPTY)
-		  {
-		    cave_set_entry (cave, x, y, OBJECT_EMPTY, 0);
-		    cave_set_entry (cave, x+1, y, OBJECT_BOULDER, 1);
-		    cave->entry[x+1][y].scanned= TRUE;
-		  }
-		else if (cave->entry[x-1][y].object   == OBJECT_EMPTY &&
+	        if (cave->entry[x][y].state)
+		  stones_sound_play (BOULDER_SOUND);
+	        if (cave->entry[x-1][y].object   == OBJECT_EMPTY &&
 			 cave->entry[x-1][y+1].object == OBJECT_EMPTY)
 		  {
 		    cave_set_entry (cave, x, y, OBJECT_EMPTY, 0);
 		    cave_set_entry (cave, x-1, y, OBJECT_BOULDER, 1);
 		    cave->entry[x-1][y].scanned= TRUE;
 		  }
-		else
-		  cave->entry[x][y].state= 0;
+		else if (cave->entry[x+1][y].object   == OBJECT_EMPTY &&
+		    cave->entry[x+1][y+1].object == OBJECT_EMPTY)
+		  {
+		    cave_set_entry (cave, x, y, OBJECT_EMPTY, 0);
+		    cave_set_entry (cave, x+1, y, OBJECT_BOULDER, 1);
+		    cave->entry[x+1][y].scanned= TRUE;
+		  }
+		else 
+		    cave->entry[x][y].state= 0;
 	      }
   else if (cave->entry[x][y].state == 1)
     {
@@ -933,8 +988,11 @@ boulder_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *context
 	    }
 	  cave_set_entry (cave, x, y, OBJECT_EMPTY, 0);
 	}
-      else
-	cave->entry[x][y].state= 0;
+      else if (cave->entry[x][y].state)
+	{
+	  stones_sound_play (BOULDER_SOUND);
+	  cave->entry[x][y].state= 0;
+	}
     }
   else
     cave->entry[x][y].state= 0;
@@ -966,7 +1024,8 @@ static GStonesObjectDesc boulder_object=
 static void
 diamond_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 {
-  if (cave->entry[x][y+1].object == OBJECT_EMPTY)
+  if (cave->entry[x][y+1].object == OBJECT_EMPTY && 
+        !cave->entry[x][y+1].scanned)
     {
       cave->entry[x][y].object   = OBJECT_EMPTY;
       cave->entry[x][y+1].object = OBJECT_DIAMOND;
@@ -978,21 +1037,21 @@ diamond_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *context
 	     (cave->entry[x][y+1].object == OBJECT_DIAMOND)) &&
 	    cave->entry[x][y+1].state == 0))
 	      {
-		if (cave->entry[x+1][y].object   == OBJECT_EMPTY && 
-		    cave->entry[x+1][y+1].object == OBJECT_EMPTY)
-		  {
-		    cave->entry[x][y].object   = OBJECT_EMPTY;
-		    cave->entry[x+1][y].object = OBJECT_DIAMOND;
-		    cave->entry[x+1][y].state  = 1;
-		    cave->entry[x+1][y].scanned= TRUE;
-		  }
-		else if (cave->entry[x-1][y].object   == OBJECT_EMPTY &&
+		if (cave->entry[x-1][y].object   == OBJECT_EMPTY &&
 			 cave->entry[x-1][y+1].object == OBJECT_EMPTY)
 		  {
 		    cave->entry[x][y].object   = OBJECT_EMPTY;
 		    cave->entry[x-1][y].object = OBJECT_DIAMOND;
 		    cave->entry[x-1][y].state  = 1;
 		    cave->entry[x-1][y].scanned= TRUE;
+		  }
+		else if (cave->entry[x+1][y].object   == OBJECT_EMPTY && 
+		    cave->entry[x+1][y+1].object == OBJECT_EMPTY)
+		  {
+		    cave->entry[x][y].object   = OBJECT_EMPTY;
+		    cave->entry[x+1][y].object = OBJECT_DIAMOND;
+		    cave->entry[x+1][y].state  = 1;
+		    cave->entry[x+1][y].scanned= TRUE;
 		  }
 		else
 		  cave->entry[x][y].state= 0;
@@ -1100,7 +1159,8 @@ explosion_new (GStonesCave *cave, guint x, guint y, gboolean diamond)
 
       GStonesObject *type= cave->entry[xn][yn].object;
       
-      if (type != OBJECT_FRAME)
+      /* FRAME is immune */
+      if (type != OBJECT_FRAME) 
 	{
 	  if (type == OBJECT_GNOME && !(cave->flags & CAVE_FINISHED))
 	    {
@@ -1118,6 +1178,9 @@ explosion_new (GStonesCave *cave, guint x, guint y, gboolean diamond)
 	}
       
     }
+
+  stones_sound_play( EXPLOSION_SOUND );
+
 }
 
 
@@ -1178,6 +1241,7 @@ entrance_signals (GStonesCave *cave, GStonesSignal signal, GStonesObjContext *co
 	for (x= 1 ; x <= CAVE_MAX_WIDTH; x++)
 	  if (cave->entry[x][y].object == OBJECT_ENTRANCE)
 	    cave->entry[x][y].state= 1;
+      stones_sound_play( GNOME_BORN_SOUND );
     }
 }
 
@@ -1329,6 +1393,13 @@ objects_init (GStonesPlugin *plugin)
   SIGNAL_PLAYER_DIE      = gstones_signal ("player.die");
   SIGNAL_PLAYER_START    = gstones_signal ("player.start");
   SIGNAL_OPTION_CHANGED  = gstones_signal ("option.changed");
+
+  sounds[GNOME_BORN_SOUND]  = sound_register ("born.wav");
+  sounds[EXPLOSION_SOUND]   = sound_register ("explosion.wav");
+  sounds[DIG_SOUND]         = sound_register ("dig.wav");
+  sounds[BOULDER_SOUND]     = sound_register ("boulder.wav");
+  sounds[GET_DIAMOND_SOUND] = sound_register ("get_diamond.wav");
+  sounds[DOOR_OPEN_SOUND]   = sound_register ("door_open.wav");
 
   return "gnome-stones";
 }

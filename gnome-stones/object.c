@@ -183,13 +183,34 @@ static GStonesObjectDesc frame_description=
   0, 0
 };
 
+/*****************************************************************************/
+/* This is animated curtain.  */
+
+
+static GStonesObjectDesc curtain_description=
+{
+  "curtain",
+
+  NULL,
+  NULL,
+  
+  NULL,
+  NULL,
+  
+  "animated_curtain.png",
+  NULL,
+  0, 0
+};
+
 
 gchar *
 default_objects_init (GStonesPlugin *plugin)
 {
   object_register (plugin, &frame_description);
+  object_register (plugin, &curtain_description);
 
   return "default";
+
 }
 
 
@@ -287,7 +308,7 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
   
   object->pixbuf_image= g_malloc (num_x*num_y*sizeof (GdkPixbuf*));
   
-  if (object->image == NULL)
+  if (object->pixbuf_image == NULL)
     {
       char *error= g_strconcat ("Error while registering object ", 
 				   description->image_name, 

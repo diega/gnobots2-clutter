@@ -28,6 +28,7 @@
 
 
 #define STONE_SIZE 32
+#define SCROLL_SPEED 26
 
 
 typedef struct _GStonesPlugin       GStonesPlugin;
@@ -211,8 +212,8 @@ struct _GStonesCave
 
   /* Some static information about this cave.  */
   GStonesGame      *game;
-  guint             width;
-  guint             height;
+  gint              width;
+  gint              height;
   gboolean          is_intermission;
   guint             diamond_score;
   guint             extra_diamond_score;
@@ -241,6 +242,9 @@ struct _GStonesCave
   gboolean          player_push;
 
   GStonesCaveEntry  entry[CAVE_MAX_WIDTH+2][CAVE_MAX_HEIGHT+2];
+
+  /* Animated curtain */
+  GStonesObject *animated_curtain;
 
   /* This hash table holds an object context for every object that is used in
      this cave.  */

@@ -1,4 +1,4 @@
-SUBDIRS  = objects graphics help
+SUBDIRS  = objects graphics sounds help
 
 Gamesdir = $(datadir)/applications
 scoredir =$(localstatedir)/games
@@ -19,6 +19,7 @@ bin_PROGRAMS = gnome-stones
 
 gnome_stones_SOURCES =				\
         main.c					\
+	main.h					\
 	types.h					\
 	game.c					\
 	game.h					\
@@ -35,7 +36,9 @@ gnome_stones_SOURCES =				\
 	preferences.c                           \
 	preferences.h                           \
 	view.c                                  \
-	view.h
+	view.h					\
+	sound.c					\
+	sound.h				       
 
 gnome_stones_LDADD =				\
 	$(GNOME_GAMES_LIBS) \
@@ -48,7 +51,7 @@ Games_in_files = gnome-stones.desktop.in
 Games_DATA = $(Games_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
-Caves_in_files = default.caves.in tutorial.caves.in gnomekoban.caves.in
+Caves_in_files = default.caves.in tutorial.caves.in gnomekoban.caves.in atari.caves.in
 Caves_DATA = $(Caves_in_files:.caves.in=.caves)
 @INTLTOOL_CAVES_RULE@
 
@@ -79,3 +82,9 @@ install-data-local:
 gnome-stones.keys: gnome-stones.keys.in Makefile
 	sed -e 's^\@icondir\@^$(Pixmapdir)^g' < $(srcdir)/gnome-stones.keys.in > gnome-stones.keys.tmp \
 	&& mv gnome-stones.keys.tmp gnome-stones.keys 
+
+
+
+
+
+

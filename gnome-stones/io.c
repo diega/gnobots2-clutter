@@ -178,6 +178,7 @@ gstones_game_load (const gchar *name)
   game->new_life_score= gnome_config_get_int    ("General/New life score=500");
   game->lives         = gnome_config_get_int    ("General/Lives=3");
   
+
   /* We now determine the plugins, that this game requires.  */
   {
     gchar *token;

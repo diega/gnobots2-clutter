@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1999/03/03 18:17:52 carsten>
+ * Time-stamp: <2001/09/08 20:19:56 benes>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -24,6 +24,7 @@
 #endif
 
 #include "preferences.h"
+#include "main.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
@@ -67,6 +68,12 @@ guint start_cave= 0;
   guint32 joystick_deviceid = 0;
 #endif
 gfloat   joystick_switch_level= 0.5;
+
+
+/* This is default scroll method for view function */
+
+void (*view_scroll_method) (GStonesView *view, GStonesCave *cave)= atari_scroll;
+
 
 /* The game can be in different states.  These state decides, how to
    react if some events occur.  */
@@ -147,6 +154,15 @@ add_game (const char *filename)
 }
 
 
+gboolean caves_suffix (char *name)
+{
+ int l=strlen (name); 
+ if (l<7) return FALSE;
+
+ return strcmp (name+l-6, ".caves")==0;
+
+}
+
 void
 game_directory_scan (const char *directory)
 {
@@ -162,7 +178,8 @@ game_directory_scan (const char *directory)
 	  char *filename= g_strconcat (directory, "/", entry->d_name, NULL);
 	  struct stat sbuf;
 	  
-	  if ((stat (filename, &sbuf)== 0) && S_ISREG (sbuf.st_mode))
+	  if ( caves_suffix (filename) 
+	       && (stat (filename, &sbuf)== 0) && S_ISREG (sbuf.st_mode))
 	    add_game (filename);
 
 	  g_free (filename);
@@ -202,6 +219,35 @@ load_game_by_name (const char *filename, guint cave)
 
 
 /*****************************************************************************/
+/* string<-->scroll_method conversion  */
+
+
+gchar *scroll_method_name (void)
+{
+  if (view_scroll_method==atari_scroll)
+    return "atari_scroll";
+  if (view_scroll_method==smooth_scroll)
+    return "smooth_scroll";
+  if (view_scroll_method==center_scroll)
+    return "center_scroll";
+ 
+  return "default";
+
+}
+
+void set_scroll_method (gchar *name)
+{
+
+  if (!strcmp (name,"atari_scroll"))  view_scroll_method=atari_scroll;
+  if (!strcmp (name,"smooth_scroll")) view_scroll_method=smooth_scroll;
+  if (!strcmp (name,"center_scroll")) view_scroll_method=center_scroll;
+
+}
+
+
+
+
+/*****************************************************************************/
 /* Save preferences.  */
 
 
@@ -226,8 +272,10 @@ preferences_save (gboolean global)
 #endif  
   if (devicename)
     gnome_config_set_string ("Preferences/Joystick device",  devicename);
-  gnome_config_set_float ("Preferences/Joytick switch level", 
+  gnome_config_set_float ("Preferences/Joystick switch level", 
 			  joystick_switch_level);
+
+  gnome_config_set_string ("Preferences/Scroll method", scroll_method_name());
 
   if (game)
     {
@@ -326,7 +374,10 @@ preferences_restore (void)
 #endif
 
   joystick_switch_level= 
-    gnome_config_get_float ("Preferences/Joytick switch level=0.5");
+    gnome_config_get_float ("Preferences/Joystick switch level=0.5");
+
+  set_scroll_method ( 
+    gnome_config_get_string ("Preferences/Scroll method=atari_scroll") );
 
 
   filename= gnome_config_get_string_with_default ("Preferences/Game", &def);
@@ -373,6 +424,13 @@ struct _PreferencesData
   
   guint32           joystick_deviceid;
   gfloat            joystick_switch_level;
+
+
+  /* Page three */
+
+  /* Page four */
+  gchar            *scroll_method_name;
+
 };
 
 
@@ -394,6 +452,9 @@ preferences_apply_cb (GtkWidget *w, gint page, gpointer data)
     case 1:
       joystick_set_properties (prdata->joystick_deviceid,
 			       prdata->joystick_switch_level);
+      break;
+    case 3:
+      set_scroll_method (prdata->scroll_method_name);
       break;
     default:
       /* After setting all needed values, we can save the programs
@@ -475,6 +536,25 @@ preferences_set_joystick_switch_level (GtkAdjustment *adjust, gpointer data)
 
   gnome_property_box_changed (prdata->property_box);
 }
+
+
+
+/* The scroll method callbacks.  */
+
+static void
+preferences_set_scroll_method (GtkWidget *widget, gpointer data)
+{
+
+  PreferencesData *prdata  = 
+    (PreferencesData *) gtk_object_get_user_data (GTK_OBJECT (widget));
+
+  prdata->scroll_method_name= (gchar *)data;
+
+  gnome_property_box_changed (prdata->property_box);
+
+}
+
+
 
 
 static GtkWidget *
@@ -692,23 +772,128 @@ preferences_dialog_new (void)
 			    (GNOME_PROPERTY_BOX (propbox)->notebook), 
 			    box, label);
 
-  /* The third page of our preferences dialog. 
-   *  box= gtk_vbox_new (FALSE, GNOME_PAD);
-   *  gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
-   */
+  /* The third page of our preferences dialog. */
 
-  /*  label= gtk_label_new (_("Not yet implemented!"));
-   *  gtk_box_pack_start (GTK_BOX (box), label, TRUE, FALSE, GNOME_PAD_SMALL);
-   */
+  box= gtk_vbox_new (FALSE, GNOME_PAD);
+  gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
+  
 
-   /*  gtk_widget_show (label); */
-   /*  gtk_widget_show (box); */
+  label= gtk_label_new (_("Sound enable/disable. Not yet implemented!"));
+  gtk_box_pack_start (GTK_BOX (box), label, TRUE, FALSE, GNOME_PAD_SMALL);
+  
 
-  /* label= gtk_label_new (_("Sound"));
-   *  gtk_notebook_append_page (GTK_NOTEBOOK
-   *                       (GNOME_PROPERTY_BOX (propbox)->notebook),
-   *                       box, label);
-   */
+  gtk_widget_show (label); 
+  gtk_widget_show (box); 
+
+  label= gtk_label_new (_("Sound"));
+  gtk_notebook_append_page (GTK_NOTEBOOK
+			    (GNOME_PROPERTY_BOX (propbox)->notebook),
+			    box, label);
+
+
+  /* Fourth page is miscellaneous stuff */
+  
+  box= gtk_vbox_new (FALSE, GNOME_PAD);
+  gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
+  
+
+  
+  {
+    gint      i=0;
+    GtkWidget *frame;
+    GtkWidget *hbox;
+    GtkWidget *vbox;
+    GtkWidget *menuitem;
+    GtkWidget *optionmenu;
+    GtkWidget *scroll_method_menu;
+
+
+    frame= gtk_frame_new (_("Scroll method"));
+    gtk_box_pack_start (GTK_BOX (box), frame, FALSE, FALSE, GNOME_PAD_SMALL);
+    gtk_widget_show (frame);
+
+    vbox= gtk_vbox_new (FALSE, GNOME_PAD);
+    gtk_container_add (GTK_CONTAINER (frame), vbox);
+    gtk_widget_show (vbox);
+
+    hbox= gtk_hbox_new (FALSE, GNOME_PAD);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, GNOME_PAD_SMALL);
+    gtk_widget_show (hbox);
+
+    /*
+    label= gtk_label_new (_("Scroll method:"));
+    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, GNOME_PAD_SMALL);
+    gtk_widget_show (label);
+    */
+    
+    scroll_method_menu= gtk_menu_new ();
+
+
+    prdata->scroll_method_name = scroll_method_name();
+
+    menuitem= gtk_menu_item_new_with_label (_("Atari like scrolling"));
+    gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
+    gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
+			(GtkSignalFunc) preferences_set_scroll_method,
+			"atari_scroll");
+    gtk_menu_append (GTK_MENU (scroll_method_menu), menuitem);
+    gtk_widget_show (menuitem);
+
+    if (!strcmp(prdata->scroll_method_name,"atari_scroll"))
+      gtk_menu_set_active (GTK_MENU (scroll_method_menu), i++);
+    ++i;
+
+
+
+
+    menuitem= gtk_menu_item_new_with_label (_("Smooth scrolling"));
+    gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
+    gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
+			(GtkSignalFunc) preferences_set_scroll_method,
+			"smooth_scroll");
+    gtk_menu_append (GTK_MENU (scroll_method_menu), menuitem);
+    gtk_widget_show (menuitem);
+
+    if (!strcmp(prdata->scroll_method_name,"smooth_scroll"))
+      gtk_menu_set_active (GTK_MENU (scroll_method_menu), i++);
+    ++i;
+
+
+
+    menuitem= gtk_menu_item_new_with_label (_("Always in the center"));
+    gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
+    gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
+			(GtkSignalFunc) preferences_set_scroll_method,
+			"center_scroll");
+    gtk_menu_append (GTK_MENU (scroll_method_menu), menuitem);
+    gtk_widget_show (menuitem);
+
+    if (!strcmp(prdata->scroll_method_name,"center_scroll"))
+      gtk_menu_set_active (GTK_MENU (scroll_method_menu), i);
+    ++i;
+
+    
+
+   
+    optionmenu= gtk_option_menu_new ();
+    gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu), scroll_method_menu);
+    gtk_box_pack_start (GTK_BOX (hbox), optionmenu, FALSE, FALSE, 2);
+    gtk_widget_show (optionmenu);
+    
+    gtk_widget_show (label);
+    gtk_widget_show (hbox);
+    gtk_widget_show (optionmenu);
+
+  }
+
+  gtk_widget_show (box); 
+
+  label= gtk_label_new (_("Misc."));
+  gtk_notebook_append_page (GTK_NOTEBOOK
+			    (GNOME_PROPERTY_BOX (propbox)->notebook),
+			    box, label);
+
+
 
   gtk_signal_connect (GTK_OBJECT (propbox), "destroy",
 		      GTK_SIGNAL_FUNC (preferences_destroy_cb), prdata);
@@ -735,13 +920,6 @@ preferences_dialog_show (void)
 /* Initialize the session management stuff.  */
 
 
-/* FIXME: should move to main.c.  */
-void
-gstones_exit (GnomeClient *client, gpointer client_data)
-{
-  exit (0);
-}
-
 
 void
 session_management_init (void)
@@ -764,3 +942,8 @@ session_management_init (void)
 /* eval:(add-hook 'write-file-hooks 'time-stamp) */
 /* eval:(setq time-stamp-format '(time-stamp-yyyy/mm/dd time-stamp-hh:mm:ss user-login-name)) */
 /* End: */
+
+
+
+
+

@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1999/03/02 18:48:54 carsten>
+ * Time-stamp: <2001/09/08 18:03:52 benes>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -23,6 +23,7 @@
 
 #include <gnome.h>
 #include "types.h"
+#include "view.h"
 
 
 /*****************************************************************************/
@@ -59,6 +60,14 @@ extern guint start_cave;
 
 extern guint32  joystick_deviceid;
 extern gfloat   joystick_switch_level;
+
+
+/* Which scroll method should we use */
+
+
+extern void (*view_scroll_method) (GStonesView *view, GStonesCave *cave);
+
+
 
 /* The game can be in different states.  These state decides, how to
    react if some events occur.  */

@@ -68,14 +68,18 @@ struct _GStonesView
   ViewDisplayMode         display_mode;
 
   /* cave display */
-  guint                   x_offset;
-  guint                   y_offset;
+  gint                   x_offset;
+  gint                   y_offset;
   gboolean                x_scrolling;
   gboolean                y_scrolling;
 
   /* image display */
   GdkPixmap              *image;
 
+  /* image buffer */
+  GdkPixmap *view_buffer;
+  GdkPixmap *last_image[CAVE_MAX_WIDTH+2][CAVE_MAX_HEIGHT+2];
+ 
   /* curtain display */
   GdkPixmap              *curtain_image;
   ViewCurtainDisplayMode  curtain_display_mode;
@@ -104,4 +108,11 @@ void       view_display_cave     (GStonesView *view, GStonesCave *cave);
 void       view_calculate_offset (GStonesView *view, GStonesCave *cave);
 
 
+
+void       center_scroll (GStonesView *view, GStonesCave *cave);
+void       atari_scroll (GStonesView *view, GStonesCave *cave);
+void       smooth_scroll (GStonesView *view, GStonesCave *cave);
+
+
 #endif
+

@@ -1,3 +1,42 @@
+2002-04-17  Bastien Nocera  <hadess@hadess.net>
+
+	* Makefile.am:
+	* atari.caves.in:
+	* cave.c: (cave_new), (cave_iterate):
+	* graphics/Makefile.am:
+	* graphics/animated_curtain.png:
+	* graphics/boulder.png:
+	* graphics/diamond.png:
+	* io.c: (gstones_game_load):
+	* main.c: (my_exit), (title_image_load), (curtain_ready),
+	(countdown_timeout_function), (countdown_start),
+	(iteration_timeout_function), (load_game), (game_start_cb),
+	(game_stop_cb), (quit_cb), (gstones_exit), (main):
+	* object.c: (default_objects_init), (object_register):
+	* objects/gnome-stones.c: (stones_sound_play), (empty_signals),
+	(gnome_init_cave), (gnome_scanned), (boulder_scanned),
+	(diamond_scanned), (explosion_new), (entrance_signals),
+	(objects_init):
+	* preferences.c: (caves_suffix), (game_directory_scan),
+	(scroll_method_name), (set_scroll_method), (preferences_save),
+	(preferences_restore), (preferences_apply_cb),
+	(preferences_set_scroll_method), (preferences_dialog_new):
+	* preferences.h:
+	* sounds/Makefile.am:
+	* sounds/born.wav:
+	* sounds/boulder.wav:
+	* sounds/dig.wav:
+	* sounds/door_open.wav:
+	* sounds/explosion.wav:
+	* sounds/get_diamond.wav:
+	* sounds/title.wav:
+	* types.h:
+	* view.c: (view_class_init), (view_new), (curtain_visible_test),
+	(view_expose), (view_set_curtain_mode), (atari_scroll),
+	(smooth_scroll), (center_scroll), (view_calculate_offset):
+	* view.h: loads of new files, and major gameplay enhancements by
+	benes@karlin.mff.cuni.cz (Michal Benes), adapted a little bit
+
 2002-02-17  Chris Lyttle  <chris@wilddev.net>
 
 	* help/C/gnome-stones.xml: updated for new template.
