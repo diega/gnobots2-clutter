@@ -1,3 +1,8 @@
+1999-02-19  Raja R Harinath  <harinath@cs.umn.edu>
+
+	* help/C/Makefile.am (index.html): Don't fail if `db2html' failed.
+	(install-data-local): Likewise.
+
 1999-02-13  Ian Peters  <ipeters@acm.org>
 
 	* same-gnome.c (main): Add a default value for config load
