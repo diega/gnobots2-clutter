@@ -842,6 +842,14 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 				res = true;
 			}
 			break;
+		case GDK_space:
+                        if (!t->dropBlock)
+                        {
+                                t->dropBlock = true;
+                                t->ops->dropBlock();
+                                res = TRUE;
+                        }        
+			break;
 		default:
 			return FALSE;
 		}
@@ -862,8 +870,7 @@ Tetris::eventHandler(GtkWidget *widget, GdkEvent *event, void *d)
 			}
 			break;
 		case GDK_space:
-			t->ops->dropBlock();
-			res = TRUE;
+                        t->dropBlock = false;
 			break;
 		default:
 			return FALSE;

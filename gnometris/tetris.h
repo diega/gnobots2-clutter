@@ -154,6 +154,7 @@ private:
 
 	bool fastFall;
 	int fastFallPoints;
+        bool dropBlock;
 };
 
 #endif // __tetris_h__

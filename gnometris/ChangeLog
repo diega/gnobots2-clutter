@@ -1,3 +1,8 @@
+2003-05-27  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* tetris.cpp (eventHandler): Rearranged so that the block drops
+	when the space bar goes down, not when it comes back up.
+
 2003-04-15  Ross Burton  <ross@burtonini.com>
 
 	* tetris.cpp: Actually pass a key name to the sanity check
