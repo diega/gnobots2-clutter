@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <1999/01/09 16:45:59 carsten>
+ * Time-stamp: <1999/01/10 05:56:18 ndf>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -1165,22 +1165,17 @@ about_cb (GtkWidget *widget, gpointer data)
 /* Menu definitions */
 
 
-static GnomeUIInfo game_menu[]= {
-  GNOMEUIINFO_MENU_NEW_ITEM(N_("_New"), N_("Start a new game"),
-			    game_start_cb, NULL),
-  GNOMEUIINFO_SEPARATOR,
-
-  {
-    GNOME_APP_UI_ITEM,
-    N_("_Scores..."), N_("Show highscore table"),
-    show_scores_cb, (gpointer) 0, NULL,
-    GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SCORES,
-    0, (GdkModifierType) 0, NULL
-  },
-
-  GNOMEUIINFO_SEPARATOR,
-
+static GnomeUIInfo file_menu[]= {
   GNOMEUIINFO_MENU_EXIT_ITEM(quit_cb, NULL),
+  GNOMEUIINFO_END
+};
+
+static GnomeUIInfo game_menu[]= {
+  GNOMEUIINFO_MENU_NEW_GAME_ITEM(game_start_cb, NULL),
+
+  GNOMEUIINFO_SEPARATOR,
+
+  GNOMEUIINFO_MENU_SCORES_ITEM(show_scores_cb, NULL),
 
   GNOMEUIINFO_END
 };
@@ -1198,7 +1193,8 @@ static GnomeUIInfo settings_menu[]= {
 
 static GnomeUIInfo main_menu[]= 
 {
-  GNOMEUIINFO_SUBTREE(N_("_Game"), game_menu),
+  GNOMEUIINFO_MENU_FILE_TREE(file_menu),
+  GNOMEUIINFO_MENU_GAME_TREE(game_menu),
   GNOMEUIINFO_MENU_SETTINGS_TREE(settings_menu),
   GNOMEUIINFO_MENU_HELP_TREE(help_menu),
   GNOMEUIINFO_END

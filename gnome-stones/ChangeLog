@@ -1,3 +1,7 @@
+1999-01-10  Nat Friedman  <nat@nat.org>
+
+	* main.c: Standardized the menus.
+
 1999-01-10  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
 	* preferences.c (preferences_dialog_show): New function.
