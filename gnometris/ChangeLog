@@ -3,6 +3,7 @@
 	* gnome-canvas-pimage.c (gnome_canvas_pimage_draw): Convert to
 	pixbufs.  This will allow us to support block images with an
 	alpha layer.
+	(dist_to_mask): Perform some checks for NULL images.
 
 	* tetris.cpp (setupPixmap): Removed unused pix pixmap.
 

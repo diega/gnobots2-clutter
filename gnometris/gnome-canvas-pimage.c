@@ -1,3 +1,5 @@
+/* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
+
 /*
  * This is a temporary hack until somebody optimize GnomeCanvasPixbuf.
  * I just get the GnomeCanvasImage that comes with gnome-libs and ported
@@ -318,10 +320,12 @@ gnome_canvas_pimage_update (GnomeCanvasItem *item, double *affine, ArtSVP *clip_
 
 	free_pixmap_and_mask (image);
 
-	if (image->width != gdk_pixbuf_get_width(image->im) && image->height != gdk_pixbuf_get_height(image->im)) {
+	if (image->width != gdk_pixbuf_get_width(image->im)
+            && image->height != gdk_pixbuf_get_height(image->im)) {
 		GdkPixbuf *tmp;
-		tmp = gdk_pixbuf_scale_simple (image->im, image->width, image->height, GDK_INTERP_BILINEAR);
-		gdk_pixbuf_unref (image->im);
+		tmp = gdk_pixbuf_scale_simple (image->im, image->width, image->height,
+                                               GDK_INTERP_BILINEAR);
+		g_object_unref (image->im);
 		image->im = tmp;
 	}
 
@@ -385,7 +389,7 @@ gnome_canvas_pimage_unrealize (GnomeCanvasItem *item)
 
 	image = GNOME_CANVAS_PIMAGE (item);
 
-	gdk_gc_unref (image->gc);
+	g_object_unref (image->gc);
 	image->gc = NULL;
 
 	if (parent_class->unrealize)
@@ -442,7 +446,7 @@ dist_to_mask (GnomeCanvasPImage *image, int cx, int cy)
 
 	/* Trivial case:  if there is no mask, we are inside */
 
-	if (!image->im)
+	if (image->im == NULL)
 		return 0.0;
 
 	/* Rectangle that we need */
@@ -471,21 +475,24 @@ dist_to_mask (GnomeCanvasPImage *image, int cx, int cy)
 
         gdk_pixbuf_render_pixmap_and_mask (image->im, NULL, &mask, 127);
         
-	gimage = gdk_image_get (mask, dest.x, dest.y, dest.width, dest.height);
-        g_object_unref (mask);
-
-	for (y = 0; y < dest.height; y++)
-		for (x = 0; x < dest.width; x++)
-			if (gdk_image_get_pixel (gimage, x, y)) {
-				tx = x + dest.x - cx;
-				ty = y + dest.y - cy;
-
-				dist = sqrt (tx * tx + ty * ty);
-				if (dist < best)
-					best = dist;
-			}
-
-	gdk_image_destroy (gimage);
+        if (mask != NULL) {
+		gimage = gdk_image_get (mask, dest.x, dest.y,
+					dest.width, dest.height);
+		g_object_unref (mask);
+		if (gimage != NULL) {
+			for (y = 0; y < dest.height; y++)
+				for (x = 0; x < dest.width; x++)
+					if (gdk_image_get_pixel (gimage, x, y)) {
+						tx = x + dest.x - cx;
+						ty = y + dest.y - cy;
+						
+						dist = sqrt (tx * tx + ty * ty);
+						if (dist < best)
+							best = dist;
+					}
+		gdk_image_destroy (gimage);
+		}
+	}
 
 	return best;
 }
