@@ -539,8 +539,8 @@ GnomeActionAreaItem sel_actions [] = {
 void
 game_preferences_callback (GtkWidget *widget, void *data)
 {
-	GtkWidget *menu, *omenu, *l, *hb, *cb; 
-	GtkDialog *d, *f, *fv;
+	GtkWidget *menu, *omenu, *l, *hb, *cb, *f, *fv;
+	GtkDialog *d;
 
 	if (pref_dialog)
 		return;
