@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <1998/08/24 19:16:08 carsten>
+ * Time-stamp: <1998/08/28 05:59:45 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -82,6 +82,14 @@ static GStonesPlayer *player= NULL;
    which cave the player will start.  */
 
 static guint start_cave= 0;
+
+/* If you use a joystick as input device, this variable holds the
+   device's id.  Setting it to GDK_CORE_POINTER disables the Joystick
+   support.  */
+
+static guint32 joystick_deviceid= GDK_CORE_POINTER;
+static gfloat  joystick_switch_level= 0.5;
+
 
 /* The game can be in different states.  These state decide, how to
    react if some events occur.  */
@@ -547,8 +555,6 @@ game_widget_create (void)
 			 GAME_COLS * STONE_SIZE,
 			 GAME_ROWS * STONE_SIZE);
 
-  gtk_widget_show (widget);
-
 #ifdef USE_GNOME_CANVAS
   /* Now for some experimantal gnome canvas stuff.  */
   gnome_canvas_set_size (GNOME_CANVAS (canvas), 
@@ -588,8 +594,11 @@ game_widget_create (void)
   gtk_widget_show (canvas);
 #endif
 
+  gtk_widget_show (widget);
+
   gtk_signal_connect (GTK_OBJECT (widget), "expose_event", 
 		      (GtkSignalFunc) game_widget_expose_event_cb, 0);
+  gtk_widget_set_extension_events (widget, GDK_EXTENSION_EVENTS_ALL);
 
 #ifdef USE_GNOME_CANVAS
   return canvas;
@@ -969,6 +978,47 @@ countdown_start (GStonesCave *cave)
 
 /*****************************************************************************/
 
+void
+joystick_get_information (gint *x_direction, gint *y_direction)
+{
+  /* FIXME: This function should only return a joystick movement, if
+     the game_widget has focus.  */
+  if (joystick_deviceid != GDK_CORE_POINTER)
+    {
+      gdouble x;
+      gdouble y;
+      
+      gint xi;
+      gint yi;
+      
+      gint xdir= 0;
+      gint ydir= 0;
+      
+      GdkModifierType mask;
+      
+      gdk_input_window_get_pointer (GTK_WIDGET (game_widget)->window, 
+				    joystick_deviceid, 
+				    &x, &y, NULL, NULL, NULL, &mask);
+      gdk_window_get_origin (GTK_WIDGET (game_widget)->window, &xi, &yi);
+      
+      x= ((gdouble) xi+x)/gdk_screen_width ()*100.0;
+      y= ((gdouble) yi+y)/gdk_screen_height ()*100.0;
+      
+      if (x > joystick_switch_level)
+	xdir= 1;
+      else if (x < -joystick_switch_level)
+	xdir= -1;
+      else if (y > joystick_switch_level)
+	ydir= 1;
+      else if (y < -joystick_switch_level)
+	ydir= -1;
+      
+      if (x_direction) *x_direction= xdir;
+      if (y_direction) *y_direction= ydir;
+    }
+}
+
+
 CaveFlags flags= 0;
 
 static gint
@@ -979,6 +1029,8 @@ iteration_timeout_function (gpointer data)
 
   if (state == STATE_TITLE)
     return TRUE;
+
+  joystick_get_information (&player_x_direction, &player_y_direction);
   
   cave_iterate (cave, player_x_direction, player_y_direction, player_push);
 
@@ -1169,22 +1221,36 @@ struct _PreferencesData
   /* Page one.  */
   GtkWidget        *game_list;
   gint              selected_game;
+
+  /* Page two. */
+  GtkWidget        *level_frame;
+  
+  guint32           joystick_deviceid;
+  gfloat            joystick_switch_level;
 };
 
 
 static void
 preferences_apply_cb (GtkWidget *w, gint page, gpointer data)
 {
-  PreferencesData *preferences_data= (PreferencesData *) data;
+  PreferencesData *prdata= (PreferencesData *) data;
 
-  g_return_if_fail (preferences_data != NULL);
+  g_return_if_fail (prdata != NULL);
 
   switch (page)
     {
     case 0:
       /* FIXME: Add some checks and warnings here.  */
-      if (preferences_data->selected_game > -1)
-	load_game_by_number (preferences_data->selected_game);
+      if (prdata->selected_game > -1)
+	load_game_by_number (prdata->selected_game);
+      break;
+
+    case 1:
+      joystick_deviceid= prdata->joystick_deviceid;
+      if (joystick_deviceid != GDK_CORE_POINTER)
+	gdk_input_set_mode (joystick_deviceid, GDK_MODE_SCREEN);
+
+      joystick_switch_level= prdata->joystick_switch_level;
       break;
     default:
       break;
@@ -1195,11 +1261,11 @@ preferences_apply_cb (GtkWidget *w, gint page, gpointer data)
 static void
 preferences_changed_cb (GtkWidget *w, gpointer data)
 {
-  PreferencesData *preferences_data= (PreferencesData *) data;
+  PreferencesData *prdata= (PreferencesData *) data;
   
-  g_return_if_fail (preferences_data != NULL);
+  g_return_if_fail (prdata != NULL);
 
-  gnome_property_box_changed (preferences_data->property_box);
+  gnome_property_box_changed (prdata->property_box);
 }
 
 
@@ -1212,17 +1278,54 @@ preferences_delete_cb (GtkWidget *w, GdkEventAny *event, gpointer data)
 }
 
 
-static void game_selector_select_row (GtkCList * clist,
-				      gint row, gint column,
-				      GdkEvent * event, gpointer data)
+static void 
+game_selector_select_row (GtkCList * clist,
+			  gint row, gint column,
+			  GdkEvent * event, gpointer data)
 {
-  PreferencesData *preferences_data= (PreferencesData *) data;
+  PreferencesData *prdata= (PreferencesData *) data;
   
-  g_return_if_fail (preferences_data != NULL);
+  g_return_if_fail (prdata != NULL);
 
   preferences_changed_cb (GTK_WIDGET (clist), data);
 
-  preferences_data->selected_game= row;
+  prdata->selected_game= row;
+}
+
+
+/* The joystick callbacks.  */
+
+static void
+preferences_set_joystick_device (GtkWidget *widget, gpointer data)
+{
+  guint32          deviceid= GPOINTER_TO_UINT(data);
+  PreferencesData *prdata  = 
+    (PreferencesData *) gtk_object_get_user_data (GTK_OBJECT (widget));
+
+  prdata->joystick_deviceid= deviceid;
+  
+  if (deviceid == GDK_CORE_POINTER)
+    {
+      gtk_widget_set_sensitive (prdata->level_frame, FALSE);
+    }
+  else
+    {
+      gtk_widget_set_sensitive (prdata->level_frame, TRUE);
+    }
+
+  gnome_property_box_changed (prdata->property_box);
+}
+
+
+static void
+preferences_set_joystick_switch_level (GtkAdjustment *adjust, gpointer data)
+{
+  PreferencesData *prdata  = 
+    (PreferencesData *) gtk_object_get_user_data (GTK_OBJECT (adjust));
+
+  prdata->joystick_switch_level= adjust->value;
+
+  gnome_property_box_changed (prdata->property_box);
 }
 
 
@@ -1233,12 +1336,12 @@ preferences_dialog_new (void)
   GtkWidget *box;
   GtkWidget *label;
   GtkWidget *list;
-  PreferencesData *preferences_data;
+  PreferencesData *prdata;
 
-  preferences_data= g_malloc (sizeof (PreferencesData));
+  prdata= g_malloc (sizeof (PreferencesData));
 
   propbox= gnome_property_box_new ();
-  preferences_data->property_box= GNOME_PROPERTY_BOX (propbox);
+  prdata->property_box= GNOME_PROPERTY_BOX (propbox);
   
   gtk_window_set_title (GTK_WINDOW(&GNOME_PROPERTY_BOX(propbox)->dialog.window),
 			_("Gnome-Stones Preferences"));
@@ -1248,7 +1351,7 @@ preferences_dialog_new (void)
 
   /* The list of game names.  */
   list= gtk_clist_new (3);
-  preferences_data->game_list= list;
+  prdata->game_list= list;
 
   gtk_clist_set_column_title (GTK_CLIST (list), 0, _("Game title"));
   gtk_clist_set_column_width (GTK_CLIST (list), 0, 250);
@@ -1268,7 +1371,7 @@ preferences_dialog_new (void)
   gtk_box_pack_start (GTK_BOX (box), list, FALSE, FALSE, 0);
 
   gtk_clist_freeze (GTK_CLIST (list));
-  preferences_data->selected_game= -1;
+  prdata->selected_game= -1;
   {
     GList *tmp= games;
     
@@ -1289,7 +1392,7 @@ preferences_dialog_new (void)
 	if (game && strcmp (file->filename, game->filename) == 0)
 	  {
 	    gtk_clist_select_row (GTK_CLIST (list), row, 0);
-	    preferences_data->selected_game= row;
+	    prdata->selected_game= row;
 	  }
 
 	tmp= tmp->next;
@@ -1298,7 +1401,7 @@ preferences_dialog_new (void)
   gtk_clist_thaw (GTK_CLIST (list));
   gtk_signal_connect (GTK_OBJECT (list), "select_row", 
 		      GTK_SIGNAL_FUNC (game_selector_select_row),
-		      preferences_data);
+		      prdata);
 
   gtk_widget_show (list);
   gtk_widget_show (box);
@@ -1309,6 +1412,126 @@ preferences_dialog_new (void)
 			    box, label);
 
   /* The second page of our preferences dialog. */
+
+  prdata->joystick_deviceid    = joystick_deviceid;
+  prdata->joystick_switch_level= joystick_switch_level;
+
+  box= gtk_vbox_new (TRUE, 4);
+  
+  {
+    guint      i;
+    GtkObject *adjust;
+    GtkWidget *frame;
+    GtkWidget *scale;
+    GtkWidget *hbox;
+    GtkWidget *vbox;
+    GtkWidget *menuitem;
+    GtkWidget *optionmenu;
+    GtkWidget *device_menu;
+    GList     *tmp;
+    GList     *device_info= gdk_input_list_devices ();
+
+    frame= gtk_frame_new (_("Device"));
+    gtk_box_pack_start (GTK_BOX (box), frame, TRUE, FALSE, 0);
+    gtk_widget_show (frame);
+
+    vbox= gtk_vbox_new (FALSE, 2);
+    gtk_container_add (GTK_CONTAINER (frame), vbox);
+    gtk_widget_show (vbox);
+
+    hbox= gtk_hbox_new (FALSE, 2);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 2);
+    gtk_widget_show (hbox);
+
+    label= gtk_label_new (_("Joystick device:"));
+    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 2);
+    gtk_widget_show (label);
+    
+    device_menu= gtk_menu_new ();
+
+    /* We definatly have a "disable" entry.  */
+    menuitem= gtk_menu_item_new_with_label (_("disabled"));
+    gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
+    gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
+			(GtkSignalFunc) preferences_set_joystick_device,
+			GUINT_TO_POINTER (GDK_CORE_POINTER));
+    gtk_menu_append (GTK_MENU (device_menu), menuitem);
+    gtk_widget_show (menuitem);
+    
+    for (tmp= device_info, i= 1; tmp; tmp= tmp->next, i++)
+      {
+	GdkDeviceInfo *info = (GdkDeviceInfo *) tmp->data;
+
+	if (info->deviceid != GDK_CORE_POINTER)
+	  {
+	    menuitem= gtk_menu_item_new_with_label (info->name);
+
+	    gtk_object_set_user_data (GTK_OBJECT (menuitem), prdata);
+            gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
+                                (GtkSignalFunc) preferences_set_joystick_device,
+                                GUINT_TO_POINTER (info->deviceid));
+
+	    gtk_menu_append (GTK_MENU (device_menu), menuitem);
+	    gtk_widget_show (menuitem);
+	  }
+
+	if (info->deviceid == prdata->joystick_deviceid)
+	  gtk_menu_set_active (GTK_MENU (device_menu), i);
+      }
+    
+    optionmenu= gtk_option_menu_new ();
+    gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu), device_menu);
+    gtk_box_pack_start (GTK_BOX (hbox), optionmenu, FALSE, FALSE, 2);
+    gtk_widget_show (optionmenu);
+    
+    gtk_widget_show (label);
+    gtk_widget_show (hbox);
+    gtk_widget_show (optionmenu);
+
+    frame= gtk_frame_new (_("Binary joytick emulation"));
+    gtk_box_pack_start (GTK_BOX (box), frame, TRUE, FALSE, 0);
+    gtk_widget_show (frame);
+
+    vbox= gtk_vbox_new (FALSE, 2);
+    gtk_container_add (GTK_CONTAINER (frame), vbox);
+    gtk_widget_show (vbox);
+
+    hbox= gtk_hbox_new (FALSE, 2);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 2);
+    gtk_widget_show (hbox);
+
+    label= gtk_label_new (_("Switch level:"));
+    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 2);
+    gtk_widget_show (label);
+
+    adjust= gtk_adjustment_new (prdata->joystick_switch_level,
+				0.0, 1.0, 0.02, 0.1, 0.0);
+    gtk_object_set_user_data (adjust, prdata);
+    gtk_signal_connect (adjust, "value_changed",
+			(GtkSignalFunc) preferences_set_joystick_switch_level,
+			NULL);
+    
+    scale= gtk_hscale_new (GTK_ADJUSTMENT (adjust));
+    gtk_scale_set_digits (GTK_SCALE (scale), 2);
+    gtk_box_pack_start (GTK_BOX (hbox), scale, FALSE, FALSE, 2);
+    gtk_widget_show (scale);
+    
+    if (prdata->joystick_deviceid == GDK_CORE_POINTER)
+      {
+	gtk_widget_set_sensitive (GTK_WIDGET (frame), FALSE);
+      }
+
+    prdata->level_frame= frame;
+  }
+  
+  gtk_widget_show (box);
+
+  label= gtk_label_new (_("Joystick"));
+  gtk_notebook_append_page (GTK_NOTEBOOK 
+			    (GNOME_PROPERTY_BOX (propbox)->notebook), 
+			    box, label);
+
+  /* The third page of our preferences dialog. */
   box= gtk_vbox_new (TRUE, 4);
 
   label= gtk_label_new (_("Not yet implemented!"));
@@ -1323,11 +1546,9 @@ preferences_dialog_new (void)
 			    box, label);
 
   gtk_signal_connect (GTK_OBJECT (propbox), "delete_event",
-		      GTK_SIGNAL_FUNC (preferences_delete_cb),
-		      preferences_data);
+		      GTK_SIGNAL_FUNC (preferences_delete_cb), prdata);
   gtk_signal_connect (GTK_OBJECT (propbox), "apply",
-		      GTK_SIGNAL_FUNC (preferences_apply_cb),
-		      preferences_data);
+		      GTK_SIGNAL_FUNC (preferences_apply_cb), prdata);
   return propbox;
 }
 
@@ -1581,7 +1802,6 @@ main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (app), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_main_quit), 0);
   
-
   gtk_widget_show (app);
 
   load_images ();

@@ -1,3 +1,20 @@
+1998-08-28  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* main.c: Added the global variables 'joystick_deviceid' and
+ 	'joystick_switch_level'. These variables hold the joystick
+ 	configuration.
+	(game_widget_create): Make the 'game_widget' receive XInput
+ 	events.
+	(joystick_get_information): New function.
+	(iteration_timeout_function): Additionally call
+ 	joystick_get_information.
+	(struct _PreferencesData): Extended the structure.
+	(preferences_apply_cb): Now also sets joystick information.
+	(preferences_set_joystick_device): New function.
+	(preferences_set_joystick_switch_level): New function.
+	(preferences_dialog_new): New joystick configuration notebook
+ 	added.
+
 1998-08-26  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
 	* README: New file.
