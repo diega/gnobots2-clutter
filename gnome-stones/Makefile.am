@@ -1,7 +1,7 @@
+SUBDIRS  = graphics
 
 Gamesdir = $(datadir)/apps/Games
 scoredir =$(localstatedir)/games
-pixmapdir= $(datadir)/pixmaps/gnome-stones
 Pixmapdir= $(datadir)/pixmaps
 Cavesdir = $(datadir)/gnome-stones
 
@@ -27,7 +27,9 @@ gnome_stones_SOURCES =				\
 	player.c				\
 	player.h				\
 	status.c				\
-	status.h
+	status.h                                \
+	preferences.c                           \
+	preferences.h
 
 gnome_stones_LDADD =				\
 	$(GNOME_LIBDIR)				\
@@ -35,19 +37,16 @@ gnome_stones_LDADD =				\
 	$(INTLLIBS)
 
 
-pixmap_DATA= tiles.png title.png
 Pixmap_DATA= gnome-stones.png
 Games_DATA = gnome-stones.desktop
-Caves_DATA = default.caves
+Caves_DATA = default.caves tutorial.caves
 
 EXTRA_DIST    = 				\
-	$(pixmap_DATA)				\
 	$(Pixmap_DATA)				\
 	$(Games_DATA)				\
 	$(Caves_DATA)				\
-	title.xcf				\
-	tiles.xcf				\
-	TODO
+	TODO					\
+	README
 
 install-data-local:
 	-$(mkinstalldirs) $(scoredir)
