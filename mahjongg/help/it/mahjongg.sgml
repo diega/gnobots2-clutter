@@ -5,6 +5,8 @@
 
 <article id="index">
 
+  <artheader>
+  
     <title>Mahjongg per Gnome</title>
     <copyright>
       <year>1998</year>
@@ -140,7 +142,8 @@
     <para>
       Si inizia con cinque livelli di tessere disposte in modo che alcune
       siano coperte dalle tessere che gli sono sopra. Selezionando, nella
-      <link linkend="prefs">finestra di dialogo <interface>Preferenze&hellip;</interface>,
+      <link linkend="prefs">finestra di dialogo <interface>Preferenze&hellip;
+      </interface></link>,
       un livello più difficile otterrete che all'inizio del gioco un
       maggior numero di tessere sarà coperto. Lo scopo del gioco in
       <application>Mahjongg per Gnome</application> è di eliminare tutte le
@@ -631,11 +634,11 @@
 	    <guilabel>Avverti quando le tessere non 
 	    corrispondono</guilabel> &mdash; 
 	    Questa opzione determina se deve apparire la
-	    <link linkend="info-fig2">Finestra informativa<interface> quando
-	    le due tessere non combaciano. Se la casella è alzata apparirà
+	    <link linkend="info-fig2"><interface>Finestra informativa</interface>
+	    quando le due tessere non combaciano. Se la casella è alzata apparirà
 	    il messaggio <quote>Le tessere sono diverse!</quote> nell'angolo
 	    in basso a sinistra della <interface>Finestra 
-	    principale</interface>.
+	    principale</interface></link>.
 	  </para>
 	</listitem>
 	<listitem>
@@ -752,7 +755,7 @@
   <para>
    Una copia della <citetitle>Licenza pubblica generica GNU</citetitle>
    è inclusa come appendice nella <citetitle>Guida utente di
-   GNOME<citetitle>. È possibile anche ottenerne una copia dalla
+   GNOME</citetitle>. È possibile anche ottenerne una copia dalla
    Free Software Foundation visitando <ulink type="http"
    url="http://www.fsf.org/">il loro sito Web</ulink> o scrivendo a:
    <address>

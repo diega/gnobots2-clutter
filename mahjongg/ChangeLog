@@ -1,3 +1,8 @@
+2001-08-14  Kjartan Maraas  <kmraaas@gnome.org>
+
+	* help/*/*.sgml: Fix up the sgml. My italian is a bit rusty
+	so you might want to check that I didn't break anything :)
+	
 2001-07-27  Abel Cheung  <maddog@linux.org.hk>
 
 	* mahjongg.desktop: Added traditional Chinese translation.
