@@ -297,6 +297,9 @@ tilepos hard_map [MAX_TILES] = {
 	{ 14, 0,  0}
 };
 tilepos *pos = hard_map ;
+int xpos_offset;
+int ypos_offset;
+
 tile tiles[MAX_TILES];
 
 GtkWidget *window, *pref_dialog, *hint_dialog;
@@ -1340,11 +1343,21 @@ gint area_event (GtkWidget *widget, GdkEvent *event, void *d)
 void set_map (char *name)
 {
   int lp ;
+  int xmax = 0, ymax = 0;
+  tilepos *t;
 
   for (lp=0;lp<sizeof(maps)/sizeof(struct _maps);lp++)
     if (strcasecmp (maps[lp].name, name) == 0)
       {
 	pos = maps[lp].map ;
+
+	for ( t = pos ; t < pos + MAX_TILES ; t++ ) {
+	    if ( (*t).x  > xmax ) xmax = (*t).x;
+	    if ( (*t).y  > ymax ) ymax = (*t).y;
+	}
+	xpos_offset = ( AREA_WIDTH - (HALF_WIDTH * (xmax+1)) ) / 2;
+	ypos_offset = ( AREA_HEIGHT - (HALF_HEIGHT * (ymax+1) ) ) / 2;
+
 	generate_dependancies() ;
 	new_game () ;
 
@@ -1408,8 +1421,8 @@ void create_mahjongg_board (void)
 	gtk_widget_show (draw_area);
 
 	gtk_drawing_area_size (GTK_DRAWING_AREA (draw_area),
-			       600,
-			       480);
+			       AREA_WIDTH,
+			       AREA_HEIGHT);
 
 	buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/tileset=default.png", NULL);
 	load_tiles (buf);

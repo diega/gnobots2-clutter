@@ -318,15 +318,18 @@ void validate_tile (int t)
 /* Place tile in map at position f, with pic & type from t */
 void place_tile (int f, int t, int idx)
 {
+  int xoff, yoff;
 #ifdef PLACE_DEBUG
   printf ("Placing at\n") ;
   dump_tile(f) ;
 #endif
   tiles[f].visible = 1;
   tiles[f].selected = 0;
-  tiles[f].x = pos[f].x * (HALF_WIDTH-0) + 120 + (5 * pos[f].layer);
-  tiles[f].y = pos[f].y * (HALF_HEIGHT-0) + 25 - (4 * pos[f].layer);
+
+  tiles[f].x = pos[f].x * (HALF_WIDTH-0) + xpos_offset + (5 * pos[f].layer);
+  tiles[f].y = pos[f].y * (HALF_HEIGHT-0) + ypos_offset - (4 * pos[f].layer);
   tiles[f].layer = pos[f].layer;
+
   /*  if (tiles[f].layer>0)
       tiles[f].visible = 0 ;
       tiles[f].sequence = 0 ; */

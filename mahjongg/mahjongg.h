@@ -18,11 +18,16 @@
 #define MAX_TILES 144
 #define MAX_TILES_STR "144"
 
+#define AREA_WIDTH 600
+#define AREA_HEIGHT 480
 #define TILE_WIDTH 40
 #define TILE_HEIGHT 56
 #define HALF_WIDTH 18
 #define HALF_HEIGHT 26
 #define MAH_VERSION "0.5.0"
+
+extern int xpos_offset;
+extern int ypos_offset;
 
 typedef struct _tilepos tilepos;     
 typedef struct _tile tile;
