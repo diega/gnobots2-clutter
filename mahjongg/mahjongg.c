@@ -646,7 +646,7 @@ void about_callback (GtkWidget *widget, gpointer data)
 		NULL
 	};
 
-	about = gnome_about_new (_("Gnome Mahjong"), MAH_VERSION,
+	about = gnome_about_new (_("Gnome Mahjongg"), MAH_VERSION,
 				 "(C) 1998 The Free Software Foundation",
 				 authors,
 				 _("Send comments and bug reports to: pancho@nuclecu.unam.mx"),
