@@ -107,7 +107,44 @@
   </sect1>
  </chapter>
  <chapter id="prgfmt"><title>Program File Format</title>
-  <para></para>
+  <para>
+Any empty line or any line beginning with a hash (#) is ignored. In other
+case, five tokens, each separated by a space, are expected. These are the
+state number, the expected symbol, the symbol to write, the direction to
+move, and the new state. Anything following these tokens is ignored.
+</para>
+<para>
+Expected symbols and symbols to write can be any printable character.
+The blank character is represented by the underscore (_). States are integer
+numbers, starting from 0. The possible directions to move are left and
+right, represented by 'l' and 'r', respectively.
+</para>
+<para>
+The machine starts at state 0 and stops when it cannot find the new state or
+the new state doesn't expect the read symbol.
+</para>
+<para>
+It is important to note that, as the machine's tape is supposed to be of
+infinite length, the tape will have an infinite number of blank spaces
+appended at each end of what the user set as the tape's contents.
+</para>
+<para>
+<example><title>Binary ++</title>
+<programlisting>
+# This program adds 1 to a binary number. The initial tape must be a binary
+# number.
+
+0 1 1 r 0 Move to the rightmost digit of the binary number. Then, goto 
+0 0 0 r 0 state 1.
+0 _ _ l 1
+1 1 0 l 1 If there is a 1, change it for a 0 and move left.
+1 0 1 r 2 If there is a 0, change it for a 1 and goto state 2
+1 _ 1 r 2 Same for the blank space.
+
+# As there is no state 2, the machine stops.
+</programlisting>
+</example>
+	</para>
  </chapter>
 </book>
 
