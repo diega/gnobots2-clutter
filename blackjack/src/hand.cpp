@@ -573,13 +573,15 @@ bj_hand_finish_play ()
             check_splits = false;
           }
         if (player->getCount () >= 21) 
-          if ((player = player->nextHand) == NULL)
+          if (player->nextHand == NULL)
             {
               check_splits = false;
               allSettled = false;
               bj_hand_finish ();
             }
-        
+          else
+            player = player->nextHand;
+
         bj_hand_show_dealer_probabilities ();
         bj_hand_show_options ();
       }
