@@ -1089,7 +1089,7 @@ void undo_tile_callback (GtkWidget *widget, gpointer data)
     if (selected_tile<MAX_TILES) 
       {
 	tiles[selected_tile].selected = 0 ;
-	change_tile_image (&tiles[i]);
+	change_tile_image (&tiles[selected_tile]);
 	selected_tile = MAX_TILES + 1; 
       }
 
