@@ -3,8 +3,7 @@ pixmapdir = $(datadipixmapdir = $(datadir)/pixmaps/phaser-chess
 Gamesdir  = $(datadir)/apps/Games
 
 INCLUDES = 			\
-	-I$(includedir)		\
-	$(X_CFLAGS)
+	-I$(includedir)
 
 SUFFIXES = .m
 
