@@ -277,7 +277,7 @@ static void recreate_tile_images (void)
     fg = games_preimage_render (tilepreimage, tilewidth*NUM_PATTERNS,
                                 tileheight*2, NULL);
     
-    /* This usually handles corrupt, non-scalable images. */
+    /* Handle corrupt images that were not caught during preimage creation. */
     if (fg == NULL) {
       g_object_unref (tilepreimage);
       tilepreimage = NULL;
