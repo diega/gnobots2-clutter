@@ -384,7 +384,7 @@ gboolean load_images (gchar * file)
   g_free (temp);
 
   if (filename == NULL) {
-    file = "mahjongg/default.svg";
+    file = "mahjongg/default.png";
     filename = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
                                           file, TRUE, NULL);
     if (filename == NULL) {

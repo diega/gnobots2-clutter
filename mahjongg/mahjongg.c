@@ -1984,7 +1984,7 @@ load_preferences (void)
 
 	buf = gconf_client_get_string (conf_client, "/apps/mahjongg/tileset", NULL);
 	if (buf == NULL) {
-		buf = g_strdup("default.svg");
+		buf = g_strdup("default.png");
 	}
 	selected_tileset = g_strdup (buf);
 	g_free (buf);	

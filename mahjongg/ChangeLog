@@ -1,3 +1,9 @@
+2004-02-24  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c (load_preferences): 
+	* drawing.c (load_images): Remove references to the never-finished
+	default.svg.
+
 2004-02-23  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c: Fixed up the ordering of the "Confouding Cross"
