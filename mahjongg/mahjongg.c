@@ -257,20 +257,20 @@ void redraw_area (int x1, int y1, int x2, int y2, int mlayer);
 void about_callback (GtkWidget *widget, gpointer data);
 
 GnomeMenuInfo filemenu [] = {
-	{GNOME_APP_MENU_ITEM, "New", new_game_callback, NULL},
-	{GNOME_APP_MENU_ITEM, "Setup", NULL, NULL},
-	{GNOME_APP_MENU_ITEM, "Exit", quit_game_callback, NULL},
+	{GNOME_APP_MENU_ITEM, N_("New"), new_game_callback, NULL},
+	{GNOME_APP_MENU_ITEM, N_("Setup"), NULL, NULL},
+	{GNOME_APP_MENU_ITEM, N_("Exit"), quit_game_callback, NULL},
 	{GNOME_APP_MENU_ENDOFINFO, NULL, NULL, NULL}
 };
 
 GnomeMenuInfo helpmenu[] = {
-	{GNOME_APP_MENU_ITEM, "About", about_callback, NULL},
+	{GNOME_APP_MENU_ITEM, N_("About"), about_callback, NULL},
 	{GNOME_APP_MENU_ENDOFINFO, NULL, NULL, NULL}
 };
 
 GnomeMenuInfo mainmenu [] = {
-	{GNOME_APP_MENU_SUBMENU, "File", filemenu, NULL},
-	{GNOME_APP_MENU_SUBMENU, "Help", helpmenu, NULL},
+	{GNOME_APP_MENU_SUBMENU, N_("File"), filemenu, NULL},
+	{GNOME_APP_MENU_SUBMENU, N_("Help"), helpmenu, NULL},
 	{GNOME_APP_MENU_ENDOFINFO, NULL, NULL, NULL}
 };
 
@@ -607,10 +607,10 @@ void about_callback (GtkWidget *widget, gpointer data)
 		NULL
 	};
 
-	about = gnome_about_new ("Gnome Mahjong", VERSION,
+	about = gnome_about_new (_("Gnome Mahjong"), VERSION,
 				 "(C) 1998 The Free Software Foundation",
 				 authors,
-				 "Send comments and bug reports to: pancho@nuclecu.unam.mx",
+				 _("Send comments and bug reports to: pancho@nuclecu.unam.mx"),
 				 NULL);
 	gtk_widget_show (about);
 }
@@ -906,7 +906,7 @@ void button_pressed (int x, int y)
 					selected_tile = MAX_TILES + 1;
 				}
 				else {
-					printf ("Tiles don't match \n");
+					printf (_("Tiles don't match \n"));
 					i = selected_tile;
 				}
 			}
@@ -1011,9 +1011,10 @@ int main (int argc, char *argv [])
 	gtk_init (&argc, &argv);
 	gnome_init (&argc, &argv);
 
+	textdomain (PACKAGE);
 	srand (time (NULL));
 	
-	window = gnome_app_new ("gmahjongg", "Gnome Mahjongg");
+	window = gnome_app_new ("gmahjongg", _("Gnome Mahjongg"));
 	gtk_widget_realize (window);
 	gtk_window_set_policy (GTK_WINDOW (window), FALSE, FALSE, TRUE);
 
