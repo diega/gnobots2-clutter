@@ -1087,7 +1087,7 @@ mapset_changed_cb (GConfClient *client,
 		GTK_MESSAGE_QUESTION,
 		GTK_BUTTONS_NONE,
 		"<b>%s</b>\n\n%s", 
-		_("Do you want to finish the current game or start playing with the new map immediately ?"),
+		_("Do you want to finish the current game or start playing with the new map immediately?"),
 		_("If you choose to finish with the old map then the next game will use the new map."));
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
 				_("_Finish"), GTK_RESPONSE_REJECT,

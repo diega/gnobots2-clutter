@@ -1,3 +1,7 @@
+2004-09-15  callum  <callum@spooky-possum.org>
+
+	* mahjongg.c (mapset_changed_cb): Remove whitespace before punctuation.
+
 2004-09-09  callum  <callum@spooky-possum.org>
 
 	* help/C/figures/*.png:
