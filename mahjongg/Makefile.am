@@ -22,11 +22,13 @@ bin_PROGRAMS = mahjongg
 
 mahjongg_SOURCES = 	\
 	mahjongg.c	\
+	mahjongg.h	\
 	drawing.c	\
 	drawing.h	\
+	maps.c		\
+	maps.h		\
 	solubility.c	\
-	solubility.h	\
-	mahjongg.h
+	solubility.h	
 
 mahjongg_LDADD =					\
 	$(GNOME_GAMES_LIBS)				\

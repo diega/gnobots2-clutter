@@ -10,21 +10,18 @@
  * pancho@nuclecu.unam.mx
  *
  */
-#include <gnome.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
 
-#define MAX_TILES 144
+#ifndef MAHJONGG_H
+#define MAHJONGG_H
+
+#include <gnome.h>
+
+#include "maps.h"
+
+
 #define MAX_TILES_STR "144"
 
-struct _tilepos {
-	int x;
-	int y;
-	int layer;
-};
-typedef struct _tilepos tilepos;     
-
 extern tilepos *pos;
-
 
 typedef struct _tile tile;
 
@@ -42,3 +39,6 @@ void tile_event (gint tileno, gint button);
 extern tile tiles[MAX_TILES];
 extern gint paused;
 extern gchar * tileset;
+
+#endif /* MAHJONGG_H */
+

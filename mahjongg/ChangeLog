@@ -1,3 +1,12 @@
+2004-11-04  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* maps.c:
+	* maps.h:
+	* mahjongg.c:
+	* mahjongg.h: Add code to load maps from a file.
+
+	* solubility.h: Protect if the #ifndef etc.
+
 2004-11-02  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c: Menu state fixes. Including bug #156961.
