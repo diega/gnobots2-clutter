@@ -1,3 +1,8 @@
+2001-06-26  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	* help/ip/Makefile.am (figs): Remove some inexistents figures,
+	  now distcheck work fine.
+
 2001-05-26  Juan Pablo Mendoza <pablo_juan@yahoo.com>
 
 	* mahjongg.c (apply_preferences), (fill_tile_menu),
