@@ -4,7 +4,7 @@ Gamesdir=$(datadir)/gnome/apps/Games
 
 INCLUDES=\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
-	$(GNOME_INCLUDEDIR)
+	$(GNOME_INCLUDEDIR) $(GDK_PIXBUF_CFLAGS)
 
 bin_PROGRAMS=gnometris
 
@@ -26,6 +26,7 @@ gnometris_SOURCES=\
 gnometris_LDADD=\
 	$(GNOME_LIBDIR) \
 	$(GNOMEUI_LIBS) \
+	$(GDK_PIXBUF_LIBS) \
 	$(INTLLIBS)
 
 
