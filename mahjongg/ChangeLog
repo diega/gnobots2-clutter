@@ -1,3 +1,9 @@
+2004-02-23  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c: Fixed up the ordering of the "Confouding Cross"
+	level. Also removed the separator from the settings menu, it is
+	not needed on a two-item menu.	
+
 2004-02-20  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am: Added the maya.png tileset from Gonzalo Odiard.
