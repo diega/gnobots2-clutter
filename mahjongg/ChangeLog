@@ -1,3 +1,11 @@
+2003-08-24  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* solubility.c: I have rewritten the generate game code yet
+	again. It builds a tree of moves so that if it hits a dead-end it
+	backtracks rather than starting over again as the last version
+	did. Unfortunately some of the elegance has disappeared in the
+	debugging stage.
+
 2003-08-18  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* solubility.c: Moved some code from generate_dependencies to
