@@ -1,5 +1,8 @@
 2003-05-31  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* Makefile.am: Undo the score directory
+	changes. It breaks more than it fixes.
+
 	* tetris.cpp (fillMenu): Add support for jpg images as
 	backgrounds.
 
