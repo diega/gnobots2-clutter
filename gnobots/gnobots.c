@@ -742,7 +742,7 @@ gpointer    data
     
     save_properties();
     
-    gtk_widget_destroy(app);
+//    gtk_widget_destroy(app);
     gtk_main_quit();
 }
 
@@ -1244,10 +1244,9 @@ int main(
 int argc,
 char *argv[]
 ){
-    GtkWidget *box;
     GtkWidget *sttbl;
     GtkWidget *label;
-    GtkWidget *frame;
+    GtkWidget *appbar;
     GnomeClient *client;
     char buf[PATH_MAX];
     
@@ -1292,26 +1291,16 @@ char *argv[]
 
     load_properties();
 
-    box = gtk_vbox_new(FALSE, 0);
-    gnome_app_set_contents(GNOME_APP(app), box);
 
     game_area = gtk_drawing_area_new();
-    gtk_box_pack_start(GTK_BOX(box), game_area, TRUE, TRUE, 0);
+    gnome_app_set_contents(GNOME_APP(app), game_area);
     gtk_widget_realize(game_area);
     gtk_drawing_area_size(GTK_DRAWING_AREA(game_area),
             TILE_WIDTH*GAME_WIDTH, TILE_HEIGHT*GAME_HEIGHT);
     gtk_widget_show(game_area);
 
-    frame = gtk_frame_new(NULL);
-    gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_OUT);
-    gtk_container_border_width(GTK_CONTAINER(frame), 0);
-    gtk_widget_show(frame);
 
     sttbl = gtk_table_new(1, 8, FALSE);
-
-    gtk_container_add(GTK_CONTAINER(frame), sttbl);
-
-    gtk_box_pack_start(GTK_BOX(box), frame, TRUE, TRUE, 0);
 
     label = gtk_label_new(_("Score:"));
     gtk_table_attach(GTK_TABLE(sttbl), label, 0, 1, 0, 1, 0, 0, 3, 3);
@@ -1342,8 +1331,11 @@ char *argv[]
     gtk_widget_show(level_label);
     
     gtk_widget_show(sttbl);
+
+    appbar = gnome_appbar_new(FALSE, FALSE, FALSE);
+    gtk_box_pack_start(GTK_BOX(appbar), sttbl, FALSE, FALSE, 0);
     
-    gtk_widget_show(box);
+    gnome_app_set_statusbar(GNOME_APP(app), appbar);
 
     load_bubble_pixmaps();
 
