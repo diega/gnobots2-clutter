@@ -1,6 +1,8 @@
 2003-06-19  William Jon McCann  <mccann@jhu.edu>
 
 	* tetris.cpp: #define all the gconf keys for convenience.
+	(setupPixmap):
+	(gameProperties): Use g_build_filename.
 
 	* scoreframe.cpp (ScoreFrame): Convert to gconf.
 

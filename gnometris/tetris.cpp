@@ -278,9 +278,9 @@ Tetris::setupPixmap()
 	char *pixname, *fullpixname;
         gchar * s;
 	
-	pixname = g_strdup_printf("gnometris/%s", blockPixmap);
+	pixname = g_build_filename ("gnometris", blockPixmap);
 	fullpixname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, pixname, FALSE, NULL);
-	g_free(pixname);
+	g_free (pixname);
 
 	if (!g_file_test (fullpixname, G_FILE_TEST_EXISTS))
 	{
@@ -327,11 +327,11 @@ Tetris::setupPixmap()
 
 	}
 
-	pixname = g_strdup_printf("gnometris/bg/%s", bgPixmap);
+	pixname = g_build_filename ("gnometris", "bg", bgPixmap, NULL);
 	fullpixname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, pixname, FALSE, NULL);
-	g_free(pixname);
+	g_free (pixname);
 
-	if(bgimage)
+	if (bgimage)
 		g_object_unref (G_OBJECT (bgimage));
 
 	if (g_file_test (fullpixname, G_FILE_TEST_EXISTS)) 
@@ -757,8 +757,10 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 
 	omenu = gtk_option_menu_new ();
 	menu = gtk_menu_new ();
-	t->fillMenu (menu, t->bgPixmap, "gnometris/bg",
+	gchar *tmp = g_build_filename ("gnometris", "bg", NULL);
+	t->fillMenu (menu, t->bgPixmap, tmp,
 		     (GtkSignalFunc)setBGSelection, true);
+	g_free (tmp);
 	gtk_option_menu_set_menu(GTK_OPTION_MENU (omenu), menu);
 	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 1, 2);
 
