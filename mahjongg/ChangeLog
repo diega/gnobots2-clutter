@@ -1,5 +1,11 @@
 2000-10-19  Dan Mueth <d-mueth@uchicago.edu>
 
+	* help/C/topic.dat: Fixed
+	  er - I was being dumb below.  The menu item is now
+	  fine.  Just the properties dialog button remains.
+
+2000-10-19  Dan Mueth <d-mueth@uchicago.edu>
+
 	* Makefile.am: added SUBDIRS = help
 	* help/Makefile.am: Added this file, with SUBDIRS = C
 	* help/C/topic.dat: Added this file 
