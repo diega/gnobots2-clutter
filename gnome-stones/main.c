@@ -1345,6 +1345,7 @@ main (int argc, char *argv[])
 
   /* That's what a gnome application needs:  */
   app= gnome_app_new ("gnome-stones", _("Gnome-Stones"));
+  gtk_widget_realize(app);
   gtk_window_set_policy  (GTK_WINDOW (app), FALSE, FALSE, TRUE);
   gtk_window_set_wmclass (GTK_WINDOW (app), "gnome-stones", "main");
 

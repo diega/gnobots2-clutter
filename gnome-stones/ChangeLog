@@ -1,3 +1,7 @@
+1999-01-17  Tomas Ogren  <stric@ing.umu.se>
+
+	* main.c: Better realize the main window.. fvwm2 got cranky..
+
 1999-01-10  Nat Friedman  <nat@nat.org>
 
 	* main.c: Standardized the menus.
