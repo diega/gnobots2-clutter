@@ -451,33 +451,40 @@ static gint
 handle_other_motion_event (GtkWidget *widget, GdkEventMotion *event)
 {
         // This is primarily to display help information
-
         hstack_type hstack;
         gint chipid;
+        guint context_id;
+
+        context_id = gtk_statusbar_get_context_id (GTK_STATUSBAR (status_bar), "help");
+
         bj_chip_stack_pressed ((gint)(event->x), (gint)(event->y), &hstack, &chipid);
         if (hstack) {
                 if (bj_chip_stack_is_source (hstack)) {
+                        gtk_statusbar_pop (GTK_STATUSBAR (status_bar), context_id);
+
                         if (bj_hand_can_be_doubled ())
-                                gnome_appbar_set_status (GNOME_APPBAR (status_bar), 
-                                                         _("Click to double your wager"));
+                                gtk_statusbar_push (GTK_STATUSBAR (status_bar), context_id,
+                                                    _("Click to double your wager"));
                         else if (! bj_game_is_active ()) {
                                 gfloat chip_value = 
                                         ((hchip_type)g_list_last (hstack->chips)->data)->value;
                                 gchar *message = g_strdup_printf
                                         (_("Double click to increase your wager by %.2f"), 
                                          chip_value);
-                                gnome_appbar_set_status (GNOME_APPBAR (status_bar), 
-                                                         message);
+                                gtk_statusbar_push (GTK_STATUSBAR (status_bar), context_id,
+                                                    message);
                                 g_free (message);
                         }
                 }
                 else {
                         if (! bj_game_is_active ()) {
+                                gtk_statusbar_pop (GTK_STATUSBAR (status_bar), context_id);
+
                                 gfloat chip_value = ((hchip_type)g_list_last (hstack->chips)->data)->value;
                                 gchar *message = g_strdup_printf (_("Double click to decrease your wager by %.2f"), 
                                                                   chip_value);
-                                gnome_appbar_set_status (GNOME_APPBAR (status_bar), 
-                                                         message);
+                                gtk_statusbar_push (GTK_STATUSBAR (status_bar), context_id,
+                                                    message);
                                 g_free (message);
                         }
                 }
@@ -499,13 +506,14 @@ handle_other_motion_event (GtkWidget *widget, GdkEventMotion *event)
                         }
                         else
                                 message = g_strdup (_("Click to deal a new hand"));
-                        gnome_appbar_set_status (GNOME_APPBAR (status_bar), message);
+                        gtk_statusbar_pop (GTK_STATUSBAR (status_bar), context_id);
+                        gtk_statusbar_push (GTK_STATUSBAR (status_bar), context_id,
+                                            message);
                         g_free (message);
                 }
                 else {
                         // Not over anything we know about
-                        // black out the status bar
-                        gnome_appbar_set_status (GNOME_APPBAR (status_bar), "");
+                        gtk_statusbar_pop (GTK_STATUSBAR (status_bar), context_id);
                 }
         }
         return FALSE;

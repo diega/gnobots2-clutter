@@ -1,3 +1,10 @@
+2004-06-08  William Jon McCann  <mccann@jhu.edu>
+
+	* src/events.cpp (handle_other_motion_event): 
+	* src/blackjack.cpp (main_prog):
+	Use GtkStatusBar instead of deprecated GnomeAppBar.  Move
+	information to left side to handle resize grip.
+
 2004-06-08  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* card.cpp:

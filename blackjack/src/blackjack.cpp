@@ -290,8 +290,9 @@ create_chip_stack_press_data ()
 static void
 main_prog (int argc, char *argv[])
 {
-        GtkWidget *wager_label, *balance_label, *balance_box, *group_box;
+        GtkWidget *wager_label, *balance_label, *status_box, *group_box;
         gchar *label_string;
+        guint context_id;
 
         seed = time (NULL);
         g_random_set_seed (seed);
@@ -304,49 +305,51 @@ main_prog (int argc, char *argv[])
         bj_create_board ();
         bj_menu_create ();
 
-        balance_box = gtk_hbox_new (FALSE, GNOME_PAD);
+        status_box = gtk_hbox_new (FALSE, GNOME_PAD);
 
-        status_bar = gnome_appbar_new (FALSE, TRUE, GNOME_PREFERENCES_NEVER);
-        gtk_box_pack_start (GTK_BOX (status_bar), balance_box, 
-                            FALSE, FALSE, 0);
-        gnome_app_set_statusbar (GNOME_APP (app), status_bar);
-        gnome_appbar_set_status (GNOME_APPBAR (status_bar), 
-                                 _("Place your wager or deal a hand"));
+        group_box = gtk_hbox_new (FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
 
-	group_box = gtk_hbox_new (FALSE, 0);
         GtkWidget *shoe_label = gtk_label_new (_("Cards left:"));
         gtk_box_pack_start (GTK_BOX (group_box), shoe_label, FALSE, FALSE, 0);
         shoe_value_label = gtk_label_new ("");
-        gtk_box_pack_start (GTK_BOX (group_box), shoe_value_label, 
-                            FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (balance_box), group_box, FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (group_box), shoe_value_label, FALSE, FALSE, 0);
+
 
 	group_box = gtk_hbox_new (FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
+
         wager_label = gtk_label_new (_("Wager:"));
-        gtk_box_pack_start (GTK_BOX (group_box), wager_label, 
-                            FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (group_box), wager_label, FALSE, FALSE, 0);
 
         wager_value = 5.0;
         label_string = g_strdup_printf ("%.2f", wager_value);
         wager_value_label = gtk_label_new (label_string);
         g_free (label_string);
-        gtk_box_pack_start (GTK_BOX (group_box), wager_value_label, 
-                            FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (group_box), wager_value_label, FALSE, FALSE, 0);
 
-	gtk_box_pack_start (GTK_BOX (balance_box), group_box, FALSE, FALSE, 0);
 
 	group_box = gtk_hbox_new (FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
+
         balance_label = gtk_label_new (_("Balance:"));
-        gtk_box_pack_start (GTK_BOX (group_box), balance_label, 
-                            FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (group_box), balance_label, FALSE, FALSE, 0);
         label_string = g_strdup_printf ("%.2f", balance_value);
         balance_value_label = gtk_label_new (label_string);
         g_free (label_string);
-        gtk_box_pack_start (GTK_BOX (group_box), balance_value_label, 
-                            FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (balance_box), group_box, FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (group_box), balance_value_label, FALSE, FALSE, 0);
 
-        gtk_widget_show_all (balance_box);
+
+        status_bar = gtk_statusbar_new ();
+        gtk_box_pack_start (GTK_BOX (status_box), status_bar, TRUE, TRUE, 0);
+        gnome_app_set_statusbar_custom (GNOME_APP (app), status_box, status_bar);
+
+        context_id = gtk_statusbar_get_context_id (GTK_STATUSBAR (status_bar),
+                                                   "help");
+        gtk_statusbar_push (GTK_STATUSBAR (status_bar), context_id,
+                            _("Place your wager or deal a hand"));
+
+        gtk_widget_show_all (status_box);
 
         bj_menu_install_hints (GNOME_APP (app));
 
