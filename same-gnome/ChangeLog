@@ -1,3 +1,14 @@
+2002-02-17  Chris Lyttle  <chris@wilddev.net>
+
+	* help/C/same-gnome.xml: new doc by Nicholas Curran.
+	* help/C/legal.xml:  added to comply with new template
+	* help/C/figures:  added
+	* help/C/figures/blink-sync.png:  added
+	* help/C/figures/preferences.png:  added
+	* help/C/figures/same-main-window.png:  added
+	* help/C/figures/same-planets-fig.png:  added
+	* help/C/figures/score-dialog.png:  added
+
 2002-04-22  Bastien Nocera  <hadess@hadess.net>
 
 	* same-gnome.c: (mark_balls), (set_score):
