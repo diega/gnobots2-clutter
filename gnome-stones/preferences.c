@@ -429,6 +429,8 @@ preferences_dialog_new (void)
   GtkWidget *box;
   GtkWidget *label;
   GtkWidget *list;
+  GtkWidget *scrolled;
+
   PreferencesData *prdata;
 
   prdata= g_malloc (sizeof (PreferencesData));
@@ -457,12 +459,14 @@ preferences_dialog_new (void)
   gtk_clist_column_titles_show (GTK_CLIST (list));
   gtk_widget_set_usize (list, -2, 200);
   
-  gtk_clist_set_policy (GTK_CLIST (list), 
-			GTK_POLICY_ALWAYS, 
-			GTK_POLICY_AUTOMATIC);
   gtk_clist_set_selection_mode (GTK_CLIST (list), GTK_SELECTION_SINGLE);
-  
-  gtk_box_pack_start (GTK_BOX (box), list, FALSE, FALSE, GNOME_PAD_SMALL);
+
+  scrolled = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
+                                  GTK_POLICY_ALWAYS,
+                                  GTK_POLICY_AUTOMATIC);
+  gtk_container_add (GTK_CONTAINER (scrolled), list);
+  gtk_box_pack_start (GTK_BOX (box), scrolled, FALSE, FALSE, GNOME_PAD_SMALL);
 
   gtk_clist_freeze (GTK_CLIST (list));
   prdata->selected_game= -1;
