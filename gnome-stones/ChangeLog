@@ -1,3 +1,8 @@
+2005-01-26  Richard Hoelscher  <rah@rahga.com>
+
+	* main.c (load_image_from_path): If any images fail to load,
+	exit after the warning dialog. Update error string handling.
+
 2004-12-13  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* object.c:

@@ -119,20 +119,23 @@ load_image_from_path (const char *relative_name)
   if (!image)
     {
       GtkWidget *widget;
-      char       buffer[1024];
-      g_snprintf (buffer, sizeof(buffer), 
-		  _("An error occured while loading the image file \"%s\".\n"
-		    "Please make sure, that GNOME Stones is "
-		    "correctly installed!"), relative_name);
+      char *message;
+      
+      message = g_strdup_printf (_("An error occured while loading the image file \"%s\".\n"
+                                   "Please make sure, that GNOME Stones is "
+		                   "correctly installed!"), relative_name);
 					    
       widget= gtk_message_dialog_new (GTK_WINDOW(app), 
                                       GTK_DIALOG_DESTROY_WITH_PARENT,
                                       GTK_MESSAGE_ERROR, 
                                       GTK_BUTTONS_OK, 
-                                      buffer);
+                                      message);
       gtk_dialog_run(GTK_DIALOG(widget));
 
       gtk_widget_destroy(widget);
+      g_free (message);
+
+      exit(1);
     }
   
   return image;
