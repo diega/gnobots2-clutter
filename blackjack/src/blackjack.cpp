@@ -602,7 +602,7 @@ main (int argc, char *argv [])
 
   gtk_widget_push_colormap (gdk_rgb_get_colormap ());
 
-  gchar *icon_path = g_build_filename (GNOME_ICONDIR, "gnome-blackjack.png");
+  gchar *icon_path = g_build_filename (GNOME_ICONDIR, "gnome-blackjack.png", NULL);
   gnome_window_icon_set_default_from_file (icon_path);
   g_free (icon_path);
 
