@@ -1,3 +1,7 @@
+2005-03-02  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/gnome-stones.xml: Bump the app version number. No revisions.
+
 2005-01-26  Richard Hoelscher  <rah@rahga.com>
 
 	* main.c (load_image_from_path): If any images fail to load,
