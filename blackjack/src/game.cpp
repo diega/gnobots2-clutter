@@ -71,9 +71,9 @@ gint             numHands;
 gchar            *game_file = "";
 gchar            *game_name;
 
-gboolean         allSettled = false;
-gboolean         game_is_done = false;
-gboolean         first_hand = true;
+gboolean         allSettled = FALSE;
+gboolean         game_is_done = FALSE;
+gboolean         first_hand = TRUE;
 
 GList *rules_list = NULL;
 
@@ -220,11 +220,11 @@ void
 bj_game_set_active (gboolean value)
 {
         if (value) {
-                game_is_done = false;
-                first_hand = false;
+                game_is_done = FALSE;
+                first_hand = FALSE;
         }
         else
-                game_is_done = true;
+                game_is_done = TRUE;
 
 }
 
@@ -469,9 +469,9 @@ bj_game_eval_installed_file (gchar *file)
                 installed_filename = g_build_filename (config_dir, cache_filename, NULL);
                 g_free (config_dir);
                         
-                gboolean use_cache = false;
+                gboolean use_cache = FALSE;
                 if (g_file_test (installed_filename, G_FILE_TEST_EXISTS))
-                        use_cache = true;
+                        use_cache = TRUE;
 
                 if (! use_cache)
                         splash_new ();
@@ -512,6 +512,8 @@ bj_game_cancel ()
 {
         bj_hand_cancel ();
         bj_game_set_active (FALSE);
+        bj_press_data_free ();
+        bj_chip_stack_press_data_free ();
 }
 
 void
@@ -521,7 +523,7 @@ bj_game_new (gchar* file, guint *seedp )
 
         bj_game_cancel ();
 
-        first_hand = true;
+        first_hand = TRUE;
 
         bj_show_balance (bj_get_balance ());
 
@@ -571,6 +573,7 @@ bj_game_new (gchar* file, guint *seedp )
         bj_clear_table ();
 
         bj_make_window_title (game_name);
+        bj_update_control_menu ();
 }
 
 void
@@ -612,6 +615,7 @@ bj_clear_table ()
         dealer->reset ();
         dealerProbabilities->reset ();
 
-        first_hand = true;
+        first_hand = TRUE;
+        gtk_widget_queue_draw (playing_area);
 }
 

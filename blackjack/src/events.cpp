@@ -48,6 +48,7 @@ using namespace std;
 #include "card.h"
 #include "menu.h"
 #include "chips.h"
+#include "press_data.h"
 
 #include "hand.h"
 #include "game.h"
@@ -222,16 +223,9 @@ drop_moving_cards (gint x, gint y)
                          hslot->pixelx + hslot->width - width, 
                          hslot->pixely + hslot->height - height);
 
-        bj_draw_refresh_screen ();
+        bj_press_data_free ();
 
-        gdk_window_hide (press_data->moving_cards);
-  
-        if (press_data->moving_pixmap)
-                g_object_unref (press_data->moving_pixmap);
-        if (press_data->moving_mask)
-                g_object_unref (press_data->moving_mask);
-        press_data->moving_pixmap = NULL;
-        press_data->moving_mask = NULL;
+        bj_draw_refresh_screen ();
 
         if (do_split)
                 bj_hand_split ();
@@ -281,18 +275,8 @@ drop_moving_chips (gint x, gint y)
                 bj_chip_stack_update_length (chip_stack_press_data->hstack);
         }
 
-        chip_stack_press_data->chips = NULL;
-
+        bj_chip_stack_press_data_free ();
         bj_draw_refresh_screen ();
-
-        gdk_window_hide (chip_stack_press_data->moving_chips);
-  
-        if (chip_stack_press_data->moving_pixmap)
-                g_object_unref (chip_stack_press_data->moving_pixmap);
-        if (chip_stack_press_data->moving_mask)
-                g_object_unref (chip_stack_press_data->moving_mask);
-        chip_stack_press_data->moving_pixmap = NULL;
-        chip_stack_press_data->moving_mask = NULL;
 }
 
 static gint
@@ -483,10 +467,7 @@ bj_event_button_release (GtkWidget *widget, GdkEventButton *event, void *d)
                 drop_moving_cards ((gint)event->x, (gint)event->y);
                 break;
         case STATUS_SHOW:
-                press_data->status = STATUS_NONE;
-                gdk_window_hide (press_data->moving_cards);
-                press_data->moving_pixmap = NULL;
-                press_data->moving_mask = NULL;
+                bj_press_data_free ();
                 break;
     
         case STATUS_MAYBE_DRAG:
@@ -506,10 +487,7 @@ bj_event_button_release (GtkWidget *widget, GdkEventButton *event, void *d)
                 drop_moving_chips ((gint)event->x, (gint)event->y);
                 break;
         case STATUS_SHOW:
-                chip_stack_press_data->status = STATUS_NONE;
-                gdk_window_hide (chip_stack_press_data->moving_chips);
-                chip_stack_press_data->moving_pixmap = NULL;
-                chip_stack_press_data->moving_mask = NULL;
+                bj_chip_stack_press_data_free ();
                 break;
     
         case STATUS_MAYBE_DRAG:
@@ -721,6 +699,7 @@ bj_event_playing_area_configure (GtkWidget *widget, GdkEventConfigure *event)
                 if (window_width == event->width && window_height == event->height)
                         return TRUE;
                 g_object_unref (surface);
+                surface = NULL;
         }
   
         if (!draw_gc) {

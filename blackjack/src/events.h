@@ -19,8 +19,8 @@
  * USA
  */
 
-#ifndef EVENTS_H
-#define EVENTS_H
+#ifndef BJ_EVENTS_H
+#define BJ_EVENTS_H
 
 #include <gtk/gtk.h>
 
@@ -32,15 +32,5 @@ gint bj_event_playing_area_configure (GtkWidget *, GdkEventConfigure *);
 gint bj_event_enter_notify (GtkWidget *, GdkEventCrossing *, void *);
 gint bj_event_motion_notify (GtkWidget *, GdkEventMotion* );
 gint bj_event_expose_callback (GtkWidget *, GdkEventExpose *, void *);
-
-
-enum {
-  STATUS_NONE,
-  STATUS_MAYBE_DRAG,
-  STATUS_NOT_DRAG,
-  STATUS_IS_DRAG,
-  STATUS_CLICK,
-  STATUS_SHOW
-};
 
 #endif

@@ -1,4 +1,4 @@
-// -*- mode:C++; tab-width:2; c-basic-offset:2; indent-tabs-mode:nil -*-
+// -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil -*-
 /* Blackjack - press_data.h
  * Copyright (C) 2003 William Jon McCann <mccann@jhu.edu>
  * Copyright (C) 1998 Jonathan Blandford <jrb@mit.edu>
@@ -19,45 +19,58 @@
  * USA
  */
 
-#ifndef PRESS_DATA_H
-#define PRESS_DATA_H
+#ifndef BJ_PRESS_DATA_H
+#define BJ_PRESS_DATA_H
 #include <gtk/gtk.h>
 #include "slot.h"
 #include "chips.h"
 
 typedef struct {
-  gint xoffset;
-  gint yoffset;
-  GdkPixmap *moving_pixmap;
-  GdkBitmap *moving_mask;
+        gint       xoffset;
+        gint       yoffset;
+        GdkPixmap *moving_pixmap;
+        GdkBitmap *moving_mask;
 
-  GList* cards;
-  hslot_type hslot;
-  gint cardid;
+        GList     *cards;
+        hslot_type hslot;
+        gint       cardid;
 
-  gint status;
-  GdkWindow *moving_cards;
+        gint       status;
+        GdkWindow *moving_cards;
 } press_data_type;
 
 typedef struct {
-  gint xoffset;
-  gint yoffset;
+        gint        xoffset;
+        gint        yoffset;
 
-  GdkPixmap *moving_pixmap;
-  GdkBitmap *moving_mask;
+        GdkPixmap  *moving_pixmap;
+        GdkBitmap  *moving_mask;
 
-  GList* chips;
-  hstack_type hstack;
-  gint chipid;
+        GList      *chips;
+        hstack_type hstack;
+        gint        chipid;
 
-  gint status;
-  GdkWindow *moving_chips;
+        gint        status;
+        GdkWindow  *moving_chips;
 } chip_stack_press_data_type;
 
-void bj_press_data_generate ( void );
-void bj_chip_stack_press_data_generate ( void );
+void bj_press_data_create              (void);
+void bj_chip_stack_press_data_create   (void);
+void bj_press_data_generate            (void);
+void bj_chip_stack_press_data_generate (void);
+void bj_press_data_free                (void);
+void bj_chip_stack_press_data_free     (void);
 
-extern press_data_type  *press_data;
+extern press_data_type             *press_data;
 extern chip_stack_press_data_type  *chip_stack_press_data;
+
+enum {
+  STATUS_NONE,
+  STATUS_MAYBE_DRAG,
+  STATUS_NOT_DRAG,
+  STATUS_IS_DRAG,
+  STATUS_CLICK,
+  STATUS_SHOW
+};
 
 #endif

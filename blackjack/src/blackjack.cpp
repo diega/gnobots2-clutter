@@ -404,47 +404,6 @@ create_main_window (void)
 }
 
 static void
-create_press_data (void)
-{
-        GdkWindowAttr attributes;
-
-        attributes.wclass = GDK_INPUT_OUTPUT;
-        attributes.window_type = GDK_WINDOW_CHILD;
-        attributes.event_mask = 0;
-        attributes.width = card_width;
-        attributes.height = card_height;
-        attributes.colormap = gdk_drawable_get_colormap (GDK_DRAWABLE (playing_area->window));
-        attributes.visual = gdk_drawable_get_visual (GDK_DRAWABLE (playing_area->window));
-  
-        press_data = (press_data_type*) g_malloc (sizeof (press_data_type));
-        press_data->moving_cards = gdk_window_new (playing_area->window, &attributes,
-                                                   (GDK_WA_VISUAL | GDK_WA_COLORMAP));
-        press_data->status = 0;
-}
-
-static void
-create_chip_stack_press_data (void)
-{
-        GdkWindowAttr attributes;
-
-        attributes.wclass = GDK_INPUT_OUTPUT;
-        attributes.window_type = GDK_WINDOW_CHILD;
-        attributes.event_mask = 0;
-        attributes.width = chip_width;
-        attributes.height = attributes.width;
-        attributes.colormap = gdk_drawable_get_colormap (GDK_DRAWABLE (playing_area->window));
-        attributes.visual = gdk_drawable_get_visual (GDK_DRAWABLE (playing_area->window));
-  
-        chip_stack_press_data = 
-                (chip_stack_press_data_type*) g_malloc (sizeof (chip_stack_press_data_type));
-        chip_stack_press_data->moving_chips = gdk_window_new (playing_area->window, 
-                                                              &attributes,
-                                                              (GDK_WA_VISUAL 
-                                                               | GDK_WA_COLORMAP));
-        chip_stack_press_data->status = 0;
-}
-
-static void
 main_prog (int argc, char *argv[])
 {
         gchar *lcard_style;
@@ -468,8 +427,8 @@ main_prog (int argc, char *argv[])
 
         bj_gui_show_toolbar (show_toolbar);
 
-        create_press_data ();
-        create_chip_stack_press_data ();
+        bj_press_data_create ();
+        bj_chip_stack_press_data_create ();
 
         gtk_widget_pop_colormap ();
 

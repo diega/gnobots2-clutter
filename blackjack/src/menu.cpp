@@ -65,14 +65,6 @@ on_game_hint_activate (GtkAction *action,
         show_hint_dialog ();
 }
 
-#if 0
-static void
-new_rules (GtkWidget* w, gchar* file) 
-{
-        bj_game_new (file, NULL);
-}
-#endif
-
 void
 on_game_quit_activate (GtkAction *action,
                        gpointer   data)

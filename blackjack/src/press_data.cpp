@@ -29,10 +29,29 @@
 #include "chips.h"
 #include "blackjack.h"
 
-press_data_type* press_data; 
+press_data_type *press_data;
 
 void
-bj_press_data_generate ()
+bj_press_data_create (void)
+{
+        GdkWindowAttr attributes;
+
+        attributes.wclass = GDK_INPUT_OUTPUT;
+        attributes.window_type = GDK_WINDOW_CHILD;
+        attributes.event_mask = 0;
+        attributes.width = card_width;
+        attributes.height = card_height;
+        attributes.colormap = gdk_drawable_get_colormap (GDK_DRAWABLE (playing_area->window));
+        attributes.visual = gdk_drawable_get_visual (GDK_DRAWABLE (playing_area->window));
+  
+        press_data = (press_data_type*) g_malloc0 (sizeof (press_data_type));
+        press_data->moving_cards = gdk_window_new (playing_area->window, &attributes,
+                                                   (GDK_WA_VISUAL | GDK_WA_COLORMAP));
+        press_data->status = 0;
+}
+
+void
+bj_press_data_generate (void)
 {
         GList *tempptr;
         hslot_type hslot = press_data->hslot;
@@ -109,7 +128,29 @@ bj_press_data_generate ()
 chip_stack_press_data_type *chip_stack_press_data;
 
 void
-bj_chip_stack_press_data_generate ()
+bj_chip_stack_press_data_create (void)
+{
+        GdkWindowAttr attributes;
+
+        attributes.wclass = GDK_INPUT_OUTPUT;
+        attributes.window_type = GDK_WINDOW_CHILD;
+        attributes.event_mask = 0;
+        attributes.width = chip_width;
+        attributes.height = attributes.width;
+        attributes.colormap = gdk_drawable_get_colormap (GDK_DRAWABLE (playing_area->window));
+        attributes.visual = gdk_drawable_get_visual (GDK_DRAWABLE (playing_area->window));
+  
+        chip_stack_press_data = 
+                (chip_stack_press_data_type*) g_malloc0 (sizeof (chip_stack_press_data_type));
+        chip_stack_press_data->moving_chips = gdk_window_new (playing_area->window, 
+                                                              &attributes,
+                                                              (GDK_WA_VISUAL 
+                                                               | GDK_WA_COLORMAP));
+        chip_stack_press_data->status = 0;
+}
+
+void
+bj_chip_stack_press_data_generate (void)
 {
         GList *tempptr;
         hstack_type hstack = chip_stack_press_data->hstack;
@@ -186,4 +227,54 @@ bj_chip_stack_press_data_generate ()
 
         chip_stack_press_data->chips->prev = NULL;
         bj_chip_stack_update_length (chip_stack_press_data->hstack);
+}
+
+/* This does slightly more than free data, it also hides the window for
+ * instance, but it is certainly in the correct spirit. */
+void
+bj_press_data_free (void)
+{
+        if (press_data == NULL)
+                return;
+
+        if (press_data->moving_cards)
+                gdk_window_hide (press_data->moving_cards);
+
+        if (press_data->moving_pixmap) {
+                g_object_unref (press_data->moving_pixmap);
+                press_data->moving_pixmap = NULL;
+        }
+        if (press_data->moving_mask) {
+                g_object_unref (press_data->moving_mask);
+                press_data->moving_mask = NULL;
+        }
+        press_data->status = STATUS_NONE;
+        /* FIXME: I think there is a memory leak here, but I haven't managed
+         * to figure out where the list is extracted from yet. This is what
+         * most of the rest of the code does. */
+        press_data->cards = NULL;
+}
+
+void
+bj_chip_stack_press_data_free (void)
+{
+        if (chip_stack_press_data == NULL)
+                return;
+
+        if (chip_stack_press_data->moving_chips)
+                gdk_window_hide (chip_stack_press_data->moving_chips);
+
+        if (chip_stack_press_data->moving_pixmap) {
+                g_object_unref (chip_stack_press_data->moving_pixmap);
+                chip_stack_press_data->moving_pixmap = NULL;
+        }
+        if (chip_stack_press_data->moving_mask) {
+                g_object_unref (chip_stack_press_data->moving_mask);
+                chip_stack_press_data->moving_mask = NULL;
+        }
+        chip_stack_press_data->status = STATUS_NONE;
+        /* FIXME: I think there is a memory leak here, but I haven't managed
+         * to figure out where the list is extracted from yet. This is what
+         * most of the rest of the code does. */
+        chip_stack_press_data->chips = NULL;
 }

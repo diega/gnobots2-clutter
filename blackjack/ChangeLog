@@ -1,5 +1,15 @@
 2004-11-12  William Jon McCann  <mccann@jhu.edu>
 
+	* src/press_data.cpp (bj_press_data_free)
+	(bj_chip_stack_press_data_free): New functions.
+
+	* src/game.cpp (bj_game_cancel): 
+	* src/events.cpp (drop_moving_cards, drop_moving_chips)
+	(bj_event_button_release):
+	Free the press data when the game ends.  Fixes #138469.
+
+2004-11-12  William Jon McCann  <mccann@jhu.edu>
+
 	* src/hand.cpp (bj_hand_finish_play, bj_hand_new5)
 	(bj_hand_finish): 
 	* src/blackjack.cpp (control_menu_set_sensitive)
