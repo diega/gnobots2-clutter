@@ -1,3 +1,8 @@
+2002-08-18  Ross Burton  <ross@burtonini.com>
+
+	* gataxx.c (quit_game_cb): Make the Quit dialog conform to the
+	HIG. Patch from Samuel Stringham <sams@e-sa.com>, fixing #73031.
+
 2002-08-17  Juan Pablo Mendoza  <jpablo@gnome.org>
 
         * sunmoon.png: New file by DarkAlloy.
