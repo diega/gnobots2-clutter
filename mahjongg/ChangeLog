@@ -1,3 +1,7 @@
+2004-12-18  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* maps.c (compare_tiles): Fix the tile sorting routines.
+
 2004-11-05  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.map:	

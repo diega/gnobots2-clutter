@@ -755,22 +755,20 @@ static void parse_start_el (GMarkupParseContext *context,
  * Bottom left = high y, low x ! */
 static int compare_tiles (tilepos *a, tilepos *b)
 {
-  /* FIXME: This isn't right, see ziggurat. Reversing x and y sorts
-   * screws up easy for the opposite reasons. The problem is where
-   * 0.5 aligned tiles abut 0 aligned tiles. */
+  int dx, dy;
+
+  dx = b->x - a->x;
+  dy = b->y - a->y;
 
   if (b->layer < a->layer)
     return -1;
   if (b->layer > a->layer)
     return +1;
-  if (b->x < a->x)
-    return +1;
-  if (b->x > a->x)
+  if (dx > dy)
     return -1;
-  if (b->y < a->y)
-    return -1;
-  if (b->y > a->y)
+  if (dx < dy)
     return +1;
+
   return 0;
 }
 
