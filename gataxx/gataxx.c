@@ -416,7 +416,7 @@ about_cb(GtkWidget *widget, gpointer data)
   }
   
   about = gnome_about_new(_("gataxx"), VERSION,
-			  "Copyright \xc2\xa9 1999-2003 Chris Rogers",
+			  "Copyright \xc2\xa9 1999-2004 Chris Rogers",
   			  _("gataxx is a GNOME port of the old game ataxx. "
 			    "It is derived from Ian Peters' iagno code."),
   			  (const char **)authors,

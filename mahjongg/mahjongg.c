@@ -1658,7 +1658,7 @@ about_callback (GtkWidget *widget, gpointer data)
 	}
 	
 	about = gnome_about_new (_("GNOME Mahjongg"), VERSION,
-				 "Copyright \xc2\xa9 1998-2003 Free Software "
+				 "Copyright \xc2\xa9 1998-2004 Free Software "
 				 "Foundation, Inc.",
 				 _("GNOME version of the Eastern tile game, "
 				   "Mahjongg."),

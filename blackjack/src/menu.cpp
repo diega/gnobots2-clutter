@@ -105,7 +105,7 @@ help_about_callback ()
   }
   about = gnome_about_new ( _("Blackjack"), VERSION,
                             /* copyright notice */
-                            "Copyright \xc2\xa9 2003 "
+                            "Copyright \xc2\xa9 2003-2004 "
                             "William Jon McCann, Eric Farmer",
                             _("Blackjack provides a casino-style "
                               "blackjack card game."),

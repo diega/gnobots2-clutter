@@ -1110,7 +1110,7 @@ about_cb (GtkWidget *widget, gpointer data)
 	  }
   }
   about= gnome_about_new (_("GNOME Stones"), VERSION,
-			  "Copyright \xc2\xa9 1998-2003 Carsten Schaar",
+			  "Copyright \xc2\xa9 1998-2004 Carsten Schaar",
 			  _("Mine through dirt and collect gems."),
 			  (const char **)authors,
                           (const char **)documenters,
