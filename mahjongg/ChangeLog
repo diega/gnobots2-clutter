@@ -1,4 +1,8 @@
-2001-08-15  Juan Pablo Mendoza <jpablo@gnome.org>
+2001-12-16  Juan Pablo Mendoza <jpablo@gnome.org>
+
+	* mahjongg.c: Hide/Show toolbar works again.
+
+2001-12-15  Juan Pablo Mendoza <jpablo@gnome.org>
 
 	* mahjongg.c: Now it don't crash on startup.
 

@@ -1706,13 +1706,12 @@ void select_game ()
 
 void show_tb_callback (GtkWidget *widget, gpointer data)
 {
-#if 0
-    GnomeDockItem *gdi;
+    BonoboDockItem *gdi;
 
     GtkWidget *toolbar;
 
     gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
-    toolbar = gnome_dock_item_get_child (gdi);
+    toolbar = bonobo_dock_item_get_child (gdi);
 
     if((GTK_CHECK_MENU_ITEM(settingsmenu[0].widget))->active)
     {
@@ -1725,7 +1724,6 @@ void show_tb_callback (GtkWidget *widget, gpointer data)
         gtk_widget_hide(GTK_WIDGET(gdi));
 	gtk_widget_queue_resize (window);
     }
-#endif
 }
 
 void sound_on_callback (GtkWidget *widget, gpointer data)
