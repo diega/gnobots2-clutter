@@ -1,4 +1,10 @@
-11999-08-09  Robert Brady  <rwb197@ecs.soton.ac.uk
+1999-08-31  David Mansergh  <djm54@hermes.cam.ac.uk>
+
+	* mahjongg.c (you_won): typo fix
+	(check_free): corrected moves_left count
+	(update_moves_left): removed unnecessary reassignment of moves_left
+
+1999-08-09  Robert Brady  <rwb197@ecs.soton.ac.uk
 
 	* solubility.[ch] : applied Irix compiling fix from David Kaelbling 
 	  <drk@sgi.com> : [bug #1781].

@@ -531,14 +531,11 @@ void chrono_start ()
 int update_moves_left ()
 {
         gchar tmpchar[16];
-        int tmp;
 
         check_free();
         sprintf(tmpchar, "%2d", moves_left);
         gtk_label_set (GTK_LABEL(moves_label), tmpchar);
-        tmp = moves_left;
-        moves_left = 0; 
-        return tmp;
+        return moves_left;
 }
 
 void set_backgnd_colour (char *str)
@@ -639,7 +636,6 @@ tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
                                                   check_free();
                                                   sprintf(tmpchar, "%2d", moves_left);
                                                   gtk_label_set (GTK_LABEL(moves_label), tmpchar);
-                                                  moves_left = 0; 
 
                                                   if (visible_tiles <= 0) {
                                                           gtk_clock_stop(GTK_CLOCK(chrono));
@@ -895,22 +891,23 @@ void no_match (void)
 
 void check_free (void)
 {
-	int i, j, type, free = 0, lfree = 0;
-	
-	/* Tile Free is now _so_ much quicker, it is more elegant to do a
-	 * British Library search, and safer. */
-	for (i=0;i<MAX_TILES;i++)
-                if (tile_free(i)) {
-                        type = tiles[i].type ;
-                        for (j=i+1;j<MAX_TILES;j++) {
-                                lfree = (tiles[j].type == type && tile_free(j)) ;
-                                if (lfree) {
-                                        moves_left=moves_left+1;
-                                        free=1;
-                                }
-                        }
-                }
- 	if (!free && visible_tiles>0) { 
+	int i;
+        int tile_count[MAX_TILES];
+
+        moves_left = 0;
+
+        for (i=0; i<MAX_TILES; i++)
+                tile_count[i] = 0;
+
+	for (i=0;i<MAX_TILES;i++) {
+                if (tile_free(i))
+                        tile_count[tiles[i].type]++;
+        }
+
+        for (i=0; i<MAX_TILES; i++)
+                moves_left += tile_count[i]>>1;
+
+ 	if ((moves_left == 0) && (visible_tiles>0)) { 
                 GtkWidget *mb;
                 if (!game_over) {
                         mb = gnome_message_box_new (_("No more moves"), 
@@ -938,7 +935,7 @@ void you_won (void)
         score = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
         if ( pos = gnome_score_log (score, mapset, FALSE) ) {
                 gnome_scores_display (_(APPNAME_LONG), APPNAME, mapset, pos);
-                sprintf (message, "Fantastic !  %.2f !\nYou have reach #%d in the Top Ten.\n\nAnother game ?", score, pos);
+                sprintf (message, "Fantastic !  %.2f !\nYou have reached #%d in the Top Ten.\n\nAnother game ?", score, pos);
         }
         else
                 sprintf (message, "Great !\nYou made it in %.2f.\n\nAnother game ?", score);
