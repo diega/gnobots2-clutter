@@ -1,3 +1,14 @@
+Thu Sep 24 06:48:19 BST 1998 Mark Rae <Mark.Rae@ed.ac.uk>
+
+        * gnobots.c  - Fixed Help Menu
+
+Sat Aug 29 14:39:53 BST 1998 Mark Rae <Mark.Rae@ed.ac.uk>
+
+        * gnobots.c  - Fixed problems when screen becomes too full of robots
+        * game.c     - Game now 'wraps around' back to the start with
+        * gbdefs.h   - the starting number of robots, after displaying
+        * index.html - a congratulatory message
+
 Tue Jul 28 19:40:06 BST 1998 Mark Rae <Mark.Rae@ed.ac.uk>
 
         * gnobots.c  - Allowed 'Space' key to start a new game
@@ -7,9 +18,9 @@ Tue Jul 28 19:40:06 BST 1998 Mark Rae <Mark.Rae@ed.ac.uk>
 
 1998-07-24  Nuno Ferreira  <nmrf@rnl.ist.utl.pt>
 
-	* gnobots.desktop: Added Portuguese translation.
+        * gnobots.desktop: Added Portuguese translation.
 	
-	* .cvsignore: New file. Added `Makefile.in'.
+        * .cvsignore: New file. Added `Makefile.in'.
 	
 Thu Jul 16 19:16:20 BST 1998 Mark Rae <Mark.Rae@ed.ac.uk>
 

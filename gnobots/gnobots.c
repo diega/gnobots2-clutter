@@ -112,7 +112,8 @@ static void    update_score_label();
 static void    update_teleports_label();
 static void    update_level_label();
 static error_t parse_an_arg (int key, char *arg, struct argp_state *state);
-
+static void    show_teleport_message(int safe);
+       void    show_rollover_message();
 
 /* The command-line options we understand.  */
 static struct argp_option options[] =
@@ -161,7 +162,7 @@ GnomeUIInfo helpmenu[] = {
     {GNOME_APP_UI_ITEM, N_("About..."), NULL, about_cb, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
 
-    {GNOME_APP_UI_HELP, NULL, NULL, NULL, NULL, NULL,
+    {GNOME_APP_UI_HELP, NULL, NULL, "gnobots", NULL, NULL,
         GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
     {GNOME_APP_UI_ENDOFINFO}        
@@ -920,12 +921,25 @@ static void check_collision(
  */
 static void do_random_teleport(
 ){
-    int nx, ny;
+    int nx, ny, ox, oy;
 
+
+    ox = nx = random() % GAME_WIDTH;
+    ox = ny = random() % GAME_HEIGHT;
     while(1){
-        nx = random() % GAME_WIDTH;
-        ny = random() % GAME_HEIGHT;
         if(game_grid[nx][ny] == GRID_EMPTY) break;
+		nx++;
+		if(nx >= GAME_WIDTH){
+			nx = 0;
+			ny++;
+		}
+		if(ny >= GAME_HEIGHT){
+			ny = 0;
+		}
+		if((nx == ox) && (ny == oy)){
+			show_teleport_message(FALSE);
+			return;
+		}
     }
 
     player_xpos = nx;
@@ -949,13 +963,27 @@ static void do_random_teleport(
  */
 static void do_safe_teleport(
 ){
-    int nx, ny;
+    int nx, ny, ox, oy;
 
+
+    ox = nx = random() % GAME_WIDTH;
+    oy = ny = random() % GAME_HEIGHT;
     while(1){
-        nx = random() % GAME_WIDTH;
-        ny = random() % GAME_HEIGHT;
         if(check_move_safe(nx, ny)) break;
+		nx++;
+		if(nx >= GAME_WIDTH){
+			nx = 0;
+			ny++;
+		}
+		if(ny >= GAME_HEIGHT){
+			ny = 0;
+		}
+		if((nx == ox) && (ny == oy)){
+			show_teleport_message(TRUE);
+			return;
+		}
     }
+
     safe_teleports--;
     update_teleports_label();
 
@@ -1214,6 +1242,45 @@ struct argp_state *state
     return 0;
 }
 
+/*
+ * Show message when we cannot teleport
+ */
+void show_teleport_message(
+int safe
+){
+	GtkWidget *box;
+
+	if(safe){
+        box = gnome_message_box_new(
+                                _("No Locations Available For Safe Teleport"), 
+								GNOME_MESSAGE_BOX_INFO, 
+								GNOME_STOCK_BUTTON_OK, NULL);
+	} else {
+        box = gnome_message_box_new(
+                                _("No Locations Available For Teleport"), 
+								GNOME_MESSAGE_BOX_INFO, 
+								GNOME_STOCK_BUTTON_OK, NULL);
+	}
+	gnome_dialog_set_modal(GNOME_DIALOG(box));
+
+	gtk_widget_show(box);
+}
+
+/*
+ * Show message when there are too many robots
+ */
+void show_rollover_message(
+){
+	GtkWidget *box;
+
+	box = gnome_message_box_new(
+_("Congratulations, you have defeated the Robots!\nBut can you do it again?"), 
+								GNOME_MESSAGE_BOX_INFO, 
+								GNOME_STOCK_BUTTON_OK, NULL);
+	gnome_dialog_set_modal(GNOME_DIALOG(box));
+
+	gtk_widget_show(box);
+}
 
 /*
  * It all starts here!

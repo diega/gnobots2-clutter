@@ -31,6 +31,8 @@ static void clear_level();
 static void copy_level();
 static void generate_level();
 
+extern void show_rollover_message();
+
 /*
  * Clear the level
  */
@@ -91,6 +93,11 @@ void start_new_level(
 ){
     level++;
     num_robots += ROBOT_INCREMENT;
+
+	if(num_robots > MAX_ROBOTS){
+		num_robots = INITIAL_ROBOTS;
+		show_rollover_message();
+	}
 
     generate_level();    
 }

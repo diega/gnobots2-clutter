@@ -80,6 +80,7 @@
 #define INITIAL_ROBOTS          10
 #define INITIAL_TELEPORTS       1
 #define ROBOT_INCREMENT         10
+#define MAX_ROBOTS              ((GAME_WIDTH*GAME_HEIGHT)/2)
 #define ROBOT_SCORE             10
 #define MAX_SAFE_TELEPORTS      10
 #define DEAD_DELAY              20
