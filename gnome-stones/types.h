@@ -1,6 +1,6 @@
 /* gnome-stones - types.h
  *
- * Time-stamp: <1998/08/23 12:03:10 carsten>
+ * Time-stamp: <1998/09/07 22:29:15 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -26,6 +26,9 @@
 
 
 
+#define STONE_SIZE 32
+
+
 typedef struct _GStonesGame      GStonesGame;
 typedef struct _GStonesCaveEntry GStonesCaveEntry;
 typedef struct _GStonesCave      GStonesCave;
@@ -45,24 +48,34 @@ typedef void     (*DestroyFunction)   (GStonesCave *cave, gpointer data);
 typedef void     (*ObjectFunction)    (GStonesCave *cave, gpointer data);
 typedef void     (*ScanFunction)      (GStonesCave *cave, guint x, guint y,
 				       gpointer data);
-typedef void     (*AnimationFunction) (GStonesCave *cave, guint x, guint y, 
-				       guint *ix, guint *iy, gpointer data);
+typedef guint    (*AnimationFunction) (GStonesCave *cave, guint x, guint y, 
+				       gpointer data);
 
 struct _GStonesObject
 {
-  gchar *name;
+  gchar              *name;
 
-  InitCaveFunction  init_cave_function;
-  DestroyFunction   destroy_function;
+  InitCaveFunction    init_cave_function;
+  DestroyFunction     destroy_function;
 
-  ScanFunction      scan_function;
+  ScanFunction        scan_function;
 
-  ObjectFunction    pre_cave_scan_function;
-  ObjectFunction    post_cave_scan_function;
+  ObjectFunction      pre_cave_scan_function;
+  ObjectFunction      post_cave_scan_function;
 
-  AnimationFunction animation_function;
-  guint             ix;
-  guint             iy;
+  gchar              *image_name;
+  AnimationFunction   animation_function;
+
+  /* The image to shown, if no animation_function is given.  */
+  guint               image_index;
+
+  /* Which image should be shown in the editor.  (Not used yet) */
+  guint               editor_index;
+
+
+  /* FIXME: should be moved to some private stuff.  */
+  GdkPixmap         **image;
+  GdkImlibImage     **imlib_image;
 };
 
 
@@ -134,6 +147,8 @@ struct _GStonesCave
 
   /* Administrativ data.  */
   gchar            *config_prefix;
+  GHashTable       *translation_table;
+  guint             key_size;
   
   /* Some static information about this cave.  */
   guint             width;
