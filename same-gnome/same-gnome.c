@@ -586,7 +586,7 @@ game_about_callback (GtkWidget *widget, void *data)
 			"(C) 1997-1998 the Free Software Foundation",
 			authors,
 			_("Original idea from KDE's same game program."),
-			NULL);
+			"gnome-same-gnome.xpm");
 	gtk_widget_show (about);
 
 	return TRUE;
