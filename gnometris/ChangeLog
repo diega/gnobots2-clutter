@@ -1,3 +1,8 @@
+2004-03-06  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/.cvsignore: Ignore the correct files not the gtali ones
+	where I copied this from.
+
 2004-02-23  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* tetris.cpp (Tetris): Add the help file to the help menu.

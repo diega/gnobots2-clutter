@@ -1,3 +1,8 @@
+2004-03-06  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* properties.c: A simple adaption of jrb's iagno patch for fixing
+	bug #136236.
+
 2004-02-25  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* help/C/gataxx.xml: Update version to 2.6.
