@@ -1,3 +1,7 @@
+1999-07-08  Michael Meeks  <michael@edenproject.org>
+
+	* mahjongg.c: Added <ctrl> H hint shortcut key.
+
 1999-06-20  Tuomas Kuosmanen  <tigert@gimp.org>
 
 	* Makefile.am: add the new file (bg4.png) so it gets installed
