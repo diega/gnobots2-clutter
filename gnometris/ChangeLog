@@ -1,3 +1,11 @@
+1999-01-27  Marcin Gorycki  <mgo@olicom.dk>
+
+	* tetris.h, tetris.cpp, scoreframe.cpp: i18n support fixed
+
+1999-01-20  pablo  <add your address Pablo!!!>
+
+	* gnometris.desktop: updated *.desktop whith es and fr descriptions
+
 1999-01-20  Marcin Gorycki  <mgo@olicom.dk>
 
 	* COPYING: initial rev.
