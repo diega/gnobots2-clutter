@@ -85,7 +85,6 @@ private:
 	GtkWidget * w;
 
         GList * themeList;
-        GList * bgThemeList;
         
 	char *blockPixmap;
 	char *bgPixmap;
@@ -109,7 +108,7 @@ private:
 	static gchar *decodeDropData(gchar * data, gint type);
 	static void dragDrop(GtkWidget *widget, GdkDragContext *context,
 			     gint x, gint y, GtkSelectionData *data, 
-			     guint info, guint time, gpointer userdata);
+			     guint info, guint time, Tetris *t);
 	static int timeoutHandler(void *d);
 	static int gameQuit(GtkWidget *widget, void *d);
 	static int gameNew(GtkWidget *widget, void *d);

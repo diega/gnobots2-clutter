@@ -1,3 +1,11 @@
+2004-05-07  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gnometris.schemas.in:
+	* tetris.h:	
+	* tetris.cpp: Drag-and-drop background changing now works. Any
+	dragged URI is saved to a local file which is then loaded as 
+	necessary.
+
 2004-05-06  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* tetris.cpp (dragDrop): Proof-of-principle code that loads a

@@ -63,7 +63,6 @@ bool rotateCounterClockWise = true;
 
 #define KEY_OPTIONS_DIR "/apps/gnometris/options"
 #define KEY_BLOCK_PIXMAP "/apps/gnometris/options/block_pixmap"
-#define KEY_BACKGROUND_PIXMAP "/apps/gnometris/options/background_pixmap"
 #define KEY_STARTING_LEVEL "/apps/gnometris/options/starting_level"
 #define KEY_DO_PREVIEW "/apps/gnometris/options/do_preview"
 #define KEY_RANDOM_BLOCK_COLORS "/apps/gnometris/options/random_block_colors"
@@ -76,7 +75,6 @@ bool rotateCounterClockWise = true;
 
 Tetris::Tetris(int cmdlLevel): 
 	blockPixmap(0),
-	bgPixmap(0),
 	field(0),
 	preview(0),
 	paused(false), 
@@ -93,6 +91,7 @@ Tetris::Tetris(int cmdlLevel):
 	double x1, y1, x2, y2;
 	double width;
 	double pts;
+	gchar * outdir;
 	GtkTargetEntry targets[] = {{"text/uri-list", 0, URI_LIST}, 
 				    {"text/plain", 0, TEXT_PLAIN},
 				    {"STRING", 0, TEXT_PLAIN}};
@@ -100,6 +99,14 @@ Tetris::Tetris(int cmdlLevel):
 	pic = new GdkPixbuf*[tableSize];
 	for (int i = 0; i < tableSize; ++i)
 		pic[i] = 0;
+
+	/* Locate our background image. */
+	outdir = g_build_filename (gnome_user_dir_get (), "gnometris.d", 
+				   NULL);
+	if (!g_file_test (outdir, G_FILE_TEST_EXISTS))
+	    mkdir (outdir, 0700);
+	bgPixmap = g_build_filename (outdir, "background.bin", NULL);
+	g_free (outdir);
 	
 	w = gnome_app_new("gnometris", _("Gnometris"));
 	g_signal_connect (w, "delete_event", G_CALLBACK (gameQuit), this);
@@ -107,7 +114,7 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_drag_dest_set (w, GTK_DEST_DEFAULT_ALL, targets, 
 			   G_N_ELEMENTS(targets), GDK_ACTION_COPY);
 	g_signal_connect (G_OBJECT (w), "drag_data_received", 
-			  G_CALLBACK (dragDrop), NULL);
+			  G_CALLBACK (dragDrop), this);
 
 	static GnomeUIInfo game_menu[] = 
 	{
@@ -194,7 +201,6 @@ Tetris::Tetris(int cmdlLevel):
         setupScoreState ();
 
 	themeList = NULL;
-	bgThemeList = NULL;
 	
 	gtk_widget_show(hb);
 	gtk_widget_show(vb1);
@@ -315,7 +321,6 @@ void
 Tetris::setupPixmap()
 {
 	gchar *pixname, *fullpixname;
-        gchar * s;
 	
 	pixname = g_build_filename ("gnometris", blockPixmap, NULL);
 	fullpixname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, pixname, FALSE, NULL);
@@ -363,34 +368,13 @@ Tetris::setupPixmap()
 
 	}
 
-	pixname = g_build_filename ("gnometris", "bg", bgPixmap, NULL);
-	fullpixname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, pixname, FALSE, NULL);
-	g_free (pixname);
-
 	if (bgimage)
 		g_object_unref (G_OBJECT (bgimage));
 
-	if (g_file_test (fullpixname, G_FILE_TEST_EXISTS)) 
-		bgimage = gdk_pixbuf_new_from_file (fullpixname, NULL);
-	else {
-                /* If we can't find a .png look for a .jpg, this is
-                 * especially pertinant since a lot of the original
-                 * backgrounds have been converted for size reasons. */
-                s = g_strrstr(fullpixname, ".png");
-		if (s == NULL) { /* Not a .png. */
-			bgimage = 0;
-		} else {
-			g_strlcpy(s, ".jpg", 5);
-			if (g_file_test (fullpixname, G_FILE_TEST_EXISTS)) {
-				bgimage = gdk_pixbuf_new_from_file (fullpixname, NULL);
-				s = g_strrstr (bgPixmap, ".png");
-				g_strlcpy (s, ".jpg", 5);
-				gconf_client_set_string (gconf_client, KEY_BACKGROUND_PIXMAP, bgPixmap, NULL);
-			} else
-				bgimage = 0;
-		}
-        }
-	g_free (fullpixname);
+	if (g_file_test (bgPixmap, G_FILE_TEST_EXISTS)) 
+		bgimage = gdk_pixbuf_new_from_file (bgPixmap, NULL);
+	else 
+		bgimage = NULL;
 
 	if (field)
 	{
@@ -430,18 +414,6 @@ Tetris::initOptions ()
 	}
         if (blockPixmap == NULL)
           blockPixmap = g_strdup ("7blocks-tig.png");
-
-	if (bgPixmap)
-		g_free (bgPixmap);
-
-	bgPixmap = gconf_client_get_string (gconf_client, KEY_BACKGROUND_PIXMAP, &error);
-	if (error) {
-		g_warning ("gconf error: %s\n", error->message);
-		g_error_free (error);
-		error = NULL;
-	}
-        if (bgPixmap == NULL)
-          bgPixmap = g_strdup ("gnometris-bg.jpg");
 
 	startingLevel = gconf_client_get_int (gconf_client, KEY_STARTING_LEVEL, &error);
 	if (error) {
@@ -551,21 +523,6 @@ Tetris::setSelection(GtkWidget *widget, void *data)
 			   gtk_combo_box_get_active (GTK_COMBO_BOX (widget)));
 
 	gconf_client_set_string (t->gconf_client, KEY_BLOCK_PIXMAP,
-				 (char *)item->data, NULL);
-}
-
-void
-Tetris::setBGSelection(GtkWidget *widget, void *data)
-{
-	Tetris *t;
-	GList * item;
-	
-	t = (Tetris *)g_object_get_data (G_OBJECT (widget), TETRIS_OBJECT);
-
-	item = g_list_nth (t->bgThemeList,
-			   gtk_combo_box_get_active (GTK_COMBO_BOX (widget)));
-			   
-	gconf_client_set_string (t->gconf_client, KEY_BACKGROUND_PIXMAP,
 				 (char *)item->data, NULL);
 }
 
@@ -790,19 +747,6 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	t->fillMenu (omenu, t->blockPixmap, "gnometris", &(t->themeList));
 	g_signal_connect (omenu, "changed", G_CALLBACK (setSelection), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 0, 1);
-
-	/* background pixmap */
-	label = gtk_label_new(_("Background image:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 1, 2);
-	
-	omenu = gtk_combo_box_new_text ();	
-	g_object_set_data (G_OBJECT (omenu), TETRIS_OBJECT, t);	
-	gchar *tmp = g_build_filename ("gnometris", "bg", NULL);
-	t->fillMenu (omenu, t->bgPixmap, tmp, &(t->bgThemeList), true);
-	g_free (tmp);
-	g_signal_connect (omenu, "changed", G_CALLBACK (setBGSelection), NULL);
-	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 1, 2);
 
 	gtk_container_add (GTK_CONTAINER (frame), table);
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (t->setupdialog)->vbox), frame, 
@@ -1052,17 +996,29 @@ Tetris::decodeDropData(gchar * data, gint type)
 void
 Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 		 gint x, gint y, GtkSelectionData *data, guint info, 
-		 guint time, gpointer userdata)
+		 guint time, Tetris * t)
 {
 	gchar * fileuri;
-	GnomeVFSHandle *vfshandle;
+	GnomeVFSHandle *inhandle;
+	GnomeVFSHandle *outhandle;
 	GnomeVFSResult result;
 	GnomeVFSFileInfo fileinfo;
 	GnomeVFSFileSize bytesread;
+	GnomeVFSFileSize filesize;
 	GdkPixbufLoader * loader;
 	GdkPixbuf * pixbuf;
 	guchar * buffer;
 
+	/* Accept a dropped filename and try and load it as the
+	   background image. In the event of any kind of failure we
+	   silently ignore it. */
+	
+	/* FIXME: We should also handle dropped colours so we get a
+	   solid background (dropped gimp gradients too ?). */
+
+	/* FIXME: We don't accept nautlus bgs/colours either. */
+
+	/* Drag and drop from eog isn't working either. */
 
 	if (data->length < 0) {
 		gtk_drag_finish (context, FALSE, FALSE, time);
@@ -1071,25 +1027,22 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 
 	gtk_drag_finish (context, TRUE, FALSE, time);
 
-	g_print ("Dropped (%d): ", info);
-	g_print ("%s", data->data);
-
 	fileuri = decodeDropData ((gchar *)data->data, info);
 	/* Silently ignore bad data. */
 	if (fileuri == NULL)
 		goto error_exit;
 
-	/* From here on in is test code for loading from a URI rather
-	 * than a straight file name. */
+	/* Now that we have a URI we load it and test it to see if it is 
+	 * an image file. */
 
-	g_print ("Using: %s\n", fileuri);
-
+	/* FIXME: All this is slow and synchronous. It also
+	 * doesn't give any feedback about errors. */
 	
-	result = gnome_vfs_open (&vfshandle, fileuri, GNOME_VFS_OPEN_READ);
+	result = gnome_vfs_open (&inhandle, fileuri, GNOME_VFS_OPEN_READ);
 	if (result != GNOME_VFS_OK)
 		goto error_exit;
 
-	result = gnome_vfs_get_file_info_from_handle (vfshandle, &fileinfo,
+	result = gnome_vfs_get_file_info_from_handle (inhandle, &fileinfo,
 						      GNOME_VFS_FILE_INFO_FOLLOW_LINKS);
 	if (result != GNOME_VFS_OK)
 		goto error_exit_handle;
@@ -1097,20 +1050,20 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	if (!(fileinfo.valid_fields & GNOME_VFS_FILE_INFO_FIELDS_SIZE))
 		goto error_exit_handle;
 
-	g_print ("%lld\n", fileinfo.size);
+	filesize = fileinfo.size;
 
-	buffer = (guchar *)g_malloc (fileinfo.size);
+	buffer = (guchar *)g_malloc (filesize);
 	if (buffer == NULL)
 		goto error_exit_handle;
 	
-	result = gnome_vfs_read (vfshandle, buffer, fileinfo.size, &bytesread);
+	result = gnome_vfs_read (inhandle, buffer, filesize, &bytesread);
 	/* FIXME: We should reread if not enough was read. */
-	if ((result != GNOME_VFS_OK) || (bytesread != fileinfo.size))
+	if ((result != GNOME_VFS_OK) || (bytesread != filesize))
 		goto error_exit_buffer;
 
 	loader = gdk_pixbuf_loader_new ();
 
-	if (!gdk_pixbuf_loader_write (loader, buffer, fileinfo.size, NULL))
+	if (!gdk_pixbuf_loader_write (loader, buffer, filesize, NULL))
 		goto error_exit_loader;
 
 	gdk_pixbuf_loader_close (loader, NULL);
@@ -1121,15 +1074,29 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 
 	g_object_ref (pixbuf);
 
-	g_print ("Loaded ?\n");
+	/* We now have an image file, in memory, that we know gdk-pixbuf
+	 * can handle. Now we save it to disk. This is necessary so that
+	 * "slow" URIs (e.g. http) behave well in the long run. */
 
-	g_object_unref (pixbuf);
+	result = gnome_vfs_create (&outhandle, t->bgPixmap, GNOME_VFS_OPEN_WRITE,
+				   FALSE, 0600);
+	if (result != GNOME_VFS_OK)
+		goto error_exit_loader;
+
+	result = gnome_vfs_write (outhandle, buffer, filesize, &bytesread);
+	if ((result != GNOME_VFS_OK) || (bytesread != filesize))
+	    goto error_exit_saver;
+
+	t->setupPixmap ();
+
+ error_exit_saver:
+	gnome_vfs_close (outhandle);
  error_exit_loader:
 	g_object_unref (loader);
  error_exit_buffer:
 	g_free (buffer);
  error_exit_handle:
-	gnome_vfs_close (vfshandle);
+	gnome_vfs_close (inhandle);
  error_exit:
 	return;
 

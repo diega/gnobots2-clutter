@@ -15,18 +15,6 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/gnometris/options/background_pixmap</key>
-      <applyto>/apps/gnometris/options/background_pixmap</applyto>
-      <owner>gnometris</owner>
-      <type>string</type> 
-      <default>gnome2-foot.jpg</default>
-      <locale name="C">
-        <short>Image to use as background</short>
-	<long>Image to use as background.</long>
-      </locale>
-    </schema>
-
-    <schema>
       <key>/schemas/apps/gnometris/options/starting_level</key>
       <applyto>/apps/gnometris/options/starting_level</applyto>
       <owner>gnometris</owner>
