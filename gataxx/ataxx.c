@@ -346,19 +346,19 @@ gint computer_move_2(guint me) {
   
   if(num_moves) {
     tmplist = g_malloc(sizeof(gint) * num_maxes);
-    g_print("num_maxes:%d\n",num_maxes);
+   /* g_print("num_maxes:%d\n",num_maxes); */
     j = 0;
     for (i = 0; i < num_moves; i++) {
-      g_print("weight:%d, max:%d\n",weights[i],maxwhite2);
+/*      g_print("weight:%d, max:%d\n",weights[i],maxwhite2); */
       if (weights[i] == maxwhite2) {
 	tmplist[j++] = i;
       }
     }
-    g_print("maxes assigned:%d\n",j);
+/*    g_print("maxes assigned:%d\n",j); */
     j = (rand()>>3) % num_maxes;
-    g_print("index into tmplist:%d\n",j);
+/*    g_print("index into tmplist:%d\n",j); */
     i = tmplist[j];
-    g_print("i:%d\n",i);
+/*    g_print("i:%d\n",i); */
     move(xs[i], ys[i], xss[i], yss[i], me);
     g_free(tmplist);
   }
@@ -422,7 +422,7 @@ gint computer_move_1(guint me) {
 			}
 			  
 	      tmp2 = (maxwhite - maxpieces);
-	      g_print("weight:%d\n",tmp2);
+	/*	      g_print("weight:%d\n",tmp2); */
 	      if ( tmp2 == maxwhite2) {
 		xss[num_moves] = i;
 		yss[num_moves] = j;
@@ -431,7 +431,8 @@ gint computer_move_1(guint me) {
 		weights[num_moves] = maxwhite2;
 		num_maxes++;
 		num_moves++;
-		g_print("num_moves:%d weight:%d\n",num_moves,maxwhite2);
+	/*	g_print("num_moves:%d weight:%d\n",num_moves,maxwhite2);
+*/
 	      } 
 	      else if (tmp2> maxwhite2){
 		xss[num_moves] = i;
@@ -443,25 +444,26 @@ gint computer_move_1(guint me) {
 
 		num_maxes = 1;
 		num_moves++;
-		g_print("num_moves:%d weight:%d\n",num_moves,maxwhite2);
+	/*	g_print("num_moves:%d weight:%d\n",num_moves,maxwhite2);
+*/
 	      }
 	    }
   
   if(num_moves) {
     tmplist = g_malloc(sizeof(gint) * num_maxes);
-    g_print("num_maxes:%d\n",num_maxes);
+ /*   g_print("num_maxes:%d\n",num_maxes); */
     j = 0;
     for (i = 0; i < num_moves; i++) {
-      g_print("weight:%d, max:%d\n",weights[i],maxwhite2);
+    /*   g_print("weight:%d, max:%d\n",weights[i],maxwhite2); */
       if (weights[i] == maxwhite2) {
 	tmplist[j++] = i;
       }
     }
-    g_print("maxes assigned:%d\n",j);
+   /* g_print("maxes assigned:%d\n",j); */
     j = (rand()>>3) % num_maxes;
-    g_print("index into tmplist:%d\n",j);
+   /* g_print("index into tmplist:%d\n",j); */
     i = tmplist[j];
-    g_print("i:%d\n",i);
+/*    g_print("i:%d\n",i); */
     move(xs[i], ys[i], xss[i], yss[i], me);
     g_free(tmplist);
   }
@@ -572,7 +574,7 @@ gint check_valid_moves()
     break;
   }
 
-  if(!white_moves && !black_moves) {
+  if(!white_moves || !black_moves) {
     gtk_clock_stop(GTK_CLOCK(time_display));
     white_moves = count_pieces(board, WHITE_TURN);
     black_moves = count_pieces(board, BLACK_TURN);
