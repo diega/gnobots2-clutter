@@ -1,3 +1,7 @@
+2003-07-27  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gnome-canvas-pimage.c: Remove dead code, silence the compiler.
+
 2003-07-22  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* solubility.c: Fixed the clear_row_deps* functions so they

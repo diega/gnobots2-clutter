@@ -1,3 +1,8 @@
+2003-07-27  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* objects/gnome-stones.c:
+	* objects/gnomekoban.c: Compiler warning fixes.
+
 2003-07-22  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* main.c: Make the menus sensitive to the state of the game. This

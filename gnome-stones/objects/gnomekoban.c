@@ -1,8 +1,8 @@
 /* gnome-stones - objects/gnomekoban.c
  *
- * Time-stamp: <2003/06/17 14:37:20 mccannwj>
+ * Time-stamp: <2003-07-27 05:17:59 callum>
  *
- * Copyright (C) 1998 Carsten Schaar
+ * Copyright (C) 1998, 2003 Carsten Schaar
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -398,7 +398,10 @@ gnome_animate (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 {
   register guint idx  = 0;
   register gint  state= cave->entry[x][y].state >> 4;
-  GnomeAnimState anim = *((GnomeAnimState*) &cave->entry[x][y].anim_state);
+  GnomeAnimState anim;
+
+  anim.sequence = cave->entry[x][y].anim_state >> 8;
+  anim.offset = cave->entry[x][y].anim_state & 0xff;
   
   switch (state)
     {
@@ -455,7 +458,7 @@ gnome_animate (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
       idx= 0;
       break;
     }
-  cave->entry[x][y].anim_state= *((guint*) &anim); 
+  cave->entry[x][y].anim_state = (anim.sequence << 8) | anim.offset; 
   return idx;
 }
 

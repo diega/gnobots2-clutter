@@ -1,8 +1,8 @@
 /* gnome-stones - objects/gnome-stones.c
  *
- * Time-stamp: <2003/06/17 14:35:42 mccannwj>
+ * Time-stamp: <2003-07-27 05:11:13 callum>
  *
- * Copyright (C) 1998 Carsten Schaar
+ * Copyright (C) 1998, 2003 Carsten Schaar
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -573,7 +573,10 @@ gnome_animate (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 {
   register guint idx  = 0;
   register gint  state= cave->entry[x][y].state;
-  GnomeAnimState anim = *((GnomeAnimState*) &cave->entry[x][y].anim_state);
+  GnomeAnimState anim;
+
+  anim.sequence = cave->entry[x][y].anim_state >> 8;
+  anim.offset = cave->entry[x][y].anim_state & 0xff;
   
   switch (state)
     {
@@ -630,7 +633,7 @@ gnome_animate (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
       idx= 0;
       break;
     }
-  cave->entry[x][y].anim_state= *((guint*) &anim); 
+  cave->entry[x][y].anim_state = (anim.sequence << 8) | anim.offset; 
   return idx;
 }
 
@@ -1125,8 +1128,11 @@ struct _ExplosionState
 static void
 explosion_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 {
-  ExplosionState state= *((ExplosionState*) &cave->entry[x][y].state);
-    
+  ExplosionState state;
+
+  state.state = cave->entry[x][y].state >> 1;
+  state.diamond = cave->entry[x][y].state & 1;
+  
   if (state.state == 2)
     {
       /* The third bit indicates, wheater the explosion will explode
@@ -1142,7 +1148,7 @@ explosion_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *conte
   else
     {
       state.state++;
-      cave->entry[x][y].state= *((guint*)&state);
+      cave->entry[x][y].state= (state.state << 1) | state.diamond;
     }
 }
 
@@ -1176,7 +1182,7 @@ explosion_new (GStonesCave *cave, guint x, guint y, gboolean diamond)
 	  state.diamond= diamond;
 
 	  cave->entry[xn][yn].object = OBJECT_EXPLOSION;
-	  cave->entry[xn][yn].state  = *((guint*)&state);
+	  cave->entry[xn][yn].state  = (state.state << 1) | state.diamond;
 	  cave->entry[xn][yn].scanned= TRUE;
 	}
       
@@ -1189,9 +1195,12 @@ explosion_new (GStonesCave *cave, guint x, guint y, gboolean diamond)
 
 static guint
 explosion_animate (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
-{
-  ExplosionState state= *((ExplosionState*) &cave->entry[x][y].state);
-    
+{ 
+  ExplosionState state;
+
+  state.state = cave->entry[x][y].state >> 1;
+  state.diamond = cave->entry[x][y].state & 1;
+  
   return state.state;
 }
 

@@ -13,7 +13,7 @@
  * gnome-games/mahjongg
  * gnome-games/gnometris
  *
- * Copyright (C) 1998 The Free Software Foundation
+ * Copyright (C) 1998, 2003 The Free Software Foundation
  * Copyright (C) 2001 Juan Pablo Mendoza Mendoza
  *
  * Authors: Federico Mena <federico@nuclecu.unam.mx> (Original code).
@@ -60,7 +60,6 @@ static void   gnome_canvas_pimage_draw        (GnomeCanvasItem *item, GdkDrawabl
 					      int x, int y, int width, int height);
 static double gnome_canvas_pimage_point       (GnomeCanvasItem *item, double x, double y,
 					      int cx, int cy, GnomeCanvasItem **actual_item);
-static void   gnome_canvas_pimage_translate   (GnomeCanvasItem *item, double dx, double dy);
 static void   gnome_canvas_pimage_bounds      (GnomeCanvasItem *item, double *x1, double *y1, double *x2, double *y2);
 static void   gnome_canvas_pimage_render      (GnomeCanvasItem *item, GnomeCanvasBuf *buf);
 
@@ -116,9 +115,6 @@ gnome_canvas_pimage_class_init (GnomeCanvasPImageClass *class)
 	item_class->unrealize = gnome_canvas_pimage_unrealize;
 	item_class->draw = gnome_canvas_pimage_draw;
 	item_class->point = gnome_canvas_pimage_point;
-#if 0
-	item_class->translate = gnome_canvas_pimage_translate;
-#endif
 	item_class->bounds = gnome_canvas_pimage_bounds;
 	item_class->render = gnome_canvas_pimage_render;
 }
@@ -195,25 +191,6 @@ get_bounds (GnomeCanvasPImage *image, double *px1, double *py1, double *px2, dou
 	*py2 = i_bbox.y1 + 1;
 }
 
-/* deprecated */
-static void
-recalc_bounds (GnomeCanvasPImage *image)
-{
-	GnomeCanvasItem *item;
-
-	item = GNOME_CANVAS_ITEM (image);
-
-	get_bounds (image, &item->x1, &item->y1, &item->x2, &item->y2);
-
-	item->x1 = image->cx;
-	item->y1 = image->cy;
-	item->x2 = image->cx + image->cwidth;
-	item->y2 = image->cy + image->cheight;
-#if 0
-	gnome_canvas_group_child_bounds (GNOME_CANVAS_GROUP (item->parent), item);
-#endif
-}
-
 static void
 gnome_canvas_pimage_set_arg (GtkObject *object, GtkArg *arg, guint arg_id)
 {
@@ -260,16 +237,8 @@ gnome_canvas_pimage_set_arg (GtkObject *object, GtkArg *arg, guint arg_id)
 		break;
 	}
 
-#ifdef OLD_XFORM
-	if (update)
-		(* GNOME_CANVAS_ITEM_CLASS (item->object.klass)->update) (item, NULL, NULL, 0);
-
-	if (calc_bounds)
-		recalc_bounds (image);
-#else
 	if (update)
 		gnome_canvas_item_request_update (item);
-#endif
 }
 
 static void
@@ -336,9 +305,6 @@ gnome_canvas_pimage_update (GnomeCanvasItem *item, double *affine, ArtSVP *clip_
 	if (image->im)
 		image->need_recalc = TRUE;
 
-#ifdef OLD_XFORM
-	recalc_bounds (image);
-#else
 	get_bounds_item_relative (image, &i_bbox.x0, &i_bbox.y0, &i_bbox.x1, &i_bbox.y1);
 	art_drect_affine_transform (&c_bbox, &i_bbox, affine);
 
@@ -366,7 +332,6 @@ gnome_canvas_pimage_update (GnomeCanvasItem *item, double *affine, ArtSVP *clip_
 	image->affine[3] = (affine[3] * image->height) / h;
 	image->affine[4] = i_bbox.x0 * affine[0] + i_bbox.y0 * affine[2] + affine[4];
 	image->affine[5] = i_bbox.x0 * affine[1] + i_bbox.y0 * affine[3] + affine[5];
-#endif
 }
 
 static void
@@ -543,21 +508,6 @@ gnome_canvas_pimage_point (GnomeCanvasItem *item, double x, double y,
 		dy = 0;
 
 	return sqrt (dx * dx + dy * dy) / item->canvas->pixels_per_unit;
-}
-
-static void
-gnome_canvas_pimage_translate (GnomeCanvasItem *item, double dx, double dy)
-{
-#ifdef OLD_XFORM
-	GnomeCanvasPImage *image;
-
-	image = GNOME_CANVAS_PIMAGE (item);
-
-	image->x += dx;
-	image->y += dy;
-
-	recalc_bounds (image);
-#endif
 }
 
 static void
