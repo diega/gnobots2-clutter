@@ -2046,6 +2046,11 @@ shuffle_tiles_callback (GtkWidget *widget, gpointer data)
 
         if (paused || game_over == GAME_DEAD || game_over == GAME_WON) return;
 
+	/* Make sure no tiles are selected. */
+	if (selected_tile < MAX_TILES) {
+		unselect_tile(selected_tile);
+	}
+
 	ok = shuffle ();
    
 	if (!ok) {
