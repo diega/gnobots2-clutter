@@ -122,11 +122,10 @@ Tetris::Tetris(int cmdlLevel):
 
 	/* init gconf */
 	gconf_client = gconf_client_get_default ();
-	if (!games_gconf_sanity_check_string (gconf_client, "/apps/gnometris/options/block_pixmap")) {
-		exit(1);
-	}
-	gconf_client_add_dir (gconf_client_get_default (), "/apps/gnometris/options", GCONF_CLIENT_PRELOAD_NONE, NULL);
-	gconf_client_notify_add (gconf_client_get_default (), "/apps/gnometris/options", gconfNotify, this, NULL, NULL);
+	games_gconf_sanity_check_string (gconf_client, "/apps/gnometris/options/block_pixmap");
+
+	gconf_client_add_dir (gconf_client, "/apps/gnometris/options", GCONF_CLIENT_PRELOAD_NONE, NULL);
+	gconf_client_notify_add (gconf_client, "/apps/gnometris/options", gconfNotify, this, NULL, NULL);
 
 	initOptions ();
 
@@ -362,6 +361,8 @@ Tetris::initOptions ()
 		g_error_free (error);
 		error = NULL;
 	}
+        if (blockPixmap == NULL)
+          blockPixmap = g_strdup ("7blocks-tig.png");
 
 	if (bgPixmap)
 		free (bgPixmap);
@@ -372,6 +373,8 @@ Tetris::initOptions ()
 		g_error_free (error);
 		error = NULL;
 	}
+        if (bgPixmap == NULL)
+          bgPixmap = g_strdup ("gnometris-bg.jpg");
 
 	startingLevel = gconf_client_get_int (gconf_client, "/apps/gnometris/options/starting_level", &error);
 	if (error) {
@@ -379,6 +382,8 @@ Tetris::initOptions ()
 		g_error_free (error);
 		error = NULL;
 	}
+        if (startingLevel < 1) 
+          startingLevel = 1;
 
 	do_preview = gconf_client_get_bool (gconf_client, "/apps/gnometris/options/do_preview", &error);
 	if (error) {

@@ -1,5 +1,8 @@
 2003-06-05  William Jon McCann  <mccann@jhu.edu>
 
+	* tetris.cpp (Tetris): Don't exit if schemas are not installed,
+	try to use minimum number of defaults.
+
 	* Makefile.am (install-data-local): Only install schemas
 	if they are requested.
 
