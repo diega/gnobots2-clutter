@@ -46,6 +46,8 @@ extern gchar whose_turn;
 extern gint computer_timeout_id;
 extern gint game_over_flip_id;
 
+extern GdkColor colors[2];
+
 static GnomeUIInfo
 game_menu[] = {
   GNOMEUIINFO_MENU_NEW_GAME_ITEM (new_game_cb, NULL),
@@ -204,8 +206,10 @@ main (int argc, char **argv)
   iagno2_app_init ();
   iagno2_appbar_init ();
   iagno2_drawing_area_init ();
-  
+
   gtk_widget_show_all (app);
+
+  iagno2_set_bg_color ();
 
   gtk_main ();
 
@@ -216,4 +220,6 @@ main (int argc, char **argv)
   reversi_destroy_board (&board_pixmaps);
   */
   g_free (board_pixmaps);
+
+  gdk_colormap_free_colors (gdk_colormap_get_system (), colors, 2);
 }

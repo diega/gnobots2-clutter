@@ -37,8 +37,6 @@ void iagno2_app_init ();
 
 void iagno2_canvas_init ();
 
-void iagno2_show_grid_lines ();
-
 void iagno2_set_bg_color ();
 
 void iagno2_force_board_redraw ();
@@ -50,6 +48,8 @@ void iagno2_board_changed ();
 void iagno2_setup_current_player ();
 
 void iagno2_initialize_players ();
+
+void iagno2_draw_grid ();
 
 gint iagno2_game_over ();
 

@@ -72,7 +72,7 @@ apply_cb (GtkWidget *widget, gint pagenum, gpointer data)
     }
 
     if (toggle_grid || new_tileset) {
-      iagno2_show_grid_lines ();
+      iagno2_draw_grid ();
     }
 
     if (strcmp (old_properties->player1, properties->player1)) {
@@ -398,13 +398,17 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
 
   frame = gtk_frame_new (_("Dark Player"));
 
+  vbox = gtk_vbox_new (TRUE, GNOME_PAD_SMALL);
+  gtk_container_border_width (GTK_CONTAINER (vbox), GNOME_PAD_SMALL);
+
   option_menu = gtk_option_menu_new ();
   menu = gtk_menu_new ();
   fill_plugin_menu (menu, 1);
   gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
 
-  vbox = gtk_vbox_new (TRUE, GNOME_PAD_SMALL);
-  gtk_container_border_width (GTK_CONTAINER (vbox), GNOME_PAD_SMALL);
+  if (game_in_progress) {
+    gtk_widget_set_sensitive (option_menu, FALSE);
+  }
 
   gtk_box_pack_start (GTK_BOX (vbox), option_menu, TRUE, TRUE, 0);
 
@@ -415,6 +419,9 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                       GTK_SIGNAL_FUNC (configure_cb), (gpointer) 1);
   gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
+  if (game_in_progress) {
+    gtk_widget_set_sensitive (button, FALSE);
+  }
   button = gtk_button_new_with_label (_("About..."));
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                       GTK_SIGNAL_FUNC (about_cb), (gpointer) 1);
@@ -433,6 +440,10 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
   fill_plugin_menu (menu, 2);
   gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
 
+  if (game_in_progress) {
+    gtk_widget_set_sensitive (option_menu, FALSE);
+  }
+
   vbox = gtk_vbox_new (TRUE, GNOME_PAD_SMALL);
   gtk_container_border_width (GTK_CONTAINER (vbox), GNOME_PAD_SMALL);
 
@@ -445,6 +456,9 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                       GTK_SIGNAL_FUNC (configure_cb), (gpointer) 2);
   gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 0);
+  if (game_in_progress) {
+    gtk_widget_set_sensitive (button, FALSE);
+  }
   button = gtk_button_new_with_label (_("About..."));
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                       GTK_SIGNAL_FUNC (about_cb), (gpointer) 2);
@@ -461,10 +475,13 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
 
   label = gtk_label_new (_("Graphics"));
 
-  vbox = gtk_vbox_new (FALSE, 0);
+  vbox = gtk_vbox_new (FALSE, GNOME_PAD_SMALL);
+  gtk_container_border_width (GTK_CONTAINER (vbox), GNOME_PAD_SMALL);
 
   hbox = gtk_hbox_new (FALSE, GNOME_PAD_SMALL);
+  /*
   gtk_container_border_width (GTK_CONTAINER (hbox), GNOME_PAD_SMALL);
+  */
 
   label2 = gtk_label_new (_("Tileset:"));
   gtk_box_pack_start (GTK_BOX (hbox), label2, FALSE, FALSE, 0);
@@ -477,6 +494,14 @@ iagno2_preferences_cb (GtkWidget *widget, gpointer data)
   gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+  button = gtk_check_button_new_with_label (_("Draw grid lines"));
+  if (properties->draw_grid)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+  gtk_signal_connect (GTK_OBJECT (button), "toggled",
+                      GTK_SIGNAL_FUNC (draw_grid_cb), NULL);
+
+  gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 
   gnome_property_box_append_page (GNOME_PROPERTY_BOX (preferences_dialog),
                                   vbox, label);

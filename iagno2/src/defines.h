@@ -24,18 +24,16 @@
 
 #define TILEWIDTH   60
 #define TILEHEIGHT  60
-/*
 #define GRIDWIDTH   1
-*/
 /*
 #define BOARDSIZE   8
 */
-/*
 #define BOARDWIDTH  (TILEWIDTH + GRIDWIDTH) * BOARDSIZE - 1
 #define BOARDHEIGHT (TILEHEIGHT + GRIDWIDTH) * BOARDSIZE - 1
-*/
+/*
 #define BOARDWIDTH  TILEWIDTH * BOARDSIZE
 #define BOARDHEIGHT TILEHEIGHT * BOARDSIZE
+*/
 
 /*
 #define INDEX(r,c) ((r << 3) + c)

@@ -1,4 +1,11 @@
-2000-04-09  Ian Peters  <itp@gnu.org>
+2000-04-10  Ian Peters  <itp@gnu.org>
+
+	* src/preferences.c, src/iagno2.c: fixed bg color detection, readded
+	  support for showing grid lines
+	* src/*.c: Killed a lot of code that's been commented out for a while
+	  that is now officially dead.
+
+2000-04-10  Ian Peters  <itp@gnu.org>
 
 	* Added license information to all source files
 	* src/main.c, plugins/random/random.c,

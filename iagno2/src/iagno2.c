@@ -40,24 +40,12 @@ extern Iagno2Plugin *plugin;
 
 extern gboolean game_in_progress;
 
-/*
-GtkWidget *canvas;
-GdkImlibImage *tileset_images[32];
-GnomeCanvasItem *background;
-GnomeCanvasGroup *grid_lines;
-GnomeCanvasItem *board_items[BOARDSIZE * BOARDSIZE];
-GdkColor bg_color;
-GdkColor grid_color;
-*/
-
 GtkWidget *drawing_area;
-/*
-GdkPixbuf *tileset_pixbufs[32];
-*/
 GdkPixbuf *tileset_pixbuf;
-GdkColor bg_color;
 
 GdkPixmap *buffer_pixmap = NULL;
+
+GdkColor colors[2];
 
 gchar *board_pixmaps = NULL;
 
@@ -81,17 +69,8 @@ gint move_count = 0;
 void
 iagno2_tileset_load ()
 {
-  /*
-  GdkImlibImage *tileset_image;
-  */
-  /*
-  GdkPixbuf *tileset_pixbuf;
-  */
   gchar *tmp_path;
   gchar *filename;
-  /*
-  gint i, j;
-  */
   gint i;
 
   tmp_path = g_strconcat ("iagno2/", properties->tileset, NULL);
@@ -105,49 +84,6 @@ iagno2_tileset_load ()
 
   tileset_pixbuf = gdk_pixbuf_new_from_file (filename);
 
-  /*
-  tileset_image = gdk_imlib_load_image (filename);
-  */
-
-  /*
-  for (i = 0; i < 8; i++) {
-    for (j = 0; j < 4; j++) {
-      tileset_images[j * 8 + i] =
-        gdk_imlib_crop_and_clone_image (tileset_image,
-            i * TILEWIDTH,
-            j * TILEHEIGHT,
-            TILEWIDTH,
-            TILEHEIGHT);
-    }
-  }
-  */
-
-  /*
-  for (i = 0; i < 32; i++) {
-    if (tileset_pixbufs[i]) {
-      gdk_pixbuf_unref (tileset_pixbufs[i]);
-      tileset_pixbufs[i] = NULL;
-    }
-
-    tileset_pixbufs[i] = gdk_pixbuf_new (ART_PIX_RGB, FALSE, 8,
-                                         TILEWIDTH, TILEHEIGHT);
-    
-    gdk_pixbuf_copy_area (tileset_pixbuf,
-                          i * TILEWIDTH, 0,
-                          TILEWIDTH, TILEHEIGHT,
-                          tileset_pixbufs[i],
-                          0, 0);
-  }
-  */
-
-  /*
-  gdk_imlib_destroy_image (tileset_image);
-  */
-
-  /*
-  gdk_pixbuf_unref (tileset_pixbuf);
-  */
-
   g_free (filename);
 }
 
@@ -158,30 +94,26 @@ iagno2_render_tile (int tile, int index)
   int x = ROW (index);
   int y = COL (index);
 
-  /*
-  gdk_pixbuf_render_to_drawable (tileset_pixbufs[tile],
-  */
   gdk_pixbuf_render_to_drawable (tileset_pixbuf,
                                  drawing_area->window, gc,
                                  tile * TILEWIDTH, 0,
                                  /*
-                                 0, 0,
-                                 */
                                  x * TILEWIDTH, y * TILEHEIGHT,
+                                 */
+                                 x * (TILEWIDTH + GRIDWIDTH),
+                                 y * (TILEHEIGHT + GRIDWIDTH),
                                  TILEWIDTH, TILEHEIGHT,
                                  GDK_RGB_DITHER_NORMAL,
                                  0, 0);
   
-  /*
-  gdk_pixbuf_render_to_drawable (tileset_pixbufs[tile],
-  */
   gdk_pixbuf_render_to_drawable (tileset_pixbuf,
                                  buffer_pixmap, gc,
                                  tile * TILEWIDTH, 0,
                                  /*
-                                 0, 0,
-                                 */
                                  x * TILEWIDTH, y * TILEHEIGHT,
+                                 */
+                                 x * (TILEWIDTH + GRIDWIDTH),
+                                 y * (TILEHEIGHT + GRIDWIDTH),
                                  TILEWIDTH, TILEHEIGHT,
                                  GDK_RGB_DITHER_NORMAL,
                                  0, 0);
@@ -194,46 +126,23 @@ iagno2_render_tile_to_buffer (int tile, int index)
   int x = ROW (index);
   int y = COL (index);
 
-  /*
-  gdk_pixbuf_render_to_drawable (tileset_pixbufs[tile],
-  */
   gdk_pixbuf_render_to_drawable (tileset_pixbuf,
                                  buffer_pixmap, gc,
                                  tile * TILEWIDTH, 0,
                                  /*
-                                 0, 0,
-                                 */
                                  x * TILEWIDTH, y * TILEHEIGHT,
+                                 */
+                                 x * (TILEWIDTH + GRIDWIDTH),
+                                 y * (TILEHEIGHT + GRIDWIDTH),
                                  TILEWIDTH, TILEHEIGHT,
                                  GDK_RGB_DITHER_NORMAL,
                                  0, 0);
 }
 
+/*
 static GdkColor
 iagno2_get_pixbuf_color (GdkPixbuf *pixbuf)
 {
-  /*
-  GdkVisual *visual;
-  GdkColor color;
-  GdkImage *image;
-  GdkPixmap *pixmap;
-  
-  visual = gdk_imlib_get_visual ();
-  if (visual->type != GDK_VISUAL_TRUE_COLOR) {
-    gdk_imlib_set_render_type (RT_PLAIN_PALETTE);
-  }
-  gdk_imlib_render (imlib_image,
-      imlib_image->rgb_width,
-      imlib_image->rgb_height);
-  pixmap = gdk_imlib_move_image (imlib_image);
-  image = gdk_image_get (pixmap, 0, 0, 1, 1);
-  
-  color.pixel = gdk_image_get_pixel (image, 0, 0);
-
-  gdk_image_destroy (image);
-  gdk_pixmap_unref (pixmap);
-  */
-
   GdkColor color;
   guchar *pixels;
   gint bits;
@@ -250,6 +159,50 @@ iagno2_get_pixbuf_color (GdkPixbuf *pixbuf)
   return (color);
 }
 
+static GdkColor
+iagno2_get_grid_color (GdkColor bg_color)
+{
+  GdkColor color;
+
+  color.pixel = 0xFFFFFF - bg_color.pixel;
+}
+*/
+
+void
+iagno2_set_bg_color ()
+{
+  /*
+  GdkColor color;
+  */
+  guchar *pixels;
+  GdkGC *grid_gc;
+
+  pixels = gdk_pixbuf_get_pixels (tileset_pixbuf);
+
+  colors[0].red = pixels[0] << 8;
+  colors[0].green = pixels[1] << 8;
+  colors[0].blue = pixels[2] << 8;
+
+  gdk_colormap_alloc_color (gdk_colormap_get_system (), &colors[0],
+                            FALSE, TRUE);
+
+  gdk_window_set_background (drawing_area->window, &colors[0]);
+
+  /*
+  gdk_gc_set_background (gc, &color);
+  gdk_gc_set_foreground (gc, &color);
+  */
+
+  colors[1].red = 0xFFFF - colors[0].red;
+  colors[1].green = 0xFFFF - colors[0].green;
+  colors[1].blue = 0xFFFF - colors[0].blue;
+
+  gdk_colormap_alloc_color (gdk_colormap_get_system (), &colors[1],
+                            FALSE, TRUE);
+
+  iagno2_draw_grid ();
+}
+
 void
 iagno2_app_init ()
 {
@@ -263,6 +216,10 @@ iagno2_app_init ()
       "delete_event",
       GTK_SIGNAL_FUNC (delete_event_cb),
       NULL);
+
+  /*
+  iagno2_set_bg_color ();
+  */
 }
 
 void
@@ -275,26 +232,17 @@ iagno2_appbar_init ()
   gnome_appbar_set_status (GNOME_APPBAR (appbar), _(" Welcome to Iagno II!"));
 }
 
+/*
 void
 iagno2_set_bg_color ()
 {
-  /*
-  bg_color = iagno2_get_pixbuf_color (tileset_pixbufs[0]);
-  */
   bg_color = iagno2_get_pixbuf_color (tileset_pixbuf);
 
-  /*
-  grid_color.pixel = 0xFFFFFF - bg_color.pixel;
-  */
-
-  /*
-  gnome_canvas_item_set (background,
-      "fill_color_gdk", &bg_color,
-      NULL);
-      */
+  grid_color = iagno2_get_grid_color (bg_color);
 
   gdk_window_set_background (drawing_area->window, &bg_color);
 }
+*/
 
 static void
 iagno2_render_buffer_to_screen (int x, int y, int width, int height)
@@ -306,6 +254,37 @@ iagno2_render_buffer_to_screen (int x, int y, int width, int height)
                    x, y,
                    x, y,
                    width, height);
+}
+
+void
+iagno2_draw_grid ()
+{
+  GdkGC *grid_gc;
+  int i, j;
+
+  grid_gc = gdk_gc_new (drawing_area->window);
+
+  gdk_gc_copy (grid_gc, drawing_area->style->bg_gc[0]);
+
+  if (properties->draw_grid) {
+    i = 1;
+  } else {
+    i = 0;
+  }
+
+  gdk_gc_set_background (grid_gc, &colors[i]);
+  gdk_gc_set_foreground (grid_gc, &colors[i]);
+
+  for (i = 1; i < BOARDSIZE; i++) {
+    gdk_draw_line (buffer_pixmap, grid_gc, i * (TILEWIDTH + GRIDWIDTH) - 1, 0,
+                   i * (TILEWIDTH + GRIDWIDTH) - 1, BOARDHEIGHT);
+    gdk_draw_line (buffer_pixmap, grid_gc, 0, i * (TILEHEIGHT + GRIDWIDTH) - 1,
+                   BOARDWIDTH, i * (TILEHEIGHT + GRIDWIDTH) - 1);
+  }
+
+  gdk_gc_unref (grid_gc);
+
+  iagno2_render_buffer_to_screen (0, 0, BOARDWIDTH, BOARDHEIGHT);
 }
 
 static gint
@@ -349,13 +328,8 @@ drawing_area_button_press_event_cb (GtkWidget *widget, GdkEvent *event,
         x = event->button.x;
         y = event->button.y;
 
-        /*
-        grid_row = y / (TILEWIDTH + GRIDWIDTH);
-        grid_col = x / (TILEHEIGHT + GRIDWIDTH);
-        */
-
-        grid_row = x / TILEWIDTH;
-        grid_col = y / TILEHEIGHT;
+        grid_row = x / (TILEWIDTH + GRIDWIDTH);
+        grid_col = y / (TILEHEIGHT + GRIDWIDTH);
 
         index = INDEX (grid_row, grid_col);
 
@@ -375,96 +349,6 @@ drawing_area_button_press_event_cb (GtkWidget *widget, GdkEvent *event,
 
   return FALSE;
 }
-
-/*
-void
-iagno2_canvas_init ()
-{
-  GnomeCanvasGroup *group;
-  GnomeCanvasItem *item;
-  gint i;
-  GnomeCanvasPoints *points;
-  gchar r, c;
-  double x, y;
-  
-  gtk_widget_push_visual (gdk_imlib_get_visual ());
-  gtk_widget_push_colormap (gdk_imlib_get_colormap ());
-  canvas = gnome_canvas_new ();
-  gtk_widget_pop_colormap ();
-  gtk_widget_pop_visual ();
-
-  gtk_widget_set_usize (GTK_WIDGET (canvas),
-      BOARDWIDTH, BOARDHEIGHT);
-
-  gnome_canvas_set_scroll_region (GNOME_CANVAS (canvas),
-      0, 0,
-      BOARDWIDTH, BOARDHEIGHT);
-
-  group = gnome_canvas_root (GNOME_CANVAS (canvas));
-
-  background = gnome_canvas_item_new (group,
-      gnome_canvas_rect_get_type (),
-      "x1", 0.0,
-      "y1", 0.0,
-      "x2", (double) BOARDWIDTH,
-      "y2", (double) BOARDHEIGHT,
-      NULL);
-
-  grid_lines = GNOME_CANVAS_GROUP (gnome_canvas_item_new (group,
-        gnome_canvas_group_get_type (),
-        "x", 0.0,
-        "y", 0.0,
-        NULL));
-
-  points = gnome_canvas_points_new (2);
-
-  for (i = 1; i < BOARDSIZE; i++) {
-    points->coords[0] = 0.0;
-    points->coords[1] = (double) (i * (TILEHEIGHT + GRIDWIDTH) - 1);
-    points->coords[2] = BOARDWIDTH;
-    points->coords[3] = points->coords[1];
-    item = gnome_canvas_item_new (grid_lines,
-        gnome_canvas_line_get_type (),
-        "points", points,
-        "width_units", 1.0,
-        NULL);
-    points->coords[0] = (double) (i * (TILEWIDTH + GRIDWIDTH) - 1);
-    points->coords[1] = 0.0;
-    points->coords[2] = points->coords[0];
-    points->coords[3] = BOARDHEIGHT;
-    item = gnome_canvas_item_new (grid_lines,
-        gnome_canvas_line_get_type (),
-        "points", points,
-        "width_units", 1.0,
-        NULL);
-  }
-
-  gnome_canvas_points_unref (points);
-
-  iagno2_set_bg_color ();
-  iagno2_show_grid_lines ();
-
-  for (i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
-    r = ROW (i);
-    c = COL (i);
-    board_items[i] = gnome_canvas_item_new (group,
-        gnome_canvas_image_get_type (),
-        "image", tileset_images[0],
-        "x", (double) (c * (TILEWIDTH + GRIDWIDTH)),
-        "y", (double) (r * (TILEHEIGHT + GRIDWIDTH)),
-        "anchor", GTK_ANCHOR_NORTH_WEST,
-        "width", (double) TILEWIDTH,
-        "height", (double) TILEHEIGHT,
-        NULL);
-    gtk_signal_connect (GTK_OBJECT (board_items[i]),
-        "event",
-        GTK_SIGNAL_FUNC (board_item_cb),
-        NULL);
-  }
-
-  gnome_app_set_contents (GNOME_APP (app), canvas);
-}
-*/
 
 void
 iagno2_drawing_area_init ()
@@ -491,7 +375,12 @@ iagno2_drawing_area_init ()
   gnome_app_set_contents (GNOME_APP (app), drawing_area);
 
   /*
-  drawing_area_configure_event_cb (drawing_area, NULL);
+  if (!gc) {
+    gc = gdk_gc_new (drawing_area->window);
+    gdk_gc_copy (gc, drawing_area->style->bg_gc[0]);
+  }
+
+  printf ("gc initialized\n");
   */
 }
 
@@ -501,50 +390,11 @@ iagno2_force_board_redraw ()
   gint i;
 
   for (i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
-    /*
-    gnome_canvas_item_set (GNOME_CANVAS_ITEM (board_items[i]),
-        "image", tileset_images[board[i]],
-        NULL);
-        */
     iagno2_render_tile_to_buffer (board->board[i], i);
   }
 
   iagno2_render_buffer_to_screen (0, 0, BOARDWIDTH, BOARDHEIGHT);
 }
-
-void
-iagno2_show_grid_lines ()
-{
-  /*
-  GdkColor eff_grid_color;
-  GList *lines;
-
-  if (properties->draw_grid) {
-    eff_grid_color = grid_color;
-  } else {
-    eff_grid_color = bg_color;
-  }
-
-  lines = grid_lines->item_list;
-
-  while (lines != NULL) {
-    gnome_canvas_item_set (GNOME_CANVAS_ITEM (lines->data),
-        "fill_color_gdk", &eff_grid_color,
-        NULL);
-    lines = lines->next;
-  }
-  */
-}
-
-/*
-static void
-iagno2_draw_tile (gint item, gchar tile)
-{
-  gnome_canvas_item_set (GNOME_CANVAS_ITEM (board_items[item]),
-      "image", tileset_images[tile],
-      NULL);
-}
-*/
 
 static gint
 iagno2_flip_tiles ()
@@ -596,20 +446,10 @@ iagno2_board_changed ()
 }
 
 static gint
-/*
-iagno2_get_computer_move (int *index)
-*/
 iagno2_get_computer_move ()
 {
-  /*
-  if (*index != 64) {
-  */
   if (computer_return != 64) {
     iagno2_move (computer_return);
-    /*
-    iagno2_move (*index);
-    free (index);
-    */
     return (FALSE);
   }
 
@@ -617,19 +457,11 @@ iagno2_get_computer_move ()
 }
 
 static void
-/*
-iagno2_computer_thread (int *index)
-*/
 iagno2_computer_thread ()
 {
   int player = PLAYER (whose_turn);
   
-  /*
-  *index = players[player]->plugin_move (board);
-  */
-
-  computer_return = players[player]->plugin_move (board,
-                                                  whose_turn);
+  computer_return = players[player]->plugin_move (board, whose_turn);
 
   _exit (0);
 }
@@ -638,24 +470,11 @@ static gint
 iagno2_computer_player_wrapper ()
 {
   pthread_t tid;
-  /*
-  int *index = (int *) malloc (sizeof (int));
-  */
-
-  /*
-  *index = 64;
-  */
 
   computer_return = 64;
 
-  /*
-  pthread_create (&tid, NULL, iagno2_computer_thread, index);
-  */
   pthread_create (&tid, NULL, (void *)iagno2_computer_thread, NULL);
 
-  /*
-  computer_timeout_id = gtk_timeout_add (500, iagno2_get_computer_move, index);
-  */
   computer_timeout_id = gtk_timeout_add (500, iagno2_get_computer_move, NULL);
 
   return FALSE;
@@ -719,9 +538,6 @@ iagno2_post_move_check ()
       gnome_appbar_set_status (GNOME_APPBAR (appbar), " Game over!");
       return;
     } else {
-      /*
-      printf ("A player had to pass!\n");
-      */
       whose_turn = OTHER_TILE (whose_turn);
       pass = TRUE;
     }
@@ -734,11 +550,6 @@ void
 iagno2_move (gchar index)
 {
   move (board, index, whose_turn);
-
-  /*
-  game_history[move_count++].player = whose_turn;
-  game_history[move_count++].index = index;
-  */
 
   iagno2_post_move_check ();
 }
@@ -757,9 +568,6 @@ iagno2_initialize_players (int which)
     }
     if (!strcmp (properties->player1, "Human")) {
       players[0] = NULL;
-      /*
-      printf ("Player 1 is \"Human\"\n");
-      */
     } else {
       tmp_path = g_strconcat ("iagno2/",
           properties->player1, NULL);
@@ -784,9 +592,6 @@ iagno2_initialize_players (int which)
     }
     if (!strcmp (properties->player2, "Human")) {
       players[1] = NULL;
-      /*
-      printf ("Player 2 is \"Human\"\n");
-      */
     } else {
       tmp_path = g_strconcat ("iagno2/",
           properties->player2, NULL);
@@ -804,17 +609,6 @@ iagno2_initialize_players (int which)
     }
   }
 }
-
-/*
-void
-game_over_new_game_cb (gint reply, gpointer data)
-{
-  new_game_dialog = NULL;
-  if (!reply) {
-    new_game_cb (NULL, NULL);
-  }
-}
-*/
 
 gint
 iagno2_game_over ()
