@@ -1,3 +1,16 @@
+2005-04-04  Richard Hoelscher  <rah@rahga.com>
+
+	* mahjongg.c: Support games-stock items, port to GtkUIInfo.
+	Update callbacks to use actions, make several of them 'static'.
+	(main): Update welcome message, support GtkUIInfo menu and toolbar.
+	(update_menu_sensitivities): Replace name of set_menus_sensitive() and
+	support actions.
+	(set_undoredo_state): Update name, call update_menu_sensitivies ().
+	(show_toolbar_changed_cb, show_tb_callback): Update for Gtk+ toolbar.
+	(properties_callback): Replace "*w" with "*widget".
+	(about_callback): Use GtkAboutDialog.
+	(create_ui_manager): New, sets up menu and tilebars.
+
 2005-03-23  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c: Patches from Dennis Cranston
