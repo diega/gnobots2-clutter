@@ -1,3 +1,4 @@
+/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
 /*
  * GNOME-Mahjongg
  * (C) 1998-1999 the Free Software Foundation
@@ -1883,29 +1884,39 @@ create_mahjongg_board (GtkWidget *mbox)
 
 	mapset = gconf_client_get_string (conf_client,
 			"/apps/mahjongg/mapset", NULL);
+	if (mapset == NULL) {
+		mapset = g_strdup("easy");
+	}
 
 	buf = gconf_client_get_string (conf_client,
 			"/apps/mahjongg/bgcolour", NULL) ;
+	if (buf == NULL) {
+		buf = g_strdup("#34385B");
+	}
 	set_backgnd_colour (buf) ;
 	g_free (buf);
 
-	buf = gconf_client_get_string (conf_client,
-			"/apps/mahjongg/tileset", NULL);
-        buf2 = gconf_client_get_string (conf_client,
-			"/apps/mahjongg/background", NULL);
+	buf = gconf_client_get_string (conf_client, "/apps/mahjongg/tileset", NULL);
+	if (buf == NULL) {
+		buf = g_strdup("default.png");
+	}
+	buf2 = gconf_client_get_string (conf_client, "/apps/mahjongg/background", NULL);
+	if (buf2 == NULL) {
+		buf2 = g_strdup("bg1.png");
+	}
         
 	popup_warn = gconf_client_get_bool (conf_client,
-			"/apps/mahjongg/warn", NULL);
-
+					    "/apps/mahjongg/warn", NULL);
+	
 	popup_confirm = gconf_client_get_bool (conf_client,
-			"/apps/mahjongg/confirm", NULL);
+					       "/apps/mahjongg/confirm", NULL);
 
 	do_game ();
 	load_tiles (buf, buf2);
 
 	create_canvas_items ();
 
-        g_free (buf2);
+	g_free (buf2);
 	g_free (buf);
 	init_game ();
 	update_score_state ();
@@ -2046,9 +2057,9 @@ main (int argc, char *argv [])
 	GtkWidget *chrono_label;
 	GtkWidget *status_box;
 	GtkWidget *group_box;
-        gboolean show=TRUE;
+	gboolean show=TRUE;
 
-        gnome_score_init (APPNAME);
+	gnome_score_init (APPNAME);
 
 	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -2060,7 +2071,7 @@ main (int argc, char *argv [])
 			    GNOME_PARAM_APP_DATADIR, DATADIR,
 			    NULL);
 
-        gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-mahjongg.png");
+	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-mahjongg.png");
 	new_seed ();
 	conf_client = gconf_client_get_default ();
 	gconf_sanity_check();
@@ -2109,7 +2120,7 @@ main (int argc, char *argv [])
 	gnome_app_create_menus (GNOME_APP (window), mainmenu);
 	gnome_app_install_menu_hints(GNOME_APP (window), mainmenu);
 
-        gnome_app_create_toolbar (GNOME_APP (window), toolbar_uiinfo);
+	gnome_app_create_toolbar (GNOME_APP (window), toolbar_uiinfo);
 
 	g_signal_connect (G_OBJECT (window), "delete_event",
 			  G_CALLBACK (delete_event_callback), (gpointer)QUIT_GAME);
@@ -2123,19 +2134,19 @@ main (int argc, char *argv [])
 	show = gconf_client_get_bool (conf_client,
 			"/apps/mahjongg/show-toolbar", NULL);
 
-        if (show) {
+	if (show) {
 		gtk_check_menu_item_set_active
 			(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), TRUE);
 	} else {
 		BonoboDockItem *gdi;
-
-                gtk_check_menu_item_set_active
+		
+		gtk_check_menu_item_set_active
 			(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), FALSE);
 		gdi = gnome_app_get_dock_item_by_name
 			(GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
-                gtk_widget_hide(GTK_WIDGET(gdi)) ;
-                gtk_widget_queue_resize (window);
-        }
+		gtk_widget_hide(GTK_WIDGET(gdi)) ;
+		gtk_widget_queue_resize (window);
+	}
 
 	init_config();
 
