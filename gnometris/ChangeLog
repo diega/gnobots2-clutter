@@ -1,3 +1,7 @@
+2004-07-14  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* tetris.cpp (setupPixmap): w->ww, h->hh to avoid warnings about shadowing members with local variables (bug #147543).
+
 2004-07-13  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* tetris.cpp: Fix support for eog uri-lists. Add support for

@@ -405,15 +405,15 @@ Tetris::setupPixmap()
 		
 			for (i=0; i<=bgwidth/width; i++) {
 				for (j=0; j<=bgheight/height; j++) {
-					int x, y, w, h;
+					int x, y, ww, hh;
 
 					x = i*width;
 					y = j*height;
-					w = MIN (width, bgwidth - x);
-					h = MIN (height, bgheight - y);
+					ww = MIN (width, bgwidth - x);
+					hh = MIN (height, bgheight - y);
 
 					gdk_pixbuf_copy_area (bgimage, 0, 0,
-							      w, h, temp,
+							      ww, hh, temp,
 							      x, y);
 				}
 			}
