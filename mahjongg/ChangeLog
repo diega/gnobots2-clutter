@@ -1,3 +1,7 @@
+2004-02-02  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* postmodern.svg: New, slimmer, version from Richard Hoelscher.
+
 2004-01-28  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c (shuffle_tiles_callback): Apllied patch from Richard
