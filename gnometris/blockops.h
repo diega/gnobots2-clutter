@@ -38,7 +38,8 @@ public:
 	void fallingToLaying();
 	void checkFullLines(ScoreFrame *s);
 	bool generateFallingBlock();
-	void emptyField();
+	void emptyField(void);
+	void emptyField(int filled_lines, int fill_prob);
 	void putBlockInField(bool erase);
 	int getLinesToBottom();
 	GnomeCanvasItem *generateItem(int x, int y, int color);

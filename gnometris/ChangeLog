@@ -1,3 +1,9 @@
+1999-10-23  Callum McKenzie  <callum@localhost>
+
+	* blockops.h, blockops.cpp, tetris.h, tetris.cpp, TODO : 
+	  added code to allow pre-filling of the field with 
+	  random blocks.
+
 1999-10-04  Marcin Gorycki  <mgo@olicom.dk>
 
 	* pix/Makefile.am, vortex-bg.png: added vortex-bg.png 

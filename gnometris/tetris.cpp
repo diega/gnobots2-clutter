@@ -117,6 +117,9 @@ Tetris::Tetris(int cmdlLevel):
 		GNOMEUIINFO_END
 	};
 
+	line_fill_height = 0;
+	line_fill_prob = 5;
+
 	blockPixmap = strdup(gnome_config_get_string_with_default("/gnometris/Properties/BlockPixmap=7blocks-tig.png", 0));
 	bgPixmap = strdup(gnome_config_get_string_with_default("/gnometris/Properties/BackgroundPixmap=fishy-bg.png", 0));
 
@@ -267,12 +270,16 @@ Tetris::doSetup(GtkWidget *widget, void *d)
 	Tetris *t = (Tetris*) d;
 	t->cmdlineLevel = 0;
 	t->startingLevel = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(t->sentry));
+	t->line_fill_prob = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(t->fill_prob_spinner));
+	t->line_fill_height = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(t->fill_height_spinner));
 	do_preview = t->doPreviewTmp;
 	random_block_colors = t->randomBlocksTmp;
 	
 	gnome_config_set_int("/gnometris/Properties/StartingLevel", t->startingLevel);
 	gnome_config_set_int("/gnometris/Properties/DoPreview", do_preview);
 	gnome_config_set_int("/gnometris/Properties/RandomBlockColors", random_block_colors);
+	gnome_config_set_int("/gnometris/Properties/LineFillHeight", t->line_fill_height);
+	gnome_config_set_int("/gnometris/Properties/LineFillProbability", t->line_fill_prob);
 	
 	if (blockPixmapTmp)
 	{
@@ -398,6 +405,10 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	if (t->setupdialog) 
 		return FALSE;
 
+
+	t->line_fill_height = gnome_config_get_int_with_default("/gnometris/Properties/LineFillHeight=0",0);
+	t->line_fill_prob = gnome_config_get_int_with_default("/gnometris/Properties/LineFillProbability=5",0);
+
 	t->setupdialog = gnome_dialog_new(_("Gnometris setup"), 
 																		GNOME_STOCK_BUTTON_OK, 
 																		GNOME_STOCK_BUTTON_CANCEL, 
@@ -421,7 +432,49 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_widget_show(frame);
 
 	box2 = gtk_hbox_new(FALSE, 0);
-  gtk_container_border_width(GTK_CONTAINER(box2), 10);
+	gtk_container_border_width(GTK_CONTAINER(box2), 10);
+	gtk_box_pack_start(GTK_BOX(box), box2, TRUE, TRUE, 0);
+	label = gtk_label_new(_("Number of pre-filled rows:"));
+	gtk_box_pack_start(GTK_BOX(box2), label, 0, 0, 0);
+	gtk_widget_show(label);
+	adj = gtk_adjustment_new(t->line_fill_height,0,LINES-1,1,5,0);
+	t->fill_height_spinner = gtk_spin_button_new(GTK_ADJUSTMENT(adj),10,0);
+	gtk_spin_button_set_update_policy(GTK_SPIN_BUTTON(t->fill_height_spinner),
+					  GTK_UPDATE_ALWAYS
+#ifndef HAVE_GTK_SPIN_BUTTON_SET_SNAP_TO_TICKS
+					  | GTK_UPDATE_SNAP_TO_TICKS
+#endif
+		);
+#ifdef HAVE_GTK_SPIN_BUTTON_SET_SNAP_TO_TICKS
+	gtk_spin_button_set_snap_to_ticks(GTK_SPIN_BUTTON(t->fill_height_spinner), 1);
+#endif
+	gtk_box_pack_end(GTK_BOX(box2), t->fill_height_spinner, 0, 0, 0);
+	gtk_widget_show(t->fill_height_spinner);	
+	gtk_widget_show(box2);
+
+	box2 = gtk_hbox_new(FALSE, 0);
+	gtk_container_border_width(GTK_CONTAINER(box2), 10);
+	gtk_box_pack_start(GTK_BOX(box), box2, TRUE, TRUE, 0);
+	label = gtk_label_new(_("Density of blocks in a pre-filled row:"));
+	gtk_box_pack_start(GTK_BOX(box2), label, 0, 0, 0);
+	gtk_widget_show(label);
+	adj = gtk_adjustment_new(t->line_fill_prob,0,10,1,5,0);
+	t->fill_prob_spinner = gtk_spin_button_new(GTK_ADJUSTMENT(adj),10,0);
+	gtk_spin_button_set_update_policy(GTK_SPIN_BUTTON(t->fill_prob_spinner),
+					  GTK_UPDATE_ALWAYS
+#ifndef HAVE_GTK_SPIN_BUTTON_SET_SNAP_TO_TICKS
+					  | GTK_UPDATE_SNAP_TO_TICKS
+#endif
+		);
+#ifdef HAVE_GTK_SPIN_BUTTON_SET_SNAP_TO_TICKS
+	gtk_spin_button_set_snap_to_ticks(GTK_SPIN_BUTTON(t->fill_prob_spinner), 1);
+#endif
+	gtk_box_pack_end(GTK_BOX(box2), t->fill_prob_spinner, 0, 0, 0);
+	gtk_widget_show(t->fill_prob_spinner);	
+	gtk_widget_show(box2);
+
+	box2 = gtk_hbox_new(FALSE, 0);
+	gtk_container_border_width(GTK_CONTAINER(box2), 10);
 	gtk_box_pack_start(GTK_BOX(box), box2, TRUE, TRUE, 0);
 	label = gtk_label_new(_("Starting Level:"));
 	gtk_box_pack_start(GTK_BOX(box2), label, 0, 0, 0);
@@ -735,9 +788,11 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 	t->scoreFrame->setLevel(level);
 	random_block_colors = gnome_config_get_int_with_default("/gnometris/Properties/RandomBlockColors=0", 0) != 0;
 	do_preview = gnome_config_get_int_with_default("/gnometris/Properties/DoPreview=0", 0) != 0;
-	
+	t->line_fill_height = gnome_config_get_int_with_default("/gnometris/Properties/LineFillHeight=0",0);
+	t->line_fill_prob = gnome_config_get_int_with_default("/gnometris/Properties/LineFillProbability=5",0);
+
 	t->timeoutId = gtk_timeout_add(1000 - 100 * (level - 1), timeoutHandler, t);
-	t->ops->emptyField();
+	t->ops->emptyField(t->line_fill_height,t->line_fill_prob);
 
 	t->scoreFrame->resetLines();
 	t->paused = false;

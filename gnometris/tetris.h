@@ -24,7 +24,7 @@
 #include <config.h>
 #include <gnome.h>
 
-#define TETRIS_VERSION "1.1.0"
+#define TETRIS_VERSION "1.2.0"
 
 extern int LINES;
 extern int COLUMNS;
@@ -129,6 +129,11 @@ private:
 	int cmdlineLevel;
 	bool doPreviewTmp;
 	bool randomBlocksTmp;
+
+	GtkWidget * fill_height_spinner;
+	int line_fill_height;
+	GtkWidget * fill_prob_spinner;
+	int line_fill_prob;
 	
 	GnomeUIInfo *gameMenuPtr; 
 	GnomeUIInfo *gameSettingsPtr; 

@@ -262,10 +262,13 @@ BlockOps::generateFallingBlock()
 }
 
 void
-BlockOps::emptyField()
+BlockOps::emptyField(int filled_lines, int fill_prob)
 {
+	int blank;
+
 	for (int y = 0; y < LINES; ++y)
 	{
+		blank = rand() % COLUMNS; // Allow for at least one blank per line
 		for (int x = 0; x < COLUMNS; ++x)
 		{
 			if (field[x][y].item != 0)
@@ -274,8 +277,27 @@ BlockOps::emptyField()
 				field[x][y].item = 0;
 			}
 			field[x][y].what = EMPTY;
+			if ((y>=(LINES - filled_lines)) && (x != blank) &&
+			    ((rand() % 10) < fill_prob)) { 
+				field[x][y].what = LAYING;
+				if (nr_of_colors)
+					field[x][y].color = rand() % nr_of_colors;
+				else
+					// This is in case we're called
+					// before the widgets are set 
+					// up and nr_of_colors is
+					// defined.
+					field[x][y].color = 0; 
+				field[x][y].item = generateItem(x,y,field[x][y].color);
+			}
 		}
 	}
+}
+
+void
+BlockOps::emptyField(void)
+{
+	emptyField(0,5);
 }
 
 void

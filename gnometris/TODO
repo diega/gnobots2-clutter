@@ -3,8 +3,6 @@ ASAP:
    less static methods etc.
 
 Next:
-* eliminate flicker with non-null background
-* random pieces at the bottom in various difficulty levels
 * configurable field size
 * major redesign: tetris, jewel and trojka in one shell (Sergey's (sipan@mit.edu) idea)
 
