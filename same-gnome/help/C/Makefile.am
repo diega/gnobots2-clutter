@@ -1,4 +1,4 @@
-figs =
+figdir = figures
 docname = same-gnome
 lang = C
 omffile = same-gnome-C.omf

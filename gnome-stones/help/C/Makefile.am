@@ -1,8 +1,4 @@
-figs = \
-	figures/main-game.png			\
-	figures/preferences-joystick.png	\
-	figures/main-start.png			\
-	figures/preferences-main.png
+figdir = figures
 docname = gnome-stones
 lang = C
 omffile = gnome-stones-C.omf

@@ -1,14 +1,30 @@
 <?xml version="1.0" standalone="no"?>
 <omf>
-  <resource>
-    <title>
-      Glines Manual
-    </title>
-    <subject>
-      <category>GNOME|Games</category>
-    </subject>
-    <format mime="text/sgml"/>
-    <identifier url="glines.sgml"/>
-    <language code="C"/>
-  </resource>
-</omf>
+       <resource>
+       <creator>
+    michael@koziarski.com (Michael Koziarski)
+   </creator>
+     <maintainer>
+    chris@wilddev.net (Chris Lyttle)
+   </maintainer>
+     <title>
+     Gnome-Xbill Manual
+   </title>
+     <date>
+    2002-05-05
+   </date>
+     <version identifier="2.0" date="2002-05-05" description="Updated to full OMF format"/>
+     <subject category="GNOME|Games"/>
+     <description>
+    Your mission in Gnome xBill is to maintain the stability of your computer systems. To do this you must splat the micro-Bills; restore any removed operating systems ; and dowse any sparks being sent from infected computers.
+   </description>
+     <type>
+     user's guide
+   </type>
+     <format mime="text/xml" dtd="-//OASIS//DTD DocBook XML V4.1.2//EN"/>
+     <identifier url="file://usr/share/gnome/help/xbill/C/gnome-xbill.xml"/>
+     <language code="C"/>
+     <relation seriesid="ff2351c0-600b-11d6-8555-d7ca649b2898"/>
+     <rights type="GNU FDL" license.version="1.1" holder="Michael Koziarski"/>
+     </resource>
+     </omf>

@@ -1,7 +1,4 @@
-figs = \
-	figures/gataxx-legalmoves.png	\
-	figures/gataxx-startgame.png	\
-	figures/gataxx-prefs.png
+figdir = figures
 docname = gataxx
 lang = C
 omffile = gataxx-C.omf
