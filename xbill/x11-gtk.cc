@@ -13,6 +13,10 @@ extern GtkWidget *warpbox, *quitbox, *newgamebox, *pausebox;
 extern GtkWidget *scorebox, *endgamebox;
 
 static void display_scores();
+static GtkWidget *CreateDialogIcon (char *title, int buttonmask,
+		GdkPixmap *icon, const char *text, const char *buttonlabel,
+		GtkSignalFunc callback);
+
 #ifndef GNOMEUIINFO_ITEM_STOCK_DATA
 #define GNOMEUIINFO_ITEM_STOCK_DATA(label, tip, cb, data, xpm) \
                    {GNOME_APP_UI_ITEM, label, tip, cb, data, NULL, \
@@ -34,9 +38,7 @@ static GnomeUIInfo game_menu[] = {
 };
   
 static GnomeUIInfo help_menu[] = {
-  GNOMEUIINFO_ITEM_NONE_DATA(_("Story of xBill"), NULL, (void *) popup, &storybox),
-  GNOMEUIINFO_ITEM_NONE_DATA(_("Rules"), NULL, (void *) popup, &rulesbox),
-  GNOMEUIINFO_SEPARATOR,
+  GNOMEUIINFO_HELP ("gnome-xbill"),
   GNOMEUIINFO_MENU_ABOUT_ITEM((void *) popup, &aboutbox),
   GNOMEUIINFO_END
 };
@@ -63,7 +65,7 @@ GtkWidget *CreatePixmapBox(char *title, GdkPixmap *pixmap, const char *text) {
 	win = gtk_dialog_new_with_buttons(title,
 			NULL,
 			(GtkDialogFlags)0,
-			GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+			GTK_STOCK_OK, GTK_RESPONSE_OK,
 			NULL);
 	g_signal_connect(GTK_OBJECT(win), "destroy",
 			   GTK_SIGNAL_FUNC(popdown), NULL);
@@ -90,7 +92,7 @@ GtkWidget *CreatePixmapBox(char *title, GdkPixmap *pixmap, const char *text) {
 }
 
 void warp_apply(GtkDialog *b, gint arg1, GtkEntry *entry) {
-	if (arg1 == GTK_RESPONSE_REJECT)
+	if (arg1 == GTK_RESPONSE_CANCEL)
 		return;
 
         game.warp_to_level(atoi(gtk_entry_get_text(entry)));
@@ -103,10 +105,10 @@ GtkWidget *CreateEnterText (char *title, const char *text,
 	win = gtk_dialog_new_with_buttons(title,
 			NULL,
 			(GtkDialogFlags)0,
-			GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+			GTK_STOCK_OK, GTK_RESPONSE_OK,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			NULL);
-	gtk_dialog_set_default_response(GTK_DIALOG(win), GTK_RESPONSE_ACCEPT);
+	gtk_dialog_set_default_response(GTK_DIALOG(win), GTK_RESPONSE_OK);
 	g_signal_connect(GTK_OBJECT(win), "destroy",
 			   GTK_SIGNAL_FUNC(popdown), NULL);
 	g_signal_connect(GTK_OBJECT(win), "response",
@@ -129,46 +131,86 @@ GtkWidget *CreateDialog (char *title, int buttonmask, GdkPixmap *icon,
 			 const char *text, const char *buttonlabel,
 			 GtkSignalFunc callback) {
 	GtkWidget *win, *hbox, *wid, *button;
-	char *ttext= (char*)malloc(strlen(text)+5);
+	GtkButtonsType buttons;
+
+	if (icon != NULL)
+	{
+		return CreateDialogIcon (title, buttonmask, icon,
+				text, buttonlabel,
+				callback);
+	}
+
+	if (buttonmask&CANCEL && buttonmask&OK)
+	{
+		buttons = GTK_BUTTONS_OK_CANCEL;
+	} else if (buttonmask&CANCEL) {
+		buttons = GTK_BUTTONS_CANCEL;
+	} else if (buttonmask&OK) {
+		buttons = GTK_BUTTONS_OK;
+	}
+
+	win = gtk_message_dialog_new (NULL,
+			GTK_DIALOG_MODAL,
+			GTK_MESSAGE_QUESTION,
+			GTK_BUTTONS_OK_CANCEL,
+			text, NULL);
+
+	if (callback && buttonmask&OK) {
+		g_signal_connect(GTK_DIALOG(win), "response",
+				callback, NULL);
+	}
+
+	g_signal_connect(GTK_OBJECT(win), "destroy",
+			GTK_SIGNAL_FUNC(popdown), NULL);
+	g_signal_connect(GTK_OBJECT(win), "response",
+			GTK_SIGNAL_FUNC(popdown), NULL);
+
+	gtk_dialog_set_default_response(GTK_DIALOG(win), GTK_RESPONSE_OK);
+
+	return win;
+}
+
+static
+GtkWidget *CreateDialogIcon (char *title, int buttonmask, GdkPixmap *icon,
+		const char *text, const char *buttonlabel,
+		GtkSignalFunc callback)
+{
+	GtkWidget *win, *hbox, *wid, *button;
 
 	win = gtk_dialog_new();
+
 	gtk_window_set_title (GTK_WINDOW(win), title);
 	g_signal_connect(GTK_OBJECT(win), "destroy",
-			   GTK_SIGNAL_FUNC(popdown), NULL);
+			GTK_SIGNAL_FUNC(popdown), NULL);
 	g_signal_connect(GTK_OBJECT(win), "response",
-			   GTK_SIGNAL_FUNC(popdown), NULL);
+			GTK_SIGNAL_FUNC(popdown), NULL);
 
 	hbox = gtk_hbox_new(FALSE, GNOME_PAD_SMALL);
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(win)->vbox), hbox,
-			   TRUE, TRUE, 0);
+			TRUE, TRUE, 0);
 	gtk_widget_show(hbox);
 
-	if (icon) {
-	        wid = gtk_image_new_from_pixmap(icon, NULL);
-		gtk_box_pack_start(GTK_BOX(hbox), wid, FALSE, TRUE, 0);
-		gtk_widget_show(wid);
-	}
+	wid = gtk_image_new_from_pixmap(icon, NULL);
+	gtk_box_pack_start(GTK_BOX(hbox), wid, FALSE, TRUE, 0);
+	gtk_widget_show(wid);
 
-	strcpy(ttext, text);
-	if (strlen(ttext)<12) strcat(ttext, "     ");
-	wid = gtk_label_new(ttext);
-	free (ttext);
+	wid = gtk_label_new(text);
 	g_object_set_data(G_OBJECT(win), "key", wid);
 	gtk_box_pack_start(GTK_BOX(hbox), wid, FALSE, TRUE, 0);
 	gtk_widget_show(wid);
 
 	if (buttonmask&OK) {
-	        gtk_dialog_add_buttons(GTK_DIALOG(win),
-				GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, NULL);
+		gtk_dialog_add_buttons(GTK_DIALOG(win),
+				GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
 		if (callback)
-		        g_signal_connect(GTK_DIALOG(win), "response",
-					   callback, NULL);
+			g_signal_connect(GTK_DIALOG(win), "response",
+					callback, NULL);
 	}
 	if (buttonmask&CANCEL) {
-	        gtk_dialog_add_buttons(GTK_DIALOG(win),
-				GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
+		gtk_dialog_add_buttons(GTK_DIALOG(win),
+				GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
 	}
-	gtk_dialog_set_default_response(GTK_DIALOG(win), GTK_RESPONSE_ACCEPT);
+	gtk_dialog_set_default_response(GTK_DIALOG(win), GTK_RESPONSE_OK);
 	return win;
 }
 
@@ -199,13 +241,13 @@ static void display_scores() {
 /**********************/
 
 void new_game_cb (GtkDialog *dialog, gint arg1, gpointer user_data) {
-	if (arg1 == GTK_RESPONSE_REJECT)
+	if (arg1 == GTK_RESPONSE_CANCEL)
 		return;
 	game.start(1);
 }
 
 void quit_game_cb (GtkDialog *dialog, gint arg1, gpointer user_data) {
-	if (arg1 == GTK_RESPONSE_REJECT)
+	if (arg1 == GTK_RESPONSE_CANCEL)
 		return;
 	game.quit();
 }

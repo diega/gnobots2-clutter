@@ -1,3 +1,9 @@
+2002-06-02  Bastien Nocera  <hadess@hadess.net>
+
+	* UI.cc:
+	* x11-gtk.cc: Added help, and cleaned up the dialogs a bit more
+	(you'll need the patch attached to bug #83916)
+
 2002-05-26  Chris Lyttle <chris@wilddev.net>
 
 	* help/C/Makefile.am: updated for docs move

@@ -43,7 +43,7 @@ void UI::resume_game() {
 /*******************/
 
 void UI::initialize(int argc, char **argv, const struct poptOption *options) {
-	gnome_program_init (PACKAGE, VERSION,
+	gnome_program_init ("gnome-xbill", VERSION,
 			LIBGNOMEUI_MODULE,
 			argc, argv,
 			GNOME_PARAM_POPT_TABLE, options,
