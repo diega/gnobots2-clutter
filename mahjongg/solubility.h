@@ -14,7 +14,7 @@
 /* If defined this allows graphical placement debugging.
  * define, then run and hit new game. Then press keys as
  * in keyPress to change things */
-// #define PLACE_DEBUG
+/* #define PLACE_DEBUG */
 
 extern void generate_game () ;
 extern void generate_dependancies () ;

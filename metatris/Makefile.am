@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-INCLUDES = $(GTK_CFLAGS) -Wall -ansi	\
+INCLUDES = $(GTK_CFLAGS) -ansi	\
 	$(GNOME_INCLUDEDIR) -I$(srcdir)
 
 appicondir=$(datadir)/pixmaps

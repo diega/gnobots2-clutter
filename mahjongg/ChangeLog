@@ -1,3 +1,8 @@
+11999-08-09  Robert Brady  <rwb197@ecs.soton.ac.uk
+
+	* solubility.[ch] : applied Irix compiling fix from David Kaelbling 
+	  <drk@sgi.com> : [bug #1781].
+
 1999-08-06  Philippe Chavin  <Philippe.Chavin@wanadoo.fr>
 
 	* mahjongg.c (seed_dialog_clicked_cb): fixed to get the whole 

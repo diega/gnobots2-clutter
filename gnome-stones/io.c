@@ -1,6 +1,6 @@
 /* gnome-stones - io.c
  *
- * Time-stamp: <1999/03/03 18:14:10 carsten>
+ * Time-stamp: <1999/08/09 18:05:13 robert>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -167,7 +167,7 @@ gstones_game_load (const gchar *name)
   
   gnome_config_push_prefix (game->config_prefix);
 
-  // FIXME: Add check, if title is unset.
+  /* FIXME: Add check, if title is unset. */
   game->title         = gnome_config_get_translated_string ("General/Title");
   game->frame_rate    = gnome_config_get_float ("General/Frame rate=0.2")*1000;
   game->new_life_score= gnome_config_get_int    ("General/New life score=500");
@@ -190,7 +190,7 @@ gstones_game_load (const gchar *name)
     if (token)
       {
 	/* FIXME: Add error handling.  */
-	printf ("This game needs a plugin, that is not available.\n");
+	printf ("This game needs a plugin that is not available.\n");
 	game_free (game);
 	
 	return NULL;

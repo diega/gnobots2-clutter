@@ -13,7 +13,7 @@ public:
 	void setup();
 	void draw();
 	void update();
-	onspark (int locx, int locy);
+	int onspark (int locx, int locy);
 
 };
 

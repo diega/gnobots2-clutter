@@ -1,3 +1,8 @@
+1999-08-09  Robert Brady  <rwb197@ecs.soton.ac.uk>
+
+	* io.c: Applied IRIX compiling fix from David Kaelbling <drk@sgi.com>,
+	(bug #1781).
+
 1999-04-22  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
 	* objects/gnomekoban.c (objects_init): Added two new objects. With

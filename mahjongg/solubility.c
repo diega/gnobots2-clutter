@@ -668,7 +668,9 @@ void generate_game (void)
 	tiles[offset].selected = 1 ;
 #endif
 #ifdef CHEAT_DEBUG
+#ifndef __sgi
 #warning Cheater
+#endif
 	tiles[offset].sequence = (MAX_TILES/2) - (int)(lp/2) ;
 #else
 	tiles[offset].sequence = 0 ;
