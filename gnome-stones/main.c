@@ -1140,17 +1140,16 @@ about_cb (GtkWidget *widget, gpointer data)
 /* Menu definitions */
 
 
-static GnomeUIInfo file_menu[]= {
-  GNOMEUIINFO_MENU_EXIT_ITEM(quit_cb, NULL),
-  GNOMEUIINFO_END
-};
-
 static GnomeUIInfo game_menu[]= {
   GNOMEUIINFO_MENU_NEW_GAME_ITEM(game_start_cb, NULL),
 
   GNOMEUIINFO_SEPARATOR,
 
   GNOMEUIINFO_MENU_SCORES_ITEM(show_scores_cb, NULL),
+
+  GNOMEUIINFO_SEPARATOR,
+
+  GNOMEUIINFO_MENU_EXIT_ITEM(quit_cb, NULL),
 
   GNOMEUIINFO_END
 };
@@ -1168,7 +1167,6 @@ static GnomeUIInfo settings_menu[]= {
 
 static GnomeUIInfo main_menu[]= 
 {
-  GNOMEUIINFO_MENU_FILE_TREE(file_menu),
   GNOMEUIINFO_MENU_GAME_TREE(game_menu),
   GNOMEUIINFO_MENU_SETTINGS_TREE(settings_menu),
   GNOMEUIINFO_MENU_HELP_TREE(help_menu),
