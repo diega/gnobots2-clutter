@@ -340,6 +340,10 @@ struct _maps
 } maps[] = { { "easy",      easy_map },
 	     { "difficult", hard_map } } ;
 
+gint hint_tiles[2];
+guint timer;
+guint timeout_counter = 0;
+
 void set_map (char *name) ;
 void load_tiles (char *fname);
 void quit_game_callback (GtkWidget *widget, gpointer data);
@@ -889,10 +893,29 @@ void properties_callback (GtkWidget *widget, gpointer data)
 	
 }
 
+gint hint_timeout (gpointer data)
+{
+  if (timeout_counter <= 4) {
+    if (tiles[hint_tiles[0]].selected == 17) {
+      tiles[hint_tiles[0]].selected = 0;
+      tiles[hint_tiles[1]].selected = 0;
+    }
+    else {
+      tiles[hint_tiles[0]].selected = 17;
+      tiles[hint_tiles[1]].selected = 17;
+    }
+    redraw_tile(hint_tiles[0]);
+    redraw_tile(hint_tiles[1]);
+  }
+  else {
+    gtk_timeout_remove (timer);
+  }
+  timeout_counter ++;
+  return 1;
+}
+
 void hint_callback (GtkWidget *widget, gpointer data)
 {
-  GtkDialog *d;
-  GtkWidget *button, *f, *t;
   int i, j, free=0, type ;
 
   if (hint_dialog)
@@ -916,6 +939,8 @@ void hint_callback (GtkWidget *widget, gpointer data)
 		  tiles[j].selected = 17 ;
 		redraw_tile(i) ;
 		redraw_tile(j) ;
+		hint_tiles[0] = i;
+		hint_tiles[1] = j;
 	      }
 	  }
       }
@@ -923,31 +948,9 @@ void hint_callback (GtkWidget *widget, gpointer data)
     for (i=0;i<MAX_TILES;i++)
     if (tiles[i].selected == 17)
     tiles[i].visible = 0 ;*/
-  
-  hint_dialog = gtk_dialog_new ();
-  d = GTK_DIALOG(hint_dialog);
-  gtk_signal_connect (GTK_OBJECT(hint_dialog), "delete_event",
-		      (GtkSignalFunc)hint_cancel, NULL); 
 
-  f = gtk_vbox_new (0, 5) ;
-  gtk_container_border_width (GTK_CONTAINER(f), 5) ;
-
-    t = gtk_label_new (_("Click to continue")) ;
-    gtk_box_pack_start_defaults (GTK_BOX(f), t) ;
-    gtk_widget_show (t) ;
-
-  gtk_box_pack_start_defaults (GTK_BOX(d->vbox), f) ;
-  gtk_widget_show (f) ;
-
-  /* Misc bottom buttons */
-  button = gnome_stock_button(GNOME_STOCK_BUTTON_OK);
-  gtk_signal_connect(GTK_OBJECT(button), "clicked", 
-		     GTK_SIGNAL_FUNC(hint_cancel), NULL); 
-  gtk_box_pack_start(GTK_BOX(d->action_area), button, TRUE, TRUE, 5);
-  gtk_widget_show(button);
-  
-  gtk_widget_show (hint_dialog);
-	
+  timeout_counter = 0;
+  timer = gtk_timeout_add (250, (GtkFunction) hint_timeout, NULL);
 }
 
 void about_callback (GtkWidget *widget, gpointer data)
