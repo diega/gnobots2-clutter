@@ -1,5 +1,5 @@
 /*
- * Gnome-Mahjonggg
+ * Gnome-Mahjongg
  * (C) 1998 the Free Software Foundation
  *
  *
@@ -521,7 +521,7 @@ void check_free (void)
 			}
 		}
 	}
- 	if (!free) { 
+ 	if (!free && visible_tiles>0) { 
  		mb = gnome_message_box_new (_("No more movements"), 
  					    GNOME_MESSAGE_BOX_INFO, 
  					    _("Ok"), NULL); 
@@ -663,6 +663,7 @@ void restart_game_callback (GtkWidget *widget, gpointer data)
         tiles[i].visible = 1;
         tiles[i].selected = 0;
     }
+    selected_tile=MAX_TILES+1;
     gtk_widget_draw (draw_area, NULL);
 }
 
@@ -686,7 +687,7 @@ void redo_tile_callback (GtkWidget *widget, gpointer data)
 	{
 	  tiles[i].selected = 0 ;
 	  tiles[i].visible = 0 ;
-	  visible_tiles++ ;
+	  visible_tiles-- ;
 	  redraw_tile (i);
 	  change = 1 ;
 	}
@@ -924,7 +925,7 @@ void clear_undo_queue ()
 {
   int lp ;
   for (lp=0;lp<MAX_TILES;lp++)
-    if (tiles[lp].sequence>sequence_number)
+    if (tiles[lp].sequence>=sequence_number)
       tiles[lp].sequence = 0 ;
 }
 
@@ -945,9 +946,9 @@ void button_pressed (int x, int y)
 					tile_gone (selected_tile,
 						   tiles[selected_tile].x + 1,
 						   tiles[selected_tile].y + 1);
+					clear_undo_queue() ;
 					tiles[i].sequence = sequence_number ;
 					tiles[selected_tile].sequence = sequence_number ;
-					clear_undo_queue() ;
 					sequence_number++ ;
 					selected_tile = MAX_TILES + 1;
                                         visible_tiles -= 2;

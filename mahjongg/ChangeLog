@@ -1,3 +1,12 @@
+Mon Aug 3 04:33:57 BST 1998 Ganesh Sittampalam <ganesh.sittampalam@magd.ox.ac.uk>
+
+	* Fixed bug that left a tile selected when you restarted the game
+	* Got rid of the "No more movements" message when you won the game
+	* Made it decrement the tiles left when you redo a step, rather than
+	incrementing it.
+	* Fixed bug that left multiple removals with the same sequence number after
+	an undo followed by a different removal.
+
 1998-07-25  Nuno Ferreira  <nmrf@rnl.ist.utl.pt>
 
 	* mahjongg.desktop: Added Portuguese translation.
