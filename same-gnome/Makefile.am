@@ -2,6 +2,8 @@ scoredir=$(localstatedir)/games
 pixmapdir = $(datadir)/pixmaps/same-gnome
 Gamesdir = $(datadir)/apps/Games
 
+SUBDIRS = C
+
 INCLUDES = -I.. -I$(srcdir)/..		\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	-I$(includedir)			\
