@@ -584,11 +584,11 @@ game_quit_callback (GtkWidget *widget, void *data)
 }
 
 GtkMenuEntry same_menu [] = {
-	{ _("Game/New"),        "<control>N", game_new_callback, NULL },
-	{ _("Game/Scenario"),   "<control>S", game_preferences_callback, NULL },
-	{ _("Game/Top Ten"),    "<control>T", game_top_ten_callback, NULL },
-	{ _("Game/<separator>"), NULL, NULL, NULL },
-	{ _("Game/Quit"),       "<control>Q", (GtkMenuCallback) game_quit_callback, NULL }, 
+	{ N_("Game/New"),        "<control>N", game_new_callback, NULL },
+	{ N_("Game/Scenario"),   "<control>S", game_preferences_callback, NULL },
+	{ N_("Game/Top Ten"),    "<control>T", game_top_ten_callback, NULL },
+	{ N_("Game/<separator>"), NULL, NULL, NULL },
+	{ N_("Game/Quit"),       "<control>Q", (GtkMenuCallback) game_quit_callback, NULL }, 
 };
 
 #define ELEMENTS(x) (sizeof (x) / sizeof (x [0]))
@@ -597,6 +597,10 @@ GtkMenuFactory *
 create_menu ()
 {
 	GtkMenuFactory *subfactory;
+	int i;
+	
+	for (i = 0; i < ELEMENTS(same_menu); i++)
+		same_menu[i].path = _(same_menu[i].path);
 	
 	subfactory = gtk_menu_factory_new  (GTK_MENU_FACTORY_MENU_BAR);
 	gtk_menu_factory_add_entries (subfactory, same_menu, ELEMENTS(same_menu));
