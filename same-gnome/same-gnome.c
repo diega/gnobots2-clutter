@@ -653,12 +653,6 @@ game_quit_callback (GtkWidget *widget, void *data)
 	return TRUE;
 }
 
-GnomeUIInfo filemenu[] = {
-        GNOMEUIINFO_MENU_EXIT_ITEM(game_quit_callback, NULL),
-
-	GNOMEUIINFO_END
-};
-
 GnomeUIInfo gamemenu[] = {
 
         GNOMEUIINFO_MENU_NEW_GAME_ITEM(game_new_callback, NULL),
@@ -666,6 +660,10 @@ GnomeUIInfo gamemenu[] = {
 	GNOMEUIINFO_SEPARATOR,
 
 	GNOMEUIINFO_MENU_SCORES_ITEM(game_top_ten_callback, NULL),
+
+	GNOMEUIINFO_SEPARATOR,
+
+        GNOMEUIINFO_MENU_EXIT_ITEM(game_quit_callback, NULL),
 
 	GNOMEUIINFO_END
 };
@@ -685,7 +683,6 @@ GnomeUIInfo helpmenu[] = {
 };
 
 GnomeUIInfo mainmenu[] = {
-        GNOMEUIINFO_MENU_FILE_TREE(filemenu),
 	GNOMEUIINFO_MENU_GAME_TREE(gamemenu),
 	GNOMEUIINFO_MENU_SETTINGS_TREE(settingsmenu),
 	GNOMEUIINFO_MENU_HELP_TREE(helpmenu),

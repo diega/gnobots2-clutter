@@ -82,23 +82,18 @@ game_scores_callback( GtkWidget *widget, gpointer data )
   gnome_scores_display(_("Metatris"), "metatris", NULL, 0);  
 }
 
-static GnomeUIInfo filemenu[] =
+static GnomeUIInfo gamemenu[] =
 {
   GNOMEUIINFO_MENU_NEW_WINDOW_ITEM( file_new_window_callback, NULL ),
 
-  GNOMEUIINFO_SEPARATOR,
-  
-  GNOMEUIINFO_MENU_EXIT_ITEM(file_exit_callback, NULL),
-
-  GNOMEUIINFO_END
-};
-
-static GnomeUIInfo gamemenu[] =
-{
   GNOMEUIINFO_MENU_NEW_GAME_ITEM(file_new_callback, NULL),
 
   GNOMEUIINFO_MENU_SCORES_ITEM(game_scores_callback, NULL ),
   
+  GNOMEUIINFO_SEPARATOR,
+  
+  GNOMEUIINFO_MENU_EXIT_ITEM(file_exit_callback, NULL),
+
   GNOMEUIINFO_END
 };
 
@@ -112,7 +107,6 @@ static GnomeUIInfo helpmenu[] =
 };
 
 GnomeUIInfo mainmenu[] = {
-  GNOMEUIINFO_MENU_FILE_TREE(filemenu),
   GNOMEUIINFO_MENU_GAME_TREE(gamemenu),
   GNOMEUIINFO_MENU_HELP_TREE(helpmenu),
   GNOMEUIINFO_END
