@@ -217,6 +217,7 @@ void
 Tetris::setupPixmap()
 {
 	char *pixname, *fullpixname;
+        gchar * s;
 	
 	pixname = g_strdup_printf("gnometris/%s", blockPixmap);
 	fullpixname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, pixname, FALSE, NULL);
@@ -274,8 +275,20 @@ Tetris::setupPixmap()
 
 	if (g_file_test (fullpixname, G_FILE_TEST_EXISTS)) 
 		bgimage = gdk_pixbuf_new_from_file(fullpixname, NULL);
-	else
-		bgimage = 0;
+	else {
+                /* If we can't find a .png look for a .jpg, this is
+                 * especially pertinant since a lot of the original
+                 * backgrounds have been converted for size reasons. */
+                s = g_strrstr(fullpixname, ".png");
+                g_strlcpy(s, ".jpg", 5);
+                if (g_file_test (fullpixname, G_FILE_TEST_EXISTS)) {
+                        bgimage = gdk_pixbuf_new_from_file(fullpixname, NULL);
+                        s = g_strrstr (bgPixmap, ".png");
+                        g_strlcpy (s, ".jpg", 5);
+                        gconf_client_set_string (gconf_client, "/apps/gnometris/options/background_pixmap", bgPixmap, NULL);
+                } else
+                        bgimage = 0;
+        }
 
 	if (field)
 	{

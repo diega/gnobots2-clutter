@@ -1,3 +1,11 @@
+2003-06-01  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gnometris.schemas.in: Default background has gone from a .png to
+	a .jpg.
+
+	* tetris.cpp: Be smart about the transition from the .png files to
+	.jpg and use a .jpg extension if the .png one can't be found. 
+
 2003-05-31  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am: Undo the score directory

@@ -19,7 +19,7 @@
       <applyto>/apps/gnometris/options/background_pixmap</applyto>
       <owner>gnometris</owner>
       <type>string</type> 
-      <default>gnometris-bg.png</default>
+      <default>gnometris-bg.jpg</default>
       <locale name="C">
         <short>Image to use as background.</short>
 	<long>Image to use as background.</long>
