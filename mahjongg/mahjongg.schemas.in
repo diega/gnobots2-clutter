@@ -73,18 +73,6 @@
         </locale>
       </schema>
 
-      <schema>
-        <key>/schemas/apps/mahjongg/confim</key>
-	<applyto>/apps/mahjongg/confirm</applyto>
-	<owner>mahjongg</owner>
-	<type>bool</type>
-	<default>TRUE</default>
-	<locale name="C">
-	  <short></short>
-	  <long></long>
-        </locale>
-      </schema>
-
   </schemalist>
   
 </gconfschemafile>

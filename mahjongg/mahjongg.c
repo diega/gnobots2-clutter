@@ -293,7 +293,7 @@ gint paused=0;
 
 /* for the preferences */
 GConfClient *conf_client;
-gboolean popup_warn = FALSE, popup_confirm = FALSE;
+gboolean popup_warn = FALSE;
 GtkWidget *warn_cb = NULL, *confirm_cb = NULL;
 GtkWidget *colour_well = NULL;
 GtkWidget *pref_dialog = NULL;
@@ -546,36 +546,6 @@ popup_warn_changed_cb (GConfClient *client,
 }
 
 void
-popup_confirm_callback (GtkWidget *widget, gpointer data)
-{
-	popup_confirm = gtk_toggle_button_get_active
-		(GTK_TOGGLE_BUTTON (widget));
-
-	gconf_client_set_bool (conf_client,
-			"/apps/mahjongg/confirm", popup_confirm, NULL);
-}
-
-void
-popup_confirm_changed_cb (GConfClient *client,
-		guint cnxn_id,
-		GConfEntry *entry,
-		gpointer user_data)
-{
-	gboolean popup_confirm_tmp;
-
-	popup_confirm_tmp = gconf_client_get_bool (conf_client,
-			"/apps/mahjongg/confirm", NULL);
-	if (popup_confirm_tmp != popup_confirm)
-	{
-		popup_confirm = popup_confirm_tmp;
-		if (confirm_cb != NULL)
-			gtk_toggle_button_set_active
-				(GTK_TOGGLE_BUTTON (confirm_cb),
-				popup_confirm);
-	}
-}
-
-void
 show_toolbar_changed_cb (GConfClient *client,
 		guint cnxn_id,
 		GConfEntry *entry,
@@ -710,10 +680,6 @@ init_config (void)
 	gconf_client_notify_add (conf_client,
 			"/apps/mahjongg/mapset",
 			mapset_changed_cb,
-			NULL, NULL, NULL);
-	gconf_client_notify_add (conf_client,
-			"/apps/mahjongg/confirm",
-			popup_confirm_changed_cb,
 			NULL, NULL, NULL);
 	gconf_client_notify_add (conf_client,
 			"/apps/mahjongg/warn",
@@ -1219,11 +1185,6 @@ properties_callback (GtkWidget *widget, gpointer data)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), popup_warn);
 	g_signal_connect (G_OBJECT(w), "clicked", G_CALLBACK (popup_warn_callback), NULL);
 	gtk_box_pack_start_defaults (GTK_BOX (table), w);
-
-	w = gtk_check_button_new_with_label (_("Show confirmation dialogs"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), popup_confirm);
-	g_signal_connect (G_OBJECT(w), "clicked", G_CALLBACK (popup_confirm_callback), NULL);
-	gtk_box_pack_start_defaults (GTK_BOX (table), w);
 	
 	gtk_container_add(GTK_CONTAINER (frame), table);
 	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
@@ -1443,78 +1404,20 @@ init_game (void)
 void
 confirm_action (GtkWidget *widget, gpointer data)
 {
-	gboolean doit = TRUE;
-
-	if (popup_confirm == TRUE) {
-		gchar *confirm_text;
-		GtkWidget *dialog;
-		gint response;
-		
-		switch ((game_state)data) {
-		case RESTART_GAME :
-			confirm_text = _("Are you sure you want to restart this game?");
-			break;
-		case QUIT_GAME :
-			/* GNOME IS AN ACRONYM, DAMNIT! */
-			confirm_text = _("Are you sure you want to quit GNOME Mahjongg?");
-			break;
-		case NEW_GAME:
-		case NEW_GAME_WITH_SEED:
-			confirm_text = _("Are you sure you want to start a new game?");
-			break;
-		default:
-			confirm_text = _("Serious internal error");
-			break;
-		}
-
-		/* Special case the quit because the buttons are different */
-
-		if ((game_state)data == QUIT_GAME)
-		{
-			dialog = gtk_message_dialog_new (GTK_WINDOW (window),
-						 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_MESSAGE_QUESTION,
-						 GTK_BUTTONS_NONE,
-						 confirm_text);
-			gtk_dialog_add_buttons (GTK_DIALOG (dialog),
-						GTK_STOCK_CANCEL,
-						GTK_RESPONSE_NO,
-						GTK_STOCK_QUIT,
-						GTK_RESPONSE_YES,
-						NULL);
-		}
-		else {
-                        dialog = gtk_message_dialog_new (GTK_WINDOW (window),
-                                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                 GTK_MESSAGE_QUESTION,
-                                                 GTK_BUTTONS_YES_NO,
-                                                 confirm_text);
-		}
-
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
-		gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
-		response = gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (dialog);
-		
-		doit = (response == GTK_RESPONSE_YES);
-	}
-	
-	if (doit) {
-		switch ((gint)data) {
-		case NEW_GAME:
-		case NEW_GAME_WITH_SEED:
-			ensure_pause_off ();
-			new_game ((gint)data == NEW_GAME);
-			break;
-		case RESTART_GAME:
-			restart_game ();
-			break;
-		case QUIT_GAME:
-			gtk_main_quit ();
-			break;
-		default:
-			break;
-		}
+	switch ((gint)data) {
+	case NEW_GAME:
+	case NEW_GAME_WITH_SEED:
+		ensure_pause_off ();
+		new_game ((gint)data == NEW_GAME);
+		break;
+	case RESTART_GAME:
+		restart_game ();
+		break;
+	case QUIT_GAME:
+		gtk_main_quit ();
+		break;
+	default:
+		break;
 	}
 }
 
@@ -1902,9 +1805,6 @@ create_mahjongg_board (GtkWidget *mbox)
 	popup_warn = gconf_client_get_bool (conf_client,
 					    "/apps/mahjongg/warn", NULL);
 	
-	popup_confirm = gconf_client_get_bool (conf_client,
-					       "/apps/mahjongg/confirm", NULL);
-
 	do_game ();
 	load_tiles (buf, buf2);
 

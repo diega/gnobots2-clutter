@@ -1,5 +1,9 @@
 2003-06-13  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* gataxx.c (quit_game_cb): Removed the last "are you sure"
+	questions.
+	
+
 	* properties.c (show_properties_dialog): Correct the preferences title.
 
 2003-06-11  Callum McKenzie  <callum@physics.otago.ac.nz>

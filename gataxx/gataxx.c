@@ -223,30 +223,6 @@ GnomeUIInfo mainmenu[] = {
 
 gboolean quit_game_cb(GtkWidget *widget, gpointer data)
 {
-  if(game_in_progress) {
-    GtkWidget *box;
-    gint response;
-
-    box = gtk_message_dialog_new (GTK_WINDOW (window),
-                                 GTK_DIALOG_MODAL,
-                                 GTK_MESSAGE_QUESTION,
-                                 GTK_BUTTONS_NONE,
-                                 _("Are you sure you want to quit Gataxx?"));
-    gtk_dialog_add_buttons (GTK_DIALOG (box),
-            GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
-            GTK_STOCK_QUIT, GTK_RESPONSE_ACCEPT,
-            NULL);
-
-    gtk_dialog_set_has_separator (GTK_DIALOG (box), FALSE);
-    gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_REJECT);
-
-    response = gtk_dialog_run (GTK_DIALOG (box));
-    gtk_widget_destroy (box);
-
-    if (response == GTK_RESPONSE_REJECT)
-      return TRUE;
-  }
-
   if (flip_pixmaps_id) {
     g_source_remove (flip_pixmaps_id);
     flip_pixmaps_id = 0;
@@ -273,27 +249,6 @@ gboolean quit_game_cb(GtkWidget *widget, gpointer data)
 }
 
 void new_game_cb(GtkWidget *widget, gpointer data) {
-  
-  if(game_in_progress) {
-    GtkWidget *box;
-    gint response;
-
-    box = gtk_message_dialog_new (GTK_WINDOW (window),
-                     GTK_DIALOG_DESTROY_WITH_PARENT,
-                     GTK_MESSAGE_QUESTION,
-                     GTK_BUTTONS_YES_NO,
-                     _("Are you sure you want to start a new game?"));
-
-    gtk_dialog_set_default_response (GTK_DIALOG (box), GTK_RESPONSE_YES);
-    gtk_dialog_set_has_separator (GTK_DIALOG (box), FALSE);
-    response = gtk_dialog_run (GTK_DIALOG (box));
-    gtk_widget_destroy (box);
-
-    if (response == GTK_RESPONSE_NO)
-      return;
-
-  }
-  /*network_new(); */
   init_new_game();
 }
 
