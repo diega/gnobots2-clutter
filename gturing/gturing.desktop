@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=gTuring
+Name[de]=gTuring
+Comment=Waste time with a simulated Turing machine
+Comment[de]=Nette Zeitverschwendung mittels einer simulierten Turingmaschine
+Exec=gturing
+Terminal=0
+Type=Application
