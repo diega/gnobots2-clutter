@@ -14,7 +14,7 @@ schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_in_files = blackjack.schemas.in
 schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 @INTLTOOL_SCHEMAS_RULE@
- 
+
 
 EXTRA_DIST    = $(rules_DATA)		\
 		$(sys_DATA)		\
@@ -22,5 +22,5 @@ EXTRA_DIST    = $(rules_DATA)		\
 
 install-data-local:
 if GCONF_SCHEMAS_INSTALL
-        GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
 endif

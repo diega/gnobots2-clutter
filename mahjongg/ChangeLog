@@ -1,3 +1,8 @@
+2003-07-04  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* Makefile.am (install-data-local): Fix the high-score file
+	installation (thanks Steve).
+
 2003-06-28  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c: Moved the seed to the title bar to be consistent
