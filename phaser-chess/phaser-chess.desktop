@@ -2,9 +2,11 @@
 Name=Phaser Chess
 Name[es]=Ajedrez Phaser
 Name[de]=Phaser-Schach
+Name[ko]=페이저 체스
 Comment=Gnome Phaser Chess
 Comment[es]=Ajedrez Phaser de Gnome
 Comment[de]=Gnome Phaser-Schach
+Comment[ko]=그놈 페이저 체스
 Exec=phaser_chess
 Icon=
 Terminal=0

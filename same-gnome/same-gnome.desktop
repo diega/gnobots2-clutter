@@ -2,9 +2,11 @@
 Name=Same Gnome
 Name[es]=Same Gnome
 Name[de]=Same Gnome
+Name[ko]=¼¼ÀÓ±×³ð
 Comment=Gnome SameGame program
 Comment[es]=Juego Gnome SameGame
 Comment[de]=Gnome Variante des Spiels SameGame
+Comment[ko]=±×³ð ¼¼ÀÓ±×³ð °ÔÀÓ
 Exec=samegnome
 Icon=gnome-same-gnome.xpm
 Terminal=0
