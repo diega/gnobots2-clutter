@@ -1,6 +1,6 @@
 /*
  * Gnome-Mahjongg
- * (C) 1998 the Free Software Foundation
+ * (C) 1998-1999 the Free Software Foundation
  *
  *
  * Author: Francisco Bustamante
@@ -25,6 +25,7 @@
 #include "mahjongg.h"
 #include "solubility.h"
 
+/* The number of half-cycles to blink during a hint (less 1) */
 #define HINT_BLINK_NUM 5
 
 typeinfo type_info [MAX_TILES+70] = {
@@ -548,7 +549,7 @@ change_tile_image (tile *tile_inf) {
 	orig_x = (tile_inf->image % 21) * TILE_WIDTH;
 	orig_y = (tile_inf->image / 21) * TILE_HEIGHT;
 
-	if ((tile_inf->selected == 1) || (tile_inf->selected == 17)) {
+	if (tile_inf->selected) {
 		orig_y += 2 * TILE_HEIGHT;
 	}
 
@@ -567,9 +568,9 @@ tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
   switch(event->type) {
 	  case GDK_BUTTON_PRESS :
 	    if((event->button.button == 1) && tile_free(tile_inf->number)) {
-	      if (tile_inf->selected == 1) {
+	      if (tile_inf->selected & SELECTED_FLAG) {
 		selected_tile = MAX_TILES + 1;
-		tile_inf->selected = 0;
+		tile_inf->selected &= ~SELECTED_FLAG;
 		change_tile_image (tile_inf);
 	      }
 	      else {
@@ -577,7 +578,7 @@ tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
 		  if ((tiles[selected_tile].type == tile_inf->type) && tile_free (tile_inf->number)) {
 		    tiles[selected_tile].visible = 0;
 		    tile_inf->visible = 0;
-		    tiles[selected_tile].selected = 0;
+		    tiles[selected_tile].selected &= ~SELECTED_FLAG;
 		    change_tile_image (&tiles[selected_tile]);
 		    gnome_canvas_item_hide (tiles[selected_tile].image_item);
 		    gnome_canvas_item_hide (tile_inf->image_item);
@@ -596,7 +597,7 @@ tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
 		    no_match ();
 		}
 		else if (tile_free(tile_inf->number)) {
-		  tile_inf->selected = 1;
+		  tile_inf->selected |= SELECTED_FLAG;
 		  change_tile_image(tile_inf);
 		  selected_tile = tile_inf->number;
 		}
@@ -946,14 +947,8 @@ gint hint_timeout (gpointer data)
   if (timeout_counter > HINT_BLINK_NUM)
     return 0;
   
-  if (tiles[hint_tiles[0]].selected == 17) {
-    tiles[hint_tiles[0]].selected = 0;
-    tiles[hint_tiles[1]].selected = 0;
-  }
-  else {
-    tiles[hint_tiles[0]].selected = 17;
-    tiles[hint_tiles[1]].selected = 17;
-  }
+  tiles[hint_tiles[0]].selected ^= HINT_FLAG;
+  tiles[hint_tiles[1]].selected ^= HINT_FLAG;
   change_tile_image(&tiles[hint_tiles[0]]);
   change_tile_image(&tiles[hint_tiles[1]]);
 
@@ -968,6 +963,7 @@ void hint_callback (GtkWidget *widget, gpointer data)
     return;
   /* This prevents the flashing speeding up if the hint button is
    * pressed multiple times. */
+  
   if (timeout_counter<=HINT_BLINK_NUM) 
     return;
 
@@ -989,10 +985,8 @@ void hint_callback (GtkWidget *widget, gpointer data)
 	    free = (tiles[j].type == type && i != j && tile_free(j)) ;
 	    if (free)
 	      {
-		if (!tiles[i].selected)
-		  tiles[i].selected = 17 ;
-		if (!tiles[j].selected)
-		  tiles[j].selected = 17 ;
+		tiles[i].selected ^= HINT_FLAG;
+		tiles[j].selected ^= HINT_FLAG;
 		change_tile_image (&tiles[i]);
 		change_tile_image (&tiles[j]);
 		hint_tiles[0] = i;

@@ -1,3 +1,9 @@
+1999-01-08  Callum McKenzie <callum@physics.otago.ac.nz>
+
+	* mahjongg.c : Fixed up the hint code to not crash. Also
+	changed the use of the "selected" field in tile to make
+	sure that hints and selection interacted nicely. 
+
 1998-12-16  Jonathan Blandford  <jrb@redhat.com>
 
 	* mahjongg.c (main): now use the new toolbar code.

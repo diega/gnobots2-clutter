@@ -1,6 +1,6 @@
 /*
  * Gnome-Mahjonggg main header
- * (C) 1998 the Free Software Foundation
+ * (C) 1998-1999 the Free Software Foundation
  *
  *
  * Author: Francisco Bustamante et al.
@@ -24,7 +24,11 @@
 #define TILE_HEIGHT 56
 #define HALF_WIDTH 18
 #define HALF_HEIGHT 26
-#define MAH_VERSION "0.99.1"
+#define MAH_VERSION "0.99.2"
+
+/* #defines for the tile selection code. */
+#define SELECTED_FLAG   1
+#define HINT_FLAG       16
 
 #include <gnome.h>
 
