@@ -1,3 +1,7 @@
+2001-06-20 Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	* help/es/figures: Added the figures.
+
 2001-06-20  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* help/Makefile.am, help/es/*: Added Spanish trasnlation by
