@@ -556,44 +556,40 @@ set_selection (GtkTreeSelection *selection, gpointer data)
 	gconf_client_set_string (conf_client, KEY_TILESET, filename, NULL);
 }
 
+static void fill_list_foreach (gchar * string, GtkListStore * list)
+{
+        GtkTreeIter iter;
+	gchar *name;
+	gchar *suffix;
+	
+	/* We strip any trailing suffix, any -sync suffix
+	 * and convert '_' to ' '. This is brutal code. */
+	name = g_strdup (string);
+	suffix = g_strrstr (name,".");
+	if (suffix) *suffix = '\0';
+	suffix = g_strrstr (name,"-sync");
+	if (suffix) *suffix = '\0';
+	suffix = name;
+	while (*suffix) {
+		if (*suffix == '_') *suffix = ' ';
+		suffix++;
+	}
+	
+	gtk_list_store_append (list, &iter);
+	gtk_list_store_set (list, &iter, 0, name, 1, g_strdup (string), -1);
+} 
+
 static void
 fill_list (GtkListStore *list)
 {
-        GtkTreeIter iter;
 	GamesFileList * filelist;
-	GList * item;
 	
 	filelist = games_file_list_new_images (PIXMAPDIR, NULL);
 	games_file_list_transform_basename (filelist);
 	
+	games_file_list_for_each (filelist, (GFunc) fill_list_foreach, list);
 
-	/* FIXME: Once again we use internal knowledge of the structure 
-	 * of the GamesFileListType. We must stop this. */
-	item = (GList *) filelist;
-	while (item != NULL) {
-		gchar *name;
-                gchar *suffix;
-		
-                /* We strip any trailing suffix, any -sync suffix
-                 * and convert '_' to ' '. This is brutal code. */
-                name = g_strdup (item->data);
-                suffix = g_strrstr (name,".");
-                if (suffix) *suffix = '\0';
-                suffix = g_strrstr (name,"-sync");
-                if (suffix) *suffix = '\0';
-                suffix = name;
-                while (*suffix) {
-                        if (*suffix == '_') *suffix = ' ';
-                        suffix++;
-                }
-                
-                gtk_list_store_append (list, &iter);
-                gtk_list_store_set (list, &iter, 0, name, 1, item->data, -1);
-		item = g_list_next (item);
-	}
-
-
-	games_file_list_free (filelist);
+	g_object_unref (filelist);
 }
 
 static void
