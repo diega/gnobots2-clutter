@@ -6,5 +6,8 @@ what needs to be implemented/imported:
  - Iagno AI.
  - Iagno/gataxx command line switches.
  - Multiple desktop entries (in the same file ?)
+ - Import the iagno icon.
+ - Move across the tile-sets.
+ - Rewrite drawing code to be scalable (not exactly a merge item).
 
 Also note the usability bugs in bugzilla related to iagno.
