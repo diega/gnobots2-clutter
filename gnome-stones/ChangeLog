@@ -1,5 +1,9 @@
 2002-04-17  Bastien Nocera  <hadess@hadess.net>
 
+	* main.c: (about_cb): added icon to about box
+
+2002-04-17  Bastien Nocera  <hadess@hadess.net>
+
 	* main.h, sound.c, sound.h: forgot some files
 
 2002-04-17  Bastien Nocera  <hadess@hadess.net>

@@ -986,6 +986,7 @@ static void
 about_cb (GtkWidget *widget, gpointer data)
 {
   GtkWidget *about= NULL;
+  GdkPixbuf *pixbuf = NULL;
   
   const gchar *authors[]= {
     "Carsten Schaar <nhadcasc@fs-maphy.uni-hannover.de>",
@@ -996,13 +997,26 @@ about_cb (GtkWidget *widget, gpointer data)
                          };
   /* Translator credits */
   gchar *translator_credits = _("translator_credits");
+
+  {
+	  char *filename = NULL;
+
+	  filename = gnome_program_locate_file (NULL,
+			  GNOME_FILE_DOMAIN_PIXMAP,  ("gnome-stones.png"),
+			  TRUE, NULL);
+	  if (filename != NULL)
+	  {
+		  pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+		  g_free (filename);
+	  }
+  }
   about= gnome_about_new (_("Gnome-Stones"), VERSION,
 			  "(C) 1998 Carsten Schaar",
 			  _("A game."),
 			  (const char **)authors,
                           (const char **)documenters,
                           strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
-			  NULL);
+			  pixbuf);
   gtk_widget_show (about);
 }
 
