@@ -1126,8 +1126,9 @@ main (int argc, char *argv[])
   
   gnome_score_init (APP_NAME);
 
-  bindtextdomain (PACKAGE, GNOMELOCALEDIR);
-  textdomain (PACKAGE);
+  bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
+  bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+  textdomain (GETTEXT_PACKAGE);
 
   gnome_init_with_popt_table (APP_NAME, VERSION, argc, argv, options, 0, NULL);
   gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-stones.png");

@@ -2041,8 +2041,9 @@ int main (int argc, char *argv [])
 
         gnome_score_init (APPNAME);
 
-	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
-	textdomain (PACKAGE);
+	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
 
   	gnome_init (APPNAME, MAH_VERSION, argc, argv); 
         gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-mahjongg.png");
