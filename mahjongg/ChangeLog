@@ -1,3 +1,8 @@
+2003-11-25  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* Makefile.am: That reference to bg_DATA shouldn't have been
+	there. Thanks Steve.
+
 2003-10-29  Callum McKenzie  <callum@localhost.localdomain>
 
 	* Makefile.am (INCLUDES): Removed *_DISABLE_DEPRECATED.

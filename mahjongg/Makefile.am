@@ -51,7 +51,6 @@ if GCONF_SCHEMAS_INSTALL
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(top_builddir)/mahjongg/$(schema_DATA)
 endif
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
-	$(mkinstalldirs) $(DESTDIR)$(bgdir)
 	-for i in easy difficult ; do \
 		touch $(DESTDIR)$(scoredir)/mahjongg.$$i.scores; \
 		chown $(scores_user):$(scores_group) $(DESTDIR)$(scoredir)/mahjongg.$$i.scores; \
