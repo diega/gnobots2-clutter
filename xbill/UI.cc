@@ -2,11 +2,12 @@
 #include "config.h"
 #endif
 
+#include <gnome.h>
+
 #include "objects.h"
 #include "x11.h"
 #include "Strings.h"
 
-#include <libgnomeui/gnome-window-icon.h>
 GtkWidget *toplevel, *menubar, *field;
 GtkWidget *scorebox, *endgamebox;
 GtkWidget *warpbox, *quitbox, *newgamebox, *pausebox;
@@ -42,11 +43,14 @@ void UI::resume_game() {
 /*******************/
 
 void UI::initialize(int argc, char **argv, const struct poptOption *options) {
-        gnome_init_with_popt_table(PACKAGE, VERSION, argc, argv,
-				   options, 0, NULL);
+	gnome_program_init (PACKAGE, VERSION,
+			LIBGNOMEUI_MODULE,
+			argc, argv,
+			GNOME_PARAM_POPT_TABLE, options,
+			NULL);
 	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/xbill.png");
 	toplevel = gnome_app_new("gnome-xbill", "Gnome xBill");
-	gtk_signal_connect(GTK_OBJECT(toplevel), "destroy",
+	g_signal_connect(GTK_OBJECT(toplevel), "destroy",
 			   GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
 	gtk_widget_realize(toplevel);
 	display = toplevel->window;
@@ -58,7 +62,7 @@ void UI::make_mainwin() {
 	CreateMenuBar(toplevel);
 
 	field = gtk_drawing_area_new();
-	gtk_drawing_area_size(GTK_DRAWING_AREA(field), game.scrwidth,
+	gtk_widget_set_size_request(GTK_WIDGET(field), game.scrwidth,
 			      game.scrheight);
 
 	gnome_app_set_contents(GNOME_APP(toplevel), field);
@@ -89,21 +93,21 @@ void UI::make_mainwin() {
 			             GDK_ENTER_NOTIFY_MASK |
 			             GDK_EXPOSURE_MASK);
 
-	gtk_signal_connect(GTK_OBJECT(field), "button_press_event",
+	g_signal_connect(GTK_OBJECT(field), "button_press_event",
 			   GTK_SIGNAL_FUNC(button_press_eh), NULL);
-	gtk_signal_connect(GTK_OBJECT(field), "button_release_event",
+	g_signal_connect(GTK_OBJECT(field), "button_release_event",
 			   GTK_SIGNAL_FUNC(button_release_eh), NULL);
-	gtk_signal_connect(GTK_OBJECT(field), "leave_notify_event",
+	g_signal_connect(GTK_OBJECT(field), "leave_notify_event",
 			   GTK_SIGNAL_FUNC(leave_window_eh), NULL);
-	gtk_signal_connect(GTK_OBJECT(field), "enter_notify_event",
+	g_signal_connect(GTK_OBJECT(field), "enter_notify_event",
 			   GTK_SIGNAL_FUNC(enter_window_eh), NULL);
-	gtk_signal_connect(GTK_OBJECT(field), "expose_event",
+	g_signal_connect(GTK_OBJECT(field), "expose_event",
 			   GTK_SIGNAL_FUNC(redraw_window_eh), NULL);
 	
 	gtk_widget_realize(field);
 	window = field->window;
 
-	gtk_window_set_policy(GTK_WINDOW(toplevel), FALSE, FALSE, FALSE);
+	gtk_window_set_resizable(GTK_WINDOW(toplevel), FALSE);
         gtk_widget_show(toplevel);
 }
 

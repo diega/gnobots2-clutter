@@ -5,7 +5,10 @@ SUBDIRS = pixmaps cursors help
 # This is where the high score file goes ...
 scoredir = $(localstatedir)/games
 
-INCLUDES = $(GNOME_GAMES_CFLAGS) -DGNOMELOCALEDIR=\""$(datadir)/locale"\" 
+INCLUDES = $(GNOME_GAMES_CFLAGS)			\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
+	-DG_DISABLE_DEPRECATED 				\
+	-DGTK_DISABLE_DEPRECATED -DGNOME_DISABLE_DEPRECATED
 bin_PROGRAMS = gnome-xbill
 
 gnome_xbill_SOURCES = Bucket.cc Bucket.h Cable.cc Cable.h Computer.cc \

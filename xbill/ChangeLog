@@ -1,3 +1,13 @@
+2002-04-16  Bastien Nocera  <hadess@hadess.net>
+
+	* MCursor.cc:
+	* Makefile.am:
+	* Picture.cc:
+	* UI.cc:
+	* x11-gtk.cc:
+	* x11.h: ported the whole lot to gnome2, no GDK_DISABLE_DEPRECATED
+	as I don't know what to replace gdk_color_white() with
+
 2002-04-15  Bastien Nocera  <hadess@hadess.net>
 
 	* Game.cc, MCursor.cc, UI.cc: patch from drk@sgi.com to get

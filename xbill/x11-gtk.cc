@@ -26,7 +26,7 @@ static GnomeUIInfo game_menu[] = {
   GNOMEUIINFO_MENU_PAUSE_GAME_ITEM((void *) popup, &pausebox),
   GNOMEUIINFO_SEPARATOR,
   GNOMEUIINFO_ITEM_STOCK_DATA(_("Warp to level..."), NULL, (void *) popup, &warpbox,
-			      GNOME_STOCK_MENU_FORWARD),
+			      GTK_STOCK_GO_FORWARD),
   GNOMEUIINFO_MENU_SCORES_ITEM((void *) display_scores, NULL),
   GNOMEUIINFO_SEPARATOR,
   GNOMEUIINFO_MENU_EXIT_ITEM((void *) popup, &quitbox),
@@ -60,19 +60,23 @@ static gint  popdown(GtkWidget *w) {
 GtkWidget *CreatePixmapBox(char *title, GdkPixmap *pixmap, const char *text) {
         GtkWidget *win, *hbox, *vbox, *wid;
 
-	win = gnome_dialog_new(title, GNOME_STOCK_BUTTON_OK, NULL);
-	gtk_signal_connect(GTK_OBJECT(win), "close",
+	win = gtk_dialog_new_with_buttons(title,
+			NULL,
+			(GtkDialogFlags)0,
+			GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+			NULL);
+	g_signal_connect(GTK_OBJECT(win), "destroy",
 			   GTK_SIGNAL_FUNC(popdown), NULL);
-	gtk_signal_connect(GTK_OBJECT(win), "clicked",
+	g_signal_connect(GTK_OBJECT(win), "response",
 			   GTK_SIGNAL_FUNC(popdown), NULL);
-	vbox = GNOME_DIALOG(win)->vbox;
+	vbox = GTK_DIALOG(win)->vbox;
 
-	wid = gtk_pixmap_new(game.logo.pix, NULL);
+	wid = gtk_image_new_from_pixmap(game.logo.pix, NULL);
 	gtk_box_pack_start(GTK_BOX(vbox), wid, FALSE, TRUE, 0);
 	gtk_widget_show(wid);
 
 	if (pixmap) {
-	        wid = gtk_pixmap_new(pixmap, NULL);
+	        wid = gtk_image_new_from_pixmap(pixmap, NULL);
 		gtk_box_pack_start(GTK_BOX(vbox), wid, FALSE, TRUE, 0);
 		gtk_widget_show(wid);
 	}
@@ -85,7 +89,10 @@ GtkWidget *CreatePixmapBox(char *title, GdkPixmap *pixmap, const char *text) {
 	return win;
 }
 
-void warp_apply(GtkWidget *b, GtkEntry *entry) {
+void warp_apply(GtkDialog *b, gint arg1, GtkEntry *entry) {
+	if (arg1 == GTK_RESPONSE_REJECT)
+		return;
+
         game.warp_to_level(atoi(gtk_entry_get_text(entry)));
 }
 
@@ -93,14 +100,18 @@ GtkWidget *CreateEnterText (char *title, const char *text,
 			    GtkSignalFunc callback) {
         GtkWidget *win, *vbox, *entry, *wid;
 
-	win = gnome_dialog_new(title, GNOME_STOCK_BUTTON_OK,
-			       GNOME_STOCK_BUTTON_CANCEL, NULL);
-	gnome_dialog_set_default(GNOME_DIALOG(win), 0);
-	gtk_signal_connect(GTK_OBJECT(win), "close",
+	win = gtk_dialog_new_with_buttons(title,
+			NULL,
+			(GtkDialogFlags)0,
+			GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+			NULL);
+	gtk_dialog_set_default_response(GTK_DIALOG(win), GTK_RESPONSE_ACCEPT);
+	g_signal_connect(GTK_OBJECT(win), "destroy",
 			   GTK_SIGNAL_FUNC(popdown), NULL);
-	gtk_signal_connect(GTK_OBJECT(win), "clicked",
+	g_signal_connect(GTK_OBJECT(win), "response",
 			   GTK_SIGNAL_FUNC(popdown), NULL);
-	vbox = GNOME_DIALOG(win)->vbox;
+	vbox = GTK_DIALOG(win)->vbox;
 
 	wid = gtk_label_new(text);
 	gtk_box_pack_start(GTK_BOX(vbox), wid, FALSE, TRUE, 0);
@@ -110,7 +121,7 @@ GtkWidget *CreateEnterText (char *title, const char *text,
 	gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, TRUE, 0);
 	gtk_widget_show(entry);
 
-	gnome_dialog_button_connect(GNOME_DIALOG(win), 0, callback, entry);
+	g_signal_connect(win, "response", callback, entry);
 	return win;
 }
 
@@ -120,19 +131,20 @@ GtkWidget *CreateDialog (char *title, int buttonmask, GdkPixmap *icon,
 	GtkWidget *win, *hbox, *wid, *button;
 	char *ttext= (char*)malloc(strlen(text)+5);
 
-	win = gnome_dialog_new(title, NULL);
-	gtk_signal_connect(GTK_OBJECT(win), "close",
+	win = gtk_dialog_new();
+	gtk_window_set_title (GTK_WINDOW(win), title);
+	g_signal_connect(GTK_OBJECT(win), "destroy",
 			   GTK_SIGNAL_FUNC(popdown), NULL);
-	gtk_signal_connect(GTK_OBJECT(win), "clicked",
+	g_signal_connect(GTK_OBJECT(win), "response",
 			   GTK_SIGNAL_FUNC(popdown), NULL);
 
 	hbox = gtk_hbox_new(FALSE, GNOME_PAD_SMALL);
-	gtk_box_pack_start(GTK_BOX(GNOME_DIALOG(win)->vbox), hbox,
+	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(win)->vbox), hbox,
 			   TRUE, TRUE, 0);
 	gtk_widget_show(hbox);
 
 	if (icon) {
-	        wid = gtk_pixmap_new(icon, NULL);
+	        wid = gtk_image_new_from_pixmap(icon, NULL);
 		gtk_box_pack_start(GTK_BOX(hbox), wid, FALSE, TRUE, 0);
 		gtk_widget_show(wid);
 	}
@@ -141,22 +153,22 @@ GtkWidget *CreateDialog (char *title, int buttonmask, GdkPixmap *icon,
 	if (strlen(ttext)<12) strcat(ttext, "     ");
 	wid = gtk_label_new(ttext);
 	free (ttext);
-	gtk_object_set_user_data(GTK_OBJECT(win), wid);
+	g_object_set_data(G_OBJECT(win), "key", wid);
 	gtk_box_pack_start(GTK_BOX(hbox), wid, FALSE, TRUE, 0);
 	gtk_widget_show(wid);
 
 	if (buttonmask&OK) {
-	        gnome_dialog_append_buttons(GNOME_DIALOG(win),
-					    GNOME_STOCK_BUTTON_OK, NULL);
+	        gtk_dialog_add_buttons(GTK_DIALOG(win),
+				GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, NULL);
 		if (callback)
-		        gnome_dialog_button_connect(GNOME_DIALOG(win), 0,
+		        g_signal_connect(GTK_DIALOG(win), "response",
 					   callback, NULL);
 	}
 	if (buttonmask&CANCEL) {
-	        gnome_dialog_append_buttons(GNOME_DIALOG(win),
-					    GNOME_STOCK_BUTTON_CANCEL, NULL);
+	        gtk_dialog_add_buttons(GTK_DIALOG(win),
+				GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
 	}
-	gnome_dialog_set_default(GNOME_DIALOG(win), 0);
+	gtk_dialog_set_default_response(GTK_DIALOG(win), GTK_RESPONSE_ACCEPT);
 	return win;
 }
 
@@ -168,9 +180,9 @@ void UI::update_scorebox(int level, int score) {
         GtkLabel *label;
 	char *str;
 
-	label = GTK_LABEL(gtk_object_get_user_data(GTK_OBJECT(scorebox)));
+	label = GTK_LABEL(g_object_get_data(G_OBJECT(scorebox), "key"));
 	str = g_strdup_printf (_("After Level %d:     \nYour score: %d"), level, score);
-	gtk_label_set(label, str);
+	gtk_label_set_text (label, str);
 	g_free (str);
 }
 

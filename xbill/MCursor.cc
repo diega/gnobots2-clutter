@@ -2,7 +2,9 @@
 #include "objects.h"
 
 void MCursor::load(const char *name, int masked) {
-	static char *dir = gnome_unconditional_datadir_file("xbill/cursors");
+	static char *dir = gnome_program_locate_file (NULL,
+			GNOME_FILE_DOMAIN_DATADIR, "xbill/cursors",
+			FALSE, NULL);
 	GdkPixmap *pixmap, *bitmap, *mask;
 	int width, height;
 	char *file;
@@ -15,7 +17,7 @@ void MCursor::load(const char *name, int masked) {
 		printf ("cannot open %s\n", file);
 		exit(1);
 	} else
-	  gdk_pixmap_unref(pixmap);
+	  g_object_unref(pixmap);
 	if (masked == SEP_MASK) {
 	  g_free (file);
 	  file = g_strdup_printf ("%s/%s_mask.xpm", dir, name);
@@ -26,10 +28,10 @@ void MCursor::load(const char *name, int masked) {
 	    printf("cannot open %s\n", file);
 	    exit(1);
 	  } else
-	    gdk_pixmap_unref(pixmap);
+	    g_object_unref(pixmap);
 	} else
 	  mask = bitmap;
-	gdk_window_get_size(bitmap, &width, &height);
+	gdk_drawable_get_size(bitmap, &width, &height);
 	cursor = gdk_cursor_new_from_pixmap(bitmap, mask, &ui.black, &ui.white,
 					    width/2, height/2);
 	g_free (file);

@@ -17,7 +17,8 @@ void Picture::load(const char *name, int index) {
 		sprintf (file, "xbill/pixmaps/%s_%d.xpm", name, index);
 	else
 	        sprintf(file, "xbill/pixmaps/%s.xpm", name);
-	logo = gnome_datadir_file(file);
+	logo = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_DATADIR, file,
+			TRUE, NULL);
 	pix = gdk_pixmap_colormap_create_from_xpm(ui.display, ui.colormap,
 						  &mask, &ui.white, logo);
 	g_free(logo);
@@ -29,5 +30,5 @@ void Picture::load(const char *name, int index) {
 	gc = gdk_gc_new_with_values(ui.display, &gcval,
 				    (GdkGCValuesMask)gcmask);
 	gdk_gc_set_clip_mask(gc, mask);
-	gdk_window_get_size(pix, &width, &height);
+	gdk_drawable_get_size(pix, &width, &height);
 }

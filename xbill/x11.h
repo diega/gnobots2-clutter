@@ -28,5 +28,5 @@ GtkWidget *CreateDialog (char *title, int buttonmask, GdkPixmap *icon,
 			 GtkSignalFunc callback);
 
 void show_scores(int pos);
-void warp_apply (GtkWidget *w, GtkEntry *entry);
+void warp_apply (GtkDialog *w, gint arg1, GtkEntry *entry);
 #endif
