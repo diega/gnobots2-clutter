@@ -907,7 +907,7 @@ static void set_menus_sensitive (void)
 	state = game_over != GAME_WON;
 	gtk_widget_set_sensitive (gamemenu[3].widget, state);
 	gtk_widget_set_sensitive (toolbar_uiinfo[2].widget, state);
-
+	
 	/* Hint */
 	state = moves_left > 0;
 	gtk_widget_set_sensitive (gamemenu[7].widget, state);
@@ -1704,16 +1704,30 @@ about_callback (GtkWidget *widget, gpointer data)
 void
 pause_callback (void)
 {
+	static gboolean noloops = FALSE;
+
+	/* The calls to set the menu bar toggle-button will
+         * trigger another callback, which will trigger another
+	 * callback ... this must be stopped. */
+	if (noloops)
+                return;
+
+	noloops = TRUE;
         paused = !paused;
 	draw_all_tiles ();
         if (paused) {
+		gtk_toggle_button_set_active (
+                  GTK_TOGGLE_BUTTON (toolbar_uiinfo[2].widget), TRUE);
                 games_clock_stop (GAMES_CLOCK (chrono));
-                message(_("... Game paused ..."));
+                message(_("Game paused"));
         }
         else {
-                message ("");
+		gtk_toggle_button_set_active (
+                  GTK_TOGGLE_BUTTON (toolbar_uiinfo[2].widget), FALSE);
                 games_clock_start (GAMES_CLOCK(chrono));
+                message ("");
         }
+	noloops = FALSE;
 }
 
 void ensure_pause_off (void)

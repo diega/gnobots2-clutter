@@ -1,3 +1,8 @@
+2004-06-05  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c: Make sure the state of the pause menubar button
+	is always correct. Fixes bug #143465.
+
 2004-05-26  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c: Fix compiler warnings.
