@@ -1,3 +1,9 @@
+1999-08-06  Philippe Chavin  <Philippe.Chavin@wanadoo.fr>
+
+	* mahjongg.c (seed_dialog_clicked_cb): fixed to get the whole 
+	seed string.
+	(tile_event): added button 3 click to select tiles unconditionally.
+
 1999-07-21  Philippe Chavin  <Philippe.Chavin@wanadoo.fr>
 
 	* mahjongg.c (PAUSE_BUTTON): fixed index.

@@ -592,58 +592,81 @@ change_tile_image (tile *tile_inf) {
 	gnome_canvas_item_set (tile_inf->image_item, "image", new_image, NULL);
 }
 
+void select_tile (tile *tile_inf)
+{
+        tile_inf->selected |= SELECTED_FLAG;
+        change_tile_image(tile_inf);
+        selected_tile = tile_inf->number;
+}
+
+void unselect_tile (tile *tile_inf)
+{
+        selected_tile = MAX_TILES + 1;
+        tile_inf->selected &= ~SELECTED_FLAG;
+        change_tile_image (tile_inf);
+}
+
 static void
 tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
 {
   gchar tmpchar[16];
-  
+
   if (paused) return; 
+
   switch(event->type) {
-	  case GDK_BUTTON_PRESS :
-	    if((event->button.button == 1) && tile_free(tile_inf->number)) {
-	      if (tile_inf->selected & SELECTED_FLAG) {
-		selected_tile = MAX_TILES + 1;
-		tile_inf->selected &= ~SELECTED_FLAG;
-		change_tile_image (tile_inf);
-	      }
-	      else {
-		if (selected_tile < MAX_TILES) {
-		  if ((tiles[selected_tile].type == tile_inf->type) && tile_free (tile_inf->number)) {
-		    tiles[selected_tile].visible = 0;
-		    tile_inf->visible = 0;
-		    tiles[selected_tile].selected &= ~SELECTED_FLAG;
-		    change_tile_image (&tiles[selected_tile]);
-		    gnome_canvas_item_hide (tiles[selected_tile].canvas_item);
-		    gnome_canvas_item_hide (tile_inf->canvas_item);
-		    clear_undo_queue ();
-		    tiles[selected_tile].sequence = tile_inf->sequence = sequence_number;
-		    sequence_number ++;
-		    selected_tile = MAX_TILES + 1;
-		    visible_tiles -= 2;
-		    sprintf(tmpchar, "%3d", visible_tiles);
-		    gtk_label_set (GTK_LABEL(tiles_label), tmpchar);
-		    check_free();
-		    sprintf(tmpchar, "%2d", moves_left);
-		    gtk_label_set (GTK_LABEL(moves_label), tmpchar);
-  		    moves_left = 0; 
-		    if (visible_tiles <= 0) {
-                            gtk_clock_stop(GTK_CLOCK(chrono));
-                            you_won ();
-                    }
-		  }
-		  else
-		    no_match ();
-		}
-		else if (tile_free(tile_inf->number)) {
-		  tile_inf->selected |= SELECTED_FLAG;
-		  change_tile_image(tile_inf);
-		  selected_tile = tile_inf->number;
-		}
-	      }
-	    }
-	    break;
-	  default :
-	    break;
+  case GDK_BUTTON_PRESS :
+          if(tile_free(tile_inf->number)) {
+                  switch (event->button.button) {
+                  case 1:
+                          if (tile_inf->selected & SELECTED_FLAG)
+                                  unselect_tile (tile_inf);
+                          else {
+                                  if (selected_tile < MAX_TILES) {
+                                          if ((tiles[selected_tile].type == tile_inf->type) ) {
+                                                  tiles[selected_tile].visible = 0;
+                                                  tile_inf->visible = 0;
+                                                  tiles[selected_tile].selected &= ~SELECTED_FLAG;
+                                                  change_tile_image (&tiles[selected_tile]);
+                                                  gnome_canvas_item_hide (tiles[selected_tile].canvas_item);
+                                                  gnome_canvas_item_hide (tile_inf->canvas_item);
+                                                  clear_undo_queue ();
+                                                  tiles[selected_tile].sequence = tile_inf->sequence = sequence_number;
+                                                  sequence_number ++;
+                                                  selected_tile = MAX_TILES + 1;
+                                                  visible_tiles -= 2;
+                                                  sprintf(tmpchar, "%3d", visible_tiles);
+                                                  gtk_label_set (GTK_LABEL(tiles_label), tmpchar);
+                                                  check_free();
+                                                  sprintf(tmpchar, "%2d", moves_left);
+                                                  gtk_label_set (GTK_LABEL(moves_label), tmpchar);
+                                                  moves_left = 0; 
+
+                                                  if (visible_tiles <= 0) {
+                                                          gtk_clock_stop(GTK_CLOCK(chrono));
+                                                          you_won ();
+                                                  }
+                                          }
+                                          else
+                                                  no_match ();
+                                  }
+                                  else 
+                                          select_tile (tile_inf);
+                          }
+                          break;
+                          
+                  case 3:
+                          if (selected_tile < MAX_TILES) 
+                                  unselect_tile (&tiles[selected_tile]);
+                          select_tile (tile_inf);
+                          
+                  default: 
+                          break;
+                  }
+                  break;
+
+          default :
+                  break;
+          }
   }
 }
 
@@ -1603,7 +1626,7 @@ void seed_dialog_clicked_cb (GnomeDialog * dialog, gint button_number,
 {
         switch (button_number) {
         case 0: /* OK button */
-                srand (atoi ((char *)(GTK_ENTRY (data)->text)));
+                srand (atoi (gtk_entry_get_text (GTK_ENTRY (data))));
                 new_game ();
                 break;
 
