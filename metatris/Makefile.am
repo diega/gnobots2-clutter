@@ -111,8 +111,8 @@ CPPFLAGS = \
 scoredir=$(localstatedir)/games
 
 install-data-local:
-	-$(mkinstalldirs) $(scoredir)
-	-touch $(scoredir)/metatris.scores
-	-chown games.games $(scoredir)/metatris.scores
-	-chmod 664 $(scoredir)/metatris.scores
-	-chgrp games $(bindir)/metatris && chmod 2111 $(bindir)/metatris
+	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
+	-touch $(DESTDIR)$(scoredir)/metatris.scores
+	-chown games.games $(DESTDIR)$(scoredir)/metatris.scores
+	-chmod 664 $(DESTDIR)$(scoredir)/metatris.scores
+	-chgrp games $(DESTDIR)$(bindir)/metatris && chmod 2111 $(DESTDIR)$(bindir)/metatris

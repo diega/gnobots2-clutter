@@ -46,12 +46,12 @@ EXTRA_DIST = README \
              $(pixmap_DATA)
 
 install-data-local:
-	-$(mkinstalldirs) $(scoredir)
-	-touch $(scoredir)/gnobots.unsafe.scores
-	-chown games.games $(scoredir)/gnobots.unsafe.scores
-	-chmod 664 $(scoredir)/gnobots.unsafe.scores
-	-touch $(scoredir)/gnobots.safe.scores
-	-chown games.games $(scoredir)/gnobots.safe.scores
-	-chmod 664 $(scoredir)/gnobots.safe.scores
-	-chgrp games $(bindir)/gnobots && chmod 2111 $(bindir)/gnobots
+	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
+	-touch $(DESTDIR)$(scoredir)/gnobots.unsafe.scores
+	-chown games.games $(DESTDIR)$(scoredir)/gnobots.unsafe.scores
+	-chmod 664 $(DESTDIR)$(scoredir)/gnobots.unsafe.scores
+	-touch $(DESTDIR)$(scoredir)/gnobots.safe.scores
+	-chown games.games $(DESTDIR)$(scoredir)/gnobots.safe.scores
+	-chmod 664 $(DESTDIR)$(scoredir)/gnobots.safe.scores
+	-chgrp games $(DESTDIR)$(bindir)/gnobots && chmod 2111 $(DESTDIR)$(bindir)/gnobots
 

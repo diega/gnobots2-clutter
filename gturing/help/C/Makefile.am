@@ -16,14 +16,15 @@ gturing/index.html: gturing.sgml
 
 
 dist-hook:
-	mkdir $(distdir)/gturing
+	-$(mkinstalldirs) $(distdir)/gturing
 	-cp gturing/*.html $(distdir)/gturing
 	-cp gturing/*.css $(distdir)/gturing
 
 install-data-local: index.html
+	-$(mkinstalldirs) $(DESTDIR)$(gturing_helpdir)
 	-for file in gturing/*.html gturing/*.css; do \
 	  basefile=`echo $$file | sed -e 's,^.*/,,'`; \
-	  $(INSTALL_DATA) $(srcdir)/$$file $(gturing_helpdir)/$$basefile; \
+	  $(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(gturing_helpdir)/$$basefile; \
 	done
 
 gturing.ps: gturing.sgml

@@ -20,9 +20,10 @@ dist-hook:
 	cp $(srcdir)/same-gnome/*.css $(distdir)/same-gnome
 
 install-data-local: index.html
+	-$(mkinstalldirs) $(DESTDIR)$(same_gnome_helpdir)
 	(cd $(srcdir); for file in same-gnome/*.html same-gnome/*.css; do \
 	  basefile=`echo $$file | sed -e 's,^.*/,,'`; \
-	  $(INSTALL_DATA) $$file $(same_gnome_helpdir)/$$basefile; \
+	  $(INSTALL_DATA) $$file $(DESTDIR)$(same_gnome_helpdir)/$$basefile; \
 	done)
 
 same-gnome.ps: same-gnome.sgml

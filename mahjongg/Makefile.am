@@ -31,10 +31,11 @@ EXTRA_DIST = mahjongg.desktop $(pixmap_DATA) $(appicon_DATA)
 Games_DATA = mahjongg.desktop
 
 install-data-local:
-	-$(mkinstalldirs) $(scoredir)
-	touch $(scoredir)/mahjongg.scores
-	-chown games.games $(scoredir)/mahjongg.scores
-	-chgrp games $(bindir)/mahjongg && chmod 2111 $(bindir)/mahjongg
-	$(mkinstalldirs) $(Gamesdir)
+	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
+	touch $(DESTDIR)$(scoredir)/mahjongg.scores
+	-chown games.games $(DESTDIR)$(scoredir)/mahjongg.scores
+	-chmod 664 $(DESTDIR)$(scoredir)/mahjongg.scores
+	-chgrp games $(DESTDIR)$(bindir)/mahjongg && chmod 2111 $(DESTDIR)$(bindir)/mahjongg
+	$(mkinstalldirs) $(DESTDIR)$(Gamesdir)
 
 

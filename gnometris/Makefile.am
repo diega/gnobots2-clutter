@@ -35,11 +35,11 @@ EXTRA_DIST = AUTHORS \
              gnometris.desktop 	
 
 install-data-local:
-	-$(mkinstalldirs) $(scoredir)
-	touch $(scoredir)/gnometris.scores
-	-chown games.games $(scoredir)/gnometris.scores
-	-chmod 666 $(scoredir)/gnometris.scores
-	-chgrp games $(bindir)/gnometris && chmod 2111 $(bindir)/gnometris
+	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
+	touch $(DESTDIR)$(scoredir)/gnometris.scores
+	-chown games.games $(DESTDIR)$(scoredir)/gnometris.scores
+	-chmod 664 $(DESTDIR)$(scoredir)/gnometris.scores
+	-chgrp games $(DESTDIR)$(bindir)/gnometris && chmod 2111 $(DESTDIR)$(bindir)/gnometris
 
 
 

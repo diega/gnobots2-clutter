@@ -22,11 +22,12 @@ dist-hook:
 
 # No-op if db2html failed
 install-data-local: index.html
+	-$(mkinstalldirs) $(DESTDIR)$(same_gnome_helpdir)
 	files=`echo $(srcdir)/same-gnome/*.html $(srcdir)/same-gnome/*.css`; \
 	if test "$$files" != '$(srcdir)/same-gnome/*.html $(srcdir)/same-gnome/*.css'; then \
 	  for file in $$files; do \
 	    basefile=`echo $$file | sed -e 's,^.*/,,'`; \
-	    $(INSTALL_DATA) $$file $(same_gnome_helpdir)/$$basefile; \
+	    $(INSTALL_DATA) $$file $(DESTDIR)$(same_gnome_helpdir)/$$basefile; \
 	  done; \
 	fi
 

@@ -29,5 +29,4 @@ EXTRA_DIST = play.xpm power.xpm step.xpm stop.xpm \
 	README CREDITS $(examples_DATA)
 
 install-data-local:
-	-$(mkinstalldirs)
-	-chgrp games $(bindir)/gturing && chmod 2111 $(bindir)/gturing
+	-chgrp games $(DESTDIR)$(bindir)/gturing && chmod 2111 $(DESTDIR)$(bindir)/gturing
