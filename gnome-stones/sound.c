@@ -2,7 +2,7 @@
 
 /* gnome-stones - sound.c
  *
- * Time-stamp: <2003/06/17 15:14:06 mccannwj>
+ * Time-stamp: <2003/06/19 16:11:28 mccannwj>
  *
  * Copyright (C) 2001 Michal Benes
  *
@@ -49,13 +49,15 @@ set_sound_enabled (gboolean value)
     stop_title_music ();
 }
 
-void sound_init( void )
+void
+sound_init (void)
 {
   numsamples = 0; 
   /* g_print ( "gnome-stones: sound init\n" ); */
 }
 
-void sound_close( void )
+void
+sound_close (void)
 {
 #ifndef NO_ESD
  int i;
@@ -63,29 +65,32 @@ void sound_close( void )
  stop_title_music ();
 
  for (i=0; i<numsamples; ++i)
-   esd_sample_free (gnome_sound_connection_get(), samples[i]);
+   esd_sample_free (gnome_sound_connection_get (), samples[i]);
  
  /* g_print ( "gnome-stones: sound close\n" ); */
  gnome_sound_shutdown ();
 #endif /* NO_ESD */
 }
 
-void sound_play( gint sound_id )
+void
+sound_play (gint sound_id)
 {
 #ifndef NO_ESD
- if (sound_id<0) return;
+ if (sound_id < 0)
+   return;
 
  if (! sound_enabled)
    return;
 
 /* we are waiting for the esound hackers to implement esd_sample_kill */
 /* FIXME: esd_sample_kill( gnome_sound_connection, sound_id );*/
- esd_sample_play( gnome_sound_connection_get(), sound_id );
+ esd_sample_play (gnome_sound_connection_get (), sound_id);
 #endif
 }
 
 
-gint sound_register( char *name )
+gint
+sound_register (char *name)
 {
  gint sample_id = -1;
 #ifndef NO_ESD
@@ -93,51 +98,55 @@ gint sound_register( char *name )
  char *fullname;
 
 
- if( numsamples>=MAX_SAMPLES-1 ) return -1;
+ if (numsamples >= MAX_SAMPLES-1)
+   return -1;
 
- buf = g_strdup_printf( "gnome-stones/%s", name );
+ buf = g_build_filename ("gnome-stones", name, NULL);
  fullname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_SOUND,
                                        buf, TRUE, NULL);
 
- sample_id = gnome_sound_sample_load( name, fullname );
+ sample_id = gnome_sound_sample_load (name, fullname);
 
  if (sample_id >= 0)
-   samples[numsamples++]=sample_id;
+   samples[numsamples++] = sample_id;
 /* else
-   g_print( "gnome-stones: cannot register sound %s\n", buf ); */
+   g_print ("gnome-stones: cannot register sound %s\n", buf); */
 
- g_free( fullname );
+ g_free (fullname);
+ g_free (buf);
 #endif
  return sample_id;
 }
 
 
-void play_title_music( void )
+void
+play_title_music (void)
 {
 #ifndef NO_ESD
   if (! sound_enabled)
     return;
   
-  if (title_music<0)
-    title_music = sound_register( "title.wav" );
+  if (title_music < 0)
+    title_music = sound_register ("title.wav");
   
-  if( !playing_title_music && title_music>=0 )
+  if(! playing_title_music && title_music>=0)
     {
       playing_title_music = TRUE; 
-      esd_sample_loop( gnome_sound_connection_get(), title_music );
+      esd_sample_loop (gnome_sound_connection_get (), title_music);
     }
 #endif
 }
 
-void stop_title_music( void )
+void
+stop_title_music (void)
 {
 #ifndef NO_ESD
- if( playing_title_music )
+ if (playing_title_music)
    {
      playing_title_music = FALSE; 
 
      /* FIXME: we want esd_sample_kill once it is implemented */
-     esd_sample_stop( gnome_sound_connection_get(), title_music );
+     esd_sample_stop (gnome_sound_connection_get (), title_music);
    }
 #endif
 }

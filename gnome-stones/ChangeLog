@@ -1,3 +1,10 @@
+2003-06-19  William Jon McCann  <mccann@jhu.edu>
+
+	* sound.c (sound_register): Use g_build_filename.
+
+	* object.c (plugin_load_plugins_in_dir): Use glib file utilities.
+	(object_register): Use g_strdup_printf instead of g_strconcat.
+
 2003-06-19  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* preferences.c: Clamped the joystick_level value.

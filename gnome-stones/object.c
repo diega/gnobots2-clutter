@@ -2,7 +2,7 @@
 
 /* gnome-stones - object.c
  *
- * Time-stamp: <2003/06/17 15:13:46 mccannwj>
+ * Time-stamp: <2003/06/19 16:06:22 mccannwj>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -136,25 +136,25 @@ plugin_load (const gchar *filename)
 void
 plugin_load_plugins_in_dir (const gchar *directory)
 {
-  DIR *d;
-  struct dirent *e;
+  GDir *d;
+  G_CONST_RETURN gchar *e;
   
-  if ((d = opendir (directory)) == NULL)
+  if ((d = g_dir_open (directory)) == NULL)
     return;
   
-  while ((e = readdir (d)) != NULL)
+  while ((e = g_dir_read_name (d)) != NULL)
     {
-      if ((strlen (e->d_name) > SOEXT_LEN) &&  
-	  (strncmp (e->d_name + strlen (e->d_name) - SOEXT_LEN, SOEXT, SOEXT_LEN) == 0))
+      if ((strlen (e) > SOEXT_LEN) &&  
+	  (strncmp (e + strlen (e) - SOEXT_LEN, SOEXT, SOEXT_LEN) == 0))
 	{
-	  char *objects_name;
+	  gchar *objects_name;
 	  
-	  objects_name = g_strconcat (directory, e->d_name, NULL);
+	  objects_name = g_build_filename (directory, e, NULL);
 	  plugin_load (objects_name);
 	  g_free (objects_name);
 	}
     }
-  closedir (d);
+  g_dir_close (d);
 }
 
 
@@ -252,8 +252,8 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
   guint          x;
   guint          y;
   guint          idx;
-  char          *filename;
-  char          *pathname;
+  gchar          *filename;
+  gchar          *pathname;
   GdkPixbuf *image;
   GStonesObject *object;
 
@@ -265,18 +265,17 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
   object->description= description;
   object->plugin     = plugin;
 
-  filename= g_strconcat ("gnome-stones/", description->image_name, NULL);
-  pathname=  gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
-                                        filename, TRUE, NULL);
+  filename= g_build_filename ("gnome-stones", description->image_name, NULL);
+  pathname= gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
+                                       filename, TRUE, NULL);
   image   = gdk_pixbuf_new_from_file (pathname, NULL);
   g_free (pathname);
   g_free (filename);
   
   if (!image)
     {
-      char *error= g_strconcat ("Error while loading image ", 
-				   description->image_name, 
-				   ": file not found!", NULL);
+      gchar *error= g_strdup_printf ("Error while loading image %s: file not found!", 
+                                    description->image_name);
       g_warning (error);
       g_free (error);
 
@@ -289,9 +288,8 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
 
   if (num_x*num_y == 0)
     {
-      char *error= g_strconcat ("Error while registering object ", 
-				   description->image_name, 
-				   ": image contains no data!", NULL);
+      gchar *error= g_strdup_printf ("Error while registering object %s: image contains no data!", 
+                                     description->image_name);
       g_warning (error);
       g_free (error);
 
@@ -303,9 +301,8 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
   
   if (object->image == NULL)
     {
-      char *error= g_strconcat ("Error while registering object ", 
-				   description->image_name, 
-				   ": out of memory!", NULL);
+      char *error= g_strdup_printf ("Error while registering object %s: out of memory!", 
+                                    description->image_name);
       g_warning (error);
       g_free (error);
 
@@ -316,9 +313,8 @@ object_register (GStonesPlugin *plugin, GStonesObjectDesc *description)
   
   if (object->pixbuf_image == NULL)
     {
-      char *error= g_strconcat ("Error while registering object ", 
-				   description->image_name, 
-				   ": out of memory!", NULL);
+      char *error= g_strdup_printf ("Error while registering object %s: out of memory!", 
+                                    description->image_name);
       g_warning (error);
       g_free (error);
       g_free (object->image);
