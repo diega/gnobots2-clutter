@@ -40,7 +40,6 @@ gnome_stones_SOURCES =				\
 gnome_stones_LDADD =				\
 	$(GNOME_GAMES_LIBS) \
 	$(INTLLIBS)	\
-	-lprof-parasite
 
 gnome_stones_LDFLAGS=-export-dynamic
 
