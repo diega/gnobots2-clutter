@@ -50,7 +50,6 @@ tile tiles[MAX_TILES];
 
 GtkWidget *window, *appbar;
 GtkWidget *tiles_label;
-GtkWidget *image_warning_dialog = NULL;
 gint selected_tile, visible_tiles;
 gint sequence_number;
 
@@ -199,20 +198,26 @@ GnomeUIInfo toolbar_uiinfo [] = {
 
 void mahjongg_theme_warning (gchar *message)
 {
-	/* Limit warnings to one per theme. */
-	if (image_warning_dialog != NULL) return;
+	GtkWidget *dialog;
+	GtkWidget *button;
 
-	image_warning_dialog = gtk_message_dialog_new (GTK_WINDOW (window),
-						       GTK_DIALOG_DESTROY_WITH_PARENT,
-						       GTK_MESSAGE_WARNING,
-						       GTK_BUTTONS_OK,
-						       _("Could not load tile set"));
-	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (image_warning_dialog), message);
+	dialog = gtk_message_dialog_new (GTK_WINDOW (window),
+					 GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_WARNING,
+					 GTK_BUTTONS_CLOSE,
+					 _("Could not load tile set"));
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), message);
 
-	g_signal_connect (image_warning_dialog, "response",
-			  G_CALLBACK (properties_callback), NULL);
-	gtk_dialog_run (GTK_DIALOG (image_warning_dialog));
-	gtk_widget_destroy (image_warning_dialog);
+	button = gtk_dialog_add_button (GTK_DIALOG (dialog),
+					_("Preferences"), GTK_RESPONSE_ACCEPT
+					);
+
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
+
+	g_signal_connect (button, "clicked", G_CALLBACK (properties_callback), NULL);
+
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
 }
 
 
@@ -276,7 +281,6 @@ tileset_changed_cb (GConfClient *client,
 		if (strcmp (tile_tmp, selected_tileset) != 0) {
 			g_free (selected_tileset);
 			selected_tileset = tile_tmp;
-			image_warning_dialog = NULL;
 			load_images (selected_tileset);
 			draw_all_tiles ();
 		} else {

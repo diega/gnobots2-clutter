@@ -74,6 +74,8 @@ gint yoffset;
 gint gridwidth;
 gint gridheight;
 
+gchar * warning_message = NULL;
+
 static void recalculate_sizes (gint width, gint height)
 {
   gdouble scale;
@@ -275,22 +277,29 @@ static void recreate_tile_images (void)
     fg = games_preimage_render (tilepreimage, tilewidth*NUM_PATTERNS,
                                 tileheight*2, NULL);
     
-    /* If the preimage was bad, remove it. */
+    /* This usually handles corrupt, non-scalable images. */
     if (fg == NULL) {
       g_object_unref (tilepreimage);
       tilepreimage = NULL;
+
+      g_free (warning_message);
+      warning_message = g_strdup (_("This image may be corrupt."));
     }  
   
+  } 
+
+  /* If there's a warning, display it. */
+  if (warning_message) {
+    mahjongg_theme_warning (warning_message);
+    g_free (warning_message);
+    warning_message = NULL;
   }
-  
-  /* If there's no theme pixbuf, provide a blank one and warn. */
+
+  /* If there's no theme pixbuf, provide a blank one. */
   if (fg == NULL) {
     fg = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, 
                          tilewidth*NUM_PATTERNS, tileheight*2);
     gdk_pixbuf_fill (fg, 0x00000000);
-
-    mahjongg_theme_warning (_("The selected image may be corrupt. Please choose another tile set."));
-
   }
 
   gdk_pixbuf_render_threshold_alpha (fg, tilemask, 0, 0, 0, 0,
@@ -403,22 +412,40 @@ void load_images (gchar * file)
 {
   gchar * filename;
   gchar * temp;
-  gchar * warning_message;
 
   temp = g_strconcat ("mahjongg/", file, NULL);
   
   filename = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
                                         temp, TRUE, NULL);
-
   g_free (temp);
 
-  if (filename == NULL) {
-    warning_message = g_strdup_printf (_("Unable to locate file '%s'. Please choose another tile set."), file);
-    mahjongg_theme_warning (warning_message);
-    g_free (warning_message);
-  } else {
-    if (tilepreimage) g_object_unref (tilepreimage);
+  if (!filename) {
+
+    filename = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
+					  "mahjongg/postmodern.svg", TRUE, NULL);
+
+    if (!filename) {
+      warning_message = g_strdup_printf (_("Unable to locate file: '%s'\n\nAlso, the default tile set could not be found."), file);
+    } else {
+      warning_message = g_strdup_printf (_("Unable to locate file: '%s'\n\nThe default tile set will be loaded instead."), file);
+    }
+
+  }
+
+  if (tilepreimage) 
+    g_object_unref (tilepreimage);
+
+  tilepreimage = NULL;
+  
+  if (filename) {
     tilepreimage = games_preimage_new_from_file (filename, NULL);
+
+    /* This usually happens with bad images or a missing image loader. */
+    if (!tilepreimage) {
+      g_free (warning_message);
+      warning_message = g_strdup_printf (_("Unable to load file: '%s'\n\nThis tile set was found but did not load."), file);
+    }
+
   }
   
   update_tileimages = TRUE;
@@ -426,6 +453,7 @@ void load_images (gchar * file)
   if (tileset)
     g_free (tileset);
   tileset = g_strdup (file);
+
   g_free (filename);
 
   /* We may be called before the window is created, in which case we let
