@@ -474,13 +474,6 @@ game_new_callback (GtkWidget *widget, void *data)
 	new_game ();
 }
 
-/*static int
-yes (GtkWidget *widget, void *data)
-{
-	selected_scenario.scenario = 0;
-	return TRUE;
-}*/
-
 static void
 free_str (GtkWidget *widget, void *data)
 {
@@ -512,8 +505,10 @@ fill_menu (GtkWidget *menu)
 		item = gtk_menu_item_new_with_label (s);
 		gtk_widget_show (item);
 		gtk_menu_append (GTK_MENU(menu), item);
-		gtk_signal_connect (GTK_OBJECT(item), "activate", (GtkSignalFunc)set_selection, s);
-		gtk_signal_connect (GTK_OBJECT(item), "destroy", (GtkSignalFunc) free_str, s);
+		gtk_signal_connect (GTK_OBJECT(item), "activate",
+				    GTK_SIGNAL_FUNC (set_selection), s);
+		gtk_signal_connect (GTK_OBJECT(item), "destroy",
+				    GTK_SIGNAL_FUNC (free_str), s);
 	  
 	        if (!strcmp(scenario, s))
 	        {
@@ -537,7 +532,6 @@ load_scenario_callback (GtkWidget *widget, void *data)
 {
 	if (selected_scenario.scenario) {
 		load_scenario (selected_scenario.scenario);
-/*		new_game ();*/
 		if (selected_scenario.make_it_default) {
 			gnome_config_set_string (
 				"/same-gnome/Preferences/Scenario", 
@@ -561,7 +555,8 @@ game_preferences_callback (GtkWidget *widget, void *data)
 			GNOME_STOCK_BUTTON_OK, GNOME_STOCK_BUTTON_CANCEL,
 			NULL);
 	gnome_dialog_set_parent (GNOME_DIALOG (pref_dialog), GTK_WINDOW (app));
-	gtk_signal_connect (GTK_OBJECT(pref_dialog), "delete_event", (GtkSignalFunc)cancel, NULL);
+	gtk_signal_connect (GTK_OBJECT(pref_dialog), "delete_event",
+			    GTK_SIGNAL_FUNC (cancel), NULL);
 
 	omenu = gtk_option_menu_new ();
 	menu = gtk_menu_new ();
@@ -704,63 +699,63 @@ save_state (GnomeClient *client,
 	    gint fast,
 	    gpointer client_data)
 {
-  gchar *prefix= gnome_client_get_config_prefix (client);
-  gchar *argv[]= { "rm", "-r", NULL };
-  gchar *buf;
-  struct ball *f = (struct ball*) field;
-  int i;  
-  
-  if (debugging)
-    g_print ("Saving state\n");
-  
-  gnome_config_push_prefix (prefix);
-  
-  gnome_config_set_int ("Game/Score", score);
-  gnome_config_set_int ("Game/NStones", sync_stones ? 1 : nstones);
-  
-  buf= g_malloc(STONE_COLS*STONE_LINES+1);
-  for (i=0 ; i < (STONE_COLS*STONE_LINES) ; i++ )
-    {
-      buf[i]= f[i].color + 'a';
-    }
-  buf[STONE_COLS*STONE_LINES]= '\0';
-  gnome_config_set_string ("Game/Field", buf);
-  g_free(buf);
-  
-  gnome_config_pop_prefix ();
-  gnome_config_sync();
-  
-  argv[2]= gnome_config_get_real_path (prefix);
-  gnome_client_set_discard_command (client, 3, argv);
-  
-  return TRUE;
+	gchar *prefix = gnome_client_get_config_prefix (client);
+	gchar *argv []= { "rm", "-r", NULL };
+	gchar *buf;
+	struct ball *f = (struct ball*) field;
+	int i;  
+	
+	if (debugging)
+		g_print ("Saving state\n");
+	
+	gnome_config_push_prefix (prefix);
+	
+	gnome_config_set_int ("Game/Score", score);
+	gnome_config_set_int ("Game/NStones", sync_stones ? 1 : nstones);
+	
+	buf= g_malloc (STONE_COLS*STONE_LINES+1);
+	
+	for (i = 0 ; i < (STONE_COLS*STONE_LINES); i++){
+		buf [i]= f [i].color + 'a';
+	}
+	buf [STONE_COLS*STONE_LINES]= '\0';
+	gnome_config_set_string ("Game/Field", buf);
+	g_free(buf);
+	
+	gnome_config_pop_prefix ();
+	gnome_config_sync();
+	
+	argv[2]= gnome_config_get_real_path (prefix);
+	gnome_client_set_discard_command (client, 3, argv);
+	
+	return TRUE;
 }
 
 
 static void
 restart (void)
 {
-  gchar *buf;
-  struct ball *f = (struct ball*) field;
-  int i;
-  
-  if (debugging)
-    g_print ("Retrieving state\n");
-  
-  score  = gnome_config_get_int_with_default ("Game/Score", 0);
-  nstones= gnome_config_get_int_with_default ("Game/NStones", 0);
-  
-  buf    = gnome_config_get_string_with_default ("Game/Field", NULL);  
-  if (buf)
-    {
-      for (i= 0; i < (STONE_COLS*STONE_LINES); i++) 
-	{
-	  f[i].color= buf[i] - 'a';
-	  f[i].tag  = 0;
-	  f[i].frame= nstones ? (rand () % nstones) : 0;
+	gchar *buf;
+	struct ball *f = (struct ball*) field;
+	int i;
+	
+	if (debugging)
+		g_print ("Retrieving state\n");
+	
+	score = gnome_config_get_int_with_default ("Game/Score", 0);
+	nstones = gnome_config_get_int_with_default ("Game/NStones", 0);
+	
+	buf = gnome_config_get_string_with_default ("Game/Field", NULL);  
+
+	if (buf) {
+		for (i= 0; i < (STONE_COLS*STONE_LINES); i++) 
+		{
+			f[i].color= buf[i] - 'a';
+			f[i].tag  = 0;
+			f[i].frame= nstones ? (rand () % nstones) : 0;
+		}
+		g_free (buf);
 	}
-      g_free (buf);
-    }
 }
 
 static gint
@@ -772,9 +767,9 @@ client_die (GnomeClient *client, gpointer client_data)
 }
 
 static const struct poptOption options[] = {
-  {NULL, 'd', POPT_ARG_NONE, &debugging, 0, N_("Debugging mode"), NULL},
-  {"scenario", 's', POPT_ARG_STRING, &fname, 0, N_("Set game scenario"), N_("NAME")},
-  {NULL, '\0', 0, NULL, 0}
+	{ NULL, 'd', POPT_ARG_NONE, &debugging, 0, N_("Debugging mode"), NULL },
+	{ "scenario", 's', POPT_ARG_STRING, &fname, 0, N_("Set game scenario"), N_("NAME") },
+	{ NULL, '\0', 0, NULL, 0 }
 };
 
 #ifndef GNOME_CLIENT_RESTARTED
@@ -806,15 +801,14 @@ main (int argc, char *argv [])
 	gtk_signal_connect (GTK_OBJECT (client), "die",
 			    GTK_SIGNAL_FUNC (client_die), NULL);
 
-	if (GNOME_CLIENT_RESTARTED (client))
-	  {
-	    gnome_config_push_prefix (gnome_client_get_config_prefix (client));
+	if (GNOME_CLIENT_RESTARTED (client)){
+		gnome_config_push_prefix (gnome_client_get_config_prefix (client));
 	    
-	    restart ();
-	    restarted= 1;
-	    
-	    gnome_config_pop_prefix ();
-	  }
+		restart ();
+		restarted = 1;
+		
+		gnome_config_pop_prefix ();
+	}
 
 	srand (time (NULL));
 
