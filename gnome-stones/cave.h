@@ -1,6 +1,6 @@
 /* gnome-stones - cave.h
  *
- * Time-stamp: <1998/09/07 22:28:49 carsten>
+ * Time-stamp: <1998/11/01 22:10:29 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -27,39 +27,52 @@
 
 
 /*****************************************************************************/
-/* Object declarations.  */
+/* Gnome-Stones signal stuff.  */
 
 
-gboolean
-object_register (GStonesObject *object);
-
-
-const ObjectType
-object_get_type (const gchar *name);
-
-#define OBJECT_DEFAULT_IMAGE -1
-#define OBJECT_EDITOR_IMAGE -2
-
-GdkPixmap *
-object_get_image (ObjectType type, gint index);
-
-GdkImlibImage *
-object_get_imlib_image (ObjectType type, gint index);
-
-gboolean
-objects_register_all (void);
+GStonesSignal
+gstones_signal (const gchar *sig_name);
 
 
 
 /*****************************************************************************/
-/* Cave declaration.  */
+
+/* The following signals are used by default:
+ *
+ * > cave.pre_scan
+ *
+ *   This signal is emitted just before scanning the hole cave.  It's
+ *   emitted by the cave_iterate function.
+ *
+ * > cave.post_scan
+ *
+ *   This signal is emitted by the cave_iterate function just after
+ *   scanning the hole cave.
+ *
+ * > player.start
+ *
+ *   This signal is emitted when calling 'cave_start'.
+ *
+ * > player.die
+ *
+ *   This signal is emitted when calling 'cave_player_die'.  
+ *
+ */
+
+
+/*****************************************************************************/
+/* Cave declarations.  */
 
 
 GStonesCave   *cave_new               (void);
 void           cave_free              (GStonesCave *cave);
 
-GStonesCave   *cave_load              (const GStonesGame *game,
-				       const char        *cavename);
+/* Object management.  */
+
+gboolean cave_add_object       (GStonesCave *cave, GStonesObject *object);
+void     cave_remove_object    (GStonesCave *cave, GStonesObject *object);
+gboolean cave_object_removable (GStonesCave *cave, GStonesObject *object);
+
 
 void           cave_set_player        (GStonesCave *cave, 
 				       GStonesPlayer *player);
@@ -86,11 +99,41 @@ void           cave_player_die        (GStonesCave *cave);
 void           cave_start             (GStonesCave *cave);
 
 
+void           cave_emit_signal       (GStonesCave *cave, GStonesSignal sig);
+
+
+
 guint          cave_time_to_frames    (GStonesCave *cave, gdouble time);
+
+
+/* Cave entry stuff.  */
+gboolean       cave_set_entry         (GStonesCave   *cave, 
+				       guint          x, 
+				       guint          y, 
+				       GStonesObject *object,
+				       guint          state);
+
 
 GdkPixmap     *cave_get_image         (GStonesCave *cave, guint x, guint y);
 
 GdkImlibImage *cave_get_imlib_image   (GStonesCave *cave, guint x, guint y);
+
+
+/* Object options stuff.  */
+
+gchar         *cave_get_string_object_option (GStonesCave   *cave, 
+					      GStonesObject *object,
+					      const gchar   *name);
+gboolean       cave_get_bool_object_option   (GStonesCave   *cave, 
+					      GStonesObject *object,
+					      const gchar   *name);
+gint           cave_get_int_object_option    (GStonesCave   *cave,
+					      GStonesObject *object,
+					      const gchar   *name);
+void           cave_set_object_option        (GStonesCave   *cave,
+					      GStonesObject *object,
+					      const gchar   *name,
+					      const gchar   *value);
 
 #endif
 

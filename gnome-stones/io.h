@@ -1,6 +1,6 @@
-/* gnome-stones - game.h
+/* gnome-stones - io.h
  *
- * Time-stamp: <1998/11/01 16:02:26 carsten>
+ * Time-stamp: <1998/11/01 16:48:03 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -18,28 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-#ifndef GAME_H
-#define GAME_H
+#ifndef IO_H
+#define IO_H
 
-#include <config.h>
-#include <gnome.h>
 #include "types.h"
-#include "object.h"
 
-
-/*****************************************************************************/
-/* Game declarations.  */
-
-
-GStonesGame* game_new        (void);
-void         game_free       (GStonesGame *game);
-
-/* Add a plugin to the list of required plugins.  */
-gboolean     game_add_plugin (GStonesGame *game, GStonesPlugin *plugin);
-
+GStonesGame *gstones_game_load (const gchar *name);
+GStonesCave *gstones_cave_load (GStonesGame *game, const char *cavename);
 
 #endif
-
 
 /* Local Variables: */
 /* mode:c */

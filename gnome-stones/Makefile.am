@@ -1,4 +1,4 @@
-SUBDIRS  = graphics
+SUBDIRS  = objects graphics
 
 Gamesdir = $(datadir)/apps/Games
 scoredir =$(localstatedir)/games
@@ -24,10 +24,14 @@ gnome_stones_SOURCES =				\
 	game.h					\
 	cave.c					\
 	cave.h					\
+	object.c				\
+	object.h				\
 	player.c				\
 	player.h				\
 	status.c				\
 	status.h                                \
+	io.c                                    \
+	io.h                                    \
 	preferences.c                           \
 	preferences.h
 
@@ -39,7 +43,7 @@ gnome_stones_LDADD =				\
 
 Pixmap_DATA= gnome-stones.png
 Games_DATA = gnome-stones.desktop
-Caves_DATA = default.caves tutorial.caves
+Caves_DATA = default.caves tutorial.caves gnomekoban.caves
 
 EXTRA_DIST    = 				\
 	$(Pixmap_DATA)				\

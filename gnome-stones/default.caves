@@ -1,20 +1,21 @@
 [General]
 Title=Default caves
 Object size=1
+Plugins=default:gnome-stones
 
 [Objects]
-_=empty
-.=dirt
-W=wall
-m=magic wall
-X=frame
-O=boulder
-V=diamond
-N=entrance
-D=closed exit
-F=firefly
-B=butterfly
-A=amoeba
+X=default:frame
+_=gnome-stones:empty
+.=gnome-stones:dirt
+W=gnome-stones:wall
+m=gnome-stones:magic wall
+O=gnome-stones:boulder
+V=gnome-stones:diamond
+N=gnome-stones:entrance
+D=gnome-stones:closed exit
+F=gnome-stones:firefly
+B=gnome-stones:butterfly
+A=gnome-stones:amoeba
 
 [Caves]
 Cave001=Cave Test1
@@ -90,7 +91,7 @@ Diamond score= 25
 Time= 300
 Height=13
 Width=22
-Amoeba max size=1000
+gnome-stones:amoeba:maxSize=1000
 Line01=XXXXXXXXXXXXXXXXXXXXXX
 Line02=XA.....OOVVOVOV......X
 Line03=X......VOOVOOOO......X

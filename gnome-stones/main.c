@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <1998/09/07 22:50:52 carsten>
+ * Time-stamp: <1998/11/01 16:49:25 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -25,9 +25,11 @@
 #include <string.h>
 #include "game.h"
 #include "cave.h"
+#include "object.h"
 #include "status.h"
 #include "player.h"
 #include "preferences.h"
+#include "io.h"
 
 /* You should leave 'USE_GNOME_CANVAS' undefined, because this game
    currently doesn't support all features with gnome_canvas stuff
@@ -776,7 +778,7 @@ countdown_timeout_function (gpointer data)
 	}
       
       if (cave->next)
-	newcave= cave_load (game, cave->next);
+	newcave= gstones_cave_load (game, cave->next);
 	
       curtain_start (newcave);
 
@@ -943,18 +945,18 @@ iteration_timeout_function (gpointer data)
     {
       if (!(cave->flags & CAVE_PLAYER_EXISTS) && !cave->is_intermission)
 	{
-	  player_inc_lifes (player, -1);
+	  player_inc_lives (player, -1);
 	  
-	  if (player->lifes != 0)
+	  if (player->lives != 0)
 	    { 
 	      /* Restart cave.  */
-	      GStonesCave *newcave= cave_load (game, cave->name);
+	      GStonesCave *newcave= gstones_cave_load (game, cave->name);
 	      
 	      curtain_start (newcave);
 	    }
 	  else
 	    {
-	      /* That's it.  No lifes anymore.  */
+	      /* That's it.  No lives anymore.  */
 	      gint pos= gnome_score_log (player->score, NULL, TRUE);
 
 	      /* FIXME: somewhere is a bug, that makes this needed.  */
@@ -1024,7 +1026,7 @@ load_game (const gchar *filename, guint _start_cave)
     }
   
   /* Load game.  */
-  newgame= game_load (filename);
+  newgame= gstones_game_load (filename);
 
   if (newgame)
     {
@@ -1080,7 +1082,7 @@ game_start_cb (GtkWidget *widget, gpointer data)
   if (!player) return;
 
   tmp = g_list_nth (game->start_caves, start_cave);
-  cave= cave_load (game, tmp->data);
+  cave= gstones_cave_load (game, tmp->data);
   
   if (cave)
     curtain_start (cave);
@@ -1193,7 +1195,7 @@ static GnomeUIInfo main_menu[]=
 
 
 static gboolean
-scan_public_game_directories (void)
+scan_public_game_directory (void)
 {
   game_directory_scan (CAVESDIR);
 
@@ -1202,15 +1204,43 @@ scan_public_game_directories (void)
 
 
 static gboolean
-scan_private_game_directories (void)
+scan_private_game_directory (void)
 {
-  char *path= gnome_util_home_file ("GnomeStonesGames");
+  char *dir= gnome_util_home_file ("gnomes-stones/games");
   
-  game_directory_scan (path);
+  game_directory_scan (dir);
 
-  g_free (path);
+  g_free (dir);
   return TRUE;
 }
+
+
+static gboolean
+scan_public_plugin_directory (void)
+{
+  char *dir= gnome_unconditional_libdir_file ("gnome-stones/objects/");
+
+  plugin_load_plugins_in_dir (dir);
+
+  g_free (dir);
+  return TRUE;
+}
+
+
+static gboolean
+scan_private_plugin_directory (void)
+{
+  char *dir= gnome_util_home_file ("gnomes-stones/objects");
+  
+  plugin_load_plugins_in_dir (dir);
+
+  g_free (dir);
+  return TRUE;
+}
+
+
+/*****************************************************************************/
+/* Startup sequence.  */
 
 
 typedef struct
@@ -1226,6 +1256,14 @@ StartupSequence startup_sequence[]=
     curtain_image_load,
     N_("Loading curtain image...")
   },
+  {
+    scan_private_plugin_directory,
+    N_("Scanning private object directory...")
+  },
+  {
+    scan_public_plugin_directory,
+    N_("Scanning public object directory...")
+  },
 #ifdef USE_GNOME_CANVAS
   {
     game_widget_fill,
@@ -1233,16 +1271,12 @@ StartupSequence startup_sequence[]=
   },
 #endif /* USE_GNOME_CANVAS */
   {
-    objects_register_all,
-    N_("Registering game objects...")
+    scan_private_game_directory,
+    N_("Scanning private game directory...")
   },
   {
-    scan_private_game_directories,
-    N_("Scanning private game directories...")
-  },
-  {
-    scan_public_game_directories,
-    N_("Scanning public game directories...")
+    scan_public_game_directory,
+    N_("Scanning public game directory...")
   },
   {
     preferences_restore,

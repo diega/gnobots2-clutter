@@ -32,8 +32,8 @@ general structure of a caves file is the following:
 	
 * New life score: (integer, optional, default 500)
 
-* Lifes: (integer, optional, default 3)
-	The number of lifes, that you start with 
+* Lives: (integer, optional, default 3)
+	The number of lives, that you start with 
 	
 * Frame rate: (float, optional, default 0.2)
 	The game is updated every "Frame rate" second (float, optional

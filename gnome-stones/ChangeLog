@@ -1,3 +1,34 @@
+1998-10-15  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* status.h:
+	* player.h:
+	* types.h: 
+	* status.c: 
+	* player.c: 
+	* main.c:
+	* game.c: Changed 'lifes' to 'lives' (thanks to
+ 	Larry Lade for correcting the wrong spelling.)
+
+1998-09-21  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* types.h (struct _GStonesObject): Removed
+ 	'pre_cave_scan_function' and 'post_cave_scan_function' members.
+  	This functions are substituted by a signal.
+	(struct _GStonesObject): New member 'signal_function'.
+
+
+	* cave.c (gstones_signal): New function.  Implements the
+ 	management of the simple Gnome-Stones signals.
+	(cave_emit_signal): New function.  Emits a signal to all objects.
+	(empty_signals): New function.
+	(closed_exit_signals): Likewise.
+	(gnome_signals): Likewise.
+
+1998-09-13  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
+
+	* cave.c (gnome_animate): Added support for more than one
+ 	animation sequence.
+
 1998-09-12  Carsten Schaar  <nhadcasc@fs-maphy.uni-hannover.de>
 
 	* Makefile.am (SUBDIRS): Added graphics subdirectory.

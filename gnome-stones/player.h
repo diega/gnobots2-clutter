@@ -1,6 +1,6 @@
 /* gnome-stones - player.h
  *
- * Time-stamp: <1998/08/20 13:04:20 carsten>
+ * Time-stamp: <1998/10/15 20:32:10 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -33,7 +33,7 @@ void           player_free         (GStonesPlayer *player);
 /* The player gained a new life, if 'player_inc_score' returns 'TRUE'.  */
 
 gboolean       player_inc_score    (GStonesPlayer *player, guint inc);
-void           player_inc_lifes    (GStonesPlayer *player, gint inc);
+void           player_inc_lives    (GStonesPlayer *player, gint inc);
 
 void           player_set_diamonds (GStonesPlayer *player, guint diamonds);
 void           player_set_time     (GStonesPlayer *player, 

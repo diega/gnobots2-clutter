@@ -1,6 +1,6 @@
 /* gnome-stones - player.c
  *
- * Time-stamp: <1998/08/22 13:11:10 carsten>
+ * Time-stamp: <1998/10/15 20:28:48 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -36,13 +36,13 @@ player_new (GStonesGame *game)
       player->max_time      = 1;
 
       player->score         = 0;
-      player->lifes         = game->lifes;
+      player->lives         = game->lives;
       player->time          = 0;
     }
 
   /* Update the statusbar.  */
   status_set_score (player->score);
-  status_set_lifes (player->lifes);
+  status_set_lives (player->lives);
 
   return player;
 }
@@ -70,7 +70,7 @@ player_inc_score (GStonesPlayer *player, guint inc)
   if (new_life)
     {
       gnome_app_flash (GNOME_APP (app), _("You gained an extra life!"));
-      player_inc_lifes (player, 1);
+      player_inc_lives (player, 1);
     }
 
   /* Update the statusbar.  */
@@ -81,13 +81,13 @@ player_inc_score (GStonesPlayer *player, guint inc)
 
 
 void
-player_inc_lifes (GStonesPlayer *player, gint inc)
+player_inc_lives (GStonesPlayer *player, gint inc)
 {
   if (!player)
     return;
   
-  player->lifes+= inc;
-  status_set_lifes (player->lifes);
+  player->lives+= inc;
+  status_set_lives (player->lives);
 }
 
 

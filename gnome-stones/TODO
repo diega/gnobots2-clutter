@@ -2,10 +2,7 @@ This is an unsorted list of things to do:
 
 * Make objects in the game files bigger than one ascii character.
 * Revisit the printing of messages during the game play.
-* Add signals to GStonesObject definitions.
-* Make GStonesObjects loadable.
 * Draw nicer graphics. 
 * Add more caves and games to the game.
-* Extract GStonesObject stuff from the cave.[ch] files.
 * Truncate messages, that are to long.
 * Write Help and README files.

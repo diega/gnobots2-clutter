@@ -1,6 +1,6 @@
 /* gnome-stones - status.c
  *
- * Time-stamp: <1998/08/20 12:38:29 carsten>
+ * Time-stamp: <1998/10/15 20:35:32 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -39,7 +39,7 @@ static GtkWidget *game_table = NULL;
 static GtkWidget *status_score_label;
 static GtkWidget *status_diamonds_label;
 static GtkWidget *status_cave_label;
-static GtkWidget *status_lifes_label;
+static GtkWidget *status_lives_label;
 
 
 
@@ -97,13 +97,13 @@ status_widget_get (void)
   
   gtk_table_set_col_spacing (GTK_TABLE (game_table), 2, 32);
   
-  label= gtk_label_new (_("Lifes:"));
+  label= gtk_label_new (_("Lives:"));
   gtk_table_attach (GTK_TABLE (game_table), label, 3, 4, 0, 1, 0, 0, 3, 3);
   gtk_widget_show (label);
   
-  status_lifes_label= gtk_label_new ("0");
-  gtk_table_attach (GTK_TABLE (game_table), status_lifes_label, 4, 5, 0, 1, 0, 0, 3, 3);
-  gtk_widget_show (status_lifes_label);
+  status_lives_label= gtk_label_new ("0");
+  gtk_table_attach (GTK_TABLE (game_table), status_lives_label, 4, 5, 0, 1, 0, 0, 3, 3);
+  gtk_widget_show (status_lives_label);
   
   gtk_table_set_col_spacing (GTK_TABLE(game_table), 5, 32);
   
@@ -160,9 +160,8 @@ status_set_maxtimer (guint time)
 /*****************************************************************************/
 /* Setting the information.  */
 
-static guint new_life_score= 0;
 static guint status_score= 0;
-static guint status_lifes= 0;
+static guint status_lives= 0;
 
 
 void status_set_score (guint score)
@@ -180,16 +179,16 @@ void status_set_score (guint score)
 
 
 void
-status_set_lifes (guint lifes)
+status_set_lives (guint lives)
 {
-  if (lifes != status_lifes)
+  if (lives != status_lives)
     {
       gchar buffer[32];
       
-      status_lifes= lifes;
+      status_lives= lives;
       
-      sprintf (buffer, "%d", status_lifes);
-      gtk_label_set (GTK_LABEL (status_lifes_label), buffer);
+      sprintf (buffer, "%d", status_lives);
+      gtk_label_set (GTK_LABEL (status_lives_label), buffer);
     }
 }
 

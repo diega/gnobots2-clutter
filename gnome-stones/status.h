@@ -1,6 +1,6 @@
 /* gnome-stones - status.h
  *
- * Time-stamp: <1998/08/20 12:52:52 carsten>
+ * Time-stamp: <1998/10/15 20:32:27 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -75,7 +75,7 @@ status_set_maxtimer (guint time);
 /* Setting information for the statusbar.  */
 
 void status_set_score    (guint score);
-void status_set_lifes    (guint lifes);
+void status_set_lives    (guint lives);
 void status_set_diamonds (guint diamonds);
 void status_set_cave     (char *cave);
 void status_set_time     (gfloat time);
