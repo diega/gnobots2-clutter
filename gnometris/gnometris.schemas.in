@@ -34,7 +34,7 @@
       <default>FALSE</default>
       <locale name="C">
         <short>Whether to use the background image</short>
-        <long>This selects whether or not to draw the background image over thebackground color.</long>
+        <long>This selects whether or not to draw the background image over the background color.</long>
       </locale>
     </schema>
 

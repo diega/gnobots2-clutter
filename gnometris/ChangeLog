@@ -1,3 +1,8 @@
+2004-07-25  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gnometris.schemas.in: Typo in the usebgimage schema (bug
+	#148361).
+
 2004-07-18  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* help/C/gnometris.xml: Update to document background and sound
