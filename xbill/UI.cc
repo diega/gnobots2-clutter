@@ -10,8 +10,8 @@
 
 GtkWidget *toplevel, *menubar, *field;
 GtkWidget *scorebox, *endgamebox;
-GtkWidget *warpbox, *quitbox, *newgamebox, *pausebox;
-GtkWidget *aboutbox, *rulesbox, *storybox;
+GtkWidget *warpbox, *pausebox;
+GtkWidget *rulesbox, *storybox;
 
 /**************************/
 /* Timer control routines */
@@ -50,8 +50,9 @@ void UI::initialize(int argc, char **argv, const struct poptOption *options) {
 			GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
 	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/xbill.png");
 	toplevel = gnome_app_new("gnome-xbill", "Gnome xBill");
-	g_signal_connect(GTK_OBJECT(toplevel), "destroy",
-			   GTK_SIGNAL_FUNC(gtk_main_quit), NULL);
+        g_signal_connect(G_OBJECT(toplevel), "delete_event",
+                G_CALLBACK(delete_event_callback), (gpointer)CONFIRM_QUIT);
+
 	gtk_widget_realize(toplevel);
 	display = toplevel->window;
 }
@@ -115,28 +116,21 @@ void UI::make_mainwin() {
 }
 
 void UI::make_windows() {
-	Picture about;
 
 	icon.load("icon");
 
 	gdk_window_set_icon(toplevel->window, NULL, icon.pix, NULL);
 	/* XXXXX */
-	newgamebox = CreateDialog (_("New Game"), OK|CANCEL, NULL,
-		newgamestr, (char *)NULL, GTK_SIGNAL_FUNC(new_game_cb));
 	pausebox = CreateDialog (_("Pause Game"), OK, icon.pix,
 		pausestr, _("Continue"), NULL);
-	quitbox = CreateDialog (_("Quit"), OK|CANCEL, NULL,
-		quitstr, (char *)NULL, GTK_SIGNAL_FUNC(quit_game_cb));
 	warpbox = CreateEnterText (_("Warp To Level"), warpstr,
 		GTK_SIGNAL_FUNC(warp_apply));
-	about.load("about");
 
-	aboutbox = CreatePixmapBox(_("About"), about.pix,
-		_("Ported to GNOME by James Henstridge <james@daa.com.au>"));
 	rulesbox = CreatePixmapBox(_("Rules"), NULL, rulesstr);
 	storybox = CreatePixmapBox(_("Story"), NULL, storystr);
 
 	scorebox = CreateDialog (_("Score"), OK, NULL, "", (char *)NULL, NULL);
+
 	endgamebox = CreateDialog (_("Endgame"), OK, NULL,
 		endgamestr, "Nuts!", NULL);
 }

@@ -7,10 +7,14 @@
 #define OK	1
 #define CANCEL	2
 
+#define CONFIRM_NEW_GAME  1
+#define CONFIRM_QUIT      2
+
 void popup (GtkWidget *mi, GtkWidget **dlgbox);
 
 void new_game_cb (GtkDialog *dialog, gint arg1, gpointer user_data);
 void quit_game_cb (GtkDialog *dialog, gint arg1, gpointer user_data);
+gboolean delete_event_callback (GtkWidget *w, GdkEventAny *any, gpointer data);
 
 void leave_window_eh(GtkWidget *w, GdkEventCrossing *event);
 void enter_window_eh(GtkWidget *w, GdkEventCrossing *event);

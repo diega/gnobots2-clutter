@@ -1,3 +1,13 @@
+2002-11-04  Tim Musson <trmusson@ihug.co.nz>
+
+	* x11-gtk.cc:
+	* UI.cc:
+	* x11.h:
+	* Game.h: Switched to a GNOME About dialog.  Quit and New game
+	dialogs are now alert dialogs. They now work if the main window's
+	"close" button is used, and now only appear if there's a game in
+	progress. This fixes #97318.
+
 2002-11-11  Ross Burton  <ross@burtonini.com>
 
 	* xbill.png: New icon contributed by Timothy Musson.

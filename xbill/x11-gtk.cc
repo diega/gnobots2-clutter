@@ -8,14 +8,17 @@
 #include <gtk/gtk.h>
 
 extern GtkWidget *toplevel, *menubar, *field;
-extern GtkWidget *aboutbox, *rulesbox, *storybox;
-extern GtkWidget *warpbox, *quitbox, *newgamebox, *pausebox;
+extern GtkWidget *rulesbox, *storybox;
+extern GtkWidget *warpbox, *pausebox;
 extern GtkWidget *scorebox, *endgamebox;
 
 static void display_scores();
+static void display_about();
+static void game_quit(GtkWidget *w, gpointer data);
 static GtkWidget *CreateDialogIcon (char *title, int buttonmask,
 		GdkPixmap *icon, const char *text, const char *buttonlabel,
 		GtkSignalFunc callback);
+static void confirm_action (GtkWidget *widget, gpointer data);
 
 #ifndef GNOMEUIINFO_ITEM_STOCK_DATA
 #define GNOMEUIINFO_ITEM_STOCK_DATA(label, tip, cb, data, xpm) \
@@ -26,20 +29,20 @@ static GtkWidget *CreateDialogIcon (char *title, int buttonmask,
                    {GNOME_APP_UI_ITEM, label, tip, cb, data, NULL, \
 	            GNOME_APP_PIXMAP_NONE, NULL, 0, (GdkModifierType)0, NULL}
 static GnomeUIInfo game_menu[] = {
-  GNOMEUIINFO_MENU_NEW_GAME_ITEM((void *) popup, &newgamebox),
+  GNOMEUIINFO_MENU_NEW_GAME_ITEM(confirm_action, CONFIRM_NEW_GAME),
   GNOMEUIINFO_MENU_PAUSE_GAME_ITEM((void *) popup, &pausebox),
   GNOMEUIINFO_SEPARATOR,
   GNOMEUIINFO_ITEM_STOCK_DATA(_("Warp to level..."), NULL, (void *) popup, &warpbox,
 			      GTK_STOCK_GO_FORWARD),
   GNOMEUIINFO_MENU_SCORES_ITEM((void *) display_scores, NULL),
   GNOMEUIINFO_SEPARATOR,
-  GNOMEUIINFO_MENU_QUIT_ITEM((void *) popup, &quitbox),
+  GNOMEUIINFO_MENU_QUIT_ITEM(confirm_action, CONFIRM_QUIT),
   GNOMEUIINFO_END
 };
   
 static GnomeUIInfo help_menu[] = {
   GNOMEUIINFO_HELP ("gnome-xbill"),
-  GNOMEUIINFO_MENU_ABOUT_ITEM((void *) popup, &aboutbox),
+  GNOMEUIINFO_MENU_ABOUT_ITEM(display_about, NULL),
   GNOMEUIINFO_END
 };
 static GnomeUIInfo menus[] = {
@@ -181,6 +184,59 @@ GtkWidget *CreateDialogIcon (char *title, int buttonmask, GdkPixmap *icon,
 	return win;
 }
 
+static void display_about (void) {
+  	static GtkWidget *aboutbox = NULL;
+	const gchar *authors[] = {
+	  "Main Programmer\nBrian Wellington <bwelling@tis.com>\n",
+	  "Programming and Graphics\nMatias Duarte <matias@hyperimage.com>\n",
+	  "Porting to GTK and GNOME\nJames Henstridge <james@daa.com.au>",
+	  NULL};
+	const gchar *documenters[] = { NULL };
+	/* TRANSLATORS: Replace this string with your
+	 * names, one name per line. */
+	gchar *translators = _("translator_credits");
+	gchar *fname_icon;
+	GdkPixbuf *pixbuf = NULL;
+
+
+	if (aboutbox != NULL) {
+		gtk_window_present(GTK_WINDOW(aboutbox));
+		return;
+	}
+
+	if (!strcmp(translators, "translator_credits")) {
+		translators = NULL;
+	}
+
+	fname_icon = gnome_program_locate_file(NULL,
+	  GNOME_FILE_DOMAIN_APP_PIXMAP, "xbill.png", TRUE, NULL);
+
+	if (fname_icon != NULL) {
+		pixbuf = gdk_pixbuf_new_from_file(fname_icon, NULL);
+		g_free(fname_icon);
+	}
+
+	aboutbox = gnome_about_new("GNOME xBill", VERSION,
+	  _("Copyright (C) 1994, Psychosoft\nComputer logos, etc., copyright their respective owners"),
+	  _("GNOME version of the popular xBill game"),
+	  authors,
+	  documenters,
+	  translators,
+	  pixbuf);
+
+	gtk_window_set_transient_for(GTK_WINDOW(aboutbox),
+	  GTK_WINDOW(toplevel));
+
+	gtk_window_set_destroy_with_parent(GTK_WINDOW(aboutbox), TRUE);
+	
+	g_signal_connect(G_OBJECT(aboutbox), "destroy",
+	  G_CALLBACK(gtk_widget_destroyed), &aboutbox);
+
+	if (pixbuf != NULL) g_object_unref(pixbuf);
+
+	gtk_widget_show(aboutbox);
+}
+
 void UI::update_hsbox(char *str) {
         /* this is no longer needed (because of gnome_scores) */
 }
@@ -239,6 +295,60 @@ void popup (GtkWidget *mi, GtkWidget **box) {
   gtk_grab_remove(*box);
   gtk_widget_hide(*box);
   ui.resume_game();
+}
+
+static void confirm_action (GtkWidget *widget, gpointer data) {
+	gboolean doit = TRUE;
+	gchar *confirm_text;
+	GtkWidget *dialog;
+	gint response;
+
+	if (game.state == game.PLAYING) {
+
+  		  switch((gint)data) {
+			case CONFIRM_NEW_GAME:
+			  confirm_text = _("Do you want to start a new game?");
+			  break;
+			case CONFIRM_QUIT:
+			  confirm_text = _("Do you want to quit GNOME xBill?");
+			  break;
+			default:
+			  g_printerr(PACKAGE ": confirm_action: bad switch\n");
+			  return;
+		}
+
+		dialog = gtk_message_dialog_new(
+			GTK_WINDOW(toplevel),
+			GTK_DIALOG_MODAL,
+			GTK_MESSAGE_QUESTION,
+			GTK_BUTTONS_YES_NO,
+			confirm_text);
+
+		gtk_dialog_set_default_response(GTK_DIALOG(dialog),
+			GTK_RESPONSE_YES);
+
+		response = gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+		doit = (response == GTK_RESPONSE_YES);
+	}
+
+	if (doit) {
+		switch((gint)data) {
+		  case CONFIRM_NEW_GAME:
+		    game.start(1);
+		    break;
+		  case CONFIRM_QUIT:
+		    gtk_main_quit();
+		    break;
+		  default:
+		    break;
+		}
+	}
+}
+
+gboolean delete_event_callback (GtkWidget *w, GdkEventAny *any, gpointer data) {
+	confirm_action(w, data);
+	return TRUE;
 }
 
 /******************/
