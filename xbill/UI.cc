@@ -67,8 +67,18 @@ void UI::make_mainwin() {
 	gtk_widget_ensure_style(field);
 	style = field->style;
 	colormap = style->colormap;
-	white.red = style->white.red; white.green = style->white.green;
-	white.blue = style->white.blue; white.pixel = style->white.pixel;
+
+	/* try to alloc color */
+	if (colormap)
+		gdk_color_white(colormap, &white);
+	else if (gdk_color_white(gdk_colormap_get_system(), &white)) {
+		style = gtk_style_copy(gtk_widget_get_style(GTK_WIDGET(field)));
+
+		/* set new style */
+		style->bg[GTK_STATE_NORMAL] = white;
+		gtk_widget_set_style(GTK_WIDGET(field), style);
+	}
+
 	black.red = style->black.red; black.green = style->black.green;
 	black.blue = style->black.blue; black.pixel = style->black.pixel;
 
