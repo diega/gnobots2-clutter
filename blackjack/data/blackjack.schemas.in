@@ -8,7 +8,7 @@
       <type>bool</type>
       <default>TRUE</default>
       <locale name="C">
-        <short>Whether or not to show the toolbar.</short>
+        <short>Whether or not to show the toolbar</short>
         <long>Whether or not to show the toolbar.</long>
       </locale>
     </schema>
@@ -20,7 +20,7 @@
       <type>string</type>
       <default>Vegas_Strip.rules</default>
       <locale name="C">
-        <short>The variation of the rules file to use.</short>
+        <short>The variation of the rules file to use</short>
         <long>The name of the rules file containing the variation of the rules to play.</long>
       </locale>
     </schema>
@@ -32,7 +32,7 @@
       <type>string</type>
       <default>dondorf-flower.png dondorf.png gnome.png bold-09x14.png knuth-09x10.png knuth-18x21.png knuth-21x25.png</default>
       <locale name="C">
-        <short>What card style to use.</short>
+        <short>What card style to use</short>
         <long>A string containing a list of files to use to describe the cards. The format is obscure and defined by the gdk-card-image library</long>
       </locale>
     </schema>
@@ -44,7 +44,7 @@
       <type>float</type>
       <default>500.0</default>
       <locale name="C">
-        <short>The amount of money in your bank.</short>
+        <short>The amount of money in your bank</short>
         <long>The amount of money in your bank.</long>
       </locale>
     </schema>
@@ -56,7 +56,7 @@
       <type>bool</type>
       <default>FALSE</default>
       <locale name="C">
-        <short>Display probabilities.</short>
+        <short>Display probabilities</short>
         <long>Display the probabilities of each dealer hand outcome and the expected value of your hand.</long>
       </locale>
     </schema>
@@ -68,7 +68,7 @@
       <type>bool</type>
       <default>FALSE</default>
       <locale name="C">
-        <short>Use a quick deal.</short>
+        <short>Use a quick deal</short>
         <long>Use a quick deal with no delay between each card.</long>
       </locale>
     </schema>

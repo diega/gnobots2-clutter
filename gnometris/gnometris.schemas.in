@@ -9,7 +9,7 @@
       <type>string</type> 
       <default>7blocks-tig.png</default>
       <locale name="C">
-        <short>Image to use for drawing blocks.</short>
+        <short>Image to use for drawing blocks</short>
         <long>Image to use for drawing blocks.</long>
       </locale>
     </schema>
@@ -21,7 +21,7 @@
       <type>string</type> 
       <default>gnometris-bg.jpg</default>
       <locale name="C">
-        <short>Image to use as background.</short>
+        <short>Image to use as background</short>
 	<long>Image to use as background.</long>
       </locale>
     </schema>
@@ -33,7 +33,7 @@
       <type>int</type> 
       <default>1</default>
       <locale name="C">
-        <short>Level to start with.</short>
+        <short>Level to start with</short>
         <long>Level to start with.</long>
       </locale>
     </schema>
@@ -45,7 +45,7 @@
       <type>bool</type> 
       <default>TRUE</default>
       <locale name="C">
-        <short>Whether to preview the next block.</short>
+        <short>Whether to preview the next block</short>
         <long>Whether to preview the next block.</long>
       </locale>
     </schema>
@@ -57,7 +57,7 @@
       <type>bool</type> 
       <default>FALSE</default>
       <locale name="C">
-        <short>Whether to give blocks random colors.</short>
+        <short>Whether to give blocks random colors</short>
         <long>Whether to give blocks random colors.</long>
       </locale>
     </schema>
@@ -69,7 +69,7 @@
       <type>bool</type> 
       <default>TRUE</default>
       <locale name="C">
-        <short>Whether to rotate counter clock wise.</short>
+        <short>Whether to rotate counter clock wise</short>
         <long>Whether to rotate counter clock wise.</long>
       </locale>
     </schema>
@@ -81,8 +81,8 @@
       <type>int</type> 
       <default>0</default>
       <locale name="C">
-        <short></short>
-        <long></long>
+        <short>The number of rows to fill</short>
+        <long>The number of rows that are filled with random blocks at the start of the game.</long>
       </locale>
     </schema>
 
@@ -93,8 +93,8 @@
       <type>int</type> 
       <default>5</default>
       <locale name="C">
-        <short></short>
-        <long></long>
+        <short>The density of filled rows</short>
+        <long>The density of blocks in rows filled at the start of the game. The value is between 0 (for no blocks) and 10 (for a completely filled row).</long>
       </locale>
     </schema>
   </schemalist>

@@ -1931,6 +1931,7 @@ main (int argc, char *argv [])
 	GtkWidget *chrono_label;
 	GtkWidget *status_box;
 	GtkWidget *group_box;
+	GtkWidget *spacer;
 	gboolean show=TRUE;
 
 	gnome_score_init (APPNAME);
@@ -1961,29 +1962,37 @@ main (int argc, char *argv [])
 	status_box = gtk_hbox_new (FALSE, 10);
 
 	group_box = gtk_hbox_new (FALSE, 0);
-	tiles_label = gtk_label_new (_("Tiles Left: "));
+	tiles_label = gtk_label_new (_("Tiles Left:"));
 	gtk_box_pack_start (GTK_BOX (group_box), tiles_label, FALSE, FALSE, 0);
+	spacer = gtk_label_new (" ");
+	gtk_box_pack_start (GTK_BOX (group_box), spacer, FALSE, FALSE, 0);
 	tiles_label = gtk_label_new (MAX_TILES_STR);
 	gtk_box_pack_start (GTK_BOX (group_box), tiles_label, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
 
 	group_box = gtk_hbox_new (FALSE, 0);
-	moves_label = gtk_label_new(_("Moves Left: "));
+	moves_label = gtk_label_new(_("Moves Left:"));
 	gtk_box_pack_start (GTK_BOX (group_box), moves_label, FALSE, FALSE, 0);
+	spacer = gtk_label_new (" ");
+	gtk_box_pack_start (GTK_BOX (group_box), spacer, FALSE, FALSE, 0);
 	moves_label = gtk_label_new (MAX_TILES_STR);
 	gtk_box_pack_start (GTK_BOX (group_box), moves_label, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
 
 	group_box = gtk_hbox_new (FALSE, 0);
-	chrono_label = gtk_label_new (_("Time: "));
+	chrono_label = gtk_label_new (_("Time:"));
 	gtk_box_pack_start (GTK_BOX (group_box), chrono_label, FALSE, FALSE, 0);
+	spacer = gtk_label_new (" ");
+	gtk_box_pack_start (GTK_BOX (group_box), spacer, FALSE, FALSE, 0);
 	chrono = games_clock_new ();
 	gtk_box_pack_start (GTK_BOX (group_box), chrono, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
 
 	group_box = gtk_hbox_new (FALSE, 0);
-	seed_label = gtk_label_new (_("Seed: "));
+	seed_label = gtk_label_new (_("Seed:"));
 	gtk_box_pack_start (GTK_BOX (group_box), seed_label, FALSE, FALSE, 0);
+	spacer = gtk_label_new (" ");
+	gtk_box_pack_start (GTK_BOX (group_box), spacer, FALSE, FALSE, 0);
 	seed_label = gtk_label_new ("");
 	gtk_box_pack_start (GTK_BOX (group_box), seed_label, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);

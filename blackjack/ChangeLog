@@ -1,3 +1,8 @@
+2003-06-22  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* data/blackjack.schemas.in: Remove full-stop from the end of
+	short descriptions.
+
 2003-06-19  William Jon McCann  <mccann@jhu.edu>
 
 	* src/card.cpp (bj_card_load_pixmaps): 

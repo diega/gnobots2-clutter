@@ -1,3 +1,8 @@
+2003-06-22  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* same-gnome.c (main): Space at end of string fixes for i18n
+	people.
+
 2003-06-19  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* same-gnome.c: More compile cleanups from Steve Chaplin.

@@ -736,7 +736,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_table_set_col_spacings (GTK_TABLE (table), 6);
 
 	/* Block pixmap */
-	label = gtk_label_new(_("Block Image: "));
+	label = gtk_label_new(_("Block image:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
 
@@ -749,7 +749,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 0, 1);
 
 	/* background pixmap */
-	label = gtk_label_new(_("Background Image: "));
+	label = gtk_label_new(_("Background image:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 1, 2);
 

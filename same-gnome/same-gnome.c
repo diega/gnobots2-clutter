@@ -933,7 +933,7 @@ main (int argc, char *argv [])
 
 	update_score_state ();
 	
-	label = gtk_label_new (_("Score: "));
+	label = gtk_label_new (_("Score:"));
 	scorew = gtk_label_new ("");
 	set_score (score);
 
