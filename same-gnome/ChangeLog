@@ -1,3 +1,10 @@
+2003-08-02  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/same-gnome.xml: Updated for 2.4, including screen-shots.
+
+	* glass.png: Fixed corruption in the PNG stream. Mysteriously this
+	actually reduced the size of the file by 10k.
+
 2003-07-10  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* same-gnome.desktop.in: Update name to fit HIG (bug 116916).

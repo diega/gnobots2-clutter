@@ -2,8 +2,8 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY appversion "1.90.2">
-  <!ENTITY manrevision "2.0">
+  <!ENTITY appversion "2.4">
+  <!ENTITY manrevision "2.4">
   <!ENTITY date "27 April 2002">
   <!ENTITY app "<application>Same GNOME</application>">
   <!-- Information about the entities
@@ -145,7 +145,8 @@
       different color.  Balls of the same type in squares that border each
       other are grouped together.  If you click on one ball in a group, you
       remove all of the balls in that group.  You cannot remove a ball that is
-      not part of a group.
+      not part of a group. There have two be two balls of the same
+      type adjacent to each other before they can be removed.
     </para>
     <para>
       You can tell which balls are in a group by moving your mouse over the
@@ -234,14 +235,10 @@
 	<para>The status bar displays the following information:
 	  <itemizedlist>
 	  <listitem><para>
-	    The left penal shows information about menu items in &app;.
+	    The left panel shows information about menu items in &app;.
 	  </para></listitem>
 	  <listitem><para>
-	    The center panel shows how many balls will be removed if you click
-	    on the ball your mouse is currently over.
-	  </para></listitem>
-	  <listitem><para>
-	    The right panel shows you your score.
+	    Your score is shown on the right.
 	  </para></listitem>
 	  </itemizedlist>
 	</para>
@@ -275,26 +272,10 @@
     <para>
       The game is over when no groups of balls remain.  If there are no balls
       left, you receive a bonus 1000 points.  At the end of the game, &app;
-      will display the <interface>Score</interface> dialog.  The
-      <interface>Score dialog</interface> is shown in
-      <xref linkend="score-dialog-fig"/>.
-
-    <!-- ==== Figure ==== -->
-      <figure id="score-dialog-fig"> 
-	<title>Score Dialog</title> 
-	<screenshot> 
-	  <mediaobject> 
-	    <imageobject><imagedata
-		fileref="figures/score-dialog.png" format="PNG"/> 
-	    </imageobject>
-	  </mediaobject> 
-	</screenshot> 
-      </figure>
-    <!-- ==== End of Figure ==== -->
-
+      will display the <interface>Scores</interface> dialog.
     </para>
     <para>
-      You can view the <interface>Score dialog</interface> at any time by
+      You can also view the high score list at any time by
       choosing
       <menuchoice>
         <guimenu>Game</guimenu>
