@@ -17,10 +17,9 @@ mahjongg_LDADD = \
 	$(GNOMEUI_LIBS)	\
 	$(INTLLIBS)
 
-pixmap_DATA = default.xpm
-inline_pixmaps = hborder.xpm vborder.xpm
+pixmap_DATA = default.xpm seta.xpm
 
-EXTRA_DIST = mahjongg.desktop $(pixmap_DATA) $(inline_pixmaps)
+EXTRA_DIST = mahjongg.desktop $(pixmap_DATA)
 
 Games_DATA = mahjongg.desktop
 
