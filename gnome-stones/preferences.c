@@ -2,7 +2,7 @@
 
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <2003/06/18 10:12:28 mccannwj>
+ * Time-stamp: <2003-06-19 11:19:35 callum>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -139,6 +139,9 @@ add_game (const char *filename)
   char     *prefix= NULL;
   GList    *tmp;
   GameFile *file;
+
+  if (!filename || (*filename == '\0'))
+    return NULL;
   
   /* Maybe this game is already in the games list.  */
   tmp= g_list_find_custom (games, (gpointer) filename, 
@@ -147,19 +150,25 @@ add_game (const char *filename)
   
   /* FIXME: add some checks, if it's realy a Gnome-Stones game.  */
   file= g_malloc (sizeof (GameFile));
-  
+
   if (file)
     {
       file->filename = g_strdup (filename);
 
       prefix= g_strconcat ("=", filename, "=/", NULL);
       gnome_config_push_prefix (prefix);
+      g_free (prefix);
       
-      file->gametitle= gnome_config_get_translated_string ("General/Title");
+      file->gametitle= gnome_config_get_translated_string_with_default ("General/Title", NULL);
+      if (file->gametitle == NULL) {
+        gnome_config_pop_prefix ();
+        g_free (file);
+        return NULL;
+      }
+      
       file->caves    = gnome_config_get_int               ("Caves/Number");
 
       gnome_config_pop_prefix ();
-      g_free (prefix);
       
       games= g_list_append (games, file);
     }
@@ -222,12 +231,10 @@ static gboolean
 load_game_by_name (const char *filename, guint cave)
 {
   GameFile *file= add_game (filename);
-  
+
   if (file)
     {
-      load_game (file->filename, cave);
-      
-      return TRUE;
+      return load_game (file->filename, cave);
     }
   
   return FALSE;
@@ -390,6 +397,8 @@ preferences_restore (void)
   gboolean     def;
   guint        cave;
   gchar       *scroll_method;
+  GtkWidget * dialog;
+  
 #if 0
   gchar       *devicename;
 
@@ -418,6 +427,11 @@ preferences_restore (void)
                                                   KEY_JOYSTICK_SWITCH,
                                                   NULL);
 
+  if (joystick_switch_level > 1.0)
+    joystick_switch_level = 0.5;
+  if (joystick_switch_level <= 0.0)
+    joystick_switch_level = 0.5;
+  
   set_sound_enabled (pref_get_sound_enabled ());
 
   scroll_method = gconf_client_get_string (get_gconf_client (),
@@ -437,7 +451,21 @@ preferences_restore (void)
     {
       if (def || !load_game_by_name (filename, cave))
 	{
-	  load_game_by_name (CAVESDIR"/default.caves", 0);
+	  if (!load_game_by_name (CAVESDIR"/default.caves", 0)) {
+            dialog = gtk_message_dialog_new (GTK_WINDOW (app),
+                                             GTK_DIALOG_DESTROY_WITH_PARENT,
+                                             GTK_MESSAGE_ERROR,
+                                             GTK_BUTTONS_OK,
+                                             "<b>%s</b>\n\n%s\n\n%s",
+                                             _("Neither your chosen game nor the default game could be loaded."),
+                                             _("Please make sure that GNOME Stones is correctly installed."),
+                                             _("You may be able to select a different game from the preferences dialog."));
+            gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
+            gtk_label_set_use_markup (GTK_LABEL (GTK_MESSAGE_DIALOG (dialog)->label),
+                                      TRUE);
+            gtk_dialog_run (GTK_DIALOG (dialog));
+            gtk_widget_destroy (dialog);
+          }
 	}
     }
 

@@ -9,7 +9,7 @@
       <default>atari_scroll</default>
       <locale name="C">
         <short>Scroll method</short>
-        <long>Scroll method.</long>
+        <long>The scroll method, valid values are "atari-scroll", "smooth_scroll" and "center_scroll".</long>
       </locale>
       </schema>
 
@@ -21,7 +21,7 @@
       <default></default>
       <locale name="C">
         <short>Game name</short>
-        <long>Filename of game to load.</long>
+        <long>The full path and filename of game to load.</long>
       </locale>
       </schema>
 
@@ -69,7 +69,7 @@
       <default>0.5</default>
       <locale name="C">
         <short>Joystick switch level</short>
-        <long>Joystick switch level.</long>
+        <long>The level an analog joystick must reach to be considered "on" when emulating a digital joystick. This takes a value between 0.0 and 1.0.</long>
       </locale>
       </schema>
 

@@ -2,7 +2,7 @@
 
 /* gnome-stones - main.c
  *
- * Time-stamp: <2003-06-03 22:02:25 callum>
+ * Time-stamp: <2003-06-19 10:39:18 callum>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -913,26 +913,26 @@ iteration_start (GStonesCave *newcave)
 /****************************************************************************/
 /* Additional game stuff.  */
 
-void
+gboolean
 load_game (const gchar *filename, guint _start_cave)
 {
   gchar *basename;
   char buffer[256];
   GStonesGame *newgame;
 
-  g_return_if_fail (filename);
+  if (!filename)
+    return FALSE;
+
+  /* Zero length strings cause interesting problems later, so catch them now. */
+  if (*filename == '\0')
+    return FALSE;
   
   basename = g_path_get_basename (filename);
 
   /* We don't need to load a game twice.  */
   if (game && (strcmp (game->filename, filename) == 0))
-    {
-      /* Give feedback in statusbar.  */
-      sprintf (buffer, "Game '%s' already loaded.", basename);
-      gnome_app_flash (GNOME_APP (app), buffer);
-      return;
-    }
-  
+    return TRUE;
+
   /* Load game.  */
   newgame= gstones_game_load (filename);
 
@@ -970,8 +970,11 @@ load_game (const gchar *filename, guint _start_cave)
       sprintf (buffer, "Game '%s' loaded.", basename);
 
       gnome_app_flash (GNOME_APP (app), buffer);
-    }
+    } else
+      return FALSE;
+  
   g_free (basename);
+  return TRUE;
 }
 
 

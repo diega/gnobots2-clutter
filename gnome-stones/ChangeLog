@@ -1,3 +1,16 @@
+2003-06-19  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* preferences.c: Clamped the joystick_level value.
+	
+	* preferences.c:
+	* io.c:
+	* main.h:
+	* main.c: Handle bad cave filenames more gracefully. Also give an
+	error if neither the chosen game or the default could be
+	loaded. Fixes bug #106623.
+	
+	* gnome-stones.schemas.in: Improved some of the long descriptions.
+
 2003-06-18  William Jon McCann  <mccann@jhu.edu>
 
 	* preferences.c: Include string.h.

@@ -1,6 +1,6 @@
 /* gnome-stones - io.c
  *
- * Time-stamp: <2003/06/17 14:39:30 mccannwj>
+ * Time-stamp: <2003-06-19 10:49:32 callum>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -173,8 +173,13 @@ gstones_game_load (const gchar *name)
   
   gnome_config_push_prefix (game->config_prefix);
 
-  /* FIXME: Add check, if title is unset. */
-  game->title         = gnome_config_get_translated_string ("General/Title");
+  game->title = gnome_config_get_translated_string_with_default ("General/Title",
+                                                                 NULL);
+  if (game->title == NULL) {
+    game_free (game);
+    gnome_config_pop_prefix ();
+    return NULL;
+  }
   game->frame_rate    = gnome_config_get_float ("General/Frame rate=0.2")*1000;
   game->new_life_score= gnome_config_get_int    ("General/New life score=500");
   game->lives         = gnome_config_get_int    ("General/Lives=3");

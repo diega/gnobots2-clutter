@@ -1,8 +1,8 @@
 /* gnome-stones - sound.h
  *
- * Time-stamp: <2003/06/17 14:27:50 mccannwj>
+ * Time-stamp: <2003-06-19 10:06:32 callum>
  *
- * Copyright (C) 2001 Michal Benes
+ * Copyright (C) 2001, 2003 Michal Benes
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ void gstones_exit (GnomeClient *client, gpointer client_data);
 GConfClient *get_gconf_client (void);
 
 void joystick_set_properties (guint32 deviceid, gfloat switch_level);
-void load_game (const gchar *filename, guint start_cave);
+gboolean load_game (const gchar *filename, guint start_cave);
 
 #endif /* MAIN_H */
 
