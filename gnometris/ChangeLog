@@ -1,8 +1,8 @@
-2000-04-27  Marcin Gorycki  <Janusz.Gorycki@intel.com>
+2000-11-07  Michael Plump <plumpy@gangstageeks.org>
 
 	* blockops.cpp, scoreframe.cpp, scoreframe.h, tetris.h:
 	scoring updated (variable scores depending on number of lines
-	filled and other things)
+	filled and other things) - patch
 	
 2000-04-27  Marcin Gorycki  <Janusz.Gorycki@intel.com>
 
