@@ -342,7 +342,7 @@ GnomeUIInfo toolbar [] = {
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_UNDO, 0, 0, NULL},
 
          {GNOME_APP_UI_ITEM, N_("Re-do"), NULL, redo_tile_callback, NULL, NULL,
-         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_FORWARD, 0, 0, NULL},
+         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_REDO, 0, 0, NULL},
 
          {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), NULL, sound_on_callback, NULL, NULL,
          GNOME_APP_PIXMAP_DATA, mini_sound_xpm, 0, 0, NULL},
@@ -674,7 +674,6 @@ void redo_tile_callback (GtkWidget *widget, gpointer data)
     if (sequence_number>(MAX_TILES/2))
       return ;
 
-    printf ("Re-do %d\n", sequence_number) ;
     if (selected_tile<MAX_TILES) 
       {
 	tiles[selected_tile].selected = 0 ;
@@ -709,8 +708,6 @@ void undo_tile_callback (GtkWidget *widget, gpointer data)
     else
       return ;
     
-    printf ("Undo %d\n", sequence_number) ;
-
     if (selected_tile<MAX_TILES) 
       {
 	tiles[selected_tile].selected = 0 ;
@@ -721,7 +718,6 @@ void undo_tile_callback (GtkWidget *widget, gpointer data)
     for (i=0; i<MAX_TILES; i++)
       if (tiles[i].sequence == sequence_number)
 	{
-	  tiles[i].sequence = 0 ;
 	  tiles[i].selected = 0 ;
 	  tiles[i].visible = 1 ;
 	  visible_tiles++ ;
