@@ -43,6 +43,7 @@ void sound_init( void )
 
 void sound_close( void )
 {
+#ifndef NO_ESD
  int i;
 
  stop_title_music();
@@ -52,28 +53,27 @@ void sound_close( void )
  
  /* g_print ( "gnome-stones: sound close\n" ); */
  gnome_sound_shutdown();
-
+#endif /* NO_ESD */
 }
 
 void sound_play( gint sound_id )
 {
-
+#ifndef NO_ESD
  if( sound_id<0 ) return;
 
 /* we are waiting for the esound hackers to implement esd_sample_kill */
 /* FIXME: esd_sample_kill( gnome_sound_connection, sound_id );*/
  esd_sample_play( gnome_sound_connection_get(), sound_id );
- 
-
+#endif
 }
 
 
 gint sound_register( char *name )
 {
-
+ gint sample_id = -1;
+#ifndef NO_ESD
  char *buf; 
  char *fullname;
- gint sample_id;
 
 
  if( numsamples>=MAX_SAMPLES-1 ) return -1;
@@ -90,15 +90,14 @@ gint sound_register( char *name )
    samples[numsamples++]=sample_id;
    
  g_free( fullname );
-
+#endif
  return sample_id;
-
 }
 
 
 void play_title_music( void )
 {
-
+#ifndef NO_ESD
  if( title_music<0 ) title_music = sound_register( "title.wav" );
 
  if( !playing_title_music && title_music>=0 )
@@ -106,12 +105,12 @@ void play_title_music( void )
      playing_title_music = TRUE; 
      esd_sample_loop( gnome_sound_connection_get(), title_music );
    }
-
+#endif
 }
 
 void stop_title_music( void )
 {
-
+#ifndef NO_ESD
  if( playing_title_music )
    {
      playing_title_music = FALSE; 
@@ -119,7 +118,7 @@ void stop_title_music( void )
      /* FIXME: we want esd_sample_kill once it is implemented */
      esd_sample_stop( gnome_sound_connection_get(), title_music );
    }
-
+#endif
 }
 
 

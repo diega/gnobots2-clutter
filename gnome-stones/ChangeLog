@@ -1,3 +1,10 @@
+2002-05-07  Bastien Nocera  <hadess@hadess.net>
+
+	* Makefile.am:
+	* sound.c: (sound_close), (sound_play), (sound_register),
+	(play_title_music), (stop_title_music): make the sound support
+	optional (can anybody actually test that ?)
+
 2002-05-05  Chris Lyttle <chris@wilddev.net>
 
 	* help/C/Makefile.am: updated for new format of SK 0.3.8.

@@ -15,8 +15,9 @@ INCLUDES =						\
 	-DGNOME_DISABLE_DEPRECATED			\
 	-DCAVESDIR=\""$(Cavesdir)"\"			\
 	$(GNOME_GAMES_CFLAGS)				\
+	$(ESD_CFLAGS)					\
 	-I$(includedir)					
-	
+
 
 bin_PROGRAMS = gnome-stones
 
@@ -45,7 +46,8 @@ gnome_stones_SOURCES =				\
 	sound.h				       
 
 gnome_stones_LDADD =				\
-	$(GNOME_GAMES_LIBS) \
+	$(GNOME_GAMES_LIBS)			\
+	$(ESD_LIBS)				\
 	$(INTLLIBS)
 
 gnome_stones_LDFLAGS=-export-dynamic
