@@ -75,12 +75,24 @@ Tetris::Tetris(int cmdlLevel):
   gtk_window_set_policy(GTK_WINDOW(w), FALSE, FALSE, TRUE);
 	gtk_signal_connect(GTK_OBJECT(w), "delete_event", (GtkSignalFunc)gameQuit, this);
 
-	GnomeUIInfo game_menu[] = 
+	static GnomeUIInfo game_menu[] = 
 	{
 		GNOMEUIINFO_MENU_NEW_GAME_ITEM(gameNew, this),
-		GNOMEUIINFO_MENU_PREFERENCES_ITEM(gameProperties, this),
+		GNOMEUIINFO_MENU_PAUSE_GAME_ITEM(gamePause, this),
+		GNOMEUIINFO_MENU_RESTART_GAME_ITEM(gameRestart, this),
+		GNOMEUIINFO_SEPARATOR,
 		GNOMEUIINFO_MENU_SCORES_ITEM(gameTopTen, this),
+		GNOMEUIINFO_MENU_END_GAME_ITEM(gameEnd, this),
+		GNOMEUIINFO_SEPARATOR,
 		GNOMEUIINFO_MENU_EXIT_ITEM(gameQuit, this),
+		GNOMEUIINFO_END
+	};
+
+	gameMenuPtr = game_menu;
+	
+	GnomeUIInfo settings_menu[] = 
+	{
+		GNOMEUIINFO_MENU_PREFERENCES_ITEM(gameProperties, this),
 		GNOMEUIINFO_END
 	};
 
@@ -94,6 +106,7 @@ Tetris::Tetris(int cmdlLevel):
 	GnomeUIInfo mainmenu[] = 
 	{
 		GNOMEUIINFO_MENU_GAME_TREE(game_menu),
+		GNOMEUIINFO_MENU_SETTINGS_TREE(settings_menu),
 		GNOMEUIINFO_MENU_HELP_TREE(help_menu),
 		GNOMEUIINFO_END
 	};
@@ -140,6 +153,10 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_widget_show(vb2);
 	scoreFrame->show();
 	gtk_widget_show(w);
+
+	gtk_widget_set_sensitive(gameMenuPtr[1].widget, FALSE);
+	gtk_widget_set_sensitive(gameMenuPtr[2].widget, FALSE);
+	gtk_widget_set_sensitive(gameMenuPtr[5].widget, FALSE);
 }
 
 Tetris::~Tetris()
@@ -367,17 +384,19 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	if (t->setupdialog) 
 		return FALSE;
 
-	t->setupdialog = gtk_window_new(GTK_WINDOW_DIALOG);
+	t->setupdialog = gnome_dialog_new(_("Gnometris setup"), 
+																		GNOME_STOCK_BUTTON_OK, 
+																		GNOME_STOCK_BUTTON_CANCEL, 
+																		NULL);
+	gnome_dialog_set_parent(GNOME_DIALOG(t->setupdialog), GTK_WINDOW(t->w));
 
 	gtk_container_border_width(GTK_CONTAINER(t->setupdialog), 10);
 	GTK_WINDOW(t->setupdialog)->position = GTK_WIN_POS_MOUSE;
-	gtk_window_set_title(GTK_WINDOW(t->setupdialog), _("Gnometris setup"));
 	gtk_signal_connect(GTK_OBJECT(t->setupdialog), "delete_event",
 										 GTK_SIGNAL_FUNC(setupdialogDestroy), d);
 
 	allBoxes = gtk_vbox_new(FALSE, 5);
-	gtk_container_add(GTK_CONTAINER(t->setupdialog), allBoxes);
-
+	
 	frame = gtk_vbox_new(FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(allBoxes), frame, TRUE, TRUE, 0);
 	
@@ -457,20 +476,44 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_box_pack_start(GTK_BOX(box), box2, 0, 0, 0);
 	gtk_widget_show(box2);
 
-	box = gtk_hbox_new(TRUE, 5);
-	gtk_box_pack_start(GTK_BOX(allBoxes), box, TRUE, TRUE, 0);
-	button = gnome_stock_button(GNOME_STOCK_BUTTON_OK);
-	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(doSetup), d);
-	gtk_box_pack_start(GTK_BOX(box), button, TRUE, TRUE, 5);
-  gtk_widget_show(button);
-  button = gnome_stock_button(GNOME_STOCK_BUTTON_CANCEL);
-	gtk_signal_connect(GTK_OBJECT(button), "clicked", (GtkSignalFunc)setupdialogDestroy, d);
-	gtk_box_pack_start(GTK_BOX(box), button, TRUE, TRUE, 5);
-  gtk_widget_show(button);
-	
 	gtk_widget_show(box);
+	gtk_box_pack_start_defaults(GTK_BOX(GNOME_DIALOG(t->setupdialog)->vbox), allBoxes);
 	gtk_widget_show(allBoxes);
+
+	gnome_dialog_button_connect(GNOME_DIALOG(t->setupdialog), 0, GTK_SIGNAL_FUNC(doSetup), d);
+	gnome_dialog_button_connect(GNOME_DIALOG(t->setupdialog), 1, 
+															GTK_SIGNAL_FUNC(setupdialogDestroy), d);
+	
 	gtk_widget_show(t->setupdialog);
+}
+
+int
+Tetris::gamePause(GtkWidget *widget, void *d)
+{
+	Tetris *t = (Tetris*) d;
+	t->paused = true;
+	gtk_widget_set_sensitive(t->gameMenuPtr[1].widget, FALSE);
+	gtk_widget_set_sensitive(t->gameMenuPtr[2].widget, TRUE);
+}
+
+int
+Tetris::gameRestart(GtkWidget *widget, void *d)
+{
+	Tetris *t = (Tetris*) d;
+	t->paused = false;
+	gtk_widget_set_sensitive(t->gameMenuPtr[1].widget, TRUE);
+	gtk_widget_set_sensitive(t->gameMenuPtr[2].widget, FALSE);
+}
+
+int
+Tetris::gameEnd(GtkWidget *widget, void *d)
+{
+	Tetris *t = (Tetris*) d;
+	
+	gtk_timeout_remove(t->timeoutId);
+	t->timeoutId = -1;
+	blocknr_next = -1;
+	t->endOfGame();
 }
 
 int
@@ -629,6 +672,8 @@ void
 Tetris::togglePause()
 {
 	paused = !paused;
+	gtk_widget_set_sensitive(gameMenuPtr[1].widget, !paused);
+	gtk_widget_set_sensitive(gameMenuPtr[2].widget, paused);
 }
 
 void
@@ -654,6 +699,12 @@ void
 Tetris::endOfGame()
 {
 	int pos = gnome_score_log(scoreFrame->getScore(), NULL, TRUE);
+
+	gtk_widget_set_sensitive(gameMenuPtr[0].widget, TRUE);
+	gtk_widget_set_sensitive(gameMenuPtr[1].widget, FALSE);
+	gtk_widget_set_sensitive(gameMenuPtr[2].widget, FALSE);
+	gtk_widget_set_sensitive(gameMenuPtr[5].widget, FALSE);
+
 	showScores("Gnometris", pos);
 }
 
@@ -683,10 +734,16 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 	t->ops->emptyField();
 
 	t->scoreFrame->resetLines();
-
+	t->paused = false;
+	
 	t->ops->generateFallingBlock();
 	gtk_widget_draw(t->field->getWidget(), NULL);
 	gtk_widget_draw(t->preview->getWidget(), NULL);
+
+	gtk_widget_set_sensitive(t->gameMenuPtr[0].widget, FALSE);
+	gtk_widget_set_sensitive(t->gameMenuPtr[1].widget, TRUE);
+	gtk_widget_set_sensitive(t->gameMenuPtr[2].widget, FALSE);
+	gtk_widget_set_sensitive(t->gameMenuPtr[5].widget, TRUE);
 
 	return TRUE;
 }

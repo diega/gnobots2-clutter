@@ -24,7 +24,7 @@
 #include <config.h>
 #include <gnome.h>
 
-#define TETRIS_VERSION "0.99.2"
+#define TETRIS_VERSION "0.99.3"
 
 extern int LINES;
 extern int COLUMNS;
@@ -105,6 +105,9 @@ private:
 	static int timeoutHandler(void *d);
 	static int gameQuit(GtkWidget *widget, void *d);
 	static int gameNew(GtkWidget *widget, void *d);
+	static int gamePause(GtkWidget *widget, void *d);
+	static int gameRestart(GtkWidget *widget, void *d);
+	static int gameEnd(GtkWidget *widget, void *d);
 	static int gameAbout(GtkWidget *widget, void *d);
 	static int gameTopTen(GtkWidget *widget, void *d);
 	static int gameProperties(GtkWidget *widget, void *d);
@@ -129,6 +132,8 @@ private:
 	bool doPreviewTmp;
 	bool randomBlocksTmp;
 	
+	GnomeUIInfo *gameMenuPtr; 
+
 	void manageFallen();
 	void showScores(gchar *title, guint pos);
 
