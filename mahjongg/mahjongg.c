@@ -23,6 +23,7 @@
 #include <gnome.h>
 #include <libgnomeui/gnome-window-icon.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <games-clock.h>
 
 #include "mahjongg.h"
 #include "solubility.h"
@@ -530,11 +531,9 @@ void message (gchar *message)
 
 void chrono_start ()
 {
-#if 0
-  gtk_clock_stop (GTK_CLOCK (chrono));
-  gtk_clock_set_seconds (GTK_CLOCK (chrono), 0);
-  gtk_clock_start (GTK_CLOCK (chrono));
-#endif
+  games_clock_stop (GAMES_CLOCK (chrono));
+  games_clock_set_seconds (GAMES_CLOCK (chrono), 0);
+  games_clock_start (GAMES_CLOCK (chrono));
 }
 
 int update_moves_left ()
@@ -657,9 +656,7 @@ tile_event (GnomeCanvasItem *item, GdkEvent *event, tile *tile_inf)
                                                   gtk_label_set (GTK_LABEL(moves_label), tmpchar);
 
                                                   if (visible_tiles <= 0) {
-                                                  	  #if 0
-                                                          gtk_clock_stop(GTK_CLOCK(chrono));
-                                                          #endif
+                                                          games_clock_stop(GAMES_CLOCK(chrono));
                                                           you_won ();
                                                   }
                                           }
@@ -958,7 +955,7 @@ void you_won (void)
 
         game_over = GAME_WON;
 #if 0        
-        seconds = GTK_CLOCK (chrono)->stopped;
+        seconds = GAMES_CLOCK (chrono)->stopped;
 #else
 	seconds = 100;
 #endif
@@ -1395,12 +1392,10 @@ void hint_callback (GtkWidget *widget, gpointer data)
                 timer = gtk_timeout_add (250, (GtkFunction) hint_timeout, NULL);
                 
                 /* 30s penalty */
-                #if 0
-                gtk_clock_stop (GTK_CLOCK(chrono));
-                seconds = GTK_CLOCK(chrono)->stopped;
-                gtk_clock_set_seconds(GTK_CLOCK(chrono), (int) (seconds+30));
-                gtk_clock_start (GTK_CLOCK(chrono));
-                #endif
+                games_clock_stop (GAMES_CLOCK(chrono));
+                seconds = GAMES_CLOCK(chrono)->stopped;
+                games_clock_set_seconds(GAMES_CLOCK(chrono), (int) (seconds+30));
+                games_clock_start (GAMES_CLOCK(chrono));
 }
 
 void about_callback (GtkWidget *widget, gpointer data)
@@ -1452,9 +1447,7 @@ void pause_callback()
         }
         paused = !paused;
         if (paused) {
-        	#if 0
-                gtk_clock_stop (GTK_CLOCK (chrono));
-                #endif
+                games_clock_stop (GAMES_CLOCK (chrono));
                 for (i = 0; i < MAX_TILES; i++) 
                         if (tiles[i].visible) 
                                 gnome_canvas_item_hide (tiles[i].image_item);
@@ -1465,9 +1458,7 @@ void pause_callback()
                         if (tiles[i].visible) 
                                 gnome_canvas_item_show (tiles[i].image_item);
                 message ("");
-                #if 0
-                gtk_clock_start (GTK_CLOCK(chrono));
-                #endif
+                games_clock_start (GAMES_CLOCK(chrono));
         }
 }
 
@@ -1997,9 +1988,7 @@ void shuffle_tiles_callback (GtkWidget *widget, gpointer data)
         if (num_shuffle >= visible_tiles) {
                 GtkWidget *mb;
                 game_over = GAME_DEAD;
-                #if 0
-                gtk_clock_stop (GTK_CLOCK (chrono));
-                #endif
+                games_clock_stop (GAMES_CLOCK (chrono));
                 mb = gnome_message_box_new (_("Sorry, I can't find\na playable configuration."), 
                                             GNOME_MESSAGE_BOX_INFO, 
                                             GNOME_STOCK_BUTTON_OK, NULL); 
@@ -2020,12 +2009,10 @@ void shuffle_tiles_callback (GtkWidget *widget, gpointer data)
                 game_over = GAME_RUNNING;
 
                 /* 60s penalty */
-                #if 0
-                gtk_clock_stop (GTK_CLOCK(chrono));
-                seconds = GTK_CLOCK(chrono)->stopped;
-                gtk_clock_set_seconds(GTK_CLOCK(chrono), (int) (seconds+60));
-                gtk_clock_start (GTK_CLOCK(chrono));
-                #endif
+                games_clock_stop (GAMES_CLOCK(chrono));
+                seconds = GAMES_CLOCK(chrono)->stopped;
+                games_clock_set_seconds(GAMES_CLOCK(chrono), (int) (seconds+60));
+                games_clock_start (GAMES_CLOCK(chrono));
         }
 }
 
@@ -2050,16 +2037,12 @@ int main (int argc, char *argv [])
 
 	/* Statusbar for a chrono */
 	chrono_box = gtk_hbox_new(0, FALSE);
-	chrono_label = gtk_label_new (_("Time:"));
+	chrono_label = gtk_label_new (_("Time : "));
 	gtk_box_pack_start (GTK_BOX(chrono_box), chrono_label, FALSE, FALSE, 0);
-#if 0
-	chrono = gtk_clock_new (GTK_CLOCK_INCREASING);
+	chrono = games_clock_new ();
 	gtk_box_pack_start (GTK_BOX(chrono_box), chrono, FALSE, FALSE, 0);
-#endif
 	gtk_widget_show (chrono_label);
-#if 0
 	gtk_widget_show (chrono);
-#endif	
 	gtk_widget_show (chrono_box);
 
 	appbar = gnome_appbar_new (FALSE, TRUE, GNOME_PREFERENCES_USER);

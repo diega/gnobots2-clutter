@@ -4,9 +4,12 @@ bgdir = $(datadir)/pixmaps/mahjongg/bg
 Gamesdir = $(datadir)/applications
 appicondir=$(datadir)/pixmaps
 
-INCLUDES = -I.. -I$(srcdir)/..		\
-	$(GNOME_GAMES_CFLAGS) \
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
+INCLUDES =						\
+	-I$(top_srcdir)/libgames-support		\
+	-I..						\
+	-I$(srcdir)/..					\
+	$(GNOME_GAMES_CFLAGS)				\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	-I$(includedir)	
 
 bin_PROGRAMS = mahjongg
@@ -20,8 +23,9 @@ mahjongg_SOURCES = 	\
 	gnome-canvas-pimage.h \
 	gnome-canvas-pimage.c
 
-mahjongg_LDADD = \
-	$(GNOME_GAMES_LIBS) \
+mahjongg_LDADD =					\
+	$(GNOME_GAMES_LIBS)				\
+	../libgames-support/libgames-support.la		\
 	$(INTLLIBS)
 
 pixmap_DATA = default.png seta.png
