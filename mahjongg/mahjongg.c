@@ -773,7 +773,6 @@ apply_preferences (void)
   }
   if (redraw)
     gnome_canvas_update_now(GNOME_CANVAS(canvas));
-  pref_cancel (0,0);
 
   if (ask_newgame)
           gnome_app_question_modal (GNOME_APP (window), 
@@ -1486,29 +1485,6 @@ void init_game (void)
         chrono_start();
 }
 
-void confirm_callback (gint response, gpointer data)
-{
-        if (response == GTK_RESPONSE_YES)
-                switch ((gint)data) 
-                {
-                case NEW_GAME: 
-                        ensure_pause_off ();
-                        new_game (); 
-                        break;
-                case RESTART_GAME: 
-                        restart_game (); 
-                        break;
-                case SELECT_GAME: 
-                        select_game (); 
-                        break;
-                case QUIT_GAME:
-                        quit_game ();
-                        break;
-                default:
-                        break;
-                }
-}
-
 void exit_game_callback_query (GtkWidget *widget, gboolean *quit, gpointer data)
 {
         gchar *confirm_text;
@@ -1552,11 +1528,30 @@ void exit_game_callback_query (GtkWidget *widget, gboolean *quit, gpointer data)
 	
 		if (response == GTK_RESPONSE_YES)
 		{
-			confirm_callback (response, data);
+                	switch ((gint)data) 
+                	{
+                	case NEW_GAME: 
+                        	ensure_pause_off ();
+                        	new_game (); 
+                        	break;
+                	case RESTART_GAME: 
+                        	restart_game (); 
+                        	break;
+                	case SELECT_GAME: 
+                        	select_game (); 
+                        	break;
+                	case QUIT_GAME:
+                        	quit_game ();
+                        	break;
+                	default:
+                        	break;
+                	}
 		}
 		
 		gtk_widget_hide (dialog);
 	
+	} else {
+		quit_game ();
 	}
 }
 
