@@ -1200,10 +1200,6 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	
 	/* FIXME: We don't handle colour gradients (e.g. from the gimp) */
 
-	/* FIXME: Drag and drop from konqueror doesn't work, we
-	 * aren't even registering that it is providing test/uri-list
-	 * content. */
-
 	/* FIXME: Dropped URLs from mozilla don't work (see below). */
 
 	if (data->length < 0) {

@@ -37,6 +37,22 @@ const char *soundFiles[] = { "gnometris/gameover.wav",
 			     "gnometris/slide.wav", 
 			     "gnometris/turn.wav" };
 
+#ifdef NO_ESD
+
+// In the event of no sound support we just use dummy functions.
+
+Sound::Sound () { }
+
+void Sound::turnOn () { }
+
+void Sound::turnOff () { }
+
+gboolean Sound::isOn () { return FALSE; }
+
+void Sound::playSound (int soundId) { }
+
+#else
+
 Sound::Sound ()
 {
   soundOn = FALSE;
@@ -87,4 +103,4 @@ void Sound::playSound (int soundId)
   esd_sample_play (connection, sampleIds[soundId]);
 }
 
-
+#endif
