@@ -15,17 +15,19 @@
 
 #include <gtk/gtk.h>
 #include <gnome.h>
+#include <gdk_imlib.h>
 
-#include "vborder.xpm"
-#include "hborder.xpm"
+/* #include "vborder.xpm" */
+/* #include "hborder.xpm" */
 
-#define GAME_EVENTS (GDK_EXPOSURE_MASK         |\
-                     GDK_BUTTON_PRESS_MASK)
+#define GAME_EVENTS (GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK)
 
-#define TILE_SIZE 40
+#define TILE_WIDTH 40
+#define TILE_HEIGHT 56     
 #define MAX_TILES 146
-#define HALF_TILE 20
-#define MAH_VERSION "0.0.1 Pre Alpha"
+#define HALF_WIDTH 20
+#define HALF_HEIGHT 28
+#define MAH_VERSION "0.1.0"
      
 typedef struct _tilepos tilepos;     
 typedef struct _tile tile;
@@ -89,150 +91,150 @@ struct _tilepos {
 };
 
 tilepos default_pos [] = {
-	{120, 0, 0},
-	{160, 0, 0},
-	{200, 0, 0},
-	{240, 0, 0},
-	{280, 0, 0},
-	{20, 20, 0},
-	{60, 20, 0},
-	{20, 60, 0},
-	{60, 60, 0},
-	{0, 120, 0},
-	{40, 100, 0},
-	{40, 140, 0},
-	{20, 180, 0},
-	{60, 180, 0},
-	{20, 220, 0},
-	{60, 220, 0},
-	{120, 240, 0},
-	{160, 240, 0},
-	{200, 240, 0},
-	{240, 240, 0},
-	{280, 240, 0},
-	{340, 20, 0},
-	{380, 20, 0},
-	{340, 60, 0},
-	{380, 60, 0},
-	{340, 180, 0},
-	{380, 180, 0},
-	{340, 220, 0},
-	{380, 220, 0},
-	{400, 120, 0},
-	{360, 140, 0},
-	{360, 100, 0},
-	{100, 40, 0},
-	{140, 40, 0},
-	{180, 40, 0},
-	{220, 40, 0},
-	{260, 40, 0},
-	{300, 40, 0},
-	{100, 200, 0},
-	{140, 200, 0},
-	{180, 200, 0},
-	{220, 200, 0},
-	{260, 200, 0},
-	{300, 200, 0},
-	{80, 100, 0},
-	{80, 140, 0},
-	{320, 100, 0},
-	{320, 140, 0},
-	{120, 80, 0},
-	{160, 80, 0},
-	{200, 80, 0},
-	{240, 80, 0},
-	{280, 80, 0},
-	{120, 120, 0},
-	{160, 120, 0},
-	{200, 120, 0},
-	{240, 120, 0},
-	{280, 120, 0},
-	{120, 160, 0},
-	{160, 160, 0},
-	{200, 160, 0},
-	{240, 160, 0},
-	{280, 160, 0},
-	{40, 40, 1},
-	{80, 40, 1},
-	{120, 40, 1},
-	{140, 0, 1},
-	{180, 20, 1},
-	{220, 20, 1},
-	{260, 0, 1},
-	{280, 40, 1},
-	{320, 40, 1},
-	{360, 40, 1},
-	{40, 200, 1},
-	{80, 200, 1},
-	{120, 200, 1},
-	{140, 240, 1},
-	{180, 220, 1},
-	{220, 220, 1},
-	{260, 240, 1},
-	{280, 200, 1},
-	{320, 200, 1},
-	{360, 200, 1},
-	{160, 60, 1},
-	{200, 60, 1},
-	{240, 60, 1},
-	{140, 100, 1},
-	{180, 100, 1},
-	{220, 100, 1},
-	{260, 100, 1},
-	{140, 140, 1},
-	{180, 140, 1},
-	{220, 140, 1},
-	{260, 140, 1},
-	{160, 180, 1},
-	{200, 180, 1},
-	{240, 180, 1},
-	{60, 80, 1},
-	{60, 120, 1},
-	{60, 160, 1},
-	{100, 80, 1},
-	{100, 120, 1},
-	{100, 160, 1},
-	{300, 80, 1},
-	{300, 120, 1},
-	{300, 160, 1},
-	{340, 80, 1},
-	{340, 120, 1},
-	{340, 160, 1},
-	{100, 80, 2},
-	{140, 80, 2},
-	{180, 80, 2},
-	{220, 80, 2},
-	{260, 80, 2},
-	{300, 80, 2},
-	{100, 160, 2},
-	{140, 160, 2},
-	{180, 160, 2},
-	{220, 160, 2},
-	{260, 160, 2},
-	{300, 160, 2},
-	{80, 120, 2},
-	{120, 120, 2},
-	{160, 120, 2},
-	{200, 120, 2},
-	{240, 120, 2},
-	{280, 120, 2},
-	{320, 120, 2},
-	{140, 100, 3},
-	{180, 100, 3},
-	{220, 100, 3},
-	{260, 100, 3},
-	{140, 140, 3},
-	{180, 140, 3},
-	{220, 140, 3},
-	{260, 140, 3},
-	{100, 120, 3},
-	{300, 120, 3},
-	{160, 120, 4},
-	{200, 120, 4},
-	{240, 120, 4},
-	{180, 120, 5},
-	{220, 120, 5},
-	{200, 120, 6}
+	{6, 0,  0},
+	{8, 0,  0},
+	{10, 0,  0},
+	{12, 0,  0},
+	{14, 0,  0},
+	{1, 1,  0},
+	{3, 1,  0},
+	{1, 3,  0},
+	{3, 3,  0},
+	{0, 6,  0},
+	{2, 5,  0},
+	{2, 7,  0},
+	{1, 9,  0},
+	{3, 9,  0},
+	{1, 11,  0},
+	{3, 11,  0},
+	{6, 12,  0},
+	{8, 12,  0},
+	{10, 12,  0},
+	{12, 12,  0},
+	{14, 12,  0},
+	{17, 1,  0},
+	{19, 1,  0},
+	{17, 3,  0},
+	{19, 3,  0},
+	{17, 9,  0},
+	{19, 9,  0},
+	{17, 11,  0},
+	{19, 11,  0},
+	{20, 6,  0},
+	{18, 7,  0},
+	{18, 5,  0},
+	{5, 2,  0},
+	{7, 2,  0},
+	{9, 2,  0},
+	{11, 2,  0},
+	{13, 2,  0},
+	{15, 2,  0},
+	{5, 10,  0},
+	{7, 10,  0},
+	{9, 10,  0},
+	{11, 10,  0},
+	{13, 10,  0},
+	{15, 10,  0},
+	{4, 5,  0},
+	{4, 7,  0},
+	{16, 5,  0},
+	{16, 7,  0},
+	{6, 4,  0},
+	{8, 4,  0},
+	{10, 4,  0},
+	{12, 4,  0},
+	{14, 4,  0},
+	{6, 6,  0},
+	{8, 6,  0},
+	{10, 6,  0},
+	{12, 6,  0},
+	{14, 6,  0},
+	{6, 8,  0},
+	{8, 8,  0},
+	{10, 8,  0},
+	{12, 8,  0},
+	{14, 8,  0},
+	{2, 2,  1},
+	{4, 2,  1},
+	{6, 2,  1},
+	{7, 0,  1},
+	{9, 1,  1},
+	{11, 1,  1},
+	{13, 0,  1},
+	{14, 2,  1},
+	{16, 2,  1},
+	{18, 2,  1},
+	{2, 10,  1},
+	{4, 10,  1},
+	{6, 10,  1},
+	{7, 12,  1},
+	{9, 11,  1},
+	{11, 11,  1},
+	{13, 12,  1},
+	{14, 10,  1},
+	{16, 10,  1},
+	{18, 10,  1},
+	{8, 3,  1},
+	{10, 3,  1},
+	{12, 3,  1},
+	{7, 5,  1},
+	{9, 5,  1},
+	{11, 5,  1},
+	{13, 5,  1},
+	{7, 7,  1},
+	{9, 7,  1},
+	{11, 7,  1},
+	{13, 7,  1},
+	{8, 9,  1},
+	{10, 9,  1},
+	{12, 9,  1},
+	{3, 4,  1},
+	{3, 6,  1},
+	{3, 8,  1},
+	{5, 4,  1},
+	{5, 6,  1},
+	{5, 8,  1},
+	{15, 4,  1},
+	{15, 6,  1},
+	{15, 8,  1},
+	{17, 4,  1},
+	{17, 6,  1},
+	{17, 8,  1},
+	{5, 4,  2},
+	{7, 4,  2},
+	{9, 4,  2},
+	{11, 4,  2},
+	{13, 4,  2},
+	{15, 4,  2},
+	{5, 8,  2},
+	{7, 8,  2},
+	{9, 8,  2},
+	{11, 8,  2},
+	{13, 8,  2},
+	{15, 8,  2},
+	{4, 6,  2},
+	{6, 6,  2},
+	{8, 6,  2},
+	{10, 6,  2},
+	{12, 6,  2},
+	{14, 6,  2},
+	{16, 6,  2},
+	{7, 5,  3},
+	{9, 5,  3},
+	{11, 5,  3},
+	{13, 5,  3},
+	{7, 7,  3},
+	{9, 7,  3},
+	{11, 7,  3},
+	{13, 7,  3},
+	{5, 6,  3},
+	{15, 6,  3},
+	{8, 6,  4},
+	{10, 6,  4},
+	{12, 6,  4},
+	{9, 6,  5},
+	{11, 6,  5},
+	{10, 6,  6}
 };
 
 struct _tile{
@@ -248,9 +250,12 @@ struct _tile{
 GtkWidget *window;
 GtkWidget *mbox;
 GtkWidget *draw_area;
-GdkPixmap *tiles_pix, *mask, *vborderpic, *hborderpic;
+GdkPixmap *tiles_pix, *mask;
+GdkGC *my_gc;
 tile tiles[MAX_TILES];
 int selected_tile, visible_tiles;
+
+static GdkImlibImage *tiles_image;
 
 void quit_game_callback (GtkWidget *widget, gpointer data);
 void new_game_callback (GtkWidget *widget, gpointer data);
@@ -290,8 +295,8 @@ int find_tile_in_layer (int x, int y, int layer)
 	int i, tile_num = MAX_TILES + 1;
 
 	for (i = 0; i < MAX_TILES; i ++) {
-		if ((tiles[i].x < x) && ((tiles[i].x + TILE_SIZE) > x)) {
-			if ((tiles[i].y < y) && ((tiles[i].y + TILE_SIZE) > y)) {
+		if ((tiles[i].x < x) && ((tiles[i].x + TILE_WIDTH) > x)) {
+			if ((tiles[i].y < y) && ((tiles[i].y + TILE_HEIGHT) > y)) {
 				if ((tiles[i].layer == layer) && (tiles[i].visible == 1))
 					tile_num = i;
 			}
@@ -305,8 +310,8 @@ int find_tile (int x, int y)
 	int i, tile_num = MAX_TILES + 1, layer = 0, temp_tile;
 
 	for (i = 0; i < MAX_TILES; i++) {
-		if ((tiles[i].x < x) && ((tiles[i].x + TILE_SIZE) > x) && (tiles[i].visible)) {
-			if ((tiles[i].y < y) && ((tiles[i].y + TILE_SIZE) > y)) {
+		if ((tiles[i].x < x) && ((tiles[i].x + TILE_WIDTH) > x) && (tiles[i].visible)) {
+			if ((tiles[i].y < y) && ((tiles[i].y + TILE_HEIGHT) > y)) {
 				if ((tiles[i].layer >= layer) && (tiles[i].visible == 1)) {
 					tile_num = i;
 					layer = tiles[i].layer;
@@ -324,50 +329,53 @@ void draw_selected_tile (int i)
 	int tile_h, tile_w, x_pos, y_pos, x_end, y_end;
 	int uleft, bleft, lbottom, rbottom;
 
+	
 	if (tiles[i].visible == 1) {
 		uleft = find_tile (tiles[i].x + 1, tiles[i].y + 1);
 		if (uleft != i)
-			bleft = find_tile (tiles[i].x + 1, tiles[uleft].y + TILE_SIZE);
+			bleft = find_tile (tiles[i].x + 1, tiles[uleft].y + TILE_HEIGHT);
 		else 
-			bleft = find_tile (tiles[i].x + 1, tiles[i].y + HALF_TILE);
+			bleft = find_tile (tiles[i].x + 1, tiles[i].y + HALF_HEIGHT);
 		if (bleft != i)
-			lbottom = find_tile (tiles[bleft].x + TILE_SIZE + 1, tiles[i].y + TILE_SIZE - 1);
-		else lbottom = find_tile (tiles[i].x + 10, tiles[i].y + TILE_SIZE - 1);
+			lbottom = find_tile (tiles[bleft].x + TILE_WIDTH + 1, tiles[i].y + TILE_HEIGHT - 1);
+		else lbottom = find_tile (tiles[i].x + 10, tiles[i].y + TILE_HEIGHT - 1);
 		if (lbottom != i) {
-			rbottom = find_tile (tiles[lbottom].x + TILE_SIZE + 1, tiles[i].y + TILE_SIZE - 1);
-			if ((tiles[lbottom].x + TILE_SIZE) > tiles[i].x + TILE_SIZE)
+			rbottom = find_tile (tiles[lbottom].x + TILE_WIDTH + 1, tiles[i].y + TILE_HEIGHT - 1);
+			if ((tiles[lbottom].x + TILE_WIDTH) > tiles[i].x + TILE_WIDTH)
 				rbottom = i;
 		}
-		else rbottom = find_tile (tiles[i].x + TILE_SIZE - 1, tiles[i].y + TILE_SIZE - 2);
+		else rbottom = find_tile (tiles[i].x + TILE_WIDTH - 1, tiles[i].y + TILE_HEIGHT - 2);
 
 
-		if (uleft != i) dx1 = tiles[uleft].x + TILE_SIZE - tiles[i].x;
-		if (bleft != i) dx2 = tiles[bleft].x + TILE_SIZE - tiles[i].x;
-		if (lbottom != i) dy1 = TILE_SIZE + tiles[i].y - tiles[lbottom].y;
-		if (rbottom != i) dy2 = TILE_SIZE + tiles[i].y - tiles[rbottom].y;
+		if (uleft != i) dx1 = tiles[uleft].x + TILE_WIDTH - tiles[i].x;
+		if (bleft != i) dx2 = tiles[bleft].x + TILE_WIDTH - tiles[i].x;
+		if (lbottom != i) dy1 = TILE_HEIGHT + tiles[i].y - tiles[lbottom].y;
+		if (rbottom != i) dy2 = TILE_HEIGHT + tiles[i].y - tiles[rbottom].y;
 
 		y = tiles[i].y;
-		bx = (tiles[i].image % 21) * TILE_SIZE;
-		by = (tiles[i].image / 21) * TILE_SIZE;
-		if (tiles[i].selected) by += 80;
+		bx = (tiles[i].image % 21) * TILE_WIDTH;
+		by = (tiles[i].image / 21) * TILE_HEIGHT;
+		if (tiles[i].selected) by += 2 * TILE_HEIGHT;
 
 		if ((dx1 == 0) && (dx2 == 0) && (dy1 == 0) && (dy2 == 0)) {
+			gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
 			gdk_draw_pixmap (draw_area->window,
-					 draw_area->style->black_gc, tiles_pix,
+					 my_gc, tiles_pix,
 					 bx, by, tiles[i].x, tiles[i].y,
-					 TILE_SIZE, TILE_SIZE);
+					 TILE_WIDTH, TILE_HEIGHT);
 		}
 		else {
 			bborder = (dy1 > dy2) ? dy1 : dy2;
 			if (dx1 != 0) {
-				x_pos = tiles[uleft].x + TILE_SIZE;
+				x_pos = tiles[uleft].x + TILE_WIDTH;
 				y_pos = tiles[i].y;
-				x_end = tiles[i].x + TILE_SIZE;
-				y_end = tiles[uleft].y + TILE_SIZE;
+				x_end = tiles[i].x + TILE_WIDTH;
+				y_end = tiles[uleft].y + TILE_HEIGHT;
 				tile_w = x_end - x_pos;
-				tile_h = y_end - y_pos + 1; 
+				tile_h = y_end - y_pos + 1;
+				gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
 				gdk_draw_pixmap (draw_area->window,
-						 draw_area->style->black_gc, tiles_pix,
+						 my_gc, tiles_pix,
 						 bx + x_pos - tiles[i].x, by + y_pos - tiles[i].y,
 						 x_pos, y_pos, tile_w, tile_h);
 				y = y_end + 1;
@@ -375,12 +383,13 @@ void draw_selected_tile (int i)
 			else if (dx2 != 0) {
 				x_pos = tiles[i].x;
 				y_pos = tiles[i].y;
-				x_end = tiles[i].x + TILE_SIZE;
+				x_end = tiles[i].x + TILE_WIDTH;
 				y_end = tiles[bleft].y - 1;
 				tile_w = x_end - x_pos;
 				tile_h = y_end - y_pos + 1;
+				gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
 				gdk_draw_pixmap (draw_area->window,
-						 draw_area->style->black_gc, tiles_pix,
+						 my_gc, tiles_pix,
 						 bx + x_pos - tiles[i].x, by + y_pos - tiles[i].y,
 						 x_pos, y_pos, tile_w, tile_h);
 				y = y_end + 1;
@@ -388,41 +397,44 @@ void draw_selected_tile (int i)
 			else {
 				x_pos = tiles[i].x;
 				y_pos = tiles[i].y;
-				x_end = tiles[i].x + TILE_SIZE;
-				y_end = tiles[i].y + TILE_SIZE - bborder - 1;
+				x_end = tiles[i].x + TILE_WIDTH;
+				y_end = tiles[i].y + TILE_HEIGHT - bborder - 1;
 				tile_w = x_end - x_pos;
 				tile_h = y_end - y_pos + 1;
+				gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
 				gdk_draw_pixmap (draw_area->window,
-						 draw_area->style->black_gc, tiles_pix,
+						 my_gc, tiles_pix,
 						 bx + x_pos - tiles[i].x, by + y_pos - tiles[i].y,
 						 x_pos, y_pos, tile_w, tile_h);
 				y = tiles[bleft].y;
 			}
 			if (dx2 != 0) {
-				x_pos = tiles[bleft].x + TILE_SIZE;
+				x_pos = tiles[bleft].x + TILE_WIDTH;
 				y_pos = tiles[bleft].y;
-				x_end = tiles[i].x + TILE_SIZE;
+				x_end = tiles[i].x + TILE_WIDTH;
 				if (bleft == lbottom) {
-					y_end = tiles[i].y + TILE_SIZE - ((dy1 < dy2) ? dy1 : dy2) - 1;
+					y_end = tiles[i].y + TILE_HEIGHT - ((dy1 < dy2) ? dy1 : dy2) - 1;
 					bborder = 0;
 				}
-				else y_end = tiles[i].y + TILE_SIZE - bborder - 1;
+				else y_end = tiles[i].y + TILE_HEIGHT - bborder - 1;
 				tile_w = x_end - x_pos;
 				tile_h = y_end - y_pos;
+				gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
 				gdk_draw_pixmap (draw_area->window,
-						 draw_area->style->black_gc, tiles_pix,
+						 my_gc, tiles_pix,
 						 bx + x_pos - tiles[i].x, by + y_pos - tiles[i].y,
 						 x_pos, y_pos, tile_w, tile_h);
 			}
 			else {
 				x_pos = tiles[i].x;
 				y_pos = y;
-				x_end = tiles[i].x + TILE_SIZE;
-				y_end = tiles[i].y + TILE_SIZE - bborder - 1;
+				x_end = tiles[i].x + TILE_WIDTH;
+				y_end = tiles[i].y + TILE_HEIGHT - bborder - 1;
 				tile_w = x_end - x_pos;
 				tile_h = y_end - y_pos;
+				gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
 				gdk_draw_pixmap (draw_area->window,
-						 draw_area->style->black_gc, tiles_pix,
+						 my_gc, tiles_pix,
 						 bx + x_pos - tiles[i].x, by + y_pos - tiles[i].y,
 						 x_pos, y_pos, tile_w, tile_h);
 			}
@@ -430,12 +442,13 @@ void draw_selected_tile (int i)
 				if (dy1 > dy2) {
 					x_pos = tiles[lbottom].x;
 					y_pos = tiles[lbottom].y;
-					x_end = tiles[i].x + TILE_SIZE;
-					y_end = tiles[i].y + TILE_SIZE;
+					x_end = tiles[i].x + TILE_WIDTH;
+					y_end = tiles[i].y + TILE_HEIGHT;
 					tile_w = x_end - x_pos;
 					tile_h = y_end - y_pos;
+					gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
 					gdk_draw_pixmap (draw_area->window,
-							 draw_area->style->black_gc, tiles_pix,
+							 my_gc, tiles_pix,
 							 bx + x_pos - tiles[i].x, by + y_pos - tiles[i].y,
 							 x_pos, y_pos, tile_w, tile_h);
 				}
@@ -443,97 +456,17 @@ void draw_selected_tile (int i)
 					x_pos = tiles[i].x;
 					y_pos = tiles[rbottom].y;
 					x_end = tiles[rbottom].x - 1;
-					y_end = tiles[i].y + TILE_SIZE;
+					y_end = tiles[i].y + TILE_HEIGHT;
 					tile_w = x_end - x_pos;
 					tile_h = y_end - y_pos;
+					gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
 					gdk_draw_pixmap (draw_area->window,
-							 draw_area->style->black_gc, tiles_pix,
+							 my_gc, tiles_pix,
 							 bx + x_pos - tiles[i].x, by + y_pos - tiles[i].y,
 							 x_pos, y_pos, tile_w, tile_h);
 				}
 			}
 		}
-	}
-}
-
-void left_border (int tile_num)
-{
-	int x, y, uleft_tile, bleft_tile, uleft_free = 0, bleft_free = 0, corner_tile;
-	int hcornerd = 0;
-	
-	x = tiles[tile_num].x + 2;
-	y = tiles[tile_num].y + 2;
-
-	uleft_tile = find_tile (x - 5, y);
-	bleft_tile = find_tile (x - 5, y + HALF_TILE);
-	corner_tile = find_tile_in_layer (tiles[tile_num].x - 3, y + TILE_SIZE, tiles[tile_num].layer);
-
-	if ((uleft_tile > MAX_TILES) || (tiles[tile_num].layer > tiles[uleft_tile].layer) ||
-	    (tiles[uleft_tile].visible == 0)) uleft_free = 1;
-	if ((bleft_tile > MAX_TILES) || (tiles[tile_num].layer > tiles[bleft_tile].layer) ||
-	    (tiles[bleft_tile].visible == 0)) bleft_free = 1;
-	if ((corner_tile < MAX_TILES) && (tiles[corner_tile].visible)) hcornerd = 4;
-	
-	if ((uleft_free == 1) && (bleft_free == 1)) 
-		gdk_draw_pixmap (draw_area->window,
-				 draw_area->style->black_gc, vborderpic,
-				 0, 0, tiles[tile_num].x - 5, tiles[tile_num].y,
-				 5, 44 - hcornerd);
-	else if ((uleft_free == 1) && (bleft_free == 0)) {
-		gdk_draw_pixmap (draw_area->window,
-				 draw_area->style->black_gc, vborderpic,
-				 0, 0, tiles[tile_num].x - 5, tiles[tile_num].y,
-				 5, HALF_TILE);
-/*   		draw_selected_tile (bleft_tile);   */
-	} else if ((bleft_free == 1) && (uleft_free == 0)) {
-		gdk_draw_pixmap (draw_area->window,
-				 draw_area->style->black_gc, vborderpic,
-				 0, 0, tiles[tile_num].x - 5, tiles[tile_num].y + HALF_TILE,
-				 5, 44 - HALF_TILE - hcornerd);
-/*   		draw_selected_tile (uleft_tile);   */
-	}
-}
-
-int bottom_border (int tile_num)
-{
-	int x, y, lbottom_tile, rbottom_tile, lbottom_free = 0, rbottom_free = 0, corner_tile, vcornerd = 0;
-
-	x = tiles[tile_num].x + 2;
-	y = tiles[tile_num].y + TILE_SIZE + 2;
-
-	lbottom_tile = find_tile (x, y);
-	rbottom_tile = find_tile (x + HALF_TILE, y);
-	corner_tile = find_tile_in_layer (x - 5, y, tiles[tile_num].layer);
-
-	if ((lbottom_tile > MAX_TILES) || (tiles[tile_num].layer > tiles[lbottom_tile].layer) ||
-	    (tiles[lbottom_tile].visible == 0)) lbottom_free = 1;
-	if ((rbottom_tile > MAX_TILES) || (tiles[tile_num].layer > tiles[rbottom_tile].layer) ||
-	    (tiles[rbottom_tile].visible == 0)) rbottom_free = 1;
-	if (corner_tile < MAX_TILES)
-		vcornerd = 5;
-
-	if ((lbottom_free == 1) && (rbottom_free == 1)) {
-		gdk_draw_pixmap (draw_area->window,
-				 draw_area->style->black_gc, hborderpic,
-				 0, 0, tiles[tile_num].x - 5 + vcornerd, tiles[tile_num].y + TILE_SIZE,
-				 45 - vcornerd, 4);
-/*  		if ((corner_tile < MAX_TILES) || (tiles[corner_tile].visible == 1))  */
-/*   			draw_selected_tile (corner_tile);   */
-	}
-	else if ((lbottom_free == 1) && (rbottom_free == 0)) {
-		gdk_draw_pixmap (draw_area->window,
-				 draw_area->style->black_gc, hborderpic,
-				 0, 0, tiles[tile_num].x - 5 + vcornerd, tiles[tile_num].y + TILE_SIZE,
-				 HALF_TILE + 5 - vcornerd, 4);
-/*   		draw_selected_tile (rbottom_tile);   */
-/*  		if ((corner_tile < MAX_TILES) || (tiles[corner_tile].visible == 1))  */
-/*  			draw_selected_tile (corner_tile);		  */
-	} else if ((rbottom_free == 1) && (lbottom_free == 0)) {
-		gdk_draw_pixmap (draw_area->window,
-				 draw_area->style->black_gc, hborderpic,
-				 0, 0, tiles[tile_num].x +  HALF_TILE, tiles[tile_num].y + TILE_SIZE,
-				 HALF_TILE, 4);
-/*   		draw_selected_tile (lbottom_tile);   */
 	}
 }
 
@@ -553,15 +486,15 @@ int tile_free (int x, int y, int tile_num)
 		if ((temp_tile > MAX_TILES) || (tiles[temp_tile].visible == 0))
 			nlayer_ul_free = 1;
 		
-		temp_tile = find_tile_in_layer (tile_x + HALF_TILE, tile_y, nlayer);
+		temp_tile = find_tile_in_layer (tile_x + HALF_WIDTH, tile_y, nlayer);
 		if ((temp_tile > MAX_TILES) || (tiles[temp_tile].visible == 0))
 			nlayer_ur_free = 1;
 		
-		temp_tile = find_tile_in_layer (tile_x, tile_y + HALF_TILE, nlayer);
+		temp_tile = find_tile_in_layer (tile_x, tile_y + HALF_HEIGHT, nlayer);
 		if ((temp_tile > MAX_TILES) || (tiles[temp_tile].visible == 0))
 			nlayer_bl_free = 1;
 		
-		temp_tile = find_tile_in_layer (tile_x + HALF_TILE, tile_y + HALF_TILE, nlayer);
+		temp_tile = find_tile_in_layer (tile_x + HALF_WIDTH, tile_y + HALF_HEIGHT, nlayer);
 		if ((temp_tile > MAX_TILES) || (tiles[temp_tile].visible == 0))
 			nlayer_br_free = 1;
 	}
@@ -577,16 +510,16 @@ int tile_free (int x, int y, int tile_num)
 
 	if ((nlayer_ul_free == 1) && (nlayer_ur_free == 1) &&
 	    (nlayer_bl_free == 1) && (nlayer_br_free == 1)) {
-		uleft_tile = find_tile_in_layer (tile_x - HALF_TILE, tile_y, tiles[tile_num].layer);
-		bleft_tile = find_tile_in_layer (tile_x - HALF_TILE,
-						 tile_y + HALF_TILE, tiles[tile_num].layer);
-		uright_tile = find_tile_in_layer (tile_x + TILE_SIZE, tile_y, tiles[tile_num].layer);
-		bright_tile = find_tile_in_layer (tile_x + TILE_SIZE,
-						  tile_y + HALF_TILE, tiles[tile_num].layer);
-		rbottom_tile = find_tile_in_layer (tile_x + HALF_TILE, y + TILE_SIZE, tiles[tile_num].layer);
-		lbottom_tile = find_tile_in_layer (tile_x, y + TILE_SIZE, tiles[tile_num].layer);
-		rup_tile = find_tile_in_layer (tile_x + HALF_TILE, y - TILE_SIZE, tiles[tile_num].layer);
-		lup_tile = find_tile_in_layer (tile_x, y - TILE_SIZE, tiles[tile_num].layer);
+		uleft_tile = find_tile_in_layer (tile_x - HALF_WIDTH, tile_y, tiles[tile_num].layer);
+		bleft_tile = find_tile_in_layer (tile_x - HALF_WIDTH,
+						 tile_y + HALF_HEIGHT, tiles[tile_num].layer);
+		uright_tile = find_tile_in_layer (tile_x + TILE_WIDTH, tile_y, tiles[tile_num].layer);
+		bright_tile = find_tile_in_layer (tile_x + TILE_WIDTH,
+						  tile_y + HALF_HEIGHT, tiles[tile_num].layer);
+		rbottom_tile = find_tile_in_layer (tile_x + HALF_WIDTH, y + TILE_HEIGHT, tiles[tile_num].layer);
+		lbottom_tile = find_tile_in_layer (tile_x, y + TILE_HEIGHT, tiles[tile_num].layer);
+		rup_tile = find_tile_in_layer (tile_x + HALF_WIDTH, y - TILE_HEIGHT, tiles[tile_num].layer);
+		lup_tile = find_tile_in_layer (tile_x, y - TILE_HEIGHT, tiles[tile_num].layer);
 
 		if (((uleft_tile > MAX_TILES) || (tiles[uleft_tile].visible == 0)) &&
 		    ((bleft_tile > MAX_TILES) || (tiles[bleft_tile].visible == 0))) left_free = 1;
@@ -642,14 +575,15 @@ void about_callback (GtkWidget *widget, gpointer data)
 {
 	GtkWidget *about;
 	gchar *authors [] = {
-		"Francisco Bustamante",
+		"Code: Francisco Bustamante",
+		"Tiles: Jonathan Buzzard",
 		NULL
 	};
 
 	about = gnome_about_new (_("Gnome Mahjongg"), MAH_VERSION,
 				 "(C) 1998 The Free Software Foundation",
 				 authors,
-				 _("Send comments and bug reports to: pancho@nuclecu.unam.mx"),
+				 _("Send comments and bug reports to: pancho@nuclecu.unam.mx\nTiles under the General Public License."),
 				 NULL);
 	gtk_widget_show (about);
 }
@@ -682,9 +616,9 @@ void new_game (void)
 				f = (int) (144.0 * rand () / RAND_MAX);
 			tiles[f].visible = 1;
 			tiles[f].selected = 0;
-			tiles[f].x = default_pos[f].x + 80 + (5 * default_pos[f].layer);
-			tiles[f].y = default_pos[f].y + 60 - (4 * default_pos[f].layer);
-			tiles[f].layer = default_pos[f].layer;
+			tiles[f].x = default_pos[f].x * HALF_WIDTH + 80 + (5 * default_pos[f].layer);
+			tiles[f].y = default_pos[f].y * HALF_HEIGHT + 60 - (4 * default_pos[f].layer);
+			tiles[f].layer = default_pos[i].layer;
 			tiles[f].type = default_types[i].type;
 			tiles[f].image = default_types[i].image;
 		}
@@ -701,26 +635,28 @@ void redraw_tile_in_area (int x1, int y1, int x2, int y2, int tile)
 			x_pos = x1;
 		else x_pos = tiles[tile].x;
 	
-		if ((tiles[tile].x + TILE_SIZE) >= x2)
+		if ((tiles[tile].x + TILE_WIDTH) >= x2)
 			x_end = x2;
-		else x_end = tiles[tile].x + TILE_SIZE;
+		else x_end = tiles[tile].x + TILE_WIDTH;
 
 		if (tiles[tile].y <= y1) 
 			y_pos = y1;
 		else y_pos = tiles[tile].y;
-		if ((tiles[tile].y + TILE_SIZE) >= y2)
+		if ((tiles[tile].y + TILE_HEIGHT) >= y2)
 			y_end = y2;
-		else y_end = tiles[tile].y + TILE_SIZE;
+		else y_end = tiles[tile].y + TILE_HEIGHT;
 	
 		tile_width = x_end - x_pos;
 		tile_height = y_end - y_pos;
 
-		orig_x = ((tiles[tile].image % 21) * TILE_SIZE) + x_pos - tiles[tile].x;
-		orig_y = ((tiles[tile].image / 21) * TILE_SIZE) + y_pos - tiles[tile].y;
-		if (tiles[tile].selected == 1) orig_y += 80;
+		orig_x = ((tiles[tile].image % 21) * TILE_WIDTH) + x_pos - tiles[tile].x;
+		orig_y = ((tiles[tile].image / 21) * TILE_HEIGHT) + y_pos - tiles[tile].y;
+		if (tiles[tile].selected == 1) orig_y += 2 * TILE_HEIGHT;
+
+		gdk_gc_set_clip_origin (my_gc, tiles[tile].x, tiles[tile].y);
 
 		gdk_draw_pixmap (draw_area->window,
-				 draw_area->style->black_gc, tiles_pix,
+				 my_gc, tiles_pix,
 				 orig_x, orig_y, x_pos, y_pos,
 				 tile_width, tile_height);
 	}
@@ -775,27 +711,29 @@ void redraw_area (int x1, int y1, int x2, int y2, int mlayer)
 					x_pos = x1;
 				else x_pos = tiles[tile].x;
 	
-				if ((tiles[tile].x + TILE_SIZE) >= x2)
+				if ((tiles[tile].x + TILE_WIDTH) >= x2)
 					x_end = x2;
-				else x_end = tiles[tile].x + TILE_SIZE;
+				else x_end = tiles[tile].x + TILE_WIDTH;
 
 				if (tiles[tile].y <= y1) 
 					y_pos = y1;
 				else y_pos = tiles[tile].y;
 				last_y_end = y_end;
-				if ((tiles[tile].y + TILE_SIZE) >= y2)
+				if ((tiles[tile].y + TILE_HEIGHT) >= y2)
 					y_end = y2;
-				else y_end = tiles[tile].y + TILE_SIZE;
+				else y_end = tiles[tile].y + TILE_HEIGHT;
 	
 				tile_width = x_end - x_pos;
 				tile_height = y_end - y_pos;
 
-				orig_x = ((tiles[tile].image % 21) * TILE_SIZE) + x_pos - tiles[tile].x;
-				orig_y = ((tiles[tile].image / 21) * TILE_SIZE) + y_pos - tiles[tile].y;
-				if (tiles[tile].selected == 1) orig_y += 80;
+				orig_x = ((tiles[tile].image % 21) * TILE_WIDTH) + x_pos - tiles[tile].x;
+				orig_y = ((tiles[tile].image / 21) * TILE_HEIGHT) + y_pos - tiles[tile].y;
+				if (tiles[tile].selected == 1) orig_y += 2 * TILE_HEIGHT;
+
+				gdk_gc_set_clip_origin (my_gc, tiles[tile].x, tiles[tile].y);
 
 				gdk_draw_pixmap (draw_area->window,
-						 draw_area->style->black_gc, tiles_pix,
+						 my_gc, tiles_pix,
 						 orig_x, orig_y, x_pos, y_pos,
 						 tile_width, tile_height);
 				x = x_pos - 1;
@@ -808,24 +746,13 @@ void redraw_area (int x1, int y1, int x2, int y2, int mlayer)
 
 	tile = find_tile (x1 + 1, y1 + 6);
 	redraw_tile_in_area (x1, y1, x2, y2 - 4, tile);
- 	tile = find_tile (x1 + 1, y1 + TILE_SIZE - 6);
+ 	tile = find_tile (x1 + 1, y1 + TILE_HEIGHT - 6);
  	redraw_tile_in_area (x1, y1, x2, y2 - 4, tile); 
- 	tile = find_tile (x1 + 8, y1 + TILE_SIZE - 2); 
+ 	tile = find_tile (x1 + 8, y1 + TILE_HEIGHT - 2); 
  	redraw_tile_in_area (x1 + 5, y1, x2, y2, tile); 
- 	tile = find_tile (x1 + TILE_SIZE - 2, y1 + TILE_SIZE - 2); 
+ 	tile = find_tile (x1 + TILE_WIDTH - 2, y1 + TILE_HEIGHT - 2); 
  	redraw_tile_in_area (x1 + 5, y1, x2, y2, tile); 
  	tile = find_tile_in_layer (x1, y1 - 3, mlayer); 
-	if ((tile < MAX_TILES) && (tiles[tile].visible == 1))
-		bottom_border (tile);
-	tile = find_tile_in_layer (x2 - 1, y1 - 3, mlayer);
-	if ((tile < MAX_TILES) && (tiles[tile].visible == 1))
-		bottom_border (tile);
-	tile = find_tile_in_layer (x2 + 1, y1, mlayer);
-	if ((tile < MAX_TILES) && (tiles[tile].visible == 1))
-		left_border (tile);
-	tile = find_tile_in_layer (x2 + 1, y1 + HALF_TILE + 1, mlayer);
-	if ((tile < MAX_TILES) && (tiles[tile].visible == 1))
-		left_border (tile);
 }
 
 void refresh (GdkRectangle *area)
@@ -835,92 +762,28 @@ void refresh (GdkRectangle *area)
 	
 	for(i = 0; i < MAX_TILES; i ++) {
 		if (tiles [i].visible) {
-			bx = (tiles[i].image % 21) * TILE_SIZE;
-			by = (tiles[i].image / 21) * TILE_SIZE;
+			bx = (tiles[i].image % 21) * TILE_WIDTH;
+			by = (tiles[i].image / 21) * TILE_HEIGHT;
 			if (tiles [i].selected == 1)
-				by += 80;
+				by += 2 * TILE_HEIGHT;
+			gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
 			gdk_draw_pixmap (draw_area->window,
-					 draw_area->style->black_gc, tiles_pix,
+					 my_gc, tiles_pix,
 					 bx, by, tiles[i].x, tiles[i].y,
-					 TILE_SIZE, TILE_SIZE);
- 			left_border (i);
- 			bottom_border (i);
+					 TILE_WIDTH, TILE_HEIGHT);
 		}
 	}
 }
 
 void tile_gone (int i, int x, int y)
 {
-	int uleft_tile, bleft_tile, lbottom_tile, rbottom_tile, corner_tile;
-	int uright_tile, bright_tile, lup_tile, rup_tile;
-	int uleft_free = 1, bleft_free = 1, lbottom_free = 1, rbottom_free = 1, corner_free = 1;
-	int uright_free = 1, bright_free = 1, lup_free = 1, rup_free = 1;
+	gdk_window_clear_area (draw_area->window, tiles[i].x, tiles[i].y,
+			       TILE_WIDTH, TILE_HEIGHT);
 	
-	int tile_x, tile_y, vbord = 0, hbord = 0, layer;
-
-	tile_x = tiles[i].x + 2;
-	tile_y = tiles[i].y + 2;
-	layer = tiles[i].layer;
-	
- 	uleft_tile = find_tile_in_layer (tile_x - 5, tile_y, layer); 
- 	bleft_tile = find_tile_in_layer (tile_x - 5, tile_y + HALF_TILE, layer); 
- 	lbottom_tile = find_tile_in_layer (tile_x + 1, tile_y + TILE_SIZE + 1, layer); 
- 	rbottom_tile = find_tile_in_layer (tile_x + TILE_SIZE - 2, tile_y + TILE_SIZE + 1, layer); 
- 	corner_tile = find_tile_in_layer (tile_x - 5, tile_y + TILE_SIZE + 1, layer); 
-
-	uright_tile = find_tile_in_layer (tile_x + TILE_SIZE, tile_y, layer);
-	bright_tile = find_tile_in_layer (tile_x + TILE_SIZE, tile_y + HALF_TILE, layer);
-	lup_tile = find_tile_in_layer (tile_x, tile_y - 5, layer);
-	rup_tile = find_tile_in_layer (tile_x + HALF_TILE, tile_y - 5, layer);
-	
-	if ((uleft_tile < MAX_TILES) && (tiles[uleft_tile].visible != 0)) uleft_free = 0;
-	if ((bleft_tile < MAX_TILES) && (tiles[bleft_tile].visible != 0)) bleft_free = 0;
-	if ((lbottom_tile < MAX_TILES) && (tiles[lbottom_tile].visible != 0)) lbottom_free = 0;
-	if ((rbottom_tile < MAX_TILES) && (tiles[rbottom_tile].visible != 0)) rbottom_free = 0;
-	if ((uright_tile < MAX_TILES) && (tiles[uright_tile].visible != 0)) uright_free = 0;
-	if ((bright_tile < MAX_TILES) && (tiles[bright_tile].visible != 0)) bright_free = 0;
-	if ((lup_tile < MAX_TILES) && (tiles[lup_tile].visible != 0)) lup_free = 0;
-	if ((rup_tile < MAX_TILES) && (tiles[rup_tile].visible != 0)) rup_free = 0;
-	if ((corner_tile < MAX_TILES) && (tiles[corner_tile].visible != 0)) corner_free = 0;
-
-	if ((uleft_free) && (bleft_free))
-		vbord = 5;
-	if ((lbottom_free) && (rbottom_free))
-		hbord = 4;
-	
-	gdk_window_clear_area (draw_area->window, tiles[i].x - vbord, tiles[i].y,
-			       TILE_SIZE + vbord, TILE_SIZE + hbord);
-	if (layer == 0) {
-		if (uleft_free)
-			gdk_window_clear_area (draw_area->window, tiles[i].x - 5, tiles[i].y,
-					       5, HALF_TILE);
-		if (bleft_free)
-			gdk_window_clear_area (draw_area->window, tiles[i].x - 5, tiles[i].y + HALF_TILE,
-					       5, HALF_TILE);
-		if (lbottom_free)
-			gdk_window_clear_area (draw_area->window, tiles[i].x, tiles[i].y + TILE_SIZE,
-					       HALF_TILE, 4);
-		if (rbottom_free);
-			gdk_window_clear_area (draw_area->window, tiles[i].x + HALF_TILE,
-					       tiles[i].y + TILE_SIZE,
-					       HALF_TILE, 4);
-		if (corner_free)
-			gdk_window_clear_area (draw_area->window, tiles[i].x - 5,
-					       tiles[i].y + TILE_SIZE, 5, 4);
-		if (uright_tile < MAX_TILES) 
-			left_border (uright_tile);
-		if (bright_tile < MAX_TILES) 
-			left_border (bright_tile);
-		if (lup_tile < MAX_TILES) 
-			bottom_border (lup_tile);
-		if (rup_tile < MAX_TILES) 
-			bottom_border (rup_tile);
-	} 
-	
- 	if (layer > 0) redraw_area (tiles[i].x - vbord, tiles[i].y, 
-				    tiles[i].x + TILE_SIZE,
-				    tiles[i].y + TILE_SIZE + hbord,
-				    layer); 
+ 	if (tiles[i].layer > 0) redraw_area (tiles[i].x, tiles[i].y, 
+				    tiles[i].x + TILE_WIDTH,
+				    tiles[i].y + TILE_HEIGHT,
+				    tiles[i].layer); 
 }
 
 void button_pressed (int x, int y)
@@ -988,7 +851,6 @@ gint area_event (GtkWidget *widget, GdkEvent *event, void *d)
 
 void load_tiles (char *fname)
 {
- 	GtkStyle *style;
 	char *tmp, *fn;
 
 	tmp = g_copy_strings ("mahjongg/", fname, NULL);
@@ -1000,11 +862,15 @@ void load_tiles (char *fname)
 		printf ("Could not find file \'%s\'\n", fn);
 		exit (1);
 	}
+
+	if (tiles_image)
+		gdk_imlib_destroy_image (tiles_image);
+
+	tiles_image = gdk_imlib_load_image (fn);
+	gdk_imlib_render (tiles_image, tiles_image->rgb_width, tiles_image->rgb_height);
 	
-	style = gtk_widget_get_style (draw_area);
-	tiles_pix = gdk_pixmap_create_from_xpm (window->window, &mask,
-						&style->bg [GTK_STATE_NORMAL],
-						fn);
+	tiles_pix = gdk_imlib_move_image (tiles_image);
+	mask = gdk_imlib_move_mask (tiles_image);
 
 	g_free (fn);
 	new_game ();
@@ -1024,18 +890,20 @@ void create_mahjongg_board (void)
 
 	gtk_widget_show (draw_area);
 
-	vborderpic = gdk_pixmap_create_from_xpm_d (window->window, &mask,
-						   &style->bg [GTK_STATE_NORMAL],
-						   vborder);
-	hborderpic = gdk_pixmap_create_from_xpm_d (window->window, &mask,
-						   &style->bg [GTK_STATE_NORMAL],
-						   hborder);
+/* 	vborderpic = gdk_pixmap_create_from_xpm_d (window->window, &mask, */
+/* 						   &style->bg [GTK_STATE_NORMAL], */
+/* 						   vborder); */
+/* 	hborderpic = gdk_pixmap_create_from_xpm_d (window->window, &mask, */
+/* 						   &style->bg [GTK_STATE_NORMAL], */
+/* 						   hborder); */
 
 	gtk_drawing_area_size (GTK_DRAWING_AREA (draw_area),
 			       600,
-			       400);
+			       480);
 
 	load_tiles ("default.xpm");
+	my_gc = gdk_gc_new (draw_area->window);
+	gdk_gc_set_clip_mask (my_gc, mask);
 
 	gtk_signal_connect (GTK_OBJECT (draw_area), "event", (GtkSignalFunc) area_event, 0);
 	
@@ -1085,7 +953,7 @@ int main (int argc, char *argv [])
 				      &color.pixel, &x);
 	create_mahjongg_board ();
 
-	gdk_window_set_background (window->window, &color);
+	gdk_window_set_background (draw_area->window, &color);
 	
 	gtk_widget_show (window);
 	gtk_main ();
