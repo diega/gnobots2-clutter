@@ -1,3 +1,15 @@
+Sun Mar  8 15:54:03 1998  Tom Tromey  <tromey@cygnus.com>
+
+	* Makefile.am (INCLUDES): Added GNOME_INCLUDEDIR.
+
+	* same-gnome.c (parse_an_arg): New function.
+	(parse_args): Removed.
+	(main): Use new gnome_init.  Create session manager client.
+	(client_connect): Use previous id, not current one.
+	(options): New structure
+	(parser): New structure.
+	(fname): New global.
+
 1998-02-28  Arturo Espinosa <arturo@nuclecu.unam.mx>
 
         * same-gnome.c: Minor bug-fixes.

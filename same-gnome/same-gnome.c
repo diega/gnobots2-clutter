@@ -14,15 +14,13 @@
 #include <stdlib.h>
 #include <time.h>
 #include <dirent.h>
-#ifdef HAVE_GETOPT_LONG
-#include <getopt.h>
-#else
-#include <support/getopt.h>
-#endif
 
 #include <config.h>
 #include <gnome.h>
 #include <gdk_imlib.h>
+
+
+static error_t parse_an_arg (int key, char *arg, struct argp_state *state);
 
 #define STONE_SIZE 40
 #define STONE_COLS  15
@@ -32,7 +30,28 @@
 		     GDK_ENTER_NOTIFY_MASK          |\
 		     GDK_LEAVE_NOTIFY_MASK          |\
 		     GDK_POINTER_MOTION_MASK)
-	
+
+/* The command-line options we understand.  */
+static struct argp_option options[] =
+{
+  { "debug", 'd', NULL, 0, N_("Enable debugging"), 1 },
+  { "delete-sess", 'D', N_("ID"), OPTION_HIDDEN, NULL, 1 },
+  { "scenario", 's', N_("NAME"), 0, N_("Set game scenario"), 1 },
+  { NULL, 0, NULL, 0, NULL, 0 }
+};
+
+/* How to parse the command-line options.  */
+static struct argp parser =
+{
+  options,
+  parse_an_arg,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
 static GtkWidget *pref_dialog, *scorew;
 static GtkWidget *app, *draw_area, *vb;
 static GdkImlibImage *image;
@@ -59,6 +78,9 @@ static struct ball {
 static int nstones;
 static int ncolors;
 static int sync_stones = 0;
+
+/* This is used only while parsing arguments.  */
+static gchar *fname;
 
 #define mapx(x) (x)
 #define mapy(y) (STONE_LINES-1-(y))
@@ -820,105 +842,55 @@ client_connect (GnomeClient *client, gint was_restarted)
 {
 	if (was_restarted) {
 		restarted = 1;
-		restart (gnome_client_get_id (client));
+		restart (gnome_client_get_previous_id (client));
 	}
 }
 
-static gchar *
-parse_args (int argc,char *argv[])
+static error_t
+parse_an_arg (int key, char *arg, struct argp_state *state)
 {
-        GnomeClient *client = NULL;
-	gint ch;
-
-	struct option options[] = {
-		{ "debug",        no_argument,       NULL, 'd' },
-		{ "help",         no_argument,	     NULL, 'h' },
-		{ "sm-client-id", required_argument, NULL, 'S' },
-		{ "delete-sess",  required_argument, NULL, 'D' },
-		{ "scenario", 	  required_argument, NULL, 's' },
-		{ "version", 	  no_argument,	     NULL, 'v' },
-		{ NULL, 0, NULL, 0 }
-	};
-
-	gchar *id = NULL;
-	gchar *fname = gnome_config_get_string ( "/same-gnome/Preferences/Scenario=stones.png" );
-	
-	debugging = 0;
-	restarted = 0;
-
-	score = 0;
-
-	/* initialize getopt */
-	optarg = NULL;
-	optind = 0;
-	optopt = 0;
-
-	while( (ch = getopt_long(argc, argv, "dhsv", options, NULL)) != EOF ) {
-		switch(ch) {
-		case 'd':
-			debugging = 1;
-			g_print ("Debugging mode\n");
-			break;
-		case 'h':
-			exit(0);
-			break;
-		case 'v':
-			g_print (_("Same Gnome %s.\n"), 
-				 VERSION);
-			exit(0);
-			break;
-		case 'S':
-			id = g_strdup (optarg);
-			restart (id);
-			restarted = 1;
-			break;
-		case 'D':
-			id = g_strdup (optarg);
-			delete_session (id);
-			exit(0);
-			break;
-		case 's':
-			g_free (fname);
-			fname = g_strdup (optarg);
-			break;
-		case ':':
-		case '?':
-			g_print (_("Options error\n"));
-			exit(0);
-			break;
-		}
+	switch(key) {
+	case 'd':
+		debugging = 1;
+		g_print ("Debugging mode\n");
+		break;
+	case 'D':
+		delete_session (arg);
+		exit(0);
+		break;
+	case 's':
+		if (fname)
+			argp_usage (state);
+		fname = g_strdup (arg);
+		break;
+	default:
+		return ARGP_ERR_UNKNOWN;
 	}
 
-	client = gnome_client_new_without_connection (argc, argv);
-	
-	gtk_signal_connect (GTK_OBJECT (client), "save_yourself",
-			    GTK_SIGNAL_FUNC (save_state), argv[0]);
-	
-	gtk_signal_connect (GTK_OBJECT (client), "connect",
-			    GTK_SIGNAL_FUNC (client_connect), NULL);
-
-	gnome_client_connect (client);
-	
-	if (debugging)
-		g_print ("Session ID: %s\n", gnome_client_get_id (client));
-	g_free(id);
-
-	return fname;
+	return 0;
 }
 
 int
 main (int argc, char *argv [])
 {
 	GtkWidget *label, *hb;
-	gchar *fname;
+	GnomeClient *client;
 
-	gnome_score_init("same-gnome");
-	
-	gnome_init ("same-gnome", &argc, &argv);
-	gdk_imlib_init ();
-	fname = parse_args(argc, argv);
+	argp_program_version = VERSION;
+
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
+
+	gnome_score_init("same-gnome");
+
+	client = gnome_client_new_default ();
+	gtk_signal_connect (GTK_OBJECT (client), "save_yourself",
+			    GTK_SIGNAL_FUNC (save_state), argv[0]);
+	gtk_signal_connect (GTK_OBJECT (client), "connect",
+			    GTK_SIGNAL_FUNC (client_connect), NULL);
+
+	gnome_init ("same-gnome", &parser, argc, argv, 0, NULL);
+	gdk_imlib_init ();
 
 	srand (time (NULL));
 
