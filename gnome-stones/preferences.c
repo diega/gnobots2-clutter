@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <1999/01/09 17:19:28 carsten>
+ * Time-stamp: <1999/01/17 15:14:25 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -714,25 +714,6 @@ void
 gstones_exit (GnomeClient *client, gpointer client_data)
 {
   exit (0);
-}
-
-
-void
-discard_session_file (const gchar *file)
-{
-  gchar *file2= g_strdup (file);
-  gint   len  = strlen (file2);
-  
-  if (len && (file2[len-1]== '/'))
-    file2[len-1]= '\0';
-
-  gnome_config_push_prefix (file);
-  (void) gnome_config_get_int ("Dummy/Dummy=0");
-  gnome_config_pop_prefix ();
-  
-  /* All session information is written to the config file.  */
-  gnome_config_clean_file (file2);
-  gnome_config_sync ();
 }
 
 

@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <1999/01/10 05:56:18 ndf>
+ * Time-stamp: <1999/01/17 15:16:30 carsten>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -91,33 +91,8 @@ static char *default_message= N_("Gnome-Stones (c) 1998 Carsten Schaar");
 /* Commandline options.  */
 
 
-static void 
-parse_func (poptContext ctx,
-	    enum poptCallbackReason reason,
-	    const struct poptOption *opt,
-	    const char *arg, void *data)
-{
-  int key = opt ? opt->val : 0;
-
-  printf ("Parsing commandline: key %i\n", key);
-
-  if (key == 1)
-    {
-      printf ("\"--discard-file %s\" found\n", arg);
-      /* Option: --discard-file  */
-      discard_session_file (arg);
-
-      exit (0);
-    }
-
-}
-
-
 /* Command-line arguments understood by this module.  */
 static const struct poptOption options[] = {
-  {NULL, '\0', POPT_ARG_CALLBACK, parse_func, 0, NULL, NULL},
-  {"discard-file", '\0', POPT_ARG_STRING, NULL, 1, 
-   N_("Config file to discard"), N_("CONFIG FILE")},
   {NULL, '\0', 0, NULL, 0}
 };
 
