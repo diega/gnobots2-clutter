@@ -6,7 +6,7 @@ appicondir=$(datadir)/pixmaps
 INCLUDES = 			\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	-I$(includedir)				 \
-	$(GNOME_INCLUDEDIR) -I.
+	$(GNOME_INCLUDEDIR) -I. $(GDK_PIXBUF_CFLAGS)
 
 bin_PROGRAMS = gataxx
 
@@ -21,6 +21,7 @@ gataxx_SOURCES = \
 gataxx_LDADD = \
 	$(GNOME_LIBDIR) \
 	$(GNOMEGNORBA_LIBS)	\
+	$(GDK_PIXBUF_LIBS) \
 	$(INTLLIBS)
 
 pixmap_DATA = \
