@@ -411,7 +411,8 @@ load_scenario (char *fname)
 	g_free( fn );
 	gdk_window_get_size (stones, &width, &height);
 	nstones = width / STONE_SIZE;
-	ncolors = height / STONE_SIZE;
+/*	ncolors = height / STONE_SIZE; */
+	ncolors = 3;
 	new_game ();
 	gtk_widget_draw (draw_area, NULL);
 }
@@ -531,7 +532,7 @@ void
 game_preferences_callback (GtkWidget *widget, void *data)
 {
 	GtkWidget *menu, *omenu, *l, *hb, *cb; 
-	GtkDialog *d;
+	GtkDialog *d, *f, *fv;
 
 	if (pref_dialog)
 		return;
@@ -545,7 +546,10 @@ game_preferences_callback (GtkWidget *widget, void *data)
 	fill_menu (menu);
 	gtk_widget_show (omenu);
 	gtk_option_menu_set_menu (GTK_OPTION_MENU(omenu), menu);
-	
+
+	f = gtk_frame_new (_ ("Scenario"));
+	gtk_container_border_width (GTK_CONTAINER (f), 5);
+
 	hb = gtk_hbox_new (FALSE, FALSE);
 	gtk_widget_show (hb);
 	
@@ -559,9 +563,17 @@ game_preferences_callback (GtkWidget *widget, void *data)
 	gtk_signal_connect (GTK_OBJECT(cb), "clicked", (GtkSignalFunc)set_selection_def, NULL);
 	gtk_widget_show (cb);
 
-	gtk_box_pack_start_defaults (GTK_BOX(d->vbox), hb);
-	gtk_box_pack_start_defaults (GTK_BOX(d->vbox), cb);
-
+	fv = gtk_vbox_new (0, 5);
+	gtk_container_border_width (GTK_CONTAINER (fv), 5);
+	gtk_widget_show (fv);
+	
+	gtk_box_pack_start_defaults (GTK_BOX(fv), hb);
+	gtk_box_pack_start_defaults (GTK_BOX(fv), cb);
+	gtk_box_pack_start_defaults (GTK_BOX(d->vbox), f);
+	gtk_container_add (GTK_CONTAINER (f), fv);
+	
+	gtk_widget_show (f);
+	
 	sel_actions [0].label = _("Ok");
 	sel_actions [1].label = _("Cancel");
 	
