@@ -1,5 +1,9 @@
 2004-10-13  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* mahjongg.c: Fix up the restart sensitivity and make sure that
+	the redo command doesn't do a quick set insensitive/ set sensitive
+	on the redo button.
+
 	* help/C/mahjongg.xml: Update docs to reflect the lack of a seed.
 
 	* mahjongg.c: Remove the seed, both the UI and all the internal

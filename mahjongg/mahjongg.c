@@ -767,12 +767,6 @@ GtkWidget *about = NULL;
 /* Has the map been changed ? */
 gboolean new_map = TRUE;
 
-typedef enum {
-	NEW_GAME,
-	RESTART_GAME,
-	QUIT_GAME
-} game_state;
-
 enum {
 	GAME_RUNNING = 0,
 	GAME_WON,
@@ -898,11 +892,6 @@ static void set_menus_sensitive (void)
 	state = moves_left > 0;
 	gtk_widget_set_sensitive (gamemenu[6].widget, state);
 	gtk_widget_set_sensitive (toolbar_uiinfo[6].widget, state);
-
-	/* Restart */
-	state = sequence_number != 1;
-	gtk_widget_set_sensitive (gamemenu[1].widget, state);
-	gtk_widget_set_sensitive (toolbar_uiinfo[1].widget, state);
 }
 
 /* Undo and redo sensitivity functionality. */
@@ -912,6 +901,9 @@ static void set_undoredo_sensitive (gboolean undo, gboolean redo)
 	gtk_widget_set_sensitive(toolbar_uiinfo[4].widget, undo);
 	gtk_widget_set_sensitive(gamemenu[5].widget, redo);
 	gtk_widget_set_sensitive(toolbar_uiinfo[5].widget, redo);
+	/* The restart game sensitivity condition is the same as for undo. */
+	gtk_widget_set_sensitive (gamemenu[1].widget, undo);
+	gtk_widget_set_sensitive (toolbar_uiinfo[1].widget, undo);
 }
 
 static void
@@ -1796,6 +1788,7 @@ redo_tile_callback (GtkWidget *widget, gpointer data)
 {
         gint i, change ;
         char *tmpstr;
+	gboolean found;
         
         if (paused) 
                 return; 
@@ -1820,16 +1813,18 @@ redo_tile_callback (GtkWidget *widget, gpointer data)
                 if (sequence_number < MAX_TILES)
                         sequence_number++ ;
         }
-        else
-                  	gnome_app_flash (GNOME_APP (window), "No more redo!");
+
         tmpstr = g_strdup_printf ("%3d",visible_tiles);
         gtk_label_set_text(GTK_LABEL (tiles_label), tmpstr);
 
-        set_undoredo_sensitive (TRUE, FALSE);
-	for (i=0; i<MAX_TILES; i++) {
-		if (tiles[i].sequence == sequence_number)
-			set_undoredo_sensitive (TRUE, TRUE);
+	found = FALSE;
+    	for (i=0; i<MAX_TILES; i++) {
+		if (tiles[i].sequence == sequence_number) {
+			found = TRUE;
+			break;
+		}
 	}
+	set_undoredo_sensitive (TRUE, found);
 	
         update_moves_left ();
 }
