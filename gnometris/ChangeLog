@@ -1,3 +1,9 @@
+2004-10-17  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* Makefile.am: Explicitly include the esd cflags and libs
+	variables. The flags for libgnome generally cover this, but as it
+	turns out, not always. See bug #155559.
+
 2004-09-09  callum  <callum@spooky-possum.org>
 
 	* help/C/gnometris.xml: Update version numbers.

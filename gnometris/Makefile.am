@@ -8,7 +8,7 @@ AM_CPPFLAGS=\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"
 
 AM_CXXFLAGS=\
-	$(GNOME_GAMES_CXXFLAGS)
+	$(GNOME_GAMES_CXXFLAGS) $(ESD_CFLAGS)
 
 AM_CFLAGS=\
 	$(GNOME_GAMES_CFLAGS)
@@ -37,6 +37,7 @@ gnometris_SOURCES=\
 gnometris_LDADD=\
 	$(GNOME_GAMES_LIBS) \
 	../libgames-support/libgames-support.la \
+	$(ESD_LIBS) \
 	$(INTLLIBS)
 
 
