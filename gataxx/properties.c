@@ -313,8 +313,8 @@ void show_properties_dialog ()
 	GtkWidget *option_menu;
 	
 	propbox = gtk_dialog_new_with_buttons (_("Properties"),
-					       NULL,
-					       GTK_DIALOG_DESTROY_WITH_PARENT,
+					       GTK_WINDOW (window),
+					       GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
 					       _("Done"),
 					       GTK_RESPONSE_OK,
 					       NULL);
