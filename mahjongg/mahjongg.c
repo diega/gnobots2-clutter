@@ -545,7 +545,10 @@ void about_callback (GtkWidget *widget, gpointer data)
 	GtkWidget *about;
 	gchar *authors [] = {
 		"Code: Francisco Bustamante",
+		"      Max Watson",
+		"      Heinz Hempe",
 		"Tiles: Jonathan Buzzard",
+		"       Max Watson",
 		NULL
 	};
 
