@@ -1908,7 +1908,7 @@ shuffle_tiles_callback (GtkWidget *widget, gpointer data)
 
         do {
                 num_shuffle++;
-                /* We do a circular permutation (FIXME: check the english term...)*/
+                /* We do a circular permutation */
                 for (i=0; i<MAX_TILES; i++) {
                         if (tiles[i].visible) {
                                 if (first) {
@@ -1936,6 +1936,7 @@ shuffle_tiles_callback (GtkWidget *widget, gpointer data)
 					     GTK_BUTTONS_OK,
 					     (_("Sorry, I was unable to find a playable configuration.")));
 		gtk_dialog_run (GTK_DIALOG (mb));
+		gtk_widget_destroy (mb);
 
         } else {
                 

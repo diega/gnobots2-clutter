@@ -1,3 +1,9 @@
+2002-07-07  Ross Burton  <ross@burtonini.com>
+
+	* mahjongg.c (shuffle_tiles_callback): Pressing the OK button
+	actually closes the dialog now. (from sams@e-sa.com, fixing
+	#84199).
+
 2002-07-04  Ross Burton  <ross@burtonini.com>
 
 	* mahjongg.c: Created a new function gconf_sanity_check() which
