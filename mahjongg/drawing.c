@@ -232,6 +232,9 @@ void draw_all_tiles (void)
   
   gdk_gc_set_clip_mask (gc, tilemask); 
   for (i = MAX_TILES - 1; i >= 0; i--) {
+    if (!tiles[i].visible)
+      continue;
+
     dx = view_geometry[i].x;
     dy = view_geometry[i].y;
 

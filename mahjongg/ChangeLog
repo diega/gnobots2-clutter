@@ -1,5 +1,8 @@
 2003-12-07  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* drawing.c (draw_all_tiles): Fix a drawing error when shuffling
+	the tiles.
+
 	* mahjongg.c (check_free): Add a shuffle option to the "no more
 	moves dialog".
 
@@ -8,7 +11,7 @@
 	* Makefile.am: That reference to bg_DATA shouldn't have been
 	there. Thanks Steve.
 
-2003-10-29  Callum McKenzie  <callum@localhost.localdomain>
+2003-10-29  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am (INCLUDES): Removed *_DISABLE_DEPRECATED.
 
