@@ -21,9 +21,10 @@
  * For more details see the file COPYING.
  */
 
+#include <config.h>
 #include <gnome.h>
 
-#define TETRIS_VERSION "0.1.0"
+#define TETRIS_VERSION "0.1.1"
 
 #define LINES   15
 #define COLUMNS 11

@@ -356,7 +356,7 @@ void
 Tetris::endOfGame()
 {
 	int pos = gnome_score_log(scoreFrame->getScore(), NULL, TRUE);
-	showScores(_("Gnometris"), pos);
+	showScores("Gnometris", pos);
 }
 
 void
@@ -398,7 +398,7 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 
 	const gchar *authors[] = {"J. Marcin Gorycki", NULL};
 
-	about = gnome_about_new(_("Gnometris"), TETRIS_VERSION, "(C) 1999 J. Marcin Gorycki", 
+	about = gnome_about_new("Gnometris", TETRIS_VERSION, "(C) 1999 J. Marcin Gorycki", 
 													(const char **)authors,
 													_("Written for my wife, Matylda\n"
 														"Send comments and bug reports to: mgo@olicom.dk"), NULL);
@@ -414,7 +414,7 @@ int
 Tetris::gameTopTen(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
-	t->showScores(_("Gnometris"), 0);
+	t->showScores("Gnometris", 0);
 
 	return TRUE;
 }
