@@ -46,11 +46,11 @@ using namespace std;
 #include "hand.h"
 #include "game.h"
 
-hslot_type last_hslot;
-gint last_cardid;
+hslot_type last_hslot = NULL;
+gint last_cardid = -1;
 
-hstack_type last_hstack;
-gint last_chipid;
+hstack_type last_hstack = NULL;
+gint last_chipid = -1;
 
 GTimer * click_timer = NULL;
 gdouble dbl_click_time;
@@ -229,8 +229,6 @@ static gint
 handle_slot_pressed (GdkEventButton *event, hslot_type hslot, gint cardid)
 {
   gboolean double_click;
-
-  g_print ("%d, %d\n", hslot, cardid);
 
   /* We can't let Gdk do the double-click detection since the entire playing
    * area is one big widget it can't distinguish between single-clicks on two

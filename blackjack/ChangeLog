@@ -1,3 +1,8 @@
+2004-02-20  William Jon McCann  <mccann@jhu.edu>
+
+	* src/events.cpp: Properly initialize variables.  Fixes bug #125523.
+	(handle_slot_pressed): Remove debug print statement.
+
 2004-02-14  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* src/game.cpp: 
