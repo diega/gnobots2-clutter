@@ -37,7 +37,6 @@ int ball_timeout_id = -1;
 int old_x = -1, old_y = -1;
 int score;
 gchar *scenario;
-char *session_id;
 gint restarted;
 gint debugging;
 
@@ -653,9 +652,13 @@ create_main_window ()
 }
 
 static int
-save_state (gpointer client_data, GnomeSaveStyle save_style,
-           int is_shutdown, GnomeInteractStyle interact_style,
-           int is_fast)
+save_state (GnomeClient *client,
+	    gint phase,
+	    GnomeSaveStyle save_style,
+	    gint shutdown, 
+	    GnomeInteractStyle interact_style,
+	    gint fast,
+	    gpointer client_data)
 {
 	gchar *sess;
 	gchar *buf;
@@ -669,8 +672,8 @@ save_state (gpointer client_data, GnomeSaveStyle save_style,
 		g_print ("Saving state\n");
 
 	sess = g_copy_strings ("Saved-Session-",
-				session_id,
-				NULL);
+			        gnome_client_get_id (client),
+			        NULL);
 
 	buf = g_copy_strings ("/same-gnome/",
 				sess, 
@@ -704,15 +707,11 @@ save_state (gpointer client_data, GnomeSaveStyle save_style,
 	g_free(sess);
 
 	argv[0] = (char*) client_data;
-	argv[1] = "--session";
-	argv[2] = session_id;
-
-	gnome_session_set_restart_command (3, argv); /* probably it should
-		remember command-line parameters (--debug, ...) */
 	argv[1] = "--delete-sess";
-	gnome_session_set_discard_command (3, argv);
+	argv[2] = gnome_client_get_id (client);
+	gnome_client_set_discard_command (client, 3, argv);
 	
-	return(1);
+	return TRUE;
 }
 
 void
@@ -783,18 +782,29 @@ restart (gchar *id)
 	g_free(sess);
 }
 
+static void
+connect (GnomeClient *client, gint was_restarted)
+{
+  if (was_restarted)
+    {
+      restarted = 1;
+      restart (gnome_client_get_id (client));
+    }
+}
+
 gchar *
 parse_args (int argc,char *argv[])
 {
+        GnomeClient *client = NULL;
 	gint ch;
 
 	struct option options[] = {
-		{ "debug",    	no_argument,		NULL,	'd'	},
-		{ "help",    	no_argument,		NULL,	'h'	},
-		{ "session", 	required_argument,	NULL,	'S'	},
-		{ "delete-sess",required_argument,	NULL,	'D'	},
-		{ "scenario", 	required_argument,	NULL,	's'	},
-		{ "version", 	no_argument,		NULL,	'v'	},
+		{ "debug",        no_argument,       NULL, 'd'	},
+		{ "help",         no_argument,	     NULL, 'h'	},
+		{ "sm-client-id", required_argument, NULL, 'S'	},
+		{ "delete-sess",  required_argument, NULL, 'D'	},
+		{ "scenario", 	  required_argument, NULL, 's'	},
+		{ "version", 	  no_argument,	     NULL, 'v'	},
 		{ NULL, 0, NULL, 0 }
 		};
 
@@ -849,10 +859,18 @@ parse_args (int argc,char *argv[])
 		}
 	}
 
-	session_id = gnome_session_init (save_state, argv[0], NULL, NULL, id);
+	client = gnome_client_new_without_connection (argc, argv);
+	
+	gtk_signal_connect (GTK_OBJECT (client), "save_yourself",
+			    GTK_SIGNAL_FUNC (save_state), argv[0]);
+	
+	gtk_signal_connect (GTK_OBJECT (client), "connect",
+			    GTK_SIGNAL_FUNC (connect), NULL);
+
+	gnome_client_connect (client);
+	
 	if (debugging)
-		g_print ("Session ID: %s\n", session_id);
-	gnome_session_set_program (argv[0]);
+		g_print ("Session ID: %s\n", gnome_client_get_id (client));
 	g_free(id);
 
 	return fname;
