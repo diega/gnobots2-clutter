@@ -1,5 +1,7 @@
 2004-02-23  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* help/*: Added a help file.
+
 	* tetris.cpp: Changed the <invalid> value for timeoutID from -1 to
 	0 since this is what g_source uses. This may help bug 103787.
 	(timeoutHandler): Change 1 to TRUE to make sure we match glib's

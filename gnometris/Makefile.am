@@ -1,4 +1,4 @@
-SUBDIRS=pix
+SUBDIRS=pix help
 
 
 
