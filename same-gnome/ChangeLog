@@ -1,5 +1,9 @@
 1998-02-28  Arturo Espinosa <arturo@nuclecu.unam.mx>
 
+        * same-gnome.c: Minor bug-fixes.
+
+1998-02-28  Arturo Espinosa <arturo@nuclecu.unam.mx>
+
         * same-gnome.c: We are now using PNGs instead of XPM.
                         Now using GNOME_APP_UI's for the menus.
                         Fix: Preferences menu now remembers scenario in use.

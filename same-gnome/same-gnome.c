@@ -292,10 +292,10 @@ check_game_over (void)
 		}
 	if (cleared){
 		set_score (score+1000);
-		end_of_game (_("You win!"));
+		end_of_game (_("The Same Gnome"));
 	}
 	else
-		end_of_game(_("The Game Is Over"));
+		end_of_game(_("The Same Gnome"));
 }
 
 static void
@@ -924,12 +924,15 @@ main (int argc, char *argv [])
 
 	app = gnome_app_new("same-gnome", _("Same Gnome"));
         gtk_window_set_policy(GTK_WINDOW(app), FALSE, FALSE, TRUE);
+	gtk_signal_connect (GTK_OBJECT(app), "delete_event", (GtkSignalFunc)game_quit_callback, NULL);
 	gnome_app_create_menus(GNOME_APP(app), mainmenu);
         gtk_menu_item_right_justify(GTK_MENU_ITEM(mainmenu[1].widget));
   
         vb = gtk_vbox_new (FALSE, 0);
 	hb = gtk_hbox_new (FALSE, 0);
 	gnome_app_set_contents (GNOME_APP (app), vb);
+
+	create_same_board (fname);
 
 	label = gtk_label_new (_("Score: "));
 	scorew = gtk_label_new ("");
@@ -938,13 +941,12 @@ main (int argc, char *argv [])
 	gtk_box_pack_end   (GTK_BOX(hb), scorew, 0, 0, 10);
 	gtk_box_pack_end   (GTK_BOX(hb), label,  0, 0, 0);
 	
-	create_same_board (fname);
 	if (!restarted)
 		new_game ();
 	
 	free (fname);
 
-	gtk_widget_show (app);
+        gtk_widget_show (app);
 	gtk_widget_show (hb);
 	gtk_widget_show (vb);
 	gtk_widget_show (GTK_WIDGET(label));
