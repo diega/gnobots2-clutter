@@ -824,7 +824,7 @@ parse_args (int argc,char *argv[])
 				exit(0);
 				break;
 			case 'v':
-				g_print (_("Same Gnome version %s.\n"), 
+				g_print (_("Same Gnome %s.\n"), 
 								VERSION);
 				exit(0);
 				break;
