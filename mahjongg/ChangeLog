@@ -1,3 +1,21 @@
+Mon Aug 17 18:00:00 BST 1998 Michael Meeks <michael@imaginator.com>
+	* Major code mangle.
+	* Added extra map, renamed structures to acommodate
+	* Updated preference menu to cope
+	* Rewrote and documented structures
+	* Improved and documented placement debugging
+	* Added #warning on cheat
+	* Improved placing algorithem to favor higher sites
+	* Upped version to 0.5.0
+	* Fixed C++ style comments
+	* Padded 'Tiles Remaining' status to give less of a jump on decrement
+	* Implemented 'hint' function
+	* Updated Authors, and support mail address
+	* Several of Ganesh' fixes:
+	* Simplified check_free, it now works
+	* Fixed restart, undo destroys map
+	* Other useful feedback
+	
 1998-08-06  Miguel de Icaza  <miguel@nuclecu.unam.mx>
 
 	* mahjongg.c (fill_menu): Allow more graphics formats to be used

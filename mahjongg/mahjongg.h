@@ -11,28 +11,30 @@
  *
  */
 
+/* If defined this cooks the sequence no.s,
+   press redo in a new game */
+#define CHEAT_DEBUG
+
 #define MAX_TILES 144
 #define MAX_TILES_STR "144"
 
 #define TILE_WIDTH 40
 #define TILE_HEIGHT 56
 #define HALF_WIDTH 18
-//#define HALF_WIDTH 20
 #define HALF_HEIGHT 26
-//#define HALF_HEIGHT 28
-#define MAH_VERSION "0.4.0"
+#define MAH_VERSION "0.5.0"
 
 typedef struct _tilepos tilepos;     
 typedef struct _tile tile;
-typedef struct _tiletypes tiletypes;
+typedef struct _typeinfo typeinfo;
 
-struct _tiletypes {
-	int type;
-	int num_tiles;
-	int image;
+struct _typeinfo {
+  int type;
+  int placed;
+  int image[2];
 };
 
-extern tiletypes default_types[] ;
+extern typeinfo type_info[] ;
 
 struct _tilepos {
 	int x;
@@ -40,7 +42,7 @@ struct _tilepos {
 	int layer;
 };
 
-extern tilepos default_pos [];
+extern tilepos *pos ;
 
 struct _tile{
   int type;

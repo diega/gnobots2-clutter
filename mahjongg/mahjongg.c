@@ -27,205 +27,279 @@
 
 #include "button-images.h"
 
+/* If defined this does a very bad job of rendering
+ * sequence numbers on top of the tiles as they are drawn.
+ */
 /* #define SEQUENCE_DEBUG */
 
 #define GAME_EVENTS (GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK)
 
-tiletypes default_types [] = {
-        {0, 4, 0},
-	{1, 4, 1},
-	{2, 4, 2},
-	{3, 4, 3},
-	{4, 4, 4},
-	{5, 4, 5},
-	{6, 4, 6},
-	{7, 4, 7},
-	{8, 4, 8},
-	{9, 4, 9},
-	{10, 4, 10},
-	{11, 4, 11},
-	{12, 4, 12},
-	{13, 4, 13}, 
-	{14, 4, 14}, 
-	{15, 4, 15}, 
-	{16, 4, 16}, 
-	{17, 4, 17}, 
-	{18, 4, 18}, 
-	{19, 4, 19}, 
-	{20, 4, 20},
-	{21, 4, 21}, 
-	{22, 4, 22}, 
-	{23, 4, 23}, 
-	{24, 4, 24}, 
-	{25, 4, 25}, 
-	{26, 4, 26}, 
-	{27, 4, 27}, 
-	{28, 4, 28}, 
-	{29, 4, 29}, 
-	{30, 4, 30}, 
-	{31, 4, 31},
-	{32, 4, 32}, 
-	{33, 1, 33}, 
-	{33, 1, 34}, 
-	{33, 1, 35},
-	{33, 1, 36}, 
-	{34, 4, 37}, 
-	{35, 1, 38}, 
-	{35, 1, 39}, 
-	{35, 1, 40}, 
-	{35, 1, 41},	
+typeinfo type_info [MAX_TILES+70] = {
+  	{ 0, 0, {0, 0} },
+	{ 0, 0, {0, 0} },
+	{ 1, 0, {1, 1} },
+	{ 1, 0, {1, 1} },
+	{ 2, 0, {2, 2} },
+	{ 2, 0, {2, 2} },
+	{ 3, 0, {3, 3} },
+	{ 3, 0, {3, 3} },
+	{ 4, 0, {4, 4} },
+	{ 4, 0, {4, 4} },
+	{ 5, 0, {5, 5} },
+	{ 5, 0, {5, 5} },
+	{ 6, 0, {6, 6} },
+	{ 6, 0, {6, 6} },
+	{ 7, 0, {7, 7} },
+	{ 7, 0, {7, 7} },
+	{ 8, 0, {8, 8} },
+	{ 8, 0, {8, 8} },
+	{ 9, 0, {9, 9} },
+	{ 9, 0, {9, 9} },
+	{ 10, 0, {10, 10} },
+	{ 10, 0, {10, 10} },
+	{ 11, 0, {11, 11} },
+	{ 11, 0, {11, 11} },
+	{ 12, 0, {12, 12} },
+	{ 12, 0, {12, 12} },
+	{ 13, 0, {13, 13} },
+	{ 13, 0, {13, 13} },
+	{ 14, 0, {14, 14} },
+	{ 14, 0, {14, 14} },
+	{ 15, 0, {15, 15} },
+	{ 15, 0, {15, 15} },
+	{ 16, 0, {16, 16} },
+	{ 16, 0, {16, 16} },
+	{ 17, 0, {17, 17} },
+	{ 17, 0, {17, 17} },
+	{ 18, 0, {18, 18} },
+	{ 18, 0, {18, 18} },
+	{ 19, 0, {19, 19} },
+	{ 19, 0, {19, 19} },
+	{ 20, 0, {20, 20} },
+	{ 20, 0, {20, 20} },
+	{ 21, 0, {21, 21} },
+	{ 21, 0, {21, 21} },
+	{ 22, 0, {22, 22} },
+	{ 22, 0, {22, 22} },
+	{ 23, 0, {23, 23} },
+	{ 23, 0, {23, 23} },
+	{ 24, 0, {24, 24} },
+	{ 24, 0, {24, 24} },
+	{ 25, 0, {25, 25} },
+	{ 25, 0, {25, 25} },
+	{ 26, 0, {26, 26} },
+	{ 26, 0, {26, 26} },
+	{ 27, 0, {27, 27} },
+	{ 27, 0, {27, 27} },
+	{ 28, 0, {28, 28} },
+	{ 28, 0, {28, 28} },
+	{ 29, 0, {29, 29} },
+	{ 29, 0, {29, 29} },
+	{ 30, 0, {30, 30} },
+	{ 30, 0, {30, 30} },
+	{ 31, 0, {31, 31} },
+	{ 31, 0, {31, 31} },
+	{ 32, 0, {32, 32} },
+	{ 32, 0, {32, 32} },
+	{ 33, 0, {33, 34} },
+	{ 33, 0, {35, 36} },
+	{ 34, 0, {37, 37} },
+	{ 34, 0, {37, 37} },
+	{ 35, 0, {38, 39} },
+	{ 35, 0, {40, 41} }
 };
 
-tilepos default_pos [] = {
-        {13, 7,  4},
-        {12, 8,  3},
-        {14, 8,  3},
-        {12, 6,  3},
-        {14, 6,  3},
-        {10, 10,  2},
-	{12, 10,  2},
-	{14, 10,  2},
-	{16, 10,  2},
-	{10, 8,  2},
-	{12, 8,  2},
-	{14, 8,  2},
-	{16, 8,  2},
-        {10, 6,  2},
-	{12, 6,  2},
-	{14, 6,  2},
-	{16, 6,  2},
-	{10, 4,  2},
-	{12, 4,  2},
-	{14, 4,  2},
-	{16, 4,  2},
-	{8, 12,  1},
-	{10, 12,  1},
-	{12, 12,  1},
-	{14, 12,  1},
-	{16, 12,  1},
-	{18, 12,  1},
-	{8, 10,  1},
-	{10, 10,  1},
-	{12, 10,  1},
-	{14, 10,  1},
-	{16, 10,  1},
-	{18, 10,  1},
-	{8, 8,  1},
-	{10, 8,  1},
-	{12, 8,  1},
-	{14, 8,  1},
-	{16, 8,  1},
-	{18, 8,  1},
-	{8, 6,  1},
-	{10, 6,  1},
-	{12, 6,  1},
-	{14, 6,  1},
-	{16, 6,  1},
-	{18, 6,  1},
-	{8, 4,  1},
-	{10, 4,  1},
-	{12, 4,  1},
-	{14, 4,  1},
-	{16, 4,  1},
-	{18, 4,  1},
-	{8, 2,  1},
-	{10, 2,  1},
-	{12, 2,  1},
-	{14, 2,  1},
-	{16, 2,  1},
-	{18, 2,  1},
-        {2, 14,  0},
-        {4, 14,  0},
-	{6, 14,  0},
-	{8, 14,  0},
-	{10, 14,  0},
-	{12, 14,  0},
-	{14, 14,  0},
-	{16, 14,  0},
-        {18, 14,  0},
-        {20, 14,  0},
-        {22, 14,  0},
-        {24, 14,  0},
-        {6, 12,  0},
-	{8, 12,  0},
-	{10, 12,  0},
-	{12, 12,  0},
-	{14, 12,  0},
-	{16, 12,  0},
-	{18, 12,  0},
-	{20, 12,  0},
-        {4, 10,  0},
-        {6, 10,  0},
-	{8, 10,  0},
-	{10, 10,  0},
-	{12, 10,  0},
-	{14, 10,  0},
-        {16, 10,  0},
-        {18, 10,  0},
-        {20, 10,  0},
-        {22, 10,  0},
-        {0, 7,  0},
-        {2, 8,  0},
-        {4, 8,  0},
-	{6, 8,  0},
-	{8, 8,  0},
-	{10, 8,  0},
-	{12, 8,  0},
-	{14, 8,  0},
-	{16, 8,  0},
-        {18, 8,  0},
-        {20, 8,  0},
-        {22, 8,  0},
-        {24, 8,  0},
-        {2, 6,  0},
-	{4, 6,  0},
-	{6, 6,  0},
-	{8, 6,  0},
-	{10, 6,  0},
-	{12, 6,  0},
-	{14, 6,  0},
-	{16, 6,  0},
-	{18, 6,  0},
-	{20, 6,  0},
-	{22, 6,  0},
-	{24, 6,  0},
-        {4, 4,  0},
-        {6, 4,  0},
-	{8, 4,  0},
-	{10, 4,  0},
-	{12, 4,  0},
-	{14, 4,  0},
-        {16, 4,  0},
-        {18, 4,  0},
-        {20, 4,  0},
-        {22, 4,  0},
-	{6, 2,  0},
-	{8, 2,  0},
-	{10, 2,  0},
-	{12, 2,  0},
-	{14, 2,  0},
-	{16, 2,  0},
-	{18, 2,  0},
-        {20, 2,  0},
-        {2, 0,  0},
-        {4, 0,  0},
-	{6, 0,  0},
-	{8, 0,  0},
-	{10, 0,  0},
-	{12, 0,  0},
-	{14, 0,  0},
-        {16, 0,  0},
-	{18, 0,  0},
-        {20, 0,  0},
-	{22, 0,  0},
-        {24, 0,  0},
-        {26, 7, 0},
-        {28, 7, 0}
+tilepos easy_map [MAX_TILES] = {
+ {13, 7,  4}, {12, 8,  3}, {14, 8,  3}, {12, 6,  3},
+ {14, 6,  3}, {10, 10,  2}, {12, 10,  2}, {14, 10,  2},
+ {16, 10,  2}, {10, 8,  2}, {12, 8,  2}, {14, 8,  2},
+ {16, 8,  2}, {10, 6,  2}, {12, 6,  2}, {14, 6,  2},
+ {16, 6,  2}, {10, 4,  2}, {12, 4,  2}, {14, 4,  2},
+ {16, 4,  2}, {8, 12,  1}, {10, 12,  1}, {12, 12,  1},
+ {14, 12,  1}, {16, 12,  1}, {18, 12,  1}, {8, 10,  1},
+ {10, 10,  1}, {12, 10,  1}, {14, 10,  1}, {16, 10,  1}, 
+ {18, 10,  1}, {8, 8,  1}, {10, 8,  1}, {12, 8,  1},
+ {14, 8,  1}, {16, 8,  1}, {18, 8,  1}, {8, 6,  1},
+ {10, 6,  1}, {12, 6,  1}, {14, 6,  1}, {16, 6,  1},
+ {18, 6,  1}, {8, 4,  1}, {10, 4,  1}, {12, 4,  1},
+ {14, 4,  1}, {16, 4,  1}, {18, 4,  1}, {8, 2,  1},
+ {10, 2,  1}, {12, 2,  1}, {14, 2,  1}, {16, 2,  1},
+ {18, 2,  1}, {2, 14,  0}, {4, 14,  0}, {6, 14,  0},
+ {8, 14,  0}, {10, 14,  0}, {12, 14,  0}, {14, 14,  0}, 
+ {16, 14,  0}, {18, 14,  0}, {20, 14,  0}, {22, 14,  0},
+ {24, 14,  0}, {6, 12,  0}, {8, 12,  0}, {10, 12,  0},
+ {12, 12,  0}, {14, 12,  0}, {16, 12,  0}, {18, 12,  0},
+ {20, 12,  0}, {4, 10,  0}, {6, 10,  0}, {8, 10,  0},
+ {10, 10,  0}, {12, 10,  0}, {14, 10,  0}, {16, 10,  0},
+ {18, 10,  0}, {20, 10,  0}, {22, 10,  0}, {0, 7,  0},
+ {2, 8,  0}, {4, 8,  0}, {6, 8,  0}, {8, 8,  0},
+ {10, 8,  0}, {12, 8,  0}, {14, 8,  0}, {16, 8,  0},
+ {18, 8,  0}, {20, 8,  0}, {22, 8,  0}, {24, 8,  0},
+ {2, 6,  0}, {4, 6,  0}, {6, 6,  0}, {8, 6,  0},
+ {10, 6,  0}, {12, 6,  0}, {14, 6,  0}, {16, 6,  0},
+ {18, 6,  0}, {20, 6,  0}, {22, 6,  0}, {24, 6,  0},
+ {4, 4,  0}, {6, 4,  0}, {8, 4,  0}, {10, 4,  0},
+ {12, 4,  0}, {14, 4,  0}, {16, 4,  0}, {18, 4,  0},
+ {20, 4,  0}, {22, 4,  0}, {6, 2,  0}, {8, 2,  0},
+ {10, 2,  0}, {12, 2,  0}, {14, 2,  0}, {16, 2,  0},
+ {18, 2,  0}, {20, 2,  0}, {2, 0,  0}, {4, 0,  0},
+ {6, 0,  0}, {8, 0,  0}, {10, 0,  0}, {12, 0,  0},
+ {14, 0,  0}, {16, 0,  0}, {18, 0,  0}, {20, 0,  0},
+ {22, 0,  0}, {24, 0,  0}, {26, 7, 0}, {28, 7, 0} 
 };
 
+/* Sorted such that the bottom leftest are first
+ * Bottom left = high y, low x ! */
+tilepos hard_map [MAX_TILES] = {
+	{ 10, 6,  6},
+	{ 9, 6,  5},
+	{ 11, 6,  5},
+	{ 8, 6,  4},
+	{ 10, 6,  4},
+	{ 12, 6,  4},
+	{ 5, 6,  3},
+	{ 7, 7,  3},
+	{ 7, 5,  3},
+	{ 9, 7,  3},
+	{ 9, 5,  3},
+	{ 11, 7,  3},
+	{ 11, 5,  3},
+	{ 13, 7,  3},
+	{ 13, 5,  3},
+	{ 15, 6,  3},
+	{ 5, 8,  2},
+	{ 7, 8,  2},
+	{ 9, 8,  2},
+	{ 11, 8,  2},
+	{ 13, 8,  2},
+	{ 15, 8,  2},
+	{ 4, 6,  2},
+	{ 6, 6,  2},
+	{ 8, 6,  2},
+	{ 10, 6,  2},
+	{ 12, 6,  2},
+	{ 14, 6,  2},
+	{ 16, 6,  2},
+	{ 5, 4,  2},
+	{ 7, 4,  2},
+	{ 9, 4,  2},
+	{ 11, 4,  2},
+	{ 13, 4,  2},
+	{ 15, 4,  2},
+	{ 7, 12,  1},
+	{ 9, 11,  1},
+	{ 11, 11,  1},
+	{ 13, 12,  1},
+	{ 2, 10,  1},
+	{ 4, 10,  1},
+	{ 6, 10,  1},
+	{ 8, 9,  1},
+	{ 10, 9,  1},
+	{ 12, 9,  1},
+	{ 14, 10,  1},
+	{ 16, 10,  1},
+	{ 18, 10,  1},
+	{ 3, 8,  1},
+	{ 3, 6,  1},
+	{ 5, 8,  1},
+	{ 5, 6,  1},
+	{ 7, 7,  1},
+	{ 9, 7,  1},
+	{ 11, 7,  1},
+	{ 13, 7,  1},
+	{ 15, 8,  1},
+	{ 17, 8,  1},
+	{ 3, 4,  1},
+	{ 5, 4,  1},
+	{ 7, 5,  1},
+	{ 9, 5,  1},
+	{ 11, 5,  1},
+	{ 13, 5,  1},
+	{ 15, 6,  1},
+	{ 17, 6,  1},
+	{ 2, 2,  1},
+	{ 4, 2,  1},
+	{ 6, 2,  1},
+	{ 8, 3,  1},
+	{ 10, 3,  1},
+	{ 12, 3,  1},
+	{ 15, 4,  1},
+	{ 17, 4,  1},
+	{ 7, 0,  1},
+	{ 9, 1,  1},
+	{ 11, 1,  1},
+	{ 14, 2,  1},
+	{ 16, 2,  1},
+	{ 18, 2,  1},
+	{ 13, 0,  1},
+	{ 6, 12,  0},
+	{ 8, 12,  0},
+	{ 10, 12,  0},
+	{ 12, 12,  0},
+	{ 14, 12,  0},
+	{ 1, 11,  0},
+	{ 3, 11,  0},
+	{ 1, 9,  0},
+	{ 0, 6,  0},
+	{ 3, 9,  0},
+	{ 5, 10,  0},
+	{ 7, 10,  0},
+	{ 9, 10,  0},
+	{ 11, 10,  0},
+	{ 13, 10,  0},
+	{ 15, 10,  0},
+	{ 17, 11,  0},
+	{ 19, 11,  0},
+	{ 2, 7,  0},
+	{ 4, 7,  0},
+	{ 6, 8,  0},
+	{ 8, 8,  0},
+	{ 2, 5,  0},
+	{ 4, 5,  0},
+	{ 6, 6,  0},
+	{ 8, 6,  0},
+	{ 10, 8,  0},
+	{ 10, 6,  0},
+	{ 12, 8,  0},
+	{ 12, 6,  0},
+	{ 14, 8,  0},
+	{ 14, 6,  0},
+	{ 17, 9,  0},
+	{ 16, 7,  0},
+	{ 19, 9,  0},
+	{ 18, 7,  0},
+	{ 1, 3,  0},
+	{ 3, 3,  0},
+	{ 6, 4,  0},
+	{ 8, 4,  0},
+	{ 10, 4,  0},
+	{ 12, 4,  0},
+	{ 14, 4,  0},
+	{ 16, 5,  0},
+	{ 18, 5,  0},
+	{ 20, 6,  0},
+	{ 1, 1,  0},
+	{ 3, 1,  0},
+	{ 5, 2,  0},
+	{ 7, 2,  0},
+	{ 9, 2,  0},
+	{ 11, 2,  0},
+	{ 13, 2,  0},
+	{ 15, 2,  0},
+	{ 17, 3,  0},
+	{ 19, 3,  0},
+	{ 17, 1,  0},
+	{ 19, 1,  0},
+	{ 6, 0,  0},
+	{ 8, 0,  0},
+	{ 10, 0,  0},
+	{ 12, 0,  0},
+	{ 14, 0,  0}
+};
+tilepos *pos = hard_map ;
 tile tiles[MAX_TILES];
 
-GtkWidget *window, *pref_dialog;
+GtkWidget *window, *pref_dialog, *hint_dialog;
 GtkWidget *mbox;
 GtkWidget *draw_area;
 GtkWidget *tiles_label;
@@ -235,13 +309,29 @@ int selected_tile, visible_tiles;
 int sequence_number;
 
 static GdkImlibImage *tiles_image;
-static gchar *tileset;
+static gchar *tileset = 0 ;
 
 static struct {
-	char *tileset;
-	int make_it_default;
+  char *tileset;
+  int make_it_default;
 } selected_tileset = {0,0};
 
+static gchar *mapset = 0 ;
+
+static struct {
+  char *mapset ;
+  int make_it_default;
+} selected_mapset = {0,0} ;
+
+struct _maps
+{
+  char *name ;
+  tilepos *map ;
+  int make_it_default ;
+} maps[] = { { "easy",      easy_map },
+	     { "difficult", hard_map } } ;
+
+void set_map (char *name) ;
 void load_tiles (char *fname);
 void quit_game_callback (GtkWidget *widget, gpointer data);
 void new_game_callback (GtkWidget *widget, gpointer data);
@@ -250,8 +340,10 @@ void undo_tile_callback (GtkWidget *widget, gpointer data);
 void redo_tile_callback (GtkWidget *widget, gpointer data);
 void select_game_callback (GtkWidget *widget, gpointer date);
 void new_game (void);
+void hint_callback (GtkWidget *widget, gpointer data);
 void properties_callback (GtkWidget *widget, gpointer data);
 void redraw_area (int x1, int y1, int x2, int y2, int mlayer);
+void redraw_tile (int i);
 void about_callback (GtkWidget *widget, gpointer data);
 void show_tb_callback (GtkWidget *widget, gpointer data);
 void sound_on_callback (GtkWidget *widget, gpointer data);
@@ -269,7 +361,7 @@ GnomeUIInfo filemenu [] = {
 
          {GNOME_APP_UI_SEPARATOR},
 
-         {GNOME_APP_UI_ITEM, N_("Hint"), NULL, NULL, NULL, NULL,
+         {GNOME_APP_UI_ITEM, N_("Hint"), NULL, hint_callback, NULL, NULL,
          GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
          {GNOME_APP_UI_ITEM, N_("Undo"), NULL, undo_tile_callback, NULL, NULL,
@@ -291,9 +383,6 @@ GnomeUIInfo optionsmenu [] = {
 
         {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), NULL, NULL, NULL, NULL,
         GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
-
-        {GNOME_APP_UI_ITEM, N_("Tile Set"), NULL, NULL, NULL, NULL,
-        GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_BLANK, 0, 0, NULL},
 
         {GNOME_APP_UI_ITEM, N_("Properties..."), NULL, properties_callback, NULL, NULL,
         GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
@@ -335,7 +424,7 @@ GnomeUIInfo toolbar [] = {
          {GNOME_APP_UI_ITEM, N_("Restart"), NULL, restart_game_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_REFRESH, 0, 0, NULL},
 
-         {GNOME_APP_UI_ITEM, N_("Hint"), NULL, NULL, NULL, NULL,
+         {GNOME_APP_UI_ITEM, N_("Hint"), NULL, hint_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_HELP, 0, 0, NULL},
 
          {GNOME_APP_UI_ITEM, N_("Undo"), NULL, undo_tile_callback, NULL, NULL,
@@ -347,9 +436,6 @@ GnomeUIInfo toolbar [] = {
          {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), NULL, sound_on_callback, NULL, NULL,
          GNOME_APP_PIXMAP_DATA, mini_sound_xpm, 0, 0, NULL},
 
-	 /*         {GNOME_APP_UI_ITEM, N_("Tile Set"), NULL, NULL, NULL, NULL,
-		    GNOME_APP_PIXMAP_DATA, mini_tiles_xpm, 0, 0, NULL},*/
-
          {GNOME_APP_UI_ITEM, N_("Properties"), NULL, properties_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_PROPERTIES, 0, 0, NULL},
 
@@ -359,22 +445,49 @@ GnomeUIInfo toolbar [] = {
 };
 
 static void
-cancel (GtkWidget *widget, void *data)
+pref_cancel (GtkWidget *widget, void *data)
 {
 	gtk_widget_destroy (pref_dialog);
 	pref_dialog = 0;
 }
 
 static void
-set_selection (GtkWidget *widget, void *data)
+hint_cancel (GtkWidget *widget, void *data)
+{
+  int lp ;
+  for (lp=0;lp<MAX_TILES;lp++)
+    if (tiles[lp].selected == 17)
+      {
+	tiles[lp].selected = 0 ;
+	redraw_tile(lp) ;
+      }
+
+  gtk_widget_destroy (hint_dialog);
+  hint_dialog = 0;
+}
+
+static void
+set_tile_selection (GtkWidget *widget, void *data)
 {
 	selected_tileset.tileset = data;
 }
 
 static void
-set_selection_def (GtkWidget *widget, gpointer *data)
+set_tile_selection_def (GtkWidget *widget, gpointer *data)
 {
 	selected_tileset.make_it_default = GTK_TOGGLE_BUTTON (widget)->active;
+}
+
+static void
+set_map_selection (GtkWidget *widget, void *data)
+{
+	selected_mapset.mapset = data;
+}
+
+static void
+set_map_selection_def (GtkWidget *widget, gpointer *data)
+{
+	selected_mapset.make_it_default = GTK_TOGGLE_BUTTON (widget)->active;
 }
 
 static void
@@ -384,23 +497,40 @@ free_str (GtkWidget *widget, void *data)
 }
 
 static void
-load_tileset_callback (GtkWidget *widget, void *data)
+load_callback (GtkWidget *widget, void *data)
 {
-	if (selected_tileset.tileset) {
-		load_tiles (selected_tileset.tileset);
-		gtk_widget_draw (draw_area, NULL);
-		if (selected_tileset.make_it_default) {
-			gnome_config_set_string (
-				"/gmahjongg/Preferences/tileset", 
-				selected_tileset.tileset);
-			gnome_config_sync();
-		}
+  int redraw = 0, sync = 0 ;
+  if (selected_tileset.tileset)
+    {
+      load_tiles (selected_tileset.tileset);
+      redraw = 1 ;
+      if (selected_tileset.make_it_default)
+	{
+	  gnome_config_set_string ("/gmahjongg/Preferences/tileset", 
+				   selected_tileset.tileset);
+	  sync = 1 ;
 	}
-	cancel (0,0);
+    }
+  if (selected_mapset.mapset)
+    {
+      set_map (selected_mapset.mapset) ;
+      redraw = 1 ;
+      if (selected_mapset.make_it_default)
+	{
+	  gnome_config_set_string ("/gmahjongg/Preferences/mapset", 
+				   selected_mapset.mapset);
+	  sync = 1 ;
+	}
+    }
+  if (sync)
+    gnome_config_sync();
+  if (redraw)
+    gtk_widget_draw (draw_area, NULL);
+  pref_cancel (0,0);
 }
 
 static void
-fill_menu (GtkWidget *menu)
+fill_tile_menu (GtkWidget *menu)
 {
 	struct dirent *e;
 	char *dname = gnome_unconditional_pixmap_file ("mahjongg");
@@ -428,8 +558,10 @@ fill_menu (GtkWidget *menu)
 		item = gtk_menu_item_new_with_label (s);
 		gtk_widget_show (item);
 		gtk_menu_append (GTK_MENU(menu), item);
- 		gtk_signal_connect (GTK_OBJECT(item), "activate", (GtkSignalFunc)set_selection, s); 
- 		gtk_signal_connect (GTK_OBJECT(item), "destroy", (GtkSignalFunc) free_str, s); 
+ 		gtk_signal_connect (GTK_OBJECT(item), "activate",
+				    (GtkSignalFunc)set_tile_selection, s); 
+ 		gtk_signal_connect (GTK_OBJECT(item), "destroy",
+				    (GtkSignalFunc) free_str, s); 
 	  
  	        if (!strcmp(tileset, s)) 
  	        { 
@@ -439,6 +571,29 @@ fill_menu (GtkWidget *menu)
 	        itemno++;
 	}
 	closedir (dir);
+}
+
+static void
+fill_map_menu (GtkWidget *menu)
+{
+  int lp, itemno=0 ;
+  GtkWidget *item;
+
+  for (lp=0;lp<sizeof(maps)/sizeof(struct _maps);lp++)
+    {
+      char *str = strdup (maps[lp].name) ;
+
+      item = gtk_menu_item_new_with_label (str) ;
+      gtk_widget_show (item);
+      gtk_menu_append (GTK_MENU(menu), item);
+      gtk_signal_connect (GTK_OBJECT(item), "activate",
+			  (GtkSignalFunc)set_map_selection, str); 
+      gtk_signal_connect (GTK_OBJECT(item), "destroy",
+			   (GtkSignalFunc) free_str, str); 
+      if (!strcasecmp(mapset, str))
+	  gtk_menu_set_active(GTK_MENU(menu), itemno); 
+      itemno++ ;
+    }
 }
 
 void clear_window ()
@@ -484,7 +639,7 @@ void draw_selected_tile (int i)
 {
 	redraw_area (tiles[i].x, tiles[i].y,
 		     tiles[i].x + TILE_WIDTH - 1, tiles[i].y + TILE_HEIGHT - 1,
-		     tiles[i].layer);
+		     -1);
 }
 
 void no_match (void)
@@ -501,30 +656,18 @@ void no_match (void)
 
 void check_free (void)
 {
-	int i = -1, type = MAX_TILES, br = 0, other = MAX_TILES, free = 0;
+	int i, j, type, free = 0;
 	GtkWidget *mb;
 	
-	while ((i < MAX_TILES) && (!free)) {
-		if (other >= MAX_TILES) i++;
-		while ((i < MAX_TILES) && (!tile_free(i))) {
-			i++;
-		}
-		if (other >= MAX_TILES) {
-			other = i + 1;
-		}
-		if (tile_free(i)) type = tiles[i].type;
-		br = 0;
-		while (!br) {
-			other++;
-			if (other >= MAX_TILES)
-				br = 1;
-			if ((tile_free(other)) && (tiles[other].type == type)) {
-				br = 1;
-				free = 1;
-				other = MAX_TILES;
-			}
-		}
-	}
+	/* Tile Free is now _so_ much quicker, it is more elegant to do a
+	 * British Library search, and safer. */
+	for (i=0;i<MAX_TILES && !free;i++)
+	    if (tile_free(i))
+	    {
+		type = tiles[i].type ;
+		for (j=0;j<MAX_TILES && !free;j++)
+		  free = (i != j && tiles[j].type == type && tile_free(j)) ;
+	    }
  	if (!free && visible_tiles>0) { 
  		mb = gnome_message_box_new (_("No more movements"), 
  					    GNOME_MESSAGE_BOX_INFO, 
@@ -537,12 +680,14 @@ void check_free (void)
 
 void redraw_tile (int i)
 {
+#ifndef PLACE_DEBUG
 	gdk_window_clear_area (draw_area->window, tiles[i].x, tiles[i].y,
 			       TILE_WIDTH, TILE_HEIGHT);
-	
+#endif
+
 	redraw_area (tiles[i].x, tiles[i].y, 
-		     tiles[i].x + TILE_WIDTH - 1,
-		     tiles[i].y + TILE_HEIGHT - 1,
+		     tiles[i].x + TILE_WIDTH-1,
+		     tiles[i].y + TILE_HEIGHT-1,
 		     0);
 }
 
@@ -566,20 +711,22 @@ void properties_callback (GtkWidget *widget, gpointer data)
 {
 	GtkDialog *d;
 	GtkWidget *button;
-	GtkWidget *menu, *omenu, *l, *hb, *cb, *f, *fv;
+	GtkWidget *tmenu, *mmenu, *otmenu, *ommenu, *l, *hb, *cb, *f, *fv;
 
 	if (pref_dialog)
 		return;
 	
 	pref_dialog = gtk_dialog_new ();
 	d = GTK_DIALOG(pref_dialog);
- 	gtk_signal_connect (GTK_OBJECT(pref_dialog), "delete_event", (GtkSignalFunc)cancel, NULL); 
+ 	gtk_signal_connect (GTK_OBJECT(pref_dialog), "delete_event",
+			    (GtkSignalFunc)pref_cancel, NULL); 
 
-	omenu = gtk_option_menu_new ();
-	menu = gtk_menu_new ();
-	fill_menu (menu);
-	gtk_widget_show (omenu);
-	gtk_option_menu_set_menu (GTK_OPTION_MENU(omenu), menu);
+	/* The Tile sub-menu */
+	otmenu = gtk_option_menu_new ();
+	tmenu = gtk_menu_new ();
+	fill_tile_menu (tmenu);
+	gtk_widget_show (otmenu);
+	gtk_option_menu_set_menu (GTK_OPTION_MENU(otmenu), tmenu);
 
 	f = gtk_frame_new (_ ("Tiles"));
 	gtk_container_border_width (GTK_CONTAINER (f), 5);
@@ -591,10 +738,11 @@ void properties_callback (GtkWidget *widget, gpointer data)
 	gtk_widget_show (l);
 	    
 	gtk_box_pack_start_defaults (GTK_BOX(hb), l);
-	gtk_box_pack_start_defaults (GTK_BOX(hb), omenu);
+	gtk_box_pack_start_defaults (GTK_BOX(hb), otmenu);
 
 	cb = gtk_check_button_new_with_label ( _("Make it the default tile set") );
- 	gtk_signal_connect (GTK_OBJECT(cb), "clicked", (GtkSignalFunc)set_selection_def, NULL);
+ 	gtk_signal_connect (GTK_OBJECT(cb), "clicked",
+			    (GtkSignalFunc)set_tile_selection_def, NULL);
 	gtk_widget_show (cb);
 
 	fv = gtk_vbox_new (0, 5);
@@ -605,22 +753,107 @@ void properties_callback (GtkWidget *widget, gpointer data)
 	gtk_box_pack_start_defaults (GTK_BOX(fv), cb);
 	gtk_box_pack_start_defaults (GTK_BOX(d->vbox), f);
 	gtk_container_add (GTK_CONTAINER (f), fv);
+	gtk_widget_show (f);
+
+	/* The Map sub-menu */
+	ommenu = gtk_option_menu_new ();
+	mmenu = gtk_menu_new ();
+	fill_map_menu (mmenu);
+	gtk_widget_show (ommenu);
+	gtk_option_menu_set_menu (GTK_OPTION_MENU(ommenu), mmenu);
+
+	f = gtk_frame_new (_ ("Maps"));
+	gtk_container_border_width (GTK_CONTAINER (f), 5);
+
+	hb = gtk_hbox_new (FALSE, FALSE);
+	gtk_widget_show (hb);
 	
+	l = gtk_label_new (_("Select Map:"));
+	gtk_widget_show (l);
+	    
+	gtk_box_pack_start_defaults (GTK_BOX(hb), l);
+	gtk_box_pack_start_defaults (GTK_BOX(hb), ommenu);
+
+	cb = gtk_check_button_new_with_label ( _("Make it the default map") );
+ 	gtk_signal_connect (GTK_OBJECT(cb), "clicked",
+			    (GtkSignalFunc)set_map_selection_def, NULL);
+	gtk_widget_show (cb) ;
+
+	fv = gtk_vbox_new (0, 5);
+	gtk_container_border_width (GTK_CONTAINER (fv), 5);
+	gtk_widget_show (fv);
+	
+	gtk_box_pack_start_defaults (GTK_BOX(fv), hb);
+	gtk_box_pack_start_defaults (GTK_BOX(fv), cb);
+	gtk_box_pack_start_defaults (GTK_BOX(d->vbox), f);
+	gtk_container_add (GTK_CONTAINER (f), fv);
 	gtk_widget_show (f);
 	
+	/* Misc bottom buttons */
         button = gnome_stock_button(GNOME_STOCK_BUTTON_OK);
 	 	gtk_signal_connect(GTK_OBJECT(button), "clicked", 
- 			   GTK_SIGNAL_FUNC(load_tileset_callback), NULL); 
+ 			   GTK_SIGNAL_FUNC(load_callback), NULL); 
 	gtk_box_pack_start(GTK_BOX(d->action_area), button, TRUE, TRUE, 5);
         gtk_widget_show(button);
         button = gnome_stock_button(GNOME_STOCK_BUTTON_CANCEL);
  	gtk_signal_connect(GTK_OBJECT(button), "clicked", 
-			   (GtkSignalFunc)cancel, 
+			   (GtkSignalFunc)pref_cancel,
  			   (gpointer)1);
 	gtk_box_pack_start(GTK_BOX(d->action_area), button, TRUE, TRUE, 5);
         gtk_widget_show(button);
 
         gtk_widget_show (pref_dialog);
+	
+}
+
+void hint_callback (GtkWidget *widget, gpointer data)
+{
+  GtkDialog *d;
+  GtkWidget *button;
+  int i, j, free=0, type ;
+
+  if (hint_dialog)
+    return;
+
+  /* Snarfed from check free
+   * Tile Free is now _so_ much quicker, it is more elegant to do a
+   * British Library search, and safer. */
+  for (i=0;i<MAX_TILES && !free;i++)
+    if (tile_free(i))
+      {
+	type = tiles[i].type ;
+	for (j=0;j<MAX_TILES && !free;j++)
+	  {
+	    free = (tiles[j].type == type && i != j && tile_free(j)) ;
+	    if (free)
+	      {
+		if (!tiles[i].selected)
+		  tiles[i].selected = 17 ;
+		if (!tiles[j].selected)
+		  tiles[j].selected = 17 ;
+		redraw_tile(i) ;
+		redraw_tile(j) ;
+	      }
+	  }
+      }
+  /* This is a good way to test check_free
+    for (i=0;i<MAX_TILES;i++)
+    if (tiles[i].selected == 17)
+    tiles[i].visible = 0 ;*/
+  
+  hint_dialog = gtk_dialog_new ();
+  d = GTK_DIALOG(hint_dialog);
+  gtk_signal_connect (GTK_OBJECT(hint_dialog), "delete_event",
+		      (GtkSignalFunc)hint_cancel, NULL); 
+
+  /* Misc bottom buttons */
+  button = gnome_stock_button(GNOME_STOCK_BUTTON_OK);
+  gtk_signal_connect(GTK_OBJECT(button), "clicked", 
+		     GTK_SIGNAL_FUNC(hint_cancel), NULL); 
+  gtk_box_pack_start(GTK_BOX(d->action_area), button, TRUE, TRUE, 5);
+  gtk_widget_show(button);
+  
+  gtk_widget_show (hint_dialog);
 	
 }
 
@@ -631,6 +864,7 @@ void about_callback (GtkWidget *widget, gpointer data)
 		"Code: Francisco Bustamante",
 		"      Max Watson",
 		"      Heinz Hempe",
+		"      Michael Meeks",
 		"Tiles: Jonathan Buzzard",
 		"       Max Watson",
 		NULL
@@ -639,7 +873,9 @@ void about_callback (GtkWidget *widget, gpointer data)
 	about = gnome_about_new (_("Gnome Mahjongg"), MAH_VERSION,
 				 "(C) 1998 The Free Software Foundation",
 				 (const char **)authors,
-				 _("Send comments and bug reports to: pancho@nuclecu.unam.mx\n"
+				 _("Send comments and bug reports to:\n"
+				   "        pancho@nuclecu.unam.mx or\n"
+				   "        michael@imaginator.com\n\n"
 				   "Tiles under the General Public License."),
 				 NULL);
 	gtk_widget_show (about);
@@ -666,8 +902,10 @@ void restart_game_callback (GtkWidget *widget, gpointer data)
     for (i = 0; i < MAX_TILES; i++) {
         tiles[i].visible = 1;
         tiles[i].selected = 0;
+	tiles[i].sequence = 0;
     }
     selected_tile=MAX_TILES+1;
+    sequence_number = 1 ;
     gtk_widget_draw (draw_area, NULL);
 }
 
@@ -699,7 +937,7 @@ void redo_tile_callback (GtkWidget *widget, gpointer data)
       if (sequence_number<MAX_TILES)
 	sequence_number++ ;
 
-    sprintf(tmpchar,"%d",visible_tiles) ;
+    sprintf(tmpchar,"%3d",visible_tiles) ;
     gtk_label_set(GTK_LABEL(tiles_label), tmpchar);
 }
 
@@ -712,7 +950,7 @@ void undo_tile_callback (GtkWidget *widget, gpointer data)
       sequence_number-- ;
     else
       return ;
-    
+
     if (selected_tile<MAX_TILES) 
       {
 	tiles[selected_tile].selected = 0 ;
@@ -810,7 +1048,6 @@ void sound_on_callback (GtkWidget *widget, gpointer data)
     printf("mer\n");
 }
 
-
 void redraw_tile_in_area (int x1, int y1, int x2, int y2, int tile)
 {
 	GdkRectangle trect, arect, dest;
@@ -873,7 +1110,7 @@ void redraw_tile_in_area (int x1, int y1, int x2, int y2, int tile)
 			gdk_draw_string(draw_area->window,
 					font, gc,
 					dest.x+4, dest.y+16,
-					tmpstr) ;*/
+					tmpstr) ;
 			sprintf (tmpstr, "%d", tile) ;
 			gdk_draw_string(draw_area->window,
 					font, gc,
@@ -894,7 +1131,6 @@ void redraw_area (int x1, int y1, int x2, int y2, int mlayer)
 	area.width = x2 - x1 + 1;
         area.height = y2 - y1 + 1;
 
-	//for(i = 0; i < MAX_TILES; i ++) {
         for(i = MAX_TILES; i > -1; i --) {
         	if ((tiles[i].visible) && (tiles[i].layer >= mlayer)) {
 			trect.x = tiles[i].x;
@@ -910,7 +1146,8 @@ void redraw_area (int x1, int y1, int x2, int y2, int mlayer)
 
 void refresh (GdkRectangle *area)
 {
-  redraw_area (area->x, area->y, area->x + area->width - 1, area->y + area->height - 1, 0);
+  redraw_area (area->x, area->y, area->x + area->width - 1,
+	       area->y + area->height - 1, 0);
 }
 
 void tile_gone (int i, int x, int y)
@@ -940,9 +1177,12 @@ void button_pressed (int x, int y)
         
 	i = find_tile (x, y);
 	if (i < MAX_TILES) {
-		if (tile_free (i)) {
-			if (selected_tile < MAX_TILES) {
-				if ((tiles[selected_tile].type == tiles[i].type) &&
+	    if (tile_free (i)) {
+/*		printf ("{ %d %d %d },\n",
+			(tiles[i].x - 5*tiles[i].layer - 30)/HALF_WIDTH,
+			(tiles[i].y + 4*tiles[i].layer - 25)/HALF_HEIGHT, tiles[i].layer) */
+		if (selected_tile < MAX_TILES) {
+			    if ((tiles[selected_tile].type == tiles[i].type) &&
 				    (i != selected_tile) ) {
 					tiles[i].visible = 0;
 					tiles[selected_tile].visible = 0;
@@ -1007,6 +1247,23 @@ gint area_event (GtkWidget *widget, GdkEvent *event, void *d)
 	}
 }
 
+void set_map (char *name)
+{
+  int lp ;
+
+  for (lp=0;lp<sizeof(maps)/sizeof(struct _maps);lp++)
+    if (strcasecmp (maps[lp].name, name) == 0)
+      {
+	pos = maps[lp].map ;
+	generate_dependancies() ;
+	new_game () ;
+
+	if (mapset)
+	  g_free (mapset);
+	mapset = g_strdup(name);
+      }
+}
+
 void load_tiles (char *fname)
 {
 	char *tmp, *fn;
@@ -1066,6 +1323,10 @@ void create_mahjongg_board (void)
 
 	buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/tileset=default.xpm", NULL);
 	load_tiles (buf);
+
+	buf = gnome_config_get_string_with_default ("/gmahjongg/Preferences/mapset=easy", NULL);
+	set_map (buf);
+
 	my_gc = gdk_gc_new (draw_area->window);
 	gdk_gc_set_clip_mask (my_gc, mask);
 
