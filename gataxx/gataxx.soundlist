@@ -1,0 +1,10 @@
+[__section_info__]
+description=gataxx
+
+[gameover]
+file=gataxx/gameover.wav
+description=Game over
+
+[flip-piece]
+file=gataxx/flip-piece.wav
+description=Piece flipping
