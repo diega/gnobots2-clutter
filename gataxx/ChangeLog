@@ -1,3 +1,8 @@
+2004-04-05  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* properties.c: Free the file list when the properties dialog is
+	destroyed.
+
 2004-03-25  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* ai.*:

@@ -264,8 +264,10 @@ static GtkWidget * add_level(GtkWidget * container,
 static gboolean quit_properties_dialog(GtkWidget * widget, gpointer data) {
 	save_properties();
 	apply_changes();
+	g_object_unref (theme_file_list);
+	theme_file_list = NULL;
 	gtk_widget_destroy(propbox);
-	propbox=NULL;
+	propbox = NULL;
 	return FALSE;
 }
 
@@ -302,7 +304,7 @@ void show_properties_dialog (void) {
 	g_signal_connect (G_OBJECT (propbox), "response",
 			  G_CALLBACK (quit_properties_dialog), &propbox);
 
-	g_signal_connect (G_OBJECT (propbox), "destroy",
+	g_signal_connect (G_OBJECT (propbox), "delete_event",
 			  G_CALLBACK (quit_properties_dialog), &propbox);
 	
 	/* create notebook (tabs) */
