@@ -1,0 +1,5 @@
+2003-06-02  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* src/chips.cpp: If we're going to use sqrt, we'd better include
+	math.h.
+
