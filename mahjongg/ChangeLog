@@ -1,3 +1,9 @@
+Wed Aug 27 15:06:19 2003  Jonathan Blandford  <jrb@redhat.com>
+
+	* mahjongg.c (bg_changed_cb): if you're going to add -ansi to
+	CFLAGS, you need to use ansi-compatible comments.
+	(tileset_changed_cb): Ditto
+
 2003-08-26  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* solubility.c: Optimisations. Thats 10k shaved off, which amounts

@@ -510,7 +510,7 @@ tileset_changed_cb (GConfClient *client,
 		}
 	}
 	gnome_canvas_update_now(GNOME_CANVAS(canvas));
-	//FIXME apply in the GUI
+	/* FIXME apply in the GUI */
 }
 
 static void
@@ -543,7 +543,7 @@ bg_changed_cb (GConfClient *client,
 		}
 	}
 	gnome_canvas_update_now(GNOME_CANVAS(canvas));
-	//FIXME apply in the GUI
+	/* FIXME apply in the GUI */
 }
 
 static void
