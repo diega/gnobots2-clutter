@@ -331,7 +331,7 @@ void states_view_edit_callback (GtkWidget *widget, gpointer data)
 	gint i;
 	gchar *labels[] = { N_("State"), N_("Read"), N_("Write"), N_("Move"), N_("New State"), NULL };
 	
-	message = gnome_message_box_new (_("Editting is still alpha. Come back later or hack."),
+	message = gnome_message_box_new (_("Editing is still alpha. Come back later or hack."),
 																	 GNOME_MESSAGE_BOX_WARNING,
 																	 GNOME_STOCK_BUTTON_OK,
 																	 NULL);
