@@ -71,7 +71,7 @@
   <chapter id="newthemes">
     <title>Making new themes for Same GNOME</title>
       <para>Making new animation themes for Same GNOME is very simple.
-      Each tile should measure fourty by fourty pixels.  You need to
+      Each tile should measure forty by forty pixels.  You need to
       provide a graphic image that contains at least 3 rows of 40
       pixels each (for the three different tile colors) and a variable
       number of frames to do your animation (this animation will be
