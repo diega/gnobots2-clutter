@@ -1,3 +1,9 @@
+2004-06-15  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c: Replace the dialog warning you about the map change
+	not taking effect until the next game with one that offers the
+	chance of starting a new game immediately.
+
 2004-06-09  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c: Remove the explicit shuffle controls and

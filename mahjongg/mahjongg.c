@@ -1068,6 +1068,7 @@ mapset_changed_cb (GConfClient *client,
 {
 	GtkWidget *dialog;
 	char *mapset_tmp;
+	gint response;
 
 	mapset_tmp = gconf_client_get_string (conf_client,
 			"/apps/mahjongg/mapset",
@@ -1079,15 +1080,24 @@ mapset_changed_cb (GConfClient *client,
 	} 
 
 	new_map = TRUE;
-	
-	dialog = gtk_message_dialog_new (
+
+	dialog = gtk_message_dialog_new_with_markup (
 		GTK_WINDOW (window),
 		GTK_DIALOG_MODAL,
-		GTK_MESSAGE_INFO,
-		GTK_BUTTONS_OK,
-		_("This new mapset will take effect when you start "
-		  "a new game, or when Mahjongg is restarted."));
-	gtk_dialog_run (GTK_DIALOG (dialog));
+		GTK_MESSAGE_QUESTION,
+		GTK_BUTTONS_NONE,
+		"<b>%s</b>\n\n%s", 
+		_("Do you want to finish the current game or start playing with the new map immediately ?"),
+		_("If you choose to finish with the old map then the next game will use the new map."));
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+				_("_Finish"), GTK_RESPONSE_REJECT,
+				GTK_STOCK_NEW, GTK_RESPONSE_ACCEPT,
+				NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog),
+					 GTK_RESPONSE_ACCEPT);
+	response = gtk_dialog_run (GTK_DIALOG (dialog));
+	if (response == GTK_RESPONSE_ACCEPT)
+		new_game (FALSE);
 	gtk_widget_destroy (dialog);
 }
 
