@@ -131,15 +131,19 @@ gint move_board(gint8 board[7][7], guint x, guint y, guint selected_x, guint sel
     if(whose_turn == WHITE_TURN) {
       whose_turn = BLACK_TURN;
       gui_message(_("Dark's move"));
+#if 0
       if(!white_computer_level) {
 	gtk_clock_stop(GTK_CLOCK(time_display));
       }
+#endif
     } else {
       whose_turn = WHITE_TURN;
       gui_message(_("Light's move"));
+#if 0
       if(!black_computer_level) {
 	gtk_clock_stop(GTK_CLOCK(time_display));
       }
+#endif
     }
     
     
@@ -187,14 +191,14 @@ gint move_board(gint8 board[7][7], guint x, guint y, guint selected_x, guint sel
     }
     
     gui_status();
-    
+#if 0    
     if(not_me == BLACK_TURN && !black_computer_level && timer_valid) {
       gtk_clock_start(GTK_CLOCK(time_display));
     }
     if(not_me == WHITE_TURN && !white_computer_level && timer_valid) {
       gtk_clock_start(GTK_CLOCK(time_display));
     }
-    
+#endif    
     tiles_to_flip = 1;
   }
   
@@ -575,7 +579,9 @@ gint check_valid_moves()
   }
 
   if(!white_moves || !black_moves) {
+#if 0
     gtk_clock_stop(GTK_CLOCK(time_display));
+#endif
     white_moves = count_pieces(board, WHITE_TURN);
     black_moves = count_pieces(board, BLACK_TURN);
     if(white_moves > black_moves)
@@ -595,10 +601,12 @@ gint check_valid_moves()
     gui_message(_("Light must pass, Dark's move"));
     whose_turn = BLACK_TURN;
     if(white_computer_level ^ black_computer_level) {
+#if 0
       if(!black_computer_level && timer_valid)
 	gtk_clock_start(GTK_CLOCK(time_display));
       else
 	gtk_clock_stop(GTK_CLOCK(time_display));
+#endif
     }
     return(TRUE);
   }
@@ -607,10 +615,12 @@ gint check_valid_moves()
     gui_message(_("Dark must pass, Light's move"));
     whose_turn = WHITE_TURN;
     if(white_computer_level ^ black_computer_level) {
+#if 0
       if(!white_computer_level && timer_valid)
 	gtk_clock_start(GTK_CLOCK(time_display));
       else
 	gtk_clock_stop(GTK_CLOCK(time_display));
+#endif
     }
     return(TRUE);
   }
