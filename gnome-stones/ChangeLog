@@ -1,3 +1,8 @@
+2003-07-22  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* main.c: Make the menus sensitive to the state of the game. This
+	is the last part of bug #97317.
+
 2003-07-09  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gnome-stones.desktop.in: Update name to fit HIG (bug 116916).

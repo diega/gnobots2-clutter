@@ -2,7 +2,7 @@
 
 /* gnome-stones - main.c
  *
- * Time-stamp: <2003-06-19 10:39:18 callum>
+ * Time-stamp: <2003-07-22 07:32:46 callum>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -95,6 +95,9 @@ game_start_cb (GtkWidget *widget, gpointer data);
 
 static void
 show_scores_dialog (gint pos);
+
+static void
+menu_set_sensitive (gboolean state);
 
 
 /****************************************************************************/
@@ -598,7 +601,9 @@ curtain_start (GStonesCave *cave)
 {
   curtain_cave= cave;
   state       = STATE_CURTAIN;
+  menu_set_sensitive (cave != NULL);
 
+  
   view_set_curtain_mode (GSTONES_VIEW (gstones_view), 
 			 VIEW_CURTAIN_ANIMATE, curtain_ready);
 }
@@ -1002,7 +1007,7 @@ game_start_cb (GtkWidget *widget, gpointer data)
 
   tmp = g_list_nth (game->start_caves, start_cave);
   cave= gstones_cave_load (game, tmp->data);
-  
+
   if (cave)
     curtain_start (cave);
 }
@@ -1149,6 +1154,15 @@ static GnomeUIInfo main_menu[]=
   GNOMEUIINFO_END
 };
 
+
+/*****************************************************************************/
+/* Menu sensitivity code. */
+static void menu_set_sensitive (gboolean state)
+{
+  gtk_widget_set_sensitive (game_menu[1].widget, state);
+  gtk_widget_set_sensitive (game_menu[2].widget, state);
+  gtk_widget_set_sensitive (game_menu[4].widget, state);
+}
 
 
 /*****************************************************************************/
@@ -1331,7 +1345,8 @@ main (int argc, char *argv[])
 
   /* ... a menu line, ... */
   gnome_app_create_menus (GNOME_APP (app), main_menu);
-
+  menu_set_sensitive (FALSE);
+  
   /* ... a toolbar, ... */
   /*  gnome_app_create_toolbar (GNOME_APP (app), toolbar); */
 
