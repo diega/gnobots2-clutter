@@ -1,3 +1,8 @@
+2002-11-19  Jeremy Browne  <jeremy@synonymous.ca>
+
+	* gataxx.c: Changes to quit / new game dialogs for consistency with
+	other parts of gnome-games package. (Bug #97321)
+
 2002-11-11  Tim Musson <trmusson@ihug.co.nz>
 
 	* properties.c: (show_properties_dialog): Multiple open properties
