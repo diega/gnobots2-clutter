@@ -71,8 +71,8 @@ draw_ball (int x, int y)
 	if (field [x][y].color){
 		by = STONE_SIZE * (field [x][y].color - 1);
 		bx = STONE_SIZE * (field [x][y].frame);
-		
-		gdk_draw_pixmap (draw_area->window,
+
+		gdk_draw_drawable (draw_area->window,
 				 draw_area->style->black_gc, stones,
 				 bx, by, x * STONE_SIZE, y * STONE_SIZE,
 				 STONE_SIZE, STONE_SIZE);
@@ -436,7 +436,7 @@ load_scenario (char *fname)
         tmpimage = gdk_image_get(stones, 0, 0, 1, 1);
         bgcolor.pixel = gdk_image_get_pixel(tmpimage, 0, 0);
         gdk_window_set_background (draw_area->window, &bgcolor);
-        gdk_image_destroy(tmpimage);
+	gdk_image_unref (tmpimage);
   
 	g_free( fn );
 
@@ -451,7 +451,7 @@ load_scenario (char *fname)
 static void
 create_same_board (char *fname)
 {
-	gtk_widget_push_colormap (gdk_rgb_get_cmap ());
+	gtk_widget_push_colormap (gdk_rgb_get_colormap ());
 
 	draw_area = gtk_drawing_area_new ();
 

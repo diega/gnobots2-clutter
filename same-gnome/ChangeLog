@@ -1,3 +1,7 @@
+2001-12-14  Juan Pablo Mendoza <jpablo@gnome.org>
+
+	* same-gnome.c: Remove some gdk deprecated stuff.
+
 2001-12-11  Gediminas Paulauskas <menesis@delfi.lt>
 
 	* same-gnome.c: Ask if quit only if game is not finished.
