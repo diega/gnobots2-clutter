@@ -1,3 +1,9 @@
+2003-06-10  William Jon McCann  <mccann@jhu.edu>
+
+	* gataxx.c: Removed separators from status bar.
+
+	* properties.c (show_properties_dialog): HIG fixes.
+
 2003-06-09  William Jon McCann  <mccann@jhu.edu>
 
 	* gataxx.c: Removed separator from dialogs as in HIG.
