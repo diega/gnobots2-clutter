@@ -1,3 +1,12 @@
+2005-01-13  Richard Hoelscher  <rah@rahga.com>
+
+	* gtkgridboard.h:
+	* gtkgridboard.c (gtk_gridboard_set_visibility): New. Hides moves,
+	allowing AI to plan future moves in secret.
+
+	* ai.h: Set most functions so they would be local to ai.c
+	* ai.c (computer_move): Disable visibility of moves while doing ai.
+	
 2005-01-10  Richard Hoelscher  <rah@rahga.com>
 
 	* gtkgridboard.c (gtk_gridboard_button_press): Fix for bug #163088.

@@ -25,14 +25,19 @@
 #include "ai.h"
 #include "properties.h"
 
-static int alphabeta(GtkGridBoard * gridboard, int alpha, int beta, int mode, int me, int depth);
-move computer_move_easy(GtkGridBoard * gridboard, int turn);
-move computer_move_ab(GtkGridBoard * gridboard, int turn, int depth);
 
 static int steps;
 
-/* takes a random move */
-move computer_move_random(GtkGridBoard * gridboard, int turn) {
+
+static int alphabeta(GtkGridBoard * gridboard, int alpha, int beta, int mode, int me, int depth);
+static int get_possible_moves_size(move *pm);
+static move * get_possible_moves(GtkGridBoard *gridboard, int turn);
+static move get_best_move_to(GtkGridBoard *gridboard, int x, int y, int me);
+static void free_possible_moves(move *pm);
+
+
+/* take a random move */
+static move computer_move_random(GtkGridBoard * gridboard, int turn) {
 	move * pm;
 	move result;
 	int size, item;
@@ -52,7 +57,7 @@ move computer_move_random(GtkGridBoard * gridboard, int turn) {
 /* makes a move which is not completely dumb, but not as hard as the move with
  * the highest heuristic value
  */
-move computer_move_easy(GtkGridBoard * gridboard, int turn) {
+static move computer_move_easy(GtkGridBoard * gridboard, int turn) {
 	move * pm;
 	move bm={ {0, 0, 0}, {0, 0, 0} };
 	int i, size, h, maxh=-100;
@@ -79,7 +84,7 @@ move computer_move_easy(GtkGridBoard * gridboard, int turn) {
  * @param depth the maximum search depth in the tree
  * @return the chosen move
  */
-move computer_move_ab(GtkGridBoard * gridboard, int turn, int depth) {
+static move computer_move_ab(GtkGridBoard * gridboard, int turn, int depth) {
 	move * pm; 				/* possible moves */
 	move bm={ {0, 0, 0}, {0, 0, 0} }; 	/* best move */
 	move * gm; 				/* good moves */
@@ -110,6 +115,26 @@ move computer_move_ab(GtkGridBoard * gridboard, int turn, int depth) {
 	free(gm);
 	return bm;
 	
+}
+
+/* this function gets called from gataxx */
+move computer_move(GtkGridBoard * gridboard, int turn) {
+        int level=props_get_level(turn);
+        move ai_move;
+
+        gtk_gridboard_set_visibility (gridboard, FALSE);
+
+	if (level == 1) {
+		ai_move = computer_move_random(gridboard, turn);
+	} else if (level == 2) {
+		ai_move = computer_move_easy(gridboard, turn);
+	} else {
+		ai_move = computer_move_ab(gridboard, turn, level-3);
+        }
+
+        gtk_gridboard_set_visibility (gridboard, TRUE);
+
+        return ai_move;
 }
 
 /* alphabeta search the possible moves */
@@ -157,25 +182,11 @@ static int alphabeta(GtkGridBoard * gridboard, int alpha, int beta, int mode, in
 	}
 }
 
-
-/* this function gets called from gataxx */
-move computer_move(GtkGridBoard * gridboard, int turn) {
-	int level=props_get_level(turn);
-
-	if (level==1) {
-		return computer_move_random(gridboard, turn);
-	} else if (level==2) {
-		return computer_move_easy(gridboard, turn);
-	} else {
-		return computer_move_ab(gridboard, turn, level-3);
-	}
-}
-
 /* returns possible moves
  * The less moves this returns, the faster the search algorithm will work.
  * Therefore, this does not really return _all_ possible moves.
  */
-move * get_possible_moves(GtkGridBoard * gridboard, int turn) {
+static move * get_possible_moves(GtkGridBoard * gridboard, int turn) {
 	int x, y, i=0;
 	move * pm;
 	move bm;
@@ -191,18 +202,18 @@ move * get_possible_moves(GtkGridBoard * gridboard, int turn) {
 	return pm;
 }
 
-int get_possible_moves_size(move * pm) {
+static int get_possible_moves_size(move * pm) {
 	return pm[0].from.valid;
 }
 
-void free_possible_moves(move * pm) {
+static void free_possible_moves(move * pm) {
 	free(pm);
 }
 
 /* only thing to make sure the returned move is the "best" move is to
  * prioritize normal moves over jumps
  */
-move get_best_move_to(GtkGridBoard * gridboard, int x, int y, int me) {
+static move get_best_move_to(GtkGridBoard * gridboard, int x, int y, int me) {
 	move bm;
 	int _x, _y, piece;
 	
@@ -243,5 +254,3 @@ move get_best_move_to(GtkGridBoard * gridboard, int x, int y, int me) {
 	
 	return bm;
 }
-
-

@@ -21,11 +21,6 @@
 #ifndef AI_H
 #define AI_H
 
-move computer_move_random(GtkGridBoard *gridboard, int turn);
 move computer_move(GtkGridBoard *gridboard, int turn);
-move *get_possible_moves(GtkGridBoard *gridboard, int turn);
-int get_possible_moves_size(move *pm);
-void free_possible_moves(move *pm);
-move get_best_move_to(GtkGridBoard *gridboard, int x, int y, int me);
 
 #endif /* AI_H */

@@ -94,7 +94,8 @@ GtkWidget * gtk_gridboard_new(gint width, gint height, char * tileset) {
         gridboard->selected=make_array(width, height);
 
         gtk_gridboard_load_pixmaps(gridboard);
-        gtk_gridboard_set_animate(gridboard, TRUE); 
+        gtk_gridboard_set_animate(gridboard, TRUE);
+        gtk_gridboard_set_visibility(gridboard, TRUE);
         
         return GTK_WIDGET(gridboard);
         
@@ -256,6 +257,8 @@ void gtk_gridboard_paint(GtkGridBoard * gridboard) {
         int x, y;
         int piecepic;
 
+	if (!gridboard->visibility) return;
+
         for (x=0; x<gridboard->height; x++) {
                 for (y=0; y<gridboard->width; y++) {
                         piecepic=get_pixmap_num(gridboard->board[x][y]);
@@ -276,6 +279,8 @@ static void gtk_gridboard_draw_pixmap(GtkGridBoard * gridboard, gint which, gint
  x, gint y) {
         GtkWidget * widget=GTK_WIDGET(gridboard);
         
+	if (!gridboard->visibility) return;
+
         gdk_draw_drawable (widget->window,
                 widget->style->fg_gc[widget->state],
                 gridboard->tiles_pixmap,
@@ -285,6 +290,7 @@ static void gtk_gridboard_draw_pixmap(GtkGridBoard * gridboard, gint which, gint
         /* draw lines around x, y */
         gtk_gridboard_draw_box(gridboard, x, y);
 }
+
 void gtk_gridboard_set_selection(GtkGridBoard * gridboard, gint type, 
 				 gint x, gint y) 
 {
@@ -303,6 +309,8 @@ static void gtk_gridboard_draw_box(GtkGridBoard *gridboard, gint x, gint y) {
         GdkGC * gc;
         int selected;
         static GdkColor selectcolor={12345, 30208, 41216, 33792};
+
+	if (!gridboard->visibility) return;
         
 	widget = GTK_WIDGET (gridboard);
 
@@ -489,6 +497,12 @@ void gtk_gridboard_set_animate(GtkGridBoard *gridboard, gboolean animate) {
                                 gtk_gridboard_flip_pixmaps,
                                 (gpointer) gridboard);
         }
+}
+
+void gtk_gridboard_set_visibility(GtkGridBoard *gridboard, gboolean visibility) {
+	g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
+
+	gridboard->visibility=visibility;
 }
 
 void gtk_gridboard_set_tileset(GtkGridBoard *gridboard, gchar * tileset) {

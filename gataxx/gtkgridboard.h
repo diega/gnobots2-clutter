@@ -66,6 +66,7 @@ struct _GtkGridBoard {
         gint tileheight;
         GdkPixmap * tiles_pixmap;
         gchar * tileset;
+        gboolean visibility;
         gboolean animate;
         gboolean showgrid;
 	StateList * statelist;
@@ -87,6 +88,7 @@ void g_cclosure_user_marshal_VOID__INT_INT (GClosure     *closure,
                                        gpointer      marshal_data); 
 
 void gtk_gridboard_set_animate(GtkGridBoard * gridboard, gboolean animate); 
+void gtk_gridboard_set_visibility(GtkGridBoard *gridboard, gboolean visibility);
 void gtk_gridboard_set_piece(GtkGridBoard * gridboard, int x, int y, int piece);
 void gtk_gridboard_set_selection (GtkGridBoard *widget, gint type, 
 				  gint x, gint y);
