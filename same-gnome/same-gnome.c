@@ -21,6 +21,7 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gconf/gconf-client.h>
 #include <games-gconf.h>
+#include <games-frame.h>
 
 /* Define a sensible alternative to ngettext if we don't have it. Note that
  * this is only sensible in the context of same-gnome. */
@@ -656,9 +657,9 @@ game_about_callback (GtkWidget *widget, void *data)
 	GdkPixbuf *pixbuf = NULL;
 	static GtkWidget *about = NULL;
 	const gchar *authors[] = {
-		"Miguel de Icaza.",
-		"Federico Mena.",
-		"Horacio J. Peña.",
+		"Miguel de Icaza",
+		"Federico Mena",
+		"Horacio J. Pe\xc3\xb1""a",		
 		NULL
 	};
 	gchar *documenters[] = {
@@ -685,10 +686,11 @@ game_about_callback (GtkWidget *widget, void *data)
 		}
 	}
 	
-	about = gnome_about_new (_("The Same GNOME"), VERSION,
-				 "(C) 1997-1998 the Free Software Foundation",
-				 _("Original idea from KDE's same game program."),
-				 (const char **)authors,
+	about = gnome_about_new (_("Same GNOME"), VERSION,
+				 "Copyright \xc2\xa9 1997-2003 Free Software "
+				 "Foundation, Inc.",
+				 _("Original idea from KDE's same game "
+				   "program."),				 (const char **)authors,
 				 (const char **)documenters,
 				 strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
                                  pixbuf);

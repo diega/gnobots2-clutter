@@ -1318,13 +1318,16 @@ about_callback (GtkWidget *widget, gpointer data)
 {
 	GdkPixbuf *pixbuf = NULL;
 	const gchar *authors [] = {
-		"Code: Francisco Bustamante",
-		"      Max Watson",
-		"      Heinz Hempe",
-		"      Michael Meeks",
-                "      Philippe Chavin",
-		"Tiles: Jonathan Buzzard",
-		"       Max Watson",
+		N_("Main game:"),
+		"Francisco Bustamante",
+		"Max Watson",
+		"Heinz Hempe",
+		"Michael Meeks",
+                "Philippe Chavin",
+		"",
+		N_("Tiles:"),
+		"Jonathan Buzzard",
+		"Max Watson",
 		NULL
 	};
 	gchar *documenters[] = {
@@ -1352,11 +1355,10 @@ about_callback (GtkWidget *widget, gpointer data)
 	}
 	
 	about = gnome_about_new (_("GNOME Mahjongg"), VERSION,
-				 "(C) 1998 The Free Software Foundation",
-				  _("Send comments and bug reports to:\n"
-				   "        pancho@nuclecu.unam.mx or\n"
-				   "        mmeeks@gnu.org\n\n"
-				   "Tiles under the General Public License."),
+				 "Copyright \xc2\xa9 1998-2003 Free Software "
+				 "Foundation, Inc.",
+				 _("GNOME version of the Eastern tile game, "
+				   "Mahjongg."),
 				 (const gchar **)authors,
 				 (const gchar **)documenters,
 				 strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,

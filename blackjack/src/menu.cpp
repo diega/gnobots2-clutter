@@ -75,8 +75,9 @@ help_about_callback ()
 {
   GdkPixbuf *pixbuf = NULL;
   const gchar *authors[] = {
-	  N_("Main program:  William Jon McCann (mccann@jhu.edu)"),
-	  N_("                      Eric Farmer (erfarmer201@comcast.net)"),
+	  N_("Main game:"),
+	  "William Jon McCann (mccann@jhu.edu)",
+	  "Eric Farmer (erfarmer201@comcast.net)",
 	  NULL
   };
 
@@ -106,10 +107,11 @@ help_about_callback ()
   }
   about = gnome_about_new ( _("Blackjack"), VERSION,
                             /* copyright notice */
-                            _("(C) 2003 William Jon McCann <mccann@jhu.edu>\n"
-                              "Eric Farmer <erfarmer201@comcast.net>"),
+                            "Copyright \xc2\xa9 2003 William Jon McCann "
+	                    "<mccann@jhu.edu>, Eric Farmer "
+		            "<erfarmer201@comcast.net>",
                             _("Blackjack provides a casino-style "
-                              "blackjack card game"),
+                              "blackjack card game."),
                             (const char **)authors,
                             (const char **)documenters,
                             NULL,

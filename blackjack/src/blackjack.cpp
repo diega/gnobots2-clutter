@@ -89,7 +89,7 @@ bj_make_window_title (gchar *game_name, gint seed)
 {
   char *title;
 
-  title = g_strdup_printf (_("Blackjack:  %s  ( %d )"), game_name, seed);
+  title = g_strdup_printf (_("Blackjack: %s (%d)"), game_name, seed);
 
   gtk_window_set_title (GTK_WINDOW (app), title); 
 

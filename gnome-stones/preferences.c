@@ -567,7 +567,7 @@ preferences_dialog_new (void)
   
   prdata= g_malloc (sizeof (PreferencesData));
   
-  properties = gtk_dialog_new_with_buttons(_("GNOME-Stones Preferences"),
+  properties = gtk_dialog_new_with_buttons(_("GNOME Stones Preferences"),
                                            GTK_WINDOW(app),
                                            /*GTK_DIALOG_MODAL |*/ GTK_DIALOG_DESTROY_WITH_PARENT,
                                            GTK_STOCK_HELP, GTK_RESPONSE_HELP,
