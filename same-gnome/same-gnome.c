@@ -588,7 +588,7 @@ GtkMenuEntry same_menu [] = {
 	{ N_("Game/Scenario"),   "<control>S", game_preferences_callback, NULL },
 	{ N_("Game/Top Ten"),    "<control>T", game_top_ten_callback, NULL },
 	{ N_("Game/<separator>"), NULL, NULL, NULL },
-	{ N_("Game/Quit"),       "<control>Q", (GtkMenuCallback) game_quit_callback, NULL }, 
+	{ N_("Game/Exit"),       "<control>E", (GtkMenuCallback) game_quit_callback, NULL }, 
 };
 
 #define ELEMENTS(x) (sizeof (x) / sizeof (x [0]))

@@ -1508,7 +1508,7 @@ static GnomeMenuInfo file_menu[]={
 	{GNOME_APP_MENU_ITEM, "New", NewGame, NULL},
 	{GNOME_APP_MENU_ITEM, "Load...", LoadAGame, NULL},
 	{GNOME_APP_MENU_ITEM, "Save...", TypeSave, NULL},
-	{GNOME_APP_MENU_ITEM, "Quit", gtk_main_quit, NULL},
+	{GNOME_APP_MENU_ITEM, "Exit", gtk_main_quit, NULL},
 	{GNOME_APP_MENU_ENDOFINFO, NULL, NULL, NULL}
 };
 
