@@ -14,7 +14,7 @@
 #include <config.h>
 
 #include <gtk/gtk.h>
-#include "gnome.h"
+#include <gnome.h>
 
 #include "vborder.xpm"
 #include "hborder.xpm"
@@ -250,7 +250,7 @@ GtkWidget *mbox;
 GtkWidget *draw_area;
 GdkPixmap *tiles_pix, *mask, *vborderpic, *hborderpic;
 tile tiles[MAX_TILES];
-int selected_tile;
+int selected_tile, visible_tiles;
 
 void quit_game_callback (GtkWidget *widget, gpointer data);
 void new_game_callback (GtkWidget *widget, gpointer data);
@@ -610,6 +610,34 @@ int tile_free (int x, int y, int tile_num)
 	return 0;
 }
 
+void no_match (void)
+{
+	GtkWidget *mb;
+
+	mb = gnome_messagebox_new (_("Tiles don't match!"),
+				   GNOME_MESSAGEBOX_INFO,
+				   _("Ok"), NULL);
+	GTK_WINDOW(mb)->position = GTK_WIN_POS_MOUSE;
+	gnome_messagebox_set_modal (GNOME_MESSAGEBOX (mb));
+	gtk_widget_show (mb);
+}
+
+void you_won (void)
+{
+	GtkWidget *mb;
+
+	mb = gnome_messagebox_new (_("You won!"),
+				   GNOME_MESSAGEBOX_INFO,
+				   _("Ok"), NULL);
+	GTK_WINDOW(mb)->position = GTK_WIN_POS_MOUSE;
+	gnome_messagebox_set_modal (GNOME_MESSAGEBOX (mb));
+	gtk_signal_connect_object (GTK_OBJECT(mb),
+				   "clicked",
+				   GTK_SIGNAL_FUNC (new_game_callback),
+				   NULL);
+	gtk_widget_show (mb);
+}
+
 void about_callback (GtkWidget *widget, gpointer data)
 {
 	GtkWidget *about;
@@ -640,6 +668,7 @@ void new_game (void)
 {
 	int i, f, n, col = 0, row = 0;
 
+	visible_tiles = 144;
 	for (f = 0; f < 144; f++) {
 		tiles[f].visible = 0;
 	}
@@ -911,13 +940,16 @@ void button_pressed (int x, int y)
 						   tiles[selected_tile].x + 1,
 						   tiles[selected_tile].y + 1);
 					selected_tile = MAX_TILES + 1;
+					visible_tiles -= 2;
+					if (visible_tiles <= 0)
+						you_won ();
 				}
 				else if (i == selected_tile) {
 					tiles[i].selected = 0;
 					selected_tile = MAX_TILES + 1;
 				}
 				else {
-					printf (_("Tiles don't match \n"));
+					no_match();
 					i = selected_tile;
 				}
 			}
