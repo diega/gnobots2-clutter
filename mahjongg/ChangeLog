@@ -1,3 +1,11 @@
+2002-05-09  Bastien Nocera  <hadess@hadess.net>
+
+	* Makefile.am:
+	* mahjongg.c: (show_toolbar_changed_cb), (show_tb_callback),
+	(main):
+	* mahjongg.schemas: start of gconf support (Closes: #77142),
+	much more to be done, add tooltips to the toolbar items
+
 2002-05-05  Chris Lyttle <chris@wilddev.net>
 
 	* help/C/Makefile.am: updated for new format of SK 0.3.8.

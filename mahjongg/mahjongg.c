@@ -21,6 +21,7 @@
 
 #include <gtk/gtk.h>
 #include <gnome.h>
+#include <gconf/gconf-client.h>
 #include <libgnomeui/gnome-window-icon.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <games-clock.h>
@@ -31,9 +32,6 @@
 
 #define APPNAME "mahjongg"
 #define APPNAME_LONG "Mahjongg"
-/*
-#define MAH_VERSION "0.99.2+"
-*/
 #define MAH_VERSION VERSION
 
 #define AREA_WIDTH 600
@@ -251,6 +249,7 @@ GtkWidget *canvas;
 GtkWidget *tiles_label;
 gint selected_tile, visible_tiles;
 gint sequence_number;
+GConfClient *conf_client;
 
 static GdkPixbuf *tiles_image, *bg_image;
 
@@ -386,28 +385,28 @@ GnomeUIInfo mainmenu [] = {
 };
 
 GnomeUIInfo toolbar_uiinfo [] = {
-	{GNOME_APP_UI_ITEM, N_("New"), NULL, confirm_action, (gpointer)NEW_GAME, NULL,
+	{GNOME_APP_UI_ITEM, N_("New"), N_("New"), confirm_action, (gpointer)NEW_GAME, NULL,
          GNOME_APP_PIXMAP_STOCK, GTK_STOCK_NEW, 0, 0, NULL},
 
-        {GNOME_APP_UI_ITEM, N_("Restart"), NULL, confirm_action, (gpointer)RESTART_GAME, NULL,
+        {GNOME_APP_UI_ITEM, N_("Restart"), N_("Restart"), confirm_action, (gpointer)RESTART_GAME, NULL,
          GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REFRESH, 0, 0, NULL},
 
-        {GNOME_APP_UI_ITEM, N_("Hint"), NULL, hint_callback, NULL, NULL,
+        {GNOME_APP_UI_ITEM, N_("Hint"), N_("Hint"), hint_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GTK_STOCK_HELP, GDK_H, GDK_CONTROL_MASK, NULL},
 
-        {GNOME_APP_UI_ITEM, N_("Undo"), NULL, undo_tile_callback, NULL, NULL,
+        {GNOME_APP_UI_ITEM, N_("Undo"), N_("Undo"), undo_tile_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GTK_STOCK_UNDO, 0, 0, NULL},
 
-        {GNOME_APP_UI_ITEM, N_("Redo"), NULL, redo_tile_callback, NULL, NULL,
+        {GNOME_APP_UI_ITEM, N_("Redo"), N_("Redo"), redo_tile_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REDO, 0, 0, NULL},
 
         /* If you change the place for this button, change the index in
            the definition of PAUSE_BUTTON below */
-        {GNOME_APP_UI_TOGGLEITEM, N_("Pause"), NULL, pause_callback, NULL, NULL,
+        {GNOME_APP_UI_TOGGLEITEM, N_("Pause"), N_("Pause"), pause_callback, NULL, NULL,
          GNOME_APP_PIXMAP_STOCK, GTK_STOCK_STOP, 0, 0, NULL},
 
 #ifdef SOUND_SUPPORT_FINISHED
-        {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), NULL, sound_on_callback, NULL, NULL,
+        {GNOME_APP_UI_TOGGLEITEM, N_("Sound"), N_("Sound"), sound_on_callback, NULL, NULL,
          GNOME_APP_PIXMAP_DATA, mini_sound_xpm, 0, 0, NULL},
 #endif
 
@@ -1461,10 +1460,35 @@ void select_game (GtkWidget *widget, gpointer data)
               	gtk_widget_destroy (dialog);
 }
 
+void
+show_toolbar_changed_cb (GConfClient *client,
+		guint cnxn_id,
+		GConfEntry *entry,
+		gpointer user_data)
+{
+	BonoboDockItem *gdi;
+	gboolean shown;
+
+	shown = gconf_client_get_bool (conf_client,
+			"/apps/mahjongg/show-toolbar", NULL);
+	gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window),
+			GNOME_APP_TOOLBAR_NAME);
+	if (shown == TRUE)
+	{
+		gtk_check_menu_item_set_active
+			(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), TRUE);
+		gtk_widget_show(GTK_WIDGET(gdi));
+	} else {
+		gtk_check_menu_item_set_active
+			(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), FALSE);
+		gtk_widget_hide(GTK_WIDGET(gdi));
+		gtk_widget_queue_resize (window);
+	}
+}
+
 void show_tb_callback (GtkWidget *widget, gpointer data)
 {
     BonoboDockItem *gdi;
-
     GtkWidget *toolbar;
 
     gdi = gnome_app_get_dock_item_by_name (GNOME_APP (window), GNOME_APP_TOOLBAR_NAME);
@@ -1472,12 +1496,14 @@ void show_tb_callback (GtkWidget *widget, gpointer data)
 
     if((GTK_CHECK_MENU_ITEM(settingsmenu[0].widget))->active)
     {
-        gnome_config_set_bool("/gmahjongg/toolbar/show", TRUE);
+        gconf_client_set_bool(conf_client,
+			"/apps/mahjongg/show-toolbar", TRUE, NULL);
         gtk_widget_show(GTK_WIDGET(gdi));
     }
     else
     {
-        gnome_config_set_bool("/gmahjongg/toolbar/show", FALSE);
+        gconf_client_set_bool(conf_client,
+			"/apps/mahjongg/show-toolbar", FALSE, NULL);
         gtk_widget_hide(GTK_WIDGET(gdi));
 	gtk_widget_queue_resize (window);
     }
@@ -1809,7 +1835,7 @@ int main (int argc, char *argv [])
 	srand (time (NULL));
 	
 	window = gnome_app_new (APPNAME, _(APPNAME_LONG));
-/*	gtk_window_set_policy (GTK_WINDOW (window), FALSE, FALSE, TRUE); */
+	gtk_window_set_resizable (GTK_WINDOW (window), FALSE);
 
 	/* Statusbar for a chrono */
 	chrono_box = gtk_hbox_new(0, FALSE);
@@ -1864,13 +1890,25 @@ int main (int argc, char *argv [])
 
 	gtk_widget_show (window);
 
-        if(gnome_config_get_bool_with_default("/gmahjongg/toolbar/show",&show))
-            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), TRUE);
+	conf_client = gconf_client_get_default ();
+	show = gconf_client_get_bool (conf_client,
+			"/apps/mahjongg/show-toolbar", NULL);
+        if(show)
+            gtk_check_menu_item_set_active
+		    (GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), TRUE);
         else {
-                gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), FALSE);
+                gtk_check_menu_item_set_active
+			(GTK_CHECK_MENU_ITEM(settingsmenu[0].widget), FALSE);
                 gtk_widget_hide(GTK_WIDGET(gdi)) ;
                 gtk_widget_queue_resize (window);
         }
+	gconf_client_add_dir (conf_client,
+			"/apps/mahjongg", GCONF_CLIENT_PRELOAD_ONELEVEL,
+			NULL);
+	gconf_client_notify_add (conf_client,
+			"/apps/mahjongg/show-toolbar",
+			show_toolbar_changed_cb,
+			NULL, NULL, NULL);
 
   	gnome_app_flash (GNOME_APP (window), 
   				_("Welcome to GNOME Mahjongg!")); 

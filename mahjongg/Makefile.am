@@ -4,6 +4,9 @@ bgdir = $(datadir)/pixmaps/mahjongg/bg
 Gamesdir = $(datadir)/applications
 appicondir=$(datadir)/pixmaps
 
+schemadir   = $(sysconfdir)/gconf/schemas
+schema_DATA = mahjongg.schemas
+
 INCLUDES =						\
 	-I$(top_srcdir)/libgames-support		\
 	-I..						\
@@ -35,7 +38,8 @@ bg_DATA = bg1.png bg2.png bg3.png bg4.png
 
 appicon_DATA = gnome-mahjongg.png
 
-EXTRA_DIST = mahjongg.desktop.in $(pixmap_DATA) $(appicon_DATA) $(bg_DATA)
+EXTRA_DIST = mahjongg.desktop.in $(pixmap_DATA) $(appicon_DATA) $(bg_DATA) \
+	$(schema_DATA)
 
 Games_in_files = mahjongg.desktop.in
 Games_DATA = $(Games_in_files:.desktop.in=.desktop)
@@ -44,6 +48,7 @@ Games_DATA = $(Games_in_files:.desktop.in=.desktop)
 SUBDIRS = help
 
 install-data-local:
+	GCONF_CONFIG_SOURCE=$(GCONF_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
 	$(mkinstalldirs) $(DESTDIR)$(bgdir)
 	touch $(DESTDIR)$(scoredir)/mahjongg.{easy,difficult}.scores
