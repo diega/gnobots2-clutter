@@ -1,6 +1,6 @@
 /* gnome-stones - main.c
  *
- * Time-stamp: <2003-05-31 15:10:05 callum>
+ * Time-stamp: <2003-06-03 22:02:25 callum>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -1006,6 +1006,11 @@ game_pause_cb (GtkWidget *widget, gpointer data)
     }
 }
 
+static void
+level_restart_cb (GtkWidget * widget, gpointer date)
+{
+  cave_player_die (cave);
+}
 
 static void
 preferences_cb (GtkWidget *widget, gpointer data)
@@ -1089,6 +1094,7 @@ about_cb (GtkWidget *widget, gpointer data)
 static GnomeUIInfo game_menu[]= {
   GNOMEUIINFO_MENU_NEW_GAME_ITEM(game_start_cb, NULL),
   GNOMEUIINFO_MENU_END_GAME_ITEM(game_stop_cb, NULL),
+  GNOMEUIINFO_ITEM_STOCK(N_("_Restart level"), N_("Restart the current level"), level_restart_cb, GTK_STOCK_REFRESH),
   GNOMEUIINFO_SEPARATOR,
   GNOMEUIINFO_MENU_PAUSE_GAME_ITEM (game_pause_cb, NULL),
   GNOMEUIINFO_SEPARATOR,

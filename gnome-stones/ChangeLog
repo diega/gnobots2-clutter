@@ -1,3 +1,13 @@
+2003-06-03  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* main.c: Add a restart level menu item. It doesn't work with
+	the escape key code or disable itself when not needed, but its as
+	good a start as I'm going to get before 2.3.3.
+
+	* gnomekoban.caves.in (Lives): Increase so that the game is
+	playable. Ten should provide a challenge while giving room
+	to make mistakes.
+
 2003-05-31  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* Makefile.am: Undo the score directory changes. It breaks more

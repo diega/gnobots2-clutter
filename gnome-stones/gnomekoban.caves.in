@@ -1,7 +1,7 @@
 [General]
 _Title=Gnomekoban
 New life score=500
-Lives=1
+Lives=10
 Frame rate=0.125
 Object size=1
 Plugins=default:gnomekoban
