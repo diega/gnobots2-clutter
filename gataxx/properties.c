@@ -61,6 +61,8 @@ gchar * gataxx_gconf_get_string (gchar *key);
 gint gataxx_gconf_get_int (gchar *key, gint default_int);
 gboolean gataxx_gconf_get_bool (gchar *key, gint default_bool);
 
+GList * theme_list;
+
 static gint clamp_int (gint input, gint low, gint high)
 {
 	if (input < low)
@@ -258,10 +260,14 @@ animate_select (GtkWidget *widget, gpointer data)
 void
 set_selection (GtkWidget *widget, gpointer data)
 {
+	GList * entry;
+	
 	if (tile_set)
 		g_free (tile_set);
 
-	tile_set = g_strdup ((char *) data);
+	entry = g_list_nth (theme_list,
+			    gtk_combo_box_get_active (GTK_COMBO_BOX (widget)));
+	tile_set = g_strdup ((char *) entry->data);
         
 	save_properties ();
 	apply_changes();
@@ -284,6 +290,12 @@ fill_menu (GtkWidget *menu)
         DIR *dir;
         int itemno = 0;
 
+	if (theme_list) {
+		g_list_foreach (theme_list, (GFunc) g_free, NULL);
+		g_list_free (theme_list);
+	}
+	theme_list = NULL;
+	
         dir = opendir (dname);
 	g_free (dname);
 	
@@ -292,23 +304,19 @@ fill_menu (GtkWidget *menu)
 	}
 
         while ((e = readdir (dir)) != NULL) {
-                GtkWidget *item;
                 char *s = GINT_TO_POINTER (g_strdup (e->d_name));
+
                 if(! g_strrstr (e->d_name, ".png")) {
                         g_free (s);
                         continue;
                 }
 
-                item = gtk_menu_item_new_with_label (s);
-                gtk_widget_show (item);
-                gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-                g_signal_connect (G_OBJECT (item), "activate",
-				  G_CALLBACK (set_selection), s);
-                g_signal_connect (G_OBJECT (item), "destroy",
-				  G_CALLBACK (free_str), s);
-
+		gtk_combo_box_append_text (GTK_COMBO_BOX (menu), s);
+		theme_list = g_list_append (theme_list, s);
+		
                 if (! strcmp (tile_set, s)) {
-                        gtk_menu_set_active (GTK_MENU (menu), itemno);
+                        gtk_combo_box_set_active (GTK_COMBO_BOX (menu),
+						  itemno);
                 }
 
                 itemno++;
@@ -325,7 +333,6 @@ show_properties_dialog (void)
 	GtkWidget *label2;
 	GtkWidget *table;
 	GtkWidget *button;
-	GtkWidget *menu;
 	GtkWidget *vbox, *vbox2;
 	GtkWidget *hbox;
 	GtkWidget *option_menu;
@@ -526,11 +533,10 @@ show_properties_dialog (void)
 	
 	gtk_box_pack_start (GTK_BOX (hbox), label2, FALSE, FALSE, 0);
 	
-	option_menu = gtk_option_menu_new ();
-	menu = gtk_menu_new ();
-	fill_menu (menu);
-	gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
-	
+	option_menu = gtk_combo_box_new_text ();
+	g_signal_connect (G_OBJECT (option_menu), "changed",
+			  G_CALLBACK (set_selection), NULL);
+	fill_menu (option_menu);
 	gtk_box_pack_start (GTK_BOX (hbox), option_menu, TRUE, TRUE, 0);
 	
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);

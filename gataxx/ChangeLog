@@ -1,3 +1,7 @@
+2003-10-19  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* properties.c: Replace functions deprecated in GTK+2.4.
+
 2003-09-13  Steve Chaplin
 
        * properties.c (fill_menu): g_free() unused memory.
