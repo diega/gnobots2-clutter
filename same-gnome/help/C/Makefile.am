@@ -8,12 +8,11 @@ EXTRA_DIST = same-gnome.sgml
 
 all: index.html
 
-index.html:same-gnome/book1.html
+index.html: same-gnome/book1.html
 	cd $(srcdir) && cp same-gnome/book1.html index.html
 
 same-gnome/book1.html: same-gnome.sgml
-	-db2html same-gnome.sgml
-
+	-cd $(srcdir) && db2html same-gnome.sgml
 
 dist-hook:
 	mkdir $(distdir)/same-gnome
