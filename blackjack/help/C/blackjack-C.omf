@@ -24,7 +24,7 @@
      user's guide
    </type>
      <format mime="text/xml" dtd="-//OASIS//DTD DocBook XML V4.1.2//EN"/>
-     <identifier url="file://usr/share/gnome/help/blackjack/C/blackjack.xml"/>
+     <identifier url="blackjack.xml"/>
      <language code="C"/>
      <relation seriesid="871c9eac-5ff2-11d6-9e71-a18a9688cdd9"/>
      <rights type="GNU FDL" license.version="1.1" holder="William Jon McCann"/>
