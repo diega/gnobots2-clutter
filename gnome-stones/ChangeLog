@@ -1,3 +1,7 @@
+2001-08-14  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* help/it/gnome-stones.sgml: Validate the sgml.
+	
 2001-08-13  Abel Cheung  <maddog@linux.org.hk>
 
 	* \*.caves: Added traditional Chinese strings. (useless?)

@@ -168,14 +168,14 @@
 
    </sect3>
 
-   <sect 3 id="scores">
+   <sect3 id="scores">
    <title>Migliori punteggi</title>
-   Per vedere i migliori punteggi realizzati selezionate: 
+   <para>
+     Per vedere i migliori punteggi realizzati selezionate: 
        <menuchoice>
         <guisubmenu>Gioco</guisubmenu> 
         <guimenuitem>Punteggi...</guimenuitem>
        </menuchoice>
-   <para>
    </para>
    </sect3>
 
@@ -422,7 +422,7 @@
   <para>
    Una copia della <citetitle>Licenza pubblica generica GNU</citetitle>
    è inclusa come appendice nella <citetitle>Guida utente di
-   GNOME<citetitle>. È possibile anche ottenerne una copia dalla
+   GNOME</citetitle>. È possibile anche ottenerne una copia dalla
    Free Software Foundation visitando <ulink type="http"
    url="http://www.fsf.org">il loro sito Web</ulink> o scrivendo a:
     <address>
