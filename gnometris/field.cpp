@@ -55,7 +55,7 @@ Field::updateSize(GdkPixbuf * bgImage, GdkColor *bgcolour)
   			"y", (double) 0,
 			"width", (double) COLUMNS * BLOCK_SIZE,
 			"height", (double) LINES * BLOCK_SIZE,
-  			0);
+  			NULL);
 		else
 			bg = gnome_canvas_item_new(
   			gnome_canvas_root(GNOME_CANVAS(w)),
@@ -67,5 +67,5 @@ Field::updateSize(GdkPixbuf * bgImage, GdkColor *bgcolour)
 				"fill_color_gdk", bgcolour,
 				"outline_color", "black",
 				"width_units", 1.0,
-  			0);
+  			NULL);
 }

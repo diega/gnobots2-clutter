@@ -33,7 +33,7 @@ GnomeCanvasItem *BlockOps::generateItem(int x, int y, int colour)
   			"y", (double) y * BLOCK_SIZE,
 			"width", (double) BLOCK_SIZE,
 			"height", (double) BLOCK_SIZE,
-  			0);
+  			NULL);
 
 	return it;
 }

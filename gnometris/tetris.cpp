@@ -251,7 +251,7 @@ Tetris::Tetris(int cmdlLevel):
                                               "y", LINES*BLOCK_SIZE/2.0,
                                               "text", _("Paused"),
                                               "size_points", 36.0,
-                                              0
+                                              NULL
                                               );
 
 	/* Since gnome_canvas doesn't support setting the size of text in
@@ -279,7 +279,7 @@ Tetris::Tetris(int cmdlLevel):
                                                  "y", LINES*BLOCK_SIZE/2.0,
                                                  "text", _("Game Over"),
                                                  "size_points", 36.0,
-                                                 0
+                                                 NULL
                                                  );
 
 	gnome_canvas_item_get_bounds (gameoverMessage, &x1, &y1, &x2, &y2);

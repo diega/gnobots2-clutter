@@ -1,3 +1,10 @@
+2004-08-24  callum  <callum@spooky-possum.org>
+
+	* tetris.cpp: 
+	* field.cpp:	
+	* blockops.cpp: Change 0->NULL to prevent crashes on x86_64
+	machines. Fixes bug #148618 and Gentoo bug #48948.
+
 2004-08-15  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* pix/5blocks.png:
