@@ -422,6 +422,7 @@ show_preferences_dialog ()
       deck_options = bj_get_deck_options ();
       gtk_card_deck_options_edit_set (GTK_CARD_DECK_OPTIONS_EDIT (deck_edit),
                                       deck_options);
-      gtk_widget_show_all(pref_dialog);
+      gtk_widget_show_all (pref_dialog);
     }
+  gtk_window_present (GTK_WINDOW (pref_dialog));
 }
