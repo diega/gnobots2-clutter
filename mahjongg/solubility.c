@@ -29,16 +29,20 @@
  * This removes the nasty code to check that the previous algorithm hadn't
  * worked itself into a corner.
  *
- * The new algorithm to generate the pile takes pairs off in the same order
- * that a player would. Since there is always a leftmost and rightmost
- * tile there is always two free tiles (the exception to this is if the tiles
- * are in a vertical row, but then, since we have an even number of tile
- * we will still have at least two to remove). We then mark any revealed
- * tiles as free and select another pair. Each time a pair is taken these
- * are marked as being identical tiles, hence forming a solvable pile.
+ * I have revised the algorithm to work inwards rather than outwards. It
+ * still suffers from the same short-comings: i.e. it can hit a deadlock
+ * where there are no more tiles to remove. However it is a little bit
+ * simpler to implement. At the moment if a generation attempt fails then
+ * the we try again from scratch until a solution is found. This is not great,
+ * but there is no general way of solving a pile by only looking one move
+ * ahead (which is essentially what we do now). There is a revised
+ * version in the pipeline which allows for backtracking, the algorithm
+ * is planned, but the details of the new data structures needed are still
+ * being considered.
+ *
+ * - Callum, 2003/08/18
  *
  */
-
 
 #include "mahjongg.h"
 #include "solubility.h"
@@ -138,6 +142,9 @@ typedef struct _dep_entry {
 
 dep_entry dependencies[MAX_TILES];
 
+gint available_moves;
+gint number_remaining;
+
 int tile_free (int index)
 {
   dep_entry * dep;
@@ -190,6 +197,9 @@ static void check_tile_is_free (gint index)
 
   if (!dep->filled)
     return;
+
+  if (dep->free)
+    return;
   
   /* First, check if we are covered above. */
   ok = TRUE;
@@ -215,6 +225,7 @@ static void check_tile_is_free (gint index)
     }
   }
   if (ok) {
+    available_moves++;    
     dep->free = TRUE;
     return;
   }
@@ -230,6 +241,7 @@ static void check_tile_is_free (gint index)
     }
   }
   if (ok) {
+    available_moves++;
     dep->free = TRUE;
   }
   return;
@@ -251,6 +263,9 @@ static void place_tile (int location, int type, int index)
   dependencies[location].filled = FALSE;
   dependencies[location].free = FALSE;
 
+  available_moves--;
+  number_remaining--;
+  
   /* See if we've freed anything above us. */
   for (i=0; i<4; i++) {
     target = dependencies[location].foundation[i];
@@ -277,11 +292,6 @@ void generate_dependencies ()
   int x,y,l;
   int tx, ty, tl;
   dep_entry * dep;
-
-  /* As well as generating the dependencies we should clear out the
-   * type_info structure. */
-  for (i=0; i<MAX_TILES/2; i++)
-    type_info[i].placed = 0;
   
   dep = dependencies;
   for (i = 0; i<MAX_TILES; i++) {
@@ -337,11 +347,6 @@ void generate_dependencies ()
     }
     dep++;
   }
-
-  /* Now mark free tiles for the generate_game routine. */
-  for (i = 0; i<MAX_TILES; i++) {
-    check_tile_is_free(i);
-  }
 }
 
 static guint get_free_location (GRand * generator)
@@ -366,26 +371,43 @@ void generate_game (guint32 seed)
   int i, a, b, c, t;
   
   generator = g_rand_new_with_seed (seed);
-  
-  for (i=0; i<MAX_TILES/2; i++) {
-    /* Find a random available pair of tiles. */
-    c = g_rand_int_range (generator, 1, MAX_TILES/2 - i + 1);
-    for (t=0; t<MAX_TILES/2; t++)
-      if (type_info[t].placed == 0)
-        if (!(--c)) break;
 
-    type_info[t].placed = 1;
-
-    /* Now find some places to put them. */
-    a = get_free_location (generator);
-    do {
-      b = get_free_location (generator);
-    } while (a == b);
+  do {
+    /* Some initialisation work. */
+    available_moves = 0;
+    for (i = 0; i<MAX_TILES; i++) {
+      dependencies[i].free = FALSE;
+      dependencies[i].filled = TRUE;
+      check_tile_is_free(i);
+    }
+    number_remaining = MAX_TILES;
+    for (i=0; i<MAX_TILES/2; i++)
+      type_info[i].placed = 0;
+    
+    for (i=0; i<MAX_TILES/2; i++) {
+      /* Find a random available pair of tiles. */
+      c = g_rand_int_range (generator, 1, MAX_TILES/2 - i + 1);
+      for (t=0; t<MAX_TILES/2; t++)
+        if (type_info[t].placed == 0)
+          if (!(--c)) break;
       
-    /* Finally we actually place them. Including the
-     * dependency updates. */
-    place_tile(a,t,0);
-    place_tile(b,t,1);
-  }
+      type_info[t].placed = 1;
+      
+      /* Now find some places to put them. */
+      if (available_moves < 2) { /* Bail out if we run out of moves. */
+        available_moves = -1;
+        break;
+      }
+      a = get_free_location (generator);
+      do {
+        b = get_free_location (generator);
+      } while (a == b);
+      
+      /* Finally we actually place them. Including the
+       * dependency updates. */
+      place_tile(a,t,0);
+      place_tile(b,t,1);
+    }
+  } while (available_moves != 0);
 }
 

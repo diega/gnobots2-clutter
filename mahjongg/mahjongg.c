@@ -1905,23 +1905,16 @@ new_game (gboolean re_seed)
 
 	if (re_seed)
 		new_seed ();
-	g_print ("A\n");
 
 	do_game ();
-	g_print ("B\n");
 	load_images ();
 
-	g_print ("C\n");
-	
 	for (i = 0; i < MAX_TILES; i++) {
 		change_tile_image (&tiles[i]);
-		g_print ("...\n");
 		gnome_canvas_item_show (tiles[i].canvas_item);
 	}
-	g_print ("D\n");
 
 	init_game ();
-	g_print ("E\n");
 
 	if (score_current_mapset != NULL)
 		g_free (score_current_mapset);

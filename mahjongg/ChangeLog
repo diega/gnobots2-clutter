@@ -1,3 +1,14 @@
+2003-08-18  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* solubility.c: Moved some code from generate_dependencies to
+	generate_game so the later routine does not have to rely on the
+	former having been run immediately beforehand. This means we can
+	do a quick and dirty regeneration is the first one fails. Also
+	added a loop to do just this. The algorithm is now correct,
+	although probabilistic. The is also some accounting code in there
+	to allow a bad generation to be detected. It's all a little messy
+	right now, but not as bad as it was before this rewrite :).
+
 2003-08-15  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* solubility.h:
