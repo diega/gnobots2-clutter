@@ -35,11 +35,10 @@ Field::show()
 	gtk_widget_realize(w);
 
 	gtk_widget_show(w);
-	updateSize(0);
 }
 
 void
-Field::updateSize(GdkPixbuf * bgImage)
+Field::updateSize(GdkPixbuf * bgImage, GdkColor *bgcolour)
 {
 	gtk_widget_set_size_request(w, COLUMNS * BLOCK_SIZE, LINES * BLOCK_SIZE);
 	gnome_canvas_set_scroll_region(GNOME_CANVAS(w), 0.0, 0.0, COLUMNS * BLOCK_SIZE, LINES * BLOCK_SIZE);
@@ -65,7 +64,7 @@ Field::updateSize(GdkPixbuf * bgImage)
   			"y1", (double) 0,
   			"x2", (double) COLUMNS * BLOCK_SIZE,
   			"y2", (double) LINES * BLOCK_SIZE,
-				"fill_color", "black",
+				"fill_color_gdk", bgcolour,
 				"outline_color", "black",
 				"width_units", 1.0,
   			0);

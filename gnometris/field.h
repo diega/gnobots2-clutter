@@ -30,7 +30,7 @@ public:
 	Field();
 	
 	void show();
-	void updateSize(GdkPixbuf * bgImage);
+	void updateSize(GdkPixbuf * bgImage, GdkColor *bgcolour);
 
 	GtkWidget * getWidget()	{return w;}
 	

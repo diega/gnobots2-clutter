@@ -27,6 +27,30 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/gnometris/options/usebgimage</key>
+      <applyto>/apps/gnometris/options/usebgimage</applyto>
+      <owner>gnometris</owner>
+      <type>bool</type> 
+      <default>FALSE</default>
+      <locale name="C">
+        <short>Whether to use the background image</short>
+        <long>This selects whether or not to draw the background image over thebackground color.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/gnometris/options/bgcolor</key>
+      <applyto>/apps/gnometris/options/bgcolor</applyto>
+      <owner>gnometris</owner>
+      <type>string</type> 
+      <default>Black</default>
+      <locale name="C">
+        <short>The background color</short>
+        <long>The background color, in a format gdk_color_parse understands.</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/gnometris/options/do_preview</key>
       <applyto>/apps/gnometris/options/do_preview</applyto>
       <owner>gnometris</owner>

@@ -1,5 +1,14 @@
 2004-07-18  Callum McKenzie  <callum@physics.otago.ac.nz>
 
+	* help/C/gnometris.xml: Update to document background and sound
+	settings.
+
+	* field.cpp: 
+	* field.h:
+	* tetris.cpp:	
+	* tetris.h: Accept drops of application/x-color and
+	x-special/gnome-background-reset.
+
 	* Makefile.am: 
 	* sounds/*:
 	* sound.h:

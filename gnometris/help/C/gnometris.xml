@@ -190,6 +190,10 @@ application or
    <sect2 id="s3-customblocks">
     <title>Customizing the Blocks</title>
     <para>From <menuchoice><guimenu>Settings</guimenu><guimenuitem>Preferences</guimenuitem></menuchoice>, you can customize a variety of features related to the blocks: previewing the next block, block colors, and block rotation.</para>
+      <sect3 id="s3-sound">
+	<title>Enable sounds</title>
+	<para>Turn the sound effects on and off using this option. If you are playing this game in any area which you share with other people, you should probably select off.</para>
+      </sect3>
      <sect3 id="s3-nextblock">
       <title>Preview Next Block</title>
         <para>Choose this option if you want to see the next block that is going to fall. This feature helps you plan the placement of your blocks.</para>
@@ -211,10 +215,13 @@ application or
        <para>You can change the style of the blocks, including image and size. There are a variety of pre-made styles.</para>
      </sect3>
      <sect3 id="s3-background">
-       <title>Background</title>
-       <para>If you drag your favorite image into
-       the <application>Gnometris</application> window it will be
-       used as the background.</para>
+       <title>Background</title> <para>If you drag your favorite image
+       into the <application>Gnometris</application> window it will be
+       used as the background. If you want a solid color as the
+       background drag one in from either the color picker or from
+       <application>nautlilus'</application> <guimenuitem>Backgrounds
+       and Emblems</guimenuitem> dialog (the reset item from that
+       dialog also works).</para>
      </sect3>
     </sect2>
    </sect1>

@@ -81,10 +81,18 @@ bool rotateCounterClockWise = true;
 #define KEY_MOVE_ROTATE "/apps/gnometris/controls/key_rotate"
 #define KEY_MOVE_PAUSE "/apps/gnometris/controls/key_pause"
 
+#define KEY_BG_COLOUR "/apps/gnometris/options/bgcolor"
+#define KEY_USE_BG_IMAGE "/apps/gnometris/options/usebgimage"
+
 #define TILE_THRESHOLD 65
 
-#define URI_LIST 0
-#define TEXT_PLAIN 1
+enum {
+	URI_LIST,
+	TEXT_PLAIN,
+	COLOUR,
+	RESET
+};
+
 
 Tetris::Tetris(int cmdlLevel): 
 	blockPixmap(0),
@@ -108,7 +116,9 @@ Tetris::Tetris(int cmdlLevel):
 	GtkTargetEntry targets[] = {{"text/uri-list", 0, URI_LIST}, 
 				    {"property/bgimage", 0, URI_LIST},
 				    {"text/plain", 0, TEXT_PLAIN},
-				    {"STRING", 0, TEXT_PLAIN}};
+				    {"STRING", 0, TEXT_PLAIN},
+				    {"application/x-color", 0, COLOUR},
+				    {"x-special/gnome-reset-background", 0, RESET}};
 
 	if (!sound)
 		sound = new Sound();
@@ -391,10 +401,14 @@ Tetris::setupPixmap()
 	if (bgimage)
 		g_object_unref (G_OBJECT (bgimage));
 
-	if (g_file_test (bgPixmap, G_FILE_TEST_EXISTS)) 
-		bgimage = gdk_pixbuf_new_from_file (bgPixmap, NULL);
-	else 
+	if (!usebg)
 		bgimage = NULL;
+	else {
+		if (g_file_test (bgPixmap, G_FILE_TEST_EXISTS)) 
+			bgimage = gdk_pixbuf_new_from_file (bgPixmap, NULL);
+		else 
+			bgimage = NULL;
+	}
 
 	/* A nasty hack to tile the image if it looks tileable (i.e. it
 	 * is small enough. */
@@ -441,7 +455,7 @@ Tetris::setupPixmap()
 
 	if (field)
 	{
-		field->updateSize (bgimage);
+		field->updateSize (bgimage, &bgcolour);
 		gtk_widget_queue_resize (field->getWidget());
 	}
 	
@@ -515,6 +529,8 @@ Tetris::gconfGetBoolean (GConfClient *client, const char *key, gboolean default_
 void
 Tetris::initOptions ()
 {
+	gchar *bgcolourstr;
+
 	if (blockPixmap)
 		g_free (blockPixmap);
 
@@ -555,6 +571,12 @@ Tetris::initOptions ()
 	moveDrop = gconfGetInt (gconf_client, KEY_MOVE_DROP, GDK_Pause);
 	moveRotate = gconfGetInt (gconf_client, KEY_MOVE_ROTATE, GDK_Up);
 	movePause = gconfGetInt (gconf_client, KEY_MOVE_PAUSE, GDK_space);
+
+	bgcolourstr = gconfGetString (gconf_client, KEY_BG_COLOUR, "Black");
+	gdk_color_parse (bgcolourstr, &bgcolour);
+	g_free (bgcolourstr);
+
+	usebg = gconfGetBoolean (gconf_client, KEY_USE_BG_IMAGE, FALSE);
 }
 
 void
@@ -1076,6 +1098,44 @@ Tetris::keyReleaseHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 	return res;
 }
 
+void Tetris::saveBgOptions ()
+{
+	gchar * cbuffer;
+
+	gconf_client_set_bool (gconf_client, KEY_USE_BG_IMAGE, 
+				  usebg, NULL);
+
+	cbuffer = g_strdup_printf ("#%04x%04x%04x", bgcolour.red,
+				   bgcolour.green, bgcolour.blue);
+	gconf_client_set_string (gconf_client, KEY_BG_COLOUR, cbuffer,
+				 NULL);
+	g_free (cbuffer);
+}
+
+void
+Tetris::decodeColour (guint16 *data, Tetris *t)
+{
+	t->bgcolour.red = data[0];
+	t->bgcolour.green = data[1];
+	t->bgcolour.blue = data[2];
+	/* Ignore the alpha channel. */
+
+	t->usebg = FALSE;
+	t->saveBgOptions ();
+}
+
+void
+Tetris::resetColour (Tetris *t)
+{
+	t->bgcolour.red = 0;
+	t->bgcolour.green = 0;
+	t->bgcolour.blue = 0;
+	/* Ignore the alpha channel. */
+
+	t->usebg = FALSE;
+	t->saveBgOptions ();
+}
+
 gchar * 
 Tetris::decodeDropData(gchar * data, gint type)
 {
@@ -1134,19 +1194,13 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	   background image. In the event of any kind of failure we
 	   silently ignore it. */
 	
-	/* FIXME: We should also handle dropped colours so we get a
-	   solid background (dropped gimp gradients too ?).
-	   application/x-color. */
+	/* FIXME: We don't handle colour gradients (e.g. from the gimp) */
 
 	/* FIXME: Drag and drop from konqueror doesn't work, we
 	 * aren't even registering that it is providing test/uri-list
-	 * content (this is an older version of konqueror). */
+	 * content. */
 
 	/* FIXME: Dropped URLs from mozilla don't work (see below). */
-
-	/* FIXME: How about x-special/gnome-reset-background (from
-	 * nautilus) to reset the background (to black, once colour
-	 * support is done). */
 
 	if (data->length < 0) {
 		gtk_drag_finish (context, FALSE, FALSE, time);
@@ -1154,6 +1208,17 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	}
 
 	gtk_drag_finish (context, TRUE, FALSE, time);
+
+	if (info == COLOUR) {
+		if (data->length == 8) 
+			decodeColour ((guint16 *)data->data, t);
+		return;
+	}
+
+	if (info == RESET) {
+		resetColour (t);
+		return;
+	}
 
 	fileuri = decodeDropData ((gchar *)data->data, info);
 	/* Silently ignore bad data. */
@@ -1217,7 +1282,8 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	if ((result != GNOME_VFS_OK) || (bytesread != filesize))
 	    goto error_exit_saver;
 
-	t->setupPixmap ();
+	t->usebg = TRUE;
+	t->saveBgOptions ();
 
  error_exit_saver:
 	gnome_vfs_close (outhandle);

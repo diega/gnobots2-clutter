@@ -109,6 +109,9 @@ private:
 	static gint keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t);
 	static gint keyReleaseHandler(GtkWidget *widget, GdkEvent *event, Tetris *t);
 	static gchar *decodeDropData(gchar * data, gint type);
+	void saveBgOptions();
+	static void decodeColour (guint16 *data, Tetris *t);
+	static void resetColour (Tetris *t);
 	static void dragDrop(GtkWidget *widget, GdkDragContext *context,
 			     gint x, gint y, GtkSelectionData *data, 
 			     guint info, guint time, Tetris *t);
@@ -144,6 +147,9 @@ private:
 	
 	GdkPixbuf *image;
 	GdkPixbuf *bgimage;
+	gboolean usebg;
+
+	GdkColor bgcolour;
 
 	void fillMenu(GtkWidget *menu, char *pixname, char *dirname, GList ** list, bool addnone = false);
 	
