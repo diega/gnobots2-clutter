@@ -3,6 +3,7 @@ pixmapdir = $(datadir)/pixmaps/same-gnome
 Gamesdir = $(datadir)/apps/Games
 
 INCLUDES = -I.. -I$(srcdir)/..		\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	-I$(includedir)
 
 bin_PROGRAMS = same-gnome

@@ -890,6 +890,7 @@ main (int argc, char *argv [])
 	
 	gnome_init (&argc, &argv);
 	fname = parse_args(argc, argv);
+	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
 
 	srand (time (NULL));

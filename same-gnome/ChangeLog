@@ -1,3 +1,9 @@
+Mon Feb 16 19:59:47 KST 1998  Changwoo Ryu  <cwryu@adam.kaist.ac.kr>
+
+	* Makefile.am (INCLUDES): Define GNOMELOCALEDIR.
+
+	* same-gnome.c (main): Add bindtextdomain().
+
 1998-02-15  Raja R Harinath  <harinath@cs.umn.edu>
 
 	* same-gnome.c: Look for `getopt.h' in `support' too.
