@@ -1068,10 +1068,8 @@ you_won (void)
         gint pos;
         time_t seconds;
         gfloat score;
-        gchar *message;
-        gint response;
         GtkWidget *dialog;
-
+	
         game_over = GAME_WON;
 
         seconds = GAMES_CLOCK (chrono)->stopped;
@@ -1084,7 +1082,7 @@ you_won (void)
 						      GTK_WINDOW(window));
 			gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
 		}
-        }
+        } 
 }
 
 static void
