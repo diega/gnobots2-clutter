@@ -13,7 +13,7 @@
 #include <games-files.h>
 #include <games-gridframe.h>
 #include <games-scores-dialog.h>
-
+#include <games-stock.h>
 
 #include "same-gnome.h"
 
@@ -33,9 +33,11 @@ GtkWidget *application;
 GtkWidget *messagewidget;
 GtkWidget *scorewidget;
 GtkWidget *gridframe = NULL;
-GtkToggleAction *fullscreenaction;
-GtkWidget *undo_widget;
-GtkWidget *redo_widget;
+
+GtkAction *undo_action;
+GtkAction *redo_action;
+GtkAction *fullscreen_action;
+GtkAction *leave_fullscreen_action;
 
 /* The index for the current theme in the theme list. This shouldn't
  * really be a global variable, but C sucks. */
@@ -339,9 +341,18 @@ static void theme_cb (void)
 	}
 }
 
-static void fullscreen_cb (GtkToggleAction *action)
+static void set_fullscreen_actions (gboolean is_fullscreen)
 {
-  if (gtk_toggle_action_get_active (action)) {
+	gtk_action_set_sensitive (leave_fullscreen_action, is_fullscreen);
+	gtk_action_set_visible (leave_fullscreen_action, is_fullscreen);
+
+	gtk_action_set_sensitive (fullscreen_action, !is_fullscreen);
+	gtk_action_set_visible (fullscreen_action, !is_fullscreen);
+}
+
+static void fullscreen_cb (GtkAction *action)
+{
+  if (action == fullscreen_action) {
     gtk_window_fullscreen (GTK_WINDOW (application));
   } else {
     gtk_window_unfullscreen (GTK_WINDOW (application));
@@ -354,8 +365,8 @@ static void window_state_cb (GtkWidget *widget, GdkEventWindowState *event)
   if (!(event->changed_mask & GDK_WINDOW_STATE_FULLSCREEN))
     return;
     
-  gtk_toggle_action_set_active (fullscreenaction,
-				event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN);
+	set_fullscreen_actions (event->new_window_state & 
+														GDK_WINDOW_STATE_FULLSCREEN);
 }
 
 static void scores_cb (void)
@@ -437,27 +448,24 @@ const GtkActionEntry actions[] = {
   { "SizeMenu", NULL, N_("_Size") },
   { "HelpMenu", NULL, N_("_Help") },
 
-  { "NewGame", GTK_STOCK_NEW, N_("_New Game"), "<control>N", NULL, G_CALLBACK (new_game_cb) },
-  { "Scores", NULL, N_("_Scores..."), NULL, NULL, G_CALLBACK (scores_cb) },
-  { "UndoMove", GTK_STOCK_UNDO, N_("_Undo Move"), "<control>Z", NULL, G_CALLBACK (undo_cb) },
-  { "RedoMove", GTK_STOCK_REDO, N_("_Redo Move"), "<shift><control>Z", NULL, G_CALLBACK (redo_cb) },
+  { "NewGame", GAMES_STOCK_NEW_GAME, NULL, NULL, NULL, G_CALLBACK (new_game_cb) },
+  { "Scores", GAMES_STOCK_SCORES, NULL, NULL, NULL, G_CALLBACK (scores_cb) },
+  { "UndoMove", GAMES_STOCK_UNDO_MOVE, NULL, NULL, NULL, G_CALLBACK (undo_cb) },
+  { "RedoMove", GAMES_STOCK_REDO_MOVE, NULL, NULL, NULL, G_CALLBACK (redo_cb) },
   { "Quit", GTK_STOCK_QUIT, NULL, NULL, NULL, G_CALLBACK (quit_cb) },
 
+	{ "Fullscreen", GAMES_STOCK_FULLSCREEN, NULL, NULL, NULL, G_CALLBACK (fullscreen_cb) },
+	{ "LeaveFullscreen", GAMES_STOCK_LEAVE_FULLSCREEN, NULL, NULL, NULL, G_CALLBACK (fullscreen_cb) },
   { "Theme", NULL, N_("_Theme..."), NULL, NULL, G_CALLBACK (theme_cb) },
 
-  { "Contents", GTK_STOCK_HELP, N_("_Contents"), "F1", NULL, G_CALLBACK (help_cb) },
-  {"About", GTK_STOCK_ABOUT, NULL, NULL, NULL, G_CALLBACK (about_cb)
-}
+  { "Contents", GAMES_STOCK_CONTENTS, NULL, NULL, NULL, G_CALLBACK (help_cb) },
+  {"About", GTK_STOCK_ABOUT, NULL, NULL, NULL, G_CALLBACK (about_cb) }
 };
 
 const GtkRadioActionEntry radio_actions[] = {
   { "SizeSmall", NULL, N_("_Small"), NULL, NULL, SMALL },
   { "SizeMedium", NULL, N_("_Medium"), NULL, NULL, MEDIUM },
   { "SizeLarge", NULL, N_("_Large"), NULL, NULL, LARGE }
-};
-
-const GtkToggleActionEntry toggle_actions[] = {
-  { "Fullscreen", NULL, N_("_Fullscreen"), "F11", NULL, G_CALLBACK (fullscreen_cb) }
 };
 
 const char *ui_description =
@@ -474,6 +482,7 @@ const char *ui_description =
 "    </menu>"
 "    <menu action='ViewMenu'>"
 "      <menuitem action='Fullscreen'/>"
+"      <menuitem action='LeaveFullscreen'/>"
 "      <menuitem action='Theme'/>"
 "    </menu>"
 "    <menu action='SizeMenu'>"
@@ -525,19 +534,17 @@ void build_gui (void)
 				      game_size, 
 				      G_CALLBACK (size_change_cb), 
 				      NULL);
-  gtk_action_group_add_toggle_actions (action_group, toggle_actions,
-				       G_N_ELEMENTS (toggle_actions), NULL);
 
-  fullscreenaction = GTK_TOGGLE_ACTION (gtk_action_group_get_action (action_group, "Fullscreen"));
+	undo_action = gtk_action_group_get_action (action_group, "UndoMove");
+	redo_action = gtk_action_group_get_action (action_group, "RedoMove");
+  fullscreen_action = gtk_action_group_get_action (action_group, "Fullscreen");
+  leave_fullscreen_action = gtk_action_group_get_action (action_group, 
+																												 "LeaveFullscreen");
+	set_fullscreen_actions (FALSE);
   
   ui_manager = gtk_ui_manager_new ();
   gtk_ui_manager_insert_action_group (ui_manager, action_group, 1);
   gtk_ui_manager_add_ui_from_string (ui_manager, ui_description, -1, NULL);
-
-	undo_widget = gtk_ui_manager_get_widget (ui_manager, 
-																					 "/MainMenu/GameMenu/UndoMove");
-	redo_widget = gtk_ui_manager_get_widget (ui_manager, 
-																					 "/MainMenu/GameMenu/RedoMove");
   
   gtk_window_add_accel_group (GTK_WINDOW (application),
 			      gtk_ui_manager_get_accel_group (ui_manager));
@@ -589,6 +596,6 @@ void build_gui (void)
 
 void set_undoredo_sensitive (gboolean undo, gboolean redo)
 {
-	gtk_widget_set_sensitive (undo_widget, undo);
-	gtk_widget_set_sensitive (redo_widget, redo);
+	gtk_action_set_sensitive (undo_action, undo);
+	gtk_action_set_sensitive (redo_action, redo);
 }

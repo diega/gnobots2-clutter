@@ -12,6 +12,7 @@
 
 #include <games-gconf.h>
 #include <games-gridframe.h>
+#include <games-stock.h>
 
 #include "same-gnome.h"
 
@@ -140,6 +141,8 @@ int main (int argc, char *argv[])
 											GNOME_PARAM_APP_DATADIR, DATADIR,
 											GNOME_PARAM_POPT_TABLE, options,  
 											NULL);
+
+	games_stock_init ();
 
   initialise_options (requested_size, requested_theme);
 

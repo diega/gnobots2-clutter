@@ -1,3 +1,10 @@
+2005-04-01  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* same-gnome.c:
+	* ui.c: Fullscreen toggle -> Fullscreen / Leave Fullscreen.
+	Use stock items from games-stock.h. Use actions rather than
+	widgets to store UI references.
+
 2005-03-24  Dennis Cranston <dennis_cranston@yahoo.com>
 
 	* ui.c:  Use an etched in shadow for list view.
