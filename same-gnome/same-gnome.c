@@ -671,8 +671,8 @@ game_quit_callback (GtkWidget *widget, void *data)
 				     GNOME_STOCK_BUTTON_YES,
 				     GNOME_STOCK_BUTTON_NO,
 				     NULL);
-	gnome_message_box_set_default (GNOME_MESSAGE_BOX (box), 0);
-	gnome_message_box_set_modal (GNOME_MESSAGE_BOX (box));
+	gnome_dialog_set_default (GNOME_MESSAGE_BOX (box), 0);
+	gnome_dialog_set_modal (GNOME_MESSAGE_BOX (box));
 	gtk_signal_connect (GTK_OBJECT (box), "clicked",
 			   (GtkSignalFunc)game_maybe_quit, NULL);
 	gtk_widget_show (box);
@@ -681,26 +681,26 @@ game_quit_callback (GtkWidget *widget, void *data)
 }
 
 GnomeUIInfo gamemenu[] = {
-	{GNOME_APP_UI_ITEM, N_("New"), NULL, game_new_callback, NULL, NULL,
-	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
+	{GNOME_APP_UI_ITEM, N_("_New"), NULL, game_new_callback, NULL, NULL,
+	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 'n', GDK_CONTROL_MASK, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Properties..."), NULL, game_preferences_callback, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("_Properties..."), NULL, game_preferences_callback, NULL, NULL,
 	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Scores..."), NULL, game_top_ten_callback, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("_Scores..."), NULL, game_top_ten_callback, NULL, NULL,
 	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SCORES, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Exit"), NULL, game_quit_callback, NULL, NULL,
-	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 0, 0, NULL},
+	{GNOME_APP_UI_ITEM, N_("_Quit"), NULL, game_quit_callback, NULL, NULL,
+	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 'q', GDK_CONTROL_MASK, NULL},
 
 	{GNOME_APP_UI_ENDOFINFO}
 };
 
 GnomeUIInfo helpmenu[] = {
-	{GNOME_APP_UI_HELP, NULL, NULL, NULL, NULL, NULL,
+	{GNOME_APP_UI_HELP, NULL, NULL, "samegnome", NULL, NULL,
 	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("About..."), NULL, game_about_callback, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("_About..."), NULL, game_about_callback, NULL, NULL,
 	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
 
 	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
@@ -708,10 +708,10 @@ GnomeUIInfo helpmenu[] = {
 };
 
 GnomeUIInfo mainmenu[] = {
-	{GNOME_APP_UI_SUBTREE, N_("Game"), NULL, gamemenu, NULL, NULL,
+	{GNOME_APP_UI_SUBTREE, N_("_Game"), NULL, gamemenu, NULL, NULL,
 	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
-	{GNOME_APP_UI_SUBTREE, N_("Help"), NULL, helpmenu, NULL, NULL,
+	{GNOME_APP_UI_SUBTREE, N_("_Help"), NULL, helpmenu, NULL, NULL,
 	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
 
 	{GNOME_APP_UI_ENDOFINFO}
