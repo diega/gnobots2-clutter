@@ -1,3 +1,10 @@
+2003-08-25  William Jon McCann  <mccann@jhu.edu>
+
+	* help/C/figures/blackjack_start_window.png:
+	* help/C/figures/blackjack_win_window.png: Updated screenshots
+	to use simple theme.  It seems like this is the de facto standard
+	for 2.4.
+
 2003-08-12  William Jon McCann  <mccann@jhu.edu>
 
 	* help/C/figures/blackjack_start_window.png:
