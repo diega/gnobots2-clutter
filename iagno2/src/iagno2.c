@@ -15,7 +15,7 @@ extern GtkWidget *new_game_dialog;
 extern GnomeUIInfo iagno2_menu[];
 extern Iagno2Properties *properties;
 
-extern gchar *board;
+extern ReversiBoard *board;
 
 extern Iagno2Plugin *plugin;
 
@@ -56,6 +56,8 @@ gint game_over_flip_id = 0;
 gint computer_return = 64;
 
 GnomeAppBar *appbar;
+
+gint move_count = 0;
 
 void
 iagno2_tileset_load ()
@@ -338,7 +340,7 @@ drawing_area_button_press_event_cb (GtkWidget *widget, GdkEvent *event,
 
         index = INDEX (grid_row, grid_col);
 
-        if (board[index]) {
+        if (board->board[index]) {
           return;
         }
 
@@ -485,7 +487,7 @@ iagno2_force_board_redraw ()
         "image", tileset_images[board[i]],
         NULL);
         */
-    iagno2_render_tile_to_buffer (board[i], i);
+    iagno2_render_tile_to_buffer (board->board[i], i);
   }
 
   iagno2_render_buffer_to_screen (0, 0, BOARDWIDTH, BOARDHEIGHT);
@@ -533,22 +535,22 @@ iagno2_flip_tiles ()
   gint delta;
 
   for (i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
-    if (board[i] == board_pixmaps[i]) {
+    if (board->board[i] == board_pixmaps[i]) {
       continue;
     }
     if (!board_pixmaps[i]) {
-      board_pixmaps[i] = board[i];
+      board_pixmaps[i] = board->board[i];
       iagno2_render_tile (board_pixmaps[i], i);
       continue;
     }
-    if (board_pixmaps[i] < board[i]) {
+    if (board_pixmaps[i] < board->board[i]) {
       delta = 1;
     } else {
       delta = -1;
     }
     board_pixmaps[i] += delta;
     iagno2_render_tile (board_pixmaps[i], i);
-    if (board_pixmaps[i] != board[i]) {
+    if (board_pixmaps[i] != board->board[i]) {
       more_to_flip = 1;
     }
   }
@@ -602,7 +604,8 @@ iagno2_computer_thread ()
   *index = players[player]->plugin_move (board);
   */
 
-  computer_return = players[player]->plugin_move (board);
+  computer_return = players[player]->plugin_move (board,
+                                                  whose_turn);
 
   _exit (0);
 }
@@ -683,10 +686,10 @@ iagno2_post_move_check ()
   
   iagno2_board_changed ();
 
-  whose_turn = other_player (whose_turn);
+  whose_turn = OTHER_TILE (whose_turn);
 
   if (!are_valid_moves (board, whose_turn)) {
-    if (!are_valid_moves (board, other_player (whose_turn))) {
+    if (!are_valid_moves (board, OTHER_TILE (whose_turn))) {
       game_over_flip_id = gtk_timeout_add (3000,
           iagno2_game_over, NULL);
       gnome_appbar_set_status (GNOME_APPBAR (appbar), " Game over!");
@@ -695,7 +698,7 @@ iagno2_post_move_check ()
       /*
       printf ("A player had to pass!\n");
       */
-      whose_turn = other_player (whose_turn);
+      whose_turn = OTHER_TILE (whose_turn);
       pass = TRUE;
     }
   }
@@ -708,6 +711,11 @@ iagno2_move (gchar index)
 {
   move (board, index, whose_turn);
 
+  /*
+  game_history[move_count++].player = whose_turn;
+  game_history[move_count++].index = index;
+  */
+
   iagno2_post_move_check ();
 }
 
@@ -718,6 +726,8 @@ iagno2_initialize_players (int which)
   gchar *tmp_path;
   gchar *filename;
 
+  printf ("In initialize_players\n");
+  
   if ((which == 0) || (which == 1)) {
     if (players[0] != NULL) {
       iagno2_plugin_close (players[0]);
@@ -765,6 +775,7 @@ iagno2_initialize_players (int which)
       players[1]->plugin_init ();
     }
   }
+  printf ("Out initialize_players\n");
 }
 
 /*
@@ -789,7 +800,7 @@ iagno2_game_over ()
   game_in_progress = FALSE;
 
   for (i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
-    if (board[i] == WHITE_TILE) {
+    if (board->board[i] == WHITE_TILE) {
       white_count++;
     } else {
       black_count++;
@@ -797,15 +808,15 @@ iagno2_game_over ()
   }
 
   for (i = 0; i < black_count; i++) {
-    board[i] = BLACK_TILE;
+    board->board[i] = BLACK_TILE;
   }
 
   for (i = black_count; i < (64 - white_count); i++) {
-    board[i] = 0;
+    board->board[i] = 0;
   }
 
   for (i = (64 - white_count); i < BOARDSIZE * BOARDSIZE; i++) {
-    board[i] = WHITE_TILE;
+    board->board[i] = WHITE_TILE;
   }
 
   iagno2_board_changed ();

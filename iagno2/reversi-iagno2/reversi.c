@@ -1,22 +1,40 @@
 #include <gnome.h>
 
 #include "defines.h"
+#include "reversi.h"
 
-gchar *board = NULL;
+/*
+ReversiBoard *board = NULL;
+*/
 /*gchar whose_turn = BLACK_TILE;*/
 
-void
-reversi_init_board (gchar **board)
+ReversiMove game_history[60];
+
+ReversiBoard *
+reversi_init_board ()
 {
-  *board = g_new0 (gchar, BOARDSIZE * BOARDSIZE);
+  ReversiBoard *tmp = g_new (ReversiBoard, 1);
+
+  tmp->board = g_new0 (gchar, BOARDSIZE * BOARDSIZE);
+
+  tmp->moves = g_new (ReversiMove, 60);
+
+  tmp->move_count = 0;
+
+  return tmp;
 }
 
 void
-reversi_destroy_board (gchar **board)
+reversi_destroy_board (ReversiBoard *board)
 {
-  g_free (*board);
+  g_free (board->board);
+
+  g_free (board->moves);
+  
+  g_free (board);
 }
 
+/*
 gchar
 other_player (gchar player)
 {
@@ -26,16 +44,20 @@ other_player (gchar player)
 
   return (tmp_other_player);
 }
+*/
 
 static gboolean
-check_direction (gchar *board, gchar index, gchar player, gchar direction)
+check_direction (ReversiBoard *board,
+                 gchar index,
+                 gchar player,
+                 gchar direction)
 {
   gchar not_me;
   gint i, j;
   gint dx, dy;
   gint possible;
 
-  not_me = other_player (player);
+  not_me = OTHER_TILE (player);
 
   switch (direction) {
     case UP:
@@ -77,14 +99,14 @@ check_direction (gchar *board, gchar index, gchar player, gchar direction)
   possible = 0;
 
   while ((i >= 0) && (i <= 7) && (j >= 0) && (j <= 7) &&
-         (board[INDEX(i,j)] == not_me)) {
+         (board->board[INDEX(i,j)] == not_me)) {
     possible = 1;
     i += dx;
     j += dy;
   }
 
   if ((i >= 0) && (i <= 7) && (j >= 0) && (j <= 7) && possible &&
-      (board[INDEX(i,j)] == player)) {
+      (board->board[INDEX(i,j)] == player)) {
     return TRUE;
   }
 
@@ -92,7 +114,10 @@ check_direction (gchar *board, gchar index, gchar player, gchar direction)
 }
 
 static void
-move_direction (gchar *board, gchar index, gchar player, gchar direction)
+move_direction (ReversiBoard *board,
+                gchar index,
+                gchar player,
+                gchar direction)
 {
   gchar not_me;
   gint i, j;
@@ -133,25 +158,25 @@ move_direction (gchar *board, gchar index, gchar player, gchar direction)
       break;
   }
 
-  not_me = other_player (player);
+  not_me = OTHER_TILE (player);
 
   i = ROW(index) + dx;
   j = COL(index) + dy;
 
   while ((i >= 0) && (i <= 7) && (j >= 0) && (j <= 7) &&
-         (board[INDEX(i,j)] == not_me)) {
-    board[INDEX(i,j)] = player;
+         (board->board[INDEX(i,j)] == not_me)) {
+    board->board[INDEX(i,j)] = player;
     i += dx;
     j += dy;
   }
 }
 
 gboolean
-is_valid_move (gchar *board, gchar index, gchar player)
+is_valid_move (ReversiBoard *board, gchar index, gchar player)
 {
   gboolean valid = FALSE;
 
-  if (board[index]) {
+  if (board->board[index]) {
     return FALSE;
   }
 
@@ -168,7 +193,7 @@ is_valid_move (gchar *board, gchar index, gchar player)
 }
 
 void
-move (gchar *board, gchar index, gchar player)
+move (ReversiBoard *board, gchar index, gchar player)
 {
   if (check_direction (board, index, player, UP)) {
     move_direction (board, index, player, UP);
@@ -195,7 +220,7 @@ move (gchar *board, gchar index, gchar player)
     move_direction (board, index, player, DOWN_RIGHT);
   }
 
-  board[index] = player;
+  board->board[index] = player;
 
   /*
   player = other_player (player);
@@ -203,7 +228,7 @@ move (gchar *board, gchar index, gchar player)
 }
 
 gboolean
-are_valid_moves (gchar *board, gchar player)
+are_valid_moves (ReversiBoard *board, gchar player)
 {
   gboolean valid_moves = 0;
   gchar i;

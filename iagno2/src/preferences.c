@@ -1,6 +1,8 @@
 #include <gnome.h>
 #include <dirent.h>
 
+#include "../reversi-iagno2/reversi.h"
+
 #include "defines.h"
 #include "properties.h"
 #include "iagno2.h"
@@ -299,7 +301,7 @@ fill_plugin_menu (GtkWidget *menu, int player)
     gchar *full_plugin_file_name;
     gchar *plugin_name;
 
-    if (!strstr (plugin_file_name, ".so.0.0.0")) {
+    if (!strstr (plugin_file_name, ".so." PLUGIN_VERSION ".0.0")) {
       g_free (plugin_file_name);
       continue;
     }

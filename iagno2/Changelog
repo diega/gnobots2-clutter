@@ -1,5 +1,21 @@
 2000-04-09  Ian Peters  <itp@gnu.org>
 
+	* plugins/random/Makefile.am: Added versioning
+	* plugins/random/random.c: Updated to new plugin interface
+	* reversi-iagno2/reversi.c, reversi-iagno2/reversi.h: Added ReversiBoard
+	  structure, with game history, updated all functions to use new
+	  structure/interface, moved some #defines from src/defines.h to
+	  reversi.h
+	* src/defines.h: Moved some stuff to reversi-iagno2/reversi.h
+	* src/iagno2.c: Updated lots of stuff to use the new ReversiBoard
+	  structure
+	* src/main.c: Updated lots of stuff to use the new ReversiBoard
+	  structure
+	* src/plugin.c, src/plugin.h: new interface
+	* src/preferences.c: versioned plugin support
+
+2000-04-09  Ian Peters  <itp@gnu.org>
+
 	* src/main.c, src/main.h: Added a help menu, and an about dialog.
 
 2000-04-09  Ian Peters  <itp@gnu.org>

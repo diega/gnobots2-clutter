@@ -3,12 +3,9 @@
 #include <sys/time.h>
 
 #include "../../reversi-iagno2/reversi.h"
+#include "../../src/iagno2.h"
 
 #define VERSION "0.1"
-
-extern GtkWidget *app;
-
-extern gchar whose_turn;
 
 gchar busy_new[50];
 
@@ -24,20 +21,21 @@ plugin_init ()
 }
 
 gint
-plugin_move (gchar *board)
+plugin_move (gchar *board, gint player, gint move)
 {
   gint i;
   gint moves[32];
   gint nummoves = 0;
 
   for (i = 0; i < 64; i++) {
-    if (is_valid_move (board, i, whose_turn)) {
+    if (is_valid_move (board, i, player)) {
       moves[nummoves++] = i;
     }
   }
 
   if (!nummoves) {
-    return TRUE;
+    /* This should never ever happen */
+    return 64;
   }
 
   i = rand () % nummoves;

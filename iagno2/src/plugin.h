@@ -4,10 +4,12 @@
 #include <gnome.h>
 #include <gmodule.h>
 
+#include "../reversi-iagno2/reversi.h"
+
 typedef struct {
 	GModule *module;
 	void (*plugin_init)();
-	gint (*plugin_move)(gchar *board);
+	gint (*plugin_move)(ReversiBoard *board, int player);
 	const gchar *(*plugin_name)();
   const gchar *(*plugin_busy_message)();
 	void (*plugin_preferences)(GtkWidget *widget);

@@ -17,7 +17,7 @@ Iagno2Plugin *plugin;
 
 gboolean game_in_progress = FALSE;
 
-extern gchar *board;
+ReversiBoard *board;
 extern gchar *board_pixmaps;
 
 extern Iagno2Plugin *players[2];
@@ -123,11 +123,14 @@ new_game_real_cb (gint reply, gpointer data)
   }
   
   if (board) {
-    reversi_destroy_board (&board);
+    reversi_destroy_board (board);
   }
 
   if (board_pixmaps) {
+    /*
     reversi_destroy_board (&board_pixmaps);
+    */
+    g_free (board_pixmaps);
   }
 
   if (computer_timeout_id) {
@@ -140,13 +143,16 @@ new_game_real_cb (gint reply, gpointer data)
     game_over_flip_id = 0;
   }
 
-  reversi_init_board (&board);
-  reversi_init_board (&board_pixmaps);
+  board = reversi_init_board ();
+  board_pixmaps = g_new0 (gchar, BOARDSIZE * BOARDSIZE);
+  /*
+  reversi_init_board (board_pixmaps);
+  */
   
-  board_pixmaps[INDEX (3, 3)] = (board[INDEX (3, 3)] = WHITE_TILE) - 1;
-  board_pixmaps[INDEX (4, 4)] = (board[INDEX (4, 4)] = WHITE_TILE) - 1;
-  board_pixmaps[INDEX (3, 4)] = (board[INDEX (3, 4)] = BLACK_TILE) + 1;
-  board_pixmaps[INDEX (4, 3)] = (board[INDEX (4, 3)] = BLACK_TILE) + 1;
+  board_pixmaps[INDEX (3, 3)] = (board->board[INDEX (3, 3)] = WHITE_TILE) - 1;
+  board_pixmaps[INDEX (4, 4)] = (board->board[INDEX (4, 4)] = WHITE_TILE) - 1;
+  board_pixmaps[INDEX (3, 4)] = (board->board[INDEX (3, 4)] = BLACK_TILE) + 1;
+  board_pixmaps[INDEX (4, 3)] = (board->board[INDEX (4, 3)] = BLACK_TILE) + 1;
 
   whose_turn = BLACK_TILE;
 
@@ -166,8 +172,11 @@ main (int argc, char **argv)
 
   properties = iagno2_properties_new ();
 
-  reversi_init_board (&board);
+  board = reversi_init_board ();
+  /*
   reversi_init_board (&board_pixmaps);
+  */
+  board_pixmaps = g_new0 (gchar, 64);
 
   iagno2_tileset_load ();
 
@@ -183,6 +192,9 @@ main (int argc, char **argv)
 
   iagno2_properties_destroy (properties);
 
-  reversi_destroy_board (&board);
+  reversi_destroy_board (board);
+  /*
   reversi_destroy_board (&board_pixmaps);
+  */
+  g_free (board_pixmaps);
 }
