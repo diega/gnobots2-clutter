@@ -16,7 +16,9 @@ gataxx_SOURCES = \
 	ataxx.c \
 	ataxx.h \
 	properties.c \
-	properties.h
+	properties.h \
+	clock.c	\
+	clock.h
 
 gataxx_LDADD = \
 	$(GNOME_GAMES_LIBS) \

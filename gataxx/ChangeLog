@@ -1,3 +1,8 @@
+2001-11-24  Kevin Vandersloot <kfv101@psu.edu>
+
+	* gattax.c, attax.c, properties.c, clock.c: bring back clock 
+	widget
+
 2001-07-27  Abel Cheung  <maddog@linux.org.hk>
 
 	* gataxx.desktop: Added traditional Chinese translation.
