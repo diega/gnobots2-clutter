@@ -2,9 +2,11 @@
 Name=Mahjongg
 Name[fr]=Mahjongg
 Name[de]=Mahjongg
+Name[no]=Mahjongg
 Comment=Gnome Mahjongg program
 Comment[fr]=Jeu de Mahjongg Gnome
 Comment[de]=Gnome Mahjongg 
+Comment[no]=Spillet Mahjongg
 Exec=mahjongg
 Icon=
 Info=Gnome Mahjongg program
