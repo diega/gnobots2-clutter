@@ -246,7 +246,7 @@ set_score (int new_score)
 	char b [20];
 	
 	score = new_score;
-	sprintf (b, "%5d", score);
+	sprintf (b, "%.5d", score);
 	gtk_label_set (GTK_LABEL(scorew), b);
 }
 
@@ -907,7 +907,7 @@ main (int argc, char *argv [])
 	gtk_container_add(GTK_CONTAINER(frame), hb);
 
 	gtk_box_pack_start(GTK_BOX(vb), frame, 1, 1, 0);
-	gtk_box_pack_end (GTK_BOX(hb), scorew, 0, 0, 10);
+	gtk_box_pack_end (GTK_BOX(hb), scorew, 0, 0, 0);
 	gtk_box_pack_end (GTK_BOX(hb), label,  0, 0, 0);
 	
 	if (!restarted)
