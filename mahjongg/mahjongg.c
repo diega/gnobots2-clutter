@@ -24,7 +24,7 @@
 #define MAX_TILES 146
 #define HALF_WIDTH 20
 #define HALF_HEIGHT 28
-#define MAH_VERSION "0.2.0"
+#define MAH_VERSION "0.3.0"
      
 typedef struct _tilepos tilepos;     
 typedef struct _tile tile;
@@ -256,6 +256,8 @@ static GdkImlibImage *tiles_image;
 
 void quit_game_callback (GtkWidget *widget, gpointer data);
 void new_game_callback (GtkWidget *widget, gpointer data);
+void restart_game_callback (GtkWidget *widget, gpointer data);
+void select_game_callback (GtkWidget *widget, gpointer date);
 void new_game (void);
 void redraw_area (int x1, int y1, int x2, int y2, int mlayer);
 void about_callback (GtkWidget *widget, gpointer data);
@@ -264,8 +266,11 @@ GnomeUIInfo filemenu [] = {
 	{GNOME_APP_UI_ITEM, N_("New"), NULL, new_game_callback, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
 
-	{GNOME_APP_UI_ITEM, N_("Restart..."), NULL, NULL, NULL, NULL,
+	{GNOME_APP_UI_ITEM, N_("Restart..."), NULL, restart_game_callback, NULL, NULL,
 	 GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("Select game"), NULL, select_game_callback, NULL, NULL,
+	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
 
 	{GNOME_APP_UI_ITEM, N_("Properties"), NULL, NULL, NULL, NULL,
 	 GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
@@ -330,149 +335,9 @@ int find_tile (int x, int y)
 
 void draw_selected_tile (int i)
 {
-	int bx, by, dx1 = 0, dx2 = 0, dy1 = 0, dy2 = 0, bborder = 0;
-	int layer, y;
-	int tile_h, tile_w, x_pos, y_pos, x_end, y_end;
-	int uleft, bleft, lbottom, rbottom;
-
-	
-	if (tiles[i].visible == 1) {
-		uleft = find_tile (tiles[i].x + 2, tiles[i].y + 2);
-		if (uleft != i)
-			bleft = find_tile (tiles[i].x + 1, tiles[uleft].y + TILE_HEIGHT + 2);
-		else 
-			bleft = find_tile (tiles[i].x + 1, tiles[i].y + TILE_HEIGHT - 2);
-		if (bleft != i)
-			lbottom = find_tile (tiles[bleft].x + TILE_WIDTH + 2, tiles[i].y + TILE_HEIGHT - 2);
-		else lbottom = find_tile (tiles[i].x + 2, tiles[i].y + TILE_HEIGHT - 2);
-		if (lbottom != i) {
-			rbottom = find_tile (tiles[lbottom].x + TILE_WIDTH + 2, tiles[i].y + TILE_HEIGHT - 2);
-			if ((tiles[lbottom].x + TILE_WIDTH) > tiles[i].x + TILE_WIDTH)
-				rbottom = i;
-		}
-		else rbottom = find_tile (tiles[i].x + TILE_WIDTH - 2, tiles[i].y + TILE_HEIGHT - 2);
-
-
-		if (uleft != i) dx1 = tiles[uleft].x + TILE_WIDTH - tiles[i].x;
-		if (bleft != i) dx2 = tiles[bleft].x + TILE_WIDTH - tiles[i].x;
-		if (lbottom != i) dy1 = TILE_HEIGHT + tiles[i].y - tiles[lbottom].y;
-		if (rbottom != i) dy2 = TILE_HEIGHT + tiles[i].y - tiles[rbottom].y;
-
-		y = tiles[i].y;
-		bx = (tiles[i].image % 21) * TILE_WIDTH;
-		by = (tiles[i].image / 21) * TILE_HEIGHT;
-		if (tiles[i].selected) by += 2 * TILE_HEIGHT;
-
-		if ((dx1 == 0) && (dx2 == 0) && (dy1 == 0) && (dy2 == 0)) {
-			gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
-			gdk_draw_pixmap (draw_area->window,
-					 my_gc, tiles_pix,
-					 bx, by, tiles[i].x, tiles[i].y,
-					 TILE_WIDTH, TILE_HEIGHT);
-		}
-		else {
-			bborder = (dy1 >= dy2) ? dy1 : dy2;
-			if ((dx1 != 0) && (uleft != i)) {
-				x_pos = tiles[uleft].x + TILE_WIDTH;
-				y_pos = tiles[i].y;
-				x_end = tiles[i].x + TILE_WIDTH;
-				if (bleft != i) 
-					y_end = ((tiles[uleft].y + TILE_HEIGHT) <= (tiles[bleft].y)) ? 
-						tiles[uleft].y + TILE_HEIGHT : tiles[bleft].y;
-				else y_end = tiles[uleft].y + TILE_HEIGHT;
-				tile_w = x_end - x_pos;
-				tile_h = y_end - y_pos + 1;
-				gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
-				gdk_draw_pixmap (draw_area->window,
-						 my_gc, tiles_pix,
-						 bx + x_pos - tiles[i].x, by + y_pos - tiles[i].y,
-						 x_pos, y_pos, tile_w, tile_h);
-				y = y_end + 1;
-			}
-			else if ((dx2 != 0) && (bleft != i)) {
-				x_pos = tiles[i].x;
-				y_pos = tiles[i].y;
-				x_end = tiles[i].x + TILE_WIDTH;
-				y_end = tiles[bleft].y - 1;
-				tile_w = x_end - x_pos;
-				tile_h = y_end - y_pos + 1;
-				gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
-				gdk_draw_pixmap (draw_area->window,
-						 my_gc, tiles_pix,
-						 bx + x_pos - tiles[i].x, by + y_pos - tiles[i].y,
-						 x_pos, y_pos, tile_w, tile_h);
-				y = y_end + 1;
-			}
-			else {
-				x_pos = tiles[i].x;
-				y_pos = tiles[i].y;
-				x_end = tiles[i].x + TILE_WIDTH;
-				y_end = tiles[i].y + TILE_HEIGHT - bborder;
-				tile_w = x_end - x_pos;
-				tile_h = y_end - y_pos + 1;
-				gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
-				gdk_draw_pixmap (draw_area->window,
-						 my_gc, tiles_pix,
-						 bx + x_pos - tiles[i].x, by + y_pos - tiles[i].y,
-						 x_pos, y_pos, tile_w, tile_h);
-				y = tiles[bleft].y;
-			}
-			if (dx2 != 0) {
-				x_pos = tiles[bleft].x + TILE_WIDTH;
-				y_pos = tiles[bleft].y;
-				x_end = tiles[i].x + TILE_WIDTH;
-				y_end = tiles[i].y + TILE_HEIGHT - bborder;
-				tile_w = x_end - x_pos;
-				tile_h = y_end - y_pos + 1;
-				gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
-				gdk_draw_pixmap (draw_area->window,
-						 my_gc, tiles_pix,
-						 bx + x_pos - tiles[i].x, by + y_pos - tiles[i].y,
-						 x_pos, y_pos, tile_w, tile_h);
-			}
-			else {
-				x_pos = tiles[i].x;
-				y_pos = y;
-				x_end = tiles[i].x + TILE_WIDTH;
-				y_end = tiles[i].y + TILE_HEIGHT - bborder;
-				tile_w = x_end - x_pos;
-				tile_h = y_end - y_pos;
-				gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
-				gdk_draw_pixmap (draw_area->window,
-						 my_gc, tiles_pix,
-						 bx + x_pos - tiles[i].x, by + y_pos - tiles[i].y,
-						 x_pos, y_pos, tile_w, tile_h);
-			}
-			if (bborder > 0) {
-				if ((dy1 > dy2) && ((tiles[lbottom].x) < (tiles[i].x)) ) {
-					x_pos = tiles[lbottom].x + TILE_WIDTH;
-					y_pos = tiles[lbottom].y;
-					x_end = tiles[i].x + TILE_WIDTH;
-					y_end = tiles[i].y + TILE_HEIGHT;
-					tile_w = x_end - x_pos;
-					tile_h = y_end - y_pos;
-					gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
-					gdk_draw_pixmap (draw_area->window,
-							 my_gc, tiles_pix,
-							 bx + x_pos - tiles[i].x, by + y_pos - tiles[i].y,
-							 x_pos, y_pos, tile_w, tile_h);
-				}
-				else if (dy2 > dy1) {
-					x_pos = tiles[i].x;
-					y_pos = tiles[rbottom].y;
-					x_end = tiles[rbottom].x - 1;
-					y_end = tiles[i].y + TILE_HEIGHT;
-					tile_w = x_end - x_pos;
-					tile_h = y_end - y_pos;
-					gdk_gc_set_clip_origin (my_gc, tiles[i].x, tiles[i].y);
-					gdk_draw_pixmap (draw_area->window,
-							 my_gc, tiles_pix,
-							 bx + x_pos - tiles[i].x, by + y_pos - tiles[i].y,
-							 x_pos, y_pos, tile_w, tile_h);
-				}
-			}
-		}
-	}
+	redraw_area (tiles[i].x, tiles[i].y,
+		     tiles[i].x + TILE_WIDTH, tiles[i].y + TILE_HEIGHT,
+		     tiles[i].layer);
 }
 
 int tile_free (int tile_num)
@@ -565,31 +430,38 @@ void no_match (void)
 
 void check_free (void)
 {
-	int i = 0, type, other = MAX_TILES, free = 0;
+	int i = -1, type = MAX_TILES, br = 0, other = MAX_TILES, free = 0;
 	GtkWidget *mb;
 	
 	while ((i < MAX_TILES) && (!free)) {
+		if (other >= MAX_TILES) i++;
 		while ((i < MAX_TILES) && (!tile_free(i))) {
 			i++;
 		}
-		if (tile_free(i)) type = tiles[i].type;
-		if (other >= MAX_TILES) other = i + 1;
-		while ((!tile_free(other)) && (other < MAX_TILES) && (tiles[other].type != type)) other++;
-		if ((other < MAX_TILES) && (tiles[other].type == type)) {
-			free = 1;
-			other = MAX_TILES;
+		if (other >= MAX_TILES) {
+			other = i + 1;
 		}
-		i++;
+		if (tile_free(i)) type = tiles[i].type;
+		br = 0;
+		while (!br) {
+			other++;
+			if (other >= MAX_TILES)
+				br = 1;
+			if ((tile_free(other)) && (tiles[other].type == type)) {
+				br = 1;
+				free = 1;
+				other = MAX_TILES;
+			}
+		}
 	}
-	printf("free: %d  i: %d  other: %d\n", free, i, other);
-/* 	if (!free) { */
-/* 		mb = gnome_message_box_new (_("No more movements"), */
-/* 					    GNOME_MESSAGE_BOX_INFO, */
-/* 					    _("Ok"), NULL); */
-/* 		GTK_WINDOW(mb)->position = GTK_WIN_POS_MOUSE; */
-/* 		gnome_message_box_set_modal (GNOME_MESSAGE_BOX (mb)); */
-/* 		gtk_widget_show (mb); */
-/* 	} */
+ 	if (!free) { 
+ 		mb = gnome_message_box_new (_("No more movements"), 
+ 					    GNOME_MESSAGE_BOX_INFO, 
+ 					    _("Ok"), NULL); 
+ 		GTK_WINDOW(mb)->position = GTK_WIN_POS_MOUSE; 
+ 		gnome_message_box_set_modal (GNOME_MESSAGE_BOX (mb)); 
+ 		gtk_widget_show (mb); 
+ 	} 
 }
 
 void you_won (void)
@@ -633,6 +505,75 @@ void quit_game_callback (GtkWidget *widget, gpointer data)
 void new_game_callback (GtkWidget *widget, gpointer data)
 {
 	new_game ();
+}
+
+void restart_game_callback (GtkWidget *widget, gpointer data)
+{
+	int i;
+	visible_tiles = 144;
+	for (i = 0; i < 144; i++) {
+		tiles[i].visible = 1;
+		tiles[i].selected = 0;
+	}
+	gtk_widget_draw (draw_area, NULL);	
+}
+
+static void
+input_callback (GtkWidget *widget, gpointer data)
+{
+	srand (atoi (GTK_ENTRY (data)->text));
+	new_game ();
+}
+
+static void
+cancel_callback (GtkWidget *widget, gpointer data)
+{
+	gtk_widget_destroy (GTK_WIDGET (data));
+}
+
+void select_game_callback (GtkWidget *widget, gpointer data)
+{
+	GtkWidget *dialog, *entry, *label, *button, *vbox;
+
+	dialog = gtk_dialog_new ();
+	GTK_WINDOW (dialog)->position = GTK_WIN_POS_MOUSE;
+	gtk_window_set_title (GTK_WINDOW (dialog), _("Select Game"));
+	gtk_signal_connect (GTK_OBJECT (dialog), "delete_event",
+			    GTK_SIGNAL_FUNC (cancel_callback),
+			    (gpointer)dialog);
+	label = gtk_label_new (_("Game Number:"));
+	gtk_box_pack_start_defaults (GTK_BOX (GTK_DIALOG (dialog)->vbox), label);
+	gtk_widget_show (label);
+	
+	entry = gtk_entry_new ();
+	gtk_box_pack_start_defaults (GTK_BOX(GTK_DIALOG(dialog)->vbox), entry);
+	gtk_widget_show (entry);
+
+	vbox = gtk_hbox_new (TRUE, 4);
+	gtk_container_add (GTK_CONTAINER(GTK_DIALOG(dialog)->action_area), vbox);
+  
+	button = gnome_stock_button (GNOME_STOCK_BUTTON_OK);
+	gtk_signal_connect (GTK_OBJECT (button), "clicked",
+			    GTK_SIGNAL_FUNC (input_callback),
+			    (gpointer)entry);
+	gtk_signal_connect (GTK_OBJECT (button), "clicked",
+			    GTK_SIGNAL_FUNC (cancel_callback),
+			    (gpointer)dialog);
+	gtk_box_pack_start_defaults (GTK_BOX(vbox), button);
+	gtk_widget_show(button);
+  
+	button = gnome_stock_button (GNOME_STOCK_BUTTON_CANCEL);
+	gtk_signal_connect (GTK_OBJECT (button), "clicked",
+			    GTK_SIGNAL_FUNC (cancel_callback),
+			    (gpointer)dialog);
+	gtk_box_pack_start_defaults (GTK_BOX(vbox), button);
+	gtk_widget_show(button);
+  
+	gtk_widget_show(vbox);
+  
+	gtk_grab_add (dialog);
+	gtk_widget_show (dialog);
+	
 }
 
 void new_game (void)
@@ -706,11 +647,11 @@ void redraw_area (int x1, int y1, int x2, int y2, int mlayer)
 	int i;
 
 	for(i = 0; i < MAX_TILES; i ++) {
-		if (tiles[i].visible) {
-			if (((tiles[i].x > x1) && (tiles[i].x < x2)) ||
-			    ((tiles[i].x + TILE_WIDTH > x1) && (tiles[i].x + TILE_WIDTH < x2)))
-				if (((tiles[i].y > y1) && (tiles[i].y < y2)) ||
-				    ((tiles[i].y + TILE_HEIGHT > y1) && (tiles[i].y + TILE_HEIGHT < y2)))
+		if ((tiles[i].visible) && (tiles[i].layer >= mlayer)) {
+			if (((tiles[i].x >= x1) && (tiles[i].x <= x2)) ||
+			    ((tiles[i].x + TILE_WIDTH >= x1) && (tiles[i].x + TILE_WIDTH <= x2)))
+				if (((tiles[i].y >= y1) && (tiles[i].y <= y2)) ||
+				    ((tiles[i].y + TILE_HEIGHT >= y1) && (tiles[i].y + TILE_HEIGHT <= y2)))
 					redraw_tile_in_area (x1, y1, x2, y2, i);
 		}
 	}
@@ -731,7 +672,7 @@ void tile_gone (int i, int x, int y)
 	redraw_area (tiles[i].x, tiles[i].y, 
 		     tiles[i].x + TILE_WIDTH,
 		     tiles[i].y + TILE_HEIGHT,
-		     tiles[i].layer);
+		     0);
 }
 
 void button_pressed (int x, int y)
