@@ -26,6 +26,7 @@
 
 #define VERSION "0.0.1"
 #define BUSY_MESSAGE "Swedish Chef is thinking..."
+#define PREF_THINK_TIME "/iagno2/swedishchef/player%d_thinking_time"
 #define DEFAULT_THINKING_TIME "0.5"
 
 /* #define DEBUG */
@@ -35,77 +36,72 @@
 
 typedef unsigned char UBYTE;
 typedef UBYTE BoardType[10][16];
-
-
-static void findMove (BoardType board, gint *xp, gint *yp, gint player);
-static gint search (BoardType board, gint oldscore, gint player,
-		   gint alpha, gint beta,
-		   gint ply, gint depth, gboolean pass);
-static gint numFlip (BoardType board, gint x, gint y, gint player);
-static void flip (BoardType board, gint x, gint y, gint player);
-static gint sumBricks (BoardType board, gint player);
-static gint rankMove (BoardType board, gint x, gint y, gint num);
-static void moveBoard (BoardType from, BoardType to);
-
-
-static gint Combs;
-static gint numTiles;
-static gint nflip[8];
-static gint xstart[64], ystart[64];
+struct PlayerData_s {
+  gint Combs;
+  gint numTiles;
+  gint nflip[8];
+  gint xstart[64], ystart[64];
+  gdouble thinking_time;
 #ifdef DEBUG
-static gint fh, fhGood;
+  gint fh, fhGood;
 #endif
+};
+typedef struct PlayerData_s PlayerData;
 
-static gdouble thinking_time;
+
+static void findMove (PlayerData *pd, BoardType board, gint *xp, gint *yp,
+		      gint player);
+static gint search (PlayerData *pd, BoardType board, gint oldscore, gint player,
+		   gint alpha, gint beta, gint ply, gint depth, gboolean pass);
+static gint numFlip (PlayerData *pd, BoardType board, gint x, gint y, gint player);
+static void flip (PlayerData *pd, BoardType board, gint x, gint y, gint player);
+static gint sumTiles (BoardType board, gint player);
+static gint rankMove (PlayerData *pd, BoardType board, gint x, gint y, gint num);
+static inline void moveBoard (BoardType from, BoardType to);
 
 /* ------------------------------------------------------------ */
+
+static PlayerData *
+get_player_data (gchar player)
+{
+  static PlayerData pd[2];
+  g_assert ((player == BLACK) || (player || WHITE));
+  return &pd[player == WHITE ? 0 : 1];
+}
 
 void
 plugin_init_player (gchar player)
 {
-  if (player == BLACK_TILE) {
-    /* I need to play black */
-  } else {
-    /* I need to play white */
-  }
+  gchar *time_str, *pref_file;
+  PlayerData *pd = get_player_data (player);
+
+  pref_file = g_strdup_printf (PREF_THINK_TIME "=" DEFAULT_THINKING_TIME, player);
+  time_str = gnome_config_get_string (pref_file);
+  sscanf (time_str, "%lg", &pd->thinking_time);
+  g_free (pref_file);
+  g_free (time_str);
 }
 
 void
 plugin_deinit_player (gchar player)
 {
-  if (player == BLACK_TILE) {
-    /* I don't play black */
-  } else {
-    /* I don't play white */
-  }
 }
 
 void
 plugin_setup (gchar player)
 {
   struct timeval tv;
-  gchar *timestr;
 
   gettimeofday (&tv, NULL);
   srand (tv.tv_sec + tv.tv_usec);
-
-  timestr = gnome_config_get_string ("/iagno2/swedishchef/thinking_time="
-				     DEFAULT_THINKING_TIME);
-  sscanf (timestr, "%lg", &thinking_time);
-  g_free (timestr);
-
-#ifdef DEBUG
-  printf ("time:%g\n", thinking_time);
-#endif
 }
-
 
 static gint
 color_convert (char iagno_color)
 {
-  if (iagno_color == BLACK_TILE)
+  if (iagno_color == BLACK)
     return 1;
-  else if (iagno_color == WHITE_TILE)
+  else if (iagno_color == WHITE)
     return 2;
   else
     return 0;
@@ -117,32 +113,32 @@ plugin_move (ReversiBoard *board, gchar player)
   gint x, y;
   BoardType myboard;
   gint xx, yy;
+  PlayerData *pd = get_player_data (player);
 
 #ifdef DEBUG
-  gint i;
-  printf ("\nturn:%d\n", board->move_num);
-  for (i = 0; i < 64; i++) {
-    printf ("%2d ", board->board[i]);
-    if (((i + 1) % 8) == 0) {
-      printf ("\n");
+  printf ("\nturn:%d\n", board->move_count);
+  for (y = 0; y < 8; y++) {
+    for (x = 0; x < 8; x++) {
+      printf ("%2d ", board->board[x + y * 8]);
     }
+    printf ("\n");
   }
 #endif
 
   for (y = 0; y < 8; y++) {
     for (x = 0; x < 8; x++) {
-      gchar tile = board->board[x * 8 + y];
+      gchar tile = board->board[x + y * 8];
       myboard[x + 1][y + 1] = color_convert (tile);
     }
   }
 
-  findMove (myboard, &xx, &yy, color_convert (player));
+  findMove (pd, myboard, &xx, &yy, color_convert (player));
 
 #ifdef DEBUG
     printf ("xx:%d yy:%d\n\n", xx, yy);
 #endif
 
-  return (xx - 1) * 8 + (yy - 1);
+  return (xx - 1) + (yy - 1) * 8;
 }
 
 const gchar *
@@ -152,13 +148,13 @@ plugin_name ()
 }
 
 const gchar *
-plugin_busy_message ()
+plugin_busy_message (gchar player)
 {
   return BUSY_MESSAGE;
 }
 
 void
-plugin_about_window (GtkWindow *parent)
+plugin_about_window (GtkWindow *parent, gchar player)
 {
   GtkWidget *about;
   const gchar *authors[] = {
@@ -182,33 +178,24 @@ plugin_about_window (GtkWindow *parent)
   gtk_widget_show (about);
 }
 
-
-static gint
-save_string (GtkWidget *widget, gpointer data)
-{
-  gchar buffer[32];
-  GtkAdjustment *adj;
-
-  adj = (GtkAdjustment *) data;
-
-  thinking_time = adj->value;
-#ifdef DEBUG
-  printf("time:%g\n", thinking_time);
-#endif
-  sprintf(buffer, "%g", thinking_time);
-  gnome_config_set_string ("/iagno2/swedishchef/thinking_time", buffer);
-
-  gnome_config_sync ();
-  return TRUE;
-}
-
 void
-plugin_preferences (GtkWidget *parent)
+plugin_preferences_window (GtkWidget *parent, gchar player)
 {
   GtkWidget *dialog;
   GtkWidget *hbox, *label, *scale;
-  gchar *timestr;
   GtkObject *adj;
+  PlayerData *pd = get_player_data (player);
+
+  gint store_prefs (GtkWidget *widget, gpointer data)
+  {
+    GtkAdjustment *adj = (GtkAdjustment *) data;
+    gchar player = (gchar)(int) gtk_object_get_data (GTK_OBJECT (adj), "player");
+    PlayerData *pd = get_player_data (player);
+
+    pd->thinking_time = adj->value;
+    gnome_property_box_changed (GNOME_PROPERTY_BOX (parent));
+    return TRUE;
+  }
 
   dialog = gnome_dialog_new (_("Swedish Chef Configuration"),
                              GNOME_STOCK_BUTTON_OK,
@@ -217,16 +204,11 @@ plugin_preferences (GtkWidget *parent)
 
   gnome_dialog_set_parent (GNOME_DIALOG (dialog), GTK_WINDOW (parent));
 
-  timestr = gnome_config_get_string ("/iagno2/swedishchef/thinking_time="
-				     DEFAULT_THINKING_TIME);
-  sscanf (timestr, "%lg", &thinking_time);
-
   hbox = gtk_hbox_new (FALSE, 10);
   label = gtk_label_new ("Thinking time:");
-  adj = gtk_adjustment_new (thinking_time, 0.0, 10.0, 0.1, 0.1, 0.0);
+  adj = gtk_adjustment_new (pd->thinking_time, 0.0, 10.0, 0.1, 0.1, 0.0);
+  gtk_object_set_data (GTK_OBJECT (adj), "player", (gpointer)(int)player);
   scale = gtk_hscale_new (GTK_ADJUSTMENT (adj));
-
-  g_free (timestr);
 
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), scale, TRUE, TRUE, 0);
@@ -238,10 +220,24 @@ plugin_preferences (GtkWidget *parent)
 
   gnome_dialog_button_connect (GNOME_DIALOG (dialog),
                                0,
-                               GTK_SIGNAL_FUNC (save_string),
+                               GTK_SIGNAL_FUNC (store_prefs),
                                (gpointer) adj);
 
   gnome_dialog_run_and_close (GNOME_DIALOG (dialog));
+}
+
+void
+plugin_preferences_save (char player)
+{
+  gchar* buffer, *pref_file;
+  PlayerData *pd = get_player_data (player);
+
+  buffer = g_strdup_printf ("%g", pd->thinking_time);
+  pref_file = g_strdup_printf (PREF_THINK_TIME, player);
+  gnome_config_set_string (pref_file, buffer);
+  g_free (pref_file);
+  g_free (buffer);
+  gnome_config_sync ();
 }
 
 /* ------------------------------------------------------------ */
@@ -252,8 +248,13 @@ static gint delta[8] = { -16, -15, 1, 17, 16, 15, -1, -17 };
 #define WINSCORE  (10000)
 #define LOSESCORE (-10000)
 
+static inline void
+moveBoard (BoardType from, BoardType to)
+{
+  memcpy (to, from, sizeof (BoardType));
+}
 static void
-findMove (BoardType board, gint *xp, gint *yp, gint player)
+findMove (PlayerData *pd, BoardType board, gint *xp, gint *yp, gint player)
 {
   UBYTE TmpBoard[10][16];
   UBYTE xMoves[64], yMoves[64];
@@ -262,20 +263,20 @@ findMove (BoardType board, gint *xp, gint *yp, gint player)
   gint NumMoves = 0;
   gint depth = 2;
 
-  numTiles = 0;
+  pd->numTiles = 0;
   for (i = 1; i < 9; i++)
     for (j = 1; j < 9; j++)
       if (board[i][j])
-	numTiles++;
+	pd->numTiles++;
   for (i = 0; i < 64; i++) {
-    xstart[i] = 1;
-    ystart[i] = 1;
+    pd->xstart[i] = 1;
+    pd->ystart[i] = 1;
   }
 
   gt = g_timer_new ();
   g_timer_start (gt);
 
-  Combs = 0;
+  pd->Combs = 0;
   do {
     gint alpha = 2 * LOSESCORE;
     gint beta = 2 * WINSCORE;
@@ -284,26 +285,26 @@ findMove (BoardType board, gint *xp, gint *yp, gint player)
 
 #ifdef DEBUG
     printf ("depth:%2d\n", depth);
-    fh = fhGood = 0;
+    pd->fh = pd->fhGood = 0;
 #endif
 
-    for (i = xstart[0], j = ystart[0]; NumLeft > 0; NumLeft--) {
+    for (i = pd->xstart[0], j = pd->ystart[0]; NumLeft > 0; NumLeft--) {
       gint num;
-      if ((board[i][j] == 0) && ((num = numFlip (board, i, j, player)) > 0)) {
+      if ((board[i][j] == 0) && ((num = numFlip (pd, board, i, j, player)) > 0)) {
 	gint tmpscore, score;
 
 	moveBoard (board, TmpBoard);
-	flip (TmpBoard, i, j, player);
-	numTiles++;
+	flip (pd, TmpBoard, i, j, player);
+	pd->numTiles++;
 
-	tmpscore = rankMove (board, i, j, num);
-	score = -search (TmpBoard, -tmpscore, 3 - player,
-			      -beta, -(alpha-1), 1, depth - 1, FALSE);
-	numTiles--;
+	tmpscore = rankMove (pd, board, i, j, num);
+	score = -search (pd, TmpBoard, -tmpscore, 3 - player,
+			 -beta, -(alpha-1), 1, depth - 1, FALSE);
+	pd->numTiles--;
 
 	if (score > alpha) {
 	  NumMoves = 0;
-	  xstart[0] = i; ystart[0] = j;
+	  pd->xstart[0] = i; pd->ystart[0] = j;
 	}
 	if (score >= alpha) {
 	  xMoves[NumMoves] = i;
@@ -322,10 +323,11 @@ findMove (BoardType board, gint *xp, gint *yp, gint player)
       }
     }
 #ifdef DEBUG
-    printf ("combs:%d fh:%.2f\n", Combs, (double)fhGood / fh);
+    printf ("combs:%d fh:%.2f\n", pd->Combs, (double)pd->fhGood / pd->fh);
 #endif
     depth++;
-  } while ((g_timer_elapsed (gt, NULL) < thinking_time) && (depth + numTiles <= 64));
+  } while ((g_timer_elapsed (gt, NULL) < pd->thinking_time) &&
+	   (depth + pd->numTiles <= 64));
   g_assert (NumMoves > 0);
   i = random () % NumMoves;
   *xp = xMoves[i]; *yp = yMoves[i];
@@ -338,8 +340,8 @@ findMove (BoardType board, gint *xp, gint *yp, gint player)
  * the first move
  */
 static gint
-search (BoardType board, gint oldscore, gint player, gint alpha, gint beta,
-	gint ply, gint depth, gboolean pass)
+search (PlayerData *pd, BoardType board, gint oldscore, gint player,
+	gint alpha, gint beta, gint ply, gint depth, gboolean pass)
 {
   gint x, y;
   UBYTE TmpBoard[10][16];
@@ -349,35 +351,38 @@ search (BoardType board, gint oldscore, gint player, gint alpha, gint beta,
   if (depth <= 0)
     return oldscore;
 
-  Combs++;
+  pd->Combs++;
 
-  for (x = xstart[ply], y = ystart[ply], NumLeft = 64; NumLeft > 0; NumLeft--) {
+  x = pd->xstart[ply];
+  y = pd->ystart[ply];
+  for (NumLeft = 64; NumLeft > 0; NumLeft--) {
     gint num;
-    if ((board[x][y] == 0) && ((num = numFlip (board, x, y, player)) > 0)) {
+    if ((board[x][y] == 0) && ((num = numFlip (pd, board, x, y, player)) > 0)) {
       gint tmpscore, score;
 
       validMoves++;
       moveBoard (board, TmpBoard);
-      flip (TmpBoard, x, y, player);
-      numTiles++;
-      if (numTiles >= 64) {
-	numTiles--;
-	return sumBricks (TmpBoard, player);
+      flip (pd, TmpBoard, x, y, player);
+      pd->numTiles++;
+      if (pd->numTiles >= 64) {
+	pd->numTiles--;
+	return sumTiles (TmpBoard, player);
       }
 
-      tmpscore = oldscore + rankMove (board, x, y, num);
-      score = -search (TmpBoard, -tmpscore, 3 - player,
+      tmpscore = oldscore + rankMove (pd, board, x, y, num);
+      score = -search (pd, TmpBoard, -tmpscore, 3 - player,
 		       -beta, -alpha,
 		       ply + 1, depth - 1, FALSE);
-      numTiles--;
+      pd->numTiles--;
 
       if (score > alpha) {
-	xstart[ply] = x; ystart[ply] = y;
+	pd->xstart[ply] = x;
+	pd->ystart[ply] = y;
 	if (score >= beta) {
 #ifdef DEBUG
-	  fh++;
+	  pd->fh++;
 	  if (validMoves == 1)
-	    fhGood++;
+	    pd->fhGood++;
 #endif
 	  return score;
 	}
@@ -393,9 +398,9 @@ search (BoardType board, gint oldscore, gint player, gint alpha, gint beta,
   if (!validMoves) {
     if (pass) {
       /* Two passes in a row means game is over */
-      return sumBricks (board, player);
+      return sumTiles (board, player);
     } else {
-      return -search (board, -oldscore, 3 - player, -beta, -alpha,
+      return -search (pd, board, -oldscore, 3 - player, -beta, -alpha,
 		      ply + 1, depth, TRUE);
     }
   }
@@ -403,7 +408,7 @@ search (BoardType board, gint oldscore, gint player, gint alpha, gint beta,
 }
 
 static gint
-numFlip (BoardType board, gint x, gint y, gint player)
+numFlip (PlayerData *pd, BoardType board, gint x, gint y, gint player)
 {
   UBYTE *ptr;
   UBYTE *orgptr = &board[x][y];
@@ -411,7 +416,7 @@ numFlip (BoardType board, gint x, gint y, gint player)
   gint i;
 
   for (i = 7; i >= 0; i--) {
-    nflip[i] = 0; x = delta[i];
+    pd->nflip[i] = 0; x = delta[i];
     ptr = orgptr + x;
     if ( ((*ptr) + player) == 3) {
       ptr += x; y = 1;
@@ -419,7 +424,8 @@ numFlip (BoardType board, gint x, gint y, gint player)
 	ptr += x; y++;
       }
       if (*ptr == player) {
-	num += y; nflip[i] = y;
+	num += y;
+	pd->nflip[i] = y;
       }
     }
   }
@@ -427,7 +433,7 @@ numFlip (BoardType board, gint x, gint y, gint player)
 }
 
 static void
-flip (BoardType board, gint x, gint y, gint player)
+flip (PlayerData *pd, BoardType board, gint x, gint y, gint player)
 {
   UBYTE *ptr;
   UBYTE *orgptr = &board[x][y];
@@ -435,7 +441,7 @@ flip (BoardType board, gint x, gint y, gint player)
 
   *orgptr = player;
   for (i = 7; i >= 0; i--) {
-    y = nflip[i]; x = delta[i];
+    y = pd->nflip[i]; x = delta[i];
     ptr = orgptr;
     while (y > 0) {
       ptr += x; *ptr = player;
@@ -445,7 +451,7 @@ flip (BoardType board, gint x, gint y, gint player)
 }
 
 static gint
-sumBricks (BoardType board, gint player)
+sumTiles (BoardType board, gint player)
 {
   UBYTE *ptr = &board[1][1];
   gint Score = 0;
@@ -472,94 +478,83 @@ sumBricks (BoardType board, gint player)
 #define S33 3
 
 static gint
-rankMove (BoardType board, gint x, gint y, gint num)
+rankMove (PlayerData *pd, BoardType board, gint x, gint y, gint num)
 {
   switch (8 * x + y - 9) {
   case 0: case 7: case 56: case 63:
-    return ((nflip[0] + nflip[2] + nflip[4] + nflip[6]) *
+    return ((pd->nflip[0] + pd->nflip[2] + pd->nflip[4] + pd->nflip[6]) *
 	    (2 * (S41 - 1)) + 2 * num + S11);
   case 1:
     if (board[1][1])
       goto hor_edge;
     else
-      return ((nflip[2] + nflip[6]) * (2 * (S41 - 1)) +
-	      2 * num + S21);
+      return (pd->nflip[2] + pd->nflip[6]) * (2 * (S41 - 1)) + 2 * num + S21;
   case 2:
     if (board[1][1])
       goto hor_edge;
     else
-      return ((nflip[2] + nflip[6]) * (2 * (S41 - 1)) +
-	      2 * num + S31);
+      return (pd->nflip[2] + pd->nflip[6]) * (2 * (S41 - 1)) + 2 * num + S31;
   case 3: case 4: case 59: case 60: hor_edge:
-    return (nflip[2] + nflip[6]) * (2 * (S41 - 1)) + 2 * num + S41;
+    return (pd->nflip[2] + pd->nflip[6]) * (2 * (S41 - 1)) + 2 * num + S41;
   case 5:
     if (board[8][1])
       goto hor_edge;
     else
-      return ((nflip[2] + nflip[6]) * (2 * (S41 - 1)) +
-	      2 * num + S31);
+      return (pd->nflip[2] + pd->nflip[6]) * (2 * (S41 - 1)) + 2 * num + S31;
   case 6:
     if (board[8][1])
       goto hor_edge;
     else
-      return ((nflip[2] + nflip[6]) * (2 * (S41 - 1)) +
-	      2 * num + S21);
+      return (pd->nflip[2] + pd->nflip[6]) * (2 * (S41 - 1)) + 2 * num + S21;
   case 8:
     if (board[1][1])
       goto ver_edge;
     else
-      return ((nflip[0] + nflip[4]) * (2 * (S41 - 1)) +
-	      2 * num + S21);
+      return (pd->nflip[0] + pd->nflip[4]) * (2 * (S41 - 1)) + 2 * num + S21;
   case 9:
     if (board[1][1])
-      return (2 * num + 1);
+      return 2 * num + 1;
     else
-      return (2 * num + S22);
+      return 2 * num + S22;
   case 14:
     if (board[8][1])
-      return (2 * num + 1);
+      return 2 * num + 1;
     else
-      return (2 * num + S22);
+      return 2 * num + S22;
   case 15:
     if (board[8][1])
       goto ver_edge;
     else
-      return ((nflip[0] + nflip[4]) * (2 * (S41 - 1)) +
-	      2 * num + S21);
+      return (pd->nflip[0] + pd->nflip[4]) * (2 * (S41 - 1)) + 2 * num + S21;
   case 16:
     if (board[1][1])
       goto ver_edge;
     else
-      return ((nflip[0] + nflip[4]) * (2 * (S41 - 1)) +
-	      2 * num + S31);
+      return (pd->nflip[0] + pd->nflip[4]) * (2 * (S41 - 1)) + 2 * num + S31;
   case 18: case 21: case 42: case 45:
     return 2 * num + S33;
   case 23:
     if (board[8][1])
       goto ver_edge;
     else
-      return ((nflip[0] + nflip[4]) * (2 * (S41 - 1)) +
-	      2 * num + S31 );
+      return (pd->nflip[0] + pd->nflip[4]) * (2 * (S41 - 1)) + 2 * num + S31;
   case 24: case 31: case 32: case 39: ver_edge:
-    return ((nflip[0] + nflip[4]) * (2 * (S41 - 1)) + 2 * num + S41 );
+    return (pd->nflip[0] + pd->nflip[4]) * (2 * (S41 - 1)) + 2 * num + S41;
   case 40:
     if (board[1][8])
       goto ver_edge;
     else
-      return ((nflip[0] + nflip[4]) * (2 * (S41 - 1)) +
-	      2 * num + S31 );
+      return (pd->nflip[0] + pd->nflip[4]) * (2 * (S41 - 1)) + 2 * num + S31;
   case 47:
     if (board[8][8])
       goto ver_edge;
     else
-      return ((nflip[0] + nflip[4]) * (2 * (S41 - 1)) +
-	      2 * num + S31 );
+      return (pd->nflip[0] + pd->nflip[4]) * (2 * (S41 - 1)) + 2 * num + S31;
   case 48:
     if (board[1][8])
       goto ver_edge;
     else
-      return ((nflip[0] + nflip[4]) * (2 * (S41 - 1)) +
-	      2 * num + S21 );
+      return (pd->nflip[0] + pd->nflip[4]) * (2 * (S41 - 1)) + 2 * num + S21;
   case 49:
     if (board[1][8])
       return 2 * num + 1;
@@ -574,32 +569,27 @@ rankMove (BoardType board, gint x, gint y, gint num)
     if (board[8][8])
       goto ver_edge;
     else
-      return ((nflip[0] + nflip[4]) * (2 * (S41 - 1)) +
-	      2 * num + S21);
+      return (pd->nflip[0] + pd->nflip[4]) * (2 * (S41 - 1)) + 2 * num + S21;
   case 57:
     if (board[1][8])
       goto hor_edge;
     else
-      return ((nflip[2] + nflip[6]) * (2 * (S41 - 1)) +
-	      2 * num + S21 );
+      return (pd->nflip[2] + pd->nflip[6]) * (2 * (S41 - 1)) + 2 * num + S21;
   case 58:
     if (board[1][8])
       goto hor_edge;
     else
-      return ((nflip[2] + nflip[6]) * (2 * (S41 - 1)) +
-	      2 * num + S31 );
+      return (pd->nflip[2] + pd->nflip[6]) * (2 * (S41 - 1)) + 2 * num + S31;
   case 61:
     if (board[8][8])
       goto hor_edge;
     else
-      return ((nflip[2] + nflip[6]) * (2 * (S41 - 1)) +
-	      2 * num + S31 );
+      return (pd->nflip[2] + pd->nflip[6]) * (2 * (S41 - 1)) + 2 * num + S31;
   case 62:
     if (board[8][8])
       goto hor_edge;
     else
-      return ((nflip[2] + nflip[6]) * (2 * (S41 - 1)) +
-	      2 * num + S21 );
+      return (pd->nflip[2] + pd->nflip[6]) * (2 * (S41 - 1)) + 2 * num + S21;
   case 10: case 11: case 12: case 13:
   case 17: case 19: case 20: case 22:
   case 25: case 26: case 27: case 28: case 29: case 30:
@@ -612,8 +602,3 @@ rankMove (BoardType board, gint x, gint y, gint num)
   return 0;
 }
 
-static void
-moveBoard (BoardType from, BoardType to)
-{
-  memcpy (to, from, sizeof (BoardType));
-}

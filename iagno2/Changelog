@@ -1,3 +1,9 @@
+2000-04-16  Ian Peters  <itp@gnu.org>
+
+	* plugins/Makefile.am: build swedishchef again
+	* plugins/swedishchef/swedishchef.c: updated to work with latest game
+	  (patch from Peter)
+
 2000-04-14  Ian Peters  <itp@gnu.org>
 
 	* src/preferences.c: Only call plugin_preferences_save if the plugin

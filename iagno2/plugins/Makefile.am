@@ -1,1 +1,1 @@
-SUBDIRS = random
+SUBDIRS = random swedishchef
