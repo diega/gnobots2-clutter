@@ -229,9 +229,12 @@ bj_game_read_rules (gchar *filename)
                 lateSurrender;
         gint lnumDecks,
                 ldealerSpeed;
+        gchar *prefix;
   
         gnome_config_pop_prefix ();
-        gnome_config_push_prefix (g_strdup_printf ("=%s=", filename));
+        prefix = g_strdup_printf ("=%s=", filename);
+        gnome_config_push_prefix (prefix);
+        g_free (prefix);
 
         lnumDecks = gnome_config_get_int_with_default 
                 ("General/Number Of Decks=6",

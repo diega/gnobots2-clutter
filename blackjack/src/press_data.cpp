@@ -42,7 +42,7 @@ bj_press_data_generate ()
         press_data->xoffset -= x = hslot->pixelx + delta * hslot->pixeldx;
         press_data->yoffset -= y = hslot->pixely + delta * hslot->pixeldy;
 
-        press_data->cards = g_list_nth(hslot->cards, press_data->cardid - 1);
+        press_data->cards = g_list_nth (hslot->cards, press_data->cardid - 1);
         width = card_width + (hslot->length - press_data->cardid) * hslot->pixeldx;
         height = card_height + (hslot->length - press_data->cardid) * hslot->pixeldy;
   
@@ -75,7 +75,7 @@ bj_press_data_generate ()
                         cardpix = bj_card_get_picture (hcard->suit, hcard->value);
                 else
                         cardpix = bj_card_get_back_pixmap ();
-      
+
                 gdk_gc_set_clip_origin (gc1, x, y);
                 gdk_gc_set_clip_origin (gc2, x, y);
                 if (cardpix != NULL)
@@ -101,7 +101,7 @@ bj_press_data_generate ()
                 hslot->cards = NULL;
 
         press_data->cards->prev = NULL;
-        bj_slot_update_length(press_data->hslot);
+        bj_slot_update_length (press_data->hslot);
 }
 
 chip_stack_press_data_type *chip_stack_press_data;
@@ -119,8 +119,8 @@ bj_chip_stack_press_data_generate ()
         chip_stack_press_data->xoffset -= x = hstack->pixelx + delta * hstack->pixeldx;
         chip_stack_press_data->yoffset -= y = hstack->pixely - delta * hstack->pixeldy;
 
-        chip_stack_press_data->chips = g_list_nth(hstack->chips, 
-                                                  chip_stack_press_data->chipid);
+        chip_stack_press_data->chips = g_list_nth (hstack->chips, 
+                                                   chip_stack_press_data->chipid);
         width = chip_width
                 + (hstack->length - chip_stack_press_data->chipid) * hstack->pixeldx;
         height = chip_width

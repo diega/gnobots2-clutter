@@ -291,6 +291,7 @@ static void
 main_prog (int argc, char *argv[])
 {
         GtkWidget *wager_label, *balance_label, *status_box, *group_box;
+        gchar *lcard_style;
         gchar *label_string;
         guint context_id;
 
@@ -299,7 +300,9 @@ main_prog (int argc, char *argv[])
 
         create_main_window ();
 
-        bj_card_load_pixmaps (app, bj_get_card_style ());
+        lcard_style = bj_get_card_style ();
+        bj_card_load_pixmaps (app, lcard_style);
+        g_free (lcard_style);
         bj_slot_load_pixmaps ();
  
         bj_create_board ();
@@ -391,6 +394,7 @@ bj_gconf_card_style_cb (GConfClient *client, guint cnxn_id,
 
         lcard_style = bj_get_card_style ();
         bj_card_set_theme (lcard_style);
+        g_free (lcard_style);
         bj_draw_refresh_screen ();
 }
 
@@ -428,8 +432,8 @@ bj_get_card_style ()
         gchar *lcard_style;
 
         lcard_style = gconf_client_get_string (bj_gconf_client (), 
-                                              GCONF_KEY_CARD_STYLE,
-                                              NULL);
+                                               GCONF_KEY_CARD_STYLE,
+                                               NULL);
         return lcard_style;
 }
 

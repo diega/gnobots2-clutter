@@ -1,5 +1,15 @@
 2004-07-06  William Jon McCann  <mccann@jhu.edu>
 
+	* src/events.cpp (handle_chip_stack_pressed): Fix typos
+	press_data -> chip_stack_press_data.
+
+	* src/card.cpp (bj_card_set_size): Fix mask getting set
+	due to being defined as a local variable.
+
+	* src/game.cpp (bj_game_read_rules): 
+	* src/blackjack.cpp (main_prog):
+	(bj_gconf_card_style_cb):  Fix string leaks.
+
 	* src/events.cpp (set_cursor, set_cursor_by_location) 
 	(bj_event_button_release, handle_slot_motion_event) 
 	(handle_chip_stack_motion_event, make_cursor) 

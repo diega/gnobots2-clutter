@@ -157,7 +157,6 @@ void
 bj_card_set_size (gint width, gint height)
 {
         GdkPixbuf *scaled = NULL;
-        GdkBitmap *lmask;
 
         if (bj_slot_get_pixbuf ()) {
                 scaled = gdk_pixbuf_scale_simple (bj_slot_get_pixbuf (), width, height,
@@ -180,8 +179,8 @@ bj_card_set_size (gint width, gint height)
         }
 
         games_card_pixmaps_set_size (images, width, height);
-        lmask = games_card_pixmaps_get_mask (images);
-        gdk_gc_set_clip_mask (draw_gc, lmask);
+        mask = games_card_pixmaps_get_mask (images);
+        gdk_gc_set_clip_mask (draw_gc, mask);
 }
 
 void

@@ -385,7 +385,7 @@ handle_chip_stack_pressed (GdkEventButton *event,
                 int x = hstack->pixelx + delta * hstack->pixeldx;
                 int y = hstack->pixely + delta * hstack->pixeldy;
                 
-                press_data->status = STATUS_SHOW;
+                chip_stack_press_data->status = STATUS_SHOW;
                 gfloat chip_value = 
                         ((hchip_type)g_list_nth_data (hstack->chips, chipid))->value;
                 
@@ -393,16 +393,16 @@ handle_chip_stack_pressed (GdkEventButton *event,
                 GdkPixmap *pixmap;
                 GdkBitmap *mask;
                 gdk_pixbuf_render_pixmap_and_mask (pixbuf, &pixmap, &mask, 127);
-                press_data->moving_pixmap = pixmap;
-                press_data->moving_mask = mask;
+                chip_stack_press_data->moving_pixmap = pixmap;
+                chip_stack_press_data->moving_mask = mask;
                 
-                if (press_data->moving_pixmap != NULL)
-                        gdk_window_set_back_pixmap (press_data->moving_cards, 
-                                                    press_data->moving_pixmap, 0);
-                gdk_window_shape_combine_mask (press_data->moving_cards, 
-                                               press_data->moving_mask, 0, 0);
-                gdk_window_move (press_data->moving_cards, x, y); 
-                gdk_window_show (press_data->moving_cards);
+                if (chip_stack_press_data->moving_pixmap != NULL)
+                        gdk_window_set_back_pixmap (chip_stack_press_data->moving_chips, 
+                                                    chip_stack_press_data->moving_pixmap, 0);
+                gdk_window_shape_combine_mask (chip_stack_press_data->moving_chips, 
+                                               chip_stack_press_data->moving_mask, 0, 0);
+                gdk_window_move (chip_stack_press_data->moving_chips, x, y); 
+                gdk_window_show (chip_stack_press_data->moving_chips);
         } 
         else if (double_click) {
                 chip_stack_press_data->status = STATUS_NONE;
