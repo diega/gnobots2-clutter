@@ -1,3 +1,8 @@
+2000-05-09  Martin Baulig  <baulig@suse.de>
+
+	* gturing.c (main): Call gnome_score_init () to fix security
+	exploit to group games.
+
 1999-04-15  Matthias Warkus  <mawa@iname.com>
 
 	* gturing.desktop: Desktop entry. All we need now is a pixmap...
