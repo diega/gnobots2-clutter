@@ -1,3 +1,7 @@
+2005-01-21  Richard Hoelscher  <rah@rahga.com>
+
+	* gataxx.c (save_state_cb): Redone, no longer crashes. Bug #164806. 
+
 2005-01-13  Richard Hoelscher  <rah@rahga.com>
 
 	* gtkgridboard.h:

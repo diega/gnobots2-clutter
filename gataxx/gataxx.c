@@ -422,31 +422,42 @@ static gboolean save_state_cb (GnomeClient * client, gint phase,
 			       GnomeInteractStyle interactive, gboolean fast,
 			       gpointer data)
 {
-  gchar * argv[] = { "gataxx", 
-    "--state=0000000000000000000000000000000000000000000000000" ,
-    "--turn=1"
-    };
+  gchar * argv[3];
+  gchar * state, * statestr;
   int i, j;
-gchar * state = argv[1] + 8;
+
+  argv[0] = "gataxx";  
+
+  state = statestr = g_malloc0 (BWIDTH * BHEIGHT + 1);
   
   for (j=0; j<BHEIGHT; j++) {
     for (i=0; i<BWIDTH; i++) {
       switch (gtk_gridboard_get_piece (gridboard, i, j)) {
-      case WHITE:
-	*state = '1';
-	break;
-      case BLACK:
-	*state = '2';
-	break;
+        case WHITE:
+  	  *state = '1';
+	  break;
+        case BLACK:
+	  *state = '2';
+	  break;
+        default:
+	  *state = '0';
       }
       state++;
     }
   }
 
-  if (turn == BLACK)
-    argv[2][7] = '2';
+  argv[1] = g_strconcat ("--state=", statestr, NULL);
 
-  gnome_client_set_restart_command (client, 2, argv);
+
+  if (turn == WHITE)
+	argv[2] = "--turn=1";
+  else
+	argv[2] = "--turn=2";
+
+  gnome_client_set_restart_command (client, 3, argv);
+  
+  g_free (statestr);
+  g_free (argv[1]);
 
   return TRUE;
 }
