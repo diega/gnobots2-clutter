@@ -6,21 +6,29 @@ INCLUDES = 			\
 	-I$(includedir)		\
 	$(GNOME_INCLUDEDIR)
 
+#-----------------------------------------------------------------------------
+## Rules similar to `automake 1.2f' for building ObjC files, with dependencies
 SUFFIXES = .m
 
-## FIXME: automake 1.2c doesn't define these if no pure C sources are
-## seen.  So for now we define them.
-#COMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-COMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-LINK = $(LIBTOOL) --mode=link $(CC) $(CFLAGS) $(LDFLAGS) -o $@
+OBJCFLAGS = $(CFLAGS)
+OBJCCOMPILE = $(OBJC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(OBJCFLAGS)
+LTOBJCCOMPILE = $(LIBTOOL) --mode=compile $(OBJCCOMPILE)
 
+# ** This has to be called `LINK', not `OBJCLINK'
+LINK = $(LIBTOOL) --mode=link $(OBJC) $(OBJCFLAGS) $(LDFLAGS) -o $@
 
+gen_deps_o = @MAINT@-Wp,-MD,.deps/$(*F).P
+gen_deps_lo = @MAINT@-Wp,-MD,.deps/$(*F).p
 
 .m.o:
-	$(COMPILE) -c $<
+	$(OBJCCOMPILE) $(gen_deps_o) -c $<
 
-#.m.lo:
-#	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+.m.lo:
+	$(LTOBJCCOMPILE) $(gen_deps_lo) -c $<
+	@MAINT@@-sed -e 's/^\([^:]*\)\.o:/\1.lo \1.o:/' \
+	@MAINT@	< .deps/$(*F).p > .deps/$(*F).P
+	@MAINT@@-rm -f .deps/$(*F).p
+#-----------------------------------------------------------------------------
 
 bin_PROGRAMS = phaser_chess
 

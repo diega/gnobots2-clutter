@@ -1,3 +1,7 @@
+1998-07-18  Raja R Harinath  <harinath@cs.umn.edu>
+
+	* Makefile.am (OBJCCOMPILE): Improve compile rules.
+
 Sun Mar  8 20:57:40 1998  Tom Tromey  <tromey@cygnus.com>
 
 	* Makefile.am (INCLUDES): Added GNOME_INCLUDEDIR.
