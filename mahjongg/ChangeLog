@@ -1,3 +1,12 @@
+2002-01-20  Josh Barrow  <drleary@mac.com>
+
+	* Makefile.am:
+	Set *_DISABLE_DEPRECATED in the Makefile.am
+	* gnome-canvas-pimage.c:
+	undef all of the *_DISABLE_DEPRECATED stuff in this file
+	becuase I don't want to mess with porting it right now.
+	Perhaps we should just use the normal canvas?
+
 2002-01-09  Juan Pablo Mendoza <jpablo@gnome.org>
 
 	Markus Bertheau <twanger@bluetwanger.de>
