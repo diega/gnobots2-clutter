@@ -39,7 +39,7 @@
 using namespace std;
 
 static GtkWidget *hint_dlg = NULL;
-static GtkObject* deck_edit = NULL;
+static GtkWidget * deck_edit = NULL;
 
 gboolean
 get_insurance_choice ()
@@ -130,13 +130,9 @@ pref_dialog_response (GtkWidget *w, int response, gpointer data)
 
   gtk_widget_hide (w);
 
-  if (gdk_card_deck_options_edit_dirty
-      (GDK_CARD_DECK_OPTIONS_EDIT (deck_edit)))
-    {
-      deck_options =
-        gdk_card_deck_options_edit_get (GDK_CARD_DECK_OPTIONS_EDIT (deck_edit));
-      bj_set_deck_options (deck_options);
-    }
+  deck_options =
+    gtk_card_deck_options_edit_get (GTK_CARD_DECK_OPTIONS_EDIT (deck_edit));
+  bj_set_deck_options (deck_options);
 }
 
 void
@@ -144,12 +140,12 @@ card_deck_options_changed (GtkWidget *w, gpointer data)
 {
   GdkCardDeckOptions deck_options = NULL;
 
-  if (GDK_IS_CARD_DECK_OPTIONS_EDIT (deck_edit)) 
+  if (GTK_IS_CARD_DECK_OPTIONS_EDIT (deck_edit)) 
     {
 #if 0
       // FIXME: why doesn't this work???
-      deck_options = gdk_card_deck_options_edit_get
-        (GDK_CARD_DECK_OPTIONS_EDIT (deck_edit));
+      deck_options = gtk_card_deck_options_edit_get
+        (GTK_CARD_DECK_OPTIONS_EDIT (deck_edit));
       bj_set_deck_options (deck_options);
 #endif
     }
@@ -407,7 +403,8 @@ show_preferences_dialog ()
         }
 
       // Cards Tab
-      deck_edit = gdk_card_deck_options_edit_new (GTK_NOTEBOOK (notebook));
+      deck_edit = gtk_card_deck_options_edit_new ();
+      gtk_notebook_append_page (GTK_NOTEBOOK (notebook), deck_edit, gtk_label_new (_("Cards")));
 
       g_signal_connect (G_OBJECT (deck_edit), "changed",
                         G_CALLBACK (card_deck_options_changed), NULL);
@@ -423,7 +420,7 @@ show_preferences_dialog ()
   if (pref_dialog && !GTK_WIDGET_VISIBLE (pref_dialog))
     {
       deck_options = bj_get_deck_options ();
-      gdk_card_deck_options_edit_set (GDK_CARD_DECK_OPTIONS_EDIT (deck_edit),
+      gtk_card_deck_options_edit_set (GTK_CARD_DECK_OPTIONS_EDIT (deck_edit),
                                       deck_options);
       gtk_widget_show_all(pref_dialog);
     }

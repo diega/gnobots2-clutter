@@ -1,3 +1,8 @@
+2003-06-07  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* src/dialog.cpp: Updated to use the revised
+	gtk_card_deck_blah_blah API.
+
 2003-06-06  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* data/.cvsignore: Oops, should be blackjack.desktop, not
