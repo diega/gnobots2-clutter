@@ -66,8 +66,9 @@ bj_hand_show_options ()
 void
 bj_hand_show_dealer_probabilities ()
 {
-  dealerProbabilities->showProbabilities (distribution,
-                                          dealer->cards[0].value());
+  if (dealer->getCards () > 0)
+    dealerProbabilities->showProbabilities (distribution,
+                                            dealer->cards[0].value());
 }
 
 gchar *

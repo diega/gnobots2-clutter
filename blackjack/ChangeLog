@@ -1,3 +1,12 @@
+2003-11-13  William Jon McCann  <mccann@jhu.edu>
+
+	* src/hand.cpp (bj_hand_show_dealer_probabilities): Add a check
+	to make sure the dealer has a card first.
+
+	* src/player.cpp (showOptions): 
+	(showProbabilities): Add labels, reduce precision, and use percentage
+	symbols as suggested by Damon Brodie.
+
 2003-10-30  Callum McKenzie  <callum@localhost.localdomain>
 
 	* src/Makefile.am: Removed *_DISABLE_DEPRECATED.
