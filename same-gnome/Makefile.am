@@ -17,8 +17,8 @@ same_gnome_LDADD =		\
 	$(INTLLIBS)		\
 	$(top_builddir)/support/libsupport.a
 
-pixmap_DATA = planets.xpm blink-sync.xpm puyonew2-sync.xpm \
-	stones.xpm rotate.xpm
+pixmap_DATA = planets.png blink-sync.png marbles.png \
+	stones.png rotate.png
 EXTRA_DIST = same-gnome.desktop $(pixmap_DATA)
 
 Games_DATA = same-gnome.desktop

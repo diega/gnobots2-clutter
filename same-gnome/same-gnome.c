@@ -35,7 +35,6 @@
 	
 static GtkWidget *pref_dialog, *scorew;
 static GtkWidget *app, *draw_area, *vb;
-static GtkMenuFactory *mf;
 static GdkImlibImage *image;
 static GdkPixmap *stones, *mask;
 static int tagged_count = 0;
@@ -328,7 +327,6 @@ area_event (GtkWidget *widget, GdkEvent *event, void *d)
 	case GDK_BUTTON_PRESS: {
 		int x, y;
 		gtk_widget_get_pointer (widget, &x, &y);
-		g_print("Got a button press at %d x %d\n", x, y);
 		kill_balls (x / STONE_SIZE, y / STONE_SIZE);
 		old_x = -1;
 		old_y = -1;
@@ -377,7 +375,7 @@ new_game (void)
 static void
 configure_sync (char *fname)
 {
-	if (strstr (fname, "-sync.xpm"))
+	if (strstr (fname, "-sync.png"))
 		sync_stones = 1;
 	else
 		sync_stones = 0;
@@ -387,7 +385,9 @@ static void
 load_scenario (char *fname)
 {
 	char *tmp, *fn;
-
+        GdkColor bgcolor;
+        GdkImage *tmpimage;
+    
 	tmp = g_copy_strings ( "same-gnome/", fname, NULL);
 
 	fn = gnome_unconditional_pixmap_file ( tmp );
@@ -414,11 +414,18 @@ load_scenario (char *fname)
 	stones = gdk_imlib_move_image (image);
 	mask = gdk_imlib_move_mask (image);
 
+        tmpimage = gdk_image_get(stones, 0, 0, 1, 1);
+        bgcolor.pixel = gdk_image_get_pixel(tmpimage, 0, 0);
+        gdk_window_set_background (draw_area->window, &bgcolor);
+        gdk_image_destroy(tmpimage);
+  
 	g_free( fn );
 
 	nstones = image->rgb_width / STONE_SIZE;
 /*	ncolors = image->rgb_height / STONE_SIZE; */
 	ncolors = 3;
+
+
 	gtk_widget_draw (draw_area, NULL);
 }
 
@@ -442,16 +449,14 @@ create_same_board (char *fname)
 
 	draw_area = gtk_drawing_area_new ();
 
-	gtk_widget_pop_colormap ();
+        gtk_widget_pop_colormap ();
 	gtk_widget_pop_visual ();
 
 	gtk_widget_set_events (draw_area, gtk_widget_get_events (draw_area) | GAME_EVENTS);
 
 	gtk_box_pack_start_defaults (GTK_BOX(vb), draw_area);
 	gtk_widget_realize (draw_area);
-	gtk_style_set_background (draw_area->style,
-				  draw_area->window,
-				  GTK_STATE_NORMAL);
+  
 	gtk_widget_show (draw_area);
 
 	load_scenario (fname);
@@ -467,12 +472,12 @@ game_new_callback (GtkWidget *widget, void *data)
 	new_game ();
 }
 
-static int
+/*static int
 yes (GtkWidget *widget, void *data)
 {
 	selected_scenario.scenario = 0;
 	return TRUE;
-}
+}*/
 
 static void
 free_str (GtkWidget *widget, void *data)
@@ -486,6 +491,7 @@ fill_menu (GtkWidget *menu)
 	struct dirent *e;
 	char *dname = gnome_unconditional_pixmap_file ("same-gnome");
 	DIR *dir;
+        int itemno = 0;
 	
 	dir = opendir (dname);
 
@@ -496,7 +502,7 @@ fill_menu (GtkWidget *menu)
 		GtkWidget *item;
 		char *s = strdup (e->d_name);
 
-		if (!strstr (e->d_name, ".xpm")) {
+		if (!strstr (e->d_name, ".png")) {
 			free (s);
 			continue;
 		}
@@ -506,6 +512,13 @@ fill_menu (GtkWidget *menu)
 		gtk_menu_append (GTK_MENU(menu), item);
 		gtk_signal_connect (GTK_OBJECT(item), "activate", (GtkSignalFunc)set_selection, s);
 		gtk_signal_connect (GTK_OBJECT(item), "destroy", (GtkSignalFunc) free_str, s);
+	  
+	        if (!strcmp(scenario, s))
+	        {
+		  gtk_menu_set_active(GTK_MENU(menu), itemno);
+		}
+	  
+	        itemno++;
 	}
 	closedir (dir);
 }
@@ -522,7 +535,7 @@ load_scenario_callback (GtkWidget *widget, void *data)
 {
 	if (selected_scenario.scenario) {
 		load_scenario (selected_scenario.scenario);
-		new_game ();
+/*		new_game ();*/
 		if (selected_scenario.make_it_default) {
 			gnome_config_set_string (
 				"/same-gnome/Preferences/Scenario", 
@@ -533,15 +546,11 @@ load_scenario_callback (GtkWidget *widget, void *data)
 	cancel (0,0);
 }
 
-static GnomeActionAreaItem sel_actions [] = {
-	{ NULL, load_scenario_callback },
-	{ NULL, cancel }
-};
-
 static void
 game_preferences_callback (GtkWidget *widget, void *data)
 {
 	GtkWidget *menu, *omenu, *l, *hb, *cb, *f, *fv;
+	GtkWidget *button;
 	GtkDialog *d;
 
 	if (pref_dialog)
@@ -549,7 +558,7 @@ game_preferences_callback (GtkWidget *widget, void *data)
 	
 	pref_dialog = gtk_dialog_new ();
 	d = GTK_DIALOG(pref_dialog);
-	gtk_signal_connect (GTK_OBJECT(app), "delete_event", (GtkSignalFunc)yes, NULL);
+	gtk_signal_connect (GTK_OBJECT(pref_dialog), "delete_event", (GtkSignalFunc)cancel, NULL);
 
 	omenu = gtk_option_menu_new ();
 	menu = gtk_menu_new ();
@@ -584,11 +593,19 @@ game_preferences_callback (GtkWidget *widget, void *data)
 	
 	gtk_widget_show (f);
 	
-	sel_actions [0].label = _("Ok");
-	sel_actions [1].label = _("Cancel");
-	
-	gnome_build_action_area (d, sel_actions, 2, 0);
-	gtk_widget_show (pref_dialog);
+        button = gnome_stock_button(GNOME_STOCK_BUTTON_OK);
+	gtk_signal_connect(GTK_OBJECT(button), "clicked",
+			   GTK_SIGNAL_FUNC(load_scenario_callback), NULL);
+	gtk_box_pack_start(GTK_BOX(d->action_area), button, TRUE, TRUE, 5);
+        gtk_widget_show(button);
+        button = gnome_stock_button(GNOME_STOCK_BUTTON_CANCEL);
+	gtk_signal_connect(GTK_OBJECT(button), "clicked",
+                           (GtkSignalFunc)cancel,
+			   (gpointer)1);
+	gtk_box_pack_start(GTK_BOX(d->action_area), button, TRUE, TRUE, 5);
+        gtk_widget_show(button);
+
+        gtk_widget_show (pref_dialog);
 }
 
 static int
@@ -629,42 +646,44 @@ game_quit_callback (GtkWidget *widget, void *data)
 	return TRUE;
 }
 
-static GtkMenuEntry same_menu [] = {
-	{ N_("Game/New"),	  N_("<control>N"), (GtkMenuCallback) game_new_callback, NULL },
-	{ N_("Game/Scenario..."), N_("<control>S"), (GtkMenuCallback) game_preferences_callback, NULL },
-	{ N_("Game/Top Ten..."),  N_("<control>T"), (GtkMenuCallback) game_top_ten_callback, NULL },
-	{ N_("Game/<separator>"), NULL, NULL, NULL },
-	{ N_("Game/Exit"),        N_("<control>E"), (GtkMenuCallback) game_quit_callback, NULL }, 
-	{ N_("Help/About..."),    N_("<control>A"), (GtkMenuCallback) game_about_callback, NULL }, 
+GnomeUIInfo gamemenu[] = {
+	{GNOME_APP_UI_ITEM, N_("New"), NULL, game_new_callback, NULL, NULL,
+	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_NEW, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("Properties..."), NULL, game_preferences_callback, NULL, NULL,
+	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_PROP, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("Scores..."), NULL, game_top_ten_callback, NULL, NULL,
+	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_SCORES, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("Exit"), NULL, game_quit_callback, NULL, NULL,
+	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_EXIT, 0, 0, NULL},
+
+	{GNOME_APP_UI_ENDOFINFO}
+};
+
+GnomeUIInfo helpmenu[] = {
+	{GNOME_APP_UI_HELP, NULL, NULL, NULL, NULL, NULL,
+	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+
+	{GNOME_APP_UI_ITEM, N_("About..."), NULL, game_about_callback, NULL, NULL,
+	GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_ABOUT, 0, 0, NULL},
+
+	{GNOME_APP_UI_ENDOFINFO, NULL, NULL, NULL, NULL, NULL,
+	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL}
+};
+
+GnomeUIInfo mainmenu[] = {
+	{GNOME_APP_UI_SUBTREE, N_("Game"), NULL, gamemenu, NULL, NULL,
+	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+
+	{GNOME_APP_UI_SUBTREE, N_("Help"), NULL, helpmenu, NULL, NULL,
+	GNOME_APP_PIXMAP_NONE, NULL, 0, 0, NULL},
+
+	{GNOME_APP_UI_ENDOFINFO}
 };
 
 #define ELEMENTS(x) (sizeof (x) / sizeof (x [0]))
-
-static GtkMenuFactory *
-create_menu ()
-{
-	GtkMenuFactory *subfactory;
-	int i;
-	
-	for (i = 0; i < ELEMENTS(same_menu); i++)
-		same_menu[i].path = _(same_menu[i].path);
-
-	subfactory = gtk_menu_factory_new  (GTK_MENU_FACTORY_MENU_BAR);
-	gtk_menu_factory_add_entries (subfactory, same_menu, ELEMENTS(same_menu));
-
-	return subfactory;
-}
-
-static GtkWidget *
-create_main_window ()
-{
-	app = gnome_app_new ("same-gnome", "Same Gnome");
-	gtk_widget_realize (app);
-	
-	gtk_signal_connect (GTK_OBJECT(app), "delete_event", GTK_SIGNAL_FUNC(game_quit_callback), NULL);
-	gtk_window_set_policy (GTK_WINDOW(app), 0, 0, 1);
-	return app;
-}
 
 static int
 save_state (GnomeClient *client,
@@ -822,7 +841,7 @@ parse_args (int argc,char *argv[])
 	};
 
 	gchar *id = NULL;
-	gchar *fname = gnome_config_get_string ( "/same-gnome/Preferences/Scenario=stones.xpm" );
+	gchar *fname = gnome_config_get_string ( "/same-gnome/Preferences/Scenario=stones.png" );
 	
 	debugging = 0;
 	restarted = 0;
@@ -903,14 +922,15 @@ main (int argc, char *argv [])
 
 	srand (time (NULL));
 
-	app = create_main_window ();
-	vb = gtk_vbox_new (FALSE, 0);
+	app = gnome_app_new("same-gnome", _("Same Gnome"));
+        gtk_window_set_policy(GTK_WINDOW(app), FALSE, FALSE, TRUE);
+	gnome_app_create_menus(GNOME_APP(app), mainmenu);
+        gtk_menu_item_right_justify(GTK_MENU_ITEM(mainmenu[1].widget));
+  
+        vb = gtk_vbox_new (FALSE, 0);
 	hb = gtk_hbox_new (FALSE, 0);
 	gnome_app_set_contents (GNOME_APP (app), vb);
 
-	mf = create_menu ();
-	gnome_app_set_menus (GNOME_APP (app), GTK_MENU_BAR (mf->widget));
-	
 	label = gtk_label_new (_("Score: "));
 	scorew = gtk_label_new ("");
 	set_score (score);
