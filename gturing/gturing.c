@@ -433,7 +433,7 @@ void about_call(GtkWidget *w, gpointer data)
 	GtkWidget *about;
 	const gchar *authors[] = { "arturo@nuclecu.unam.mx", NULL };
 	
-	about = gnome_about_new (_("gTuring"), NULL,
+	about = gnome_about_new (_("gturing"), NULL,
 													 "(C) 1997-1998 the Free Software Fundation",
 													 authors,
 													 _("A Turing Machine for GNOME"),
@@ -465,7 +465,7 @@ GnomeUIInfo settingsmenu[] = {
 };
 
 GnomeUIInfo helpmenu[] = {
-	GNOMEUIINFO_HELP("gTuring"),
+	GNOMEUIINFO_HELP("gturing"),
 	GNOMEUIINFO_MENU_ABOUT_ITEM(about_call, NULL),
 	GNOMEUIINFO_END
 };
@@ -557,8 +557,8 @@ void init_interface(int argc, char *argv[])
 	
 	init_stock();						
 	
-	app = gnome_app_new("gTuring", "gTuring");
-	gtk_window_set_wmclass(GTK_WINDOW(app), "gturing", "gTuring");
+	app = gnome_app_new("gturing", "gturing");
+	gtk_window_set_wmclass(GTK_WINDOW(app), "gturing", "gturing");
 	gtk_widget_show(app);
 
 	rootw = gtk_vbox_new(FALSE, GNOME_PAD_SMALL);

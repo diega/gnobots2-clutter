@@ -1,3 +1,9 @@
+1999-02-07  Arturo Espinosa <arturo@nuclecu.unam.mx>
+
+	* help/C/gturing.sgml: Help improved.
+	* turing.c: bug fix. The file reader won't enter a dead loop if 
+	  the file ends with a comment.
+
 1999-02-03  Arturo Espinosa <arturo@nuclecu.unam.mx>
 
 	* Makefile.am: SUBDIRS = help

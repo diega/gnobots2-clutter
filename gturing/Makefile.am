@@ -8,7 +8,7 @@ INCLUDES = 			\
 	-I$(includedir)				 \
 	$(GNOME_INCLUDEDIR)			 \
 	-DVERSION=\""$(VERSION)"\" \
-	-DGTURING_EXAMPLES_DIR=\""$(datadir)/gturing"\"
+	-DGTURING_EXAMPLES_DIR=\""$(examplesdir)"\"
 
 bin_PROGRAMS = gturing
 

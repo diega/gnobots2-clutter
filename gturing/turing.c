@@ -159,7 +159,9 @@ int turing_fread_states(turing *machine, char *filename)
 		{
 			read_spaces(fd);
 			
-			fgets(line, 1000, fd);
+			if (fgets(line, 1000, fd) == NULL)
+				break;
+			
 			if ((*line == COMMENT_TAG) || (*line == END_TAG))
 				continue;
 			
