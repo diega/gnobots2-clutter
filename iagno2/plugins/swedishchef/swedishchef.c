@@ -62,7 +62,7 @@ static inline void moveBoard (BoardType from, BoardType to);
 /* ------------------------------------------------------------ */
 
 static PlayerData *
-get_player_data (gchar player)
+get_player_data (gint player)
 {
   static PlayerData pd[2];
   g_assert ((player == BLACK) || (player || WHITE));
@@ -70,7 +70,7 @@ get_player_data (gchar player)
 }
 
 void
-plugin_init_player (gchar player)
+plugin_init_player (gint player)
 {
   gchar *time_str, *pref_file;
   PlayerData *pd = get_player_data (player);
@@ -83,12 +83,12 @@ plugin_init_player (gchar player)
 }
 
 void
-plugin_deinit_player (gchar player)
+plugin_deinit_player (gint player)
 {
 }
 
 void
-plugin_setup (gchar player)
+plugin_setup (gint player)
 {
   struct timeval tv;
 
@@ -108,7 +108,7 @@ color_convert (char iagno_color)
 }
 
 gint
-plugin_move (ReversiBoard *board, gchar player)
+plugin_move (ReversiBoard *board, gint player)
 {
   gint x, y;
   BoardType myboard;
@@ -148,13 +148,13 @@ plugin_name ()
 }
 
 const gchar *
-plugin_busy_message (gchar player)
+plugin_busy_message (gint player)
 {
   return BUSY_MESSAGE;
 }
 
 void
-plugin_about_window (GtkWindow *parent, gchar player)
+plugin_about_window (GtkWindow *parent)
 {
   GtkWidget *about;
   const gchar *authors[] = {
@@ -179,7 +179,7 @@ plugin_about_window (GtkWindow *parent, gchar player)
 }
 
 void
-plugin_preferences_window (GtkWidget *parent, gchar player)
+plugin_preferences_window (GtkWidget *parent, gint player)
 {
   GtkWidget *dialog;
   GtkWidget *hbox, *label, *scale;
@@ -227,7 +227,7 @@ plugin_preferences_window (GtkWidget *parent, gchar player)
 }
 
 void
-plugin_preferences_save (char player)
+plugin_preferences_save (gint player)
 {
   gchar* buffer, *pref_file;
   PlayerData *pd = get_player_data (player);

@@ -43,7 +43,7 @@ extern gchar *board_pixmaps;
 extern Iagno2Plugin *players[2];
 */
 
-extern gchar whose_turn;
+extern gint whose_turn;
 
 extern GnomeAppBar *appbar;
 

@@ -31,19 +31,19 @@ typedef struct {
 	GModule *module;
 
   /* Prepare to play for a side */
-	void (*plugin_init_player)(gchar player);
+	void (*plugin_init_player)(gint player);
 
   /* Done playing for a side */
-  void (*plugin_deinit_player)(gchar player);
+  void (*plugin_deinit_player)(gint player);
 
   /* Perform whatever initialization your plugin needs, ie init a random number
    * generator, set up a network connection... */
-  void (*plugin_setup)(gchar player);
+  void (*plugin_setup)(gint player);
   
   /* Find a move on the given ReversiBoard for the given player.  Iagno2 has
    * already checked that you have a move, so you /must return a move (index
    * 0-63). */
-	gint (*plugin_move)(ReversiBoard *board, gchar player);
+	gint (*plugin_move)(ReversiBoard *board, gint player);
 
   /* Return the string that is the name of your plugin.  This will show up in
    * the option menu in the preferences dialog. */
@@ -51,16 +51,16 @@ typedef struct {
 
   /* The message you want your plugin to display in the status window while
    * deciding on a move to make. */
-  const gchar *(*plugin_busy_message)(gchar player);
+  const gchar *(*plugin_busy_message)(gint player);
 
   /* Pops up a configuration dialog (this should be modal) to configure your
    * plugin.  The plugin /must/ save the configuration options entered to disk
    * (using gnome_config, for example), as it is not guaranteed that this is the
    * same copy of the plugin that will be loaded in a given game.  This does not
    * have to be defined. */
-	void (*plugin_preferences_window)(GtkWidget *parent, gchar player);
+	void (*plugin_preferences_window)(GtkWidget *parent, gint player);
 
-  void (*plugin_preferences_save)(gchar player);
+  void (*plugin_preferences_save)(gint player);
 
   /* An about window (see the random plugin for an example), does not have to be
    * defined. */
