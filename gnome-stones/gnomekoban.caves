@@ -1,0 +1,44 @@
+[General]
+Title=Gnomekoban
+New life score=500
+Lives=1
+Frame rate=0.125
+Object size=1
+Plugins=default:gnomekoban
+
+[Objects]
+X=default:frame
+_=gnomekoban:empty,0
+.=gnomekoban:empty,1
+O=gnomekoban:crate
+N=gnomekoban:entrance
+
+[Caves]
+Cave001=Tutorial 1
+Number=1
+
+[Start caves]
+Cave001=Tutorial 1
+Number=1
+
+[Tutorial 1]
+Diamonds needed=1
+Diamond score=10
+Extra diamond score=0
+Time=100
+Next cave=Tutorial 1
+Height=12
+Width=20
+Line01=XXXXXXXXXXXXXXXXXXXX
+Line02=X                  X
+Line03=X                  X
+Line04=X                  X
+Line05=X              .   X
+Line06=XN      O  O   .   X
+Line07=X        O     .   X
+Line08=X                  X
+Line09=X                  X
+Line10=X                  X
+Line11=X                  X
+Line12=XXXXXXXXXXXXXXXXXXXX
+
