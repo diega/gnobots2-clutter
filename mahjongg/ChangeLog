@@ -1,3 +1,13 @@
+2004-02-19  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* solubility.c (shuffle): Removed unused variables.
+	(walk_tree): Make the random shuffle actually uniform. I really
+	shouldn't have tried to write that from memory.
+
+2004-02-18  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* solubility.c: Just fixing spelling and grammar in comments.
+
 2004-02-14  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c: Remove references to _has_separator when dealing

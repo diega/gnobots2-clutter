@@ -27,9 +27,9 @@
  * structures are modelled on those he used (and the typeinfo
  * structure is identical) but the algorithm is completely different.
  * 
- * The new algorithm works by randomly descending the the tree of all
+ * The new algorithm works by randomly descending the tree of all
  * possible games (i.e all possible sequences of pairs of tiles) and
- * tries and find a path to a solution. If it can't get there it
+ * tries to find a path to a solution. If it can't get there it
  * backtracks up the tree trying all the possibilities in a random order.
  * In principle this could be very expensive computationally, but in
  * practice only a few levels of backtracking should be necessary,
@@ -38,11 +38,9 @@
  * after a very long time). This may be unavoidable, but I suspect that
  * given the contraints of the board (specifically the maximum height) the
  * largest unsolvable board that can be made is not a big problem. Once
- * it has a path it fills it with a pairs of tiles chosen at random.
+ * it has a path it fills it with pairs of tiles chosen at random.
  *
- * Hopefully this new algorithm can be simply modified to be used for the
- * shuffle command. This is where the ability to detect unsolvable
- * configurations will be really useful.
+ * The algorithm is also used to shuffle the tiles.
  *
  * - Callum, 20030819
  */
@@ -359,7 +357,7 @@ static gboolean walk_tree (gint depth)
   gint oldnumfree;
   guchar a, b;
 
-  /* The termination conditions. */
+  /* The termination condition. */
   if (numfree < 2) {/* We don't have enough tiles to continue. */
     return FALSE;
   }
@@ -385,9 +383,9 @@ static gboolean walk_tree (gint depth)
   
   /* Scramble the freelist. */
   for (i = 0; i<numfree*2; i++) {
-    j = g_rand_int_range (generator, 0, numfree);
-    swap = freelist[depth][0];
-    freelist[depth][0] = freelist[depth][j];
+    j = g_rand_int_range (generator, i, numfree);
+    swap = freelist[depth][i];
+    freelist[depth][i] = freelist[depth][j];
     freelist[depth][j] = swap;
   }
   
@@ -461,8 +459,7 @@ void generate_game (guint32 seed)
 int shuffle (void)
 {
   int n = 0;
-  int i,j;
-  typeinfo tmp;
+  int i;
   
   for (i=0; i<MAX_TILES; i++) {
     if (tiles[i].visible) {
