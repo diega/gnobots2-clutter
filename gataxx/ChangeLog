@@ -1,3 +1,9 @@
+2002-02-17  Chris Lyttle  <chris@wilddev.net>
+
+	* help/C/gataxx.xml: alter headers to comply with new template
+	* help/C/legal.xml: new legal blurb
+	* help/C/Makefile.am: add legal.xml
+
 2002-02-14  Chris Lyttle    <chris@wilddev.net>
 
 	* help/C/Makefile.am : move to XML.
