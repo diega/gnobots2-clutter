@@ -834,7 +834,6 @@ main (int argc, char *argv [])
 	gnome_app_set_contents (GNOME_APP (app), vb);
 
 	if (!fname) {
-//		fname = g_strdup ("stones.png");
 		fname = gnome_config_get_string
 			("/same-gnome/Preferences/Scenario=stones.png");
 	}
