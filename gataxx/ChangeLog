@@ -1,3 +1,8 @@
+2001-06-27  Juan Pablo Mendoza <pablo_juan@yahoo.com>
+
+	* gataxx.c: (main): Don't try to free the gnome_master_client to
+	  silent a gtk warning on exit.
+
 2001-06-20 Juan Pablo Mendoza <pablo_juan@yahoo.com>
 
 	* help/es/figures: Added the figures.

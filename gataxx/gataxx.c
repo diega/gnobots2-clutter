@@ -871,9 +871,6 @@ int main(int argc, char **argv) {
     gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gataxx.png");
     client= gnome_master_client();
     
-    gtk_object_ref(GTK_OBJECT(client));
-    gtk_object_sink(GTK_OBJECT(client));
-    
     gtk_signal_connect(GTK_OBJECT(client), "save_yourself", GTK_SIGNAL_FUNC(save_state), argv[0]);
     gtk_signal_connect(GTK_OBJECT(client), "die", GTK_SIGNAL_FUNC(quit_game_cb), argv[0]);
     
@@ -901,8 +898,6 @@ int main(int argc, char **argv) {
     /*	network_init(); */
     
     gtk_main();
-    
-    gtk_object_unref(GTK_OBJECT(client));
     
     return 0;
 }
