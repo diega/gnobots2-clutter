@@ -301,6 +301,8 @@ static void theme_cb (void)
 		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
 																		GTK_POLICY_AUTOMATIC,
 																		GTK_POLICY_AUTOMATIC);
+		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroll),
+		                                     GTK_SHADOW_ETCHED_IN);
 		gtk_widget_set_size_request (scroll, 250, 250);
 		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), scroll,
 												TRUE, TRUE, 0);

@@ -1,3 +1,7 @@
+2005-03-24  Dennis Cranston <dennis_cranston@yahoo.com>
+
+	* preferences.c:  Use an etched in shadow for list view.
+
 2005-03-23  Dennis Cranston  <dennis_cranston@yahoo.com>
 
 	* preferences.c:
