@@ -1,6 +1,6 @@
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <2003/06/16 10:04:48 mccannwj>
+ * Time-stamp: <2003/06/17 14:58:25 mccannwj>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -109,6 +109,9 @@ preferences_dialog_show (void);
 
 void
 preferences_save_global (void);
+
+void 
+preferences_save (gboolean global);
 
 void gconf_set_scroll_method (gchar *value);
 void gconf_set_game_name (gchar *value);

@@ -1,3 +1,5 @@
+/* -*- mode:C; indent-tabs-mode:t; tab-width:8; c-basic-offset:2; -*- */
+
 /* gnome-stones - main.c
  *
  * Time-stamp: <1999/01/18 18:50:24 carsten>
@@ -151,9 +153,9 @@ view_new (GdkPixbuf *curtain_image)
 
   gtk_widget_set_events (widget, gtk_widget_get_events (widget) | GAME_EVENTS);
   
-  gtk_drawing_area_size (drawing_area, 
-			 GAME_COLS * STONE_SIZE,
-			 GAME_ROWS * STONE_SIZE);
+  gtk_widget_set_size_request (GTK_WIDGET (drawing_area), 
+                               GAME_COLS * STONE_SIZE,
+                               GAME_ROWS * STONE_SIZE);
 
   gtk_widget_show (widget);
 
@@ -204,13 +206,13 @@ view_new (GdkPixbuf *curtain_image)
 
 #define CURTAIN_START_VALUE 31
 
-gboolean curtain_visible_test (int x, int y, int curtain)
+static gboolean
+curtain_visible_test (int x, int y, int curtain)
 {
-
-  int a=(2*x*(x+y)+3*y*GAME_COLS);
-  return ((a*a)%CURTAIN_START_VALUE)
-            *CURTAIN_START_VALUE*CURTAIN_START_VALUE
-           >= curtain*curtain*curtain;
+  int a = (2 * x * (x + y) + 3 * y * GAME_COLS);
+  return ((a*a) % CURTAIN_START_VALUE)
+    * CURTAIN_START_VALUE * CURTAIN_START_VALUE
+    >= curtain * curtain * curtain;
 }
 
 
@@ -224,7 +226,7 @@ view_expose (GtkWidget *widget, GdkEventExpose *event)
   GStonesView  *view;
   GdkRectangle *area;
   int x1, y1, x2, y2, x, y;
-  int curtain_frames=1;
+  int curtain_frames = 1;
   if( cave && cave->animated_curtain )
     {
       curtain_frames=cave->animated_curtain->num_images;
@@ -329,7 +331,9 @@ view_curtain_timeout (gpointer data)
 	  /* The curtain is not closed yet.  */
 	  
 	  view->curtain--;
-	  gtk_widget_draw (GTK_WIDGET (view), NULL);
+	  gtk_widget_queue_draw_area (GTK_WIDGET (view), 0, 0,
+				      GAME_COLS * STONE_SIZE,
+				      GAME_ROWS * STONE_SIZE);
 	  return TRUE;
 	}
 
@@ -348,7 +352,9 @@ view_curtain_timeout (gpointer data)
 	  /* The curtain is not closed yet.  */
 	  
 	  view->curtain--;
-	  gtk_widget_draw (GTK_WIDGET (view), NULL);
+	  gtk_widget_queue_draw_area (GTK_WIDGET (view), 0, 0,
+				      GAME_COLS * STONE_SIZE,
+				      GAME_ROWS * STONE_SIZE);
 	  return TRUE;
 	}
       
@@ -379,7 +385,9 @@ view_set_curtain_mode (GStonesView     *view,
     {
     case VIEW_CURTAIN_OPEN:
       view->curtain_display_mode= CURTAIN_DISPLAY_NONE;
-      gtk_widget_draw (GTK_WIDGET (view), NULL);
+      gtk_widget_queue_draw_area (GTK_WIDGET (view), 0, 0,
+                                  GAME_COLS * STONE_SIZE,
+                                  GAME_ROWS * STONE_SIZE);
       break;
       
     case VIEW_CURTAIN_ANIMATE:
@@ -395,7 +403,9 @@ view_set_curtain_mode (GStonesView     *view,
     case VIEW_CURTAIN_CLOSED:
       view->curtain_display_mode= CURTAIN_DISPLAY_CLOSING;
       view->curtain             = 0;
-      gtk_widget_draw (GTK_WIDGET (view), NULL);
+      gtk_widget_queue_draw_area (GTK_WIDGET (view), 0, 0,
+                                  GAME_COLS * STONE_SIZE,
+                                  GAME_ROWS * STONE_SIZE);
       break;      
     }
 }
@@ -409,14 +419,16 @@ view_display_image (GStonesView *view, GdkPixmap *image)
   if (image)
     {
       if (view->image)
-	gdk_drawable_unref (view->image);
+	g_object_unref (view->image);
       
       view->image= image;
-      gdk_drawable_ref (view->image);
+      g_object_ref (view->image);
     }
 
   view->display_mode= DISPLAY_IMAGE;
-  gtk_widget_draw (GTK_WIDGET (view), NULL);
+  gtk_widget_queue_draw_area (GTK_WIDGET (view), 0, 0,
+                              GAME_COLS * STONE_SIZE,
+                              GAME_ROWS * STONE_SIZE);
 }
 
 
@@ -428,7 +440,9 @@ view_display_cave (GStonesView *view, GStonesCave *cave)
   g_return_if_fail (GSTONES_IS_VIEW (view));
   
   view->display_mode= DISPLAY_CAVE;
-  gtk_widget_draw (GTK_WIDGET (view), NULL);
+  gtk_widget_queue_draw_area (GTK_WIDGET (view), 0, 0,
+                              GAME_COLS * STONE_SIZE,
+                              GAME_ROWS * STONE_SIZE);
 }
 
 

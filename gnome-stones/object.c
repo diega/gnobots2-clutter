@@ -1,6 +1,8 @@
+/* -*- mode:C; indent-tabs-mode:t; tab-width:8; c-basic-offset:2; -*- */
+
 /* gnome-stones - object.c
  *
- * Time-stamp: <2003/06/14 16:19:52 mccannwj>
+ * Time-stamp: <2003/06/17 15:13:46 mccannwj>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -206,7 +208,7 @@ static GStonesObjectDesc curtain_description=
 };
 
 
-gchar *
+static gchar *
 default_objects_init (GStonesPlugin *plugin)
 {
   object_register (plugin, &frame_description);
@@ -226,7 +228,7 @@ static GStonesPlugin default_plugin=
 };
 
 
-void
+static void
 default_objects_register (void)
 {
   /* The frame object has only to be registered once.  */

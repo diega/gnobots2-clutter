@@ -1,3 +1,18 @@
+2003-06-17  William Jon McCann  <mccann@jhu.edu>
+
+	* main.c (title_image_load): Updated optional
+	replacement title screen to use tile image.  Tile
+	image has not been added yet.
+
+	* io.c: 
+	* main.c:
+	* main.h:
+	* object.c: 
+	* preferences.c: 
+	* view.c: 
+	* objects/gnome-stones.c: 
+	* objects/gnomekoban.c: Fixed compiler warnings.
+
 2003-06-16  William Jon McCann  <mccann@jhu.edu>
 
 	* gnome-stones.schemas.in:

@@ -1,6 +1,8 @@
+/* -*- mode:C; indent-tabs-mode:t; tab-width:8; c-basic-offset:2; -*- */
+
 /* gnome-stones - sound.c
  *
- * Time-stamp: <2003/06/15 18:47:00 mccannwj>
+ * Time-stamp: <2003/06/17 15:14:06 mccannwj>
  *
  * Copyright (C) 2001 Michal Benes
  *
@@ -49,8 +51,8 @@ set_sound_enabled (gboolean value)
 
 void sound_init( void )
 {
- numsamples = 0; 
- /* g_print ( "gnome-stones: sound init\n" ); */
+  numsamples = 0; 
+  /* g_print ( "gnome-stones: sound init\n" ); */
 }
 
 void sound_close( void )

@@ -1,3 +1,5 @@
+/* -*- mode:C; indent-tabs-mode:t; tab-width:8; c-basic-offset:2; -*- */
+
 /* gnome-stones - main.c
  *
  * Time-stamp: <2003-06-03 22:02:25 callum>
@@ -98,13 +100,6 @@ show_scores_dialog (gint pos);
 /****************************************************************************/
 /* Image stuff  */
 
-static void
-my_exit (GtkWidget *widget, gpointer client_data)
-{ 
-  sound_close(); 
-  exit (1);
-}
-
 static GdkPixbuf *
 load_image_from_path (const char *relative_name)
 {
@@ -141,17 +136,20 @@ load_image_from_path (const char *relative_name)
   return image;
 }
 
-void
-draw_text (GdkDrawable *pixmap, gchar *markup, gint x, gint y)
+static void
+draw_text_centered (GdkDrawable *pixmap, gchar *markup, gint y)
 {
+  GdkGC *gc;
+
   PangoLayout *layout;
-  GdkGC* gc;
   if (pixmap)
     {
-      layout = gtk_widget_create_pango_layout (gstones_view, "");
       gc = gstones_view->style->black_gc;
+      layout = gtk_widget_create_pango_layout (gstones_view, "");
+      pango_layout_set_alignment (layout, PANGO_ALIGN_CENTER);
+      pango_layout_set_width (layout, GAME_COLS * STONE_SIZE * PANGO_SCALE);
       pango_layout_set_markup (layout, markup, -1);
-      gdk_draw_layout (pixmap, gc, x, y, layout);
+      gdk_draw_layout (pixmap, gc, 0, y, layout);
       g_object_unref (layout);
     }
 }
@@ -162,8 +160,11 @@ static void
 title_image_load (void)
 {
   gchar *markup;
-  gint i;
+  gchar *title_text;
+  gint text_size;
   GdkPixbuf *image;
+  GdkGC *gc;
+  GdkPixmap *tile;
 
 #ifdef USE_ORIG_TITLE_SCREEN
   image = load_image_from_path ("gnome-stones/title.png");
@@ -171,44 +172,41 @@ title_image_load (void)
   gdk_pixbuf_render_pixmap_and_mask (image, &title_image, NULL, 127);
 
 #else
-  image = load_image_from_path ("gnome-stones.png");
-  
-  title_template = gdk_pixmap_new (gstones_view->window, 640, 384, -1);
-
-  gdk_draw_rectangle (title_template, gstones_view->style->black_gc,
-                      TRUE, 0, 0, -1, -1);
-  gdk_draw_pixbuf (title_template,
-                   gstones_view->style->black_gc,
-                   image,
-                   0, 0, 
-                   310, 145,
-                   -1, -1, 
-                   GDK_RGB_DITHER_MAX,
-                   0, 0);
-  gdk_pixbuf_unref (image);
-
-  /* Uncomment this for a 3d effect */
-  /*
-  for (i = 0; i < 5; i++) 
+  image = load_image_from_path ("gnome-stones/title-tile.png");
+  if (image != NULL) 
     {
-      markup = g_strdup_printf ("<span size=\"54000\" foreground=\"#666666\">%s</span>", 
-                                "GNOME  Stones");
-      draw_text (title_template, markup, 40+i, 128+i);
+      gdk_pixbuf_render_pixmap_and_mask (image, &tile, NULL, 127);
+      gdk_pixbuf_unref (image);
     }
-  */
 
-  markup = g_strdup_printf ("<span size=\"54000\" foreground=\"white\">%s</span>", 
-                            "GNOME  Stones");
+  title_template = gdk_pixmap_new (gstones_view->window,
+                                   GAME_COLS * STONE_SIZE,
+                                   GAME_ROWS * STONE_SIZE, -1);
 
-  draw_text (title_template, markup, 40, 128);
+  gc = gdk_gc_new (gstones_view->window);
+  if (tile != NULL)
+    {
+      gdk_gc_set_tile (gc, tile);
+      gdk_gc_set_fill (gc, GDK_TILED);
+      gdk_draw_rectangle (title_template, gc,
+                          TRUE, 0, 0, -1, -1);
+    }
+
+  title_text = g_strdup (_("GNOME Stones"));
+  text_size = GAME_COLS * STONE_SIZE / (strlen (title_text)+1) * PANGO_SCALE;
+
+  markup = g_strdup_printf ("<span size=\"%d\" weight=\"bold\" foreground=\"black\">%s</span>", 
+                            text_size, title_text);
+  g_free (title_text);
+  draw_text_centered (title_template, markup, 128);
   g_free (markup);
 
-  title_image = gdk_pixmap_new (gstones_view->window, 640, 384, -1);
+  title_image = gdk_pixmap_new (gstones_view->window,
+                                GAME_COLS * STONE_SIZE,
+                                GAME_ROWS * STONE_SIZE, -1);
   
 #endif
 
-  /* Redraw the game widget.  */
-  gtk_widget_draw (gstones_view, NULL);
 }
 
 
@@ -303,7 +301,7 @@ game_update_title (void)
 #ifdef USE_ORIG_TITLE_SCREEN
       gc = gstones_view->style->black_gc;
 #else
-      gc = gstones_view->style->white_gc;
+      gc = gstones_view->style->black_gc;
 #endif
 
       gdk_draw_layout (title_image, gc,
@@ -341,7 +339,9 @@ game_update_title (void)
     }  
 
   /* Redraw the game widget.  */
-  gtk_widget_draw (gstones_view, NULL);
+  gtk_widget_queue_draw_area (gstones_view, 0, 0,
+                              GAME_COLS * STONE_SIZE,
+                              GAME_ROWS * STONE_SIZE);
 }
 
 
@@ -500,7 +500,8 @@ game_widget_fill (void)
 /****************************************************************************/
 /* High score enabling/disabling */
 
-void update_score_state ()
+static void 
+update_score_state (void)
 {
         gchar **names = NULL;
         gfloat *scores = NULL;
@@ -538,7 +539,7 @@ start_cave_delay_timeout (gpointer data);
 static void
 iteration_start (GStonesCave *cave);
 
-void
+static void
 curtain_ready (ViewCurtainMode mode)
 {
   switch (mode)
@@ -603,7 +604,7 @@ curtain_ready (ViewCurtainMode mode)
    after the sequence.  Setting 'cave' to a non NULL value, lets the
    program load a new cave and start it.  */
 
-void
+static void
 curtain_start (GStonesCave *cave)
 {
   curtain_cave= cave;
@@ -697,7 +698,7 @@ countdown_timeout_function (gpointer data)
    after the countdown.  Setting 'cavename' to a non NULL value, lets
    the program load a new cave and start it.  */
 
-void
+static void
 countdown_start (GStonesCave *cave)
 {
   /* When showing the countdown, there is no iteration in the
@@ -883,7 +884,9 @@ iteration_timeout_function (gpointer data)
 #ifdef USE_GNOME_CANVAS  
   game_update_image (gstones_view);
 #else
-  gtk_widget_draw (gstones_view, NULL);
+  gtk_widget_queue_draw_area (gstones_view, 0, 0,
+                              GAME_COLS * STONE_SIZE,
+                              GAME_ROWS * STONE_SIZE);
 #endif
   flags= cave->flags;
 
@@ -1331,8 +1334,8 @@ main (int argc, char *argv[])
 
   gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-stones.png");
   /* That's what a gnome application needs:  */
-  app= gnome_app_new ("gnome-stones", _("GNOME Stones"));
-  gtk_window_set_policy  (GTK_WINDOW (app), FALSE, FALSE, TRUE);
+  app = gnome_app_new ("gnome-stones", _("GNOME Stones"));
+  gtk_window_set_resizable  (GTK_WINDOW (app), FALSE);
 
   /* ... a menu line, ... */
   gnome_app_create_menus (GNOME_APP (app), main_menu);

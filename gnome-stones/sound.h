@@ -1,6 +1,6 @@
 /* gnome-stones - sound.h
  *
- * Time-stamp: <2001/09/07 15:18:29 benes>
+ * Time-stamp: <2003/06/17 14:56:08 mccannwj>
  *
  * Copyright (C) 2001 Michal Benes
  *
@@ -34,6 +34,10 @@ gint sound_register( char *name );
 void play_title_music( void );
 
 void stop_title_music( void );
+
+gboolean get_sound_enabled (void);
+
+void set_sound_enabled (gboolean value);
 
 
 #endif /* SOUND_H */

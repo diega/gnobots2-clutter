@@ -1,6 +1,6 @@
 /* gnome-stones - sound.h
  *
- * Time-stamp: <2003/06/16 10:58:05 mccannwj>
+ * Time-stamp: <2003/06/17 14:27:50 mccannwj>
  *
  * Copyright (C) 2001 Michal Benes
  *
@@ -46,7 +46,6 @@
 #define GAME_SCROLL_MAX 3
 #define GAME_SCROLL_MIN 6
 
-
 #ifdef USE_KEY_RELEASE
 #define GAME_EVENTS (GDK_KEY_PRESS_MASK             |\
 		     GDK_KEY_RELEASE_MASK)
@@ -58,6 +57,9 @@
 
 void gstones_exit (GnomeClient *client, gpointer client_data);
 GConfClient *get_gconf_client (void);
+
+void joystick_set_properties (guint32 deviceid, gfloat switch_level);
+void load_game (const gchar *filename, guint start_cave);
 
 #endif /* MAIN_H */
 

@@ -1,6 +1,6 @@
 /* gnome-stones - objects/gnome-stones.c
  *
- * Time-stamp: <2001/09/08 15:57:44 benes>
+ * Time-stamp: <2003/06/17 14:35:42 mccannwj>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -79,6 +79,8 @@ gboolean sound_played[NUM_SOUNDS];
 /*****************************************************************************/
 /* Some declarations */
 
+gchar *
+objects_init (GStonesPlugin *plugin);
 
 static void
 explosion_new (GStonesCave *cave, guint x, guint y, gboolean diamond);
@@ -88,7 +90,8 @@ explosion_new (GStonesCave *cave, guint x, guint y, gboolean diamond);
 /*****************************************************************************/
 /* play sound */
 
-void stones_sound_play( gint sound )
+static void 
+stones_sound_play( gint sound )
 {
  
   /* we want to play sounds max one-time per frame*/
@@ -525,7 +528,7 @@ gnome_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 }
 
 
-void
+static void
 gnome_signals (GStonesCave *cave, GStonesSignal signal, GStonesObjContext *context)
 {
   if (signal == SIGNAL_PLAYER_DIE)
@@ -1311,7 +1314,7 @@ static GStonesObjectDesc dirt_object=
 };
 
 
-void
+static void
 closed_exit_signals (GStonesCave *cave, GStonesSignal signal, GStonesObjContext *context)
 {
   guint x;

@@ -1,6 +1,8 @@
+/* -*- mode:C; indent-tabs-mode:t; tab-width:8; c-basic-offset:2; -*- */
+
 /* gnome-stones - preferences.h
  *
- * Time-stamp: <2003/06/16 10:33:49 mccannwj>
+ * Time-stamp: <2003/06/17 15:13:48 mccannwj>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -106,16 +108,6 @@ GtkWidget *preferences_dialog= NULL;
 
 
 
-
-/****************************************************************************/
-/* Some extern stuff, that should be removed soon.  */
-
-void joystick_set_properties (guint32 deviceid, gfloat switch_level);
-
-void load_game (const char *filename, guint cave);
-
-
-
 /****************************************************************************/
 /* Stuff for managing the list of avaiable games.  */
 
@@ -175,13 +167,15 @@ add_game (const char *filename)
 }
 
 
-gboolean
-caves_suffix (char *name)
+static gboolean
+caves_suffix (gchar *name)
 {
- int l=strlen (name); 
- if (l<7) return FALSE;
+ int l = strlen (name);
 
- return strcmp (name+l-6, ".caves")==0;
+ if (l < 7) 
+   return FALSE;
+
+ return strcmp (name + l - 6, ".caves") == 0;
 
 }
 
@@ -197,7 +191,7 @@ game_directory_scan (const char *directory)
       
       while ((entry = readdir (dir)) != NULL)
 	{
-	  char *filename= g_strconcat (directory, "/", entry->d_name, NULL);
+	  gchar *filename = g_build_filename (directory, entry->d_name, NULL);
 	  struct stat sbuf;
 	  
 	  if ( caves_suffix (filename) 
@@ -223,7 +217,7 @@ load_game_by_number (guint n)
 }
 
 
-gboolean
+static gboolean
 load_game_by_name (const char *filename, guint cave)
 {
   GameFile *file= add_game (filename);
@@ -244,7 +238,7 @@ load_game_by_name (const char *filename, guint cave)
 /* string<-->scroll_method conversion  */
 
 
-gchar *
+static gchar *
 scroll_method_name (void)
 {
   if (view_scroll_method==atari_scroll)
@@ -258,7 +252,7 @@ scroll_method_name (void)
 
 }
 
-void
+static void
 set_scroll_method (gchar *name)
 {
 
@@ -360,7 +354,7 @@ preferences_save_global (void)
 }
 
 
-gint
+static gint
 preferences_save_local (GnomeClient        *client,
 			gint                phase,
 			GnomeSaveStyle      save_style,
@@ -632,12 +626,9 @@ preferences_dialog_new (void)
   {
     GList *tmp= games;
     int index = 0;
-
     while (tmp)
       {
-	char buffer[10];
-	GameFile *file= (GameFile *)tmp->data;
-	gint      row;
+	GameFile *file = (GameFile *)tmp->data;
 	
         gtk_list_store_append (list, &iter);
         gtk_list_store_set (list, &iter,
@@ -734,7 +725,6 @@ preferences_dialog_new (void)
   gtk_container_set_border_width (GTK_CONTAINER (box), GNOME_PAD_SMALL);
   
   {
-    guint      i;
     GtkObject *adjust;
     GtkWidget *frame;
     GtkWidget *scale;
@@ -743,7 +733,6 @@ preferences_dialog_new (void)
     GtkWidget *menuitem;
     GtkWidget *optionmenu;
     GtkWidget *device_menu;
-    GtkWidget *fv;
     GList     *devices;
 
     frame= games_frame_new (_("Device"));
@@ -771,7 +760,7 @@ preferences_dialog_new (void)
     gtk_menu_shell_append (GTK_MENU_SHELL (device_menu), menuitem);
 
 #if 0    
-    for (devices= gdk_input_list_devices (), i= 1; devices; 
+    for (devices = gdk_input_list_devices (), i= 1; devices; 
 	 devices= devices->next, i++)
       {
 	GdkDeviceInfo *info = (GdkDeviceInfo *) devices->data;

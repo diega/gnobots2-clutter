@@ -1,6 +1,6 @@
 /* gnome-stones - io.c
  *
- * Time-stamp: <2003/05/29 22:43:35 callum>
+ * Time-stamp: <2003/06/17 14:39:30 mccannwj>
  *
  * Copyright (C) 1998, 2003 Carsten Schaar
  *
@@ -23,6 +23,7 @@
 #include <config.h>
 #endif
 
+#include "status.h"
 #include "io.h"
 #include "cave.h"
 #include "game.h"

@@ -1,6 +1,6 @@
 /* gnome-stones - objects/gnomekoban.c
  *
- * Time-stamp: <1999/04/21 12:33:53 carsten>
+ * Time-stamp: <2003/06/17 14:37:20 mccannwj>
  *
  * Copyright (C) 1998 Carsten Schaar
  *
@@ -41,6 +41,9 @@ static GStonesSignal SIGNAL_CAVE_PRE_SCAN;
 static GStonesSignal SIGNAL_CAVE_POST_SCAN;
 static GStonesSignal SIGNAL_PLAYER_DIE;
 static GStonesSignal SIGNAL_PLAYER_START;
+
+gchar *
+objects_init (GStonesPlugin *plugin);
 
 
 /*****************************************************************************/
@@ -350,7 +353,7 @@ gnome_scanned (GStonesCave *cave, guint x, guint y, GStonesObjContext *context)
 }
 
 
-void
+static void
 gnome_signals (GStonesCave *cave, GStonesSignal signal, GStonesObjContext *context)
 {
   if (signal == SIGNAL_PLAYER_DIE)
