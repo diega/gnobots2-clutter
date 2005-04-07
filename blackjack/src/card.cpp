@@ -34,7 +34,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <iostream>
 using namespace std;
 
 GdkBitmap *mask;

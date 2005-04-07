@@ -2,7 +2,7 @@
 /*
  * Blackjack
  *
- * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
+ * Copyright (C) 2003-2005 William Jon McCann <mccann@jhu.edu>
  *
  * This game is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,34 +22,25 @@
 
 #include <config.h>
 
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#endif
-
-#include <sys/types.h>
-#include <string.h>
 #include <stdlib.h>
-#include <dirent.h>
-#include <ctype.h>
 #include <glib/gi18n.h>
-
-#include "blackjack.h"
+#include <gtk/gtk.h>
+#include <gconf/gconf-client.h>
 
 #ifdef HAVE_GNOME
 #include <gnome.h>
 #endif
 
+#include "blackjack.h"
 #include "events.h"
 #include "draw.h"
 #include "slot.h"
 #include "card.h"
 #include "menu.h"
 #include "dialog.h"
-
 #include "game.h"
 #include "hand.h"
 
-#include <iostream>
 using namespace std;
 
 // Global Variables
@@ -79,8 +70,6 @@ guint            x_spacing = 5;
 guint            y_spacing = 15;
 double           x_expanded_offset = 0.21;
 double           y_expanded_offset = 0.21;
-
-gboolean         events_pending = false;
 
 static GConfClient *gconf_client = NULL;
 

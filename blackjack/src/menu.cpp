@@ -22,25 +22,18 @@
 
 #include <config.h>
 
-#include <sys/types.h>
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
-#include <dirent.h>
-#include <ctype.h>
-#include <iostream>
 #include <glib/gi18n.h>
-
-using namespace std;
-
-#include "blackjack.h"
 #ifdef HAVE_GNOME
 #include <gnome.h>
 #endif
 
+using namespace std;
+
+#include "blackjack.h"
 #include "menu.h"
 #include "dialog.h"
-
 #include "game.h"
 #include "hand.h"
 

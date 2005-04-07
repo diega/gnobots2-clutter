@@ -2,7 +2,7 @@
 /*
  * Blackjack - player.cpp
  *
- * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
+ * Copyright (C) 2003-2005 William Jon McCann <mccann@jhu.edu>
  *
  * This game is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,17 +22,8 @@
 
 #include <config.h>
 
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#endif
-
-#include <sys/types.h>
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
-#include <dirent.h>
-#include <ctype.h>
-
 #include <libxml/tree.h>
 #include <libxml/parser.h>
 #include <glib/gi18n.h>
@@ -191,7 +182,7 @@ Hand::showCount (bool blackjack)
                 message = g_strdup_printf ("%s%d",
                                            (getSoft() ? _("Soft") : ""), 
                                            getCount ());
-                if (! (bj_game_is_active () || hslot->id == 0 || events_pending)) {
+                if (! (bj_game_is_active () || hslot->id == 0 || bj_hand_events_pending ())) {
                         gint hand_results = bj_get_hand_results (dealer->getCount (), 
                                                                  getCount ());
                         switch (hand_results) {

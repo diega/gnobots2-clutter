@@ -22,17 +22,10 @@
 
 #include <config.h>
 
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#endif
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <string.h>
 #include <stdlib.h>
-#include <time.h>
-#include <dirent.h>
-#include <ctype.h>
+#include <string.h>
 #include <glib/gi18n.h>
+#include <glib/gstdio.h>
 #include <libxml/tree.h>
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
@@ -42,7 +35,6 @@
 #include "draw.h"
 #include "chips.h"
 #include "splash.h"
-
 #include "player.h"
 #include "hand.h"
 #include "game.h"
@@ -436,7 +428,7 @@ bj_game_ensure_config_dir_exists (const char *dir)
                         // FIXME: use a dialog
                         cerr << dir << " exists, please move it out of the way." << endl;
                 }
-                if (mkdir (dir, 488) != 0)
+                if (g_mkdir (dir, 488) != 0)
                         cerr << "Failed to create directory " << dir << endl;
         }
 }

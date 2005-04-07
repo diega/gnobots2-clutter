@@ -23,7 +23,6 @@
 #include <config.h>
 
 #include <stdlib.h>
-#include <dirent.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <games-card-selector.h>
@@ -36,7 +35,6 @@
 #include "game.h"
 #include "hand.h"
 
-#include <iostream>
 using namespace std;
 
 static GtkWidget *hint_dlg  = NULL;

@@ -2,7 +2,7 @@
 /*
  * Blackjack - blackjack.h
  *
- * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
+ * Copyright (C) 2003-2005 William Jon McCann <mccann@jhu.edu>
  *
  * This game is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -24,8 +24,8 @@
 
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
-#include "press_data.h"
 
+#include "press_data.h"
 #include "strategy.h"
 
 // Constants
@@ -86,8 +86,6 @@ extern guint            x_spacing;
 extern guint            y_spacing;
 extern double           x_expanded_offset;
 extern double           y_expanded_offset;
-
-extern gboolean         events_pending;
 
 gboolean                bj_quit_app (void);
 void                    bj_make_window_title (gchar *game_name);

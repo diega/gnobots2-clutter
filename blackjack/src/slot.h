@@ -18,18 +18,10 @@
  * USA
  */
 
-#ifndef SLOT_H
-#define SLOT_H
-#include <sys/types.h>
-#include <string.h>
-#include <stdlib.h>
-#include <time.h>
-#include <dirent.h>
-#include <ctype.h>
-#include <iostream>
-using namespace std;
+#ifndef BJ_SLOT_H
+#define BJ_SLOT_H
 
-#include <gdk/gdk.h>
+#include <glib.h>
 #include "card.h"
 
 /*

@@ -18,8 +18,8 @@
  * USA
  */
 
-#ifndef DIALOG_H
-#define DIALOG_H
+#ifndef BJ_DIALOG_H
+#define BJ_DIALOG_H
 
 gboolean get_insurance_choice (void);
 

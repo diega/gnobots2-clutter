@@ -1,3 +1,19 @@
+2005-04-07  William Jon McCann  <mccann@jhu.edu>
+
+	* src/player.cpp (showCount): 
+	* src/hand.cpp (bj_hand_events_pending, bj_hand_cancel) 
+	(bj_hand_new5, bj_hand_new, bj_hand_finish1, bj_hand_finish) 
+	(bj_hand_stand, bj_hand_hit, bj_hand_hit_delay_cb) 
+	(bj_hand_hit_with_delay, bj_hand_double, bj_hand_split) 
+	(bj_hand_surrender, bj_hand_new_deal): 
+	* src/events.cpp (bj_event_key_press, bj_event_button_press): 
+	* src/blackjack.cpp:
+	Add a new function to keep track of pending events.  Remove
+	broken global variable events_pending.  Add guards in public
+	bj_hand functions for when events are pending.  Fixes #170625.
+
+	* *.[ch]: Remove unneeded includes.
+
 2005-03-23  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* src/dialog.cpp: 	

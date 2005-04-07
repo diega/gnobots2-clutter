@@ -21,6 +21,7 @@
 
 #ifndef BJ_PRESS_DATA_H
 #define BJ_PRESS_DATA_H
+
 #include <gtk/gtk.h>
 #include "slot.h"
 #include "chips.h"

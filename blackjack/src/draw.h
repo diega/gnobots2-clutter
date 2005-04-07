@@ -18,8 +18,9 @@
  * USA
  */
 
-#ifndef DRAW_H
-#define DRAW_H
+#ifndef BJ_DRAW_H
+#define BJ_DRAW_H
+
 #include <gtk/gtk.h>
 
 #define CHIP_X_ORIGIN 0.0

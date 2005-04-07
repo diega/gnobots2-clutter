@@ -18,8 +18,8 @@
  * USA
  */
 
-#ifndef CARD_H
-#define CARD_H
+#ifndef BJ_CARD_H
+#define BJ_CARD_H
 
 #include <gdk/gdk.h>
 

@@ -2,7 +2,7 @@
 /*
  * Blackjack - hand.cpp
  *
- * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
+ * Copyright (C) 2003-2005 William Jon McCann <mccann@jhu.edu>
  *
  * This game is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,16 +22,7 @@
 
 #include <config.h>
 
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#endif
-
-#include <sys/types.h>
-#include <string.h>
 #include <stdlib.h>
-#include <time.h>
-#include <dirent.h>
-#include <ctype.h>
 #include <glib/gi18n.h>
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
@@ -45,12 +36,23 @@
 #include "hand.h"
 #include "chips.h"
 
-#include <iostream>
 using namespace std;
 
 guint deal_timeout_id = 0;
 guint finish_timeout_id = 0;
 guint hit_timeout_id = 0;
+
+gboolean
+bj_hand_events_pending (void)
+{
+        gboolean pending = FALSE;
+
+        pending = (deal_timeout_id != 0
+                   || hit_timeout_id != 0
+                   || finish_timeout_id != 0);
+
+        return pending;
+}
 
 void
 bj_hand_cancel ()
@@ -69,8 +71,6 @@ bj_hand_cancel ()
                 g_source_remove (finish_timeout_id);
                 finish_timeout_id = 0;
         }
-
-        events_pending = FALSE;
 }
 
 hslot_type
@@ -242,7 +242,6 @@ bj_deal_card_to_dealer_distribution (gboolean faceup=TRUE)
         distribution->deal (dealer->deal (shoe->deal ()));
 }
 
-
 static gboolean
 bj_hand_new5 (gpointer data)
 {
@@ -309,7 +308,6 @@ bj_hand_new5 (gpointer data)
                         strategy->showOptions (player,
                                                dealer->cards[0].value (), 
                                                numHands);
-                events_pending = FALSE;
         }
 
         bj_update_control_menu ();
@@ -373,6 +371,8 @@ bj_hand_new1 (gpointer data)
 void
 bj_hand_new ()
 {
+        if (bj_hand_events_pending ())
+                return;
 
         // Reshuffle if necessary.
         if (shoe->numCards < 52) {
@@ -387,7 +387,6 @@ bj_hand_new ()
         player->showWager ();
         lastWager = player->wager;
 
-        events_pending = TRUE;
         bj_hand_new1 (NULL);
 }
 
@@ -419,7 +418,6 @@ bj_hand_finish1 (gpointer data)
                                 player = player->nextHand;
                         }
                 }
-                events_pending = FALSE;
                 bj_draw_refresh_screen ();
                 finish_timeout_id = 0;
                 return FALSE;
@@ -429,11 +427,18 @@ bj_hand_finish1 (gpointer data)
 void
 bj_hand_finish ()
 {
-        events_pending = TRUE;
+        hcard_type card;
+
+        if (bj_hand_events_pending ())
+                return;
+
         bj_game_set_active (FALSE);
         // Turn dealer hole card.
-        hcard_type card = (hcard_type) g_list_nth_data (dealer->hslot->cards, 1);
-        card->direction = UP;
+
+        card = (hcard_type) g_list_nth_data (dealer->hslot->cards, 1);
+        if (card)
+                card->direction = UP;
+
         dealer->showCount ();
         bj_update_control_menu ();
         bj_draw_refresh_screen ();
@@ -445,6 +450,9 @@ bj_hand_finish ()
 void
 bj_hand_stand ()
 {
+        if (bj_hand_events_pending ())
+                return;
+
         if (bj_game_is_active ()) {
                 allSettled = FALSE;
                 if ((player = player->nextHand) == NULL) {
@@ -457,6 +465,9 @@ bj_hand_stand ()
 void
 bj_hand_hit ()
 {
+        if (bj_hand_events_pending ())
+                return;
+
         if (bj_hand_can_be_hit ()) {
                 bj_deal_card_to_player ();
                 
@@ -474,7 +485,6 @@ bj_hand_hit ()
 static gboolean
 bj_hand_hit_delay_cb (gpointer data)
 {
-        events_pending = FALSE;
         bj_hand_hit ();
         hit_timeout_id = 0;
         return FALSE;
@@ -483,7 +493,9 @@ bj_hand_hit_delay_cb (gpointer data)
 void
 bj_hand_hit_with_delay (void)
 {
-        events_pending = TRUE;
+        if (bj_hand_events_pending ())
+                return;
+
         hit_timeout_id = g_timeout_add ((gint)bj_get_deal_delay (),
                                         bj_hand_hit_delay_cb, NULL);
 }
@@ -491,6 +503,9 @@ bj_hand_hit_with_delay (void)
 void
 bj_hand_double ()
 {
+        if (bj_hand_events_pending ())
+                return;
+
         if (bj_hand_can_be_doubled ()) {
                 bj_adjust_balance (-1 * player->wager);
                 player->wager *= 2;
@@ -513,6 +528,9 @@ bj_hand_split ()
 {
         hslot_type hslot;
         gint slot_start_x;
+
+        if (bj_hand_events_pending ())
+                return;
 
         if (bj_hand_can_be_split ()) {
                 // Put card value back into shoe
@@ -579,6 +597,9 @@ bj_hand_split ()
 void
 bj_hand_surrender ()
 {
+        if (bj_hand_events_pending ())
+                return;
+
         if (bj_hand_can_be_surrendered ()) {
                 bj_adjust_balance (player->wager / 2);
                 if ((player = player->nextHand) == NULL)
@@ -589,6 +610,9 @@ bj_hand_surrender ()
 void
 bj_hand_new_deal ()
 {
+        if (bj_hand_events_pending ())
+                return;
+
         if (! bj_game_is_active ()) {
                 bj_clear_table ();
                 bj_hand_new ();

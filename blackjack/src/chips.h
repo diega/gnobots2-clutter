@@ -17,18 +17,10 @@
  * USA
  */
 
-#ifndef CHIPS_H
-#define CHIPS_H
-#include <sys/types.h>
-#include <string.h>
-#include <stdlib.h>
-#include <time.h>
-#include <dirent.h>
-#include <ctype.h>
-#include <iostream>
-using namespace std;
+#ifndef BJ_CHIPS_H
+#define BJ_CHIPS_H
 
-#include <gdk/gdk.h>
+#include <glib.h>
 
 /*
  * Data Structures
