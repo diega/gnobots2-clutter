@@ -64,7 +64,7 @@ get_insurance_choice (void)
                                                   secondary_message);
 
         gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
-
+        gtk_window_set_title (GTK_WINDOW (dialog), "");
         gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_NO);
 
         /* add a stock icon? */ 
@@ -117,6 +117,7 @@ show_hint_dialog (void)
                                                   secondary_message);
 
         gtk_container_set_border_width (GTK_CONTAINER (hint_dlg), 6);
+        gtk_window_set_title (GTK_WINDOW (hint_dlg), "");
 
         if (hint_dlg)
                 g_signal_connect (hint_dlg,
