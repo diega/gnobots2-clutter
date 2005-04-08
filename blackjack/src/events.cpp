@@ -142,29 +142,15 @@ bj_event_key_press (GtkWidget *widget, GdkEventKey *event, void *d)
 
         // Carry out player option.
         switch (key) {
-        case KEY_S :
-                bj_hand_stand ();
-                break;
-        case KEY_H :
-                bj_hand_hit_with_delay ();
-                break;
-        case KEY_D : 
-                bj_hand_double ();
-                break;
-        case KEY_P :
-                bj_hand_split ();
-                break;
-        case KEY_R :
-                bj_hand_surrender ();
-                break;
         case KEY_ENTER :
                 bj_hand_new_deal ();
+                return TRUE;
                 break;
         default:
                 break;
         }
 
-        return true;
+        return FALSE;
 }
 
 int
@@ -451,6 +437,12 @@ bj_slot_clicked ()
 gint
 bj_event_button_release (GtkWidget *widget, GdkEventButton *event, void *d)
 {
+        gboolean events_pending = bj_hand_events_pending ();
+
+        // ignore clicks during actions
+        if (events_pending)
+                return TRUE;
+
         switch (press_data->status) {
         case STATUS_IS_DRAG:
                 press_data->status = STATUS_NONE;

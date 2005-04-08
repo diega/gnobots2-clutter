@@ -42,6 +42,8 @@ guint deal_timeout_id = 0;
 guint finish_timeout_id = 0;
 guint hit_timeout_id = 0;
 
+static void bj_hand_finish_internal (void);
+
 gboolean
 bj_hand_events_pending (void)
 {
@@ -274,7 +276,7 @@ bj_hand_new5 (gpointer data)
                 if ( (player->getCards () == 2) && (player->getCount () == 21) )
                         bj_adjust_balance (player->wager);
                 bj_game_set_active (FALSE);
-                bj_hand_finish ();
+                bj_hand_finish_internal ();
                 deal_timeout_id = 0;
                 return FALSE;
         }
@@ -299,7 +301,7 @@ bj_hand_new5 (gpointer data)
         }
 
         if (player->getCount () == 21) {
-                bj_hand_finish ();
+                bj_hand_finish_internal ();
                 deal_timeout_id = 0;
                 return FALSE;
         }
@@ -424,13 +426,10 @@ bj_hand_finish1 (gpointer data)
         }
 }
 
-void
-bj_hand_finish ()
+static void
+bj_hand_finish_internal (void)
 {
         hcard_type card;
-
-        if (bj_hand_events_pending ())
-                return;
 
         bj_game_set_active (FALSE);
         // Turn dealer hole card.
@@ -448,6 +447,15 @@ bj_hand_finish ()
 }
 
 void
+bj_hand_finish ()
+{
+        if (bj_hand_events_pending ())
+                return;
+
+        bj_hand_finish_internal ();
+}
+
+void
 bj_hand_stand ()
 {
         if (bj_hand_events_pending ())
@@ -456,18 +464,15 @@ bj_hand_stand ()
         if (bj_game_is_active ()) {
                 allSettled = FALSE;
                 if ((player = player->nextHand) == NULL) {
-                        bj_hand_finish ();
+                        bj_hand_finish_internal ();
                 }
                 bj_hand_finish_play ();
         }
 }
 
-void
-bj_hand_hit ()
+static void
+bj_hand_hit_internal ()
 {
-        if (bj_hand_events_pending ())
-                return;
-
         if (bj_hand_can_be_hit ()) {
                 bj_deal_card_to_player ();
                 
@@ -475,7 +480,7 @@ bj_hand_hit ()
                 if (player->getCount () >= 21)
                         if ((player = player->nextHand) == NULL) {
                                 allSettled = FALSE;
-                                bj_hand_finish ();
+                                bj_hand_finish_internal ();
                                 return;
                         }
                 bj_hand_finish_play ();
@@ -485,7 +490,7 @@ bj_hand_hit ()
 static gboolean
 bj_hand_hit_delay_cb (gpointer data)
 {
-        bj_hand_hit ();
+        bj_hand_hit_internal ();
         hit_timeout_id = 0;
         return FALSE;
 }
@@ -603,7 +608,7 @@ bj_hand_surrender ()
         if (bj_hand_can_be_surrendered ()) {
                 bj_adjust_balance (player->wager / 2);
                 if ((player = player->nextHand) == NULL)
-                        bj_hand_finish ();
+                        bj_hand_finish_internal ();
         }
 }
 
@@ -639,7 +644,7 @@ bj_hand_finish_play ()
                                 if (player->nextHand == NULL) {
                                         check_splits = FALSE;
                                         allSettled = FALSE;
-                                        bj_hand_finish ();
+                                        bj_hand_finish_internal ();
                                 }
                                 else
                                         player = player->nextHand;

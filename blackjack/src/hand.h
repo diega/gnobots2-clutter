@@ -43,7 +43,6 @@ void                    bj_deal_card_to_dealer_distribution (gboolean);
 hslot_type              bj_hand_get_slot (void);
 
 void                    bj_hand_stand (void);
-void                    bj_hand_hit (void);
 void                    bj_hand_hit_with_delay (void);
 void                    bj_hand_double (void);
 void                    bj_hand_split (void);

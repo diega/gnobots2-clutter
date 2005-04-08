@@ -1,5 +1,16 @@
 2005-04-08  William Jon McCann  <mccann@jhu.edu>
 
+	* src/hand.cpp (bj_hand_new5, bj_hand_finish_internal) 
+	(bj_hand_finish, bj_hand_stand, bj_hand_hit_internal) 
+	(bj_hand_hit_delay_cb, bj_hand_surrender, bj_hand_finish_play):
+	Internal to hand use functions without pending events checks.
+
+	* src/events.cpp (bj_event_key_press): Let the GtkAction handle
+	the keypresses except Return which it won't allow as an accel.
+	(bj_event_button_release): Also guard here for pending events.
+
+2005-04-08  William Jon McCann  <mccann@jhu.edu>
+
 	* src/dialog.cpp (get_insurance_choice, show_hint_dialog):
 	Use a blank title in alerts per HIG.
 
