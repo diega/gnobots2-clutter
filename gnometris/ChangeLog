@@ -1,3 +1,7 @@
+2005-04-14  Richard Hoelscher  <rah@rahga.com>
+
+	* tetris.cpp (gameAbout): Use GtkAboutDialog.
+
 2005-03-23  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* tetris.cpp: Patches from Dennis Cranston

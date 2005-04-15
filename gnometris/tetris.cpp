@@ -1455,52 +1455,19 @@ int
 Tetris::gameAbout(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
-	GdkPixbuf *pixbuf = NULL;
-	static GtkWidget *about = NULL;
 
-	const gchar *authors[] = {"J. Marcin Gorycki", 0};
+	const gchar *authors[] = { "J. Marcin Gorycki", NULL };
 
-	const gchar *documenters[] = {
-		NULL
-	};
-
-	const gchar *translator_credits = _("translator-credits");
-
-	if (about != NULL) {
-		gtk_window_present (GTK_WINDOW(about));
-		return TRUE;
-	}
-        {
-		char *filename = NULL;
-
-		filename = gnome_program_locate_file (NULL,
-				GNOME_FILE_DOMAIN_APP_PIXMAP, 
-				"gnome-gtetris.png",
-				TRUE, NULL);
-		if (filename != NULL)
-		{
-			pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
-			g_free (filename);
-		}
-	}
-
-	about = gnome_about_new("Gnometris", 
-				VERSION, 
-				"(C) 2000 J. Marcin Gorycki",
-				_("Written for my wife, Matylda\n"
-				  "Send comments and bug reports to: "
-				  "janusz.gorycki@intel.com"),
-				(const char **)authors,
-				(const char **)documenters,
-				strcmp (translator_credits, "translator-credits") != 0 ? translator_credits : NULL,
-				pixbuf);
-	
-	if (pixbuf != NULL)
-		gdk_pixbuf_unref (pixbuf);
-	
-	gtk_window_set_transient_for (GTK_WINDOW (about), GTK_WINDOW (t->getWidget()));
-	g_signal_connect (G_OBJECT (about), "destroy", G_CALLBACK (gtk_widget_destroyed), &about);
-	gtk_widget_show(about);
+	gtk_show_about_dialog (GTK_WINDOW (t->getWidget()),
+			       "name", _("Gnometris"),
+			       "version", VERSION,
+			       "comments", _("Written for my wife, Matylda\n"
+					     "Send comments and bug reports to: "
+					     "janusz.gorycki@intel.com"),
+				"copyright", "Copyright \xc2\xa9 2000 J. Marcin Gorycki",
+				"authors", authors,				
+				"translator_credits", _("translator-credits"),
+				NULL);
 
 	return TRUE;
 }

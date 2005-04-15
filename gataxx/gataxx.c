@@ -334,7 +334,8 @@ void undo_move_cb(GtkWidget * widget, gpointer data) {
 
 /* menu: Game->Quit */
 gboolean quit_game_cb(GtkWidget * widget, gpointer data) {
-        g_source_remove (timeoutid);
+        if (timeoutid)
+		g_source_remove (timeoutid);
 	gtk_main_quit();
 	
 	return TRUE;
@@ -364,44 +365,18 @@ apply_changes() {
 void
 about_cb(GtkWidget *widget, gpointer data)
 {
-  static GtkWidget *about;
-  GdkPixbuf *pixbuf = NULL;
   const gchar *authors[] = {"Chris Rogers", "Sjoerd Langkemper", 
 			    N_("Based on code from Iagno by Ian Peters"), NULL};
-  const gchar *documenters[] = { NULL };
-  const gchar *translator_credits = _("translator-credits");
-  gchar *iconfile;
 
-  if (about != NULL) {
-    gtk_window_present (GTK_WINDOW (about));
-    return;
-  }
-
-  iconfile = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
-					"gataxx.png", TRUE, NULL);
-  if (iconfile != NULL) {
-    pixbuf = gdk_pixbuf_new_from_file (iconfile, NULL);
-    g_free (iconfile);
-  }
-
-  about = gnome_about_new (_("Ataxx"), VERSION,
-			   "Copyright \xc2\xa9 1999-2003 Chris Rogers\n"
-			   "Copyright \xc2\xa9 2004 Sjoerd Langkemper",
-                          _("A disk-flipping game where you attempt to dominate the board."),
-                          (const char **)authors,
-                          (const char **)documenters,
-                          g_utf8_collate (translator_credits, "translator-credits") !=
-0 ? translator_credits : NULL,
-                          pixbuf);
-
-  if (pixbuf != NULL)
-    gdk_pixbuf_unref (pixbuf);
-  
-  g_signal_connect (G_OBJECT (about), "destroy", 
-		    G_CALLBACK (gtk_widget_destroyed), &about);
-  gtk_window_set_transient_for (GTK_WINDOW (about), GTK_WINDOW (window));
-  
-  gtk_widget_show (about);
+  gtk_show_about_dialog (GTK_WINDOW (window),
+			 "name", _("Ataxx"), 
+			 "version", VERSION,
+			 "copyright", "Copyright \xc2\xa9 1999-2003 Chris Rogers\n"
+				      "Copyright \xc2\xa9 2004-2005 Sjoerd Langkemper",
+			 "comments", _("A disk-flipping game where you attempt to dominate the board."),
+			 "authors", authors,
+			 "translator_credits", _("translator-credits"),
+			 NULL);
 }
 
 

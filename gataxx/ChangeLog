@@ -1,3 +1,8 @@
+2005-04-11  Richard Hoelscher  <rah@rahga.com>
+
+	* gataxx.c (quit_game_cb): Add a check to timeoutid source removal.
+	(about_cb): Use GtkAboutDialog.
+
 2005-03-23  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* properties.c: Patches from Dennis Cranston
