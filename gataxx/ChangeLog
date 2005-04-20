@@ -1,3 +1,11 @@
+2005-04-20  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gataxx.c: Make sure that if the player is changed from computer
+	to human before the computer-play timeout has gone off that we
+	don't go into an infinite loop. Bug #300407. Rather than keep
+	track of timeout IDs and explicitly remove them, we just do a
+	sanity check in computer_move_cb ().
+
 2005-04-11  Richard Hoelscher  <rah@rahga.com>
 
 	* gataxx.c (quit_game_cb): Add a check to timeoutid source removal.

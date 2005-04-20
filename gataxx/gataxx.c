@@ -95,6 +95,11 @@ gboolean move_possible_to(GtkGridBoard * gridboard, int x, int y, int turn) {
 gboolean computer_move_cb(gpointer turn) {
 	move cm;
 
+	/* In case the level gets changed between the timeout
+	 * being set and it going off. */
+	if (props_get_level (GPOINTER_TO_INT (turn)) < 1)
+	  return FALSE;
+
 	cm=computer_move(gridboard, GPOINTER_TO_INT(turn));
 	do_move(cm);
 	return FALSE;
