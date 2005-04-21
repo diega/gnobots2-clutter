@@ -36,6 +36,16 @@ gboolean pixmaps_ready = FALSE;
 GdkPixmap *pixmaps[MAX_COLOURS][NFRAMES];
 GdkPixmap *blank_pixmap = NULL;
 
+GdkGC *gridgc = NULL;
+GdkGC *bggc = NULL;
+GdkGC *cursorgc = NULL;
+
+/* FIXME: These should not be hard-coded. */
+GdkColor gridcolor =   { 0, 0x5050, 0x5050, 0x5050 };
+GdkColor bgcolor =     { 0, 0x1010, 0x1010, 0x1010 };
+/* FIXME: We neither use nor allocate this yet. */
+GdkColor cursorcolor = { 0, 0xffff, 0xb7b7, 0x4646 };
+
 /* FIXME: Can we make this not global ? (redraw is the problem) */
 GtkWidget *canvaswidget;
 
@@ -127,6 +137,18 @@ gboolean expose_cb (GtkWidget *canvas, GdkEventExpose *event, gpointer data)
 	int x, y;
 	game_cell *p;
 
+	if (gridgc == NULL) {
+		gridgc = gdk_gc_new (canvas->window);
+		gdk_colormap_alloc_color (gdk_colormap_get_system (), 
+															&gridcolor, TRUE, TRUE);
+		gdk_gc_set_foreground (gridgc, &gridcolor);
+		
+		bggc = gdk_gc_new (canvas->window);
+		gdk_colormap_alloc_color (gdk_colormap_get_system (), 
+															&bgcolor, TRUE, TRUE);
+		gdk_gc_set_foreground (bggc, &bgcolor);
+	}
+
 	/* We consider two cases. One is here we have resized and the pixmaps
 	 * aren't ready yet, in that case (the else block) we just draw the
 	 * grid. Otherwise we draw everything using the tiles. */
@@ -143,15 +165,13 @@ gboolean expose_cb (GtkWidget *canvas, GdkEventExpose *event, gpointer data)
 
 		/* Fixup the left and bottom lines. */
 		if ((event->area.y + event->area.height + 1) >= board_height*tile_size) {
-			/* FIXME: This should have it's own gc. */
-			gdk_draw_line (canvas->window, canvas->style->white_gc,
+			gdk_draw_line (canvas->window, gridgc,
 										 event->area.x, board_height*tile_size - 1, 
 										 event->area.x + event->area.width - 2, 
 										 board_height*tile_size - 1);
 		}
 		if ((event->area.x + event->area.width + 1) >= board_width*tile_size) {
-			/* FIXME: This should have it's own gc. */
-			gdk_draw_line (canvas->window, canvas->style->white_gc,
+			gdk_draw_line (canvas->window, gridgc,
 										 board_width*tile_size - 1, event->area.y,
 										 board_width*tile_size - 1, 
 										 event->area.y + event->area.height - 2);
@@ -159,8 +179,7 @@ gboolean expose_cb (GtkWidget *canvas, GdkEventExpose *event, gpointer data)
 
 	} else { /* Draw only the grid. */
 
-		/* FIXME: This should be a background colour. */
-		gdk_draw_rectangle (canvas->window, canvas->style->black_gc, TRUE,
+		gdk_draw_rectangle (canvas->window, bggc, TRUE,
 												event->area.x, event->area.y, 
 												event->area.width, event->area.height);
 
@@ -168,8 +187,7 @@ gboolean expose_cb (GtkWidget *canvas, GdkEventExpose *event, gpointer data)
 		for (x = tile_size*(event->area.x/tile_size);
 				 x <= tile_size*((event->area.x + event->area.width)/tile_size);
 				 x += tile_size) {
-			/* FIXME: This should have it's own gc. */
-			gdk_draw_line (canvas->window, canvas->style->white_gc, x,
+			gdk_draw_line (canvas->window, gridgc, x,
 										 event->area.y, x, event->area.y + event->area.height);
 		}
 
@@ -177,8 +195,7 @@ gboolean expose_cb (GtkWidget *canvas, GdkEventExpose *event, gpointer data)
 		for (x = tile_size*(event->area.y/tile_size);
 				 x <= tile_size*((event->area.y + event->area.height)/tile_size);
 				 x += tile_size) {
-			/* FIXME: This should have it's own gc. */
-			gdk_draw_line (canvas->window, canvas->style->white_gc,
+			gdk_draw_line (canvas->window, gridgc,
 										 event->area.x, x, event->area.x + event->area.width, x);
 		}
 
@@ -242,26 +259,26 @@ static gboolean render_cb (GtkWidget *canvas)
 			g_object_unref (bg_pixbuf);
 
 		/* Draw up the background with the top and left grid lines. */
-		/* FIXME: hard-coded colours. */
 		bg_pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, tile_size,
 																tile_size);
 		/* FIXME: This is too large for this function, ship off else-where. */
+		/* FIXME: Colour handling is awkward. */
 		p = gdk_pixbuf_get_pixels (bg_pixbuf);
 		l = gdk_pixbuf_get_rowstride (bg_pixbuf);
 		for (i=0; i<tile_size; i++) {
-			*p++ = 0xff;
-			*p++ = 0xff;
-			*p++ = 0xff;
+			*p++ = gridcolor.red >> 8;
+			*p++ = gridcolor.green >> 8;
+			*p++ = gridcolor.blue >> 8;
 		}
 		for (j=1; j<tile_size; j++) {
 					p = p + l - 3*tile_size;
-					*p++ = 0xff;
-					*p++ = 0xff;
-					*p++ = 0xff;
+					*p++ = gridcolor.red >> 8;
+					*p++ = gridcolor.green >> 8;
+					*p++ = gridcolor.blue >> 8;
 					for (i=1; i<tile_size; i++) {
-						*p++ = 0x00;
-						*p++ = 0x00;
-						*p++ = 0x00;
+						*p++ = bgcolor.red >> 8;
+						*p++ = bgcolor.green >> 8;
+						*p++ = bgcolor.blue >> 8;
 					}
 		}
 		if (blank_pixmap != NULL)
@@ -427,24 +444,23 @@ static gboolean render_cb (GtkWidget *canvas)
 
 			/* FIXME: Split out ? */
 			/* No phase problems here. The falling stuff always has a phase of 0 */
-			/* FIXME: Once again, hard-coded bg/fg colours. */
 			bp = gdk_pixbuf_get_pixels (tile);
 			l = gdk_pixbuf_get_rowstride (tile);
 			p = bp + 3;
 			/* Remove the horizontal line... */
 			for (i=1; i<tile_size; i++) {
-				*p++ = 0x00;
-				*p++ = 0x00;
-				*p++ = 0x00;
+				*p++ = bgcolor.red >> 8;
+				*p++ = bgcolor.green >> 8;
+				*p++ = bgcolor.blue >> 8;
 			}
 			j = tile_size - 1 - ((x + 1)*(tile_size - 1))/(NFRAMESMOVED);
 			downoffsets[x] = j;
 			p = bp + j*l + 3;
 			/* ...and redraw it in the correct place. */
 			for (i=1; i<tile_size; i++) {
-				*p++ = 0xff;
-				*p++ = 0xff;
-				*p++ = 0xff;
+				*p++ = gridcolor.red >> 8;
+				*p++ = gridcolor.green >> 8;
+				*p++ = gridcolor.blue >> 8;
 			}
 
 			gdk_pixbuf_composite (file_pixbuf, tile, 1, 1, ftile_size,
@@ -482,15 +498,14 @@ static gboolean render_cb (GtkWidget *canvas)
 
 			/* FIXME: Split out ? */
 			/* No phase problems here. The falling stuff always has a phase of 0 */
-			/* FIXME: Once again, hard-coded bg/fg colours. */
 			bp = gdk_pixbuf_get_pixels (tile);
 			l = gdk_pixbuf_get_rowstride (tile);
 			p = bp + l;
 			/* Remove the vertical line... */
 			for (i=1; i<tile_size; i++) {
-				*p++ = 0x00;
-				*p++ = 0x00;
-				*p   = 0x00;
+				*p++ = bgcolor.red >> 8;
+				*p++ = bgcolor.green >> 8;
+				*p   = bgcolor.blue >> 8;
 				p   += l - 2;
 			}
 			j = ((x + 1)*(tile_size - 1))/(NFRAMESMOVED);
@@ -498,9 +513,9 @@ static gboolean render_cb (GtkWidget *canvas)
 			p = bp + l + 3*j;
 			/* ...and redraw it in the correct place. */
 			for (i=1; i<tile_size; i++) {
-				*p++ = 0xff;
-				*p++ = 0xff;
-				*p   = 0xff;
+				*p++ = gridcolor.red >> 8;
+				*p++ = gridcolor.green >> 8;
+				*p   = gridcolor.blue >> 8;
 				p   += l - 2;
 			}
 
