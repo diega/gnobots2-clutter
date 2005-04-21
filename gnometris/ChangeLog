@@ -1,3 +1,10 @@
+2005-04-18  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* blockops.cpp: 	
+	* main.cpp: A patch from Ryan Lortie <desrt@desrt.ca> to
+	replace the srand/rand calls with GRand functions. See bug
+	#301008.
+
 2005-04-14  Richard Hoelscher  <rah@rahga.com>
 
 	* tetris.cpp (gameAbout): Use GtkAboutDialog.

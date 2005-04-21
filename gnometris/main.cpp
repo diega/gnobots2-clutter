@@ -39,8 +39,6 @@ main(int argc, char *argv[])
 		{0, '\0', 0, 0, 0}
 	};
 
-	srand(time(0));
-
 	gnome_score_init("gnometris");
 
 	gnome_program_init ("gnometris", VERSION,

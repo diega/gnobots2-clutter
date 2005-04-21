@@ -262,14 +262,16 @@ BlockOps::generateFallingBlock()
 	posx = COLUMNS / 2 + 1;
 	posy = 0;
 
-	blocknr = blocknr_next == -1 ? rand() % tableSize : blocknr_next;
-	rot = rot_next == -1 ? rand() % 4 : rot_next;
-	int cn = random_block_colors ? rand() % nr_of_colors : blocknr % nr_of_colors;
+	blocknr = blocknr_next == -1 ? g_random_int_range(0, tableSize) :
+		blocknr_next;
+	rot = rot_next == -1 ? g_random_int_range(0, 4) : rot_next;
+	int cn = random_block_colors ? g_random_int_range(0, nr_of_colors) :
+		blocknr % nr_of_colors;
 	color = color_next == -1 ? cn : color_next;
 	
-	blocknr_next = rand() % tableSize;
-	rot_next = rand() % 4;
-	color_next = random_block_colors ? rand() % nr_of_colors : 
+	blocknr_next = g_random_int_range(0, tableSize);
+	rot_next = g_random_int_range(0, 4);
+	color_next = random_block_colors ? g_random_int_range(0, nr_of_colors) :
 		blocknr_next % nr_of_colors;
 	
 	if (!blockOkHere(posx, posy, blocknr, rot))
@@ -285,7 +287,9 @@ BlockOps::emptyField(int filled_lines, int fill_prob)
 
 	for (int y = 0; y < LINES; ++y)
 	{
-		blank = rand() % COLUMNS; // Allow for at least one blank per line
+ 		// Allow for at least one blank per line
+		blank = g_random_int_range(0, COLUMNS);
+
 		for (int x = 0; x < COLUMNS; ++x)
 		{
 			if (field_initialized && field[x][y].item != 0)
@@ -295,10 +299,10 @@ BlockOps::emptyField(int filled_lines, int fill_prob)
 			field[x][y].item = 0;
 			field[x][y].what = EMPTY;
 			if ((y>=(LINES - filled_lines)) && (x != blank) &&
-			    ((rand() % 10) < fill_prob)) { 
+			    ((g_random_int_range(0, 10)) < fill_prob)) { 
 				field[x][y].what = LAYING;
 				if (nr_of_colors)
-					field[x][y].color = rand() % nr_of_colors;
+					field[x][y].color = g_random_int_range(0,  nr_of_colors);
 				else
 					// This is in case we're called
 					// before the widgets are set 
