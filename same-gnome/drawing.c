@@ -246,6 +246,8 @@ static gboolean render_cb (GtkWidget *canvas)
 	gchar *suffix;
 	gint length;
 	GtkWidget *dialog;
+	static guchar r, g, b, br, bg, bb;
+	guchar tr, tg, tb;
 
 	if (idle_state == INIT) {
 		last_tile_size = tile_size;
@@ -262,23 +264,28 @@ static gboolean render_cb (GtkWidget *canvas)
 		bg_pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, tile_size,
 																tile_size);
 		/* FIXME: This is too large for this function, ship off else-where. */
-		/* FIXME: Colour handling is awkward. */
 		p = gdk_pixbuf_get_pixels (bg_pixbuf);
 		l = gdk_pixbuf_get_rowstride (bg_pixbuf);
+		r = gridcolor.red >> 8;
+		g = gridcolor.green >> 8;
+		b = gridcolor.blue >> 8;
+		br = bgcolor.red >> 8;
+		bg = bgcolor.green >> 8;
+		bb = bgcolor.blue >> 8;
 		for (i=0; i<tile_size; i++) {
-			*p++ = gridcolor.red >> 8;
-			*p++ = gridcolor.green >> 8;
-			*p++ = gridcolor.blue >> 8;
+			*p++ = r;
+			*p++ = g;
+			*p++ = b;
 		}
 		for (j=1; j<tile_size; j++) {
 					p = p + l - 3*tile_size;
-					*p++ = gridcolor.red >> 8;
-					*p++ = gridcolor.green >> 8;
-					*p++ = gridcolor.blue >> 8;
+					*p++ = r;
+					*p++ = g;
+					*p++ = b;
 					for (i=1; i<tile_size; i++) {
-						*p++ = bgcolor.red >> 8;
-						*p++ = bgcolor.green >> 8;
-						*p++ = bgcolor.blue >> 8;
+						*p++ = br;
+						*p++ = bg;
+						*p++ = bb;
 					}
 		}
 		if (blank_pixmap != NULL)
@@ -395,21 +402,20 @@ static gboolean render_cb (GtkWidget *canvas)
 			/* Instead we have a fade-out. */
 			/* This method does avoid the "phase" problem of destroying
 			 * a spinning object at an arbitrary phase. */
-			/* FIXME: Should this be the border colour fading to the
-			 * background colour rather than the current hard-coded stuff ? */
+			/* FIXME: This fade from white scheme only works for dark backgrounds. */
 			bp = gdk_pixbuf_get_pixels (tile);
 			l = gdk_pixbuf_get_rowstride (tile);
 			/* Note that this avoids the border. */
 			shift = (m - DESTFRAMESOFS)/2;
+			tr = br + ((0xff - br) >> shift);
+			tg = bg + ((0xff - bg) >> shift);
+			tb = bb + ((0xff - bb) >> shift);
 			for (j=1; j<tile_size; j++) {
 				p = bp + j*l + 3;
 				for (i=1; i<tile_size; i++) {
-					*p = 0xff >> shift;
-					p++;
-					*p = 0xff >> shift;
-					p++;
-					*p = 0xff >> shift;
-					p++;
+					*p++ = tr;
+					*p++ = tg;
+					*p++ = tb;
 				}
 			}
 
@@ -449,18 +455,18 @@ static gboolean render_cb (GtkWidget *canvas)
 			p = bp + 3;
 			/* Remove the horizontal line... */
 			for (i=1; i<tile_size; i++) {
-				*p++ = bgcolor.red >> 8;
-				*p++ = bgcolor.green >> 8;
-				*p++ = bgcolor.blue >> 8;
+				*p++ = br;
+				*p++ = bg;
+				*p++ = bb;
 			}
 			j = tile_size - 1 - ((x + 1)*(tile_size - 1))/(NFRAMESMOVED);
 			downoffsets[x] = j;
 			p = bp + j*l + 3;
 			/* ...and redraw it in the correct place. */
 			for (i=1; i<tile_size; i++) {
-				*p++ = gridcolor.red >> 8;
-				*p++ = gridcolor.green >> 8;
-				*p++ = gridcolor.blue >> 8;
+				*p++ = r;
+				*p++ = g;
+				*p++ = b;
 			}
 
 			gdk_pixbuf_composite (file_pixbuf, tile, 1, 1, ftile_size,
@@ -503,9 +509,9 @@ static gboolean render_cb (GtkWidget *canvas)
 			p = bp + l;
 			/* Remove the vertical line... */
 			for (i=1; i<tile_size; i++) {
-				*p++ = bgcolor.red >> 8;
-				*p++ = bgcolor.green >> 8;
-				*p   = bgcolor.blue >> 8;
+				*p++ = br;
+				*p++ = bg;
+				*p   = bb;
 				p   += l - 2;
 			}
 			j = ((x + 1)*(tile_size - 1))/(NFRAMESMOVED);
@@ -513,9 +519,9 @@ static gboolean render_cb (GtkWidget *canvas)
 			p = bp + l + 3*j;
 			/* ...and redraw it in the correct place. */
 			for (i=1; i<tile_size; i++) {
-				*p++ = gridcolor.red >> 8;
-				*p++ = gridcolor.green >> 8;
-				*p   = gridcolor.blue >> 8;
+				*p++ = r;
+				*p++ = g;
+				*p   = b;
 				p   += l - 2;
 			}
 

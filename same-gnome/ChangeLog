@@ -1,3 +1,9 @@
+2005-04-22  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* drawing.c (render_cb): Code improvements for the background
+	rendering. Also fade to the background colour rather than black
+	during the destruction animation.
+
 2005-04-21  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* drawing.c: Preliminary support for non black and white
