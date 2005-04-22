@@ -32,10 +32,10 @@ guint idle_id = 0;
 /* A flag for whether we have valid pixmap data. */
 gboolean pixmaps_ready = FALSE;
 
-/* FIXME: How do we initialise these to NULL ? */
 GdkPixmap *pixmaps[MAX_COLOURS][NFRAMES];
 GdkPixmap *blank_pixmap = NULL;
 
+/* These are allocated on an as-needed basis, but never disposed of. */
 GdkGC *gridgc = NULL;
 GdkGC *bggc = NULL;
 GdkGC *cursorgc = NULL;
@@ -43,7 +43,6 @@ GdkGC *cursorgc = NULL;
 /* FIXME: These should not be hard-coded. */
 GdkColor gridcolor =   { 0, 0x5050, 0x5050, 0x5050 };
 GdkColor bgcolor =     { 0, 0x1010, 0x1010, 0x1010 };
-/* FIXME: We neither use nor allocate this yet. */
 GdkColor cursorcolor = { 0, 0xffff, 0xb7b7, 0x4646 };
 
 /* FIXME: Can we make this not global ? (redraw is the problem) */
@@ -96,11 +95,20 @@ static void draw_ball_with_offset (GtkWidget * canvas, game_cell *p, int x,
 											 y*tile_size - dy, tile_size, tile_size);	
 	}
 
+	/* Draw the cursor is needed. */
 	if (draw_cursor && (x == cursor_x) && (y == cursor_y)) {
-		/* FIXME: This needs a better gc (and a colour to match the grid). */
-		gdk_draw_rectangle (canvaswidget->window, canvaswidget->style->white_gc,
-												FALSE, x*tile_size + 1, y*tile_size + 1, 
-												tile_size - 2, tile_size - 2);
+		if (cursorgc == NULL) {
+			cursorgc = gdk_gc_new (canvaswidget->window);
+			gdk_colormap_alloc_color (gdk_colormap_get_system (), 
+																&cursorcolor, TRUE, TRUE);
+			gdk_gc_set_foreground (cursorgc, &cursorcolor);
+			gdk_gc_set_line_attributes (cursorgc, 2, GDK_LINE_SOLID,
+																	GDK_CAP_BUTT, GDK_JOIN_MITER);
+		}
+
+		gdk_draw_rectangle (canvaswidget->window, cursorgc,
+												FALSE, x*tile_size + 2, y*tile_size + 2, 
+												tile_size - 3, tile_size - 3);
 	}
 
 }
@@ -166,14 +174,14 @@ gboolean expose_cb (GtkWidget *canvas, GdkEventExpose *event, gpointer data)
 		/* Fixup the left and bottom lines. */
 		if ((event->area.y + event->area.height + 1) >= board_height*tile_size) {
 			gdk_draw_line (canvas->window, gridgc,
-										 event->area.x, board_height*tile_size - 1, 
+										 event->area.x, board_height*tile_size, 
 										 event->area.x + event->area.width - 2, 
-										 board_height*tile_size - 1);
+										 board_height*tile_size);
 		}
 		if ((event->area.x + event->area.width + 1) >= board_width*tile_size) {
 			gdk_draw_line (canvas->window, gridgc,
-										 board_width*tile_size - 1, event->area.y,
-										 board_width*tile_size - 1, 
+										 board_width*tile_size, event->area.y,
+										 board_width*tile_size, 
 										 event->area.y + event->area.height - 2);
 		}
 

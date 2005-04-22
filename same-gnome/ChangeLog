@@ -3,11 +3,16 @@
 	* drawing.c (render_cb): Code improvements for the background
 	rendering. Also fade to the background colour rather than black
 	during the destruction animation.
+
 	* drawing.c:
 	* ui.h:
 	* ui.c: Remove init_pixmaps and distribute initialisation to
 	be done in a just-in-time fashion.
 
+	* drawing.c: Draw the cursor with a brighter (not necessarily
+	better) colour and make it two pixels wide. Also draw the top and
+	bottom lines in the cirrect place.
+	
 2005-04-21  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* drawing.c: Preliminary support for non black and white
