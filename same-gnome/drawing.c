@@ -587,29 +587,6 @@ void change_theme (gchar *newtheme)
 	}
 }
 
-void resize_graphics (void)
-{
-	int size;
-
-	size = drawing_area_width/board_width;
-
-	if (tile_size != size) {
-
-		tile_size = size;
-
-		start_renderer ();
-	}
-}
-
-gboolean configure_cb (GtkWidget *canvas, GdkEventConfigure *event)
-{
-	canvaswidget = canvas;
-	drawing_area_width = event->width;
-	resize_graphics ();
-
-  return FALSE;
-}
-
 static gboolean animation_timer (void)
 {
 	static float speed = 1.0;
@@ -763,6 +740,47 @@ static gboolean animation_timer (void)
 	return TRUE;
 }
 
+void resize_graphics (void)
+{
+	int size, n, m;
+	static gboolean first_run = TRUE;
+
+	if (first_run) {
+		for (n=0; n<MAX_COLOURS; n++)
+			for (m=0; m<NFRAMES; m++)
+				pixmaps[n][m] = NULL;
+
+		first_run = FALSE;
+	}
+
+	size = drawing_area_width/board_width;
+
+	if (tile_size != size) {
+
+		tile_size = size;
+
+		start_renderer ();
+	}
+}
+
+gboolean configure_cb (GtkWidget *canvas, GdkEventConfigure *event)
+{	
+	static gboolean first_run = TRUE;
+
+	if (first_run) { /* Start the animation timer if necessary. */
+		/* 16 frames/second. */
+		g_timeout_add (62, (GSourceFunc)animation_timer, NULL);
+
+		first_run = FALSE;
+	}
+
+	canvaswidget = canvas;
+	drawing_area_width = event->width;
+	resize_graphics ();
+
+  return FALSE;
+}
+
 void start_spinning (void)
 {
 	int i;
@@ -796,17 +814,4 @@ void stop_spinning (void)
 		p->style = ANI_SPINBACK;
 		list++;
 	}
-}
-
-/* FIXME: Do we need the explicit initialisation function ? */
-void init_pixmaps (void)
-{
-	int n,m;
-
-	/* 16 frames/second. */
-	g_timeout_add (62, (GSourceFunc)animation_timer, NULL);
-
-	for (n=0; n<MAX_COLOURS; n++)
-		for (m=0; m<NFRAMES; m++)
-			pixmaps[n][m] = NULL;
 }

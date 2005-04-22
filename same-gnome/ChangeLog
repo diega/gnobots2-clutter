@@ -3,6 +3,10 @@
 	* drawing.c (render_cb): Code improvements for the background
 	rendering. Also fade to the background colour rather than black
 	during the destruction animation.
+	* drawing.c:
+	* ui.h:
+	* ui.c: Remove init_pixmaps and distribute initialisation to
+	be done in a just-in-time fashion.
 
 2005-04-21  Callum McKenzie  <callum@physics.otago.ac.nz>
 

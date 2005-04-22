@@ -499,9 +499,6 @@ void build_gui (void)
   GtkUIManager *ui_manager;
   GtkActionGroup *action_group;
   
-  /* FIXME: Will need to initialise the pixmap array to zero. */
-  init_pixmaps ();
-  
 	/* FIXME: Can we get a better name for the icon? */
 	gtk_window_set_default_icon_name ("gnome-gsame");
 

@@ -11,8 +11,7 @@
 
 gboolean expose_cb (GtkWidget *canvas, GdkEventExpose *event, gpointer data);
 gboolean configure_cb (GtkWidget *canvas, GdkEventConfigure *event);
-/* FIXME: Can we get away without this ? */
-void init_pixmaps (void);
+
 void redraw (void);
 
 void cursor_draw (gint x, gint y);
