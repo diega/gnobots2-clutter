@@ -25,6 +25,8 @@ gnometris_SOURCES=\
 	blockops.h \
 	field.cpp \
 	field.h \
+	highscores.cpp \
+	highscores.h \
 	tetris.cpp \
 	tetris.h \
 	scoreframe.cpp \

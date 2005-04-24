@@ -27,6 +27,7 @@
 #include "preview.h"
 #include "scoreframe.h"
 #include "sound.h"
+#include "highscores.h"
 
 #include <games-gconf.h>
 #include <games-frame.h>
@@ -293,6 +294,8 @@ Tetris::Tetris(int cmdlLevel):
 	gnome_canvas_item_set (gameoverMessage, "size_points", pts, 0);
 
         gnome_canvas_item_hide (gameoverMessage);
+
+	high_scores = new HighScores ();
 }
 
 Tetris::~Tetris()
@@ -1384,23 +1387,7 @@ Tetris::endOfGame()
 	if (scoreFrame->getScore() > 0) 
 	{
 		int pos = gnome_score_log(scoreFrame->getScore(), 0, TRUE);
-		showScores("Gnometris", pos);
-	}
-}
-
-void
-Tetris::showScores(gchar *title, guint pos)
-{
-	GtkWidget *dialog;
-
-	dialog = gnome_scores_display(title, "gnometris", 0, pos);
-	if (dialog != NULL) {
-		gtk_window_set_transient_for (GTK_WINDOW(dialog), GTK_WINDOW(this->getWidget()));
-		gtk_dialog_set_has_separator (GTK_DIALOG(dialog), FALSE);
-		gtk_container_set_border_width (GTK_CONTAINER(dialog), 5);
-		gtk_box_set_spacing (GTK_BOX (GTK_DIALOG(dialog)->vbox), 2);
-		gtk_window_set_resizable (GTK_WINDOW(dialog), FALSE);
-		gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
+		high_scores->show (pos);
 	}
 }
 
@@ -1476,7 +1463,7 @@ int
 Tetris::gameTopTen(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
-	t->showScores("Gnometris", 0);
+	t->high_scores->show(0);
 
 	return TRUE;
 }

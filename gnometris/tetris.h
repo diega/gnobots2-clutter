@@ -66,10 +66,11 @@ extern int nr_of_colors;
 extern bool random_block_colors;
 extern bool do_preview;
 
-class	Field;
+class Field;
 class Preview;
-class	BlockOps;
+class BlockOps;
 class ScoreFrame;
+class HighScores;
 
 class Tetris
 {
@@ -95,6 +96,7 @@ private:
 	Preview *preview;
 	BlockOps *ops;
 	ScoreFrame *scoreFrame;
+	HighScores *high_scores;
 
 	GConfClient *gconf_client;
 	
@@ -180,7 +182,6 @@ private:
 	GnomeUIInfo *gameSettingsPtr; 
 
 	void manageFallen();
-	void showScores(gchar *title, guint pos);
 
 	bool fastFall;
 	int fastFallPoints;
