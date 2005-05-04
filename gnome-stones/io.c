@@ -333,9 +333,9 @@ gstones_cave_load (GStonesGame *game, const gchar *cavename)
 
   if ((cave->width > CAVE_MAX_WIDTH) || (cave->height > CAVE_MAX_HEIGHT))
     {
-      /* This cave is to big to be played with gnome-stones.  */
+      /* This cave is too big to be played with gnome-stones.  */
 
-      gstone_error (_("The cave you are trying to load it to big for this game."));
+      gstone_error (_("The cave you are trying to load is too big for this game."));
       
       gnome_config_pop_prefix ();
       cave_free (cave);

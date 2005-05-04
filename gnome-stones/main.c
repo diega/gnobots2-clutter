@@ -121,8 +121,8 @@ load_image_from_path (const char *relative_name)
       GtkWidget *widget;
       char *message;
       
-      message = g_strdup_printf (_("An error occured while loading the image file \"%s\".\n"
-                                   "Please make sure, that GNOME Stones is "
+      message = g_strdup_printf (_("An error occurred while loading the image file \"%s\".\n"
+                                   "Please make sure that GNOME Stones is "
 		                   "correctly installed!"), relative_name);
 					    
       widget= gtk_message_dialog_new (GTK_WINDOW(app), 
