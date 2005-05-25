@@ -131,10 +131,9 @@ static GtkWidget *generate_scores_dialog (void)
 
 void game_over_dialog (gint place)
 {
-  static GtkWidget *baddialog;
+  static GtkWidget *baddialog = NULL;
   static GamesScoresDialog *gooddialog;
 	GtkDialog *dialog;
-  GtkWidget *congratulations;
 	gchar *message;
 
 	if (place == 0) { /* Case 1: It was not a top-ten score. */
@@ -149,7 +148,7 @@ void game_over_dialog (gint place)
 			gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (baddialog),
 																								_("Unfortunately your score did not make the top ten."));
 			gtk_dialog_add_buttons (GTK_DIALOG (baddialog), 
-															GTK_STOCK_QUIT, GTK_RESPONSE_CLOSE,
+															GTK_STOCK_QUIT, GTK_RESPONSE_REJECT,
 															_("New Game"), GTK_RESPONSE_ACCEPT,
 															NULL);
 			gtk_dialog_set_default_response (GTK_DIALOG (baddialog), GTK_RESPONSE_ACCEPT);
@@ -165,31 +164,13 @@ void game_over_dialog (gint place)
 			 * once for the scores menu item. */
 			gooddialog = GAMES_SCORES_DIALOG (generate_scores_dialog ());
 			
-			/* This is a bit evil, the dialog doesn't quite suit, so
-			 * we take a machete to it. */
-			gtk_container_foreach (GTK_CONTAINER (GTK_DIALOG (gooddialog)->action_area),
-														 (GtkCallback) (gtk_widget_destroy), NULL);
-			gtk_dialog_add_buttons (GTK_DIALOG (gooddialog), 
-															GTK_STOCK_QUIT, GTK_RESPONSE_CLOSE,
-															_("New Game"), GTK_RESPONSE_ACCEPT,
-															NULL);
-			/* FIXME: This doesn't seem to do the right thing. */
-			gtk_dialog_set_default_response (GTK_DIALOG (gooddialog), 
-																			 GTK_RESPONSE_ACCEPT);
-
+			games_scores_dialog_set_buttons (gooddialog, 
+																			 GAMES_SCORES_QUIT_BUTTON |
+																			 GAMES_SCORES_NEW_GAME_BUTTON); 
 			message = g_strdup_printf ("<b>%s</b>\n\n%s", _("Congratulations!"),
 																 _("Your score has made the top ten."));
-			congratulations = gtk_label_new (message);
+			games_scores_dialog_set_message (gooddialog, message);
 			g_free (message);
-			gtk_label_set_use_markup (GTK_LABEL (congratulations), TRUE);
-			gtk_label_set_justify (GTK_LABEL (congratulations), 
-														 GTK_JUSTIFY_CENTER);
-			gtk_box_pack_start (GTK_BOX (GTK_DIALOG (gooddialog)->vbox),
-													congratulations,
-													FALSE, FALSE, 5);
-			gtk_box_pack_start (GTK_BOX (GTK_DIALOG (gooddialog)->vbox),
-													gtk_hseparator_new (),
-													FALSE, FALSE, 5);
 
 			gtk_widget_show_all (GTK_WIDGET (gooddialog));
 		}
@@ -198,7 +179,7 @@ void game_over_dialog (gint place)
 	}
 
 	switch (gtk_dialog_run (dialog)) {
-	case GTK_RESPONSE_CLOSE:
+	case GTK_RESPONSE_REJECT:
 		quit_cb ();
 		break;
 	case GTK_RESPONSE_ACCEPT:
