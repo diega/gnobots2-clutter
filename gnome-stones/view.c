@@ -406,74 +406,22 @@ view_display_cave (GStonesView *view, GStonesCave *cave)
 }
 
 
-void
-atari_scroll (GStonesView *view, GStonesCave *cave)
-{
-  gint x_rel;
-  gint y_rel;
-  
-  x_rel= cave->player_x-view->x_offset/STONE_SIZE;
-  y_rel= cave->player_y-view->y_offset/STONE_SIZE;
-  
-  view->x_scrolling= view->x_scrolling || (x_rel < 3) || (x_rel > GAME_COLS+1-3) || 
-    (view->x_offset+GAME_COLS*STONE_SIZE > cave->width*STONE_SIZE);
-  view->y_scrolling= view->y_scrolling || (y_rel < 3) || (y_rel > GAME_ROWS+1-3) || 
-    (view->y_offset+GAME_ROWS*STONE_SIZE > cave->height*STONE_SIZE);
-  
-  if (view->x_scrolling)
-    {
-      if (((x_rel < 7) || (view->x_offset+GAME_COLS*STONE_SIZE > cave->width*STONE_SIZE)))
-	{
-	  view->x_offset-=SCROLL_SPEED;
-	  if( view->x_offset<0 ) view->x_offset=0;
-	}
-      else if ((x_rel > GAME_COLS+1-7))
-	{
-	  view->x_offset+=SCROLL_SPEED;
-
-	  if( view->x_offset>(cave->width-GAME_COLS)*STONE_SIZE ) 
-	    view->x_offset=(cave->width-GAME_COLS)*STONE_SIZE;
-	}
-      else
-	view->x_scrolling= FALSE;
-    }
-
-  if (view->y_scrolling)
-    {      
-      if (((y_rel < 5) || (view->y_offset+GAME_ROWS*STONE_SIZE > cave->height*STONE_SIZE)))
-	{
-	  view->y_offset-=SCROLL_SPEED;
-	  if( view->y_offset<0 ) view->y_offset=0;
-	}
-      else if ((y_rel > GAME_ROWS+1-5))
-	{
-	  view->y_offset+=SCROLL_SPEED;
-
-	  if( view->y_offset>(cave->height-GAME_ROWS)*STONE_SIZE ) 
-	    view->y_offset=(cave->height-GAME_ROWS)*STONE_SIZE;
-
-	}
-      else
-	view->y_scrolling= FALSE;
-    }
-}
-
-
-#define MAX_SCROLL_SPEED 0.6
-
-#ifndef abs
-#define abs(i) ((i)>0?(i):-(i))
-#endif
+/* This generally means that we scroll past a maximum of 12
+   blocks per second in either direction. This is typically 
+   only an issue when restarting a large level. */
+#define MAX_SCROLL_SPEED 0.75
 
 void
-smooth_scroll (GStonesView *view, GStonesCave *cave)
+view_calculate_offset (GStonesView *view, GStonesCave *cave)
 {
   gint x_rel;
   gint y_rel;
   gint x_mov;
   gint y_mov;
-  gint x_mid=GAME_COLS*STONE_SIZE/2;
-  gint y_mid=GAME_ROWS*STONE_SIZE/2;
+  gint x_mid = GAME_COLS * STONE_SIZE / 2;
+  gint y_mid = GAME_ROWS * STONE_SIZE / 2;
+  gint x_max = MAX_SCROLL_SPEED * STONE_SIZE;
+  gint y_max = x_max;
 
   x_rel= (STONE_SIZE*cave->player_x-view->x_offset)-STONE_SIZE/2;
   x_mov= (x_rel-x_mid)*2/GAME_COLS;
@@ -484,20 +432,17 @@ smooth_scroll (GStonesView *view, GStonesCave *cave)
   y_mov+=(y_rel>y_mid)?1:-1;
 
   
-  view->x_scrolling= view->x_scrolling || abs(x_rel-x_mid) > 1;
-  view->y_scrolling= view->y_scrolling || abs(y_rel-y_mid) > 1;
+  view->x_scrolling= view->x_scrolling || ABS(x_rel-x_mid) > 1;
+  view->y_scrolling= view->y_scrolling || ABS(y_rel-y_mid) > 1;
   
 
   if (view->x_scrolling)
     {
 
-      if (x_mov<-MAX_SCROLL_SPEED*STONE_SIZE) 
-        x_mov=-MAX_SCROLL_SPEED*STONE_SIZE;
-      if (x_mov>MAX_SCROLL_SPEED*STONE_SIZE) 
-        x_mov=MAX_SCROLL_SPEED*STONE_SIZE;
- 
+      x_mov = CLAMP (x_mov, -x_max, x_max);
+
       view->x_offset+=x_mov;
-      if (abs(x_rel-x_mid)<2) view->x_scrolling=FALSE;
+      if (ABS(x_rel-x_mid)<2) view->x_scrolling=FALSE;
 
       
       if( x_mov>0 && view->x_offset>(cave->width-GAME_COLS)*STONE_SIZE ) 
@@ -509,13 +454,10 @@ smooth_scroll (GStonesView *view, GStonesCave *cave)
 
   if (view->y_scrolling)
     {
-      if (y_mov<-MAX_SCROLL_SPEED*STONE_SIZE) 
-        y_mov=-MAX_SCROLL_SPEED*STONE_SIZE;
-      if (y_mov>MAX_SCROLL_SPEED*STONE_SIZE) 
-        y_mov=MAX_SCROLL_SPEED*STONE_SIZE;
- 
+     y_mov = CLAMP (y_mov, -y_max, y_max);
+
       view->y_offset+=y_mov;
-      if (abs(y_rel-y_mid)<2) view->y_scrolling=FALSE;
+      if (ABS(y_rel-y_mid)<2) view->y_scrolling=FALSE;
 
       if( y_mov>0 && view->y_offset>(cave->height-GAME_ROWS)*STONE_SIZE ) 
 	view->y_offset=(cave->height-GAME_ROWS)*STONE_SIZE;
@@ -523,34 +465,4 @@ smooth_scroll (GStonesView *view, GStonesCave *cave)
       if( view->y_offset<0 ) view->y_offset=0;
     }
 
-}
-
-
-void
-center_scroll (GStonesView *view, GStonesCave *cave)
-{
-  view->x_offset= 
-     STONE_SIZE*cave->player_x-STONE_SIZE/2-GAME_COLS*STONE_SIZE/2;
-
-  view->y_offset= 
-     STONE_SIZE*cave->player_y-STONE_SIZE/2-GAME_ROWS*STONE_SIZE/2;
-
-
-  if( view->x_offset>(cave->width-GAME_COLS)*STONE_SIZE ) 
-    view->x_offset=(cave->width-GAME_COLS)*STONE_SIZE;
-
-  if( view->x_offset<0 ) view->x_offset=0;
-      
-
-  if( view->y_offset>(cave->height-GAME_ROWS)*STONE_SIZE ) 
-    view->y_offset=(cave->height-GAME_ROWS)*STONE_SIZE;
-
-  if( view->y_offset<0 ) view->y_offset=0;
-}
-
-
-void
-view_calculate_offset (GStonesView *view, GStonesCave *cave)
-{
-  view_scroll_method (view, cave); 
 }

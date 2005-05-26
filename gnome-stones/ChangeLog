@@ -1,3 +1,11 @@
+2005-05-26  Richard Hoelscher  <rah@rahga.com>
+
+	* view.[ch] (view_calculate_offset): Renamed from smooth_scroll(), while
+	atari_scroll and always center options have been removed.
+	* preverences.[ch]: The page with scroll options has been removed,
+	as have the functions to set the scroll method.
+	* gnome-stones.schemas.in: Remove scroll method.
+
 2005-05-25  Richard Hoelscher  <rah@rahga.com>
 
 	* main.c (countdown_timeout_function, iteration_start): Draw twice per

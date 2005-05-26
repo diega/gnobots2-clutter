@@ -2,18 +2,6 @@
 
   <schemalist>
       <schema>
-      <key>/schemas/apps/gnome-stones/preferences/scroll_method</key>
-      <applyto>/apps/gnome-stones/preferences/scroll_method</applyto>
-      <owner>gnome-stones</owner>
-      <type>string</type>
-      <default>atari_scroll</default>
-      <locale name="C">
-        <short>Scroll method</short>
-        <long>The scroll method, valid values are "atari_scroll", "smooth_scroll" and "center_scroll".</long>
-      </locale>
-      </schema>
-
-      <schema>
       <key>/schemas/apps/gnome-stones/preferences/game_name</key>
       <applyto>/apps/gnome-stones/preferences/game_name</applyto>
       <owner>gnome-stones</owner>

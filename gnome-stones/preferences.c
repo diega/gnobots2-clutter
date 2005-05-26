@@ -37,7 +37,6 @@
 
 #include "sound.h"
 
-#define KEY_SCROLL_METHOD "/apps/gnome-stones/preferences/scroll_method"
 #define KEY_GAME_NAME "/apps/gnome-stones/preferences/game_name"
 #define KEY_START_CAVE "/apps/gnome-stones/preferences/start_cave"
 #define KEY_JOYSTICK_DEVICE "/apps/gnome-stones/preferences/joystick_device"
@@ -91,11 +90,6 @@ guint start_cave= 0;
   guint32 joystick_deviceid = 0;
 #endif
 gfloat   joystick_switch_level= 0.5;
-
-
-/* This is default scroll method for view function */
-
-void (*view_scroll_method) (GStonesView *view, GStonesCave *cave)= atari_scroll;
 
 
 /* The game can be in different states.  These state decides, how to
@@ -240,51 +234,9 @@ load_game_by_name (const char *filename, guint cave)
   return FALSE;
 }
 
-
-
-/*****************************************************************************/
-/* string<-->scroll_method conversion  */
-
-
-static gchar *
-scroll_method_name (void)
-{
-  if (view_scroll_method==atari_scroll)
-    return "atari_scroll";
-  if (view_scroll_method==smooth_scroll)
-    return "smooth_scroll";
-  if (view_scroll_method==center_scroll)
-    return "center_scroll";
- 
-  return "default";
-
-}
-
-static void
-set_scroll_method (gchar *name)
-{
-
-  if (!strcmp (name,"atari_scroll"))
-    view_scroll_method = atari_scroll;
-  if (!strcmp (name,"smooth_scroll"))
-    view_scroll_method = smooth_scroll;
-  if (!strcmp (name,"center_scroll"))
-    view_scroll_method = center_scroll;
-
-}
-
-
-
 
 /*****************************************************************************/
 /* Save preferences.  */
-
-void
-gconf_set_scroll_method (gchar *value)
-{
-  gconf_client_set_string (get_gconf_client (), KEY_SCROLL_METHOD,
-                           value, NULL);
-}
 
 void
 gconf_set_game_name (gchar *value)
@@ -345,8 +297,6 @@ preferences_save (gboolean global)
   gconf_set_joystick_switch_level (joystick_switch_level);
 #endif  
 
-  gconf_set_scroll_method (scroll_method_name ());
-
   if (game)
     {
       gconf_set_game_name (game->filename);
@@ -396,7 +346,6 @@ preferences_restore (void)
   char        *filename;
   gboolean     def;
   guint        cave;
-  gchar       *scroll_method;
   GtkWidget * dialog;
   
 #if 0
@@ -433,13 +382,6 @@ preferences_restore (void)
     joystick_switch_level = 0.5;
   
   set_sound_enabled (pref_get_sound_enabled ());
-
-  scroll_method = gconf_client_get_string (get_gconf_client (),
-                                           KEY_SCROLL_METHOD, NULL);
-  if (scroll_method == NULL)
-    scroll_method = g_strdup ("atari_scroll");
-  set_scroll_method (scroll_method);
-  g_free (scroll_method);
 
   filename = gconf_client_get_string (get_gconf_client (),
                                       KEY_GAME_NAME, NULL);
@@ -495,10 +437,7 @@ struct _PreferencesData
 
 
   /* Page three */
-
-  /* Page four */
-  gchar            *scroll_method_name;
-
+  /* FIXME: Sounds temporarily disabled.*/
 };
 
 
@@ -578,17 +517,6 @@ preferences_set_joystick_switch_level (GtkAdjustment *adjust, gpointer data)
 }
 
 
-
-/* The scroll method callbacks.  */
-
-static void
-preferences_set_scroll_method (GtkWidget *widget, gpointer data)
-{
-  gchar * names[3] = { "atari_scroll", "smooth_scroll", "center_scroll" };
-  
-  set_scroll_method (names[gtk_combo_box_get_active (GTK_COMBO_BOX (widget))]);
-  gconf_set_scroll_method (scroll_method_name ());
-}
 
 #if 0
 static void
@@ -884,64 +812,6 @@ preferences_dialog_new (void)
 			    box, label);
 
 #endif  
-
-  /* Fourth page is miscellaneous stuff */
-  
-  box= gtk_vbox_new (FALSE, 18);
-  gtk_container_set_border_width (GTK_CONTAINER (box), 12);
-  
-
-  
-  {
-    GtkWidget *frame;
-    GtkWidget *hbox;
-    GtkWidget *vbox;
-    GtkWidget *optionmenu;
-
-
-    frame= games_frame_new (_("Scroll Method"));
-    gtk_box_pack_start (GTK_BOX (box), frame, FALSE, FALSE, 0);
-
-    vbox= gtk_vbox_new (FALSE, 6);
-    gtk_container_add (GTK_CONTAINER (frame), vbox);
-
-    hbox= gtk_hbox_new (FALSE, 12);
-    gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
-
-    /*
-    label= gtk_label_new (_("Scroll method:"));
-    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, GNOME_PAD_SMALL);
-    */
-
-    optionmenu= gtk_combo_box_new_text ();
-    
-
-    prdata->scroll_method_name = scroll_method_name();
-
-    gtk_combo_box_append_text (GTK_COMBO_BOX (optionmenu),
-                               _("Atari like scrolling"));
-    if (!strcmp(prdata->scroll_method_name,"atari_scroll"))
-      gtk_combo_box_set_active (GTK_COMBO_BOX (optionmenu), 0);
-    gtk_combo_box_append_text (GTK_COMBO_BOX (optionmenu),
-                               _("Smooth scrolling"));
-    if (!strcmp(prdata->scroll_method_name,"smooth_scroll"))
-      gtk_combo_box_set_active (GTK_COMBO_BOX (optionmenu), 1);
-    gtk_combo_box_append_text (GTK_COMBO_BOX (optionmenu),
-                               _("Always in the center"));
-    if (!strcmp(prdata->scroll_method_name,"center_scroll"))
-      gtk_combo_box_set_active (GTK_COMBO_BOX (optionmenu), 2);
-    
-    
-    g_signal_connect (GTK_OBJECT (optionmenu), "changed",
-			(GtkSignalFunc) preferences_set_scroll_method,
-			NULL);
-   
-    gtk_box_pack_start (GTK_BOX (hbox), optionmenu, TRUE, TRUE, 0);
-  }
-
-  label = gtk_label_new (_("Misc."));
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
-			    box, label);
 
   gtk_widget_show_all (notebook);
 

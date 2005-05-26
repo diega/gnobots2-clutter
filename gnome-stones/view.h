@@ -107,12 +107,5 @@ void       view_display_image    (GStonesView *view, GdkPixmap *image);
 void       view_display_cave     (GStonesView *view, GStonesCave *cave);
 void       view_calculate_offset (GStonesView *view, GStonesCave *cave);
 
-
-
-void       center_scroll (GStonesView *view, GStonesCave *cave);
-void       atari_scroll (GStonesView *view, GStonesCave *cave);
-void       smooth_scroll (GStonesView *view, GStonesCave *cave);
-
-
 #endif
 
