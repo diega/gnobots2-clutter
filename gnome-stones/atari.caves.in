@@ -2,7 +2,7 @@
 _Title=Original Atari caves
 Object size=1
 Plugins=default:gnome-stones
-Frame rate=0.13
+Frame rate=0.125
 
 [Objects]
 X=default:frame

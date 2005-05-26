@@ -53,11 +53,7 @@ view_class_init (GStonesViewClass *class)
  
   widget_class= (GtkWidgetClass *) class;
 
-
-
-#ifndef USE_GNOME_CANVAS
   widget_class->expose_event= view_expose;
-#endif
 }
 
 
@@ -125,11 +121,7 @@ GtkWidget *
 view_new (GdkPixbuf *curtain_image)
 {
   GStonesView    *view;
-#ifdef USE_GNOME_CANVAS
-  GnomeCanvas    *canvas;
-#else
   GtkDrawingArea *drawing_area;
-#endif
   GtkWidget      *widget;
   GtkObject      *object;
 
@@ -141,15 +133,9 @@ view_new (GdkPixbuf *curtain_image)
   
   gtk_widget_pop_colormap ();
 
-#ifdef USE_GNOME_CANVAS
-  canvas      = GNOME_CANVAS (view);
-#else
   drawing_area= GTK_DRAWING_AREA (view);
-#endif
   widget      = GTK_WIDGET (view);
   object      = GTK_OBJECT (view);
-
-#ifndef USE_GNOME_CANVAS
 
   gtk_widget_set_events (widget, gtk_widget_get_events (widget) | GAME_EVENTS);
   
@@ -158,34 +144,6 @@ view_new (GdkPixbuf *curtain_image)
                                GAME_ROWS * STONE_SIZE);
 
   gtk_widget_show (widget);
-
-#else
-
-  gtk_widget_push_colormap (gdk_rgb_get_colormap ());
-
-  view->canvas= gtk_drawing_area_new ();
-  canvas= gnome_canvas_new ();
-
-  gtk_widget_pop_colormap ();
-  
-  gtk_widget_set_events (view->canvas, gtk_widget_get_events (view->canvas) | GAME_EVENTS);
-
-  gtk_drawing_area_size (GTK_DRAWING_AREA (view->canvas),
-			 GAME_COLS * STONE_SIZE,
-			 GAME_ROWS * STONE_SIZE);
-
-  /* Now for some experimantal gnome canvas stuff.  */
-  gtk_widget_set_usize (canvas, GAME_COLS*STONE_SIZE, GAME_ROWS*STONE_SIZE);
-  gnome_canvas_set_scroll_region (GNOME_CANVAS (canvas),
-				  0, 0,
-				  GAME_COLS*STONE_SIZE,
-				  GAME_ROWS*STONE_SIZE);
-
-  gtk_widget_show (canvas);
-
-  gtk_widget_show (view->canvas);
-#endif
-
 
   view->view_buffer = NULL;
 
@@ -264,7 +222,7 @@ view_expose (GtkWidget *widget, GdkEventExpose *event)
 	      {
 	      image = 
 		object_get_image (cave->animated_curtain, 
-                      /*curtain_frames-1-*/(view->curtain)%curtain_frames);
+				  (view->curtain) % curtain_frames);
 	      }
 	    else
 	      image= view->curtain_image;
@@ -325,7 +283,7 @@ static gint
 view_curtain_timeout (gpointer data)
 {
   GStonesView     *view= (GStonesView *) data;
-
+  
   if (view->curtain_display_mode == CURTAIN_DISPLAY_CLOSING)
     {
       if (view->curtain > 0)
@@ -501,14 +459,7 @@ atari_scroll (GStonesView *view, GStonesCave *cave)
 }
 
 
-
-
-
-
-
-
-
-#define MAX_SCROLL_SPEED 0.9
+#define MAX_SCROLL_SPEED 0.6
 
 #ifndef abs
 #define abs(i) ((i)>0?(i):-(i))
@@ -570,10 +521,7 @@ smooth_scroll (GStonesView *view, GStonesCave *cave)
 	view->y_offset=(cave->height-GAME_ROWS)*STONE_SIZE;
 
       if( view->y_offset<0 ) view->y_offset=0;
-      
     }
-
-
 
 }
 
@@ -581,13 +529,11 @@ smooth_scroll (GStonesView *view, GStonesCave *cave)
 void
 center_scroll (GStonesView *view, GStonesCave *cave)
 {
-
   view->x_offset= 
      STONE_SIZE*cave->player_x-STONE_SIZE/2-GAME_COLS*STONE_SIZE/2;
 
   view->y_offset= 
      STONE_SIZE*cave->player_y-STONE_SIZE/2-GAME_ROWS*STONE_SIZE/2;
-
 
 
   if( view->x_offset>(cave->width-GAME_COLS)*STONE_SIZE ) 
@@ -596,18 +542,11 @@ center_scroll (GStonesView *view, GStonesCave *cave)
   if( view->x_offset<0 ) view->x_offset=0;
       
 
-
-
   if( view->y_offset>(cave->height-GAME_ROWS)*STONE_SIZE ) 
     view->y_offset=(cave->height-GAME_ROWS)*STONE_SIZE;
 
   if( view->y_offset<0 ) view->y_offset=0;
-      
-
-
 }
-
-
 
 
 void

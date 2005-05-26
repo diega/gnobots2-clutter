@@ -180,7 +180,7 @@ gstones_game_load (const gchar *name)
     gnome_config_pop_prefix ();
     return NULL;
   }
-  game->frame_rate    = gnome_config_get_float ("General/Frame rate=0.2")*1000;
+  game->frame_rate    = gnome_config_get_float ("General/Frame rate=0.125")*1000;
   game->new_life_score= gnome_config_get_int    ("General/New life score=500");
   game->lives         = gnome_config_get_int    ("General/Lives=3");
   

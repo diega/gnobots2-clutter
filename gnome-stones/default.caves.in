@@ -2,6 +2,7 @@
 _Title=Default caves
 Object size=1
 Plugins=default:gnome-stones
+Frame rate=0.125
 
 [Objects]
 X=default:frame

@@ -218,62 +218,6 @@ title_image_load (void)
 
 /* Game widget handling.  */
 
-#ifdef USE_GNOME_CANVAS
-static GnomeCanvasItem *game_items[GAME_COLS][GAME_ROWS];
-static GdkPixbuf   *game_current_images[GAME_COLS][GAME_ROWS];
-
-
-static void
-game_update_image (GtkWidget *widget)
-{
-  GdkPixbuf *image;
-  int x1, y1, x2, y2, x, y;
-
-  x1 = x_offset;
-  y1 = y_offset;
-  x2 = GAME_COLS+x_offset-1;
-  y2 = GAME_ROWS+y_offset-1;
-  
-  for (x = x1; x <= x2; x++)
-    for (y = y1; y <= y2; y++)
-      {
-	
-	gboolean cave_mode;
-	
-	if ((curtain_mode == GAME_CURTAIN_CLOSING && 
-	     (x+y > curtain+x_offset+y_offset)) ||
-	    (curtain_mode == GAME_CURTAIN_OPENING && 
-	     (x+y < curtain+x_offset+y_offset)))
-	  {
-	    cave_mode= TRUE;
-	    image= curtain_pixbuf_image;
-	  }
-	else if (display_mode == GAME_DISPLAY_IMAGE)
-	  {
-	    cave_mode= FALSE;
-	  }
-	else
-	  {
-	    cave_mode= TRUE;
-
-	    image= cave_get_pixbuf_image (cave, x+1, y+1);
-	  }
-	
-	if (image != game_current_images[x-x_offset][y-y_offset])
-	  {
-	    gnome_canvas_item_set (game_items[x-x_offset][y-y_offset],
-				   "image", image,
-				   NULL);
-	    game_current_images[x-x_offset][y-y_offset]= image;
-	  }
-      }
-
-  gnome_canvas_update_now (GNOME_CANVAS (widget));
-}
-#endif
-
-
-
 static void
 game_update_title (void)
 {
@@ -301,11 +245,7 @@ game_update_title (void)
       
       pango_layout_get_pixel_size (layout, &width, &height);
 
-#ifdef USE_ORIG_TITLE_SCREEN
       gc = gstones_view->style->black_gc;
-#else
-      gc = gstones_view->style->black_gc;
-#endif
 
       gdk_draw_layout (title_image, gc,
                        50, 
@@ -356,7 +296,7 @@ game_widget_key_press_callback (GtkWidget   *widget,
 				gpointer     client_data)
 {
   player_push= event->state & GDK_SHIFT_MASK;
-  
+
   switch (event->keyval)
     {
     case GDK_KP_8:
@@ -460,45 +400,9 @@ game_widget_key_release_callback (GtkWidget   *widget,
       last_keyval       =  GDK_VoidSymbol;
       return TRUE;
     }
-
   return FALSE;
 }
 
-
-#ifdef USE_GNOME_CANVAS
-/* We need this variable to be global, because we can only fill this
-   canvas after loading the needed images.  */
-GtkWidget *canvas;
-
-/* This function need 'canvas' and 'curtain_pixbuf_image' to have well
-   defined values.  */
-
-static gboolean
-game_widget_fill (void)
-{
-  guint x;
-  guint y;
-  
-  for (x= 0; x < GAME_COLS ; x+= 1)
-    for (y= 0; y < GAME_COLS ;  y+= 1)
-      {
-	game_items[x][y]=
-	  gnome_canvas_item_new (GNOME_CANVAS_GROUP (gnome_canvas_root 
-						     (GNOME_CANVAS 
-						      (canvas))),
-				 gnome_canvas_pixbuf_get_type (),
-				 "pixbuf", curtain_pixbuf_image,
-				 "x", (double) x*STONE_SIZE,
-				 "y", (double) y*STONE_SIZE,
-				 "width", (double) , gdk_pixbuf_get_width (curtain_pixbuf_image),
-				 "height", (double) gdk_pixbuf_get_height (curtain_pixbuf_image),
-				 NULL);
-	
-      }
-  
-  return TRUE;
-}
-#endif /* USE_GNOME_CANVAS */
 
 /****************************************************************************/
 /* High score enabling/disabling */
@@ -531,7 +435,7 @@ update_score_state (void)
 
 static guint iteration_timeout= 0;
 static guint countdown_timeout= 0;
-
+static guint delay_timeout = 0;
 /****************************************************************************/
 
 GStonesCave *curtain_cave;
@@ -555,7 +459,9 @@ curtain_ready (ViewCurtainMode mode)
 	     CURTAIN_DISPLAY_NONE;
 
 	  state= STATE_WAITING_TO_START;
-	  g_timeout_add (START_DELAY, start_cave_delay_timeout, curtain_cave);
+	  delay_timeout = g_timeout_add (START_DELAY, 
+					 start_cave_delay_timeout, 
+					 curtain_cave);
 	}
       else
 	{
@@ -637,6 +543,7 @@ start_cave_delay_timeout (gpointer data)
       state= STATE_RUNNING;
     }
 
+  delay_timeout = 0;
   return FALSE;
 }
 
@@ -830,9 +737,22 @@ iteration_timeout_function (gpointer data)
 {
   GStonesCave *cave  = (GStonesCave *)data;
   gint         retval= TRUE;
+  static gboolean gameplay_iteration = TRUE;
 
   if (state == STATE_TITLE)
     return TRUE;
+
+  /* This gives us one game iteration for every 2 drawing iterations. */
+  if (!gameplay_iteration) {
+    view_calculate_offset (GSTONES_VIEW (gstones_view), cave);
+    gtk_widget_queue_draw_area (gstones_view, 0, 0,
+                                GAME_COLS * STONE_SIZE,
+                                GAME_ROWS * STONE_SIZE);
+    gameplay_iteration = TRUE;
+    return retval;
+  }
+ 
+  gameplay_iteration = FALSE;
 
   joystick_get_information (&player_x_direction, &player_y_direction);
   
@@ -885,14 +805,9 @@ iteration_timeout_function (gpointer data)
 
   /* Manage scrolling.  */
   view_calculate_offset (GSTONES_VIEW (gstones_view), cave);
-
-#ifdef USE_GNOME_CANVAS  
-  game_update_image (gstones_view);
-#else
   gtk_widget_queue_draw_area (gstones_view, 0, 0,
                               GAME_COLS * STONE_SIZE,
                               GAME_ROWS * STONE_SIZE);
-#endif
   flags= cave->flags;
 
   return retval;
@@ -909,8 +824,10 @@ iteration_start (GStonesCave *newcave)
   cave_set_player (cave, player);
   status_set_cave (cave->name);
   
+  /* We set the timeout to half of the frame rate so we will have
+   * 2 graphical cycle for every game cycle. */
   iteration_timeout= 
-    g_timeout_add (game->frame_rate, iteration_timeout_function, cave);
+    g_timeout_add (game->frame_rate / 2, iteration_timeout_function, cave);
 }
 
 
@@ -1067,6 +984,12 @@ preferences_cb (GtkWidget *widget, gpointer data)
 void
 quit_cb (GtkWidget *widget, gpointer data)
 {
+  if (iteration_timeout) g_source_remove (iteration_timeout);
+  if (countdown_timeout) g_source_remove (countdown_timeout);
+  if (delay_timeout) g_source_remove (delay_timeout);
+  if (GSTONES_VIEW(gstones_view)->curtain_timeout) 
+    g_source_remove (GSTONES_VIEW(gstones_view)->curtain_timeout);
+
   preferences_save_global ();
   sound_close();
 
@@ -1223,12 +1146,6 @@ StartupSequence startup_sequence[]=
     scan_public_plugin_directory,
     N_("Scanning public object directory...")
   },
-#ifdef USE_GNOME_CANVAS
-  {
-    game_widget_fill,
-    N_("Filling game widget...")
-  },
-#endif /* USE_GNOME_CANVAS */
   {
     scan_private_game_directory,
     N_("Scanning private game directory...")

@@ -25,19 +25,13 @@
 #include <gnome.h>
 #include <gconf/gconf-client.h>
 
-/* You should leave 'USE_GNOME_CANVAS' undefined, because this game
-   currently doesn't support all features with gnome_canvas stuff
-   enabled.  */
-#undef USE_GNOME_CANVAS
-
 #undef USE_KEY_RELEASE
 
 #define APP_NAME "gnome-stones"
 
 /* Definitions */
 
-#define START_DELAY 3000
-#define END_DELAY 3000
+#define START_DELAY 1000
 #define CURTAIN_DELAY 20
 #define COUNTDOWN_DELAY 20
 
