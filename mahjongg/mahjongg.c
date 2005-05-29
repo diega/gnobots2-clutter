@@ -90,7 +90,6 @@ gint paused=0;
 
 /* for the preferences */
 GConfClient *conf_client;
-gboolean popup_warn = FALSE;
 GtkWidget *warn_cb = NULL, *confirm_cb = NULL;
 GtkWidget *colour_well = NULL;
 GtkWidget *pref_dialog = NULL;
@@ -107,7 +106,6 @@ enum {
 
 static void clear_undo_queue (void);
 void you_won (void);
-void no_match (void);
 void check_free (void);
 void undo_tile_callback (void);
 void properties_callback (void);
@@ -231,36 +229,6 @@ tileset_changed_cb (GConfClient *client,
 		} else {
 			g_free (tile_tmp);
 		}
-	}
-}
-
-static void
-popup_warn_callback (GtkWidget *widget, gpointer data)
-{
-	popup_warn = gtk_toggle_button_get_active
-		(GTK_TOGGLE_BUTTON (widget));
-
-	gconf_client_set_bool (conf_client,
-			"/apps/mahjongg/warn", popup_warn, NULL);
-}
-
-static void
-popup_warn_changed_cb (GConfClient *client,
-		guint cnxn_id,
-		GConfEntry *entry,
-		gpointer user_data)
-{
-	gboolean popup_warn_tmp;
-
-	popup_warn_tmp = gconf_client_get_bool (conf_client,
-			"/apps/mahjongg/warn", NULL);
-	if (popup_warn_tmp != popup_warn)
-	{
-		popup_warn = popup_warn_tmp;
-		if (warn_cb != NULL)
-			gtk_toggle_button_set_active
-				(GTK_TOGGLE_BUTTON (warn_cb),
-				popup_warn);
 	}
 }
 
@@ -408,10 +376,6 @@ init_config (void)
 			mapset_changed_cb,
 			NULL, NULL, NULL);
 	gconf_client_notify_add (conf_client,
-			"/apps/mahjongg/warn",
-			popup_warn_changed_cb,
-			NULL, NULL, NULL);
-	gconf_client_notify_add (conf_client,
 			"/apps/mahjongg/tileset",
 			tileset_changed_cb,
 			NULL, NULL, NULL);
@@ -525,9 +489,8 @@ tile_event (gint tileno, gint button)
 			remove_pair (selected_tile, tileno);
 			return;
 		}
-		no_match ();
-	break;
-	
+		/* Note the fallthrough, if the tiles don't match,
+		 * we just select the new tile. */
 	case 3:
 		if (selected_tile < MAX_TILES) 
 			unselect_tile (selected_tile);
@@ -603,24 +566,6 @@ fill_map_menu (GtkWidget *menu)
 			gtk_combo_box_set_active (GTK_COMBO_BOX (menu), itemno); 
 		itemno++ ;
 	}
-}
-
-void
-no_match (void)
-{
-	if (popup_warn == TRUE) {
-		GtkWidget *mb;
-
-		mb = gtk_message_dialog_new (GTK_WINDOW (window),
-				GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT,
-				GTK_MESSAGE_INFO,
-				GTK_BUTTONS_OK,
-				_("These tiles don't match."));
-		gtk_dialog_run (GTK_DIALOG (mb));
-		gtk_widget_destroy (mb);
-        } else
-		gnome_app_flash (GNOME_APP (window),
-				_("These tiles don't match."));
 }
 
 void
@@ -809,19 +754,6 @@ properties_callback (void)
 	gtk_label_set_mnemonic_widget (GTK_LABEL (label), widget);
 
 	gtk_container_add (GTK_CONTAINER (frame), table);
-
-
-	frame = games_frame_new (_("Warnings"));
-	gtk_table_attach_defaults (GTK_TABLE (top_table), frame, 0, 1, 3, 4);
-
-	table = gtk_vbox_new (FALSE, 6);
-
-	widget = gtk_check_button_new_with_mnemonic (_("_Warn when tiles don't match"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), popup_warn);
-	g_signal_connect (G_OBJECT(widget), "clicked", G_CALLBACK (popup_warn_callback), NULL);
-	gtk_box_pack_start_defaults (GTK_BOX (table), widget);
-	
-	gtk_container_add(GTK_CONTAINER (frame), table);
 
 	gtk_box_pack_start_defaults (GTK_BOX (GTK_DIALOG (pref_dialog)->vbox), top_table);
 
@@ -1216,9 +1148,6 @@ load_preferences (void)
 	selected_tileset = g_strdup (buf);
 	g_free (buf);	
 	
-	popup_warn = gconf_client_get_bool (conf_client,
-					    "/apps/mahjongg/warn", NULL);
-
 	windowwidth = gconf_client_get_int (conf_client,
 					    "/apps/mahjongg/width", NULL);
 	if (windowwidth <= 0)

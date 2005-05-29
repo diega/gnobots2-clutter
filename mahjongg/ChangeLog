@@ -1,3 +1,11 @@
+2005-05-28  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.schemas.in: 
+	* mahjongg.c: When an invalid tile is clicked, instead of
+	complaining, just select the new tile instead. This means that the
+	popup warning options and all the associated code can disappear,
+	not to mention the warning dialog itself.
+
 2005-04-05  Richard Hoelscher  <rah@rahga.com>
 
 	* mahjongg.c: Make menu items for "Toolbar" and "Preferences"
