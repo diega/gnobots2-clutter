@@ -49,7 +49,7 @@ tilepos *pos = 0;
 
 tile tiles[MAX_TILES];
 
-GtkWidget *window, *appbar;
+GtkWidget *window, *statusbar;
 GtkWidget *tiles_label;
 GtkWidget *toolbar;
 
@@ -170,7 +170,8 @@ window_state_callback (GtkWidget *widget, GdkEventWindowState *event)
 
 /* At the end of the game, hint, shuffle and pause all become unavailable. */
 /* Undo and Redo are handled elsewhere. */
-static void update_menu_sensitivities (void)
+static void 
+update_menu_sensitivities (void)
 {
 	gtk_action_set_sensitive (pause_action, game_over != GAME_WON);
 	gtk_action_set_sensitive (restart_action, undo_state);
@@ -188,7 +189,8 @@ static void update_menu_sensitivities (void)
 }
 
 /* Undo and redo sensitivity functionality. */
-static void set_undoredo_state (gboolean undo, gboolean redo)
+static void 
+set_undoredo_state (gboolean undo, gboolean redo)
 {
 	undo_state = undo;
 	redo_state = redo;
@@ -384,8 +386,23 @@ init_config (void)
 static void
 message (gchar *message)
 {
-	gnome_appbar_pop (GNOME_APPBAR (appbar));
-	gnome_appbar_push (GNOME_APPBAR (appbar), message);
+	gtk_statusbar_pop (GTK_STATUSBAR (statusbar), 0);
+	gtk_statusbar_push (GTK_STATUSBAR (statusbar), 0, message);
+}
+
+static gboolean
+message_flash_remove (guint flashid) {
+        gtk_statusbar_remove (GTK_STATUSBAR (statusbar), 1, flashid);
+	return FALSE;
+}
+
+static void
+message_flash (gchar *message)
+{
+	guint flashid;
+
+	flashid = gtk_statusbar_push (GTK_STATUSBAR (statusbar), 1, message);
+	g_timeout_add (5000, (GSourceFunc)message_flash_remove, GUINT_TO_POINTER(flashid));
 }
 
 static void 
@@ -1306,6 +1323,51 @@ const char *ui_description =
 "  </toolbar>"
 "</ui>";
 
+
+static void
+set_statusbar_tooltip (GtkWidget *widget, gchar *tooltip)
+{
+	gtk_statusbar_push (GTK_STATUSBAR (statusbar), 0,
+			    tooltip ? _(tooltip): "");
+}
+
+
+static void
+unset_statusbar_tooltip (GtkWidget *widget)
+{
+       gtk_statusbar_pop (GTK_STATUSBAR (statusbar), 0);
+}
+
+
+static void
+connect_proxy (GtkUIManager *merge,
+               GtkAction    *action,
+               GtkWidget    *proxy,
+		gpointer user_data)
+{
+	if (!GTK_IS_MENU_ITEM (proxy))
+		return;
+
+        gchar *tooltip;
+
+        g_object_get (G_OBJECT(action), "tooltip", &tooltip, NULL);
+
+        if (!tooltip) {
+                gchar *stockid;
+                g_object_get (G_OBJECT(action), "stock-id", &stockid, NULL);
+                if (stockid)
+                        tooltip = games_stock_copy_tooltip_from_stockid (stockid);
+                g_free (stockid);
+        }
+
+	if (tooltip){
+		g_signal_connect (proxy, "select",  
+				  G_CALLBACK (set_statusbar_tooltip), tooltip);
+		g_signal_connect (proxy, "deselect", 
+				  G_CALLBACK (unset_statusbar_tooltip), NULL);
+	}
+}
+
 static GtkUIManager*
 create_ui_manager (const gchar *group)
 {
@@ -1320,6 +1382,9 @@ create_ui_manager (const gchar *group)
 
 
         ui_manager = gtk_ui_manager_new ();
+
+	g_signal_connect (ui_manager, "connect-proxy", G_CALLBACK (connect_proxy), NULL);
+
         gtk_ui_manager_insert_action_group (ui_manager, action_group, 0);
 
 
@@ -1423,7 +1488,8 @@ main (int argc, char *argv [])
 	gtk_box_pack_start (GTK_BOX (status_box), group_box, FALSE, FALSE, 0);
 
 	/* show the status bar items */
-
+	statusbar = gtk_statusbar_new();
+	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (statusbar), FALSE);
 	ui_manager = create_ui_manager ("MahjonggActions");
 	accel_group = gtk_ui_manager_get_accel_group (ui_manager);
 	gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
@@ -1442,10 +1508,9 @@ main (int argc, char *argv [])
 	gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), board, TRUE, TRUE, 0);
 	
-	appbar = gnome_appbar_new (FALSE, TRUE, GNOME_PREFERENCES_USER);
-	gtk_box_pack_end(GTK_BOX(appbar), status_box, FALSE, FALSE, 0);
-
-	gnome_app_set_statusbar (GNOME_APP (window), appbar);
+	gtk_box_pack_end(GTK_BOX(statusbar), status_box, FALSE, FALSE, 0);
+	gtk_box_pack_end(GTK_BOX(vbox), statusbar, FALSE, FALSE, 0);
+        
 	gnome_app_set_contents (GNOME_APP (window), vbox);
 
 	/* FIXME: get these in the best place (as per the comment below. */
@@ -1464,7 +1529,7 @@ main (int argc, char *argv [])
 	if (!gconf_client_get_bool (conf_client, "/apps/mahjongg/show_toolbar", NULL))
 		gtk_widget_hide (toolbar);
 
-  	gnome_app_flash (GNOME_APP (window), _("Remove matching pairs of tiles.")); 
+  	message_flash (_("Remove matching pairs of tiles.")); 
 
 	gtk_main ();
 	

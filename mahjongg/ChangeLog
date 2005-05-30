@@ -1,3 +1,10 @@
+2005-05-28  Richard Hoelscher  <rah@rahga.com>
+	
+	* mahjongg.c (message_*): Support the GtkStatusBar.
+	(main): Switch from using the GnomeAppBar to a GtkStatusBar.
+	(connect_proxy, set_statusbar_tooltip): When a menu action is set up,
+	connect signals that set tooltips to the statusbar for the item.
+
 2005-05-28  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.schemas.in: 
