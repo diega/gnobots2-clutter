@@ -386,13 +386,19 @@ init_config (void)
 static void
 message (gchar *message)
 {
-	gtk_statusbar_pop (GTK_STATUSBAR (statusbar), 0);
-	gtk_statusbar_push (GTK_STATUSBAR (statusbar), 0, message);
+	guint context_id;
+
+	context_id = gtk_statusbar_get_context_id (GTK_STATUSBAR (statusbar), "message");
+	gtk_statusbar_pop (GTK_STATUSBAR (statusbar), context_id);
+	gtk_statusbar_push (GTK_STATUSBAR (statusbar), context_id, message);
 }
 
 static gboolean
 message_flash_remove (guint flashid) {
-        gtk_statusbar_remove (GTK_STATUSBAR (statusbar), 1, flashid);
+	guint context_id;
+
+	context_id = gtk_statusbar_get_context_id (GTK_STATUSBAR (statusbar), "flash");
+        gtk_statusbar_remove (GTK_STATUSBAR (statusbar), context_id, flashid);
 	return FALSE;
 }
 
@@ -400,8 +406,10 @@ static void
 message_flash (gchar *message)
 {
 	guint flashid;
+	guint context_id;
 
-	flashid = gtk_statusbar_push (GTK_STATUSBAR (statusbar), 1, message);
+	context_id = gtk_statusbar_get_context_id (GTK_STATUSBAR (statusbar), "flash");
+	flashid = gtk_statusbar_push (GTK_STATUSBAR (statusbar), context_id, message);
 	g_timeout_add (5000, (GSourceFunc)message_flash_remove, GUINT_TO_POINTER(flashid));
 }
 
@@ -1324,55 +1332,11 @@ const char *ui_description =
 "</ui>";
 
 
-static void
-set_statusbar_tooltip (GtkWidget *widget, gchar *tooltip)
-{
-	gtk_statusbar_push (GTK_STATUSBAR (statusbar), 0,
-			    tooltip ? _(tooltip): "");
-}
-
-
-static void
-unset_statusbar_tooltip (GtkWidget *widget)
-{
-       gtk_statusbar_pop (GTK_STATUSBAR (statusbar), 0);
-}
-
-
-static void
-connect_proxy (GtkUIManager *merge,
-               GtkAction    *action,
-               GtkWidget    *proxy,
-		gpointer user_data)
-{
-	if (!GTK_IS_MENU_ITEM (proxy))
-		return;
-
-        gchar *tooltip;
-
-        g_object_get (G_OBJECT(action), "tooltip", &tooltip, NULL);
-
-        if (!tooltip) {
-                gchar *stockid;
-                g_object_get (G_OBJECT(action), "stock-id", &stockid, NULL);
-                if (stockid)
-                        tooltip = games_stock_copy_tooltip_from_stockid (stockid);
-                g_free (stockid);
-        }
-
-	if (tooltip){
-		g_signal_connect (proxy, "select",  
-				  G_CALLBACK (set_statusbar_tooltip), tooltip);
-		g_signal_connect (proxy, "deselect", 
-				  G_CALLBACK (unset_statusbar_tooltip), NULL);
-	}
-}
-
 static GtkUIManager*
 create_ui_manager (const gchar *group)
 {
         GtkActionGroup *action_group;
-        GtkUIManager *ui_manager;
+	GtkUIManager   *ui_manager;
 
         action_group = gtk_action_group_new ("group");
 
@@ -1383,13 +1347,11 @@ create_ui_manager (const gchar *group)
 
         ui_manager = gtk_ui_manager_new ();
 
-	g_signal_connect (ui_manager, "connect-proxy", G_CALLBACK (connect_proxy), NULL);
+	games_stock_prepare_for_statusbar_tooltips (ui_manager, 
+						    statusbar);
 
         gtk_ui_manager_insert_action_group (ui_manager, action_group, 0);
-
-
         gtk_ui_manager_add_ui_from_string (ui_manager, ui_description, -1, NULL);
-
 	restart_action = gtk_action_group_get_action (action_group, "RestartGame");
 	pause_action = gtk_action_group_get_action (action_group, "PauseGame");
 	hint_action = gtk_action_group_get_action (action_group, "Hint");

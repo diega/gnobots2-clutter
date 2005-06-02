@@ -1,3 +1,9 @@
+2005-05-31  Richard Hoelscher  <rah@rahga.com>
+
+	* mahjongg.c (create_ui_manager): All of the funtions added for the
+	statusbar tooltips are now moved to games-stock, now we just call
+	games_stock_prepare_for_statusbar_tooltips().
+
 2005-05-28  Richard Hoelscher  <rah@rahga.com>
 	
 	* mahjongg.c (message_*): Support the GtkStatusBar.
