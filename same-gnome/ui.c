@@ -97,7 +97,7 @@ void  new_frame_ratio (gint board_width, gint board_height)
 
 static void about_cb (GtkWidget *widget)
 {
-  const gchar *authors[] = { "Callum McKenzie", NULL };
+  const gchar * const authors[] = { "Callum McKenzie", NULL };
   
   gtk_show_about_dialog (GTK_WINDOW (application),
 			 "authors", authors,
@@ -205,6 +205,8 @@ static void change_theme_cb (GtkTreeSelection *selection)
 	gtk_tree_model_get (model, &iter, 1, &filename, -1);
 	
 	change_theme (filename);
+
+	g_free (filename);
 }
 
 static void fill_list (gchar *name, GtkListStore *list)
@@ -218,10 +220,11 @@ static void fill_list (gchar *name, GtkListStore *list)
 	theme_index_counter++;
 
 	/* We strip the final suffix for the displayed name. */
-	uiname = g_strdup (name);
-	suffix = g_strrstr (uiname, ".");
+	suffix = g_strrstr (name, ".");
 	if (suffix)
-		*suffix = '\0';
+		uiname = g_strndup (name, suffix - name);
+	else
+		uiname = g_strdup (name);
 
 	/* Capitalise the first letter. This won't work wonderfully in
 	 * general, but it will be just fine for the themes we currently
@@ -229,10 +232,10 @@ static void fill_list (gchar *name, GtkListStore *list)
 	*uiname = g_unichar_toupper (*uiname);
 
 	gtk_list_store_append (list, &iter);
-	gtk_list_store_set (list, &iter, 0, uiname, 1, g_strdup (name), -1);
+	gtk_list_store_set (list, &iter, 0, uiname, 1, name, -1);
 
-
-
+	/* the store keeps a copy */
+	g_free (uiname);
 }
 
 static void theme_cb (void)
@@ -284,6 +287,8 @@ static void theme_cb (void)
 		g_object_unref (filelist);
 
 		listview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list));
+		g_object_unref (list);
+
 		gtk_container_add (GTK_CONTAINER (scroll), listview);
 		column = gtk_tree_view_column_new_with_attributes (_("Theme"),
 																											 gtk_cell_renderer_text_new (),
@@ -293,8 +298,9 @@ static void theme_cb (void)
 		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (listview));
 		gtk_tree_selection_set_mode (selection, GTK_SELECTION_BROWSE);
 		if (current_theme_index >= 0) {
-			gtk_tree_selection_select_path (selection, 
-																			gtk_tree_path_new_from_indices (current_theme_index, -1));
+			GtkTreePath *path = gtk_tree_path_new_from_indices (current_theme_index, -1);
+			gtk_tree_selection_select_path (selection, path);
+			gtk_tree_path_free (path);
 		} else {
 			gtk_tree_selection_unselect_all (selection);
 		}
@@ -442,7 +448,7 @@ const GtkToggleActionEntry toggle_actions[] = {
 	{ "Animation", NULL, N_("_Fast Animation"), NULL, NULL, G_CALLBACK (animation_cb) }
 };
 
-const char *ui_description =
+const char ui_description[] =
 "<ui>"
 "  <menubar name='MainMenu'>"
 "    <menu action='GameMenu'>"

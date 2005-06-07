@@ -1,3 +1,8 @@
+2005-06-07  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* ui.c: Patch from Paolo Borelli to fix some memory leaks and
+	sprinkle a few "const" statements around.
+
 2005-05-25  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* ui.c: Use the new games_scores_dialog API for setting the
