@@ -447,13 +447,16 @@
   </para>
  </sect1>
 
+<!-- Do not try to be funny, it will only annoy users who have found bugs. 
+Try to manage their expectations.  -->
  <sect1 id="bugs">
   <title>Known Bugs and Limitations</title> 
   <para> 
-   Nothing we'd like to talk about. You can report any bugs you find
-  using the <command>Bug Reporting Tool</command> or via the <ulink
+  You can help us by reporting any bugs you might find 
+  using the <application>bug-buddy</application> 
+  <command>Bug Reporting Tool</command> or via the <ulink
   url="http://bugs.gnome.org" type="http">GNOME bug tracking
-  database</ulink>.
+  database</ulink> on our website.
   </para> 
  </sect1>
 

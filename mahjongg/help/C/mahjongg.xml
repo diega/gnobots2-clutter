@@ -3,8 +3,8 @@
     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
   <!ENTITY appversion "2.10">
-  <!ENTITY manrevision "2.8">
-  <!ENTITY date "September 2004">
+  <!ENTITY manrevision "2.10">
+  <!ENTITY date "June 2005">
   <!ENTITY app "<application>GNOME Mahjongg</application>">
   <!ENTITY appname "GNOME Mahjongg">
 ]>
@@ -576,6 +576,7 @@
     
     <figure id="preferences-fig">
 <!-- FIXME: This dialog is the old one. -->
+<!-- ALAN: looks correct like version 2.10 to me -->
       <title>Preferences&hellip; Dialog</title>
       <screenshot>
 	 <mediaobject> 
@@ -639,26 +640,28 @@
     the normal way. The tiles will expand to fill it.</para>
 
   </sect1>
-
+  
+<!-- ALAN: Better to leave this section out than to say something unhelpful 
+and risk annoying the user.  
  <sect1 id="bugs">
   <title>Known Bugs and Limitations</title>
   <para>
    This application has no known bugs.
   </para>
  </sect1>
+-->
 
  <sect1 id="authors">
   <title>Authors</title>
-    <!--FIXME: Find the GNOME Mahjongg website, if it exists.-->
   <para>
    <application>GNOME Mahjongg</application> was written by Francisco 
    Bustamante (<email>pancho@nuclecu.unam.mx</email>), Michael Meeks 
    (<email>mmeeks@gnu.org</email>), Max Watson, Heinz Hempe, and 
    Philippe Chavin.  Tiles for <application>GNOME Mahjongg</application>
-   were made by Jonathan Buzzard and Max Watson.  <!--To find more information about
+   were made by Jonathan Buzzard and Max Watson.  To find more information about
    <application>GNOME Mahjongg</application>, please visit the <ulink
-   url="http://www.my-gnome-app.org" type="http">MY-GNOME-APP Web
-   page</ulink>.-->  Please send all comments, suggestions, and bug
+   url="http://www.gnome.org/projects/gnome-games/" type="http">Gnome Games</a>
+   Web page</ulink>.  Please send all comments, suggestions, and bug
    reports to the <ulink url="http://bugzilla.gnome.org" type="http">GNOME
    bug tracking database</ulink>. (Instructions for submitting bug
    reports can be found <ulink
