@@ -1,5 +1,6 @@
 /* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
 
+
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *
@@ -1449,7 +1450,7 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 			       "name", _("Gnometris"),
 			       "version", VERSION,
 			       "comments", _("Written for my wife, Matylda\n"
-					     "Send comments and bug reports to: "
+					     "Send comments and bug reports to: \n"
 					     "janusz.gorycki@intel.com"),
 				"copyright", "Copyright \xc2\xa9 2000 J. Marcin Gorycki",
 				"authors", authors,				
