@@ -1,3 +1,7 @@
+2005-05-09  Alan Horkan <horkana tcd ie>
+
+	* help/C/gataxx.xml: Removed Known Bugs sections where not needed.
+
 2005-04-20  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gataxx.c: Make sure that if the player is changed from computer

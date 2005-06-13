@@ -1,3 +1,8 @@
+2005-05-09  Alan Horkan <horkana tcd ie>
+
+	* help/C/mahjongg.xml: Removed Known Bugs sections where not
+	needed.
+	
 2005-05-31  Richard Hoelscher  <rah@rahga.com>
 
 	* mahjongg.c (create_ui_manager): All of the funtions added for the

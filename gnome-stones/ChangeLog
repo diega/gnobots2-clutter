@@ -1,3 +1,8 @@
+2005-05-09  Alan Horkan <horkana tcd ie>
+
+	* help/C/gnome-stones.xml: Removed Known Bugs sections where not
+	needed.
+
 2005-05-26  Richard Hoelscher  <rah@rahga.com>
 
 	* view.[ch] (view_calculate_offset): Renamed from smooth_scroll(), while
