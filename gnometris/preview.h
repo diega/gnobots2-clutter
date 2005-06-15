@@ -32,13 +32,22 @@ public:
 	Preview();
 	
 	void updateSize();
-	
+
 	GtkWidget * getWidget()	{return w;}
-	
+
+	void enable(bool enable);
+	void previewBlock(int bnr, int brot, int bcolor);
+
 private:
 	GtkWidget * w;
 	gint width;
 	gint height;
+
+	int blocknr;
+	int blockrot;
+	int blockcolor;
+
+	bool enabled;
 
 	static gint configure(GtkWidget * widget, GdkEventConfigure * event, Preview * preview);
 	static gint expose(GtkWidget *widget, GdkEventExpose *event, Preview * preview);

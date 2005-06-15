@@ -23,7 +23,11 @@
 #include "preview.h"
 #include "blocks.h"
 
-Preview::	Preview()
+Preview::Preview():
+	blocknr(-1),
+	blockrot(0),
+	blockcolor(0),
+	enabled(true)
 {
 	w = gtk_drawing_area_new();
 
@@ -38,6 +42,20 @@ Preview::updateSize()
 {
 	gtk_widget_set_size_request (w, PREVIEW_SIZE * BLOCK_SIZE, 
 				     PREVIEW_SIZE * BLOCK_SIZE);
+}
+
+void
+Preview::enable(bool en)
+{
+	enabled = en;
+}
+
+void
+Preview::previewBlock(int bnr, int brot, int bcolor)
+{
+	blocknr = bnr;
+	blockrot = brot;
+	blockcolor = bcolor;
 }
 
 gint
@@ -58,36 +76,36 @@ Preview::expose(GtkWidget * widget, GdkEventExpose * event, Preview * preview)
 			    area->x, area->y, area->width, area->height);
 
 	int xoffs = (preview->width 
-		     - sizeTable[blocknr_next][rot_next][1] * BLOCK_SIZE) / 2;
+		     - sizeTable[preview->blocknr][preview->blockrot][1] * BLOCK_SIZE) / 2;
 	int yoffs = (preview->height 
-		     - sizeTable[blocknr_next][rot_next][0] * BLOCK_SIZE) / 2;
+		     - sizeTable[preview->blocknr][preview->blockrot][0] * BLOCK_SIZE) / 2;
 
-	xoffs -= offsetTable[blocknr_next][rot_next][1] * BLOCK_SIZE;
-	yoffs -= offsetTable[blocknr_next][rot_next][0] * BLOCK_SIZE;
+	xoffs -= offsetTable[preview->blocknr][preview->blockrot][1] * BLOCK_SIZE;
+	yoffs -= offsetTable[preview->blocknr][preview->blockrot][0] * BLOCK_SIZE;
 
-	if (do_preview)
-	{
-		if (blocknr_next == -1)
-			return TRUE;
-
-		for (int x = 0; x < 4; ++x) {
-			for (int y = 0; y < 4; ++y) {
-				if (blockTable[blocknr_next][rot_next][x][y])	
-					gdk_draw_pixbuf (widget->window, widget->style->black_gc, pic[color_next],
-							 0, 0, 
-							 x * BLOCK_SIZE + xoffs, y * BLOCK_SIZE + yoffs,
-							 BLOCK_SIZE, BLOCK_SIZE,
-							 GDK_RGB_DITHER_NORMAL, 0, 0);
-				
-			}
-		}
-	}
-	else
+	if (!preview->enabled)
 	{
 		gdk_draw_line(widget->window, widget->style->white_gc, 0, 0, 
 			      preview->width, preview->height);
 		gdk_draw_line(widget->window, widget->style->white_gc, 0, 
 			      preview->height, preview->width, 0);
+
+		return TRUE;
+	}
+
+	if (preview->blocknr == -1)
+		return TRUE;
+
+	for (int x = 0; x < 4; ++x) {
+		for (int y = 0; y < 4; ++y) {
+			if (blockTable[preview->blocknr][preview->blockrot][x][y]) {
+				gdk_draw_pixbuf (widget->window, widget->style->black_gc, pic[preview->blockcolor],
+						 0, 0, 
+						 x * BLOCK_SIZE + xoffs, y * BLOCK_SIZE + yoffs,
+						 BLOCK_SIZE, BLOCK_SIZE,
+						 GDK_RGB_DITHER_NORMAL, 0, 0);
+			}
+		}
 	}
 
 	return TRUE;

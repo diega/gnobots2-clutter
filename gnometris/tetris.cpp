@@ -342,8 +342,10 @@ void
 Tetris::setupdialogDestroy(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
-	if (t->setupdialog)
+	if (t->setupdialog) {
+		delete t->theme_preview;
 		gtk_widget_destroy(t->setupdialog);
+	}
 	t->setupdialog = 0;
 	gtk_widget_set_sensitive(t->gameMenuPtr[0].widget, TRUE);
 }
@@ -561,6 +563,8 @@ Tetris::initOptions ()
 		sound->turnOff ();
 
 	do_preview = gconfGetBoolean (gconf_client, KEY_DO_PREVIEW, TRUE);
+	if (preview)
+		preview->enable(do_preview);
 
 	random_block_colors = gconfGetBoolean (gconf_client, KEY_RANDOM_BLOCK_COLORS, TRUE);
 
@@ -603,6 +607,9 @@ Tetris::setOptions ()
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (do_preview_toggle), do_preview);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (random_block_colors_toggle), random_block_colors);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rotate_counter_clock_wise_toggle), rotateCounterClockWise);
+
+		if (theme_preview)
+			gtk_widget_queue_draw(theme_preview->getWidget());
 	}
 
 	scoreFrame->setLevel (startingLevel);
@@ -752,7 +759,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	GtkWidget *fvbox;
 	GtkObject *adj;
 	GtkWidget *controls_list;
-        
+
 	Tetris *t = (Tetris*) d;
 	
 	if (t->setupdialog) {
@@ -863,7 +870,6 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 			  G_CALLBACK (setSound), d);
 	gtk_box_pack_start (GTK_BOX (fvbox), t->sound_toggle, 0, 0, 0);
 	
-
 	/* preview next block */
 	t->do_preview_toggle =
 		gtk_check_button_new_with_mnemonic (_("_Preview next block"));
@@ -905,25 +911,6 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
 	gtk_table_set_col_spacings (GTK_TABLE (table), 12);
 
-	/* Block pixmap */
-	label = gtk_label_new_with_mnemonic (_("_Block image:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-	                  (GtkAttachOptions) 0, 
-			  (GtkAttachOptions) 0,
-			  0, 0);
-
-	GtkWidget *omenu = gtk_combo_box_new_text ();
-	g_object_set_data (G_OBJECT (omenu), TETRIS_OBJECT, t);	
-	t->fillMenu (omenu, t->blockPixmap, "gnometris", &(t->themeList));
-	g_signal_connect (omenu, "changed", G_CALLBACK (setSelection), NULL);
-	gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 0, 1);
-	gtk_label_set_mnemonic_widget (GTK_LABEL (label), omenu);
-
-	gtk_container_add (GTK_CONTAINER (frame), table);
-	gtk_box_pack_start (GTK_BOX (vbox), frame, 
-			    FALSE, FALSE, 0);
-
 	/* controls page */
 	vbox = gtk_vbox_new (FALSE, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
@@ -931,6 +918,8 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), vbox, label);
 
 	frame = games_frame_new (_("Keyboard Controls"));
+	gtk_container_add (GTK_CONTAINER (vbox), frame);
+
 	fvbox = gtk_vbox_new (FALSE, 6);
 	gtk_container_add (GTK_CONTAINER (frame), fvbox);
 
@@ -946,10 +935,32 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 
 	gtk_box_pack_start (GTK_BOX (fvbox), controls_list, TRUE, TRUE, 0);
 
+	/* theme page */
+	vbox = gtk_vbox_new (FALSE, 0);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
+	label = gtk_label_new (_("Theme"));
+	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), vbox, label);
+
+	frame = games_frame_new (_("Block image:"));
 	gtk_container_add (GTK_CONTAINER (vbox), frame);
-	
+
+	fvbox = gtk_vbox_new (FALSE, 6);
+	gtk_container_add (GTK_CONTAINER (frame), fvbox);
+
+	GtkWidget *omenu = gtk_combo_box_new_text ();
+	g_object_set_data (G_OBJECT (omenu), TETRIS_OBJECT, t);	
+	t->fillMenu (omenu, t->blockPixmap, "gnometris", &(t->themeList));
+	g_signal_connect (omenu, "changed", G_CALLBACK (setSelection), NULL);
+	gtk_box_pack_start (GTK_BOX (fvbox), omenu, FALSE, FALSE, 0);
+
+	t->theme_preview = new Preview();
+	gtk_box_pack_start(GTK_BOX(fvbox), t->theme_preview->getWidget(), TRUE, TRUE, 0);
+
+	t->theme_preview->previewBlock(4, 0, 0);
+
 	gtk_widget_show_all (t->setupdialog);
 	gtk_widget_set_sensitive(t->gameMenuPtr[0].widget, FALSE);
+
 	return TRUE;
 }
 
@@ -1356,6 +1367,7 @@ Tetris::generate()
 	if (ops->generateFallingBlock())
 	{
 		ops->putBlockInField(false);
+		preview->previewBlock(blocknr_next, rot_next, color_next);
 		gtk_widget_queue_draw(preview->getWidget());
 		onePause = true;
 	}
@@ -1378,6 +1390,7 @@ Tetris::endOfGame()
 	color_next = -1;
 	blocknr_next = -1;
 	rot_next = -1;
+	preview->previewBlock(-1, -1, -1);
 	gtk_widget_queue_draw(preview->getWidget());
         gnome_canvas_item_hide (pauseMessage);
         gnome_canvas_item_show (gameoverMessage);
@@ -1425,6 +1438,7 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 	
 	t->ops->generateFallingBlock();
 	gtk_widget_queue_draw(t->field->getWidget());
+	t->preview->previewBlock(blocknr_next, rot_next, color_next);
 	gtk_widget_queue_draw(t->preview->getWidget());
 
 	gtk_widget_set_sensitive(t->gameMenuPtr[1].widget, TRUE);

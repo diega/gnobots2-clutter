@@ -64,7 +64,6 @@ extern int posy;
 extern int nr_of_colors;
 
 extern bool random_block_colors;
-extern bool do_preview;
 
 class Field;
 class Preview;
@@ -170,7 +169,9 @@ private:
 	GtkWidget *random_block_colors_toggle;
 	GtkWidget *rotate_counter_clock_wise_toggle;
 	GtkWidget *sound_toggle;
-	
+
+	Preview *theme_preview;
+
 	int moveLeft;
 	int moveRight;
 	int moveDown;
