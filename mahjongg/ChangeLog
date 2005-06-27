@@ -1,3 +1,7 @@
+2005-06-27  Richard Hoelscher  <rah@rahga.com>
+
+	* mahjongg.c (create_menus): Rearranged to match other gnome-games.
+
 2005-05-09  Alan Horkan <horkana tcd ie>
 
 	* help/C/mahjongg.xml: Removed Known Bugs sections where not

@@ -1332,23 +1332,16 @@ const char *ui_description =
 "</ui>";
 
 
-static GtkUIManager*
-create_ui_manager (const gchar *group)
+static void
+create_menus (GtkUIManager *ui_manager)
 {
         GtkActionGroup *action_group;
-	GtkUIManager   *ui_manager;
 
         action_group = gtk_action_group_new ("group");
 
         gtk_action_group_set_translation_domain(action_group, GETTEXT_PACKAGE);
         gtk_action_group_add_actions (action_group, actions, G_N_ELEMENTS (actions), window);
         gtk_action_group_add_toggle_actions (action_group, toggle_actions, G_N_ELEMENTS (toggle_actions), window);
-
-
-        ui_manager = gtk_ui_manager_new ();
-
-	games_stock_prepare_for_statusbar_tooltips (ui_manager, 
-						    statusbar);
 
         gtk_ui_manager_insert_action_group (ui_manager, action_group, 0);
         gtk_ui_manager_add_ui_from_string (ui_manager, ui_description, -1, NULL);
@@ -1366,8 +1359,6 @@ create_ui_manager (const gchar *group)
 
         gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (show_toolbar_action),
         			      gconf_client_get_bool (conf_client, "/apps/mahjongg/show_toolbar", NULL));
-
-        return ui_manager;
 }
 
 int
@@ -1451,8 +1442,12 @@ main (int argc, char *argv [])
 
 	/* show the status bar items */
 	statusbar = gtk_statusbar_new();
+	ui_manager = gtk_ui_manager_new ();
+
+	games_stock_prepare_for_statusbar_tooltips (ui_manager, statusbar);
 	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (statusbar), FALSE);
-	ui_manager = create_ui_manager ("MahjonggActions");
+
+	create_menus (ui_manager);
 	accel_group = gtk_ui_manager_get_accel_group (ui_manager);
 	gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
 	box = gtk_ui_manager_get_widget (ui_manager, "/MainMenu");

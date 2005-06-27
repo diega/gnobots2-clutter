@@ -322,6 +322,8 @@ create_main_window (void)
 	games_stock_init();
 	status_bar = gtk_statusbar_new ();
         ui = gtk_ui_manager_new ();
+
+	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (status_bar), FALSE);
         games_stock_prepare_for_statusbar_tooltips (ui, status_bar);
 
         gtk_ui_manager_add_ui_from_string (ui, ui_definition, -1, &error);
