@@ -1,3 +1,8 @@
+2005-06-28  Richard Hoelscher  <rah@rahga.com>
+
+	* main.c: Use GtkUIManager and GtkActions.
+	(help_cb): Added menu callback.
+
 2005-05-09  Alan Horkan <horkana tcd ie>
 
 	* help/C/gnome-stones.xml: Removed Known Bugs sections where not

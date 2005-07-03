@@ -43,6 +43,8 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 
+#include <games-stock.h>
+
 /*****************************************************************************/
 /* Used widgets. */
 
@@ -76,11 +78,13 @@ static const struct poptOption options[] = {
 };
 
 /****************************************************************************/
-/* The menus */
-static GnomeUIInfo game_menu[];
-static GnomeUIInfo help_menu[];
-static GnomeUIInfo settings_menu[];
-static GnomeUIInfo main_menu[];
+/* The actions */
+static GtkAction *pause_action;
+static GtkAction *end_game_action;
+static GtkAction *restart_level_action;
+static GtkAction *scores_action;
+
+
 
 
 /****************************************************************************/
@@ -418,12 +422,12 @@ update_score_state (void)
 	top = gnome_score_get_notable (APP_NAME, NULL, &names,
                                        &scores, &scoretimes);
 	if (top > 0) {
-		gtk_widget_set_sensitive (game_menu[6].widget, TRUE);
+		gtk_action_set_sensitive (scores_action, TRUE);
 		g_strfreev(names);
 		g_free(scores);
 		g_free(scoretimes);
 	} else {
-		gtk_widget_set_sensitive (game_menu[6].widget, FALSE);
+		gtk_action_set_sensitive (scores_action, FALSE);
 	}
 }
 
@@ -1027,51 +1031,85 @@ about_cb (GtkWidget *widget, gpointer data)
 }
 
 
+static void
+help_cb (GtkAction *action, gpointer data)
+{
+  gnome_help_display ("gnome-stones.xml", NULL, NULL); 
+}
+
+
 
 /*****************************************************************************/
 /* Menu definitions */
 
 
-static GnomeUIInfo game_menu[]= {
-  GNOMEUIINFO_MENU_NEW_GAME_ITEM(game_start_cb, NULL),
-  GNOMEUIINFO_MENU_END_GAME_ITEM(game_stop_cb, NULL),
-  GNOMEUIINFO_ITEM_STOCK(N_("_Restart level"), N_("Restart the current level"), level_restart_cb, GTK_STOCK_REFRESH),
-  GNOMEUIINFO_SEPARATOR,
-  GNOMEUIINFO_MENU_PAUSE_GAME_ITEM (game_pause_cb, NULL),
-  GNOMEUIINFO_SEPARATOR,
-  GNOMEUIINFO_MENU_SCORES_ITEM(show_scores_cb, NULL),
-  GNOMEUIINFO_SEPARATOR,
-  GNOMEUIINFO_MENU_QUIT_ITEM(quit_cb, NULL),
-  GNOMEUIINFO_END
+static const GtkActionEntry action_entry[] = {
+  { "GameMenu", NULL, N_("_Game") },
+  { "SettingsMenu", NULL, N_("_Settings") },
+  { "HelpMenu", NULL, N_("_Help") },
+  { "NewGame", GAMES_STOCK_NEW_GAME, NULL, NULL, NULL, G_CALLBACK (game_start_cb) },
+  { "EndGame", GAMES_STOCK_END_GAME, NULL, NULL, NULL, G_CALLBACK (game_stop_cb) },
+  { "RestartLevel", GAMES_STOCK_RESTART_GAME, "_Restart Level", NULL, NULL, G_CALLBACK (level_restart_cb) },
+  { "Pause", GAMES_STOCK_PAUSE_GAME, NULL, NULL, NULL, G_CALLBACK (game_pause_cb) },
+  { "Scores", GAMES_STOCK_SCORES, NULL, NULL, NULL, G_CALLBACK (show_scores_cb) },
+  { "Quit", GTK_STOCK_QUIT, NULL, NULL, NULL, G_CALLBACK (quit_cb) },
+  { "Preferences", GTK_STOCK_PREFERENCES, NULL, NULL, NULL, G_CALLBACK (preferences_cb) },
+  { "Contents", GAMES_STOCK_CONTENTS, NULL, NULL, NULL, G_CALLBACK (help_cb) },
+  { "About", GTK_STOCK_ABOUT, NULL, NULL, NULL, G_CALLBACK (about_cb) }
 };
 
-static GnomeUIInfo help_menu[]= {
-  GNOMEUIINFO_HELP(APP_NAME),
-  GNOMEUIINFO_MENU_ABOUT_ITEM(about_cb, NULL),
-  GNOMEUIINFO_END
-};
 
-static GnomeUIInfo settings_menu[]= {
-  GNOMEUIINFO_MENU_PREFERENCES_ITEM(preferences_cb, NULL),
-  GNOMEUIINFO_END
-};
+static const char *ui_description =
+"<ui>"
+"  <menubar name='MainMenu'>"
+"    <menu action='GameMenu'>"
+"      <menuitem action='NewGame'/>"
+"      <menuitem action='EndGame'/>"
+"      <menuitem action='RestartLevel'/>"
+"      <separator/>"
+"      <menuitem action='Pause'/>"
+"      <separator/>"
+"      <menuitem action='Scores'/>"
+"      <separator/>"
+"      <menuitem action='Quit'/>"
+"    </menu>"
+"    <menu action='SettingsMenu'>"
+"      <menuitem action='Preferences'/>"
+"    </menu>"
+"    <menu action='HelpMenu'>"
+"      <menuitem action='Contents'/>"
+"      <menuitem action='About'/>"
+"    </menu>"
+"  </menubar>"
+"</ui>";
 
-static GnomeUIInfo main_menu[]= 
+
+static void
+create_menus (GtkUIManager *ui_manager)
 {
-  GNOMEUIINFO_MENU_GAME_TREE(game_menu),
-  GNOMEUIINFO_MENU_SETTINGS_TREE(settings_menu),
-  GNOMEUIINFO_MENU_HELP_TREE(help_menu),
-  GNOMEUIINFO_END
-};
+        GtkActionGroup *action_group;
 
+        action_group = gtk_action_group_new ("group");
+
+        gtk_action_group_set_translation_domain(action_group, GETTEXT_PACKAGE);
+        gtk_action_group_add_actions (action_group, action_entry, G_N_ELEMENTS (action_entry), app);
+
+        gtk_ui_manager_insert_action_group (ui_manager, action_group, 0);
+        gtk_ui_manager_add_ui_from_string (ui_manager, ui_description, -1, NULL);
+
+        scores_action = gtk_action_group_get_action (action_group, "Scores");
+	end_game_action = gtk_action_group_get_action (action_group, "EndGame");
+	restart_level_action = gtk_action_group_get_action (action_group, "RestartLevel");
+	pause_action = gtk_action_group_get_action (action_group, "Pause");
+}
 
 /*****************************************************************************/
 /* Menu sensitivity code. */
 static void menu_set_sensitive (gboolean state)
 {
-  gtk_widget_set_sensitive (game_menu[1].widget, state);
-  gtk_widget_set_sensitive (game_menu[2].widget, state);
-  gtk_widget_set_sensitive (game_menu[4].widget, state);
+  gtk_action_set_sensitive (end_game_action, state);
+  gtk_action_set_sensitive (restart_level_action, state);
+  gtk_action_set_sensitive (pause_action, state);
 }
 
 
@@ -1208,7 +1246,10 @@ main (int argc, char *argv[])
   GtkWidget *frame= NULL;
   GtkWidget *vbox = NULL;
   GtkWidget *table= NULL;
-  
+  GtkWidget *menubar;
+  GtkUIManager *ui_manager;  
+  GtkAccelGroup *accel_group;
+
   gnome_score_init (APP_NAME);
 
   bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
@@ -1232,20 +1273,20 @@ main (int argc, char *argv[])
   app = gnome_app_new ("gnome-stones", _("GNOME Stones"));
   gtk_window_set_resizable  (GTK_WINDOW (app), FALSE);
 
-  /* ... a menu line, ... */
-  gnome_app_create_menus (GNOME_APP (app), main_menu);
+  table = status_widget_get ();
+
+  games_stock_init ();
+
+  ui_manager = gtk_ui_manager_new ();
+  create_menus (ui_manager);
+  accel_group = gtk_ui_manager_get_accel_group (ui_manager);
+  gtk_window_add_accel_group (GTK_WINDOW (app), accel_group);
+  menubar = gtk_ui_manager_get_widget (ui_manager, "/MainMenu");
   menu_set_sensitive (FALSE);
-  
-  /* ... a toolbar, ... */
-  /*  gnome_app_create_toolbar (GNOME_APP (app), toolbar); */
 
-  /* ... a statusline ... */
-  statusbar= gnome_appbar_new (TRUE, TRUE, GNOME_PREFERENCES_USER);
+  statusbar = gnome_appbar_new (TRUE, TRUE, GNOME_PREFERENCES_USER);
   gnome_app_set_statusbar (GNOME_APP (app), statusbar);
-
   gnome_appbar_set_default (GNOME_APPBAR (statusbar), _(default_message));
-
-  gnome_app_install_menu_hints(GNOME_APP (app), main_menu);
 
   /* and, last but not least the game display.  */
   vbox = gtk_vbox_new (FALSE, 0);
@@ -1257,9 +1298,9 @@ main (int argc, char *argv[])
   gtk_widget_show (frame);
   gtk_container_add (GTK_CONTAINER (frame), gstones_view);
 
+  gtk_box_pack_start (GTK_BOX (vbox), menubar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
-  table= status_widget_get ();
   gtk_widget_show (table);
   gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
   

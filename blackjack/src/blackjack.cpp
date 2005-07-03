@@ -211,12 +211,12 @@ static void
 control_menu_set_sensitive (const char *name,
                             gboolean    value)
 {
-        GtkWidget *widget;
+        GtkAction *action;
         char      *path;
 
         path = g_strdup_printf ("/MenuBar/ControlMenu/%s", name);
-        widget = gtk_ui_manager_get_widget (ui, path);
-        gtk_widget_set_sensitive (widget, value);
+        action = gtk_ui_manager_get_action (ui, path);
+        gtk_action_set_sensitive (action, value);
         g_free (path);
 }
 

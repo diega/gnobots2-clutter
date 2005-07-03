@@ -1,3 +1,8 @@
+2005-07-01  Richard Hoelscher  <rah@rahga.com>
+
+	* mahjongg.c: Update various callbacks to reflect GtkActions rather 
+	than Widgets.
+
 2005-06-27  Richard Hoelscher  <rah@rahga.com>
 
 	* mahjongg.c (create_menus): Rearranged to match other gnome-games.

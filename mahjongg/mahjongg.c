@@ -942,7 +942,7 @@ void ensure_pause_off (void)
 }
 
 static void
-scores_callback (GtkWidget *widget, gpointer data)
+scores_callback (GtkAction *action, gpointer data)
 {
 	GtkWidget *dialog;
 
@@ -970,7 +970,7 @@ init_game (void)
 }
 
 static void 
-new_game_cb (GtkWidget *widget, gpointer data)
+new_game_cb (GtkAction *action, gpointer data)
 {
 	stop_hints ();
 	ensure_pause_off ();
@@ -978,13 +978,13 @@ new_game_cb (GtkWidget *widget, gpointer data)
 }
 
 static void 
-restart_game_cb (GtkWidget *widget, gpointer data)
+restart_game_cb (GtkAction *action, gpointer data)
 {
 	stop_hints ();
 	restart_game ();
 }
 
-static void quit_cb (GtkWidget *widget, GdkEventAny *e, gpointer data)
+static void quit_cb (GObject *object, gpointer data)
 {
 	gtk_main_quit ();
 }
@@ -1005,7 +1005,7 @@ restart_game (void)
 }
 
 static void
-redo_tile_callback (GtkWidget *widget, gpointer data)
+redo_tile_callback (GtkAction *action, gpointer data)
 {
         gint i, change ;
         char *tmpstr;
@@ -1268,7 +1268,7 @@ help_cb (GtkAction *action, gpointer data)
         gnome_help_display ("mahjongg.xml", NULL, NULL);
 }
 
-const GtkActionEntry actions[] = {
+static const GtkActionEntry actions[] = {
         { "GameMenu", NULL, N_("_Game") },
         { "SettingsMenu", NULL, N_("_Settings") },
         { "HelpMenu", NULL, N_("_Help") },
@@ -1286,12 +1286,12 @@ const GtkActionEntry actions[] = {
         { "About", GTK_STOCK_ABOUT, NULL, NULL, NULL, G_CALLBACK (about_callback) }
 };
 
-const GtkToggleActionEntry toggle_actions[] = {
+static const GtkToggleActionEntry toggle_actions[] = {
         { "ShowToolbar", NULL, N_("_Toolbar"), NULL, N_("Show or hide the toolbar"), G_CALLBACK (show_tb_callback) },
 	{ "PauseGame", GAMES_STOCK_PAUSE_GAME, NULL, NULL, NULL, G_CALLBACK (pause_callback) }
 };
 
-const char *ui_description =
+static const char *ui_description =
 "<ui>"
 "  <menubar name='MainMenu'>"
 "    <menu action='GameMenu'>"

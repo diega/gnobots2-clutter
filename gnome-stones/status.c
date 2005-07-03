@@ -112,11 +112,11 @@ status_widget_get (void)
   
   gtk_table_set_col_spacing (GTK_TABLE(game_table), 5, 32);
   
-
   status_vbox= gtk_vbox_new (FALSE, 2);
   gtk_box_pack_start (GTK_BOX (status_vbox), cave_table, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (status_vbox), game_table, TRUE, TRUE, 0);
-  
+  gtk_widget_show (cave_table);
+
   gtk_widget_show (status_vbox);
 
 
