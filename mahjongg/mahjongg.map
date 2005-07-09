@@ -1,7 +1,7 @@
 <!-- Coordinates are for the top left corner of the tile.
      All axes count from 0.
-     x/height is vertically down the screen.
-     y/width is horizontally across the screen.
+     x/width is horizontally across the screen.
+     y/height is vertically down the screen.
      z/depth is vertically out of the screen. 
      top, bottom, left and right refer to the screen, not a physical board. -->
 

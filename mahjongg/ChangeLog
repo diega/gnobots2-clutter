@@ -1,3 +1,7 @@
+2005-07-05  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.map: Fix the comment to reflect reality.
+
 2005-07-01  Richard Hoelscher  <rah@rahga.com>
 
 	* mahjongg.c: Update various callbacks to reflect GtkActions rather 
