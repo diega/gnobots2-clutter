@@ -25,11 +25,14 @@
 
 HighScores::HighScores ()
 {
-  dialog = games_scores_dialog_new ("gnometris", _("Gnometris Scores"));
+  dialog = NULL;
 }
 
 void HighScores::show (gint highlight)
 {
+  if (!dialog)
+    dialog = games_scores_dialog_new ("gnometris", _("Gnometris Scores"));
+
   games_scores_dialog_set_hilight (GAMES_SCORES_DIALOG (dialog), highlight);
   gtk_dialog_run (GTK_DIALOG (dialog));    
   gtk_widget_hide (dialog);

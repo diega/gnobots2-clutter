@@ -187,9 +187,6 @@ private:
 	bool fastFall;
 	int fastFallPoints;
         bool dropBlock;
-
-        GnomeCanvasItem * pauseMessage;
-        GnomeCanvasItem * gameoverMessage;
 };
 
 #endif // __tetris_h__

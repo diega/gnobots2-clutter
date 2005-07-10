@@ -25,7 +25,7 @@
 
 GnomeCanvasItem *BlockOps::generateItem(int x, int y, int colour)
 {
-	GnomeCanvasItem *	it = gnome_canvas_item_new(
+	GnomeCanvasItem *it = gnome_canvas_item_new(
   			gnome_canvas_root(GNOME_CANVAS(fieldDisplay->getWidget())),
   			gnome_canvas_pimage_get_type(),
   			"image", pic[colour],
@@ -203,57 +203,64 @@ BlockOps::fallingToLaying()
 }
 
 void
-BlockOps::checkFullLines(ScoreFrame *s)
+BlockOps::eliminateLine(int l)
 {
-	bool found;
-	int numFullLines = 0;
-	
-	do
+	for (int y = l; y > 0; --y)
 	{
-		found = false;
-		
-		for (int y = LINES - 1; y >= 0; --y)
+		for (int x = 0; x < COLUMNS; ++x)
 		{
-			bool f = true;
-			for (int x = 0; x < COLUMNS; ++x)
+			if (field[x][y].item)
+				gtk_object_destroy(GTK_OBJECT(field[x][y].item));
+
+			field[x][y] = field[x][y - 1];
+			if (field[x][y].item)
+				field[x][y].item = generateItem(x, y, field[x][y].color);
+
+			if (field[x][y - 1].item)
+				gtk_object_destroy(GTK_OBJECT(field[x][y - 1].item));
+
+			field[x][y - 1].item = NULL;
+			field[x][y - 1].what = EMPTY;
+			field[x][y - 1].color = 0;
+		}
+	}
+}
+
+int
+BlockOps::checkFullLines()
+{
+	// we can have at most 4 full lines (vertical block)
+	int fullLines[4] = {0, };
+	int numFullLines = 0;
+
+	for (int y = posy; y < MIN(posy + 4, LINES); ++y)
+	{
+		bool f = true;
+		for (int x = 0; x < COLUMNS; ++x)
+		{
+			if (field[x][y].what != LAYING)
 			{
-				if (field[x][y].what != LAYING)
-				{
-					f = false;
-					break;
-				}
-			}
-			if (f)
-			{
-				++numFullLines;
-				s->checkLevel();
-				
-				found = true;
-				for (int y1 = y; y1 >= 0; --y1)
-				{
-					for (int x = 0; x < COLUMNS; ++x)
-					{
-						if (y1 < y)
-							field[x][y1 + 1] = field[x][y1];
-						field[x][y1].what = EMPTY;
-						if (field[x][y1].item)
-						{
-							gtk_object_destroy(GTK_OBJECT(field[x][y1].item));
-							field[x][y1].item = 0;
-							if (y1 < y)
-								field[x][y1 + 1].item = 
-									generateItem(x, y1 + 1, field[x][y1 + 1].color);
-						}
-						
-					}
-				}
+				f = false;
 				break;
 			}
 		}
+
+		if (f)
+		{
+			fullLines[numFullLines] = y;
+			++numFullLines;
+		}
 	}
-	while (found);
-	if(numFullLines > 0)
-		s->incLines(numFullLines);
+
+	if (numFullLines > 0)
+	{
+		for (int i = 0; i < numFullLines; ++i)
+		{
+			eliminateLine(fullLines[i]);
+		}
+	}
+
+	return numFullLines;
 }
 
 bool

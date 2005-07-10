@@ -29,14 +29,19 @@ class Field
 public:
 	Field();
 	
-	void show();
 	void updateSize(GdkPixbuf * bgImage, GdkColor *bgcolour);
+	void showPauseMessage();
+	void hidePauseMessage();
+	void showGameOverMessage();
+	void hideGameOverMessage();
 
 	GtkWidget * getWidget()	{return w;}
 	
 private:
 	GtkWidget * w;
 	GnomeCanvasItem *bg;
+	GnomeCanvasItem *pausemsg;
+	GnomeCanvasItem *gameovermsg;
 };
 
 #endif //__field_h__

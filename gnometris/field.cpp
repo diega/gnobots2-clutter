@@ -24,17 +24,11 @@
 
 Field::	Field()
 {
-	bg = 0;
+	bg = NULL;
+	pausemsg = NULL;
+	gameovermsg = NULL;
 
 	w = gnome_canvas_new();
-}
-
-void 
-Field::show()
-{
-	gtk_widget_realize(w);
-
-	gtk_widget_show(w);
 }
 
 void
@@ -68,4 +62,90 @@ Field::updateSize(GdkPixbuf * bgImage, GdkColor *bgcolour)
 				"outline_color", "black",
 				"width_units", 1.0,
   			NULL);
+}
+
+void
+Field::showPauseMessage()
+{
+	if (!pausemsg)
+	{
+		double x1, y1, x2, y2;
+		double width;
+		double pts;
+
+		pausemsg = gnome_canvas_item_new (
+			gnome_canvas_root(GNOME_CANVAS(w)),
+			gnome_canvas_text_get_type(),
+			"fill_color",
+			"white",
+			"x", COLUMNS * BLOCK_SIZE / 2.0,
+			"y", LINES * BLOCK_SIZE / 2.0,
+			"text", _("Paused"),
+			"size_points", 36.0,
+			NULL);
+
+		/* Since gnome_canvas doesn't support setting the size of text in
+		 * pixels (read the source where the "size" parameter gets set)
+		 * and pango isn't forthcoming about how it scales things (see
+		 * http://mail.gnome.org/archives/gtk-i18n-list/2003-August/msg00001.html
+		 * and bug #119081). We guess at the size, see what size it is rendered
+		 * to and then adjust the point size to fit. 36.0 points is pretty
+		 * close for 96 dpi . */
+
+		gnome_canvas_item_get_bounds (pausemsg, &x1, &y1, &x2, &y2);
+		width = x2 - x1;
+		/* 0.8 is the fraction of the screen we want to use and 36.0 is
+		 * the guess we use previously for the point size. */
+		pts = 0.8 * 36.0 * COLUMNS * BLOCK_SIZE / width;
+		gnome_canvas_item_set (pausemsg, "size_points", pts, 0);
+	}
+
+	gnome_canvas_item_show (pausemsg);
+	gnome_canvas_item_raise_to_top (pausemsg);
+}
+
+void
+Field::hidePauseMessage()
+{
+	if (pausemsg)
+		gnome_canvas_item_hide (pausemsg);
+}
+
+void
+Field::showGameOverMessage()
+{
+	if (!gameovermsg)
+	{
+		double x1, y1, x2, y2;
+		double width;
+		double pts;
+
+		gameovermsg = gnome_canvas_item_new (
+			gnome_canvas_root(GNOME_CANVAS(w)),
+			gnome_canvas_text_get_type(),
+			"fill_color",
+			"white",
+			"x", COLUMNS * BLOCK_SIZE / 2.0,
+			"y", LINES * BLOCK_SIZE / 2.0,
+			"text", _("Game Over"),
+			"size_points", 36.0,
+			NULL);
+
+		gnome_canvas_item_get_bounds (gameovermsg, &x1, &y1, &x2, &y2);
+		width = x2 - x1;
+		/* 0.9 is the fraction of the screen we want to use and 36.0 is
+		 * the guess we use previously for the point size. */
+		pts = 0.9 * 36.0 * COLUMNS * BLOCK_SIZE / width;
+		gnome_canvas_item_set (gameovermsg, "size_points", pts, 0);
+	}
+
+	gnome_canvas_item_show (gameovermsg);
+	gnome_canvas_item_raise_to_top (gameovermsg);
+}
+
+void
+Field::hideGameOverMessage()
+{
+	if (gameovermsg)
+		gnome_canvas_item_hide (gameovermsg);
 }

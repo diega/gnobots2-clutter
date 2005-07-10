@@ -22,7 +22,6 @@
  */
 
 #include "tetris.h"
-#include "scoreframe.h"
 
 class BlockOps
 {
@@ -36,7 +35,7 @@ public:
 	bool rotateBlock(bool);
 	int dropBlock();
 	void fallingToLaying();
-	void checkFullLines(ScoreFrame *s);
+	int checkFullLines();
 	bool generateFallingBlock();
 	void emptyField(void);
 	void emptyField(int filled_lines, int fill_prob);
@@ -48,6 +47,7 @@ public:
 
 private:
 	bool blockOkHere(int x, int y, int b, int r);
+	void eliminateLine(int l);
 	Block **field;
 	bool field_initialized;
 	Field *fieldDisplay;

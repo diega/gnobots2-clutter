@@ -1,3 +1,18 @@
+2005-07-09  Paolo Borelli  <pborelli@katamail.com>
+
+	* blockops.cpp: use a better algorithm for checkFullLines and make
+	it return the number of full lines, so that scoreFrame->incLines()
+	is moved to the caller and the BlockOps class doesn't depend on
+	scoreFrame anymore.  
+	* field.cpp: remove the useless show() method
+	and move here the code to show the "pause" and "game over"
+	messages so that the GnomeCanvas code is encapsulated in
+	this class.
+	* highscores.cpp: lazy creation to improve startup time.
+	* scoreframe.cpp: automatically check the level when incrementing 
+	the lines
+	* tetris.cpp: minor cleanups and adaption for the above changes.
+
 2005-06-15  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* preview.cpp: 

@@ -111,16 +111,13 @@ Tetris::Tetris(int cmdlLevel):
 	fastFall(false),
         dropBlock(false)
 {
-	double x1, y1, x2, y2;
-	double width;
-	double pts;
-	gchar * outdir;
-	GtkTargetEntry targets[] = {{"text/uri-list", 0, URI_LIST}, 
-				    {"property/bgimage", 0, URI_LIST},
-				    {"text/plain", 0, TEXT_PLAIN},
-				    {"STRING", 0, TEXT_PLAIN},
-				    {"application/x-color", 0, COLOUR},
-				    {"x-special/gnome-reset-background", 0, RESET}};
+	gchar *outdir;
+	const GtkTargetEntry targets[] = {{"text/uri-list", 0, URI_LIST}, 
+					  {"property/bgimage", 0, URI_LIST},
+					  {"text/plain", 0, TEXT_PLAIN},
+					  {"STRING", 0, TEXT_PLAIN},
+					  {"application/x-color", 0, COLOUR},
+					  {"x-special/gnome-reset-background", 0, RESET}};
 
 	if (!sound)
 		sound = new Sound();
@@ -215,7 +212,7 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_container_set_border_width(GTK_CONTAINER(vb1), 10);
 	gtk_box_pack_start_defaults(GTK_BOX(vb1), field->getWidget());
 	gtk_box_pack_start(GTK_BOX(hb), vb1, 0, 0, 0);
-	field->show();
+	gtk_widget_show(field->getWidget());
 	setupPixmap();
 
 	g_signal_connect (w, "key_press_event", G_CALLBACK (keyPressHandler), this);
@@ -226,7 +223,7 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_box_pack_end(GTK_BOX(hb), vb2, 0, 0, 0);
 	
 	preview = new Preview();
-	
+
 	gtk_box_pack_start(GTK_BOX(vb2), preview->getWidget(), FALSE, FALSE, 0);
 	
 	scoreFrame = new ScoreFrame(cmdlineLevel);
@@ -234,7 +231,7 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_box_pack_end(GTK_BOX(vb2), scoreFrame->getWidget(), TRUE, FALSE, 0);
 
 	setOptions ();
-        setupScoreState ();
+	setupScoreState ();
 
 	themeList = NULL;
 	
@@ -247,54 +244,6 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_widget_set_sensitive(gameMenuPtr[1].widget, FALSE);
 	gtk_widget_set_sensitive(gameMenuPtr[4].widget, FALSE);
 	gtk_widget_set_sensitive(gameSettingsPtr[0].widget, TRUE);
-
-        pauseMessage = gnome_canvas_item_new (gnome_canvas_root(GNOME_CANVAS(field->getWidget())),
-                                              gnome_canvas_text_get_type(),
-                                              "fill_color",
-                                              "white",
-                                              "x", COLUMNS*BLOCK_SIZE/2.0,
-                                              "y", LINES*BLOCK_SIZE/2.0,
-                                              "text", _("Paused"),
-                                              "size_points", 36.0,
-                                              NULL
-                                              );
-
-	/* Since gnome_canvas doesn't support setting the size of text in
-	 * pixels (read the source where the "size" parameter gets set)
-	 * and pango isn't forthcoming about how it scales things (see
-	 * http://mail.gnome.org/archives/gtk-i18n-list/2003-August/msg00001.html
-	 * and bug #119081). We guess at the size, see what size it is rendered
-	 * to and then adjust the point size to fit. 36.0 points is pretty
-	 * close for 96 dpi . */
-
-	gnome_canvas_item_get_bounds (pauseMessage, &x1, &y1, &x2, &y2);
-	width = x2 - x1;
-	/* 0.8 is the fraction of the screen we want to use and 36.0 is
-	 * the guess we use previously for the point size. */
-	pts = 0.8*36.0*COLUMNS*BLOCK_SIZE/width;
-	gnome_canvas_item_set (pauseMessage, "size_points", pts, 0);
-
-        gnome_canvas_item_hide (pauseMessage);
-
-        gameoverMessage = gnome_canvas_item_new (gnome_canvas_root(GNOME_CANVAS(field->getWidget())),
-                                                 gnome_canvas_text_get_type(),
-                                                 "fill_color",
-                                                 "white",
-                                                 "x", COLUMNS*BLOCK_SIZE/2.0,
-                                                 "y", LINES*BLOCK_SIZE/2.0,
-                                                 "text", _("Game Over"),
-                                                 "size_points", 36.0,
-                                                 NULL
-                                                 );
-
-	gnome_canvas_item_get_bounds (gameoverMessage, &x1, &y1, &x2, &y2);
-	width = x2 - x1;
-	/* 0.9 is the fraction of the screen we want to use and 36.0 is
-	 * the guess we use previously for the point size. */
-	pts = 0.9*36.0*COLUMNS*BLOCK_SIZE/width;
-	gnome_canvas_item_set (gameoverMessage, "size_points", pts, 0);
-
-        gnome_canvas_item_hide (gameoverMessage);
 
 	high_scores = new HighScores ();
 }
@@ -1027,7 +976,10 @@ Tetris::manageFallen()
 	sound->playSound (SOUND_LAND);
 
 	int levelBefore = scoreFrame->getLevel();
-	ops->checkFullLines(scoreFrame);
+
+	int fullLines = ops->checkFullLines();
+	if (fullLines > 0)
+		scoreFrame->incLines(fullLines);
 	int levelAfter = scoreFrame->getLevel();
 	if (levelAfter != levelBefore) 
 		sound->playSound (SOUND_GNOMETRIS);
@@ -1354,11 +1306,10 @@ void
 Tetris::togglePause()
 {
 	paused = !paused;
-        if (paused) {
-                gnome_canvas_item_show (pauseMessage);
-                gnome_canvas_item_raise_to_top (pauseMessage);
-        } else
-                gnome_canvas_item_hide (pauseMessage);
+	if (paused)
+		field->showPauseMessage();
+	else
+		field->hidePauseMessage();
 }
 
 void
@@ -1392,9 +1343,8 @@ Tetris::endOfGame()
 	rot_next = -1;
 	preview->previewBlock(-1, -1, -1);
 	gtk_widget_queue_draw(preview->getWidget());
-        gnome_canvas_item_hide (pauseMessage);
-        gnome_canvas_item_show (gameoverMessage);
-        gnome_canvas_item_raise_to_top (gameoverMessage);
+	field->hidePauseMessage();
+	field->showGameOverMessage();
 	sound->playSound (SOUND_GAMEOVER);
 	inPlay = false;
 
@@ -1445,9 +1395,9 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 	gtk_widget_set_sensitive(t->gameMenuPtr[4].widget, TRUE);
 	gtk_widget_set_sensitive(t->gameSettingsPtr[0].widget, FALSE);
 
-        gnome_canvas_item_hide (t->pauseMessage);
-        gnome_canvas_item_hide (t->gameoverMessage);
-        
+	t->field->hidePauseMessage();
+	t->field->hideGameOverMessage();
+
 	sound->playSound (SOUND_GNOMETRIS);
 
 	return TRUE;

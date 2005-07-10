@@ -29,7 +29,6 @@ public:
 	void show();
 	void resetLines();	
 	void incLines(int newlines);	
-	void checkLevel();
 	void setLevel(int l);
 	void setStartingLevel(int l);
 		

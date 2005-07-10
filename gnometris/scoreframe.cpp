@@ -150,11 +150,8 @@ ScoreFrame::incLines(int newlines)
 	incScore(linescore * level);
 	sprintf(b, "%7d", lines);
 	gtk_label_set_text(GTK_LABEL(linesw), b);
-}
 
-void 
-ScoreFrame::checkLevel()
-{
+	// check the level
 	int l = startingLevel + lines / 10;
 	if ((l > level) && (l <= 10))
 	{
