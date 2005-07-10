@@ -238,7 +238,7 @@ game_update_title (void)
       static char *gametitle = N_("Game title");
       static char *cavename = N_("Start cave");
 
-      guint width, height;
+      gint height;
       PangoLayout *layout;
       PangoFontDescription *pfd;
       GList *tmp = g_list_nth (game->start_caves, start_cave);
@@ -247,7 +247,7 @@ game_update_title (void)
       pfd = pango_font_description_from_string ("[sans-serif][bold][16]");
       pango_layout_set_font_description (layout, pfd);
       
-      pango_layout_get_pixel_size (layout, &width, &height);
+      pango_layout_get_pixel_size (layout, NULL, &height);
 
       gc = gstones_view->style->black_gc;
 

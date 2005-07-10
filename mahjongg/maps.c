@@ -569,7 +569,8 @@ tilepos testmap[MAX_TILES];
 
 gboolean in_mahjongg;
 
-gint x1, x2, y1, y2, z;
+static gint x1, x2, y1, y2, z;
+
 const gchar *name, *score_name;
 
 enum {
@@ -805,7 +806,7 @@ static void load_map_from_file (gchar *filename)
   GMarkupParseContext *parse_context;
   gboolean ok;
   gchar *file;
-  gint length;
+  gsize length;
 
   /* Read in a map file. */
   ok = g_file_get_contents (filename, &file, &length, NULL);

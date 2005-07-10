@@ -1,3 +1,8 @@
+2005-07-08  Richard Hoelscher  <rah@rahga.com>
+
+	* maps.c: Declare 'y1' et al static, workaround for built-in 'y1()'
+	(load_map_from_file): Declare length as gsize.
+
 2005-07-05  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.map: Fix the comment to reflect reality.
