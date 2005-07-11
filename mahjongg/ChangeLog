@@ -1,3 +1,10 @@
+2005-07-11  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c: Use an integer index for internal storage of the
+	current game rather than throwing a string around. Also implement
+	ALan Horkan's suggestion of putting the game name in the title bar
+	(bug #308684).
+
 2005-07-08  Richard Hoelscher  <rah@rahga.com>
 
 	* maps.c: Declare 'y1' et al static, workaround for built-in 'y1()'

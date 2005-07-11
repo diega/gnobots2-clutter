@@ -71,7 +71,7 @@ static gint windowwidth, windowheight;
 GList * tileset_list = NULL;
 
 gchar *tileset = NULL;
-static gchar *mapset = NULL;
+static gint mapset = -1;
 static gchar *score_current_mapset = NULL;
 
 static gchar *selected_tileset = NULL;
@@ -102,7 +102,7 @@ enum {
 	GAME_WON,
 	GAME_LOST,
 	GAME_DEAD
-} game_over;
+} game_over = GAME_DEAD;
 
 static void clear_undo_queue (void);
 void you_won (void);
@@ -296,25 +296,43 @@ bg_colour_callback (GtkWidget *widget, gpointer data)
 			"/apps/mahjongg/bgcolour", tmp, NULL);
 }
 
+static gint get_mapset_index (void)
+{
+	gchar *mapset_name;
+	gint newmapset = -1;
+	gint i;
+
+	mapset_name = gconf_client_get_string (conf_client,
+					       "/apps/mahjongg/mapset",
+					       NULL);
+	for (i=0; i<nmaps; i++) 
+		if (g_utf8_collate (mapset_name, maps[i].name) == 0) 
+			newmapset = i;
+
+	if (newmapset == -1) {  /* Oops: name not found. */
+		if (mapset > 0) /* If we have a valid map, use it. */
+			newmapset = mapset;
+		else            /* Otherwise use the default. */
+			newmapset = 0;
+	} 
+
+	g_free (mapset_name);
+
+	return newmapset;
+}
+
 static void
 mapset_changed_cb (GConfClient *client,
 		   guint        cnxn_id,
 		   GConfEntry  *entry,
 		   gpointer     user_data)
+
 {
 	GtkWidget *dialog;
-	char *mapset_tmp;
 	gint response;
 
-	mapset_tmp = gconf_client_get_string (conf_client,
-			"/apps/mahjongg/mapset",
-			NULL);
 
-	/* We check whether the name is valid later. */
-	if (mapset_tmp != NULL) {
-		g_free (mapset);
-		mapset = mapset_tmp;
-	} 
+	mapset = get_mapset_index ();
 
 	new_map = TRUE;
 
@@ -347,16 +365,13 @@ mapset_changed_cb (GConfClient *client,
 static void
 set_map_selection (GtkWidget *widget, void *data)
 {
-	map *map;
+	gint target_mapset;
 
-	map = maps + gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
+	target_mapset = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
 	
-	g_free (mapset);
-	mapset = g_strdup (map->name);
-
 	gconf_client_set_string (conf_client,
 				 "/apps/mahjongg/mapset",
-				 mapset, NULL);
+				 maps[target_mapset].name, NULL);
 }
 
 static void
@@ -581,16 +596,13 @@ fill_tile_menu (GtkWidget *menu, gchar *sdir)
 static void
 fill_map_menu (GtkWidget *menu)
 {
-	gint lp, itemno=0 ;
+	gint lp;
 
-	for (lp=0;lp<nmaps;lp++) {
-		gchar *str = g_strdup(_(maps[lp].name)) ;
-
-		gtk_combo_box_append_text (GTK_COMBO_BOX (menu), str) ;
-		if (!g_ascii_strcasecmp (mapset, maps[lp].name))
-			gtk_combo_box_set_active (GTK_COMBO_BOX (menu), itemno); 
-		itemno++ ;
+	for (lp=0; lp<nmaps; lp++) {
+		gtk_combo_box_append_text (GTK_COMBO_BOX (menu), 
+					   _(maps[lp].name)) ;
 	}
+	gtk_combo_box_set_active (GTK_COMBO_BOX (menu), mapset);
 }
 
 void
@@ -957,6 +969,15 @@ scores_callback (GtkAction *action, gpointer data)
 static void
 init_game (void)
 {
+	gchar *newtitle;
+
+	newtitle = g_strdup_printf (_("%s - %s"), _("Mahjongg"), 
+				    _(maps[mapset].name));
+	gtk_window_set_title (GTK_WINDOW (window), newtitle);
+	g_free (newtitle);
+
+	score_current_mapset = maps[mapset].score_name;
+
         gtk_label_set_text (GTK_LABEL (tiles_label), MAX_TILES_STR);
         update_moves_left ();
         game_over = GAME_RUNNING;
@@ -1105,29 +1126,8 @@ clear_undo_queue (void)
 static void
 load_map (void)
 {
-	gchar* name = mapset;
-	gint lp ;
-	gboolean found;
-
-	new_map = FALSE;
-		
-	found = FALSE;
-	for (lp=0;lp<nmaps;lp++)
-		if (g_ascii_strcasecmp (maps[lp].name, name) == 0) {
-			found = TRUE;
-			break;
-		}
-
-	if (!found) {
-		lp = 0;
-		g_free (mapset);
-		mapset = g_strdup (maps[0].name);
-		/* We don't set the gconf key to avoid warning messages appearing multiple times.
-		 * Yes, I know this is a bad excuse. */
-	}
-
-	pos = maps[lp].map ;
-
+	new_map = FALSE;		
+	pos = maps[mapset].map ;
 	generate_dependencies ();
 	calculate_view_geometry ();
 	configure_pixmaps (); 
@@ -1158,8 +1158,7 @@ load_preferences (void)
 {
 	gchar *buf;
 	
-	mapset = gconf_client_get_string (conf_client,
-			"/apps/mahjongg/mapset", NULL);
+	mapset = get_mapset_index ();
 
 	buf = gconf_client_get_string (conf_client,
 			"/apps/mahjongg/bgcolour", NULL) ;
@@ -1187,20 +1186,6 @@ load_preferences (void)
 	load_images (selected_tileset);
 }
 
-static void set_score_file (gchar * mapset)
-{
-	int i;
-
-	/* FIXME: This is a bit ugly, but we only save the name of the
-	   map (and it isn't suitable for generating the scorefile
-	   name. It's also a bit close to code freeze to introduce
-	   gratuitous changes so this is it. */
-	for (i=0; i<nmaps; i++) {
-		if (g_utf8_collate (mapset, maps[i].name) == 0)
-			score_current_mapset = maps[i].score_name;
-	}
-}
-
 void
 new_game (void)
 {
@@ -1209,8 +1194,6 @@ new_game (void)
 	draw_all_tiles ();
 
 	init_game ();
-
-	set_score_file (mapset);
 
 	update_score_state ();
 }
@@ -1404,7 +1387,6 @@ main (int argc, char *argv [])
         
 	gtk_window_set_default_size (GTK_WINDOW (window), windowwidth,
 				     windowheight);
-	gtk_window_set_title (GTK_WINDOW (window), _("Mahjongg"));
 	g_signal_connect (G_OBJECT (window), "configure_event",
 			  G_CALLBACK (window_configure_cb), NULL);
 	g_signal_connect (G_OBJECT (window), "window_state_event",
@@ -1475,7 +1457,6 @@ main (int argc, char *argv [])
 
 	do_game ();
 	init_game ();
-	set_score_file (mapset);
 	update_score_state ();
 	
 	/* Note: we have to have a layout loaded before here so that the
