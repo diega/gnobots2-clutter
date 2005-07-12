@@ -117,14 +117,15 @@ private:
 			     gint x, gint y, GtkSelectionData *data, 
 			     guint info, guint time, Tetris *t);
 	static int timeoutHandler(void *d);
-	static int gameQuit(GtkWidget *widget, void *d);
-	static int gameNew(GtkWidget *widget, void *d);
+	static int gameQuit(GtkAction *action, void *d);
+	static int gameNew(GtkAction *action, void *d);
 	static int focusOut(GtkWidget *widget, GdkEvent *e, Tetris *t);
-	static int gamePause(GtkWidget *widget, void *d);
-	static int gameEnd(GtkWidget *widget, void *d);
-	static int gameAbout(GtkWidget *widget, void *d);
-	static int gameTopTen(GtkWidget *widget, void *d);
-	static int gameProperties(GtkWidget *widget, void *d);
+	static int gamePause(GtkAction *action, void *d);
+	static int gameEnd(GtkAction *action, void *d);
+	static int gameHelp(GtkAction *action, void *d);
+	static int gameAbout(GtkAction *action, void *d);
+	static int gameTopTen(GtkAction *action, void *d);
+	static int gameProperties(GtkAction *action, void *d);
 	static void setupdialogDestroy(GtkWidget *widget, void *d);
 	static void setupdialogResponse(GtkWidget *dialog, gint response_id, void *d);
 	static void setSound (GtkWidget *widget, gpointer data);
@@ -179,8 +180,12 @@ private:
 	int moveRotate;
 	int movePause;
 	
-	GnomeUIInfo *gameMenuPtr; 
-	GnomeUIInfo *gameSettingsPtr; 
+	GtkAction *new_game_action;
+	GtkAction *pause_action;
+	GtkAction *resume_action;
+	GtkAction *scores_action;
+	GtkAction *end_game_action;
+	GtkAction *preferences_action;
 
 	void manageFallen();
 

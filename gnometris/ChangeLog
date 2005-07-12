@@ -1,3 +1,9 @@
+2005-07-11  Richard Hoelscher  <rah@rahga.com>
+
+	* blocks.cpp (blockTable): Re-arrange blocks, set for an eventual
+	change where user can expect tetrads to emerge at only 2 rows tall.
+	* tetris.[c|h]: Support for GtkUIManager and GtkActions.
+
 2005-07-09  Paolo Borelli  <pborelli@katamail.com>
 
 	* blockops.cpp: use a better algorithm for checkFullLines and make

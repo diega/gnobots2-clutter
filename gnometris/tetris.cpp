@@ -33,6 +33,7 @@
 #include <games-gconf.h>
 #include <games-frame.h>
 #include <games-controls.h>
+#include <games-stock.h>
 
 #include <libgnomevfs/gnome-vfs.h>
 
@@ -111,6 +112,12 @@ Tetris::Tetris(int cmdlLevel):
 	fastFall(false),
         dropBlock(false)
 {
+	GtkUIManager *ui_manager;
+	GtkAccelGroup *accel_group;
+	GtkActionGroup *action_group;
+	GtkWidget *vbox;
+	GtkWidget *menubar;
+
 	gchar *outdir;
 	const GtkTargetEntry targets[] = {{"text/uri-list", 0, URI_LIST}, 
 					  {"property/bgimage", 0, URI_LIST},
@@ -119,6 +126,44 @@ Tetris::Tetris(int cmdlLevel):
 					  {"application/x-color", 0, COLOUR},
 					  {"x-special/gnome-reset-background", 0, RESET}};
 
+	const GtkActionEntry actions[] = {
+	{ "GameMenu", NULL, N_("_Game") },
+	{ "SettingsMenu", NULL, N_("_Settings") },
+	{ "HelpMenu", NULL, N_("_Help") },
+	{ "NewGame", GAMES_STOCK_NEW_GAME, NULL, NULL, NULL, G_CALLBACK (gameNew) },
+	{ "Pause", GAMES_STOCK_PAUSE_GAME, NULL, NULL, NULL, G_CALLBACK (gamePause) },
+	{ "Resume", GAMES_STOCK_RESUME_GAME, NULL, NULL, NULL, G_CALLBACK (gamePause) },
+	{ "Scores", GAMES_STOCK_SCORES, NULL, NULL, NULL, G_CALLBACK (gameTopTen) },
+	{ "EndGame", GAMES_STOCK_END_GAME, NULL, NULL, NULL, G_CALLBACK (gameEnd) },
+	{ "Quit", GTK_STOCK_QUIT, NULL, NULL, NULL, G_CALLBACK (gameQuit) },
+	{ "Preferences", GTK_STOCK_PREFERENCES, NULL, NULL, NULL, G_CALLBACK (gameProperties) },
+	{ "Contents", GAMES_STOCK_CONTENTS, NULL, NULL, NULL, G_CALLBACK (gameHelp) },
+	{ "About", GTK_STOCK_ABOUT, NULL, NULL, NULL, G_CALLBACK (gameAbout) }
+	};
+
+	const char ui_description[] =
+	"<ui>"
+	"  <menubar name='MainMenu'>"
+	"    <menu action='GameMenu'>"
+	"      <menuitem action='NewGame'/>"
+	"      <menuitem action='Pause'/>"
+	"      <menuitem action='Resume'/>"
+	"      <separator/>"
+	"      <menuitem action='Scores'/>"
+	"      <menuitem action='EndGame'/>"
+	"      <separator/>"
+	"      <menuitem action='Quit'/>"
+	"    </menu>"
+	"    <menu action='SettingsMenu'>"
+	"      <menuitem action='Preferences'/>"
+	"    </menu>"
+	"    <menu action='HelpMenu'>"
+	"      <menuitem action='Contents'/>"
+	"      <menuitem action='About'/>"
+	"    </menu>"
+	"  </menubar>"
+	"</ui>";
+	
 	if (!sound)
 		sound = new Sound();
 
@@ -145,43 +190,6 @@ Tetris::Tetris(int cmdlLevel):
 	g_signal_connect (G_OBJECT (w), "focus_out_event",
 			  G_CALLBACK (focusOut), this);
 
-	static GnomeUIInfo game_menu[] = 
-	{
-		GNOMEUIINFO_MENU_NEW_GAME_ITEM(gameNew, this),
-		GNOMEUIINFO_MENU_PAUSE_GAME_ITEM(gamePause, this),
-		GNOMEUIINFO_SEPARATOR,
-		GNOMEUIINFO_MENU_SCORES_ITEM(gameTopTen, this),
-		GNOMEUIINFO_MENU_END_GAME_ITEM(gameEnd, this),
-		GNOMEUIINFO_SEPARATOR,
-		GNOMEUIINFO_MENU_QUIT_ITEM(gameQuit, this),
-		GNOMEUIINFO_END
-	};
-
-	gameMenuPtr = game_menu;
-	
-	static GnomeUIInfo settings_menu[] = 
-	{
-		GNOMEUIINFO_MENU_PREFERENCES_ITEM(gameProperties, this),
-		GNOMEUIINFO_END
-	};
-
-	gameSettingsPtr = settings_menu;
-	
-	GnomeUIInfo help_menu[] = 
-	{
-		GNOMEUIINFO_HELP((gpointer)"gnometris"),
-		GNOMEUIINFO_MENU_ABOUT_ITEM(gameAbout, this),
-		GNOMEUIINFO_END
-	};
-
-	GnomeUIInfo mainmenu[] = 
-	{
-		GNOMEUIINFO_MENU_GAME_TREE(game_menu),
-		GNOMEUIINFO_MENU_SETTINGS_TREE(settings_menu),
-		GNOMEUIINFO_MENU_HELP_TREE(help_menu),
-		GNOMEUIINFO_END
-	};
-
 	line_fill_height = 0;
 	line_fill_prob = 5;
 
@@ -197,12 +205,36 @@ Tetris::Tetris(int cmdlLevel):
 
 	initOptions ();
 
-	gnome_app_create_menus(GNOME_APP(w), mainmenu);
+	/* prepare menus */
+	games_stock_init ();
+	action_group = gtk_action_group_new ("MenuActions");
+	gtk_action_group_set_translation_domain (action_group, GETTEXT_PACKAGE);
+	gtk_action_group_add_actions (action_group, actions, G_N_ELEMENTS (actions), this);
+	ui_manager = gtk_ui_manager_new ();
+	gtk_ui_manager_insert_action_group (ui_manager, action_group, 0);
+	gtk_ui_manager_add_ui_from_string (ui_manager, ui_description, -1, NULL);
+	accel_group = gtk_ui_manager_get_accel_group (ui_manager);
+	gtk_window_add_accel_group (GTK_WINDOW (w), accel_group);
+
+	new_game_action = gtk_action_group_get_action (action_group, "NewGame");
+	pause_action = gtk_action_group_get_action (action_group, "Pause");
+	resume_action = gtk_action_group_get_action (action_group, "Resume");
+	scores_action = gtk_action_group_get_action (action_group, "Scores");
+	end_game_action = gtk_action_group_get_action (action_group, "EndGame");
+	preferences_action = gtk_action_group_get_action (action_group, "Preferences");
+
+	games_stock_set_pause_actions (pause_action, resume_action);
+
+	menubar = gtk_ui_manager_get_widget (ui_manager, "/MainMenu");
 
 	GtkWidget * hb = gtk_hbox_new(FALSE, 0);
-	gnome_app_set_contents(GNOME_APP(w), hb);
 
-	field = new Field(/*ops*/);
+	vbox = gtk_vbox_new (FALSE, 0);
+	gnome_app_set_contents (GNOME_APP (w), vbox);
+	gtk_box_pack_start (GTK_BOX (vbox), menubar, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), hb, TRUE, TRUE, 0);
+
+	field = new Field();
 	ops = new BlockOps(field);
 
 	gtk_widget_set_events(w, gtk_widget_get_events(w) | 
@@ -241,9 +273,9 @@ Tetris::Tetris(int cmdlLevel):
 	scoreFrame->show();
 	gtk_widget_show(w);
 
-	gtk_widget_set_sensitive(gameMenuPtr[1].widget, FALSE);
-	gtk_widget_set_sensitive(gameMenuPtr[4].widget, FALSE);
-	gtk_widget_set_sensitive(gameSettingsPtr[0].widget, TRUE);
+	gtk_action_set_sensitive(pause_action, FALSE);
+	gtk_action_set_sensitive(end_game_action, FALSE);
+	gtk_action_set_sensitive(preferences_action, TRUE);
 
 	high_scores = new HighScores ();
 }
@@ -278,12 +310,12 @@ Tetris::setupScoreState ()
 
 	top = gnome_score_get_notable ("gnometris", NULL, &names, &scores, &scoretimes);
 	if (top > 0) {
-		gtk_widget_set_sensitive (gameMenuPtr[3].widget, TRUE);
+		gtk_action_set_sensitive (scores_action, TRUE);
 		g_strfreev (names);
 		g_free (scores);
 		g_free (scoretimes);
 	} else {
-		gtk_widget_set_sensitive (gameMenuPtr[3].widget, FALSE);
+		gtk_action_set_sensitive (scores_action, FALSE);
 	}
 }
 
@@ -296,7 +328,7 @@ Tetris::setupdialogDestroy(GtkWidget *widget, void *d)
 		gtk_widget_destroy(t->setupdialog);
 	}
 	t->setupdialog = 0;
-	gtk_widget_set_sensitive(t->gameMenuPtr[0].widget, TRUE);
+	gtk_action_set_sensitive(t->new_game_action, TRUE);
 }
 
 void
@@ -698,7 +730,7 @@ Tetris::fillMenu(GtkWidget *menu, char *pixname, char *dirname,
 }
 
 int 
-Tetris::gameProperties(GtkWidget *widget, void *d)
+Tetris::gameProperties(GtkAction *action, void *d)
 {
 	GtkWidget *notebook;
 	GtkWidget *vbox;
@@ -908,7 +940,7 @@ Tetris::gameProperties(GtkWidget *widget, void *d)
 	t->theme_preview->previewBlock(4, 0, 0);
 
 	gtk_widget_show_all (t->setupdialog);
-	gtk_widget_set_sensitive(t->gameMenuPtr[0].widget, FALSE);
+	gtk_action_set_sensitive(t->new_game_action, FALSE);
 
 	return TRUE;
 }
@@ -922,7 +954,7 @@ Tetris::focusOut(GtkWidget *widget, GdkEvent *e, Tetris *t)
 }
 
 int
-Tetris::gamePause(GtkWidget *widget, void *d)
+Tetris::gamePause(GtkAction *action, void *d)
 {
 	Tetris *t = (Tetris*) d;
 	t->togglePause();
@@ -930,7 +962,7 @@ Tetris::gamePause(GtkWidget *widget, void *d)
 }
 
 int
-Tetris::gameEnd(GtkWidget *widget, void *d)
+Tetris::gameEnd(GtkAction *action, void *d)
 {
 	Tetris *t = (Tetris*) d;
 
@@ -942,7 +974,7 @@ Tetris::gameEnd(GtkWidget *widget, void *d)
 }
 
 int
-Tetris::gameQuit(GtkWidget *widget, void *d)
+Tetris::gameQuit(GtkAction *action, void *d)
 {
 	Tetris *t = (Tetris*) d;
 
@@ -1306,10 +1338,16 @@ void
 Tetris::togglePause()
 {
 	paused = !paused;
+
 	if (paused)
 		field->showPauseMessage();
 	else
 		field->hidePauseMessage();
+
+	gtk_action_set_sensitive (pause_action, !paused);
+	gtk_action_set_sensitive (resume_action, paused);
+	gtk_action_set_visible (pause_action, !paused);
+	gtk_action_set_visible (resume_action, paused);
 }
 
 void
@@ -1335,9 +1373,11 @@ Tetris::generate()
 void
 Tetris::endOfGame()
 {
-	gtk_widget_set_sensitive(gameMenuPtr[1].widget, FALSE);
-	gtk_widget_set_sensitive(gameMenuPtr[4].widget, FALSE);
-	gtk_widget_set_sensitive(gameSettingsPtr[0].widget, TRUE);
+	if (paused) togglePause();
+	gtk_action_set_sensitive (pause_action, FALSE);
+	gtk_action_set_sensitive (end_game_action, FALSE);
+	gtk_action_set_sensitive (preferences_action, TRUE);
+
 	color_next = -1;
 	blocknr_next = -1;
 	rot_next = -1;
@@ -1356,7 +1396,7 @@ Tetris::endOfGame()
 }
 
 int
-Tetris::gameNew(GtkWidget *widget, void *d)
+Tetris::gameNew(GtkAction *action, void *d)
 {
 	Tetris *t = (Tetris*) d;
 
@@ -1391,9 +1431,9 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 	t->preview->previewBlock(blocknr_next, rot_next, color_next);
 	gtk_widget_queue_draw(t->preview->getWidget());
 
-	gtk_widget_set_sensitive(t->gameMenuPtr[1].widget, TRUE);
-	gtk_widget_set_sensitive(t->gameMenuPtr[4].widget, TRUE);
-	gtk_widget_set_sensitive(t->gameSettingsPtr[0].widget, FALSE);
+	gtk_action_set_sensitive(t->pause_action, TRUE);
+	gtk_action_set_sensitive(t->end_game_action, TRUE);
+	gtk_action_set_sensitive(t->preferences_action, FALSE);
 
 	t->field->hidePauseMessage();
 	t->field->hideGameOverMessage();
@@ -1404,7 +1444,17 @@ Tetris::gameNew(GtkWidget *widget, void *d)
 }
 
 int
-Tetris::gameAbout(GtkWidget *widget, void *d)
+Tetris::gameHelp(GtkAction *action, void *d)
+{
+	Tetris *t = (Tetris*) d;
+
+	gnome_help_display ("gnometris.xml", NULL, NULL);
+
+	return TRUE;
+}
+
+int
+Tetris::gameAbout(GtkAction *action, void *d)
 {
 	Tetris *t = (Tetris*) d;
 
@@ -1425,7 +1475,7 @@ Tetris::gameAbout(GtkWidget *widget, void *d)
 }
 
 int
-Tetris::gameTopTen(GtkWidget *widget, void *d)
+Tetris::gameTopTen(GtkAction *action, void *d)
 {
 	Tetris *t = (Tetris*) d;
 	t->high_scores->show(0);
