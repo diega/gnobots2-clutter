@@ -1274,7 +1274,7 @@ static const GtkToggleActionEntry toggle_actions[] = {
 	{ "PauseGame", GAMES_STOCK_PAUSE_GAME, NULL, NULL, NULL, G_CALLBACK (pause_callback) }
 };
 
-static const char *ui_description =
+static const char ui_description[] =
 "<ui>"
 "  <menubar name='MainMenu'>"
 "    <menu action='GameMenu'>"

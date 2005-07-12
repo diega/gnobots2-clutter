@@ -1,3 +1,7 @@
+2005-07-11  Richard Hoelscher  <rah@rahga.com>
+
+	* mahjongg.c: Make ui_description readonly.
+
 2005-07-11  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* mahjongg.c: Use an integer index for internal storage of the
@@ -185,7 +189,7 @@
 	compilers should be OK, I have a bug (#145543) which I think is a
 	result of this assumption failing.
 
-2004-08-24  Richard Hoelscher  <rahga@localhost.localdomain>
+2004-08-24  Richard Hoelscher  <rah@rahga.com>
 
 	* drawing.c (configure_pixmaps): Recreate tile images only when 
 	the tileset changed, or if tile size changed after window resize.

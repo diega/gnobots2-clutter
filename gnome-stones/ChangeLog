@@ -1,3 +1,7 @@
+2005-07-11  Richard Hoelscher  <rah@rahga.com>
+
+	* main.c: Make ui_description readonly.
+
 2005-07-08  Richard Hoelscher  <rah@rahga.com>
 
 	* main.c (game_update_title): Change height from guint to gint,

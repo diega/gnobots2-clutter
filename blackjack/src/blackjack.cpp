@@ -253,7 +253,7 @@ create_main_window (void)
         char         *label_string;
         GtkActionGroup *actions;
 
-        static const char *ui_definition =
+        static const char ui_definition[] =
                 "<ui>"
                 "  <menubar name='MenuBar'>"
                 "    <menu name='GameMenu' action='game-menu'>"
