@@ -15,10 +15,10 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 @INTLTOOL_SCHEMAS_RULE@
 
 EXTRA_DIST    = $(rules_DATA)		\
-		$(sys_DATA)		\
+		$(sys_in_files)		\
 		$(schema_in_files)
 
-DISTCLEANFILES = $(schema_DATA)
+DISTCLEANFILES = $(schema_DATA) $(sys_DATA)
 
 install-data-local:
 if GCONF_SCHEMAS_INSTALL
