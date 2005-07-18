@@ -9,7 +9,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include <gnome.h>
+#include <gtk/gtk.h>
 
 gboolean mouse_movement_cb (GtkWidget *widget, GdkEventMotion *e, gpointer data);
 gboolean mouse_click_cb (GtkWidget *widget, GdkEventButton *e, gpointer data);

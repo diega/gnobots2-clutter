@@ -9,7 +9,7 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include <gnome.h>
+#include <glib.h>
 #include <gconf/gconf-client.h>
 
 #define APPNAME "same-gnome"

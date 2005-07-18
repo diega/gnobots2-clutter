@@ -6,7 +6,8 @@
  *
  */
 
-#include <gnome.h>
+#include <libgnome/gnome-score.h>
+#include <glib/gi18n.h>
 
 #include "same-gnome.h"
 

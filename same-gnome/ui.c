@@ -8,7 +8,9 @@
 
 #include "config.h"
 
-#include <gnome.h>
+#include <gtk/gtk.h>
+#include <glib/gi18n.h>
+#include <libgnome/gnome-help.h>
 
 #include <games-files.h>
 #include <games-gridframe.h>
@@ -538,7 +540,7 @@ void build_gui (void)
   gtk_box_pack_start (GTK_BOX (vbox), 
 		      gtk_ui_manager_get_widget (ui_manager, "/MainMenu"),
 		      FALSE, FALSE, 0);  
-  
+	
   gridframe = games_grid_frame_new (board_width, board_height);
   games_grid_frame_set_padding (GAMES_GRID_FRAME (gridframe), 1, 1);
   gtk_box_pack_start (GTK_BOX (vbox), gridframe, TRUE, TRUE, 0);
@@ -568,7 +570,7 @@ void build_gui (void)
 	gtk_box_pack_start (GTK_BOX (vbox), gtk_hseparator_new (), FALSE, FALSE, 0);
 
   hbox = gtk_hbox_new (TRUE, 0);
-  gtk_box_pack_end (GTK_BOX (vbox), hbox, FALSE, FALSE, GNOME_PAD);
+  gtk_box_pack_end (GTK_BOX (vbox), hbox, FALSE, FALSE, 8);
 
 	messagewidget = gtk_label_new ("");
 	gtk_box_pack_start (GTK_BOX (hbox), messagewidget, TRUE, FALSE, 0);

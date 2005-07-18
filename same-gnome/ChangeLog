@@ -1,3 +1,16 @@
+2005-07-18  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* drawing.h: 
+	* same-gnome.h: 
+	* input.h: 
+	* game.h: 
+	* same-gnome.c: 
+	* input.c: 
+	* game.c: 
+	* drawing.c: Rearrange include files to try and avoid a
+	libgnomeui dependence. It drags in a lot of stuff we don't
+	actually use.
+
 2005-06-07  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* ui.c: Patch from Paolo Borelli to fix some memory leaks and

@@ -9,7 +9,7 @@
 #ifndef UI_H
 #define UI_H
 
-#include <gnome.h>
+#include <gtk/gtk.h>
 
 #define clear_message() set_message (0)
 

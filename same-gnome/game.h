@@ -9,7 +9,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <gnome.h>
+#include <glib.h>
 
 /* Animation frame details. */
 #define ACCELERATION 0.4

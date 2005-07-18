@@ -6,6 +6,8 @@
  *
  */
 
+#include <gtk/gtk.h>
+
 #ifndef DRAWING_H
 #define DRAWING_H
 
