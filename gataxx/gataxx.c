@@ -392,14 +392,6 @@ GConfClient * get_gconf_client() {
 	return gconfclient;
 }
 
-/* returns /apps/gataxx/item */ 
-char * get_gconf_uri(const char * item) {
-	static char uri[255];
-	strcpy(uri, "/apps/gataxx/");
-	strcat(uri, item);
-	return uri;
-}
-
 static gboolean save_state_cb (GnomeClient * client, gint phase, 
 			       GnomeSaveStyle style, gboolean shutdown,
 			       GnomeInteractStyle interactive, gboolean fast,

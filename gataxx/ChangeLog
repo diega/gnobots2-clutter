@@ -1,3 +1,12 @@
+2005-07-19  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gataxx.h: 
+	* gataxx.c: 
+	* properties.c: Remove get_gconf_uri () and replace it with static
+	#defined strings. This costs 16 bytes more, but rewriting
+	get_gconf_uri so it isn't so evil and error-prone will cost more
+	than 16 bytes.
+
 2005-05-09  Alan Horkan <horkana tcd ie>
 
 	* help/C/gataxx.xml: Removed Known Bugs sections where not needed.

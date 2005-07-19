@@ -48,7 +48,6 @@ void properties_cb(GtkWidget * widget, gpointer data);
 void about_cb(GtkWidget * widget, gpointer data);
 void boxclicked_cb(GtkWidget * widget, int x, int y);
 GnomeUIInfo * get_mainmenu(void);
-char * get_gconf_uri(const char * item);
 GConfClient * get_gconf_client(void);
 char * get_tileset_path(char * tileset);
 gboolean computer_move_cb(gpointer turn);

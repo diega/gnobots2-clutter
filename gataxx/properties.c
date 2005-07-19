@@ -33,6 +33,16 @@
 #include "properties.h"
 #include "gataxx.h"
 
+#define GCONF_PREFIX "/apps/gataxx/"
+
+#define GCONF_BLACKLEVEL GCONF_PREFIX "blacklevel"
+#define GCONF_WHITELEVEL GCONF_PREFIX "whitelevel"
+#define GCONF_QUICKMOVES GCONF_PREFIX "quickmoves"
+#define GCONF_TILESET GCONF_PREFIX "tileset"
+#define GCONF_ANIMATE GCONF_PREFIX "animate"
+#define GCONF_SHOWGRID GCONF_PREFIX "showgrid"
+#define GCONF_FLIPFINAL GCONF_PREFIX "flipfinal"
+
 PropertiesData _props;
 PropertiesData * props=&_props;
 
@@ -92,11 +102,11 @@ gchar * props_get_tile_set() {
 }
 
 /* functions to get things from gconf */
-static int props_get_int(const char * setting, int def, int low, int high) {
+static int props_get_int(const gchar * key, int def, int low, int high) {
 	int result;
 	GError * error=NULL;
 
-	result=gconf_client_get_int(get_gconf_client(), get_gconf_uri(setting), &error);
+	result=gconf_client_get_int(get_gconf_client(), key, &error);
 	if (error!=NULL) {
 		g_error_free(error);
 		return def;
@@ -105,11 +115,11 @@ static int props_get_int(const char * setting, int def, int low, int high) {
 	return result;
 }
 
-static gboolean props_get_bool(gchar * key, gboolean def) {
+static gboolean props_get_bool(const gchar * key, gboolean def) {
 	GError * error=NULL;
 	gboolean result;
 
-	result=gconf_client_get_bool(get_gconf_client(), get_gconf_uri(key), &error);
+	result=gconf_client_get_bool(get_gconf_client(), key, &error);
 	if (error!=NULL) {
 		g_error_free(error);
 		return def;
@@ -121,12 +131,12 @@ static gboolean props_get_bool(gchar * key, gboolean def) {
 /* FIXME: watch this: */
 /* Returns gchar* you should free with g_free(). Returns NULL on not-found
  * or other error. */
-static gchar * props_get_string(gchar *key)
+static gchar * props_get_string(const gchar *key)
 {
 	GError *error = NULL;
 	gchar *retval;
 
-	retval = gconf_client_get_string (get_gconf_client(), get_gconf_uri(key), &error);
+	retval = gconf_client_get_string (get_gconf_client(), key, &error);
 	if (error != NULL) {
 		g_error_free (error);
 		return NULL;
@@ -137,35 +147,35 @@ static gchar * props_get_string(gchar *key)
 
 void load_properties (void)
 {
-	props->black_level=props_get_int("blacklevel", 0, 0, 3);
-	props->white_level=props_get_int("whitelevel", 0, 0, 3);
+	props->black_level=props_get_int(GCONF_BLACKLEVEL, 0, 0, 3);
+	props->white_level=props_get_int(GCONF_WHITELEVEL, 0, 0, 3);
 
-	props->tile_set=props_get_string("tileset");
+	props->tile_set=props_get_string(GCONF_TILESET);
 	if (props->tile_set == NULL) props->tile_set = g_strdup("classic.png");
 
-	props->animate=props_get_bool("animate", TRUE);
-	props->show_grid=props_get_bool("showgrid", TRUE);
-	props->quick_moves=props_get_bool("quickmoves", FALSE);
-	props->flip_final=props_get_bool ("flipfinal", TRUE);
+	props->animate=props_get_bool(GCONF_ANIMATE, TRUE);
+	props->show_grid=props_get_bool(GCONF_SHOWGRID, TRUE);
+	props->quick_moves=props_get_bool(GCONF_QUICKMOVES, FALSE);
+	props->flip_final=props_get_bool (GCONF_FLIPFINAL, TRUE);
 
 }
 
 static void
 save_properties (void)
 {
-	gconf_client_set_int (get_gconf_client(), get_gconf_uri("blacklevel"),
+	gconf_client_set_int (get_gconf_client(), GCONF_BLACKLEVEL,
 	                      props->black_level, NULL);
-	gconf_client_set_int (get_gconf_client(), get_gconf_uri("whitelevel"),
+	gconf_client_set_int (get_gconf_client(), GCONF_WHITELEVEL,
 	                      props->white_level, NULL);
-	gconf_client_set_bool (get_gconf_client(), get_gconf_uri("quickmoves"),
+	gconf_client_set_bool (get_gconf_client(), GCONF_QUICKMOVES,
 	                       props->quick_moves, NULL);
-	gconf_client_set_string (get_gconf_client(), get_gconf_uri("tileset"),
+	gconf_client_set_string (get_gconf_client(), GCONF_TILESET,
 	                         props->tile_set, NULL);
-	gconf_client_set_bool (get_gconf_client(), get_gconf_uri("animate"),
+	gconf_client_set_bool (get_gconf_client(), GCONF_ANIMATE,
 	                      props->animate, NULL);
-	gconf_client_set_bool (get_gconf_client(), get_gconf_uri("showgrid"),
+	gconf_client_set_bool (get_gconf_client(), GCONF_SHOWGRID,
 	                      props->show_grid, NULL);
-	gconf_client_set_bool (get_gconf_client(), get_gconf_uri("flipfinal"),
+	gconf_client_set_bool (get_gconf_client(), GCONF_FLIPFINAL,
 	                       props->flip_final, NULL);
 }
 
