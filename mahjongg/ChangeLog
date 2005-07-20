@@ -1,3 +1,8 @@
+2005-07-20  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/mahjongg.xml: Fix a stray </a> pointed out by Peter
+	Moulder. I should be more careful copying html links into docbook.
+
 2005-07-11  Richard Hoelscher  <rah@rahga.com>
 
 	* mahjongg.c: Make ui_description readonly.
