@@ -151,7 +151,7 @@ void game_over_dialog (gint place)
 																								_("Unfortunately your score did not make the top ten."));
 			gtk_dialog_add_buttons (GTK_DIALOG (baddialog), 
 															GTK_STOCK_QUIT, GTK_RESPONSE_REJECT,
-															_("New Game"), GTK_RESPONSE_ACCEPT,
+															_("_New Game"), GTK_RESPONSE_ACCEPT,
 															NULL);
 			gtk_dialog_set_default_response (GTK_DIALOG (baddialog), GTK_RESPONSE_ACCEPT);
 		}

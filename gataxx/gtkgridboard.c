@@ -256,6 +256,17 @@ static gint get_pixmap_num(int piece) {
         return EMPTY_PIXMAP;
 }
 
+static void gtk_gridboard_redraw_grid (GtkGridBoard *gridboard)
+{
+  int x, y;
+
+  for (x=0; x<gridboard->height; x++) {
+    for (y=0; y<gridboard->width; y++) {
+      gtk_gridboard_draw_box(gridboard, x, y);
+    }
+  }
+}
+
 void gtk_gridboard_paint(GtkGridBoard * gridboard) {
         int x, y;
         int piecepic;
@@ -268,14 +279,8 @@ void gtk_gridboard_paint(GtkGridBoard * gridboard) {
                         gtk_gridboard_draw_pixmap(gridboard, piecepic, x, y);
                 }
         }
-	/* FIXME: There has to be a better way. */
-        for (x=0; x<gridboard->height; x++) {
-                for (y=0; y<gridboard->width; y++) {
-		  if (gridboard->selected[x][y] != SELECTED_NONE)
-			    gtk_gridboard_draw_box(gridboard, x, y);
-                }
-        }
-}
+	gtk_gridboard_redraw_grid (gridboard);
+ }
 
 
 static void gtk_gridboard_draw_pixmap(GtkGridBoard * gridboard, gint which, gint
@@ -321,7 +326,7 @@ static void gtk_gridboard_draw_box(GtkGridBoard *gridboard, gint x, gint y) {
         
         if (selected==SELECTED_NONE) {
                 if (!gridboard->showgrid) {
-                        return;
+        		return;
                 } else {
                         gc=widget->style->black_gc;
                 }
@@ -550,7 +555,7 @@ void gtk_gridboard_clear_selections(GtkGridBoard *gridboard)
 			gridboard->selected[x][y]=SELECTED_NONE;
 		}
 	}
-	gtk_gridboard_paint(gridboard);
+	gtk_gridboard_paint (gridboard);
 }
 
 void gtk_gridboard_clear_pieces(GtkGridBoard *gridboard) 
@@ -634,14 +639,12 @@ gpointer gtk_gridboard_revert_state(GtkGridBoard *gridboard)
 	
 	prevstate=gridboard->statelist->prev;
 
+	gtk_gridboard_clear_selections (gridboard);
 	for (x=0; x<gridboard->width; x++) {
 		for (y=0; y<gridboard->width; y++) {
 			gridboard->board[x][y]=thisstate->board[x][y];
 		}
 	}
-	if (!gridboard->animate) gtk_gridboard_paint(gridboard);
-
-	gtk_gridboard_clear_selections (gridboard);
 
 	data=thisstate->data;
 	gridboard->statelist=prevstate;

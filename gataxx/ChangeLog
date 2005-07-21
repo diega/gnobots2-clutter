@@ -1,3 +1,14 @@
+2005-07-21  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gataxx.c: Invalidate the selection after an undo, it won't be
+	either displayed or for the correct colour. See bug #310984,
+
+	* gtkgridboard.c: When undoing a move, clear the selection (and
+	redraw the board) with the old data. Fixes bug #311001.
+	I also broke out the grid drawing code from gtk_gridboard_paint in
+	a failed attempt to fix the bug. This might be useful when we redo
+	the graphics engine and can properly delete grid lines.
+
 2005-07-19  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gataxx.h: 
