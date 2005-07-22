@@ -1,3 +1,7 @@
+2005-07-22  Richard Hoelscher  <rah@rahga.com>
+
+	* help/C/gataxx.xml: Rule clarification and update, #311126. 
+
 2005-07-21  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gataxx.c: Invalidate the selection after an undo, it won't be

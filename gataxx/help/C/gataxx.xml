@@ -151,8 +151,8 @@
       easy to learn, especially if you are familiar with other
       disc-flipping games.  The object of the game is to have more
       discs of your color on the board than your opponent does.  The
-      game ends when the board is full or when one player has no discs
-      at all on the board.
+      game ends when one of the players is unable to make a move during
+      their turn.
     </para>
     <para>
       Although <application>Ataxx</application> is a two player game,
