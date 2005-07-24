@@ -345,7 +345,6 @@ preferences_restore (void)
 {
   char        *filename;
   gboolean     def;
-  guint        cave;
   GtkWidget * dialog;
   
 #if 0
@@ -387,12 +386,12 @@ preferences_restore (void)
                                       KEY_GAME_NAME, NULL);
   def = (filename == NULL);
 
-  cave = gconf_client_get_int (get_gconf_client (),
-                               KEY_START_CAVE, NULL);
+  start_cave = gconf_client_get_int (get_gconf_client (),
+				     KEY_START_CAVE, NULL);
 
   if (!default_game || !load_game_by_name (default_game, 0))
     {
-      if (def || !load_game_by_name (filename, cave))
+      if (def || !load_game_by_name (filename, start_cave))
 	{
 	  if (!load_game_by_name (CAVESDIR"/default.caves", 0)) {
             dialog = gtk_message_dialog_new (GTK_WINDOW (app),

@@ -1,3 +1,23 @@
+2005-07-24  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gnomekoban.caves.in:
+	* default.caves.in:
+	* atari.caves.in:
+	* tutorial.caves.in: Make the cave file behaviour consistent. The
+	tutorial now ends rather than repeating the last cave ad
+	infinitum. All the others now allow you to start at any cave.
+	This is necessary to support the new semantics for start_cave. The
+	only cave set this adversely affects is the atari cave set.
+	
+	* main.c:	
+	* preferences.c: Make sure we set the restore and save the
+	start_cave variable properly. This changes the semantics of the
+	start_cave variable to be a level-save property rather than a "you
+	can start from one of these check-points" property. Ideally I
+	would have kept both semantics (as different variables) but we are
+	well past feature freeze and this is the more useful
+	behaviour. This superficially solves bug #310564.
+
 2005-07-11  Richard Hoelscher  <rah@rahga.com>
 
 	* main.c: Make ui_description readonly.

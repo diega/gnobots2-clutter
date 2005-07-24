@@ -581,8 +581,11 @@ countdown_timeout_function (gpointer data)
 	  return TRUE;
 	}
       
-      if (cave->next)
+      if (cave->next) {
 	newcave= gstones_cave_load (game, cave->next);
+	start_cave++;
+	gconf_set_start_cave (start_cave);
+      }
 	
       curtain_start (newcave);
 

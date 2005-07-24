@@ -44,11 +44,27 @@ Number=21
 
 [Start caves]
 Cave001=A1
-Cave002=E1
-Cave003=I1
-Cave004=M1
-Number=4
-
+Cave002=B1
+Cave003=C1
+Cave004=D1
+Cave005=Bonus Life 1
+Cave006=E1
+Cave007=F1
+Cave008=G1
+Cave009=H1
+Cave010=Bonus Life 2
+Cave011=I1
+Cave012=J1
+Cave013=K1
+Cave014=L1
+Cave015=Bonus Life 3
+Cave016=M1
+Cave017=N1
+Cave018=O1
+Cave019=P1
+Cave020=Bonus Life 4
+Cave021=Congratulations
+Number=21
 
 [A1]
 Diamonds needed= 12

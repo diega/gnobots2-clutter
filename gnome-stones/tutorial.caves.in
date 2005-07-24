@@ -302,7 +302,6 @@ Time=100
 gnome-stones:magic wall:millingTime=4
 gnome-stones:amoeba:slowTime=4
 gnome-stones:amoeba:maxSize=200
-Next cave=Tutorial 11
 Height=12
 Width=20
 Line01=XXXXXXXXXXXXXXXXXXXX
