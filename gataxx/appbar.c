@@ -19,8 +19,8 @@
  */
 
 
-#include <gnome.h>
 #include <glib.h>
+#include <glib/gi18n.h>
 #include "gataxx.h"
 #include "appbar.h"
 
@@ -33,7 +33,9 @@ static GtkWidget * appbar = NULL;
 GtkWidget * appbar_new() {
 	GtkWidget * hbox;
 
-	appbar=gnome_appbar_new(FALSE, TRUE, GNOME_PREFERENCES_NEVER);
+	appbar = gtk_statusbar_new();
+	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (appbar), FALSE);
+
 	hbox=gtk_hbox_new(TRUE, 5);
 
 	white_label=gtk_label_new(_("Light:"));
@@ -49,14 +51,14 @@ GtkWidget * appbar_new() {
 	gtk_box_pack_start(GTK_BOX(hbox), black_score, FALSE, FALSE, 0);
 
 	gtk_widget_show_all(hbox);
-	gtk_box_pack_start(GTK_BOX(appbar), hbox, FALSE, FALSE, 0);
+	gtk_box_pack_end(GTK_BOX(appbar), hbox, FALSE, FALSE, 0);
 
 	return appbar;	
 }
-	
+
 void appbar_set_white(int pieces) {
-        gchar * buf;
-  
+	gchar * buf;
+
 	buf = g_strdup_printf ("%d", pieces);
 	gtk_label_set_text(GTK_LABEL(white_score), buf); 
 	g_free (buf);
@@ -71,10 +73,13 @@ void appbar_set_black(int pieces) {
 }
 
 void appbar_set_status(gchar * status) {
-	gnome_appbar_set_status(GNOME_APPBAR(appbar), status);
+	gtk_statusbar_pop(GTK_STATUSBAR(appbar), 0);
+	gtk_statusbar_push(GTK_STATUSBAR(appbar), 0, status);
 }
 
 void appbar_set_turn (int player) 
 {
-  appbar_set_status (player == WHITE ? _("Light's move") : _("Dark's move"));
+	gtk_statusbar_pop(GTK_STATUSBAR(appbar), 0);
+	gtk_statusbar_push(GTK_STATUSBAR(appbar), 0,
+			   player == WHITE ? _("Light's move") : _("Dark's move"));
 }

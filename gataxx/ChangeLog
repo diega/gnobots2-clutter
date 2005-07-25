@@ -1,3 +1,8 @@
+2005-07-25  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* appbar.c: Patch from Paolo Borelli to change the gnoem_appbar to
+	a gtk_statusbar.
+
 2005-07-22  Richard Hoelscher  <rah@rahga.com>
 
 	* help/C/gataxx.xml: Rule clarification and update, #311126. 
