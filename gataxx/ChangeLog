@@ -1,3 +1,9 @@
+2005-07-29  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/figures/*
+	* help/C/gataxx.xml: Bumped the version numbers. Redo the
+	screenshots.
+
 2005-07-25  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* appbar.c: Patch from Paolo Borelli to change the gnoem_appbar to
