@@ -1,3 +1,7 @@
+2005-07-29  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/gnometris.xml: Update the appversion for 2.12.
+
 2005-07-11  Richard Hoelscher  <rah@rahga.com>
 
 	* blocks.cpp (blockTable): Re-arrange blocks, set for an eventual
