@@ -2,7 +2,7 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY appversion "2.10">
+  <!ENTITY appversion "2.12">
   <!ENTITY manrevision "2.8">
   <!ENTITY date "September 2004">
   <!ENTITY app "<application>GNOME Stones</application>">
@@ -414,32 +414,10 @@
   </mediaobject>
    </screenshot>
   </figure>
-  <para>
+<!--  <para>
     The <guilabel>Sound</guilabel> tab contains only one option: to
    enable or disable sound in the game.
-  </para>
-  <para>
-   The <guilabel>Misc.</guilabel> tab also has a single option: the
-   style of scrolling you would like to use. 
-   <variablelist>
-   <varlistentry>
-   <listitem><para>
-   <guimenuitem>Atari like scrolling</guimenuitem>&mdash; only
-   scroll the screen when near the edge.
-   </para></listitem>
-   <listitem><para>
-   <guimenuitem>Smooth scrolling</guimenuitem>&mdash; smoothly
-   scroll the screen to keep the player in the center. This may make
-   you sea-sick.
-   </para></listitem>
-   <listitem><para>
-   <guimenuitem>Atari in the center</guimenuitem>&mdash; always keep
-   the player in the center of the screen.
-   </para></listitem>
-   </varlistentry>
-   </variablelist>
-
-  </para>
+  </para> -->
   <para>
    All preferences are applied and saved instantly and
    automatically. Be warned that if you change the game type, your
