@@ -2,7 +2,7 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY appversion "2.10">
+  <!ENTITY appversion "2.12">
   <!ENTITY manrevision "2.10">
   <!ENTITY date "June 2005">
   <!ENTITY app "<application>GNOME Mahjongg</application>">
@@ -227,26 +227,11 @@
     </figure>
 
     <para>
-      <application>GNOME Mahongg</application> is played by pointing and 
-      clicking on the two tiles you want matched and then they are 
-      removed from the game.  If the two tiles don't match, a dialog 
-      appears telling you this.
+      <application>Mahongg</application> is played by 
+      clicking on two matching tiles that are then removed. Play
+      continues until all the tiles are removed or there are no
+      available pairs.
     </para>
-
-    <figure id="info-fig2">
-      <title>Information Dialog</title>
-      <screenshot>
-	 <mediaobject> 
-    <imageobject>
-  <imagedata fileref="figures/no-match.png" format="PNG"
-	       srccredit="Eric Baudais"/>
-	</imageobject>
-    <textobject> 
-      <phrase>Information Dialog.</phrase> 
-    </textobject> 
-  </mediaobject>
-      </screenshot>
-    </figure>
 
     <para>
       Only tiles at the far left and right edges on each level 

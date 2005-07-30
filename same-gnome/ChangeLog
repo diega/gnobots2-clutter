@@ -1,3 +1,9 @@
+2005-07-30  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/figures/*:
+	* help/C/same-gnome.xml: Bump the appversion number for
+	2.12. Update the screenshots.
+
 2005-07-20  Dennis Cranston <dennis_cranston@yahoo.com>
 
 	* same-gnome/ui.c: Add a mnemonic to the new game button.

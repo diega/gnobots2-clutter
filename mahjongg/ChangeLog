@@ -1,3 +1,10 @@
+2005-07-30  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* help/C/figures/*:
+	* help/C/mahjongg.xml: Bump the appversion for 2.12 and update the
+	screenshots. Also removed the mention of the obsolete "tiles don't
+	match" dialog.
+
 2005-07-20  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* help/C/mahjongg.xml: Fix a stray </a> pointed out by Peter
