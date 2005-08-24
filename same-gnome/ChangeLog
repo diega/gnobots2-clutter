@@ -1,3 +1,8 @@
+2005-08-25  Callum McKenzie  <callum@spooky-possum.org>
+
+	* help/C/same-gnome.xml: Patch from Shaun McCance to fix some XML
+	errors.
+
 2005-07-30  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* help/C/figures/*:
