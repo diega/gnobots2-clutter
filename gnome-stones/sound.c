@@ -20,7 +20,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <esd.h>
+#ifndef NO_ESD
+# include <esd.h>
+#endif
 #include <gnome.h>
 #include "sound.h"
 

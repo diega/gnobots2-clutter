@@ -21,7 +21,9 @@
  */
 
 #include <gnome.h>
-#include <esd.h>
+#ifndef NO_ESD
+# include <esd.h>
+#endif
 
 #include "sound.h"
 
