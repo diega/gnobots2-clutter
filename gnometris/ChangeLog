@@ -1,3 +1,16 @@
+2005-09-08  Callum McKenzie  <callum@spooky-possum.org>
+
+	* tetris.cpp (Tetris): Move the creation of high_scores so that
+	setupScoreState has something to work with.
+
+2005-09-07  Callum McKenzie  <callum@spooky-possum.org>
+
+	* highscores.cpp: 
+	* highscores.h:
+	* main.cpp:
+	* tetris.cpp: Use the new high scores API. (Compiles, but crashes
+	on start-up.)
+
 2005-07-29  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* help/C/gnometris.xml: Update the appversion for 2.12.

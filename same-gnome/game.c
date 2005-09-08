@@ -9,6 +9,10 @@
 #include <libgnome/gnome-score.h>
 #include <glib/gi18n.h>
 
+#include <games-gconf.h>
+#include <games-scores.h>
+#include <string.h>
+
 #include "same-gnome.h"
 
 #include "drawing.h"
@@ -28,7 +32,7 @@ game_cell *board = NULL;
 gint last_board_width = -1;
 gint last_board_height = -1;
 
-gint score;
+guint32 score;
 
 /* The stack used for the "floodfill" algorithm. */
 coordinates *findstack = NULL;
@@ -45,10 +49,6 @@ GList *urlist = NULL;
  * The next pointer points to the future, the prev pointer to
  * the past. */
 GList *urptr;
-
-const gchar *scorenames[] = {N_("Small"),
-														 N_("Medium"),
-														 N_("Large")};
 
 int calculate_score (gint nballs)
 {
@@ -167,6 +167,8 @@ void set_sizes (gint size)
 	board_ncells = board_height*board_width;
 	
 	gconf_client_set_int (gcclient, GCONF_SIZE_KEY, size, NULL);
+
+	games_scores_set_category (highscores, scorecats[size - SMALL].key);
 
 	new_frame_ratio (board_width, board_height);
 }
@@ -341,10 +343,10 @@ static void game_over (void)
 {
 	gint place;
 
-	place = gnome_score_log (score, scorenames[game_size - SMALL], TRUE);
+	place = games_scores_add_score (highscores, (GamesScoreValue)score);
 
-	/* FIXME: High score stuff. */
 	game_over_dialog (place);
+	clear_savegame ();
 }
 
 static void end_of_game_check (void)
@@ -400,6 +402,149 @@ void end_of_move (void) {
 	record_game_state ();
 }
 
+gchar * serialise_board_to_string (void)
+{
+	gint i;
+	gchar buff[2];
+	gchar *state = (gchar*)g_malloc0 (board_ncells + 1);
+	
+	for(i=0; i<board_ncells; i++) {
+		if (board[i].colour == NONE)
+			g_strlcat (state, "_", board_ncells + 1);
+		else {
+			g_snprintf (buff, 2, "%x", board[i].colour);
+			g_strlcat (state, buff, board_ncells + 1);
+		}
+	}
+	
+	return state;
+}
+
+void reset_undo ()
+{
+	/* Free and reset the memory for the undo queue. */
+	free_urlist (urlist);
+	urlist = NULL;
+	urptr = NULL;
+	record_game_state ();
+
+	set_undoredo_sensitive (FALSE, FALSE);
+	clear_message ();
+}
+
+gboolean restore_board_from_string (gchar* state) 
+{
+	gint i;
+	game_cell *p;
+	
+	if (!state)
+		return FALSE;
+
+	if (strlen (state) != board_ncells)
+		return FALSE;
+
+	for(i=0; i<board_ncells; i++) {
+		p = &board[i];
+		if (state[i] == '_')
+			p->colour = NONE;
+		else {
+			if (!g_ascii_isxdigit (state[i]))
+				return FALSE; // n.b. board state screwed, reset req.
+			p->colour = g_ascii_tolower (state[i]) - '0';
+			
+		}
+		p->frame = 0;
+		p->style = ANI_STILL;
+	}
+		
+	return TRUE;
+}
+
+void clear_savegame (void)
+{
+	gconf_client_set_string (gcclient, GCONF_SAVEGAME_KEY, "", NULL);
+}
+
+gboolean load_game (void)
+{
+	gchar *savestring, **tokens;
+
+	gint lsize, lscore, lversion;
+	
+	savestring = games_gconf_get_string (gcclient, GCONF_SAVEGAME_KEY, "");
+
+	if (g_ascii_strcasecmp (savestring, "") == 0) {
+		g_free (savestring);
+		return FALSE;
+	}
+
+	tokens = g_strsplit (savestring, SAVE_FORMAT_DIVIDER, 4);
+
+	if (g_strv_length (tokens) != 4) {
+		g_strfreev (tokens);
+		g_free (savestring);
+		return FALSE;
+	}
+	
+	lversion = (gint) g_ascii_strtoull (tokens[0], NULL, 10);
+	lsize = (gint) g_ascii_strtoull (tokens[1], NULL, 10);
+	lscore = (gint) g_ascii_strtoull (tokens[2], NULL, 10);
+
+	score = lscore;
+	set_sizes (lsize);
+
+	if (board == NULL)
+		board = g_new0 (game_cell, board_width*board_height);
+	if (findstack == NULL)
+		findstack = g_malloc (sizeof(coordinates)*(board_ncells*4));
+	if (selected == NULL)
+		selected = g_malloc (sizeof(coordinates)*(board_ncells/ncolours + 1));	
+
+	if (!restore_board_from_string ( g_strstrip (tokens[3]))) {
+		g_strfreev (tokens);
+		g_free (savestring);
+		return FALSE;
+	}
+
+	g_strfreev (tokens);
+	g_free (savestring);
+	
+	reset_undo ();
+	redraw ();
+	show_score (score);
+	clear_savegame ();
+	
+	/* FIXME: This is all a bit messy, but it is the easiest way to 
+	 * start the game again if it was saved mid-fall. */
+	if (mark_falling_balls ())
+		game_state = GAME_MOVING_DOWN;
+	else if (mark_shifting_balls ()) 
+		game_state = GAME_MOVING_LEFT;
+	else
+		game_state = GAME_IDLE;
+
+	return TRUE;
+}
+
+gboolean save_game (void)
+{
+	gchar *boardstring, *savestring;
+	
+	boardstring = serialise_board_to_string ();
+
+	savestring = g_strdup_printf ("%d%s%d%s%d%s%s", SAVE_FORMAT_ID, 
+																SAVE_FORMAT_DIVIDER, game_size, 
+																SAVE_FORMAT_DIVIDER, score, 
+																SAVE_FORMAT_DIVIDER, boardstring);
+		
+	gconf_client_set_string (gcclient, GCONF_SAVEGAME_KEY, savestring, NULL);
+	
+	g_free (boardstring);
+	g_free (savestring);
+	
+	return TRUE;
+}
+
 void new_game (void)
 {
 	int i,j,c,l;
@@ -442,19 +587,13 @@ void new_game (void)
 		board[j].colour = board[i].colour;
 		board[i].colour = c;
 	}
-
+	
 	game_state = GAME_IDLE;
 	score = 0;
 	show_score (score);
 
-	/* Free and reset the memory for the undo queue. */
-	free_urlist (urlist);
-	urlist = NULL;
-	urptr = NULL;
-	record_game_state ();
-
-	set_undoredo_sensitive (FALSE, FALSE);
-	clear_message ();
-	
+	reset_undo ();
+	clear_savegame ();
 	redraw ();
 }
+

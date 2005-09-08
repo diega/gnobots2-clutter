@@ -72,6 +72,30 @@
         <long>Whether or not to flip final results.</long>
       </locale>
       </schema>
+
+      <schema>
+      <key>/schemas/apps/gataxx/width</key>
+      <applyto>/apps/gataxx/width</applyto>
+      <owner>gataxx</owner>
+      <type>int</type>
+      <default>400</default>
+      <locale name="C">
+        <short>The width of the window</short>
+        <long>The requested width of the main window in pixels.</long>
+      </locale>
+      </schema>
+
+      <schema>
+      <key>/schemas/apps/gataxx/height</key>
+      <applyto>/apps/gataxx/height</applyto>
+      <owner>gataxx</owner>
+      <type>int</type>
+      <default>450</default>
+      <locale name="C">
+        <short>The height of the window</short>
+        <long>The requested height of the main window in pixels.</long>
+      </locale>
+      </schema>
       
   </schemalist>
   

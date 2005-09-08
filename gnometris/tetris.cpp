@@ -261,6 +261,7 @@ Tetris::Tetris(int cmdlLevel):
 	scoreFrame = new ScoreFrame(cmdlineLevel);
 	
 	gtk_box_pack_end(GTK_BOX(vb2), scoreFrame->getWidget(), TRUE, FALSE, 0);
+	high_scores = new HighScores ();
 
 	setOptions ();
 	setupScoreState ();
@@ -276,8 +277,6 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_action_set_sensitive(pause_action, FALSE);
 	gtk_action_set_sensitive(end_game_action, FALSE);
 	gtk_action_set_sensitive(preferences_action, TRUE);
-
-	high_scores = new HighScores ();
 }
 
 Tetris::~Tetris()
@@ -303,19 +302,10 @@ Tetris::~Tetris()
 void
 Tetris::setupScoreState ()
 {
-        gchar **names = NULL;
-        gfloat *scores = NULL;
-        time_t *scoretimes = NULL;
-	gint top = 0;
-
-	top = gnome_score_get_notable ("gnometris", NULL, &names, &scores, &scoretimes);
-	if (top > 0) {
-		gtk_action_set_sensitive (scores_action, TRUE);
-		g_strfreev (names);
-		g_free (scores);
-		g_free (scoretimes);
-	} else {
+	if (high_scores->empty ()) {
 		gtk_action_set_sensitive (scores_action, FALSE);
+	} else {
+		gtk_action_set_sensitive (scores_action, TRUE);
 	}
 }
 
@@ -980,7 +970,7 @@ Tetris::gameQuit(GtkAction *action, void *d)
 
 	/* Record the score if the game isn't over. */
 	if (t->inPlay && (t->scoreFrame->getScore() > 0))
-		gnome_score_log(t->scoreFrame->getScore(), 0, TRUE);
+		t->high_scores->add (t->scoreFrame->getScore());
 
 	if (t->w)
 		gtk_widget_destroy(t->w);
@@ -1390,7 +1380,7 @@ Tetris::endOfGame()
 
 	if (scoreFrame->getScore() > 0) 
 	{
-		int pos = gnome_score_log(scoreFrame->getScore(), 0, TRUE);
+		int pos = high_scores->add (scoreFrame->getScore());
 		high_scores->show (pos);
 	}
 }
@@ -1408,7 +1398,7 @@ Tetris::gameNew(GtkAction *action, void *d)
 		/* Catch the case where we started a new game without
 		 * finishing the old one. */
 		if ((t->scoreFrame->getScore() > 0) && t->inPlay)
-			gnome_score_log(t->scoreFrame->getScore(), 0, TRUE);
+			t->high_scores->add (t->scoreFrame->getScore());
 	}
 
 	t->inPlay = true;

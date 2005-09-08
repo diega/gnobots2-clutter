@@ -23,16 +23,20 @@
 #define HIGH_SCORES_H
 
 #include <gtk/gtk.h>
+#include <games-scores.h>
 #include <games-scores-dialog.h>
 
 class HighScores
 {
 protected:
   GtkWidget *dialog;
+  GamesScores *highscores;
 
 public:
   HighScores ();
 
+  gint add (gint score);
+  gboolean empty (void);
   void show (gint highlight = 0);
 };
 

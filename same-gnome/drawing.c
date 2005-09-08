@@ -26,8 +26,6 @@ guint leftoffsets[NFRAMESMOVEL];
 /* Tiles are guaranteed to be square. */
 gint tile_size;
 
-/* This is the timeout for resize operations. */
-guint resize_timeout_id = 0;
 /* This keeps track of the idle handler for redrawing pixmaps. */
 guint idle_id = 0;
 
@@ -146,6 +144,7 @@ gboolean expose_cb (GtkWidget *canvas, GdkEventExpose *event, gpointer data)
 {
 	int x, y;
 	game_cell *p;
+	game_cell dummy = { -1, 0, 0, 0 };
 
 	if (gridgc == NULL) {
 		gridgc = gdk_gc_new (canvas->window);
@@ -168,7 +167,12 @@ gboolean expose_cb (GtkWidget *canvas, GdkEventExpose *event, gpointer data)
 		p = board;
 		for (y = 0; y<board_height; y++) {
 			for (x = 0; x<board_width; x++) {
-				draw_ball (canvas, p, x, y);
+				/* Only draw stationary frames. Fill the rest in as blanks 
+				 * and let the animation sort it out. */
+				if (p->frame == 0)
+					draw_ball (canvas, p, x, y);
+				else
+					draw_ball (canvas, &dummy, x, y);
 				p++;
 			}
 		}
@@ -212,20 +216,6 @@ gboolean expose_cb (GtkWidget *canvas, GdkEventExpose *event, gpointer data)
 	}
 
   return TRUE;
-}
-
-/* If the pixmaps are ready and we haven't resized for a while,
- * then draw in the pixmaps. */
-static gboolean redraw_cb (GtkWidget *canvas)
-{
-	if (!pixmaps_ready)
-		return TRUE;
-
-	gtk_widget_queue_draw (canvas);
-
-	resize_timeout_id = 0;
-
-	return FALSE;
 }
 
 /* FIXME: This should be a two-stage thing. There should be a flag to say, 
@@ -563,6 +553,8 @@ static gboolean render_cb (GtkWidget *canvas)
 		g_object_unref (bg_pixbuf);
 		bg_pixbuf = NULL;
 		idle_state = INIT;
+		idle_id = 0;
+		redraw ();
 
 		if (pixmaps_ready) /* Just in case this was reset after the last idle call. */
 			return FALSE;
@@ -574,13 +566,9 @@ static void start_renderer (void)
 {
 	pixmaps_ready = FALSE;
 	
-	if (idle_id == 0)
-		g_idle_add ((GSourceFunc)render_cb, canvaswidget);
-	
-	if (resize_timeout_id != 0)
-		g_source_remove (resize_timeout_id);
-	resize_timeout_id = g_timeout_add (300, (GSourceFunc)redraw_cb, 
-																		 canvaswidget);
+	if (idle_id == 0) 
+		idle_id = g_idle_add ((GSourceFunc)render_cb, canvaswidget);
+
 }
 
 void change_theme (gchar *newtheme)
@@ -766,7 +754,6 @@ void resize_graphics (void)
 	size = drawing_area_width/board_width;
 
 	if (tile_size != size) {
-
 		tile_size = size;
 
 		start_renderer ();

@@ -26,18 +26,21 @@
 
 #include <sys/time.h>
 #include <string.h>
-#include <games-clock.h>
 #include <gconf/gconf-client.h>
 #include <games-gconf.h>
+#include <games-gridframe.h>
 #include <libintl.h>
 #include <libgnome/libgnome.h>
 
-#include <gtkgridboard.h>
+#include "gtkgridboard.h"
 #include "properties.h"
 #include "gataxx.h"
 #include "menus.h"
 #include "appbar.h"
 #include "ai.h"
+
+#define GCONF_WINDOW_WIDTH "/apps/gataxx/width"
+#define GCONF_WINDOW_HEIGHT "/apps/gataxx/height"
 
 GtkGridBoard * gridboard;		/* current gridboard */
 GtkWidget * window;             /* The apps main window. */
@@ -123,6 +126,8 @@ void boxclicked_cb(GtkWidget * widget, int x, int y) {
 		selection.y=y;
 		selection.valid=TRUE;
 	}
+	
+	gtk_gridboard_paint (gridboard);
 }
 
 /* sets pieces, adds undo info, changes statusbar and changes turn */
@@ -175,6 +180,7 @@ gboolean end_game_cb(gpointer data) {
 	}
 	if (props_get_flip_final()) {
 		flip_final(gridboard, wc, bc);
+		gtk_gridboard_paint (gridboard);
 	}
 	return FALSE; /* kill the timeout */
 }
@@ -316,6 +322,7 @@ static void new_game(void)
 void new_game_cb(GtkWidget * widget, gpointer data)
 {
         new_game ();
+	gtk_gridboard_paint (gridboard);
 }
 
 
@@ -336,12 +343,11 @@ void undo_move_cb(GtkWidget * widget, gpointer data) {
 	appbar_set_turn (turn);
 	appbar_set_white (gtk_gridboard_count_pieces(gridboard, WHITE));
 	appbar_set_black (gtk_gridboard_count_pieces(gridboard, BLACK));
+	gtk_gridboard_paint (gridboard);
 }
 
 /* menu: Game->Quit */
 gboolean quit_game_cb(GtkWidget * widget, gpointer data) {
-        if (timeoutid)
-		g_source_remove (timeoutid);
 	gtk_main_quit();
 	
 	return TRUE;
@@ -365,6 +371,7 @@ apply_changes() {
 	} else {
 		timeout=DEF_TIMEOUT;
 	}
+	gtk_gridboard_paint (gridboard);
 }
 
 /* menu: Help->About */
@@ -455,14 +462,44 @@ static void initgnomeclient(int argc, char ** argv) {
                     G_CALLBACK (quit_game_cb), argv[0]);
 }
 
+static gint resize_cb (GtkWindow *window, GdkEventConfigure *e, gpointer data)
+{
+  GConfClient *client;
+
+  client = gconf_client_get_default ();
+
+  gconf_client_set_int (client, GCONF_WINDOW_WIDTH, e->width, NULL);
+  gconf_client_set_int (client, GCONF_WINDOW_HEIGHT, e->height, NULL);
+
+  g_object_unref (client);
+
+  return FALSE;
+}
+
 static void create_window() {
 	gchar * tileset;
-	
+	GtkWidget *aspectbox;
+	gint width, height;
+	GConfClient *client;
+
+	client = gconf_client_get_default ();
+
+	width = gconf_client_get_int (client, GCONF_WINDOW_WIDTH, NULL);
+	height = gconf_client_get_int (client, GCONF_WINDOW_HEIGHT, NULL);
+
+	g_object_unref (client);
+
+	if (width <= 0)
+	  width = 400;
+	if (height <= 0)
+	  height = 450;
+
 	window=gnome_app_new("gataxx", "Ataxx");
-	gtk_widget_realize(window);
-	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 	g_signal_connect (G_OBJECT (window), "delete_event",
 		G_CALLBACK (quit_game_cb), NULL);
+	gtk_window_set_default_size (GTK_WINDOW (window), width, height);
+	g_signal_connect (G_OBJECT (window), "configure_event",
+			  G_CALLBACK (resize_cb), NULL);
 
 	gnome_app_create_menus(GNOME_APP(window), mainmenu);
 	menu_undo_set_sensitive(FALSE);
@@ -472,36 +509,28 @@ static void create_window() {
 
 	props_init(GTK_WINDOW(window), "gataxx");
 	tileset=props_get_tile_set();
+
+	aspectbox = games_grid_frame_new (BWIDTH, BHEIGHT);
+	gnome_app_set_contents(GNOME_APP(window), aspectbox);
 	gridboard = GTK_GRIDBOARD (gtk_gridboard_new(BWIDTH, BHEIGHT, get_tileset_path(tileset)));
-	gnome_app_set_contents(GNOME_APP(window), GTK_WIDGET (gridboard));
-	gtk_widget_show(GTK_WIDGET (gridboard));
+	gtk_container_add (GTK_CONTAINER (aspectbox), GTK_WIDGET (gridboard));
 	g_signal_connect(G_OBJECT (gridboard), "boxclicked",
 			G_CALLBACK(boxclicked_cb), NULL);
-	gtk_widget_show(window);
+	gtk_widget_show_all (window);
 	apply_changes();
 }
 
 char * get_tileset_path(char * tileset) {
         static gchar *tilesetpath = NULL;
-        gchar *pathfrag;
-      
       
         if (tilesetpath)
           g_free (tilesetpath);
       
-        pathfrag = g_build_filename ("iagno", tileset, NULL);
-      
-        tilesetpath = gnome_program_locate_file (NULL, 
-						 GNOME_FILE_DOMAIN_PIXMAP, 
-						 pathfrag, FALSE, NULL);
-        g_free (pathfrag);
+        tilesetpath = g_build_filename (THEMEDIR, tileset, NULL);
       
 	if (!g_file_test (tilesetpath, G_FILE_TEST_EXISTS)) {
 	  g_free (tilesetpath);
-	  tilesetpath = gnome_program_locate_file (NULL,
-	  					   GNOME_FILE_DOMAIN_PIXMAP,
-						   "iagno/classic.png",
-						   FALSE, NULL);
+	  tilesetpath = THEMEDIR "classic.png";
 	}
 
         return tilesetpath;

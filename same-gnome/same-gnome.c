@@ -13,6 +13,7 @@
 #include <games-gconf.h>
 #include <games-gridframe.h>
 #include <games-stock.h>
+#include <games-scores.h>
 
 #include "same-gnome.h"
 
@@ -45,6 +46,17 @@ gint board_sizes[MAX_SIZE][3] = {{-1, -1, -1}, /* This is a dummy entry. */
 																 {30, 20, 4},
 																 {45, 30, 4}};
 
+const GamesScoresCategory scorecats[] = {{"Small", N_("Small")},
+																				 {"Medium", N_("same-gnome|Medium")},
+																				 {"Large", N_("Large")},
+																				 GAMES_SCORES_LAST_CATEGORY};
+
+static const GamesScoresDescription scoredesc = {scorecats,
+																								 "Small",
+																								 "same-gnome",
+																								 GAMES_SCORES_STYLE_PLAIN_DESCENDING};
+
+GamesScores *highscores;
 gint board_width;
 gint board_height;
 gint board_ncells;
@@ -128,8 +140,7 @@ int main (int argc, char *argv[])
       N_("Game size (1=small, 3=large)"), N_("NUMBER") },
     { NULL, '\0', 0, NULL, 0, NULL, NULL }};
 
-	/* Initialise the scoring system. */
-	gnome_score_init (APPNAME);
+	/* FIXME: Do something about setgid in here! */
 
   /* Initialise i18n. */
   bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
@@ -144,13 +155,17 @@ int main (int argc, char *argv[])
 
 	games_stock_init ();
 
+	highscores = games_scores_new (&scoredesc);
+
   initialise_options (requested_size, requested_theme);
 
   build_gui ();
 
 	/* FIXME: This should be one alternative of an if statement, the other
 	 * alternative should be to load an old game. */
-	new_game ();
+	if (!load_game ())
+		new_game ();
+	
 
   gtk_main ();
 

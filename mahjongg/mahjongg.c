@@ -22,6 +22,7 @@
 
 #include <gtk/gtk.h>
 #include <gnome.h>
+#include <glib/gi18n.h>
 #include <gconf/gconf-client.h>
 #include <libgnomeui/gnome-window-icon.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
@@ -600,7 +601,7 @@ fill_map_menu (GtkWidget *menu)
 
 	for (lp=0; lp<nmaps; lp++) {
 		gtk_combo_box_append_text (GTK_COMBO_BOX (menu), 
-					   _(maps[lp].name)) ;
+					   Q_(maps[lp].name)) ;
 	}
 	gtk_combo_box_set_active (GTK_COMBO_BOX (menu), mapset);
 }
@@ -972,7 +973,7 @@ init_game (void)
 	gchar *newtitle;
 
 	newtitle = g_strdup_printf (_("%s - %s"), _("Mahjongg"), 
-				    _(maps[mapset].name));
+				    Q_(maps[mapset].name));
 	gtk_window_set_title (GTK_WINDOW (window), newtitle);
 	g_free (newtitle);
 

@@ -531,7 +531,7 @@ tilepos reddragon_map [MAX_TILES] = {
 /* FIXME: The games loaded from file won't have translated names. */
 
 map hardcoded[] = {
-	{ N_("Easy"), "easy", easy_map, TRUE, 0, 0 },
+	{ N_("mahjongg|Easy"), "easy", easy_map, TRUE, 0, 0 },
 	{ N_("Difficult"), "difficult", hard_map, TRUE, 0, 0 },
         { N_("Confounding Cross"), "confounding", cross_map, TRUE, 0, 0 },
         { N_("Pyramid's Walls"), "pyramid", pyramid_map, TRUE, 0, 0 },

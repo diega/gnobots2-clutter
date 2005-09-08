@@ -11,6 +11,7 @@
 
 #include <glib.h>
 #include <gconf/gconf-client.h>
+#include <games-scores.h>
 
 #define APPNAME "same-gnome"
 #define APPNAME_LONG "Same GNOME"
@@ -33,6 +34,7 @@
 #define GCONF_WINDOW_WIDTH_KEY "/apps/same-gnome/window_width"
 #define GCONF_WINDOW_HEIGHT_KEY "/apps/same-gnome/window_height"
 #define GCONF_FAST_ANIMATION_KEY "/apps/same-gnome/fast_animation"
+#define GCONF_SAVEGAME_KEY "/apps/same-gnome/savegame"
 
 extern GConfClient *gcclient;
 
@@ -46,6 +48,9 @@ enum {
   LARGE,
   MAX_SIZE,
 };
+
+extern GamesScores *highscores;
+extern const GamesScoresCategory scorecats[];
 
 /* A list of board sizes of the form: width, height, colours.  This has
  * to be kept in sync with the above enum and so has some empty entries. */

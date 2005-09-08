@@ -21,6 +21,7 @@
 
 #include "config.h"
 #include <gnome.h>
+#include <glib/gi18n.h>
 #include <string.h>
 #include <dirent.h>
 #include <games-clock.h>
@@ -361,12 +362,12 @@ void show_properties_dialog (void) {
 	
 	vbox2 = gtk_vbox_new (FALSE, 6);
 	
-	button=add_level(vbox2, NULL, _("Human"), 	0, BLACK);
-	button=add_level(vbox2, button, _("Very easy"),	1, BLACK);
-	button=add_level(vbox2, button, _("Easy"), 	2, BLACK);
-	button=add_level(vbox2, button, _("Medium"), 	3, BLACK);
-	button=add_level(vbox2, button, _("Hard"), 	4, BLACK);
-	button=add_level(vbox2, button, _("Very hard"), 5, BLACK);
+	button=add_level(vbox2, NULL,    _("Human"), 	        0, BLACK);
+	button=add_level(vbox2, button,  _("Very easy"),	1, BLACK);
+	button=add_level(vbox2, button, Q_("gataxx|Easy"), 	2, BLACK);
+	button=add_level(vbox2, button, Q_("gataxx|Medium"), 	3, BLACK);
+	button=add_level(vbox2, button,  _("Hard"), 	        4, BLACK);
+	button=add_level(vbox2, button,  _("Very hard"),        5, BLACK);
 
 	gtk_container_add (GTK_CONTAINER (frame), vbox2);
 	

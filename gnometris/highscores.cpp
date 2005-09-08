@@ -19,19 +19,44 @@
  * For more details see the file COPYING.
  */
 
-#include <gnome.h>
+#include <gtk/gtk.h>
 #include <games-scores-dialog.h>
 #include "highscores.h"
 
+static const GamesScoresCategory scorecats[] = {{"", "You shouldn't see this"},
+						GAMES_SCORES_LAST_CATEGORY};
+
+static const GamesScoresDescription scoredesc = {scorecats,
+                                                 "",
+                                                 "gnometris",
+                                                 GAMES_SCORES_STYLE_PLAIN_DESCENDING};
+
+
 HighScores::HighScores ()
 {
+  highscores = games_scores_new (&scoredesc);
+
   dialog = NULL;
+}
+
+gint HighScores::add (gint score)
+{
+  GamesScoreValue value;
+
+  value.plain = score;
+
+  return games_scores_add_score (highscores, value);
+}
+
+gboolean HighScores::empty (void)
+{
+  return games_scores_get (highscores) == NULL;
 }
 
 void HighScores::show (gint highlight)
 {
   if (!dialog)
-    dialog = games_scores_dialog_new ("gnometris", _("Gnometris Scores"));
+    dialog = games_scores_dialog_new (highscores, _("Gnometris Scores"));
 
   games_scores_dialog_set_hilight (GAMES_SCORES_DIALOG (dialog), highlight);
   gtk_dialog_run (GTK_DIALOG (dialog));    

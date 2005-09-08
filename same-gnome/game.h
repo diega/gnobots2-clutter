@@ -25,6 +25,9 @@
 #define MOVELFRAMESOFS (NFRAMESSPIN + NFRAMESDEST + NFRAMESMOVED)
 #define NFRAMES (NFRAMESSPIN + NFRAMESDEST + NFRAMESMOVED + NFRAMESMOVEL)
 
+#define SAVE_FORMAT_ID 0
+#define SAVE_FORMAT_DIVIDER " "
+
 /* Animation styles. */
 enum {
 	ANI_STILL,
@@ -73,8 +76,14 @@ extern game_cell *board;
 /* The names of the various board sizes. */
 extern const gchar *scorenames[];
 
+void reset_undo (void);
+gboolean load_game (void);
+gboolean save_game (void);
+void clear_savegame (void);
 void new_game (void);
 void restore_game_state (void);
+gchar * serialise_board_to_string (void);
+gboolean restore_board_from_string (gchar* state);
 void undo (void);
 void redo (void);
 int calculate_score (gint nballs);

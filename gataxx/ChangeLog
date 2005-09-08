@@ -1,7 +1,74 @@
+2005-08-12  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gtkgridboard.c: Yet another revision of the Cairo drawing
+	code. I have ditched the pixmaps and now draw everything purely
+	through Cairo primitives. Since I am using gradients it is still a
+	little slow (200ms on a full board vs. 100ms ideal). Without the
+	gradients it is 25ms/frame, but doesn't look right. Nearly there.
+
+2005-08-10  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gtkgridboard.c: Make the cairo drawing routines a lot faster by
+	removing drawing of empty space, putting the pixbuf on its own
+	surface and drawing everything directly to the window. Also moved
+	the contents of the cairo context setup and destroy functions into
+	gtk_gridboard_repaint. Unfortunately it is still about a factor of
+	3 too slow for animation on a full board (and feels slow all the
+	time, but only about 1.5 times too slow for animation).
+
+	* properties.c: Added context tags as per the request in bug
+	#312802.
+
+2005-08-07  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gataxx.c: Save the window size between runs.
+
+	* gataxx.c:
+	* gtkgridboard.c:
+	* gtkgridboard.h: Revamp of the drawing code. gtk_gridboard_paint
+	is the only function the program calls to do any drawing. This
+	removes the glitch problems, but is incredibly slow.
+
+	* gtkgridboard.h: 
+	* gtkgridboard.c: Remove gtk_gridboard_clear_pixmaps. It is unused
+	and unnecessary.
+
+	* gtkgridboard.c: Add a gtk_gridboard prefix to present_region,
+	setup_cairo_context, destroy_cairo_context.
+
 2005-08-06  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* help/C/gataxx.xml: Remove the mention of the
 	no-longer-existing bug reporting guidelines. See bug #312723.
+
+2005-08-05  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gtkgridboard.c: Mostly working Cairo graphics. Still full of
+	drawing glitches, inefficiencies and warning messages, but
+	playable. The window is resizeable, but the size isn't saved
+	between games.
+
+2005-08-04  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gataxx.c: 
+	Add a gridframe to keep the board square. Remove an unnecessary
+	including of games-clock.h.
+
+	* gtkgridboard.c: Move the global timeoutid into the gobject.
+	Replace the use of memset with g_malloc0 and remove the dependence
+	on string.h.
+
+2005-08-02  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* gtkgridboard.c: 
+	* gtkgridboard.h: Rebuilding the drawing system to be scalable
+	using Cairo. Not exactly efficient right now.
+
+	* gataxx.c: 
+	* classic.png:
+	* Makefile.am: Moved the theme to a new location with a new format
+	(1x32 rather than 4x8). Temporarily moved classic.png from iagno
+	to here since it is in a different format.
 
 2005-07-29  Callum McKenzie  <callum@physics.otago.ac.nz>
 

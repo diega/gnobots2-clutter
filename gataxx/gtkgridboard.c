@@ -7,42 +7,69 @@
 #include <gtk/gtkmain.h>
 #include <gtk/gtksignal.h>
 #include <glib-object.h>
+#include <cairo/cairo.h>
+#include <math.h>
 
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #endif
 
-#ifdef HAVE_STRINGS_H
-#include <strings.h>
-#endif
-
-#ifdef HAVE_STRING_H
-#include <string.h>
-#endif
-
 #include "gtkgridboard.h"
+
+/* A Note on the Drawing Model
+ *
+ * Because Cairo is not "pixel-perfect" we can't easily update small
+ * sections of the canvas as we would with traditional X drawing
+ * code. So instead of trying to be clever about redrawing small parts
+ * of the canvas as the model is updated we don't do any drawing. It
+ * is the duty of the program to call a gtk_gridboard_paint once they
+ * have finished updating the state of the model. By delaying drawing
+ * this way we can avoid a lot of unnecessary redraws and avoid
+ * synchronisation issues with the data. The down-side is that any
+ * code using these routines have to remember to call
+ * gtk_gtidboard_paint explicitly or risk having an inconsistent
+ * display. It is sufficient to call gtk_gridboard_paint at the end of
+ * each event-handler that changes the state of the board. The only
+ * explicit calls to gtk_gridboard_paint in this code occur after the
+ * widget is initially allocated and at after the animation timer
+ * triggers.
+ *
+ * gtk_gridboard_repaint handles all the actual drawing and should
+ * only be called from the expose event handler.
+ *
+ */
+
+#define DO_PROFILE
+
+#ifdef DO_PROFILE
+#include <sys/time.h>
+
+/* A temporary profiling counter. Only supports one instance.*/
+long int counter;
+#endif
 
 static GtkWidgetClass *parent_class=NULL;
 static guint gridboard_signals[LAST_SIGNAL] = { 0 };
 
-/* Save the flip pixmaps timeout so we can kill it at the games end. */
-guint timeoutid = 0;
-
 /* prototypes for private functions */
+static void gtk_gridboard_repaint(GtkGridBoard * gridboard);
 static gint ** make_array(int width, int height); 
-static void gtk_gridboard_draw_box(GtkGridBoard *widget, gint x, gint y); 
-static void gtk_gridboard_draw_box_with_gc(GtkGridBoard * widget, GdkGC * gc, gint x, gint y);
-static void gtk_gridboard_load_pixmaps (GtkGridBoard * gridboard);
+static void gtk_gridboard_load_tiles (GtkGridBoard * gridboard);
 static gint get_pixmap_num(int piece);
-static gint gtk_gridboard_button_press(GtkWidget *widget, GdkEventButton *event) ;
-static gint gtk_gridboard_expose(GtkWidget * widget, GdkEventExpose * event);
+static gint gtk_gridboard_button_press(GtkWidget *widget, 
+				       GdkEventButton *event) ;
+static gboolean gtk_gridboard_expose(GtkWidget * widget, 
+				     GdkEventExpose * event);
+static void gtk_gridboard_size_allocate(GtkWidget * widget, 
+					GtkAllocation * allocation);
 static void gtk_gridboard_class_init(GtkGridBoardClass * class);
 static void gtk_gridboard_finalize(GObject * object);
 static void gtk_gridboard_init(GtkGridBoard * gridboard);
 static void gtk_gridboard_realize(GtkWidget * widget);
-static void gtk_gridboard_size_allocate(GtkWidget * widget, GtkAllocation * allocation);
 static void gtk_gridboard_size_request(GtkWidget * widget, GtkRequisition * req);
-static void gtk_gridboard_draw_pixmap(GtkGridBoard * gridboard, gint which, gint x, gint y);
+static void gtk_gridboard_draw_pixmap(GtkGridBoard * gridboard, gdouble phase, 
+				      gdouble x, gdouble y, 
+				      cairo_pattern_t *pattern);
 static gint gtk_gridboard_flip_pixmaps(gpointer data);
 
 /* init functions */
@@ -60,8 +87,8 @@ static void gtk_gridboard_class_init(GtkGridBoardClass * class) {
         object_class->finalize = gtk_gridboard_finalize;
         widget_class->realize = gtk_gridboard_realize;
         widget_class->expose_event = gtk_gridboard_expose;
-        widget_class->size_request = gtk_gridboard_size_request;
-        widget_class->size_allocate = gtk_gridboard_size_allocate;
+	widget_class->size_allocate = gtk_gridboard_size_allocate;
+	widget_class->size_request = gtk_gridboard_size_request;
         widget_class->button_press_event = gtk_gridboard_button_press;
         
         gridboard_signals[BOXCLICKED] = g_signal_new ("boxclicked",
@@ -74,15 +101,24 @@ static void gtk_gridboard_class_init(GtkGridBoardClass * class) {
 }
 
 static void gtk_gridboard_init(GtkGridBoard * gridboard) {
+	gridboard->tiles_pixbuf = NULL;
+	gridboard->tiles_scale = 1;
         gridboard->tileset=NULL;
         gridboard->showgrid=FALSE;
-        gridboard->policy=GTK_UPDATE_CONTINUOUS;
         gridboard->pixmaps=NULL;
+	gridboard->timeoutid = 0;
         gridboard->tileheight=TILEHEIGHT;
         gridboard->tilewidth=TILEWIDTH;
         gridboard->width=0;
         gridboard->height=0;
 	gridboard->statelist=NULL;
+	gridboard->themesurface = NULL;
+        gridboard->transform.xx = 1.0;
+        gridboard->transform.xy = 0.0;
+        gridboard->transform.yy = 1.0;
+        gridboard->transform.yx = 0.0;
+        gridboard->transform.x0 = 0.0;
+        gridboard->transform.y0 = 0.0;
 }
 
 GtkWidget * gtk_gridboard_new(gint width, gint height, char * tileset) {
@@ -96,7 +132,7 @@ GtkWidget * gtk_gridboard_new(gint width, gint height, char * tileset) {
         gridboard->pixmaps=make_array(width, height);
         gridboard->selected=make_array(width, height);
 
-        gtk_gridboard_load_pixmaps(gridboard);
+        gtk_gridboard_load_tiles(gridboard);
         gtk_gridboard_set_animate(gridboard, TRUE);
         gtk_gridboard_set_visibility(gridboard, TRUE);
         
@@ -141,8 +177,8 @@ static gint gtk_gridboard_button_press(GtkWidget *widget,
    
    gridboard = GTK_GRIDBOARD (widget);
 
-   x = event->x / gridboard->tilewidth;
-   y = event->y / gridboard->tileheight;
+   x = event->x * gridboard->width / widget->allocation.width;
+   y = event->y * gridboard->height / widget->allocation.height;
 
    x = CLAMP (x, 0, gridboard->width - 1);
    y = CLAMP (y, 0, gridboard->height - 1);
@@ -156,16 +192,31 @@ static gint gtk_gridboard_button_press(GtkWidget *widget,
 static gboolean gtk_gridboard_expose(GtkWidget *widget,
 				     GdkEventExpose * event)
  {
-        g_return_val_if_fail (GTK_IS_GRIDBOARD(widget), FALSE);
+        GtkGridBoard *gridboard;
 
-        /* multiple exposures, do only the last one */
-        if (event->count>0) return FALSE;
+	if (!GTK_WIDGET_DRAWABLE (widget))
+	  return FALSE;
 
-	/* FIXME: We should only redraw the bit we need to. */
+	gridboard = GTK_GRIDBOARD (widget);
 
-        gtk_gridboard_paint(GTK_GRIDBOARD (widget));
+	gtk_gridboard_repaint (gridboard);
 
         return FALSE;
+}
+
+static void gtk_gridboard_size_allocate (GtkWidget * widget,
+					 GtkAllocation *allocation)
+{
+  GtkGridBoard *gridboard = GTK_GRIDBOARD (widget);
+
+  widget->allocation = *allocation;
+ 
+  if (GTK_WIDGET_REALIZED (widget)) {
+    gdk_window_move_resize (widget->window, allocation->x, allocation->y,
+			    allocation->width, allocation->height);
+  }
+
+  gtk_gridboard_paint (gridboard);
 }
 
 static void gtk_gridboard_realize(GtkWidget * widget) 
@@ -198,6 +249,7 @@ static void gtk_gridboard_realize(GtkWidget * widget)
         gdk_window_set_user_data (widget->window, widget);
 
         gtk_style_set_background (widget->style, widget->window, GTK_STATE_ACTIVE);
+	
 }
 
 static void gtk_gridboard_finalize(GObject * object) {
@@ -227,76 +279,260 @@ static void gtk_gridboard_size_request(GtkWidget * widget, GtkRequisition * req)
         req->height=gridboard->height*gridboard->tileheight + 1;
 }
 
-/* this isn't really used because the window is not resizable */
-static void gtk_gridboard_size_allocate(GtkWidget *widget,
-					GtkAllocation * allocation) 
-{
-        GtkGridBoard *gridboard; 
-
-        g_return_if_fail(GTK_IS_GRIDBOARD(widget));
-  
-	gridboard = GTK_GRIDBOARD (widget);
-
-	widget->allocation = *allocation;
-
-        if (GTK_WIDGET_REALIZED (widget)) {
-                gdk_window_move_resize (widget->window,
-                        allocation->x, 
-                        allocation->y,
-                        allocation->width, 
-                        allocation->height);
-        }
-}
-
-
 /* drawing functions */
+
 static gint get_pixmap_num(int piece) {
         if (piece==BLACK) return BLACK_PIXMAP;
         if (piece==WHITE) return WHITE_PIXMAP;
         return EMPTY_PIXMAP;
 }
 
-static void gtk_gridboard_redraw_grid (GtkGridBoard *gridboard)
+static void gtk_gridboard_draw_grid (GtkGridBoard *gridboard)
 {
-  int x, y;
+  gint x, y;
+  gboolean selected;
 
-  for (x=0; x<gridboard->height; x++) {
-    for (y=0; y<gridboard->width; y++) {
-      gtk_gridboard_draw_box(gridboard, x, y);
+  cairo_save (gridboard->cx);
+
+  cairo_set_source_rgba (gridboard->cx, 0.0, 0.0, 0.0, 1.0);
+  cairo_set_line_width (gridboard->cx, 0.01);
+
+  /* This all looks very complicated, but all we are trying to do is
+   * draw each individual line segment based on its surrounding squares. */
+
+  /* First we do the vertical segments. */
+  for (x=0; x<=gridboard->width; x++) {
+    for (y=0; y<gridboard->height; y++) {
+      selected = FALSE;
+      if (x < gridboard->width)
+	selected |= gridboard->selected[x][y];
+      if (x > 0)
+	selected |= gridboard->selected[x-1][y];
+
+      cairo_move_to (gridboard->cx, x, y);
+      if (selected) {
+	cairo_set_source_rgba (gridboard->cx, 1.0, 1.0, 1.0, 1.0);
+	cairo_line_to (gridboard->cx, x, y+1);
+	cairo_stroke (gridboard->cx);
+      } else  if (gridboard->showgrid) {
+	cairo_set_source_rgba (gridboard->cx, 0.0, 0.0, 0.0, 1.0);
+	cairo_line_to (gridboard->cx, x, y+1);
+	cairo_stroke (gridboard->cx);
+      }
     }
   }
+
+  /* Then we do the horizontal segments. */
+  for (x=0; x<gridboard->width; x++) {
+    for (y=0; y<=gridboard->height; y++) {
+      selected = FALSE;
+      if (y < gridboard->height)
+	selected |= gridboard->selected[x][y];
+      if (y > 0)
+	selected |= gridboard->selected[x][y-1];
+
+      cairo_move_to (gridboard->cx, x, y);
+      if (selected) {
+	cairo_set_source_rgba (gridboard->cx, 1.0, 1.0, 1.0, 1.0);
+	cairo_line_to (gridboard->cx, x+1, y);
+	cairo_stroke (gridboard->cx);
+      } else  if (gridboard->showgrid) {
+	cairo_set_source_rgba (gridboard->cx, 0.0, 0.0, 0.0, 1.0);
+	cairo_line_to (gridboard->cx, x+1, y);
+	cairo_stroke (gridboard->cx);
+      }
+    }
+  }
+
+  cairo_restore (gridboard->cx);
+
+  /* Another way, probably a better way, would be to collect the line
+   * segments into two lists (one for each colour) and then render
+   * each list with one cairo_stroke call. We could also collect the
+   * highlighting segments and make them into polygons and use a
+   * fill-colour with an alpha value.
+   */
 }
 
-void gtk_gridboard_paint(GtkGridBoard * gridboard) {
-        int x, y;
-        int piecepic;
+void gtk_gridboard_paint (GtkGridBoard *gridboard)
+{
+  GtkWidget *widget;
 
+  g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
+  
+  widget = GTK_WIDGET (gridboard);
+  g_return_if_fail (GTK_WIDGET_REALIZED (widget));
+
+  gtk_widget_queue_draw (widget);
+}
+
+static void gtk_gridboard_repaint(GtkGridBoard * gridboard) {
+        int x, y;
+        double phase;
+	GtkWidget *widget;
+        gdouble scale;
+	cairo_t *themecx;
+	cairo_pattern_t *gradient;
+	gint w, h;
+
+#ifdef DO_PROFILE
+	struct timeval tv;
+#endif
+
+        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
 	if (!gridboard->visibility) return;
 
+	widget = GTK_WIDGET (gridboard);
+	g_return_if_fail (GTK_WIDGET_REALIZED (widget));
+
+	gridboard->cx = gdk_cairo_create (widget->window);
+	cairo_scale (gridboard->cx, 
+		     1.0*widget->allocation.width/gridboard->width,
+		     1.0*widget->allocation.height/gridboard->height);
+
+	/* Make a new cairo surface with the background drawn on it. */
+	/* FIXME: Should be in the realize callback. */
+	/* FIXME: This doesn't allow for the theme to change at all :( */
+	if (gridboard->themesurface == NULL) {
+#ifdef DO_PROFILE
+	gettimeofday (&tv, NULL);
+	counter = tv.tv_sec * 1000000 + tv.tv_usec;
+#endif
+	  w = gdk_pixbuf_get_width (gridboard->tiles_pixbuf);
+	  h = gdk_pixbuf_get_height (gridboard->tiles_pixbuf);
+
+	  gridboard->themesurface = 
+	    cairo_surface_create_similar (cairo_get_target (gridboard->cx), 
+					  CAIRO_CONTENT_COLOR_ALPHA,
+					  w, h);
+	  themecx = cairo_create (gridboard->themesurface);
+	  gdk_cairo_set_source_pixbuf (themecx, gridboard->tiles_pixbuf,
+				       0.0, 0.0);
+	  cairo_paint (themecx);
+#ifdef DO_PROFILE
+	gettimeofday (&tv, NULL);
+	g_print ("[%ld]\n", tv.tv_sec * 1000000 + tv.tv_usec - counter);
+#endif
+	}
+
+#ifdef DO_PROFILE
+	gettimeofday (&tv, NULL);
+	counter = tv.tv_sec * 1000000 + tv.tv_usec;
+#endif
+
+	cairo_set_source_rgba (gridboard->cx, 0.0, 0.0, 0.3, 1.0);
+	cairo_paint (gridboard->cx);
+
+#ifdef DO_PROFILE
+	gettimeofday (&tv, NULL);
+	g_print ("%ld, ", tv.tv_sec * 1000000 + tv.tv_usec - counter);
+	counter = tv.tv_sec * 1000000 + tv.tv_usec;
+#endif
+
+	scale = gridboard->tiles_scale;
+
+	cairo_save (gridboard->cx);
+	//	cairo_scale (gridboard->cx, 1.0/scale, 1.0/scale);
+	//	cairo_set_source_surface (gridboard->cx, gridboard->themesurface,
+	//				  0, 0);
+	gradient = cairo_pattern_create_radial (-0.1, -0.1, 0, 
+						0, 0, 1.0);
+	cairo_pattern_add_color_stop_rgba (gradient, 0.0, 
+					   1.0, 1.0, 1.0, 0.2);
+	cairo_pattern_add_color_stop_rgba (gradient, 0.55, 
+					   0.0, 0.0, 0.0, 0.2);
         for (x=0; x<gridboard->height; x++) {
                 for (y=0; y<gridboard->width; y++) {
-                        piecepic=get_pixmap_num(gridboard->board[x][y]);
-                        gtk_gridboard_draw_pixmap(gridboard, piecepic, x, y);
+                        phase = gridboard->pixmaps[x][y];
+			if (phase > 0.0) {
+			  phase = (phase - 1.0)/30.0;
+			  gtk_gridboard_draw_pixmap(gridboard, phase, 
+						    x, y, 
+						    gradient);
+			}
                 }
         }
-	gtk_gridboard_redraw_grid (gridboard);
+	cairo_pattern_destroy (gradient);
+	cairo_restore (gridboard->cx);
+
+#ifdef DO_PROFILE
+	gettimeofday (&tv, NULL);
+	g_print ("%ld, ", tv.tv_sec * 1000000 + tv.tv_usec - counter);
+	counter = tv.tv_sec * 1000000 + tv.tv_usec;
+#endif
+
+	gtk_gridboard_draw_grid (gridboard);
+
+#ifdef DO_PROFILE
+	gettimeofday (&tv, NULL);
+	g_print ("%ld\n", tv.tv_sec * 1000000 + tv.tv_usec - counter);
+	counter = tv.tv_sec * 1000000 + tv.tv_usec;
+#endif
+
+	cairo_destroy (gridboard->cx);
+
+#ifdef DO_PROFILE
+	gettimeofday (&tv, NULL);
+	g_print ("(%ld)\n", tv.tv_sec * 1000000 + tv.tv_usec - counter);
+#endif
  }
 
 
-static void gtk_gridboard_draw_pixmap(GtkGridBoard * gridboard, gint which, gint
- x, gint y) {
-        GtkWidget * widget=GTK_WIDGET(gridboard);
-        
-	if (!gridboard->visibility) return;
+static void gtk_gridboard_draw_pixmap(GtkGridBoard * gridboard, gdouble phase, 
+				      gdouble x, gdouble y, 
+				      cairo_pattern_t *pattern) 
+{
+  cairo_matrix_t transform;
+  double d;
+  double offset;
 
-        gdk_draw_drawable (widget->window,
-                widget->style->fg_gc[widget->state],
-                gridboard->tiles_pixmap,
-                (which % 8) * TILEWIDTH, (which / 8) * TILEHEIGHT,
-                x * TILEWIDTH, y * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
+  /* FIXME: I define this here, but I am already impliclty using it up 
+     when defining things above like the pattern. */
+#define BALL_RADIUS 0.4
 
-        /* draw lines around x, y */
-        gtk_gridboard_draw_box(gridboard, x, y);
+  x = x + 0.5;
+  y = y + 0.5;
+
+  /* We special-case the two "pure" ends of the flip. */
+  if (phase > 0.98) {
+    cairo_set_source_rgb (gridboard->cx, 0.7, 0.7, 0.7);
+    cairo_arc (gridboard->cx, x, y, BALL_RADIUS, 0, 2*G_PI);
+    cairo_fill (gridboard->cx);
+  } else if (phase < 0.02) {
+    cairo_set_source_rgb (gridboard->cx, 0.0, 0.0, 0.0);
+    cairo_arc (gridboard->cx, x, y, BALL_RADIUS, 0, 2*G_PI);
+    cairo_fill (gridboard->cx);
+  } else {
+    cairo_save (gridboard->cx);
+    cairo_translate (gridboard->cx, x, y);
+    cairo_rotate (gridboard->cx, G_PI/4.0);
+    cairo_save (gridboard->cx);
+    d = BALL_RADIUS;
+    offset = d*cos (phase*M_PI);
+    cairo_arc (gridboard->cx, 0, 0, BALL_RADIUS, -G_PI/2.0, G_PI/2.0);
+    cairo_line_to (gridboard->cx, 0, d);
+    cairo_scale (gridboard->cx, cos (phase*M_PI), 1.0);
+    cairo_arc (gridboard->cx, 0, 0, BALL_RADIUS, G_PI/2.0, -G_PI/2.0);
+    cairo_close_path (gridboard->cx);
+    cairo_set_source_rgb (gridboard->cx, 0, 0, 0);
+    cairo_fill (gridboard->cx);
+    cairo_restore (gridboard->cx);
+    cairo_arc (gridboard->cx, 0, 0, BALL_RADIUS, G_PI/2.0, -G_PI/2.0);
+    cairo_line_to (gridboard->cx, 0, -d);
+    cairo_scale (gridboard->cx, cos (phase*M_PI), 1.0);
+    cairo_arc_negative (gridboard->cx, 0, 0, BALL_RADIUS, -G_PI/2.0, G_PI/2.0);
+    cairo_close_path (gridboard->cx);
+    cairo_set_source_rgb (gridboard->cx, 0.7, 0.7, 0.7);
+    cairo_fill (gridboard->cx);
+    cairo_restore (gridboard->cx);
+  }
+  cairo_matrix_init_translate (&transform, -x, -y);
+  cairo_pattern_set_matrix (pattern, &transform);
+  cairo_arc (gridboard->cx, x, y, BALL_RADIUS, 0, 2*G_PI);
+  cairo_set_source (gridboard->cx, pattern);
+  cairo_fill (gridboard->cx);
+
+#undef BALL_RADIUS
 }
 
 void gtk_gridboard_set_selection(GtkGridBoard * gridboard, gint type, 
@@ -309,48 +545,6 @@ void gtk_gridboard_set_selection(GtkGridBoard * gridboard, gint type,
 	g_return_if_fail (y < gridboard->height);
 
         gridboard->selected[x][y]=type;
-        gtk_gridboard_draw_box(gridboard, x, y);
-}
-
-static void gtk_gridboard_draw_box(GtkGridBoard *gridboard, gint x, gint y) {
-        GtkWidget *widget;
-        GdkGC * gc;
-        int selected;
-        static GdkColor selectcolor={12345, 30208, 41216, 33792};
-
-	if (!gridboard->visibility) return;
-        
-	widget = GTK_WIDGET (gridboard);
-
-        selected=gridboard->selected[x][y];
-        
-        if (selected==SELECTED_NONE) {
-                if (!gridboard->showgrid) {
-        		return;
-                } else {
-                        gc=widget->style->black_gc;
-                }
-        } else if (selected==SELECTED_A) {
-                gc=widget->style->white_gc;
-        } else if (selected==SELECTED_B) {
-                gc=gdk_gc_new(widget->window);
-                gdk_gc_set_foreground(gc, &selectcolor);
-        } else {
-		return;
-	}
-        gtk_gridboard_draw_box_with_gc(gridboard, gc, x, y);
-}
-
-static void gtk_gridboard_draw_box_with_gc(GtkGridBoard * gridboard, 
-					   GdkGC * gc, gint x, gint y) 
-{
-        GtkWidget * widget;
-
-	widget = GTK_WIDGET (gridboard);
-
-        gdk_draw_rectangle(widget->window, gc, FALSE,
-                x*gridboard->tilewidth, y*gridboard->tileheight,
-                gridboard->tilewidth, gridboard->tileheight);
 }
 
 static gint gtk_gridboard_flip_pixmaps(gpointer data) 
@@ -362,39 +556,44 @@ static gint gtk_gridboard_flip_pixmaps(gpointer data)
         gint pcepm; /* this pixmap should be there */
         gint flipped_tiles;
 
+	if (!GTK_WIDGET_DRAWABLE (GTK_WIDGET (gridboard))) {
+	  return gridboard->animate;
+	}
+
+	flipped_tiles=0;
         for (x=0; x<gridboard->width; x++) {
                 for (y=0; y<gridboard->height; y++) {
+        		/* curpm is the current pixmap being shown.
+			 * pcepm is the target pixmap. We step from
+			 * one to the other during the animation. */
                         curpm=gridboard->pixmaps[x][y];
                         pcepm=get_pixmap_num(gridboard->board[x][y]);
-                        flipped_tiles=0;
-                        if (curpm==pcepm) {
-                                /* nothing needs to be flipped */
+                        if (curpm == pcepm) {
+                                /* Nothing needs to be flipped */
                                 continue;
-                        } else if ((curpm==EMPTY_PIXMAP)||(pcepm==EMPTY_PIXMAP)) {
-                                /* don't animate empty squares */
+                        } else if ((curpm == EMPTY_PIXMAP) ||
+				   (pcepm == EMPTY_PIXMAP)) {
+                                /* Don't animate empty squares */
                                 gridboard->pixmaps[x][y]=pcepm;
                                 flipped_tiles++;
-                        } else if (curpm<pcepm) {
+                        } else if (curpm < pcepm) {
                                 gridboard->pixmaps[x][y]++;
                                 flipped_tiles++;
-                        } else if (curpm>pcepm) {
+                        } else { /* curpm > pcepm */
                                 gridboard->pixmaps[x][y]--;
                                 flipped_tiles++;
                         }
-                        if (flipped_tiles) {
-                                gtk_gridboard_draw_pixmap(
-                                                gridboard,
-                                                gridboard->pixmaps[x][y],
-                                                x, y);
-                        }
                 }
         }
+
+	if (flipped_tiles)
+	  gtk_gridboard_paint (gridboard);
 
         /* destroy the timeout if animate is false */
         return gridboard->animate;
 }
 
-static void gtk_gridboard_load_pixmaps (GtkGridBoard * gridboard) {
+static void gtk_gridboard_load_tiles (GtkGridBoard * gridboard) {
         gchar *filepath=gridboard->tileset;
         GdkPixbuf *image;
 
@@ -410,13 +609,11 @@ static void gtk_gridboard_load_pixmaps (GtkGridBoard * gridboard) {
                 exit(1);
         }
 
-        /* what happens here ? */
-        gdk_pixbuf_render_pixmap_and_mask_for_colormap (image, 
-							gdk_colormap_get_system (),
-							&(gridboard->tiles_pixmap), 
-							NULL, 127);
-  
-        gdk_pixbuf_unref (image);
+	if (gridboard->tiles_pixbuf != NULL)
+	  g_object_unref (gridboard->tiles_pixbuf);
+
+	gridboard->tiles_pixbuf = image;
+	gridboard->tiles_scale = gdk_pixbuf_get_height (image);
 }
 
 
@@ -430,8 +627,7 @@ static gint ** make_array(int width, int height) {
         
         valarraysiz=width*height;       /* size of actual array */
         ptrarraysiz=width;              /* size of pointer array */
-        result=(gint **)g_malloc(ptrarraysiz*sizeof(gint *)+valarraysiz*sizeof(gint));
-        memset(result, 0, ptrarraysiz*sizeof(gint *)+valarraysiz*sizeof(gint));
+        result=(gint **)g_malloc0(ptrarraysiz*sizeof(gint *)+valarraysiz*sizeof(gint));
         for (i=0; i<width; i++) {
                 result[i]=(gint *)(result+ptrarraysiz)+i*height;
         }
@@ -493,7 +689,6 @@ void gtk_gridboard_set_show_grid(GtkGridBoard *gridboard, gboolean showgrid) {
         g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
 
         gridboard->showgrid=showgrid;
-        gtk_gridboard_paint(gridboard);
 }
 
 void gtk_gridboard_set_animate(GtkGridBoard *gridboard, gboolean animate) {
@@ -501,12 +696,12 @@ void gtk_gridboard_set_animate(GtkGridBoard *gridboard, gboolean animate) {
 
         gridboard->animate=animate;
         if (animate) {
-	  if (timeoutid)
+	  if (gridboard->timeoutid)
 	    return;
-	  timeoutid = g_timeout_add(PIXMAP_FLIP_DELAY, 
-				    gtk_gridboard_flip_pixmaps,
-				    (gpointer) gridboard);
-        } else timeoutid = 0;
+	  gridboard->timeoutid = g_timeout_add(PIXMAP_FLIP_DELAY, 
+					       gtk_gridboard_flip_pixmaps,
+					       (gpointer) gridboard);
+        } else gridboard->timeoutid = 0;
 }
 
 void gtk_gridboard_set_visibility(GtkGridBoard *gridboard, gboolean visibility) {
@@ -519,8 +714,7 @@ void gtk_gridboard_set_tileset(GtkGridBoard *gridboard, gchar * tileset) {
         g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
 
         gridboard->tileset=tileset;
-        gtk_gridboard_load_pixmaps(gridboard);
-        gtk_gridboard_paint(gridboard);
+        gtk_gridboard_load_tiles(gridboard);
 }
         
 /* board altering functions */
@@ -530,11 +724,10 @@ void gtk_gridboard_set_piece(GtkGridBoard *gridboard, int x, int y,
         g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
 
         gridboard->board[x][y]=piece;
-        /* draw updated piece */
-        if (!gridboard->animate) {
-                gtk_gridboard_draw_pixmap(gridboard, get_pixmap_num(piece), x, y
-);
-        }
+	
+	if (!gridboard->animate) {
+	  gridboard->pixmaps[x][y] = get_pixmap_num (gridboard->board[x][y]);
+	}
 }
 
 int gtk_gridboard_get_piece(GtkGridBoard *gridboard, int x, int y) 
@@ -555,7 +748,6 @@ void gtk_gridboard_clear_selections(GtkGridBoard *gridboard)
 			gridboard->selected[x][y]=SELECTED_NONE;
 		}
 	}
-	gtk_gridboard_paint (gridboard);
 }
 
 void gtk_gridboard_clear_pieces(GtkGridBoard *gridboard) 
@@ -569,21 +761,6 @@ void gtk_gridboard_clear_pieces(GtkGridBoard *gridboard)
 			gridboard->board[x][y]=EMPTY;
 		}
 	}
-	gtk_gridboard_paint(gridboard);
-}
-
-void gtk_gridboard_clear_pixmaps(GtkGridBoard *gridboard) 
-{
-	int x, y;
-
-        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
-
-	for (x=0; x<gridboard->width; x++) {
-		for (y=0; y<gridboard->height; y++) {
-			gridboard->pixmaps[x][y]=get_pixmap_num(EMPTY);
-		}
-	}
-	gtk_gridboard_paint(gridboard);
 }
 
 void gtk_gridboard_clear(GtkGridBoard *gridboard) 
@@ -592,7 +769,6 @@ void gtk_gridboard_clear(GtkGridBoard *gridboard)
 
 	gtk_gridboard_clear_selections(gridboard);
 	gtk_gridboard_clear_pieces(gridboard);
-	gtk_gridboard_clear_pixmaps(gridboard);
 	gtk_gridboard_clear_states(gridboard);
 }
 

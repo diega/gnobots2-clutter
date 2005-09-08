@@ -1,3 +1,9 @@
+2005-08-10  Callum McKenzie  <callum@physics.otago.ac.nz>
+
+	* mahjongg.c: 
+	* maps.c: Added context tags as per the request in bug
+	#312802.
+
 2005-07-30  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* help/C/figures/*:

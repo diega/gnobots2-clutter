@@ -51,7 +51,10 @@ gint theme_index_counter;
 /* All quit events must go through here to ensure consistant behaviour. */
 static void quit_cb (void)
 {
-  gtk_main_quit ();
+	// need mutex on game_state to avoid funky save data?
+	save_game ();
+  
+	gtk_main_quit ();
 }
 
 void set_message (gint count)
@@ -114,17 +117,9 @@ static void about_cb (GtkWidget *widget)
 static GtkWidget *generate_scores_dialog (void)
 {
 	GtkWidget *dialog;
-	int i;
 
-	dialog = games_scores_dialog_new (APPNAME, _("Same GNOME Scores"));
-	for (i=0; i <= (LARGE - SMALL); i++) {
-		games_scores_dialog_add_category (GAMES_SCORES_DIALOG (dialog),
-																			scorenames[i],
-																			_(scorenames[i]));
-	}
-	games_scores_dialog_set_category (GAMES_SCORES_DIALOG (dialog), 
-																		scorenames[game_size - SMALL]);
-	
+	dialog = games_scores_dialog_new (highscores, _("Same GNOME Scores"));
+
 	games_scores_dialog_set_category_description (GAMES_SCORES_DIALOG (dialog),
 																								_("Size:"));
 
@@ -158,8 +153,6 @@ void game_over_dialog (gint place)
 		dialog = GTK_DIALOG (baddialog);
   } else { /* Case 2: It was a top ten score. */
 		if (gooddialog) {
-			games_scores_dialog_set_category (gooddialog, 
-																				scorenames[game_size - SMALL]);
 			gtk_window_present (GTK_WINDOW (gooddialog));
 		} else {
 			/* We build two, slightly different, high score dialogs. Once here and

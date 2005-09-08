@@ -8,6 +8,7 @@
 #include <gdk/gdk.h>
 #include <gtk/gtkadjustment.h>
 #include <gtk/gtkwidget.h>
+#include <cairo/cairo.h>
 
 G_BEGIN_DECLS
 
@@ -18,8 +19,6 @@ G_BEGIN_DECLS
 #define GTK_IS_GRIDBOARD(obj) GTK_CHECK_TYPE (obj, gtk_gridboard_get_type ())
 
 #define g_marshal_value_peek_int(v)      (v)->data[0].v_int
-
-extern guint timeoutid;
 
 /* definitions */
 #define EMPTY 0
@@ -57,7 +56,6 @@ struct _StateList {
 
 struct _GtkGridBoard {
         GtkWidget widget;       /* parent class */
-        guint policy:2;
         gint ** pixmaps;
         gint ** board;
         gint ** selected;
@@ -65,12 +63,17 @@ struct _GtkGridBoard {
         gint height;
         gint tilewidth;
         gint tileheight;
-        GdkPixmap * tiles_pixmap;
+        guint timeoutid;
+        GdkPixbuf *tiles_pixbuf;
+        gint tiles_scale;
         gchar * tileset;
         gboolean visibility;
         gboolean animate;
         gboolean showgrid;
 	StateList * statelist;
+        cairo_matrix_t transform;
+        cairo_surface_t *themesurface;
+        cairo_t *cx;
 };
 	
 struct _GtkGridBoardClass {
@@ -99,7 +102,6 @@ void gtk_gridboard_set_show_grid(GtkGridBoard * widget, gboolean showgrid);
 void gtk_gridboard_set_tileset(GtkGridBoard * widget, gchar * tileset);
 void gtk_gridboard_clear_selections(GtkGridBoard * widget);
 void gtk_gridboard_clear_pieces(GtkGridBoard * widget);
-void gtk_gridboard_clear_pixmaps(GtkGridBoard * widget);
 void gtk_gridboard_clear(GtkGridBoard * widget);
 void gtk_gridboard_save_state(GtkGridBoard * widget, gpointer data);
 gpointer gtk_gridboard_revert_state(GtkGridBoard * widget);
