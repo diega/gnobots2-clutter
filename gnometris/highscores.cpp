@@ -23,11 +23,7 @@
 #include <games-scores-dialog.h>
 #include "highscores.h"
 
-static const GamesScoresCategory scorecats[] = {{"", "You shouldn't see this"},
-						GAMES_SCORES_LAST_CATEGORY};
-
-static const GamesScoresDescription scoredesc = {scorecats,
-                                                 "",
+static const GamesScoresDescription scoredesc = {NULL, NULL,
                                                  "gnometris",
                                                  GAMES_SCORES_STYLE_PLAIN_DESCENDING};
 

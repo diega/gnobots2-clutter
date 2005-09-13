@@ -1,3 +1,8 @@
+2005-09-13  Callum McKenzie  <callum@spooky-possum.org>
+
+	* highscores.cpp: Remove the dummy scores category now that the
+	games-scores code can handle no categories.
+
 2005-09-08  Callum McKenzie  <callum@spooky-possum.org>
 
 	* sound.cpp: Patch from Leonardo Boshell to fix compiling without
