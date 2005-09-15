@@ -30,6 +30,8 @@
 #include <games-gconf.h>
 #include <games-frame.h>
 #include <games-stock.h>
+#include <games-scores.h>
+#include <games-scores-dialog.h>
 
 #include "mahjongg.h"
 #include "drawing.h"
@@ -97,6 +99,13 @@ GtkWidget *pref_dialog = NULL;
 
 /* Has the map been changed ? */
 gboolean new_map = TRUE;
+
+GamesScores *highscores;
+
+static const GamesScoresDescription scoredesc = {NULL,
+						 "Easy",
+						 "mahjongg",
+						 GAMES_SCORES_STYLE_TIME_ASCENDING};
 
 enum {
 	GAME_RUNNING = 0,
@@ -432,17 +441,10 @@ message_flash (gchar *message)
 static void 
 update_score_state ()
 {
-        gchar **names = NULL;
-        gfloat *scores = NULL;
-        time_t *scoretimes = NULL;
-	gint top;
+	GList *top;
 
-	top = gnome_score_get_notable (APPNAME, score_current_mapset,
-				       &names, &scores, &scoretimes);
-	gtk_action_set_sensitive (scores_action, top > 0);
-	g_strfreev (names);
-	g_free (scores);
-	g_free (scoretimes);
+	top = games_scores_get (highscores);
+	gtk_action_set_sensitive (scores_action, top != NULL);
 }
 
 static gint
@@ -659,24 +661,35 @@ you_won (void)
 {
         gint pos;
         time_t seconds;
-        gfloat score;
-        GtkWidget *dialog;
+        gdouble score;
+        static GtkWidget *dialog = NULL;
+	gchar *message;
 	
         game_over = GAME_WON;
 
         seconds = games_clock_get_seconds (GAMES_CLOCK (chrono));
 
         score = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
-	pos = gnome_score_log (score, score_current_mapset, FALSE);
+	pos = games_scores_add_score (highscores, (GamesScoreValue) score);
 	update_menu_sensitivities ();
-        if (pos) {
-                dialog = gnome_scores_display (_(APPNAME_LONG), APPNAME,
-					       score_current_mapset, pos);
-		if (dialog != NULL) {
-			gtk_window_set_transient_for (GTK_WINDOW(dialog),
-						      GTK_WINDOW(window));
-			gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
+        if (pos > 0) {
+		if (dialog) {
+			gtk_window_present (GTK_WINDOW (dialog));
+		} else {
+			dialog = games_scores_dialog_new (highscores, _("Mahjongg Scores"));
+			games_scores_dialog_set_category_description (GAMES_SCORES_DIALOG (dialog),
+							      _("Map:"));
+			message = g_strdup_printf ("<b>%s</b>\n\n%s",
+						   _("Congratulations!"),
+						   _("Your score has made the top ten."));
+			games_scores_dialog_set_message (GAMES_SCORES_DIALOG (dialog), message);
+			g_free (message);
 		}
+		games_scores_dialog_set_hilight (GAMES_SCORES_DIALOG (dialog), pos);
+		/* FIXME: Quit / New Game choice. */
+
+		gtk_dialog_run  (GTK_DIALOG (dialog));
+		gtk_widget_hide (dialog);
         } 
 }
 
@@ -957,14 +970,18 @@ void ensure_pause_off (void)
 static void
 scores_callback (GtkAction *action, gpointer data)
 {
-	GtkWidget *dialog;
+	static GtkWidget *dialog = NULL;
 
-	dialog = gnome_scores_display (_(APPNAME_LONG), APPNAME, score_current_mapset, 0);
-	if (dialog != NULL) {
-		gtk_window_set_transient_for (GTK_WINDOW(dialog),
-					      GTK_WINDOW(window));
-		gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
+	if (dialog) {
+		gtk_window_present (GTK_WINDOW (dialog));
+	} else {
+		dialog = games_scores_dialog_new (highscores, _("Mahjongg Scores"));
+		games_scores_dialog_set_category_description (GAMES_SCORES_DIALOG (dialog),
+							      _("Map:"));
 	}
+
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_hide (dialog);
 }
 
 static void
@@ -1137,6 +1154,7 @@ load_map (void)
 static void
 do_game (void)
 {
+	games_scores_set_category (highscores, maps[mapset].score_name);
 	if (new_map)
 		load_map ();
 	generate_game (g_random_int ()); /* puts in the positions of the tiles */
@@ -1345,6 +1363,18 @@ create_menus (GtkUIManager *ui_manager)
         			      gconf_client_get_bool (conf_client, "/apps/mahjongg/show_toolbar", NULL));
 }
 
+static void init_scores (void)
+{
+	int i;
+
+	highscores = games_scores_new (&scoredesc);
+
+	for (i=0; i<nmaps; i++) {
+		games_scores_add_category (highscores, maps[i].score_name, 
+					   maps[i].name);
+	}
+}
+
 int
 main (int argc, char *argv [])
 {
@@ -1358,8 +1388,6 @@ main (int argc, char *argv [])
 
 	GtkUIManager *ui_manager;
 	GtkAccelGroup *accel_group;
-
-	gnome_score_init (APPNAME);
 
 	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -1376,6 +1404,7 @@ main (int argc, char *argv [])
 	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-mahjongg.png");
 
 	load_maps ();
+	init_scores ();
 
 	conf_client = gconf_client_get_default ();
 	if (!games_gconf_sanity_check_string (conf_client, "/apps/mahjongg/tileset")) {
