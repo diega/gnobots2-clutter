@@ -362,7 +362,6 @@ void properties_cb(GtkWidget * widget, gpointer data) {
 void
 apply_changes() {
 	gtk_gridboard_set_animate(gridboard, props_get_animate());
-	gtk_gridboard_set_show_grid(gridboard, props_get_show_grid());
 	gtk_gridboard_set_tileset(gridboard, 
 			get_tileset_path(props_get_tile_set()));
 	

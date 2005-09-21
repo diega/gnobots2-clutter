@@ -41,7 +41,6 @@
 #define GCONF_QUICKMOVES GCONF_PREFIX "quickmoves"
 #define GCONF_TILESET GCONF_PREFIX "tileset"
 #define GCONF_ANIMATE GCONF_PREFIX "animate"
-#define GCONF_SHOWGRID GCONF_PREFIX "showgrid"
 #define GCONF_FLIPFINAL GCONF_PREFIX "flipfinal"
 
 PropertiesData _props;
@@ -84,10 +83,6 @@ int props_get_black_level() {
 
 gboolean props_get_flip_final() {
 	return props->flip_final;
-}
-
-gboolean props_get_show_grid() {
-	return props->show_grid;
 }
 
 gboolean props_get_animate() {
@@ -155,7 +150,6 @@ void load_properties (void)
 	if (props->tile_set == NULL) props->tile_set = g_strdup("classic.png");
 
 	props->animate=props_get_bool(GCONF_ANIMATE, TRUE);
-	props->show_grid=props_get_bool(GCONF_SHOWGRID, TRUE);
 	props->quick_moves=props_get_bool(GCONF_QUICKMOVES, FALSE);
 	props->flip_final=props_get_bool (GCONF_FLIPFINAL, TRUE);
 
@@ -174,8 +168,6 @@ save_properties (void)
 	                         props->tile_set, NULL);
 	gconf_client_set_bool (get_gconf_client(), GCONF_ANIMATE,
 	                      props->animate, NULL);
-	gconf_client_set_bool (get_gconf_client(), GCONF_SHOWGRID,
-	                      props->show_grid, NULL);
 	gconf_client_set_bool (get_gconf_client(), GCONF_FLIPFINAL,
 	                       props->flip_final, NULL);
 }
@@ -248,7 +240,7 @@ fill_tileset_menu (void)
 /* makes a perty radio button for a particular computer level */
 static GtkWidget * add_level(GtkWidget * container, 
 		GtkWidget * prev,
-		gchar * caption,
+		const gchar * caption,
 		gint level,
 		gint piece) {
 	GtkWidget * button;
@@ -417,16 +409,6 @@ void show_properties_dialog (void) {
 			G_CALLBACK(set_variable_cb), &(props->flip_final));
 	gtk_tooltips_set_tip(tooltips, button, _("Put all the white pieces at the bottom and all the black pieces on the top of the board when a game is over"), NULL);	
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
-
-	/* show grid button */
-	button=gtk_check_button_new_with_mnemonic(_("_Show grid"));
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), props->show_grid);
-	g_signal_connect(G_OBJECT(button), "toggled",
-			G_CALLBACK(set_variable_cb), &(props->show_grid));
-	gtk_tooltips_set_tip(tooltips, button, _("Whether the grid should be shown"), NULL);	
-	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
-
-	/* FIXME stagger flips button? */
 
 	/*  tileset select */
 	hbox=gtk_hbox_new(FALSE, 12);

@@ -33,7 +33,6 @@ void load_properties(void);
 void show_properties_dialog(void);
 void reload_properties(void);
 gboolean props_get_flip_final(void);
-gboolean props_get_show_grid(void);
 gboolean props_get_animate(void);
 gboolean props_get_quick_moves(void);
 gchar * props_get_tile_set(void);
@@ -45,8 +44,6 @@ typedef struct {
 	gint white_level;
 	gboolean flip_final;
 	gboolean animate;
-/*	gboolean stagger; */
-	gboolean show_grid;
 	gboolean quick_moves;
 	gchar * tile_set;
 } PropertiesData;

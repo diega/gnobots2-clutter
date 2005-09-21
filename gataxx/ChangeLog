@@ -1,3 +1,18 @@
+2005-09-21  Callum McKenzie  <callum@spooky-possum.org>
+
+	* properties.c: 
+	* properties.h:
+	* gataxx.c:
+	* gtkgridboard.h:
+	* gtkgridboard.c: Use a simpler, slicker, faster drawing
+	style. The selection is now drawn as "ghost pieces" (hence
+	simplifying the grid code). The grid option has been removed. The
+	drawing engine is back to using a backing store. We now keep track
+	of what has changed and only redraw that. Also removed a lot of
+	profiling code since the total time is the only really relevant
+	bit. The resulting code is now easily fast enough (30ms worst-case
+	redraw on my machine). 
+
 2005-08-12  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* gtkgridboard.c: Yet another revision of the Cairo drawing
