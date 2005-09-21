@@ -304,11 +304,15 @@ static void gtk_gridboard_repaint(GtkGridBoard * gridboard) {
   widget = GTK_WIDGET (gridboard);
   g_return_if_fail (GTK_WIDGET_REALIZED (widget));
 
-  if (gridboard->backing_store == NULL)
+  if (gridboard->backing_store == NULL) {
     gridboard->backing_store = gdk_pixmap_new (widget->window,
 					       widget->allocation.width,
 					       widget->allocation.height, 
 					       -1);
+    for (x=0; x<gridboard->width; x++)
+      for (y=0; y<gridboard->height; y++)
+	gridboard->changed[x][y] = TRUE;
+  }
   
   gridboard->cx = gdk_cairo_create (gridboard->backing_store);
   cairo_scale (gridboard->cx, 
