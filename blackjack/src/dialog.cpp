@@ -158,6 +158,13 @@ quick_deal_toggle_cb (GtkToggleButton *w, gpointer data)
         bj_set_quick_deal (is_on);
 }
 
+void
+never_insurance_toggle_cb (GtkToggleButton *w, gpointer data)
+{
+        gboolean is_on = gtk_toggle_button_get_active (w);
+        bj_set_never_insurance (is_on);
+}
+
 enum {
         NAME_STRING,
         NDECKS_STRING,
@@ -210,6 +217,7 @@ show_preferences_dialog (void)
         GtkWidget *button;
         gboolean show_probabilities = false;
         gboolean quick_deal = false;
+        gboolean never_insurance = false;
         static GtkListStore* list;
         static GtkWidget* list_view;
         GtkWidget* scrolled_window;
@@ -258,12 +266,20 @@ show_preferences_dialog (void)
                 gtk_box_pack_start (GTK_BOX (vbox), toggle, FALSE, FALSE, 0);
                 g_signal_connect (toggle, "toggled",
                                   G_CALLBACK (quick_deal_toggle_cb), NULL);
-                
+
+                // No insurance
+                never_insurance = bj_get_never_insurance ();
+                toggle = gtk_check_button_new_with_mnemonic (_("_Never take insurance"));
+                gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toggle),
+                                              never_insurance);
+                gtk_box_pack_start (GTK_BOX (vbox), toggle, FALSE, FALSE, 0);
+                g_signal_connect (toggle, "toggled",
+                                  G_CALLBACK (never_insurance_toggle_cb), NULL); 
+               
                 button = gtk_button_new_with_mnemonic (_("_Reset Balance"));
                 gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
                 g_signal_connect (button, "clicked",
-                                  G_CALLBACK (reset_button_cb), NULL);
-                
+                                  G_CALLBACK (reset_button_cb), NULL);               
                 
                 // Rules Tab
                 frame = games_frame_new (_("Rules"));

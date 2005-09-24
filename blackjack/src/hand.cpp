@@ -254,7 +254,7 @@ bj_hand_new5 (gpointer data)
         // Ask for insurance if the up card is an ace.
 
         bool insurance = FALSE;
-        if (dealer->cards[0].value () == 1 || dealer->cards[0].value () == 10) {
+        if (!bj_get_never_insurance () && (dealer->cards[0].value () == 1 || dealer->cards[0].value () == 10)) {
                 if (bj_get_show_probabilities ()) {
                         dealerProbabilities->showProbabilities (distribution,
                                                                 dealer->cards[0].value (),

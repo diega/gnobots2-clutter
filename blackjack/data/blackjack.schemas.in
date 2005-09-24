@@ -72,5 +72,17 @@
         <long>Use a quick deal with no delay between each card.</long>
       </locale>
     </schema>
+
+    <schema>
+      <key>/schemas/apps/blackjack/settings/never_insurance</key>
+      <applyto>/apps/blackjack/settings/never_insurance</applyto>
+      <owner>blackjack</owner>
+      <type>bool</type>
+      <default>FALSE</default>
+      <locale name="C">
+        <short>Never take insurance</short>
+        <long>Never take insurance with a dealer showing an ace.</long>
+      </locale>
+    </schema>
   </schemalist>
 </gconfschemafile>

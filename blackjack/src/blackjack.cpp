@@ -78,6 +78,7 @@ gfloat wager_value = 5.0;
 gfloat balance_value = 0.0;
 gboolean quick_deals = FALSE;
 gboolean show_probabilities = FALSE;
+gboolean never_insurance = FALSE;
 gboolean show_toolbar = TRUE;
 gchar *game_variation = NULL;
 
@@ -476,6 +477,14 @@ bj_gconf_quick_deal_cb (GConfClient *client, guint cnxn_id,
 }
 
 static void
+bj_gconf_never_insurance_cb (GConfClient *client, guint cnxn_id, 
+                             GConfEntry *entry, gpointer user_data)
+{
+        never_insurance = gconf_client_get_bool (client, GCONF_KEY_NEVER_INSURANCE, NULL);
+        bj_draw_refresh_screen ();
+}
+
+static void
 bj_gconf_show_toolbar_cb (GConfClient *client, guint cnxn_id, 
                           GConfEntry *entry, gpointer user_data)
 {
@@ -543,6 +552,19 @@ bj_set_quick_deal (gboolean value)
 {
         gconf_client_set_bool (bj_gconf_client (), 
                                GCONF_KEY_QUICK_DEAL,
+                               value, NULL);
+}
+
+gboolean
+bj_get_never_insurance ()
+{
+        return never_insurance;
+}
+void
+bj_set_never_insurance (gboolean value)
+{
+        gconf_client_set_bool (bj_gconf_client (), 
+                               GCONF_KEY_NEVER_INSURANCE,
                                value, NULL);
 }
 
@@ -616,6 +638,9 @@ bj_gconf_init (GConfClient *client)
         quick_deals = gconf_client_get_bool (client, 
                                              GCONF_KEY_QUICK_DEAL,
                                              NULL);
+        never_insurance = gconf_client_get_bool (client, 
+                                                 GCONF_KEY_NEVER_INSURANCE,
+                                                 NULL);
         show_toolbar = gconf_client_get_bool (client, 
                                               GCONF_KEY_SHOW_TOOLBAR,
                                               NULL);
@@ -635,6 +660,10 @@ bj_gconf_init (GConfClient *client)
         gconf_client_notify_add (client,
                                  GCONF_KEY_QUICK_DEAL,
                                  bj_gconf_quick_deal_cb,
+                                 NULL, NULL, NULL);
+        gconf_client_notify_add (client,
+                                 GCONF_KEY_NEVER_INSURANCE,
+                                 bj_gconf_never_insurance_cb,
                                  NULL, NULL, NULL);
         gconf_client_notify_add (client,
                                  GCONF_KEY_SHOW_TOOLBAR,

@@ -1,3 +1,25 @@
+2005-09-15  JP Rosevear  <jpr@novell.com>
+
+	* data/blackjack.schemas.in: add never insurance schema item
+	
+	* src/hand.cpp (bj_hand_new5): if never insurance is on, don't ask
+	about insurance and don't take it
+
+	* src/dialog.cpp (never_insurance_toggle_cb): set never insurance
+	value when it changes
+	(show_preferences_dialog): add never insurance check box to the
+	preferences
+
+	* src/blackjack.h: add never insurance gconf key definition and
+	function prototypes
+
+	* src/blackjack.cpp (bj_gconf_never_insurance_cb): listen for
+	changes to the never_insurance setting
+	(bj_set_never_insurance): accessor
+	(bj_set_never_insurance): ditto
+	(bj_gconf_init): read in the initial never_insurance setting and
+	listen for changes
+
 2005-07-16  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* data/Makefile.am (EXTRA_DIST): Use sys_in_files rather than
