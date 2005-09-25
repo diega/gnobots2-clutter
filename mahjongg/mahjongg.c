@@ -923,7 +923,7 @@ about_callback (void)
 	};
 
 	gtk_show_about_dialog (GTK_WINDOW (window),
-			       "name", _("GNOME Mahjongg"), 
+			       "name", _("Mahjongg"), 
 			       "version", VERSION,
 			       "comments", _("A matching game played with Mahjongg tiles."),
 			       "copyright", "Copyright \xc2\xa9 1998-2005 Free Software Foundation, Inc.",
