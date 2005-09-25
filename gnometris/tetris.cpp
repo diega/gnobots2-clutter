@@ -100,7 +100,6 @@ enum {
 Tetris::Tetris(int cmdlLevel): 
 	blockPixmap(0),
 	field(0),
-	preview(0),
 	paused(false), 
 	timeoutId(0), 
 	onePause(false), 
@@ -203,6 +202,8 @@ Tetris::Tetris(int cmdlLevel):
 	gconf_client_add_dir (gconf_client, KEY_CONTROLS_DIR, GCONF_CLIENT_PRELOAD_NONE, NULL);
 	gconf_client_notify_add (gconf_client, KEY_CONTROLS_DIR, gconfNotify, this, NULL, NULL);
 
+	preview = new Preview ();
+
 	initOptions ();
 
 	/* prepare menus */
@@ -254,8 +255,6 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_container_set_border_width(GTK_CONTAINER(vb2), 10);
 	gtk_box_pack_end(GTK_BOX(hb), vb2, 0, 0, 0);
 	
-	preview = new Preview();
-
 	gtk_box_pack_start(GTK_BOX(vb2), preview->getWidget(), FALSE, FALSE, 0);
 	
 	scoreFrame = new ScoreFrame(cmdlineLevel);
@@ -534,8 +533,10 @@ Tetris::initOptions ()
 		sound->turnOff ();
 
 	do_preview = gconfGetBoolean (gconf_client, KEY_DO_PREVIEW, TRUE);
-	if (preview)
+	
+	if (preview) {
 		preview->enable(do_preview);
+	}
 
 	random_block_colors = gconfGetBoolean (gconf_client, KEY_RANDOM_BLOCK_COLORS, TRUE);
 
