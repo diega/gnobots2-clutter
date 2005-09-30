@@ -1,4 +1,4 @@
-SUBDIRS  = objects graphics help
+SUBDIRS  = . objects graphics help
 
 schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_in_files = gnome-stones.schemas.in
@@ -48,12 +48,16 @@ gnome_stones_SOURCES =				\
 	sound.h				       
 
 gnome_stones_LDADD =				\
-	$(GNOME_GAMES_LIBS)			\
 	../libgames-support/libgames-support.la \
+	$(GNOME_GAMES_LIBS)			\
 	$(ESD_LIBS)				\
 	$(INTLLIBS)
 
-gnome_stones_LDFLAGS=-export-dynamic
+if PLATFORM_WIN32
+gnome_stones_LDFLAGS = -Wl,--export-all-symbols,--out-implib,.libs/gnome-stones.exe.a
+else
+gnome_stones_LDFLAGS = -export-dynamic
+endif
 
 Pixmap_DATA = gnome-stones.png gnome-stones-file.png
 Games_in_files = gnome-stones.desktop.in

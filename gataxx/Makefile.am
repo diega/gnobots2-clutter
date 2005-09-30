@@ -26,9 +26,10 @@ gataxx_SOURCES = \
 	properties.c \
 	properties.h
 
-gataxx_LDADD = $(GNOME_GAMES_LIBS) \
-	$(CAIRO_LIBS) \
-	../libgames-support/libgames-support.la
+gataxx_LDADD = \
+	../libgames-support/libgames-support.la \
+	$(GNOME_GAMES_LIBS) \
+	$(CAIRO_LIBS)
 
 theme_DATA=classic.png
 appicon_DATA = gataxx.png

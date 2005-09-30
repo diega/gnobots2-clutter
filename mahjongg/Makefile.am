@@ -33,8 +33,8 @@ mahjongg_SOURCES = 	\
 	solubility.h	
 
 mahjongg_LDADD =					\
-	$(GNOME_GAMES_LIBS)				\
 	../libgames-support/libgames-support.la		\
+	$(GNOME_GAMES_LIBS)				\
 	$(INTLLIBS)
 
 map_DATA = mahjongg.map

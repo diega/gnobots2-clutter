@@ -39,6 +39,6 @@ blackjack_SOURCES = 	\
 	chips.cpp
 
 blackjack_LDADD = 					\
-	$(GNOME_GAMES_LIBS)				\
-	../../libgames-support/libgames-support.la	
+	../../libgames-support/libgames-support.la	\
+	$(GNOME_GAMES_LIBS)
 

@@ -37,8 +37,8 @@ gnometris_SOURCES=\
 	gnome-canvas-pimage.c
 
 gnometris_LDADD=\
-	$(GNOME_GAMES_LIBS) \
 	../libgames-support/libgames-support.la \
+	$(GNOME_GAMES_LIBS) \
 	$(ESD_LIBS) \
 	$(INTLLIBS)
 
