@@ -913,7 +913,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	label = gtk_label_new (_("Theme"));
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), vbox, label);
 
-	frame = games_frame_new (_("Block image:"));
+	frame = games_frame_new (_("Block Image"));
 	gtk_container_add (GTK_CONTAINER (vbox), frame);
 
 	fvbox = gtk_vbox_new (FALSE, 6);
