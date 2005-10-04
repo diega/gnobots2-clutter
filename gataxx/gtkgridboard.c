@@ -386,7 +386,7 @@ static void gtk_gridboard_repaint(GtkGridBoard * gridboard) {
       }
     }
   }
-  
+
   cairo_destroy (gridboard->cx);
   
 #ifdef DO_PROFILE
@@ -482,7 +482,7 @@ static gint gtk_gridboard_flip_pixmaps(gpointer data)
                 }
         }
 
-	if (flipped_tiles)
+	if (flipped_tiles) 
 	  gtk_gridboard_paint (gridboard);
 
         /* destroy the timeout if animate is false */

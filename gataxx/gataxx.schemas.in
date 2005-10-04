@@ -62,18 +62,6 @@
       </schema>
       
       <schema>
-      <key>/schemas/apps/gataxx/flipfinal</key>
-      <applyto>/apps/gataxx/flipfinal</applyto>
-      <owner>gataxx</owner>
-      <type>bool</type>
-      <default>TRUE</default>
-      <locale name="C">
-        <short>Flip final results</short>
-        <long>Whether or not to flip final results.</long>
-      </locale>
-      </schema>
-
-      <schema>
       <key>/schemas/apps/gataxx/width</key>
       <applyto>/apps/gataxx/width</applyto>
       <owner>gataxx</owner>

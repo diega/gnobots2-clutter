@@ -41,7 +41,14 @@
 #define GCONF_QUICKMOVES GCONF_PREFIX "quickmoves"
 #define GCONF_TILESET GCONF_PREFIX "tileset"
 #define GCONF_ANIMATE GCONF_PREFIX "animate"
-#define GCONF_FLIPFINAL GCONF_PREFIX "flipfinal"
+
+typedef struct {
+	gint black_level;
+	gint white_level;
+	gboolean animate;
+	gboolean quick_moves;
+	gchar * tile_set;
+} PropertiesData;
 
 PropertiesData _props;
 PropertiesData * props=&_props;
@@ -79,10 +86,6 @@ int props_get_white_level() {
 
 int props_get_black_level() {
 	return props->black_level;
-}
-
-gboolean props_get_flip_final() {
-	return props->flip_final;
 }
 
 gboolean props_get_animate() {
@@ -151,8 +154,6 @@ void load_properties (void)
 
 	props->animate=props_get_bool(GCONF_ANIMATE, TRUE);
 	props->quick_moves=props_get_bool(GCONF_QUICKMOVES, FALSE);
-	props->flip_final=props_get_bool (GCONF_FLIPFINAL, TRUE);
-
 }
 
 static void
@@ -168,8 +169,6 @@ save_properties (void)
 	                         props->tile_set, NULL);
 	gconf_client_set_bool (get_gconf_client(), GCONF_ANIMATE,
 	                      props->animate, NULL);
-	gconf_client_set_bool (get_gconf_client(), GCONF_FLIPFINAL,
-	                       props->flip_final, NULL);
 }
 
 /* callbacks for the various check and radiobuttons */
@@ -400,14 +399,6 @@ void show_properties_dialog (void) {
 	g_signal_connect(G_OBJECT(button), "toggled",
 			G_CALLBACK(set_variable_cb), &(props->animate));
 	gtk_tooltips_set_tip(tooltips, button, _("Flip the pieces with some visual effects"), NULL);	
-	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
-
-	/* flip tiles button */
-	button=gtk_check_button_new_with_mnemonic(_("_Flip final results"));
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), props->flip_final);
-	g_signal_connect(G_OBJECT(button), "toggled",
-			G_CALLBACK(set_variable_cb), &(props->flip_final));
-	gtk_tooltips_set_tip(tooltips, button, _("Put all the white pieces at the bottom and all the black pieces on the top of the board when a game is over"), NULL);	
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 
 	/*  tileset select */

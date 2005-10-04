@@ -1,3 +1,12 @@
+2005-10-04  Callum McKenzie  <callum@spooky-possum.org>
+
+	* gataxx.schemas.in: 
+	* gataxx.c: 
+	* properties.h: 	
+	* properties.c: Remove the separate "flip final" option. The final
+	flip is performed if animation is requested. Also move the
+	PropertiesData definition inside properties.c since it is private.
+
 2005-09-21  Callum McKenzie  <callum@spooky-possum.org>
 
 	* properties.c: 
