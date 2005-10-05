@@ -279,9 +279,9 @@ void gtk_gridboard_paint (GtkGridBoard *gridboard)
   widget = GTK_WIDGET (gridboard);
   g_return_if_fail (GTK_WIDGET_REALIZED (widget));
 
-  gtk_gridboard_repaint (gridboard);
-
   gtk_widget_queue_draw (widget);
+
+  gtk_gridboard_repaint (gridboard);
 }
 
 #define COIN_RADIUS 0.4
