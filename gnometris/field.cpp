@@ -1,3 +1,4 @@
+/* -*- mode:C; indent-tabs-mode:nil; tab-width:8; c-basic-offset:8 -*- */
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *
@@ -107,21 +108,33 @@ Field::configure(GtkWidget *widget, GdkEventConfigure *event, Field *field)
 	return TRUE;
 }
 
+void
+Field::draw (gint x, gint y, gint wd, gint ht)
+{
+        cairo_t *cr;
+
+	cr = gdk_cairo_create (w->window);
+	
+	cairo_set_source_surface (cr, buffer, 0, 0);
+	cairo_rectangle (cr, x, y, wd, ht);
+	cairo_fill (cr);
+	
+	cairo_destroy (cr);
+}
+
+void
+Field::draw (void)
+{
+  draw (0, 0, width, height);
+}
+
 gboolean
 Field::expose(GtkWidget *widget, GdkEventExpose *event, Field *field)
 {
 	cairo_t *cr;
 
-	cr = gdk_cairo_create(widget->window);
-
-	// blit to window
-	cairo_set_source_surface(cr, field->buffer, 0, 0);
-	cairo_rectangle(cr,
-			event->area.x, event->area.y,
-			event->area.width, event->area.height);
-	cairo_fill(cr);
-
-	cairo_destroy(cr);
+	field->draw (event->area.x, event->area.y,
+		     event->area.width, event->area.height);
 
 	return TRUE;
 }
@@ -236,7 +249,7 @@ Field::redraw()
 
 	cairo_destroy(cr);
 
-	gtk_widget_queue_draw(w);
+	draw ();
 }
 
 void

@@ -1,3 +1,4 @@
+/* -*- mode:C; indent-tabs-mode:nil; tab-width:8; c-basic-offset:8 -*- */
 #ifndef __field_h__
 #define __field_h__
 
@@ -62,6 +63,8 @@ private:
 	void drawForeground(cairo_t *cr);
 	void drawMessage(cairo_t *cr, const char *msg);
 	void redrawAll();
+	void draw (gint x, gint y, gint w, gint h);
+	void draw ();
 
 	static gboolean configure(GtkWidget *widget, GdkEventConfigure *event, Field *field);
 	static gboolean expose(GtkWidget *widget, GdkEventExpose *event, Field *field);

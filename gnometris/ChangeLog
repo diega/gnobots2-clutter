@@ -7,7 +7,8 @@
 	* preview.cpp:
 	* tetris.cpp:
 	* tetris.h: Paolo Borelli's cairo-fication patch (bug #314790)
-	plus "improvements" from myself. Also, code to save the size of
+	plus "improvements" from myself (proper blocks and better response
+	to key presses). Also, code to save the size of
 	the main window.
 
 2005-10-05  Callum McKenzie  <callum@spooky-possum.org>

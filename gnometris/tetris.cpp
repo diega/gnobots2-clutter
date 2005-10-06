@@ -1,6 +1,5 @@
 /* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
 
-
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *
@@ -1048,13 +1047,12 @@ Tetris::timeoutHandler(void *d)
  	if (t->onePause)
  	{
 		t->onePause = false;
-		//gtk_widget_queue_draw(t->field->getWidget());
 		t->field->redraw();
 	}
  	else
 	{
 		bool res = t->field->moveBlockDown();
-		//gtk_widget_queue_draw(t->field->getWidget());
+
 		t->field->redraw();
 
 		if (res)
