@@ -1,6 +1,9 @@
 2005-10-06  Callum McKenzie  <callum@spooky-possum.org>
 
-	* field.cpp:
+	* field.cpp: Add an outline to the text in case we end up on a
+	white background. Set a minimum size to the playing field
+	(approximately the same size as the preview/score stuff).
+
 	* field.h:
 	* blockops.cpp:
 	* blockops.h:

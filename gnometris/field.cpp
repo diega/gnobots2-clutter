@@ -41,6 +41,8 @@ Field::Field():
 	g_signal_connect (w, "expose_event", G_CALLBACK (expose), this);
 	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
 
+	gtk_widget_set_size_request (w, COLUMNS*190/LINES, 190);
+
 	gtk_widget_show (w);
 }
 
@@ -222,8 +224,13 @@ Field::drawMessage(cairo_t *cr, const char *msg)
 
 	pango_layout_get_size(layout, &lw, &lh);
 	cairo_move_to(cr, -((double)lw / PANGO_SCALE) / 2, -((double)lh / PANGO_SCALE) / 2);
+	pango_cairo_layout_path(cr, layout);
 	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
-	pango_cairo_show_layout(cr, layout);
+	cairo_fill_preserve (cr);
+	cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+	/* A linewidth of 2 pixels at the default size. */
+	cairo_set_line_width (cr, width/220.0);
+	cairo_stroke (cr);
 
 	g_object_unref(layout);
 
