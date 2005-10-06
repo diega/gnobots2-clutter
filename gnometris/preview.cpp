@@ -72,42 +72,57 @@ gint
 Preview::expose(GtkWidget * widget, GdkEventExpose * event, Preview * preview)
 {
 	GdkRectangle *area = &(event->area);
+	cairo_t *cr;
 
-	gdk_draw_rectangle (widget->window, widget->style->black_gc, TRUE,
-			    area->x, area->y, area->width, area->height);
+	cr = gdk_cairo_create (widget->window);
 
-	int xoffs = (preview->width 
-		     - sizeTable[preview->blocknr][preview->blockrot][1] * BLOCK_SIZE) / 2;
-	int yoffs = (preview->height 
-		     - sizeTable[preview->blocknr][preview->blockrot][0] * BLOCK_SIZE) / 2;
+	/* restrict our drawing */
+//	owen says it's not worth... in fact I can't see a measurable differnce
+//	gdk_cairo_rectangle (cr, area);
+//	cairo_clip (cr);
 
-	xoffs -= offsetTable[preview->blocknr][preview->blockrot][1] * BLOCK_SIZE;
-	yoffs -= offsetTable[preview->blocknr][preview->blockrot][0] * BLOCK_SIZE;
+	cairo_rectangle (cr, 0 , 0, widget->allocation.width, widget->allocation.height);
+	cairo_set_source_rgb (cr, 0, 0, 0);
+	cairo_fill_preserve (cr);
+	cairo_set_source_rgb (cr, 1.0, 1.0, 0);
+	cairo_stroke (cr);
 
 	if (!preview->enabled)
 	{
-		gdk_draw_line(widget->window, widget->style->white_gc, 0, 0, 
-			      preview->width, preview->height);
-		gdk_draw_line(widget->window, widget->style->white_gc, 0, 
-			      preview->height, preview->width, 0);
+		cairo_set_source_rgb (cr, 1.0, 1.0, 1.0);
+		cairo_set_line_width (cr, 1.5);
 
-		return TRUE;
+		cairo_move_to (cr, 0, 0);
+		cairo_line_to (cr, widget->allocation.width, widget->allocation.height);
+		cairo_move_to (cr, widget->allocation.width, 0);
+		cairo_line_to (cr, 0, widget->allocation.height);
+
+		cairo_stroke (cr);
 	}
+	else if (preview->blocknr != -1)
+	{
+		int xoffs = (preview->width 
+			     - sizeTable[preview->blocknr][preview->blockrot][1] * BLOCK_SIZE) / 2;
+		int yoffs = (preview->height 
+			     - sizeTable[preview->blocknr][preview->blockrot][0] * BLOCK_SIZE) / 2;
 
-	if (preview->blocknr == -1)
-		return TRUE;
+		xoffs -= offsetTable[preview->blocknr][preview->blockrot][1] * BLOCK_SIZE;
+		yoffs -= offsetTable[preview->blocknr][preview->blockrot][0] * BLOCK_SIZE;
 
-	for (int x = 0; x < 4; ++x) {
-		for (int y = 0; y < 4; ++y) {
-			if (blockTable[preview->blocknr][preview->blockrot][x][y]) {
-				gdk_draw_pixbuf (widget->window, widget->style->black_gc, pic[preview->blockcolor],
-						 0, 0, 
-						 x * BLOCK_SIZE + xoffs, y * BLOCK_SIZE + yoffs,
-						 BLOCK_SIZE, BLOCK_SIZE,
-						 GDK_RGB_DITHER_NORMAL, 0, 0);
+		for (int x = 0; x < 4; ++x) {
+			for (int y = 0; y < 4; ++y) {
+				if (blockTable[preview->blocknr][preview->blockrot][x][y]) {
+					gdk_draw_pixbuf (widget->window, widget->style->black_gc, pic[preview->blockcolor],
+							 0, 0, 
+							 x * BLOCK_SIZE + xoffs, y * BLOCK_SIZE + yoffs,
+							 BLOCK_SIZE, BLOCK_SIZE,
+							 GDK_RGB_DITHER_NORMAL, 0, 0);
+				}
 			}
 		}
 	}
+
+	cairo_destroy (cr);
 
 	return TRUE;
 }

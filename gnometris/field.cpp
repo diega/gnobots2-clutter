@@ -20,132 +20,274 @@
 
 #include "field.h"
 #include "blocks.h"
-#include "gnome-canvas-pimage.h"
 
-Field::	Field()
+
+#define FONT "Sans Bold"
+
+
+Field::Field():
+	BlockOps(),
+	buffer(NULL),
+	background(NULL),
+	showPause(false),
+	showGameOver(false),
+	backgroundImage(NULL),
+	backgroundImageTiled(false),
+	backgroundColor(NULL)
 {
-	bg = NULL;
-	pausemsg = NULL;
-	gameovermsg = NULL;
+	w = gtk_drawing_area_new();
 
-	w = gnome_canvas_new();
+	g_signal_connect (w, "expose_event", G_CALLBACK (expose), this);
+	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
+
+	gtk_widget_show (w);
+}
+
+Field::~Field()
+{
+	if (buffer)
+		cairo_surface_destroy(buffer);
+	if (background)
+		cairo_surface_destroy(background);
+}
+
+gboolean
+Field::configure(GtkWidget *widget, GdkEventConfigure *event, Field *field)
+{
+	cairo_t *cr;
+	cairo_t *bg_cr;
+
+	field->width = widget->allocation.width;
+	field->height = widget->allocation.height;
+
+	cr = gdk_cairo_create (widget->window);
+
+	if (field->buffer)
+		cairo_surface_destroy(field->buffer);
+	if (field->background)
+		cairo_surface_destroy(field->background);
+
+	// backing buffer
+	field->buffer =  cairo_surface_create_similar (cairo_get_target (cr),
+						       CAIRO_CONTENT_COLOR,
+						       widget->allocation.width,
+						       widget->allocation.height);
+
+	// cached background
+	field->background =  cairo_surface_create_similar (cairo_get_target (cr),
+							   CAIRO_CONTENT_COLOR,
+							   widget->allocation.width,
+							   widget->allocation.height);
+
+	cairo_destroy (cr);
+
+	bg_cr = cairo_create (field->background);
+
+	if (field->backgroundImage) {
+        	gdouble xscale, yscale;
+		cairo_matrix_t m;
+
+		/* FIXME: This doesn't handle tiled backgrounds in the obvious way. */
+		gdk_cairo_set_source_pixbuf(bg_cr, field->backgroundImage, 0, 0);
+		xscale = 1.0*gdk_pixbuf_get_width (field->backgroundImage)/field->width;
+		yscale = 1.0*gdk_pixbuf_get_height (field->backgroundImage)/field->height;
+		cairo_matrix_init_scale (&m, xscale, yscale);
+		cairo_pattern_set_matrix (cairo_get_source (bg_cr), &m);
+	} else if (field->backgroundColor)
+		gdk_cairo_set_source_color(bg_cr, field->backgroundColor);
+	else
+		cairo_set_source_rgb(bg_cr, 0., 0., 0.);
+
+	cairo_paint(bg_cr);
+
+	cairo_destroy(bg_cr);
+
+	field->redraw();
+
+	return TRUE;
+}
+
+gboolean
+Field::expose(GtkWidget *widget, GdkEventExpose *event, Field *field)
+{
+	cairo_t *cr;
+
+	cr = gdk_cairo_create(widget->window);
+
+	// blit to window
+	cairo_set_source_surface(cr, field->buffer, 0, 0);
+	cairo_rectangle(cr,
+			event->area.x, event->area.y,
+			event->area.width, event->area.height);
+	cairo_fill(cr);
+
+	cairo_destroy(cr);
+
+	return TRUE;
 }
 
 void
-Field::updateSize(GdkPixbuf * bgImage, GdkColor *bgcolour)
+Field::drawBackground(cairo_t *cr)
 {
-	gtk_widget_set_size_request(w, COLUMNS * BLOCK_SIZE, LINES * BLOCK_SIZE);
-	gnome_canvas_set_scroll_region(GNOME_CANVAS(w), 0.0, 0.0, COLUMNS * BLOCK_SIZE, LINES * BLOCK_SIZE);
+	cairo_save(cr);
 
-	if (bg)
-		gtk_object_destroy(GTK_OBJECT(bg));
-	
-  	if (bgImage)
-  		bg = gnome_canvas_item_new(
-  			gnome_canvas_root(GNOME_CANVAS(w)),
-  			gnome_canvas_pimage_get_type(),
-  			"image", bgImage,
-  			"x", (double) 0,
-  			"y", (double) 0,
-			"width", (double) COLUMNS * BLOCK_SIZE,
-			"height", (double) LINES * BLOCK_SIZE,
-  			NULL);
-		else
-			bg = gnome_canvas_item_new(
-  			gnome_canvas_root(GNOME_CANVAS(w)),
-				gnome_canvas_rect_get_type(),
-  			"x1", (double) 0,
-  			"y1", (double) 0,
-  			"x2", (double) COLUMNS * BLOCK_SIZE,
-  			"y2", (double) LINES * BLOCK_SIZE,
-				"fill_color_gdk", bgcolour,
-				"outline_color", "black",
-				"width_units", 1.0,
-  			NULL);
+	cairo_set_source_surface(cr, background, 0, 0);
+	cairo_paint(cr);
+
+	cairo_restore(cr);
+}
+
+void
+Field::drawForeground(cairo_t *cr)
+{
+        const gdouble colours[7][3] = {{1.0, 0.0, 0.0},
+				       {0.0, 1.0, 0.0},
+				       {0.0, 0.0, 1.0},
+				       {1.0, 1.0, 1.0},
+				       {1.0, 1.0, 0.0},
+				       {1.0, 0.0, 1.0},
+				       {0.0, 1.0, 1.0}};
+
+	cairo_save(cr);
+
+	cairo_scale(cr, 1.0 * width / COLUMNS, 1.0 * height / LINES);
+
+	cairo_set_line_width (cr, 0.2);
+	cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
+	for (int y = 0; y < LINES; ++y)
+	{
+		for (int x = 0; x < COLUMNS; ++x)
+		{
+			if (field[x][y].what != EMPTY)
+			{
+        			int i = field[x][y].color;
+
+				i = CLAMP (i, 0, 6);
+			  	cairo_set_source_rgba(cr, colours[i][0], 
+						      colours[i][1], 
+						      colours[i][2], 0.6);
+				cairo_rectangle(cr, x, y, 
+						1.0, 1.0);
+				cairo_fill_preserve (cr);
+				cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 1.0);
+				cairo_stroke (cr);
+			}
+		}
+	}
+
+
+	cairo_restore(cr);
+}
+
+void
+Field::drawMessage(cairo_t *cr, const char *msg)
+{
+	PangoLayout *dummy_layout;
+	PangoLayout *layout;
+	PangoFontDescription *desc;
+	int lw, lh;
+
+	cairo_save(cr);
+
+	// Center coordinates
+	cairo_translate(cr, width / 2, height / 2);
+
+	desc = pango_font_description_from_string(FONT);
+
+	layout = pango_cairo_create_layout(cr);
+	pango_layout_set_text(layout, msg, -1);
+
+	dummy_layout = pango_layout_copy(layout);
+	pango_layout_set_font_description(dummy_layout, desc);
+	pango_layout_get_size(dummy_layout, &lw, &lh);
+	g_object_unref(dummy_layout);
+
+	// desired height : lh = widget width * 0.9 : lw 
+	pango_font_description_set_absolute_size(desc, ((float) lh / lw) * PANGO_SCALE * width * 0.8);
+	pango_layout_set_font_description(layout, desc);
+	pango_font_description_free(desc);
+
+	pango_layout_get_size(layout, &lw, &lh);
+	cairo_move_to(cr, -((double)lw / PANGO_SCALE) / 2, -((double)lh / PANGO_SCALE) / 2);
+	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
+	pango_cairo_show_layout(cr, layout);
+
+	g_object_unref(layout);
+
+	cairo_restore(cr);
+}
+
+void
+Field::redraw()
+{
+	cairo_t *cr;
+
+	g_return_if_fail(buffer);
+
+	cr = cairo_create(buffer);
+
+	drawBackground(cr);
+	drawForeground(cr);
+
+	if (showPause)
+		drawMessage(cr, _("Paused"));
+	else if (showGameOver)
+		drawMessage(cr, _("Game Over"));
+
+	cairo_destroy(cr);
+
+	gtk_widget_queue_draw(w);
+}
+
+void
+Field::setBackground(GdkPixbuf *bgImage)//, bool tiled)
+{
+	backgroundImage = (GdkPixbuf *) g_object_ref(bgImage);
+//	backgroundImageTiled = tiled;
+
+	// make sure to rerurn configure(), so that the bg surface
+	// is recached and redrawn.
+	gtk_widget_queue_resize (w);
+}
+
+void
+Field::setBackground(GdkColor *bgColor)
+{
+	backgroundColor = gdk_color_copy(bgColor);
+
+	// make sure to rerurn configure(), so that the bg surface
+	// is recached and redrawn.
+	gtk_widget_queue_resize (w);
 }
 
 void
 Field::showPauseMessage()
 {
-	if (!pausemsg)
-	{
-		double x1, y1, x2, y2;
-		double width;
-		double pts;
+	showPause = true;
 
-		pausemsg = gnome_canvas_item_new (
-			gnome_canvas_root(GNOME_CANVAS(w)),
-			gnome_canvas_text_get_type(),
-			"fill_color",
-			"white",
-			"x", COLUMNS * BLOCK_SIZE / 2.0,
-			"y", LINES * BLOCK_SIZE / 2.0,
-			"text", _("Paused"),
-			"size_points", 36.0,
-			NULL);
-
-		/* Since gnome_canvas doesn't support setting the size of text in
-		 * pixels (read the source where the "size" parameter gets set)
-		 * and pango isn't forthcoming about how it scales things (see
-		 * http://mail.gnome.org/archives/gtk-i18n-list/2003-August/msg00001.html
-		 * and bug #119081). We guess at the size, see what size it is rendered
-		 * to and then adjust the point size to fit. 36.0 points is pretty
-		 * close for 96 dpi . */
-
-		gnome_canvas_item_get_bounds (pausemsg, &x1, &y1, &x2, &y2);
-		width = x2 - x1;
-		/* 0.8 is the fraction of the screen we want to use and 36.0 is
-		 * the guess we use previously for the point size. */
-		pts = 0.8 * 36.0 * COLUMNS * BLOCK_SIZE / width;
-		gnome_canvas_item_set (pausemsg, "size_points", pts, 0);
-	}
-
-	gnome_canvas_item_show (pausemsg);
-	gnome_canvas_item_raise_to_top (pausemsg);
+	redraw();
 }
 
 void
 Field::hidePauseMessage()
 {
-	if (pausemsg)
-		gnome_canvas_item_hide (pausemsg);
+	showPause = false;
+
+	redraw();
 }
 
 void
 Field::showGameOverMessage()
 {
-	if (!gameovermsg)
-	{
-		double x1, y1, x2, y2;
-		double width;
-		double pts;
+	showGameOver = true;
 
-		gameovermsg = gnome_canvas_item_new (
-			gnome_canvas_root(GNOME_CANVAS(w)),
-			gnome_canvas_text_get_type(),
-			"fill_color",
-			"white",
-			"x", COLUMNS * BLOCK_SIZE / 2.0,
-			"y", LINES * BLOCK_SIZE / 2.0,
-			"text", _("Game Over"),
-			"size_points", 36.0,
-			NULL);
-
-		gnome_canvas_item_get_bounds (gameovermsg, &x1, &y1, &x2, &y2);
-		width = x2 - x1;
-		/* 0.9 is the fraction of the screen we want to use and 36.0 is
-		 * the guess we use previously for the point size. */
-		pts = 0.9 * 36.0 * COLUMNS * BLOCK_SIZE / width;
-		gnome_canvas_item_set (gameovermsg, "size_points", pts, 0);
-	}
-
-	gnome_canvas_item_show (gameovermsg);
-	gnome_canvas_item_raise_to_top (gameovermsg);
+	redraw();
 }
 
 void
 Field::hideGameOverMessage()
 {
-	if (gameovermsg)
-		gnome_canvas_item_hide (gameovermsg);
+	showGameOver = false;
+
+	redraw();
 }

@@ -66,26 +66,32 @@ bool rotateCounterClockWise = true;
 
 #define TETRIS_OBJECT "gnometris-tetris-object"
 
-#define KEY_OPTIONS_DIR "/apps/gnometris/options"
-#define KEY_SOUND "/apps/gnometris/options/sound"
-#define KEY_BLOCK_PIXMAP "/apps/gnometris/options/block_pixmap"
-#define KEY_STARTING_LEVEL "/apps/gnometris/options/starting_level"
-#define KEY_DO_PREVIEW "/apps/gnometris/options/do_preview"
-#define KEY_RANDOM_BLOCK_COLORS "/apps/gnometris/options/random_block_colors"
-#define KEY_ROTATE_COUNTER_CLOCKWISE "/apps/gnometris/options/rotate_counter_clock_wise"
-#define KEY_LINE_FILL_HEIGHT "/apps/gnometris/options/line_fill_height"
-#define KEY_LINE_FILL_PROBABILITY "/apps/gnometris/options/line_fill_probability"
+#define KEY_BASE "/apps/gnometris"
 
-#define KEY_CONTROLS_DIR "/apps/gnometris/controls"
-#define KEY_MOVE_LEFT "/apps/gnometris/controls/key_left"
-#define KEY_MOVE_RIGHT "/apps/gnometris/controls/key_right"
-#define KEY_MOVE_DOWN "/apps/gnometris/controls/key_down"
-#define KEY_MOVE_DROP "/apps/gnometris/controls/key_drop"
-#define KEY_MOVE_ROTATE "/apps/gnometris/controls/key_rotate"
-#define KEY_MOVE_PAUSE "/apps/gnometris/controls/key_pause"
+#define KEY_OPTIONS_DIR KEY_BASE "/options"
 
-#define KEY_BG_COLOUR "/apps/gnometris/options/bgcolor"
-#define KEY_USE_BG_IMAGE "/apps/gnometris/options/usebgimage"
+#define KEY_SOUND KEY_OPTIONS_DIR "/sound"
+#define KEY_BLOCK_PIXMAP KEY_OPTIONS_DIR "/block_pixmap"
+#define KEY_STARTING_LEVEL KEY_OPTIONS_DIR "/starting_level"
+#define KEY_DO_PREVIEW KEY_OPTIONS_DIR "/do_preview"
+#define KEY_RANDOM_BLOCK_COLORS KEY_OPTIONS_DIR "/random_block_colors"
+#define KEY_ROTATE_COUNTER_CLOCKWISE KEY_OPTIONS_DIR "/rotate_counter_clock_wise"
+#define KEY_LINE_FILL_HEIGHT KEY_OPTIONS_DIR "/line_fill_height"
+#define KEY_LINE_FILL_PROBABILITY KEY_OPTIONS_DIR "/line_fill_probability"
+
+#define KEY_CONTROLS_DIR KEY_BASE "/controls"
+#define KEY_MOVE_LEFT KEY_CONTROLS_DIR "/key_left"
+#define KEY_MOVE_RIGHT KEY_CONTROLS_DIR "/key_right"
+#define KEY_MOVE_DOWN KEY_CONTROLS_DIR "/key_down"
+#define KEY_MOVE_DROP KEY_CONTROLS_DIR "/key_drop"
+#define KEY_MOVE_ROTATE KEY_CONTROLS_DIR "/key_rotate"
+#define KEY_MOVE_PAUSE KEY_CONTROLS_DIR "/key_pause"
+
+#define KEY_BG_COLOUR KEY_OPTIONS_DIR "/bgcolor"
+#define KEY_USE_BG_IMAGE KEY_OPTIONS_DIR "/usebgimage"
+
+#define KEY_HEIGHT KEY_OPTIONS_DIR "/height"
+#define KEY_WIDTH KEY_OPTIONS_DIR "/width"
 
 #define TILE_THRESHOLD 65
 
@@ -115,7 +121,9 @@ Tetris::Tetris(int cmdlLevel):
 	GtkAccelGroup *accel_group;
 	GtkActionGroup *action_group;
 	GtkWidget *vbox;
+	GtkWidget *aspect_frame;
 	GtkWidget *menubar;
+	gint width, height;
 
 	gchar *outdir;
 	const GtkTargetEntry targets[] = {{"text/uri-list", 0, URI_LIST}, 
@@ -180,7 +188,6 @@ Tetris::Tetris(int cmdlLevel):
 	
 	w = gnome_app_new("gnometris", _("Gnometris"));
 	g_signal_connect (w, "delete_event", G_CALLBACK (gameQuit), this);
-	gtk_window_set_resizable (GTK_WINDOW (w), FALSE);
 	gtk_drag_dest_set (w, GTK_DEST_DEFAULT_ALL, targets, 
 			   G_N_ELEMENTS(targets), 
 			   GDK_ACTION_MOVE);
@@ -188,6 +195,8 @@ Tetris::Tetris(int cmdlLevel):
 			  G_CALLBACK (dragDrop), this);
 	g_signal_connect (G_OBJECT (w), "focus_out_event",
 			  G_CALLBACK (focusOut), this);
+	g_signal_connect (G_OBJECT (w), "configure_event",
+			  G_CALLBACK (configure), this);
 
 	line_fill_height = 0;
 	line_fill_prob = 5;
@@ -201,6 +210,16 @@ Tetris::Tetris(int cmdlLevel):
 
 	gconf_client_add_dir (gconf_client, KEY_CONTROLS_DIR, GCONF_CLIENT_PRELOAD_NONE, NULL);
 	gconf_client_notify_add (gconf_client, KEY_CONTROLS_DIR, gconfNotify, this, NULL, NULL);
+
+
+	width = gconf_client_get_int (gconf_client, KEY_WIDTH, NULL);
+	if (width <= 0)
+		width = 440;
+	height = gconf_client_get_int (gconf_client, KEY_HEIGHT, NULL);
+	if (height <= 0)
+		height = 550;
+
+	gtk_window_set_default_size (GTK_WINDOW (w), width, height);
 
 	preview = new Preview ();
 
@@ -236,16 +255,19 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_box_pack_start (GTK_BOX (vbox), hb, TRUE, TRUE, 0);
 
 	field = new Field();
-	ops = new BlockOps(field);
+
+	aspect_frame = gtk_aspect_frame_new (NULL, 0.5, 0.5, (float) COLUMNS / (float) LINES, FALSE);
+	gtk_frame_set_shadow_type (GTK_FRAME (aspect_frame), GTK_SHADOW_NONE);
+	gtk_container_add (GTK_CONTAINER (aspect_frame), field->getWidget());
 
 	gtk_widget_set_events(w, gtk_widget_get_events(w) | 
 						  GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
-	
+
 	GtkWidget *vb1 = gtk_vbox_new(FALSE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vb1), 10);
-	gtk_box_pack_start_defaults(GTK_BOX(vb1), field->getWidget());
-	gtk_box_pack_start(GTK_BOX(hb), vb1, 0, 0, 0);
-	gtk_widget_show(field->getWidget());
+	gtk_box_pack_start_defaults(GTK_BOX(vb1), aspect_frame);
+	gtk_box_pack_start_defaults(GTK_BOX(hb), vb1);
+
 	setupPixmap();
 
 	g_signal_connect (w, "key_press_event", G_CALLBACK (keyPressHandler), this);
@@ -270,6 +292,8 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_widget_show(hb);
 	gtk_widget_show(vb1);
 	gtk_widget_show(vb2);
+	gtk_widget_show(aspect_frame);
+	gtk_widget_show(field->getWidget());
 	scoreFrame->show();
 	gtk_widget_show(w);
 
@@ -280,7 +304,6 @@ Tetris::Tetris(int cmdlLevel):
 
 Tetris::~Tetris()
 {
-	delete ops;
 	delete field;
 	delete preview;
 	delete scoreFrame;
@@ -440,8 +463,10 @@ Tetris::setupPixmap()
 
 	if (field)
 	{
-		field->updateSize (bgimage, &bgcolour);
-		gtk_widget_queue_resize (field->getWidget());
+		if (bgimage)
+			field->setBackground (bgimage);
+		else
+			field->setBackground (&bgcolour);
 	}
 	
 	if (preview)
@@ -995,12 +1020,12 @@ Tetris::generateTimer(int level)
 void
 Tetris::manageFallen()
 {
-	ops->fallingToLaying();
+	field->fallingToLaying();
 	sound->playSound (SOUND_LAND);
 
 	int levelBefore = scoreFrame->getLevel();
 
-	int fullLines = ops->checkFullLines();
+	int fullLines = field->checkFullLines();
 	if (fullLines > 0)
 		scoreFrame->incLines(fullLines);
 	int levelAfter = scoreFrame->getLevel();
@@ -1023,12 +1048,14 @@ Tetris::timeoutHandler(void *d)
  	if (t->onePause)
  	{
 		t->onePause = false;
-		gtk_widget_queue_draw(t->field->getWidget());
+		//gtk_widget_queue_draw(t->field->getWidget());
+		t->field->redraw();
 	}
  	else
 	{
-		bool res = t->ops->moveBlockDown();
-		gtk_widget_queue_draw(t->field->getWidget());
+		bool res = t->field->moveBlockDown();
+		//gtk_widget_queue_draw(t->field->getWidget());
+		t->field->redraw();
 
 		if (res)
 		{
@@ -1067,17 +1094,17 @@ Tetris::keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 		return FALSE;
 
 	if (keyval == t->moveLeft) {
-		res = t->ops->moveBlockLeft();
+		res = t->field->moveBlockLeft();
 		if (res)
 			sound->playSound (SOUND_SLIDE);
 		t->onePause = false;
 	} else if (keyval == t->moveRight) {
-		res = t->ops->moveBlockRight();
+		res = t->field->moveBlockRight();
 		if (res)
 			sound->playSound (SOUND_SLIDE);
 		t->onePause = false;
 	} else if (keyval == t->moveRotate) {
-		res = t->ops->rotateBlock(rotateCounterClockWise);
+		res = t->field->rotateBlock(rotateCounterClockWise);
 		if (res)
 			sound->playSound (SOUND_TURN);
 		t->onePause = false;
@@ -1092,12 +1119,14 @@ Tetris::keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 	} else if (keyval == t->moveDrop) {
 		if (!t->dropBlock) {
 			t->dropBlock = true;
-			bonus = t->ops->dropBlock();
+			bonus = t->field->dropBlock();
 			t->scoreFrame->incScore(bonus);
 			t->manageFallen();
 			res = TRUE;
 		}        
 	}
+
+	t->field->redraw();
 
 	return res;
 }
@@ -1322,7 +1351,6 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	gnome_vfs_close (inhandle);
  error_exit:
 	return;
-
 }
 
 void
@@ -1344,9 +1372,9 @@ Tetris::togglePause()
 void
 Tetris::generate()
 {
-	if (ops->generateFallingBlock())
+	if (field->generateFallingBlock())
 	{
-		ops->putBlockInField(false);
+		field->putBlockInField(false);
 		preview->previewBlock(blocknr_next, rot_next, color_next);
 		gtk_widget_queue_draw(preview->getWidget());
 		onePause = true;
@@ -1412,13 +1440,14 @@ Tetris::gameNew(GtkAction *action, void *d)
 	t->scoreFrame->setStartingLevel(level);
 
 	t->timeoutId = g_timeout_add_full(0, 1000 - 100 * (level - 1), timeoutHandler, t, NULL);
-	t->ops->emptyField(t->line_fill_height,t->line_fill_prob);
+	t->field->emptyField(t->line_fill_height,t->line_fill_prob);
 
 	t->scoreFrame->resetLines();
 	t->paused = false;
 	
-	t->ops->generateFallingBlock();
-	gtk_widget_queue_draw(t->field->getWidget());
+	t->field->generateFallingBlock();
+	//gtk_widget_queue_draw(t->field->getWidget());
+	t->field->redraw();
 	t->preview->previewBlock(blocknr_next, rot_next, color_next);
 	gtk_widget_queue_draw(t->preview->getWidget());
 
@@ -1449,7 +1478,7 @@ Tetris::gameAbout(GtkAction *action, void *d)
 {
 	Tetris *t = (Tetris*) d;
 
-	const gchar *authors[] = { "J. Marcin Gorycki", NULL };
+	const gchar * const authors[] = { "J. Marcin Gorycki", NULL };
 
 	gtk_show_about_dialog (GTK_WINDOW (t->getWidget()),
 			       "name", _("Gnometris"),
@@ -1472,4 +1501,14 @@ Tetris::gameTopTen(GtkAction *action, void *d)
 	t->high_scores->show(0);
 
 	return TRUE;
+}
+
+gboolean Tetris::configure (GtkWidget *widget, GdkEventConfigure *event, Tetris *t)
+{
+
+	gconf_client_set_int (t->gconf_client, KEY_WIDTH, event->width, NULL);
+	gconf_client_set_int (t->gconf_client, KEY_HEIGHT, event->height, 
+			      NULL);
+
+	return FALSE;
 }

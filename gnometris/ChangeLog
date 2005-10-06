@@ -1,3 +1,15 @@
+2005-10-06  Callum McKenzie  <callum@spooky-possum.org>
+
+	* field.cpp:
+	* field.h:
+	* blockops.cpp:
+	* blockops.h:
+	* preview.cpp:
+	* tetris.cpp:
+	* tetris.h: Paolo Borelli's cairo-fication patch (bug #314790)
+	plus "improvements" from myself. Also, code to save the size of
+	the main window.
+
 2005-10-05  Callum McKenzie  <callum@spooky-possum.org>
 
 	* preview.cpp (enable): Make sure the preview is updated as the

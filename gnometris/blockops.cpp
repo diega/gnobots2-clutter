@@ -21,32 +21,15 @@
 #include "blockops.h"
 #include "blocks.h"
 #include "field.h"
-#include "gnome-canvas-pimage.h"
 
-GnomeCanvasItem *BlockOps::generateItem(int x, int y, int colour)
-{
-	GnomeCanvasItem *it = gnome_canvas_item_new(
-  			gnome_canvas_root(GNOME_CANVAS(fieldDisplay->getWidget())),
-  			gnome_canvas_pimage_get_type(),
-  			"image", pic[colour],
-  			"x", (double) x * BLOCK_SIZE,
-  			"y", (double) y * BLOCK_SIZE,
-			"width", (double) BLOCK_SIZE,
-			"height", (double) BLOCK_SIZE,
-  			NULL);
 
-	return it;
-}
-
-BlockOps::BlockOps(Field *f)
+BlockOps::BlockOps()
 {
 	field = new Block*[COLUMNS];
-	fieldDisplay = f;
 	
 	for (int i = 0; i < COLUMNS; ++i)
 		field[i] = new Block[LINES];
 
-	field_initialized = false;
 	emptyField();
 }
 
@@ -62,7 +45,7 @@ bool
 BlockOps::blockOkHere(int x, int y, int b, int r)
 {
 	x -= 2;
-	
+
 	for (int x1 = 0; x1 < 4; ++x1)
 	{
 		for (int y1 = 0; y1 < 4; ++y1)
@@ -77,6 +60,7 @@ BlockOps::blockOkHere(int x, int y, int b, int r)
 				return false;
 		}
 	}
+
 	return true;	
 }
 
@@ -102,6 +86,7 @@ BlockOps::getLinesToBottom()
 				lines = tmp;
 		}
 	}
+
 	return lines;
 }
 
@@ -209,17 +194,8 @@ BlockOps::eliminateLine(int l)
 	{
 		for (int x = 0; x < COLUMNS; ++x)
 		{
-			if (field[x][y].item)
-				gtk_object_destroy(GTK_OBJECT(field[x][y].item));
-
 			field[x][y] = field[x][y - 1];
-			if (field[x][y].item)
-				field[x][y].item = generateItem(x, y, field[x][y].color);
 
-			if (field[x][y - 1].item)
-				gtk_object_destroy(GTK_OBJECT(field[x][y - 1].item));
-
-			field[x][y - 1].item = NULL;
 			field[x][y - 1].what = EMPTY;
 			field[x][y - 1].color = 0;
 		}
@@ -299,12 +275,9 @@ BlockOps::emptyField(int filled_lines, int fill_prob)
 
 		for (int x = 0; x < COLUMNS; ++x)
 		{
-			if (field_initialized && field[x][y].item != 0)
-			{
-				gtk_object_destroy(GTK_OBJECT(field[x][y].item));
-			}
-			field[x][y].item = 0;
 			field[x][y].what = EMPTY;
+			field[x][y].color = 0; 
+
 			if ((y>=(LINES - filled_lines)) && (x != blank) &&
 			    ((g_random_int_range(0, 10)) < fill_prob)) { 
 				field[x][y].what = LAYING;
@@ -316,11 +289,9 @@ BlockOps::emptyField(int filled_lines, int fill_prob)
 					// up and nr_of_colors is
 					// defined.
 					field[x][y].color = 0; 
-				field[x][y].item = generateItem(x,y,field[x][y].color);
 			}
 		}
 	}
-	field_initialized = true;
 }
 
 void
@@ -338,26 +309,18 @@ BlockOps::putBlockInField(bool erase)
 		{
 			if (blockTable[blocknr][rot][x][y])
 			{
-				field[posx - 2 + x][y + posy].what = erase ? EMPTY : FALLING;
 				if (erase)
 				{
-					GnomeCanvasItem *o = field[posx - 2 + x][y + posy].item;
-					if (o)
-						gtk_object_destroy(GTK_OBJECT(o));
-					field[posx - 2 + x][y + posy].item = 0;
+					field[posx - 2 + x][y + posy].what = EMPTY;
+					field[posx - 2 + x][y + posy].color = 0;
 				}
 				else
 				{
+					field[posx - 2 + x][y + posy].what = FALLING;
 					field[posx - 2 + x][y + posy].color = color;
-					field[posx - 2 + x][y + posy].item = 
-						generateItem(posx - 2 + x, y + posy, 
-									 field[posx - 2 + x][y + posy].color);
 				}
 			}
 		}
 	}
 }
-
-
-
 

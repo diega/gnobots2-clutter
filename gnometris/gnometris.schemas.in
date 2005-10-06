@@ -194,6 +194,30 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/apps/gnometris/saved/width</key>
+      <applyto>/apps/gnometris/saved/width</applyto>
+      <owner>gnometris</owner>
+      <type>int</type>
+      <default>440</default>
+      <locale name="C">
+        <short>Window width</short>
+        <long>The width of the main window.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/gnometris/saved/height</key>
+      <applyto>/apps/gnometris/saved/height</applyto>
+      <owner>gnometris</owner>
+      <type>int</type>
+      <default>550</default>
+      <locale name="C">
+        <short>Window height</short>
+        <long>The height of the main window.</long>
+      </locale>
+    </schema>
+
   </schemalist>
 
 </gconfschemafile>

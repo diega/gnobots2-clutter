@@ -44,7 +44,6 @@ struct Block
 {
 	SlotType what;
 	int color;
-	GnomeCanvasItem* item;
 };
 
 extern GdkPixmap *pix;
@@ -116,6 +115,7 @@ private:
 	static void dragDrop(GtkWidget *widget, GdkDragContext *context,
 			     gint x, gint y, GtkSelectionData *data, 
 			     guint info, guint time, Tetris *t);
+	static gboolean configure (GtkWidget *widget, GdkEventConfigure *event, Tetris *t);
 	static int timeoutHandler(void *d);
 	static int gameQuit(GtkAction *action, void *d);
 	static int gameNew(GtkAction *action, void *d);

@@ -24,24 +24,48 @@
 #include "tetris.h"
 #include "blockops.h"
 
-class Field
+class Field : public BlockOps
 {
 public:
 	Field();
-	
-	void updateSize(GdkPixbuf * bgImage, GdkColor *bgcolour);
+	~Field();
+
+	void setBackground(GdkPixbuf *bgImage); //, bool tiled); fixme: move tiling here.
+	void setBackground(GdkColor *bgColor);
+	void placeBlock(int x, int y, int bcolor, bool remove);
 	void showPauseMessage();
 	void hidePauseMessage();
 	void showGameOverMessage();
 	void hideGameOverMessage();
+	void redraw();
 
 	GtkWidget * getWidget()	{return w;}
-	
+
 private:
-	GtkWidget * w;
-	GnomeCanvasItem *bg;
-	GnomeCanvasItem *pausemsg;
-	GnomeCanvasItem *gameovermsg;
+	GtkWidget *w;
+
+	int width;
+	int height;
+
+	cairo_surface_t *buffer;
+	cairo_surface_t *background;
+	cairo_surface_t **blocks;
+
+	bool showPause;
+	bool showGameOver;
+
+	GdkPixbuf *backgroundImage;
+	bool backgroundImageTiled;
+	GdkColor *backgroundColor;
+
+	void drawBackground(cairo_t *cr);
+	void drawForeground(cairo_t *cr);
+	void drawMessage(cairo_t *cr, const char *msg);
+	void redrawAll();
+
+	static gboolean configure(GtkWidget *widget, GdkEventConfigure *event, Field *field);
+	static gboolean expose(GtkWidget *widget, GdkEventExpose *event, Field *field);
+
 };
 
 #endif //__field_h__
