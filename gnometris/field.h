@@ -57,6 +57,7 @@ private:
 
 	GdkPixbuf *backgroundImage;
 	bool backgroundImageTiled;
+        bool useBGImage;
 	GdkColor *backgroundColor;
 
 	void drawBackground(cairo_t *cr);
@@ -65,6 +66,7 @@ private:
 	void redrawAll();
 	void draw (gint x, gint y, gint w, gint h);
 	void draw ();
+        void rescaleBackground ();
 
 	static gboolean configure(GtkWidget *widget, GdkEventConfigure *event, Field *field);
 	static gboolean expose(GtkWidget *widget, GdkEventExpose *event, Field *field);

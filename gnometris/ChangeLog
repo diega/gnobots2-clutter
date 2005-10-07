@@ -1,3 +1,17 @@
+2005-10-07  Callum McKenzie  <callum@spooky-possum.org>
+
+	* blockops.h: 
+	* tetris.h: Move the SlotType and Block definitions from tetris.h
+	to blockops.h.
+
+	* field.h:
+	* field.cpp: Split out the background rescaling and call it
+	directly so we don't have to generate synthetic configure events
+	when the background changes. Also add a flag to tell us whether
+	the background image or a colour should be used. This means
+	dropping a colour when the background is an image now works
+	again.
+
 2005-10-06  Callum McKenzie  <callum@spooky-possum.org>
 
 	* field.cpp: Add an outline to the text in case we end up on a

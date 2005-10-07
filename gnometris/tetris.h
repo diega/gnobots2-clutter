@@ -33,19 +33,6 @@ extern int COLUMNS;
 
 extern int BLOCK_SIZE;
 
-enum SlotType 
-{
-	EMPTY, 
-	FALLING, 
-	LAYING
-};
-
-struct Block
-{
-	SlotType what;
-	int color;
-};
-
 extern GdkPixmap *pix;
 extern GdkPixbuf **pic;
 

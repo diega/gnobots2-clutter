@@ -23,6 +23,19 @@
 
 #include "tetris.h"
 
+enum SlotType 
+{
+	EMPTY, 
+	FALLING, 
+	LAYING
+};
+
+struct Block
+{
+	SlotType what;
+	int color;
+};
+
 class BlockOps
 {
 public:

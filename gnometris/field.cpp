@@ -34,6 +34,7 @@ Field::Field():
 	showGameOver(false),
 	backgroundImage(NULL),
 	backgroundImageTiled(false),
+        useBGImage(false),
 	backgroundColor(NULL)
 {
 	w = gtk_drawing_area_new();
@@ -54,6 +55,51 @@ Field::~Field()
 		cairo_surface_destroy(background);
 }
 
+void
+Field::rescaleBackground ()
+{
+        cairo_t *bg_cr;
+        cairo_t *tmp_cr;
+
+        if (!buffer)
+                return;
+
+        tmp_cr = cairo_create (buffer);
+
+        if (background)
+                cairo_surface_destroy(background);
+
+	background =  cairo_surface_create_similar (cairo_get_target (tmp_cr),
+                                                    CAIRO_CONTENT_COLOR,
+                                                    w->allocation.width,
+                                                    w->allocation.height);
+
+        cairo_destroy (tmp_cr);
+
+	bg_cr = cairo_create (background);
+
+	if (useBGImage && backgroundImage) {
+        	gdouble xscale, yscale;
+		cairo_matrix_t m;
+
+		/* FIXME: This doesn't handle tiled backgrounds in the obvious way. */
+		gdk_cairo_set_source_pixbuf(bg_cr, backgroundImage, 0, 0);
+		xscale = 1.0*gdk_pixbuf_get_width (backgroundImage)/width;
+		yscale = 1.0*gdk_pixbuf_get_height (backgroundImage)/height;
+		cairo_matrix_init_scale (&m, xscale, yscale);
+		cairo_pattern_set_matrix (cairo_get_source (bg_cr), &m);
+	} else if (backgroundColor)
+		gdk_cairo_set_source_color(bg_cr, backgroundColor);
+	else
+		cairo_set_source_rgb(bg_cr, 0., 0., 0.);
+
+	cairo_paint(bg_cr);
+
+	cairo_destroy(bg_cr);
+
+        redraw ();
+}
+
 gboolean
 Field::configure(GtkWidget *widget, GdkEventConfigure *event, Field *field)
 {
@@ -67,8 +113,6 @@ Field::configure(GtkWidget *widget, GdkEventConfigure *event, Field *field)
 
 	if (field->buffer)
 		cairo_surface_destroy(field->buffer);
-	if (field->background)
-		cairo_surface_destroy(field->background);
 
 	// backing buffer
 	field->buffer =  cairo_surface_create_similar (cairo_get_target (cr),
@@ -76,36 +120,10 @@ Field::configure(GtkWidget *widget, GdkEventConfigure *event, Field *field)
 						       widget->allocation.width,
 						       widget->allocation.height);
 
-	// cached background
-	field->background =  cairo_surface_create_similar (cairo_get_target (cr),
-							   CAIRO_CONTENT_COLOR,
-							   widget->allocation.width,
-							   widget->allocation.height);
-
 	cairo_destroy (cr);
 
-	bg_cr = cairo_create (field->background);
 
-	if (field->backgroundImage) {
-        	gdouble xscale, yscale;
-		cairo_matrix_t m;
-
-		/* FIXME: This doesn't handle tiled backgrounds in the obvious way. */
-		gdk_cairo_set_source_pixbuf(bg_cr, field->backgroundImage, 0, 0);
-		xscale = 1.0*gdk_pixbuf_get_width (field->backgroundImage)/field->width;
-		yscale = 1.0*gdk_pixbuf_get_height (field->backgroundImage)/field->height;
-		cairo_matrix_init_scale (&m, xscale, yscale);
-		cairo_pattern_set_matrix (cairo_get_source (bg_cr), &m);
-	} else if (field->backgroundColor)
-		gdk_cairo_set_source_color(bg_cr, field->backgroundColor);
-	else
-		cairo_set_source_rgb(bg_cr, 0., 0., 0.);
-
-	cairo_paint(bg_cr);
-
-	cairo_destroy(bg_cr);
-
-	field->redraw();
+        field->rescaleBackground ();
 
 	return TRUE;
 }
@@ -181,8 +199,8 @@ Field::drawForeground(cairo_t *cr)
 			  	cairo_set_source_rgba(cr, colours[i][0], 
 						      colours[i][1], 
 						      colours[i][2], 0.6);
-				cairo_rectangle(cr, x, y, 
-						1.0, 1.0);
+				cairo_rectangle(cr, x+0.1, y+0.1, 
+						0.8, 0.8);
 				cairo_fill_preserve (cr);
 				cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 1.0);
 				cairo_stroke (cr);
@@ -263,21 +281,23 @@ void
 Field::setBackground(GdkPixbuf *bgImage)//, bool tiled)
 {
 	backgroundImage = (GdkPixbuf *) g_object_ref(bgImage);
+        useBGImage = true;
 //	backgroundImageTiled = tiled;
 
-	// make sure to rerurn configure(), so that the bg surface
-	// is recached and redrawn.
-	gtk_widget_queue_resize (w);
+        rescaleBackground ();
 }
 
 void
 Field::setBackground(GdkColor *bgColor)
 {
 	backgroundColor = gdk_color_copy(bgColor);
+        if (backgroundImage) {
+                g_object_unref (backgroundImage);
+                backgroundImage = NULL;
+        }
+        useBGImage = false;
 
-	// make sure to rerurn configure(), so that the bg surface
-	// is recached and redrawn.
-	gtk_widget_queue_resize (w);
+        rescaleBackground ();
 }
 
 void
