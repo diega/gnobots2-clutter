@@ -21,10 +21,9 @@
 
 #include "field.h"
 #include "blocks.h"
-
+#include "renderer.h"
 
 #define FONT "Sans Bold"
-
 
 Field::Field():
 	BlockOps(),
@@ -160,59 +159,6 @@ Field::expose(GtkWidget *widget, GdkEventExpose *event, Field *field)
 }
 
 void
-Field::drawBackground(cairo_t *cr)
-{
-	cairo_save(cr);
-
-	cairo_set_source_surface(cr, background, 0, 0);
-	cairo_paint(cr);
-
-	cairo_restore(cr);
-}
-
-void
-Field::drawForeground(cairo_t *cr)
-{
-        const gdouble colours[7][3] = {{1.0, 0.0, 0.0},
-				       {0.0, 1.0, 0.0},
-				       {0.0, 0.0, 1.0},
-				       {1.0, 1.0, 1.0},
-				       {1.0, 1.0, 0.0},
-				       {1.0, 0.0, 1.0},
-				       {0.0, 1.0, 1.0}};
-
-	cairo_save(cr);
-
-	cairo_scale(cr, 1.0 * width / COLUMNS, 1.0 * height / LINES);
-
-	cairo_set_line_width (cr, 0.2);
-	cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
-	for (int y = 0; y < LINES; ++y)
-	{
-		for (int x = 0; x < COLUMNS; ++x)
-		{
-			if (field[x][y].what != EMPTY)
-			{
-        			int i = field[x][y].color;
-
-				i = CLAMP (i, 0, 6);
-			  	cairo_set_source_rgba(cr, colours[i][0], 
-						      colours[i][1], 
-						      colours[i][2], 0.6);
-				cairo_rectangle(cr, x+0.1, y+0.1, 
-						0.8, 0.8);
-				cairo_fill_preserve (cr);
-				cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 1.0);
-				cairo_stroke (cr);
-			}
-		}
-	}
-
-
-	cairo_restore(cr);
-}
-
-void
 Field::drawMessage(cairo_t *cr, const char *msg)
 {
 	PangoLayout *dummy_layout;
@@ -259,13 +205,17 @@ void
 Field::redraw()
 {
 	cairo_t *cr;
-
+        Renderer *r;
+        
 	g_return_if_fail(buffer);
 
-	cr = cairo_create(buffer);
+        r = new Renderer (buffer, background, field, COLUMNS, LINES, 
+                          width, height);
 
-	drawBackground(cr);
-	drawForeground(cr);
+        r->render ();
+        delete r;
+
+	cr = cairo_create(buffer);
 
 	if (showPause)
 		drawMessage(cr, _("Paused"));

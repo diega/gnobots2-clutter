@@ -60,8 +60,6 @@ private:
         bool useBGImage;
 	GdkColor *backgroundColor;
 
-	void drawBackground(cairo_t *cr);
-	void drawForeground(cairo_t *cr);
 	void drawMessage(cairo_t *cr, const char *msg);
 	void redrawAll();
 	void draw (gint x, gint y, gint w, gint h);

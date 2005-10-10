@@ -1,3 +1,14 @@
+2005-10-10  Callum McKenzie  <callum@spooky-possum.org>
+
+	* renderer.h:
+	* renderer.cpp:
+	* Makefile.am:
+	* field.h:	
+	* field.cpp: Add a Render class and remove drawBackground and
+	drawForeground from Field as preliminary refactoring work towards
+	the drawing code to make it themeable. Also remove the redundant
+	gnome-canvas-pimage.*.
+
 2005-10-07  Callum McKenzie  <callum@spooky-possum.org>
 
 	* blockops.h: 

@@ -76,16 +76,9 @@ Preview::expose(GtkWidget * widget, GdkEventExpose * event, Preview * preview)
 
 	cr = gdk_cairo_create (widget->window);
 
-	/* restrict our drawing */
-//	owen says it's not worth... in fact I can't see a measurable differnce
-//	gdk_cairo_rectangle (cr, area);
-//	cairo_clip (cr);
-
 	cairo_rectangle (cr, 0 , 0, widget->allocation.width, widget->allocation.height);
 	cairo_set_source_rgb (cr, 0, 0, 0);
 	cairo_fill_preserve (cr);
-	cairo_set_source_rgb (cr, 1.0, 1.0, 0);
-	cairo_stroke (cr);
 
 	if (!preview->enabled)
 	{

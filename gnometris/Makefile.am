@@ -27,14 +27,14 @@ gnometris_SOURCES=\
 	field.h \
 	highscores.cpp \
 	highscores.h \
-	tetris.cpp \
-	tetris.h \
+	renderer.cpp \
+	renderer.h \
 	scoreframe.cpp \
 	scoreframe.h	\
 	sound.cpp \
 	sound.h \
-	gnome-canvas-pimage.h \
-	gnome-canvas-pimage.c
+	tetris.cpp \
+	tetris.h
 
 gnometris_LDADD=\
 	../libgames-support/libgames-support.la \
