@@ -2,6 +2,9 @@
 
 	* renderer.h:
 	* renderer.cpp:
+	(drawCell): Split out drawCell and convert it to something simple
+	and fast that will work on a black background.
+
 	* Makefile.am:
 	* field.h:	
 	* field.cpp: Add a Render class and remove drawBackground and

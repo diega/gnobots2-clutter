@@ -44,17 +44,35 @@ Renderer::~Renderer ()
         cairo_surface_destroy (background);
 }
 
+void Renderer::drawCell (cairo_t *cr, gint x, gint y)
+{
+        int i;
+        const gdouble colours[7][3] = {{1.0, 0.0, 0.0},
+				       {0.0, 1.0, 0.0},
+				       {0.0, 0.0, 1.0},
+				       {1.0, 1.0, 1.0},
+				       {1.0, 1.0, 0.0},
+				       {1.0, 0.0, 1.0},
+				       {0.0, 1.0, 1.0}};
+
+	if (data[x][y].what == EMPTY)
+	        return;
+  
+	i = data[x][y].color;                       
+	i = CLAMP (i, 0, 6);
+	
+	cairo_set_source_rgb(cr, colours[i][0], 
+			     colours[i][1], 
+			     colours[i][2]);
+	cairo_rectangle(cr, x+0.05, y+0.05, 
+			0.9, 0.9);
+	cairo_fill (cr);
+}
+
 void Renderer::render ()
 {
        cairo_t *cr;
        int x, y;
-       const gdouble colours[7][3] = {{1.0, 0.0, 0.0},
-                                      {0.0, 1.0, 0.0},
-                                      {0.0, 0.0, 1.0},
-                                      {1.0, 1.0, 1.0},
-                                      {1.0, 1.0, 0.0},
-                                      {1.0, 0.0, 1.0},
-                                      {0.0, 1.0, 1.0}};
 
        cr = cairo_create (target);
 
@@ -68,22 +86,7 @@ void Renderer::render ()
 
        for (y = 0; y<height; y++) {
                for (x = 0; x<width; x++) {
-                       int i;
-
-                       if (data[x][y].what == EMPTY)
-                               continue;
-                       
-                       i = data[x][y].color;                       
-                       i = CLAMP (i, 0, 6);
-
-                       cairo_set_source_rgba(cr, colours[i][0], 
-                                             colours[i][1], 
-                                             colours[i][2], 0.6);
-                       cairo_rectangle(cr, x+0.1, y+0.1, 
-                                       0.8, 0.8);
-                       cairo_fill_preserve (cr);
-                       cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 1.0);
-                       cairo_stroke (cr);
+		 drawCell (cr, x, y);
                }
        }
 

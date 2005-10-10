@@ -44,6 +44,8 @@ class Renderer
         int height;
         int pxwidth;
         int pxheight;
+
+	void drawCell (cairo_t *cr, gint x, gint y);
 };
  
 #endif // __renderer_h__
