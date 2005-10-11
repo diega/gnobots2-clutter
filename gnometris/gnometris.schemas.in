@@ -15,6 +15,18 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/gnometris/options/theme</key>
+      <applyto>/apps/gnometris/options/theme</applyto>
+      <owner>gnometris</owner>
+      <type>string</type> 
+      <default>plain</default>
+      <locale name="C">
+        <short>The theme used for rendering the blocks</short>
+        <long>The name of the theme used for rendering the blocks and the background.</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/gnometris/options/starting_level</key>
       <applyto>/apps/gnometris/options/starting_level</applyto>
       <owner>gnometris</owner>

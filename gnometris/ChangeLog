@@ -1,3 +1,21 @@
+2005-10-11  Callum McKenzie  <callum@spooky-possum.org>
+
+	* preview.cpp: 
+	* preview.h: Preliminary work for switching to the renderer:
+	create (and destroy) an array of Block to store the data in.
+
+	* tetris.cpp : 
+	* renderer.cpp:
+	* renderer.h:
+	* field.cpp:
+	* field.h: Make changing the theme in the preferences work
+	again. There is a new theme gconf key to store the new-style names
+	(which are currently hard-coded in renderer.cpp). Neither the
+	preview or the theme-preview are currently changed.
+
+	* renderer.cpp: Finish breaking up render into a class that can
+	easily be customised.
+
 2005-10-10  Callum McKenzie  <callum@spooky-possum.org>
 
 	* renderer.h:

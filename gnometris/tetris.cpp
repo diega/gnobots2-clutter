@@ -28,6 +28,7 @@
 #include "scoreframe.h"
 #include "sound.h"
 #include "highscores.h"
+#include "renderer.h"
 
 #include <games-gconf.h>
 #include <games-frame.h>
@@ -71,6 +72,7 @@ bool rotateCounterClockWise = true;
 
 #define KEY_SOUND KEY_OPTIONS_DIR "/sound"
 #define KEY_BLOCK_PIXMAP KEY_OPTIONS_DIR "/block_pixmap"
+#define KEY_THEME KEY_OPTIONS_DIR "/theme"
 #define KEY_STARTING_LEVEL KEY_OPTIONS_DIR "/starting_level"
 #define KEY_DO_PREVIEW KEY_OPTIONS_DIR "/do_preview"
 #define KEY_RANDOM_BLOCK_COLORS KEY_OPTIONS_DIR "/random_block_colors"
@@ -104,6 +106,7 @@ enum {
 
 Tetris::Tetris(int cmdlLevel): 
 	blockPixmap(0),
+	themeno (0),
 	field(0),
 	paused(false), 
 	timeoutId(0), 
@@ -202,7 +205,6 @@ Tetris::Tetris(int cmdlLevel):
 
 	/* init gconf */
 	gconf_client = gconf_client_get_default ();
-	games_gconf_sanity_check_string (gconf_client, KEY_BLOCK_PIXMAP);
 
 	gconf_client_add_dir (gconf_client, KEY_OPTIONS_DIR, GCONF_CLIENT_PRELOAD_NONE, NULL);
 	gconf_client_notify_add (gconf_client, KEY_OPTIONS_DIR, gconfNotify, this, NULL, NULL);
@@ -221,6 +223,7 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_window_set_default_size (GTK_WINDOW (w), width, height);
 
 	preview = new Preview ();
+	field = new Field();
 
 	initOptions ();
 
@@ -252,8 +255,6 @@ Tetris::Tetris(int cmdlLevel):
 	gnome_app_set_contents (GNOME_APP (w), vbox);
 	gtk_box_pack_start (GTK_BOX (vbox), menubar, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), hb, TRUE, TRUE, 0);
-
-	field = new Field();
 
 	aspect_frame = gtk_aspect_frame_new (NULL, 0.5, 0.5, (float) COLUMNS / (float) LINES, FALSE);
 	gtk_frame_set_shadow_type (GTK_FRAME (aspect_frame), GTK_SHADOW_NONE);
@@ -544,6 +545,8 @@ Tetris::initOptions ()
 		g_free (blockPixmap);
 
 	blockPixmap = gconfGetString (gconf_client, KEY_BLOCK_PIXMAP, "7blocks-tig.png");
+	themeno = themeNameToNumber (gconfGetString (gconf_client, KEY_THEME, "plain"));
+	field->setTheme (themeno);
 
 	startingLevel = gconfGetInt (gconf_client, KEY_STARTING_LEVEL, 1);
 	if (startingLevel < 1) 
@@ -651,13 +654,12 @@ Tetris::setSelection(GtkWidget *widget, void *data)
 	Tetris *t;
 	GList * item;
 
-      	t = (Tetris *)g_object_get_data (G_OBJECT (widget), TETRIS_OBJECT);
+      	t = (Tetris *)data;
 
-	item = g_list_nth (t->themeList,
-			   gtk_combo_box_get_active (GTK_COMBO_BOX (widget)));
-
-	gconf_client_set_string (t->gconf_client, KEY_BLOCK_PIXMAP,
-				 (char *)item->data, NULL);
+	t->themeno = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
+	t->field->setTheme (t->themeno);
+	gconf_client_set_string (t->gconf_client, KEY_THEME,
+				 ThemeTable[t->themeno].id, NULL);
 }
 
 void
@@ -944,9 +946,13 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	gtk_container_add (GTK_CONTAINER (frame), fvbox);
 
 	GtkWidget *omenu = gtk_combo_box_new_text ();
-	g_object_set_data (G_OBJECT (omenu), TETRIS_OBJECT, t);	
-	t->fillMenu (omenu, t->blockPixmap, "gnometris", &(t->themeList));
-	g_signal_connect (omenu, "changed", G_CALLBACK (setSelection), NULL);
+	ThemeTableEntry *entry = ThemeTable;
+	while (entry->id) {
+		gtk_combo_box_append_text (GTK_COMBO_BOX (omenu), entry->name);
+		entry++;
+	}
+	gtk_combo_box_set_active (GTK_COMBO_BOX (omenu), t->themeno);
+	g_signal_connect (omenu, "changed", G_CALLBACK (setSelection), t);
 	gtk_box_pack_start (GTK_BOX (fvbox), omenu, FALSE, FALSE, 0);
 
 	t->theme_preview = new Preview();

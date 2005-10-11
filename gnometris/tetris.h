@@ -76,6 +76,7 @@ private:
         
 	char *blockPixmap;
 	char *bgPixmap;
+	gint themeno;
 	
 	Field *field;
 	Preview *preview;

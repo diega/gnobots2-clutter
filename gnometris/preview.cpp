@@ -23,18 +23,37 @@
 #include "preview.h"
 #include "blocks.h"
 
+#define PREVIEW_WIDTH 6
+#define PREVIEW_HEIGHT 6
+
 Preview::Preview():
 	blocknr(-1),
 	blockrot(0),
 	blockcolor(0),
 	enabled(true)
 {
+	blocks = new Block*[PREVIEW_WIDTH];
+	for (int i = 0; i < PREVIEW_WIDTH; i++) {
+		blocks[i] = new Block [PREVIEW_HEIGHT];
+		for (int j = 0; j < PREVIEW_HEIGHT; j++) {
+			blocks[i][j].what = EMPTY;
+			blocks[i][j].color = 0;
+		}
+
 	w = gtk_drawing_area_new();
 
 	g_signal_connect (w, "expose_event", G_CALLBACK (expose), this);
 	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
 
 	gtk_widget_show (w);
+}
+
+Preview::~Preview ()
+{
+	for (int i = 0; i < PREVIEW_WIDTH; i++)
+		delete[] blocks[i];
+
+	delete[] blocks;
 }
 
 void

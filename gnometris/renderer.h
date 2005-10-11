@@ -29,14 +29,21 @@
 
 #include "blockops.h"
 
+struct ThemeTableEntry {
+        gchar *name;
+        gchar *id;
+};
+
+extern ThemeTableEntry ThemeTable[];
+
 class Renderer
 {
  public:
         Renderer (cairo_surface_t *dst, cairo_surface_t *bg, Block **src, 
                   int w, int h, int pxw, int pxh);
-        ~Renderer ();
-        void render ();
- private:
+        virtual ~Renderer ();
+        virtual void render ();
+ protected:
         cairo_surface_t *target;
         cairo_surface_t *background;         
         Block **data;
@@ -45,7 +52,25 @@ class Renderer
         int pxwidth;
         int pxheight;
 
-	void drawCell (cairo_t *cr, gint x, gint y);
+	virtual void drawCell (cairo_t *cr, gint x, gint y);
+        virtual void drawBackground (cairo_t *cr);
+        virtual void drawForeground (cairo_t *cr);
 };
- 
+
+Renderer * rendererFactory (gint id, cairo_surface_t *dst, 
+                            cairo_surface_t *bg, Block **src, int w, 
+                            int h, int pxw, int pxh);
+gint themeNameToNumber (const gchar *id);
+
+class JoinedUp : public Renderer
+{
+ public:
+        JoinedUp (cairo_surface_t *dst, cairo_surface_t *bg, Block **src, 
+                  int w, int h, int pxw, int pxh) :
+                Renderer (dst, bg, src, w, h, pxw, pxh) { }
+
+ protected:
+        virtual void drawCell (cairo_t *cr, gint x, gint y);
+};
+
 #endif // __renderer_h__

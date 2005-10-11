@@ -36,6 +36,8 @@ Field::Field():
         useBGImage(false),
 	backgroundColor(NULL)
 {
+        themeID = 0;
+
 	w = gtk_drawing_area_new();
 
 	g_signal_connect (w, "expose_event", G_CALLBACK (expose), this);
@@ -209,8 +211,8 @@ Field::redraw()
         
 	g_return_if_fail(buffer);
 
-        r = new Renderer (buffer, background, field, COLUMNS, LINES, 
-                          width, height);
+        r = rendererFactory (themeID, buffer, background, field, 
+                             COLUMNS, LINES, width, height);
 
         r->render ();
         delete r;
@@ -280,4 +282,10 @@ Field::hideGameOverMessage()
 	showGameOver = false;
 
 	redraw();
+}
+
+void 
+Field::setTheme (gint id)
+{
+        themeID = id;
 }

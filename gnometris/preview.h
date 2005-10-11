@@ -23,6 +23,8 @@
 
 #include <gnome.h>
 #include "tetris.h"
+#include "blockops.h"
+#include "renderer.h"
 
 #define PREVIEW_SIZE 5
 
@@ -30,6 +32,7 @@ class Preview
 {
 public:
 	Preview();
+	~Preview ();
 	
 	void updateSize();
 
@@ -51,6 +54,8 @@ private:
 
 	static gint configure(GtkWidget * widget, GdkEventConfigure * event, Preview * preview);
 	static gint expose(GtkWidget *widget, GdkEventExpose *event, Preview * preview);
+
+	Block **blocks;
 };
 
 #endif //__preview_h__

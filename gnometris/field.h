@@ -39,6 +39,7 @@ public:
 	void showGameOverMessage();
 	void hideGameOverMessage();
 	void redraw();
+        void setTheme (gint id);
 
 	GtkWidget * getWidget()	{return w;}
 
@@ -59,6 +60,7 @@ private:
 	bool backgroundImageTiled;
         bool useBGImage;
 	GdkColor *backgroundColor;
+        gint themeID;
 
 	void drawMessage(cairo_t *cr, const char *msg);
 	void redrawAll();
