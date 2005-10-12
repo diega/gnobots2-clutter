@@ -22,11 +22,19 @@
 #include "blocks.h"
 #include "field.h"
 
+#define NCOLOURS 7
 
-BlockOps::BlockOps()
+
+BlockOps::BlockOps() :
+  blocknr (0),
+  rot (0),
+  color (0)
 {
 	field = new Block*[COLUMNS];
 	
+	posx = COLUMNS / 2;
+	posy = 0;
+
 	for (int i = 0; i < COLUMNS; ++i)
 		field[i] = new Block[LINES];
 
@@ -248,14 +256,14 @@ BlockOps::generateFallingBlock()
 	blocknr = blocknr_next == -1 ? g_random_int_range(0, tableSize) :
 		blocknr_next;
 	rot = rot_next == -1 ? g_random_int_range(0, 4) : rot_next;
-	int cn = random_block_colors ? g_random_int_range(0, nr_of_colors) :
-		blocknr % nr_of_colors;
+	int cn = random_block_colors ? g_random_int_range(0, NCOLOURS) :
+		blocknr % NCOLOURS;
 	color = color_next == -1 ? cn : color_next;
 	
 	blocknr_next = g_random_int_range(0, tableSize);
 	rot_next = g_random_int_range(0, 4);
-	color_next = random_block_colors ? g_random_int_range(0, nr_of_colors) :
-		blocknr_next % nr_of_colors;
+	color_next = random_block_colors ? g_random_int_range(0, NCOLOURS) :
+		blocknr_next % NCOLOURS;
 	
 	if (!blockOkHere(posx, posy, blocknr, rot))
 		return false;
@@ -281,14 +289,8 @@ BlockOps::emptyField(int filled_lines, int fill_prob)
 			if ((y>=(LINES - filled_lines)) && (x != blank) &&
 			    ((g_random_int_range(0, 10)) < fill_prob)) { 
 				field[x][y].what = LAYING;
-				if (nr_of_colors)
-					field[x][y].color = g_random_int_range(0,  nr_of_colors);
-				else
-					// This is in case we're called
-					// before the widgets are set 
-					// up and nr_of_colors is
-					// defined.
-					field[x][y].color = 0; 
+				field[x][y].color = 
+				  g_random_int_range(0, NCOLOURS);
 			}
 		}
 	}

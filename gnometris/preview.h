@@ -26,20 +26,17 @@
 #include "blockops.h"
 #include "renderer.h"
 
-#define PREVIEW_SIZE 5
-
 class Preview
 {
 public:
 	Preview();
 	~Preview ();
 	
-	void updateSize();
-
 	GtkWidget * getWidget()	{return w;}
 
 	void enable(bool enable);
 	void previewBlock(int bnr, int brot, int bcolor);
+	void setTheme (int id);
 
 private:
 	GtkWidget * w;
@@ -51,6 +48,9 @@ private:
 	int blockcolor;
 
 	bool enabled;
+
+	int themeID;
+	cairo_surface_t *background;
 
 	static gint configure(GtkWidget * widget, GdkEventConfigure * event, Preview * preview);
 	static gint expose(GtkWidget *widget, GdkEventExpose *event, Preview * preview);

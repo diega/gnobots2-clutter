@@ -61,6 +61,13 @@ private:
 
 protected:
 	Block **field;
+
+	int blocknr;
+	int rot;
+	int color;
+
+	int posx;
+	int posy;
 };
 
 #endif //__blockops_h__

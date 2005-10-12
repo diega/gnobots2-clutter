@@ -1,3 +1,15 @@
+2005-10-12  Callum McKenzie  <callum@spooky-possum.org>
+
+	* tetris.h:
+	* tetris.cpp:
+	* blockops.h:
+	* blockops.cpp:
+	* main.cpp: Prune dead code and move around misplaced globals.
+
+	* tetris.cpp: 
+	* preview.cpp:
+	* preview.h: Change the preview widget to use the cairo theme.
+
 2005-10-11  Callum McKenzie  <callum@spooky-possum.org>
 
 	* preview.cpp: 

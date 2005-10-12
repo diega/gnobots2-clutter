@@ -22,8 +22,6 @@
 #include "tetris.h"
 #include <libgnomeui/gnome-window-icon.h>
 
-int nr_of_colors = 0;
-
 int
 main(int argc, char *argv[])
 {

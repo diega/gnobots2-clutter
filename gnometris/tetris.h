@@ -33,21 +33,9 @@ extern int COLUMNS;
 
 extern int BLOCK_SIZE;
 
-extern GdkPixmap *pix;
-extern GdkPixbuf **pic;
-
 extern int color_next;
 extern int blocknr_next;
 extern int rot_next;
-
-extern int blocknr;
-extern int rot;
-extern int color;
-
-extern int posx;
-extern int posy;
-
-extern int nr_of_colors;
 
 extern bool random_block_colors;
 
@@ -74,7 +62,6 @@ private:
 
         GList * themeList;
         
-	char *blockPixmap;
 	char *bgPixmap;
 	gint themeno;
 	
@@ -135,8 +122,8 @@ private:
 	void setOptions ();
 	void writeOptions ();
         void setupScoreState ();
+	void manageFallen();
 	
-	GdkPixbuf *image;
 	GdkPixbuf *bgimage;
 	gboolean usebg;
 
@@ -174,8 +161,6 @@ private:
 	GtkAction *scores_action;
 	GtkAction *end_game_action;
 	GtkAction *preferences_action;
-
-	void manageFallen();
 
 	bool fastFall;
 	int fastFallPoints;

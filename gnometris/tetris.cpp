@@ -42,19 +42,10 @@
 #include <dirent.h>
 #include <string.h>
 
-GdkPixbuf **pic;
-
 int LINES = 20;
 int COLUMNS = 11;
 
 int BLOCK_SIZE = 40;
-
-int posx = COLUMNS / 2;
-int posy = 0;
-
-int blocknr = 0;
-int rot = 0;
-int color = 0;
 
 int blocknr_next = -1;
 int rot_next = -1;
@@ -105,14 +96,12 @@ enum {
 
 
 Tetris::Tetris(int cmdlLevel): 
-	blockPixmap(0),
 	themeno (0),
 	field(0),
 	paused(false), 
 	timeoutId(0), 
 	onePause(false), 
 	inPlay(false),
-	image(0),
 	bgimage(0),
 	setupdialog(0), 
 	cmdlineLevel(cmdlLevel), 
@@ -175,10 +164,6 @@ Tetris::Tetris(int cmdlLevel):
 	
 	if (!sound)
 		sound = new Sound();
-
-	pic = new GdkPixbuf*[tableSize];
-	for (int i = 0; i < tableSize; ++i)
-		pic[i] = 0;
 
 	/* Locate our background image. */
 	outdir = g_build_filename (gnome_user_dir_get (), "gnometris.d", 
@@ -308,17 +293,11 @@ Tetris::~Tetris()
 	delete preview;
 	delete scoreFrame;
 
-	if (image)
-		g_object_unref (G_OBJECT (image));
 	if (bgimage)
 		g_object_unref (G_OBJECT (bgimage));		
 
-	if (blockPixmap)
-		g_free(blockPixmap);
 	if (bgPixmap)
 		g_free(bgPixmap);
-
-	delete[] pic;
 }
 
 void
@@ -352,60 +331,6 @@ Tetris::setupdialogResponse (GtkWidget *dialog, gint response_id, void *d)
 void
 Tetris::setupPixmap()
 {
-	gchar *pixname, *fullpixname;
-	
-	pixname = g_build_filename ("gnometris", blockPixmap, NULL);
-	fullpixname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, pixname, FALSE, NULL);
-	g_free (pixname);
-
-	if (!g_file_test (fullpixname, G_FILE_TEST_EXISTS))
-	{
-		g_free (fullpixname);
-		fullpixname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, "gnometris/7blocks-gw.png", FALSE, NULL);
-	}
-	
-	if (!g_file_test (fullpixname, G_FILE_TEST_EXISTS))
-	{
-		GtkWidget *widget = gtk_message_dialog_new (NULL,
-						       GTK_DIALOG_DESTROY_WITH_PARENT,
-						       GTK_MESSAGE_ERROR,
-						       GTK_BUTTONS_OK,
-						       _("Could not find the theme: \n%s\n\nPlease check your gnome-games installation"), fullpixname);
-		gtk_dialog_run (GTK_DIALOG (widget));
-		exit(1);
-	}
-
-	if(image)
-		g_object_unref (G_OBJECT (image));
-
-	image = gdk_pixbuf_new_from_file(fullpixname, NULL);
-
-	if (image == NULL) {
-		GtkWidget *widget= gtk_message_dialog_new (NULL,
-						       GTK_DIALOG_DESTROY_WITH_PARENT,
-						       GTK_MESSAGE_ERROR,
-						       GTK_BUTTONS_OK,
-						       _("Can't load the image: \n%s\n\nPlease check your gnome-games installation"), fullpixname);
-		gtk_dialog_run (GTK_DIALOG (widget));
-		exit (1);
-	}
-	g_free (fullpixname);
-
-	BLOCK_SIZE = gdk_pixbuf_get_height(image);
-	nr_of_colors = gdk_pixbuf_get_width(image) / BLOCK_SIZE;
-
-	for (int i = 0; i < tableSize; ++i)
-	{
-		if (pic[i])
-			g_object_unref (G_OBJECT (pic[i]));
-
-		pic[i] = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, BLOCK_SIZE, BLOCK_SIZE);
-
-		gdk_pixbuf_copy_area (image, (i % nr_of_colors) * BLOCK_SIZE, 0,
-					BLOCK_SIZE, BLOCK_SIZE, pic[i], 0, 0);
-
-	}
-
 	if (bgimage)
 		g_object_unref (G_OBJECT (bgimage));
 
@@ -471,8 +396,8 @@ Tetris::setupPixmap()
 	
 	if (preview)
 	{
-		preview->updateSize ();
-		gtk_widget_queue_resize (field->getWidget());
+		/* FIXME: We should do an update once the preview actually
+		 * uses the background pixbuf. */
 	}
 }
 
@@ -541,12 +466,9 @@ Tetris::initOptions ()
 {
 	gchar *bgcolourstr;
 
-	if (blockPixmap)
-		g_free (blockPixmap);
-
-	blockPixmap = gconfGetString (gconf_client, KEY_BLOCK_PIXMAP, "7blocks-tig.png");
 	themeno = themeNameToNumber (gconfGetString (gconf_client, KEY_THEME, "plain"));
 	field->setTheme (themeno);
+	preview->setTheme (themeno);
 
 	startingLevel = gconfGetInt (gconf_client, KEY_STARTING_LEVEL, 1);
 	if (startingLevel < 1) 
@@ -607,8 +529,10 @@ Tetris::setOptions ()
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (random_block_colors_toggle), random_block_colors);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rotate_counter_clock_wise_toggle), rotateCounterClockWise);
 
-		if (theme_preview)
+		if (theme_preview) {
+			theme_preview->setTheme (themeno);
 			gtk_widget_queue_draw(theme_preview->getWidget());
+		}
 	}
 
 	scoreFrame->setLevel (startingLevel);
@@ -939,7 +863,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	label = gtk_label_new (_("Theme"));
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), vbox, label);
 
-	frame = games_frame_new (_("Block Image"));
+	frame = games_frame_new (_("Block Style"));
 	gtk_container_add (GTK_CONTAINER (vbox), frame);
 
 	fvbox = gtk_vbox_new (FALSE, 6);
@@ -956,6 +880,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	gtk_box_pack_start (GTK_BOX (fvbox), omenu, FALSE, FALSE, 0);
 
 	t->theme_preview = new Preview();
+	t->theme_preview->setTheme (t->themeno);
 	gtk_box_pack_start(GTK_BOX(fvbox), t->theme_preview->getWidget(), TRUE, TRUE, 0);
 
 	t->theme_preview->previewBlock(4, 0, 0);
