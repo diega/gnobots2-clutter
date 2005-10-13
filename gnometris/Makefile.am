@@ -1,3 +1,5 @@
+if HAVE_CXX
+
 SUBDIRS=pix help sounds
 
 Gamesdir=$(datadir)/applications
@@ -67,3 +69,5 @@ endif
 	-if test "x$(setgid)" = "xtrue"; then chgrp $(scores_group) $(DESTDIR)$(bindir)/gnometris && chmod 2555 $(DESTDIR)$(bindir)/gnometris ; fi
 
 DISTCLEANFILES = $(Games_DATA) $(schema_DATA)
+
+endif
