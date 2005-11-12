@@ -24,15 +24,15 @@
 
 #include "renderer.h"
 
-ThemeTableEntry ThemeTable[] = {{N_("Plain"), "plain"},
-                                 {N_("Joined"), "joined"},
-                                 {NULL, NULL}};
+const ThemeTableEntry ThemeTable[] = {{N_("Plain"), "plain"},
+                                      {N_("Joined"), "joined"},
+                                      {NULL, NULL}};
 
 
 gint themeNameToNumber (const gchar *id)
 {
         int i;
-        ThemeTableEntry *t;
+        const ThemeTableEntry *t;
 
         if (id == NULL)
                 return 0;
@@ -152,16 +152,69 @@ void Renderer::render ()
 
 /*--------------------------------------------------------*/
 
+void JoinedUp::drawInnerCorner (cairo_t *cr)
+{
+        cairo_move_to (cr, 0, 0);
+        cairo_line_to (cr, border, border);
+        cairo_line_to (cr, border, 0);
+        cairo_move_to (cr, border, border);
+        cairo_line_to (cr, 0, border);
+        cairo_stroke (cr);
+}
+
+void JoinedUp::drawOuterCorner (cairo_t *cr)
+{
+        cairo_move_to (cr, 0, 0.5);
+        cairo_line_to (cr, 0, 0);
+        cairo_line_to (cr, 0.5, 0);
+        cairo_move_to (cr, 0, 0);
+        cairo_line_to (cr, border, border);
+        cairo_line_to (cr, 0.5, border);
+        cairo_move_to (cr, border, border);
+        cairo_line_to (cr, border, 0.5);
+        cairo_stroke (cr);
+}
+
+void JoinedUp::drawHEdge (cairo_t *cr)
+{
+        cairo_move_to (cr, 0, 0);
+        cairo_line_to (cr, 0.5, 0);
+        cairo_move_to (cr, 0, border);
+        cairo_line_to (cr, 0.5, border);
+        cairo_stroke (cr);
+}
+
+void JoinedUp::drawVEdge (cairo_t *cr)
+{
+        cairo_move_to (cr, 0, 0);
+        cairo_line_to (cr, 0, 0.5);
+        cairo_move_to (cr, border, 0);
+        cairo_line_to (cr, border, 0.5);
+        cairo_stroke (cr);
+}
+
 void JoinedUp::drawCell (cairo_t *cr, gint x, gint y)
 {
-        int i;
-        const gdouble colours[7][3] = {{1.0, 0.0, 0.0},
-				       {0.0, 1.0, 0.0},
-				       {0.0, 0.0, 1.0},
-				       {1.0, 1.0, 1.0},
-				       {1.0, 1.0, 0.0},
-				       {1.0, 0.0, 1.0},
-				       {0.0, 1.0, 1.0}};
+        int i, m, n;
+        int segments[4];
+        double xofs;
+        double yofs;
+        int c;
+        int neighbours[8];
+        static const int formtable[4][8] = {{0, 7, 0, 7, 4, 9, 4, 8},
+                                            {1, 4, 1, 4, 5, 10, 5, 8},
+                                            {2, 6, 2, 6, 7, 11, 7, 8},
+                                            {3, 5, 3, 5, 6, 12, 6, 8}};
+        static const gdouble colours[7][3] = {{1.0, 0.0, 0.0},
+                                              {0.1, 0.8, 0.1},
+                                              {0.1, 0.1, 0.8},
+                                              {1.0, 1.0, 1.0},
+                                              {1.0, 1.0, 0.0},
+                                              {0.8, 0.1, 0.8},
+                                              {0.0, 1.0, 1.0}};
+        static const int neighbourmap[8][2] = {{-1, -1}, {0, -1}, {+1, -1},
+                                               {-1, 0}, {+1, 0},
+                                               {-1, +1}, {0, +1}, {+1, +1}};
 
 	if (data[x][y].what == EMPTY)
 	        return;
@@ -169,30 +222,111 @@ void JoinedUp::drawCell (cairo_t *cr, gint x, gint y)
 	i = data[x][y].color;                       
 	i = CLAMP (i, 0, 6);
 	
+        cairo_save (cr);
+        cairo_translate (cr, x, y);
+
         cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
-        cairo_set_line_width (cr, 0);
+        cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
+        cairo_set_line_width (cr, 0.05);
 
-	cairo_set_source_rgb(cr, colours[i][0], 
-			     colours[i][1], 
-			     colours[i][2]);
-        cairo_rectangle(cr, x+0.05, y+0.05, 
-                        0.9, 0.9);
-        if ((x > 0) && (data[x][y].color == data[x-1][y].color) &&
-            (data[x-1][y].what != EMPTY)) {
-                cairo_rectangle (cr, x, y+0.05, 0.05, 0.9);
+	cairo_set_source_rgb (cr, colours[i][0], 
+                              colours[i][1], 
+                              colours[i][2]);
+        cairo_rectangle (cr, -0.025, -0.025, 1.025, 1.025);
+        cairo_fill (cr);
+        cairo_set_source_rgb (cr, 0.5, 0.5, 0.5);
+        
+        // Enumerate the neighbours.
+        c = data[x][y].color;
+        for (i=0; i<8; i++) {
+                m = x + neighbourmap[i][0];
+                n = y + neighbourmap[i][1];
+                if ((m < 0) || (n < 0) || (m >= width) || (n >= height))
+                        neighbours[i] = 0;
+                else
+                        neighbours[i] = ((data[m][n].what != EMPTY) && 
+                                         (data[m][n].color == c)) ? 1 : 0;
         }
-        if ((x < width-1) && (data[x][y].color == data[x+1][y].color) &&
-            (data[x+1][y].what != EMPTY)) {
-                cairo_rectangle (cr, x+0.95, y+0.05, 0.07, 0.9);
-        }
-        if ((y > 0) && (data[x][y].color == data[x][y-1].color) &&
-            (data[x][y-1].what != EMPTY)) {
-                cairo_rectangle (cr, x+0.05, y, 0.9, 0.05);
-        }
-        if ((y < height-1) && (data[x][y].color == data[x][y+1].color) &&
-            (data[x][y+1].what != EMPTY)) {
-                cairo_rectangle (cr, x+0.05, y+0.95, 0.9, 0.07);
+        
+        // Sort out which quadrant of the square is drawn in what way.
+        segments[0] = formtable [0][neighbours[3]*4 +
+                                    neighbours[0]*2 +
+                                    neighbours[1]];
+        segments[1] = formtable [1][neighbours[1]*4 +
+                                    neighbours[2]*2 +
+                                    neighbours[4]];
+        segments[2] = formtable [2][neighbours[6]*4 +
+                                    neighbours[5]*2 +
+                                    neighbours[3]];
+        segments[3] = formtable [3][neighbours[4]*4 +
+                                    neighbours[7]*2 +
+                                    neighbours[6]];
+
+        // Finally: do the actual drawing.
+        for (i=0; i<4; i++) {
+                cairo_save (cr);
+                xofs = 0.5*(i % 2);
+                yofs = 0.5*(i / 2);
+                cairo_translate (cr, xofs, yofs);
+                switch (segments[i]) {
+                case 0:
+                        drawOuterCorner (cr);
+                        break;
+                case 1:
+                        cairo_scale (cr, -1.0, 1.0);
+                        cairo_translate (cr, -0.5, 0);
+                        drawOuterCorner (cr);
+                        break;
+                case 2:
+                        cairo_scale (cr, 1.0, -1.0);
+                        cairo_translate (cr, 0, -0.5);
+                        drawOuterCorner (cr);
+                        break;
+                case 3:
+                        cairo_scale (cr, -1.0, -1.0);
+                        cairo_translate (cr, -0.5, -0.5);
+                        drawOuterCorner (cr);
+                        break;
+                case 4:
+                        drawHEdge (cr);
+                        break;
+                case 5:
+                        cairo_scale (cr, -1.0, 1.0);
+                        cairo_translate (cr, -0.5, 0);
+                        drawVEdge (cr);
+                        break;
+                case 6:
+                        cairo_scale (cr, 1.0, -1.0);
+                        cairo_translate (cr, 0, -0.5);
+                        drawHEdge (cr);
+                        break;
+                case 7:
+                        drawVEdge (cr);
+                        break;
+
+                case 8:
+                        break;
+                case 9:
+                        drawInnerCorner (cr);
+                        break;
+                case 10:
+                        cairo_scale (cr, -1.0, 1.0);
+                        cairo_translate (cr, -0.5, 0);
+                        drawInnerCorner (cr);
+                        break;
+                case 11:
+                        cairo_scale (cr, 1.0, -1.0);
+                        cairo_translate (cr, 0, -0.5);
+                        drawInnerCorner (cr);
+                        break;
+                case 12:
+                        cairo_scale (cr, -1.0, -1.0);
+                        cairo_translate (cr, -0.5, -0.5);
+                        drawInnerCorner (cr);
+                        break;
+                }
+                cairo_restore (cr);
         }
 
-	cairo_fill (cr);        
+        cairo_restore (cr);
 }

@@ -1,3 +1,9 @@
+2005-11-12  Callum McKenzie  <callum@spooky-possum.org>
+
+	* renderer.cpp:
+	* render.h: Updated "JoinedUp" to be a better (but slower)
+	demonstration of why pixmap themes can't do everything.
+
 2005-10-12  Callum McKenzie  <callum@spooky-possum.org>
 
 	* tetris.h:

@@ -870,7 +870,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	gtk_container_add (GTK_CONTAINER (frame), fvbox);
 
 	GtkWidget *omenu = gtk_combo_box_new_text ();
-	ThemeTableEntry *entry = ThemeTable;
+	const ThemeTableEntry *entry = ThemeTable;
 	while (entry->id) {
 		gtk_combo_box_append_text (GTK_COMBO_BOX (omenu), entry->name);
 		entry++;

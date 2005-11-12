@@ -34,7 +34,7 @@ struct ThemeTableEntry {
         gchar *id;
 };
 
-extern ThemeTableEntry ThemeTable[];
+extern const ThemeTableEntry ThemeTable[];
 
 class Renderer
 {
@@ -71,6 +71,13 @@ class JoinedUp : public Renderer
 
  protected:
         virtual void drawCell (cairo_t *cr, gint x, gint y);
+
+ private:
+        const static double border = 0.2;
+        void drawInnerCorner (cairo_t *cr);
+        void drawOuterCorner (cairo_t *cr);
+        void drawHEdge (cairo_t *cr);
+        void drawVEdge (cairo_t *cr);
 };
 
 #endif // __renderer_h__
