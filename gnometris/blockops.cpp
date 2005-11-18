@@ -326,3 +326,13 @@ BlockOps::putBlockInField(bool erase)
 	}
 }
 
+bool
+BlockOps::isFieldEmpty (void)
+{
+  for (int x = 0; x < COLUMNS; x++) {
+    if (field[x][LINES-1].what != EMPTY)
+      return false;
+  }
+
+  return true;
+}

@@ -163,7 +163,6 @@ private:
 	GtkAction *preferences_action;
 
 	bool fastFall;
-	int fastFallPoints;
         bool dropBlock;
 };
 

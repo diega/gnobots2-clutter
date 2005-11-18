@@ -42,14 +42,9 @@ ScoreFrame::ScoreFrame(int cmdlLevel)
 		startingLevel = gconf_client_get_int (gconf_client,
 						      KEY_STARTING_LEVEL,
 						      NULL);
-		if (startingLevel < 1)
-			startingLevel = 1;
-		if (startingLevel > 10)
-			startingLevel = 10;
 		g_object_unref (gconf_client);
 	}
-	if (startingLevel < 1)
-		startingLevel = 1;
+	startingLevel = CLAMP (startingLevel, 1, 10);
 
 	level = startingLevel;
 	
@@ -106,30 +101,27 @@ ScoreFrame::setScore(int s)
 void
 ScoreFrame::incScore(int s)
 {
-	score += s;
-	
-	sprintf(b, "%7d", score);
-	gtk_label_set_text(GTK_LABEL(scorew), b);
+	setScore (score + s);
 }
 
-void
-ScoreFrame::resetLines()
-{
-	lines = 0;
-	score = 0;
-	sprintf(b, "%7d", lines);
-	gtk_label_set_text(GTK_LABEL(scorew), b);
-	gtk_label_set_text(GTK_LABEL(linesw), b);
-}
-
+// The bonus for clearing everything. 
 void 
-ScoreFrame::incLines(int newlines)
+ScoreFrame::scoreLastLineBonus ()
+{
+	incScore (10000*level);
+	// FIXME: Get it its own sound?
+	sound->playSound (SOUND_GNOMETRIS);
+}
+
+int
+ScoreFrame::scoreLines(int newlines)
 {
 	int linescore = 0;
 
-	lines += newlines;
 	switch(newlines)
 	{
+        	case 0:
+	        	return level;
 		case 1:
 			linescore = 40;
 			sound->playSound (SOUND_LINES1);
@@ -147,18 +139,14 @@ ScoreFrame::incLines(int newlines)
 			sound->playSound (SOUND_LINES3);
 			break;
 	}
-	incScore(linescore * level);
-	sprintf(b, "%7d", lines);
-	gtk_label_set_text(GTK_LABEL(linesw), b);
+	incScore (level*linescore);
 
 	// check the level
+	setLines (lines + newlines);
 	int l = startingLevel + lines / 10;
-	if ((l > level) && (l <= 10))
-	{
-		level = l;
-		sprintf(b, "%7d", level);
-		gtk_label_set_text(GTK_LABEL(levelw), b);
-	}
+	setLevel (l);
+
+	return level;
 }
 
 void 
@@ -167,6 +155,21 @@ ScoreFrame::setLevel(int l)
 	level = l;
 	sprintf(b, "%7d", level);
 	gtk_label_set_text(GTK_LABEL(levelw), b);
+}
+
+void 
+ScoreFrame::setLines(int l)
+{
+	lines = l;
+	sprintf(b, "%7d", lines);
+	gtk_label_set_text(GTK_LABEL(linesw), b);
+}
+
+void
+ScoreFrame::resetScore ()
+{
+	setLines (0);
+	setScore (0);
 }
 
 void

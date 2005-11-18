@@ -1,3 +1,25 @@
+2005-11-18  Callum McKenzie  <callum@spooky-possum.org>
+
+	* scoreframe.cpp:
+	* scoreframe.h:
+	* tetris.cpp:
+	* tetris.h: Remove points for fastfall and using the space bar.
+	Remove the level limits. Use an exponentially decreasing timer
+	instead.
+
+	* scoreframe.cpp:
+	* scoreframe.h:
+	* tetris.cpp:
+	* blockops.cpp:
+	* blockops.h: Add a bonus for clearing the last line. This also
+	means an additional method for blockops to check for an empty field.
+	
+	* scoreframe.h:
+	* scoreframe.cpp: Change from absolute score increments to setting
+	the score by action. incScore has become private and there is a
+	new interface: scoreLines for scoring when lines are cleared. More
+	methods to follow.
+
 2005-11-12  Callum McKenzie  <callum@spooky-possum.org>
 
 	* renderer.cpp:

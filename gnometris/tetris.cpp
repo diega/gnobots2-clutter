@@ -41,6 +41,7 @@
 #include <config.h>
 #include <dirent.h>
 #include <string.h>
+#include <math.h>
 
 int LINES = 20;
 int COLUMNS = 11;
@@ -938,13 +939,16 @@ Tetris::gameQuit(GtkAction *action, void *d)
 void
 Tetris::generateTimer(int level)
 {
+	g_return_if_fail (level > 1);
+
 	g_source_remove(timeoutId);
 
-	int intv = 1000 - 100 * (level - 1);
-	if (intv <= 0)
-		intv = 100;
+	// With 0.8, the old level 10 should be hit at about level 20.
+	int intv = (int) round (1000.0 * pow (0.8, level - 1));
+	if (intv <= 10)
+		intv = 10;
 		
-	timeoutId = g_timeout_add_full(0, intv, timeoutHandler, this, NULL);
+	timeoutId = g_timeout_add (intv, timeoutHandler, this);
 }
 
 void
@@ -955,15 +959,15 @@ Tetris::manageFallen()
 
 	int levelBefore = scoreFrame->getLevel();
 
-	int fullLines = field->checkFullLines();
-	if (fullLines > 0)
-		scoreFrame->incLines(fullLines);
-	int levelAfter = scoreFrame->getLevel();
+	int levelAfter = scoreFrame->scoreLines (field->checkFullLines());
 	if (levelAfter != levelBefore) 
 		sound->playSound (SOUND_GNOMETRIS);
 	if ((levelBefore != levelAfter) || fastFall)
 		generateTimer(levelAfter);
 	
+	if (field->isFieldEmpty ())
+		scoreFrame->scoreLastLineBonus ();
+
 	generate();
 }
 
@@ -989,13 +993,10 @@ Tetris::timeoutHandler(void *d)
 		if (res)
 		{
 			t->manageFallen();
-			if(t->fastFall && t->inPlay) {
-				t->scoreFrame->incScore(t->fastFallPoints);
+			if (t->fastFall && t->inPlay) {
 				t->fastFall = false;
 			}
 		}
-		else if(t->fastFall)
-			++t->fastFallPoints;
 	}
 
 	return TRUE;	
@@ -1006,7 +1007,6 @@ Tetris::keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 {
 	int keyval;
 	bool res = false;
-	int bonus;
 
 	if (t->timeoutId == 0)
 		return FALSE;
@@ -1040,7 +1040,6 @@ Tetris::keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 	} else if (keyval == t->moveDown) {
 		if (!t->fastFall && !t->onePause) {
 			t->fastFall = true;
-			t->fastFallPoints = 0;
 			g_source_remove (t->timeoutId);
 			t->timeoutId = g_timeout_add_full(0, 10, timeoutHandler, t, NULL);
 			res = true;
@@ -1048,8 +1047,7 @@ Tetris::keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 	} else if (keyval == t->moveDrop) {
 		if (!t->dropBlock) {
 			t->dropBlock = true;
-			bonus = t->field->dropBlock();
-			t->scoreFrame->incScore(bonus);
+			t->field->dropBlock();
 			t->manageFallen();
 			res = TRUE;
 		}        
@@ -1371,7 +1369,7 @@ Tetris::gameNew(GtkAction *action, void *d)
 	t->timeoutId = g_timeout_add_full(0, 1000 - 100 * (level - 1), timeoutHandler, t, NULL);
 	t->field->emptyField(t->line_fill_height,t->line_fill_prob);
 
-	t->scoreFrame->resetLines();
+	t->scoreFrame->resetScore();
 	t->paused = false;
 	
 	t->field->generateFallingBlock();

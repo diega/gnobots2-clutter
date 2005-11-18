@@ -54,6 +54,7 @@ public:
 	void emptyField(int filled_lines, int fill_prob);
 	void putBlockInField(bool erase);
 	int getLinesToBottom();
+	bool isFieldEmpty (void);
 
 private:
 	bool blockOkHere(int x, int y, int b, int r);

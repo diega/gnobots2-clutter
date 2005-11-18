@@ -27,8 +27,7 @@ public:
 	ScoreFrame(int cmdlLevel);
 	
 	void show();
-	void resetLines();	
-	void incLines(int newlines);	
+	void resetScore();	
 	void setLevel(int l);
 	void setStartingLevel(int l);
 		
@@ -38,7 +37,8 @@ public:
 	
 	GtkWidget * getWidget()	{return w;}
 	
-	void incScore(int score);
+	int scoreLines (int nlines);
+	void scoreLastLineBonus ();
 
 private:
 	GtkWidget *w;
@@ -59,7 +59,9 @@ private:
 	int lines;
 	int startingLevel;
 	
-	void setScore(int score);
+	void setScore (int score);
+	void setLines (int lines);
+	void incScore (int score);
 };
 
 #endif //__scoreframe_h__
