@@ -1,3 +1,4 @@
+/* -*- mode:C; indent-tabs-mode:nill; tab-width:8; c-basic-offset:8 -*- */
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *
@@ -175,6 +176,29 @@ BlockOps::moveBlockDown()
 	return fallen;
 }
 
+// The target is the set of blocks which the currently falling block
+// will occupy when it lands. It is an aid for beginners.
+void
+BlockOps::generateTarget ()
+{
+	// Clean out any old targets.
+	for (int x = 0; x < COLUMNS; ++x)
+		for (int y = 0; y < LINES; ++y)
+			if (field[x][y].what == TARGET)
+				field[x][y].what = EMPTY;
+
+	// FIXME: Check that this is actually guaranteed
+	// to terminate (i.e. posx, posy, blocknr and rot 
+	// are guaranteed to be valid).
+	int n = 0;
+	do {
+		n++;
+	} while (!blockOkHere (posx, posy + n, blocknr, rot));
+
+	// Mark the relevant places.
+	putBlockInField (posx, posy + n, blocknr, rot, TARGET);
+}
+
 int
 BlockOps::dropBlock()
 {
@@ -303,27 +327,38 @@ BlockOps::emptyField(void)
 }
 
 void
-BlockOps::putBlockInField(bool erase)
+BlockOps::putBlockInField (int bx, int by, int block, int rotation,
+			   SlotType fill)
 {
 	for (int x = 0; x < 4; ++x)
 	{
 		for (int y = 0; y < 4; ++y)
 		{
-			if (blockTable[blocknr][rot][x][y])
+			if (blockTable[block][rotation][x][y])
 			{
-				if (erase)
-				{
-					field[posx - 2 + x][y + posy].what = EMPTY;
-					field[posx - 2 + x][y + posy].color = 0;
-				}
+				int i = bx - 2 + x;
+				int j = y + by;
+
+				field[i][j].what = fill;
+				if ((fill == FALLING) || (fill == LAYING))
+					field[i][j].color = color;
 				else
-				{
-					field[posx - 2 + x][y + posy].what = FALLING;
-					field[posx - 2 + x][y + posy].color = color;
-				}
+					field[i][j].color = 0;
 			}
 		}
 	}
+}
+
+// This is now just a wrapper. I'm not sure which version should be
+// used in general: having the field keep track of the block worries
+// me, but I can't say it is definitely wrong.
+void
+BlockOps::putBlockInField (bool erase)
+{
+	if (erase)
+		putBlockInField (posx, posy, blocknr, rot, EMPTY);
+	else
+		putBlockInField (posx, posy, blocknr, rot, FALLING);
 }
 
 bool

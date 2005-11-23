@@ -1,3 +1,10 @@
+2005-11-24  Callum McKenzie  <callum@spooky-possum.org>
+
+	* blockops.cpp: 
+	* blockops.h: Start of support for "targets" (also known as 
+	"ghosts"). A bit of a rearrangement of putBlockInField as a 
+	result.
+
 2005-11-18  Callum McKenzie  <callum@spooky-possum.org>
 
 	* scoreframe.cpp:

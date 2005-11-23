@@ -1,3 +1,5 @@
+/* -*- mode:C; indent-tabs-mode:nill; tab-width:8; c-basic-offset:8 -*- */
+
 #ifndef __blockops_h__
 #define __blockops_h__
 
@@ -25,7 +27,8 @@
 
 enum SlotType 
 {
-	EMPTY, 
+	EMPTY,
+	TARGET,
 	FALLING, 
 	LAYING
 };
@@ -46,6 +49,7 @@ public:
 	bool moveBlockRight();
 	bool moveBlockDown();
 	bool rotateBlock(bool);
+	void generateTarget ();
 	int dropBlock();
 	void fallingToLaying();
 	int checkFullLines();
@@ -57,6 +61,8 @@ public:
 	bool isFieldEmpty (void);
 
 private:
+	void putBlockInField (int bx, int by, int blocknr, int rotation,
+			      SlotType fill);
 	bool blockOkHere(int x, int y, int b, int r);
 	void eliminateLine(int l);
 
