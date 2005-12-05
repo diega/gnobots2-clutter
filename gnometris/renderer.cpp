@@ -107,13 +107,18 @@ void Renderer::drawCell (cairo_t *cr, gint x, gint y)
 
 	if (data[x][y].what == EMPTY)
 	        return;
-  
-	i = data[x][y].color;                       
-	i = CLAMP (i, 0, 6);
-	
-	cairo_set_source_rgb(cr, colours[i][0], 
-			     colours[i][1], 
-			     colours[i][2]);
+
+        if (data[x][y].what == TARGET) {
+                cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.3);
+        } else {
+                i = data[x][y].color;                       
+                i = CLAMP (i, 0, 6);
+                
+                cairo_set_source_rgb(cr, colours[i][0], 
+                                     colours[i][1], 
+                                     colours[i][2]);
+        }
+
 	cairo_rectangle(cr, x+0.05, y+0.05, 
 			0.9, 0.9);
 	cairo_fill (cr);
@@ -229,9 +234,13 @@ void JoinedUp::drawCell (cairo_t *cr, gint x, gint y)
         cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
         cairo_set_line_width (cr, 0.05);
 
-	cairo_set_source_rgb (cr, colours[i][0], 
-                              colours[i][1], 
-                              colours[i][2]);
+        if (data[x][y].what == TARGET) {
+                cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0);
+        } else {
+                cairo_set_source_rgb (cr, colours[i][0], 
+                                      colours[i][1], 
+                                      colours[i][2]);
+        }
         cairo_rectangle (cr, -0.025, -0.025, 1.025, 1.025);
         cairo_fill (cr);
         cairo_set_source_rgb (cr, 0.5, 0.5, 0.5);

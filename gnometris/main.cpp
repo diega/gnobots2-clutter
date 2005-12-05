@@ -33,7 +33,7 @@ main(int argc, char *argv[])
 
 	poptOption options[] = 
 	{
-		{"level", 'l', POPT_ARG_INT, &cmdlineLevel, 0, N_("Set starting level (1-10)"), N_("LEVEL")},
+		{"level", 'l', POPT_ARG_INT, &cmdlineLevel, 0, N_("Set starting level (1 or greater)"), N_("LEVEL")},
 		{0, '\0', 0, 0, 0}
 	};
 

@@ -49,7 +49,6 @@ public:
 	bool moveBlockRight();
 	bool moveBlockDown();
 	bool rotateBlock(bool);
-	void generateTarget ();
 	int dropBlock();
 	void fallingToLaying();
 	int checkFullLines();
@@ -67,6 +66,8 @@ private:
 	void eliminateLine(int l);
 
 protected:
+	void generateTarget ();
+
 	Block **field;
 
 	int blocknr;

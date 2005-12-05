@@ -193,7 +193,8 @@ BlockOps::generateTarget ()
 	int n = 0;
 	do {
 		n++;
-	} while (!blockOkHere (posx, posy + n, blocknr, rot));
+	} while (blockOkHere (posx, posy + n, blocknr, rot));
+	n--;
 
 	// Mark the relevant places.
 	putBlockInField (posx, posy + n, blocknr, rot, TARGET);
@@ -338,6 +339,10 @@ BlockOps::putBlockInField (int bx, int by, int block, int rotation,
 			{
 				int i = bx - 2 + x;
 				int j = y + by;
+
+				if ((fill == TARGET) && 
+				    (field[i][j].what != EMPTY))
+					return;
 
 				field[i][j].what = fill;
 				if ((fill == FALLING) || (fill == LAYING))

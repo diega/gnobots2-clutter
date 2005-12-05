@@ -211,6 +211,8 @@ Field::redraw()
         
 	g_return_if_fail(buffer);
 
+        generateTarget ();
+
         r = rendererFactory (themeID, buffer, background, field, 
                              COLUMNS, LINES, width, height);
 

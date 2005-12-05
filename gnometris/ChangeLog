@@ -1,3 +1,12 @@
+2005-12-05  Callum McKenzie  <callum@spooky-possum.org>
+
+	* tetris.cpp:
+	* main.cpp:
+	* blockops.h:
+	* field.cpp:
+	* renderer.cpp: Further targets work. Targets are on by default -
+	this will change. Also some cleanups regarding timer creation.
+
 2005-11-24  Callum McKenzie  <callum@spooky-possum.org>
 
 	* blockops.cpp: 

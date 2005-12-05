@@ -939,9 +939,10 @@ Tetris::gameQuit(GtkAction *action, void *d)
 void
 Tetris::generateTimer(int level)
 {
-	g_return_if_fail (level > 1);
+	g_return_if_fail (level > 0);
 
-	g_source_remove(timeoutId);
+	if (timeoutId > 0)
+		g_source_remove(timeoutId);
 
 	// With 0.8, the old level 10 should be hit at about level 20.
 	int intv = (int) round (1000.0 * pow (0.8, level - 1));
@@ -1041,7 +1042,7 @@ Tetris::keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 		if (!t->fastFall && !t->onePause) {
 			t->fastFall = true;
 			g_source_remove (t->timeoutId);
-			t->timeoutId = g_timeout_add_full(0, 10, timeoutHandler, t, NULL);
+			t->timeoutId = g_timeout_add (10, timeoutHandler, t);
 			res = true;
 		}
 	} else if (keyval == t->moveDrop) {
@@ -1366,7 +1367,7 @@ Tetris::gameNew(GtkAction *action, void *d)
 	t->scoreFrame->setLevel(level);
 	t->scoreFrame->setStartingLevel(level);
 
-	t->timeoutId = g_timeout_add_full(0, 1000 - 100 * (level - 1), timeoutHandler, t, NULL);
+	t->generateTimer (level);
 	t->field->emptyField(t->line_fill_height,t->line_fill_prob);
 
 	t->scoreFrame->resetScore();
