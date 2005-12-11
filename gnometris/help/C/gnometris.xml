@@ -206,6 +206,14 @@ application or
       <title>Rotate Blocks Counterclockwise</title>
        <para>Choose this option if you want the blocks to rotate counterclockwise or not.</para>
      </sect3>
+     <sect3 id="s3-show-target">
+      <title>Show where the block will land</title>
+        <para>If this feature is used a grey image of the block will
+  show you where the block will land. This feature is very useful for
+  beginning players, but experienced players will find it a
+  distraction.
+       </para>
+     </sect3>
    </sect2>
    <sect2 id="s2-customlook">
     <title>Customizing the Look of <application>Gnometris</application></title>

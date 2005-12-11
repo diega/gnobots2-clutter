@@ -78,6 +78,7 @@ private:
 	bool onePause;
 	
 	bool inPlay;
+	bool useTarget;
 
 	void generateTimer(int level);
 
@@ -104,9 +105,10 @@ private:
 	static void setupdialogDestroy(GtkWidget *widget, void *d);
 	static void setupdialogResponse(GtkWidget *dialog, gint response_id, void *d);
 	static void setSound (GtkWidget *widget, gpointer data);
- 	static void setRotateCounterClockWise(GtkWidget *widget, void *d);
 	static void setSelectionPreview(GtkWidget *widget, void *d);
 	static void setSelectionBlocks(GtkWidget *widget, void *d);
+ 	static void setRotateCounterClockWise(GtkWidget *widget, void *d);
+	static void setTarget (GtkWidget *widget, void *d);
 	static void setSelection (GtkWidget *widget, void *data);
 	static void setBGSelection (GtkWidget *widget, void *data);
 
@@ -144,6 +146,7 @@ private:
 	GtkWidget *do_preview_toggle;
 	GtkWidget *random_block_colors_toggle;
 	GtkWidget *rotate_counter_clock_wise_toggle;
+	GtkWidget *useTargetToggle;
 	GtkWidget *sound_toggle;
 
 	Preview *theme_preview;

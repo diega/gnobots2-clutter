@@ -1,3 +1,17 @@
+2005-12-11  Callum McKenzie  <callum@spooky-possum.org>
+
+	* help/C/gnometris.xml:
+	* blockops.cpp: 
+	* blockops.h:
+	* gnometris.schemas.in: 
+	* tetris.cpp: Make targets a preference. Note that I have used an
+	internal boolean variable to keep track of things and I am not
+	using the gconf key to store running state. I *am* updating when
+	the gconf keys change, but this is a side-effect of the current
+	code organisation and not what I want to do long term. I am doing
+	things differently because I hope to change everything to this way
+	in the future.
+
 2005-12-05  Callum McKenzie  <callum@spooky-possum.org>
 
 	* tetris.cpp:

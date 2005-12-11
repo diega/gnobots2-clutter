@@ -58,6 +58,8 @@ public:
 	void putBlockInField(bool erase);
 	int getLinesToBottom();
 	bool isFieldEmpty (void);
+	void setUseTarget (bool);
+	bool getUseTarget () { return useTarget; };
 
 private:
 	void putBlockInField (int bx, int by, int blocknr, int rotation,
@@ -65,7 +67,10 @@ private:
 	bool blockOkHere(int x, int y, int b, int r);
 	void eliminateLine(int l);
 
+	bool useTarget;
+
 protected:
+	void clearTarget ();
 	void generateTarget ();
 
 	Block **field;

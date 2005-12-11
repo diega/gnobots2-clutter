@@ -67,6 +67,7 @@ bool rotateCounterClockWise = true;
 #define KEY_THEME KEY_OPTIONS_DIR "/theme"
 #define KEY_STARTING_LEVEL KEY_OPTIONS_DIR "/starting_level"
 #define KEY_DO_PREVIEW KEY_OPTIONS_DIR "/do_preview"
+#define KEY_USE_TARGET KEY_OPTIONS_DIR "/use_target"
 #define KEY_RANDOM_BLOCK_COLORS KEY_OPTIONS_DIR "/random_block_colors"
 #define KEY_ROTATE_COUNTER_CLOCKWISE KEY_OPTIONS_DIR "/rotate_counter_clock_wise"
 #define KEY_LINE_FILL_HEIGHT KEY_OPTIONS_DIR "/line_fill_height"
@@ -103,6 +104,7 @@ Tetris::Tetris(int cmdlLevel):
 	timeoutId(0), 
 	onePause(false), 
 	inPlay(false),
+	useTarget(false),
 	bgimage(0),
 	setupdialog(0), 
 	cmdlineLevel(cmdlLevel), 
@@ -210,6 +212,7 @@ Tetris::Tetris(int cmdlLevel):
 
 	preview = new Preview ();
 	field = new Field();
+	field->setUseTarget (false);
 
 	initOptions ();
 
@@ -482,6 +485,8 @@ Tetris::initOptions ()
 	else
 		sound->turnOff ();
 
+	useTarget = gconfGetBoolean (gconf_client, KEY_USE_TARGET, FALSE);
+
 	do_preview = gconfGetBoolean (gconf_client, KEY_DO_PREVIEW, TRUE);
 	
 	if (preview) {
@@ -585,6 +590,19 @@ Tetris::setSelection(GtkWidget *widget, void *data)
 	t->field->setTheme (t->themeno);
 	gconf_client_set_string (t->gconf_client, KEY_THEME,
 				 ThemeTable[t->themeno].id, NULL);
+}
+
+void 
+Tetris::setTarget (GtkWidget *widget, void *data)
+{
+	Tetris *t;
+	
+	t = (Tetris *)data;
+
+	t->useTarget = GTK_TOGGLE_BUTTON (widget)->active;
+
+	gconf_client_set_bool (t->gconf_client, KEY_USE_TARGET, 
+			       t->useTarget, NULL);
 }
 
 void
@@ -822,6 +840,14 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	g_signal_connect (t->rotate_counter_clock_wise_toggle, "clicked",
 			  G_CALLBACK (setRotateCounterClockWise), d);
  	gtk_box_pack_start (GTK_BOX (fvbox), t->rotate_counter_clock_wise_toggle,
+			    0, 0, 0);
+
+	t->useTargetToggle = gtk_check_button_new_with_mnemonic (_("Show where the block will _land"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (t->useTargetToggle), 
+				      t->useTarget);
+	g_signal_connect (t->useTargetToggle, "clicked",
+			  G_CALLBACK (setTarget), d);
+ 	gtk_box_pack_start (GTK_BOX (fvbox), t->useTargetToggle,
 			    0, 0, 0);
 
 	gtk_container_add (GTK_CONTAINER (frame), fvbox);
@@ -1340,6 +1366,8 @@ Tetris::endOfGame()
 		int pos = high_scores->add (scoreFrame->getScore());
 		high_scores->show (pos);
 	}
+
+	field->setUseTarget (false);
 }
 
 int
@@ -1367,6 +1395,8 @@ Tetris::gameNew(GtkAction *action, void *d)
 	t->scoreFrame->setLevel(level);
 	t->scoreFrame->setStartingLevel(level);
 
+	t->field->setUseTarget (t->useTarget);
+
 	t->generateTimer (level);
 	t->field->emptyField(t->line_fill_height,t->line_fill_prob);
 
@@ -1374,7 +1404,6 @@ Tetris::gameNew(GtkAction *action, void *d)
 	t->paused = false;
 	
 	t->field->generateFallingBlock();
-	//gtk_widget_queue_draw(t->field->getWidget());
 	t->field->redraw();
 	t->preview->previewBlock(blocknr_next, rot_next, color_next);
 	gtk_widget_queue_draw(t->preview->getWidget());
