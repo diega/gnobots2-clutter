@@ -182,7 +182,7 @@ Hand::showCount (bool blackjack)
                 message = g_strdup_printf ("%s%d",
                                            (getSoft() ? _("Soft") : ""), 
                                            getCount ());
-                if (! (bj_game_is_active () || hslot->id == 0 || bj_hand_events_pending ())) {
+                if (! (bj_game_is_active () || hslot->id == 0)) {
                         gint hand_results = bj_get_hand_results (dealer->getCount (), 
                                                                  getCount ());
                         switch (hand_results) {

@@ -1,3 +1,9 @@
+2005-12-13  William Jon McCann  <mccann@jhu.edu>
+
+	* src/player.cpp (showCount): Show results of hand even
+	if events are pending.  This can give away the answer
+	too soon but it is better than it getting erased later.
+
 2005-09-15  JP Rosevear  <jpr@novell.com>
 
 	* data/blackjack.schemas.in: add never insurance schema item

@@ -73,5 +73,4 @@ extern GList            *playerHands;
 extern Card             tempCard;
 extern PlayerHand       *tempHand;
 
-
 #endif
