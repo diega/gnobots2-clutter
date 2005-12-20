@@ -1389,6 +1389,8 @@ main (int argc, char *argv [])
 	GtkUIManager *ui_manager;
 	GtkAccelGroup *accel_group;
 
+	setgid_io_init ();
+
 	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);

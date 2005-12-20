@@ -1,3 +1,7 @@
+2005-12-20  Callum McKenzie  <callum@spooky-possum.org>
+
+	* mahjongg.c: Added setgid_io_init ().
+
 2005-09-25  Callum McKenzie  <callum@spooky-possum.org>
 
 	* mahjongg.c (about_callback): De-brand the about box to be in

@@ -140,7 +140,7 @@ int main (int argc, char *argv[])
       N_("Game size (1=small, 3=large)"), N_("NUMBER") },
     { NULL, '\0', 0, NULL, 0, NULL, NULL }};
 
-	/* FIXME: Do something about setgid in here! */
+	setgid_io_init ();
 
   /* Initialise i18n. */
   bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);

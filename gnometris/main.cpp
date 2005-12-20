@@ -21,10 +21,13 @@
 #include <config.h>
 #include "tetris.h"
 #include <libgnomeui/gnome-window-icon.h>
+#include "games-scores.h"
 
 int
 main(int argc, char *argv[])
 {
+	setgid_io_init ();
+
 	bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
         bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");	
 	textdomain(GETTEXT_PACKAGE);

@@ -1,3 +1,7 @@
+2005-12-20  Callum McKenzie  <callum@spooky-possum.org>
+
+	* same-gnome.c (main): Added setgid_io_init ().
+
 2005-08-29  Callum McKenzie  <callum@spooky-possum.org>
 
 	* same-gnome.c: 
