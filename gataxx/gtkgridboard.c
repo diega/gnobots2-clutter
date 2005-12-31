@@ -17,7 +17,7 @@
 
 #include "gtkgridboard.h"
 
-#define DO_PROFILE
+#undef DO_PROFILE
 
 #ifdef DO_PROFILE
 #include <sys/time.h>
@@ -32,7 +32,6 @@ static guint gridboard_signals[LAST_SIGNAL] = { 0 };
 /* prototypes for private functions */
 static void gtk_gridboard_repaint(GtkGridBoard * gridboard);
 static gint ** make_array(int width, int height, int fill); 
-static void gtk_gridboard_load_tiles (GtkGridBoard * gridboard);
 static gint get_pixmap_num(int piece);
 static gint gtk_gridboard_button_press(GtkWidget *widget, 
 				       GdkEventButton *event) ;
@@ -45,9 +44,6 @@ static void gtk_gridboard_finalize(GObject * object);
 static void gtk_gridboard_init(GtkGridBoard * gridboard);
 static void gtk_gridboard_realize(GtkWidget * widget);
 static void gtk_gridboard_size_request(GtkWidget * widget, GtkRequisition * req);
-static void gtk_gridboard_draw_pixmap(GtkGridBoard * gridboard, gdouble phase, 
-				      gdouble x, gdouble y, 
-				      cairo_pattern_t *pattern);
 static gint gtk_gridboard_flip_pixmaps(gpointer data);
 
 /* init functions */
@@ -82,7 +78,6 @@ static void gtk_gridboard_init(GtkGridBoard * gridboard) {
         gridboard->backing_store = NULL;
 	gridboard->tiles_pixbuf = NULL;
 	gridboard->tiles_scale = 1;
-        gridboard->tileset=NULL;
         gridboard->pixmaps=NULL;
 	gridboard->timeoutid = 0;
         gridboard->tileheight=TILEHEIGHT;
@@ -90,24 +85,24 @@ static void gtk_gridboard_init(GtkGridBoard * gridboard) {
         gridboard->width=0;
         gridboard->height=0;
 	gridboard->statelist=NULL;
-	gridboard->themesurface = NULL;
+	gridboard->theme = gtk_gridboard_themes;
 }
 
-GtkWidget * gtk_gridboard_new(gint width, gint height, char * tileset) {
+GtkWidget * gtk_gridboard_new(gint width, gint height, char * theme) {
         GtkGridBoard * gridboard=g_object_new(gtk_gridboard_get_type(), NULL);
 
         gridboard->width=width;
         gridboard->height=height;
-        gridboard->tileset=tileset;
 
         gridboard->board    = make_array (width, height, 0);
         gridboard->pixmaps  = make_array (width, height, 0);
         gridboard->selected = make_array (width, height, SELECTED_NONE);
 	gridboard->changed  = make_array (width, height, TRUE);
 	
-        gtk_gridboard_load_tiles(gridboard);
         gtk_gridboard_set_animate(gridboard, TRUE);
         gtk_gridboard_set_visibility(gridboard, TRUE);
+
+	gtk_gridboard_set_theme (gridboard, theme);
         
         return GTK_WIDGET(gridboard);
         
@@ -284,15 +279,12 @@ void gtk_gridboard_paint (GtkGridBoard *gridboard)
   gtk_gridboard_repaint (gridboard);
 }
 
-#define COIN_RADIUS 0.4
-
 static void gtk_gridboard_repaint(GtkGridBoard * gridboard) {
   int x, y;
   double phase;
   GtkWidget *widget;
   gdouble scale;
-  cairo_t *themecx;
-  gint w, h;
+  cairo_t *cx;
   
 #ifdef DO_PROFILE
   struct timeval tv;
@@ -314,36 +306,10 @@ static void gtk_gridboard_repaint(GtkGridBoard * gridboard) {
 	gridboard->changed[x][y] = TRUE;
   }
   
-  gridboard->cx = gdk_cairo_create (gridboard->backing_store);
-  cairo_scale (gridboard->cx, 
-	       1.0*widget->allocation.width/gridboard->width,
+  cx = gdk_cairo_create (gridboard->backing_store);
+  cairo_scale (cx, 1.0*widget->allocation.width/gridboard->width,
 	       1.0*widget->allocation.height/gridboard->height);
-  
-  /* Make a new cairo surface with the background drawn on it. */
-  /* FIXME: Should be in the realize callback. */
-  /* FIXME: This doesn't allow for the theme to change at all :( */
-  if (gridboard->themesurface == NULL) {
-#ifdef DO_PROFILE
-    gettimeofday (&tv, NULL);
-    counter = tv.tv_sec * 1000000 + tv.tv_usec;
-#endif
-    w = gdk_pixbuf_get_width (gridboard->tiles_pixbuf);
-    h = gdk_pixbuf_get_height (gridboard->tiles_pixbuf);
     
-    gridboard->themesurface = 
-      cairo_surface_create_similar (cairo_get_target (gridboard->cx), 
-				    CAIRO_CONTENT_COLOR_ALPHA,
-				    w, h);
-    themecx = cairo_create (gridboard->themesurface);
-    gdk_cairo_set_source_pixbuf (themecx, gridboard->tiles_pixbuf,
-				 0.0, 0.0);
-    cairo_paint (themecx);
-#ifdef DO_PROFILE
-    gettimeofday (&tv, NULL);
-    g_print ("[%ld]\n", tv.tv_sec * 1000000 + tv.tv_usec - counter);
-#endif
-  }
-  
 #ifdef DO_PROFILE
   gettimeofday (&tv, NULL);
   counter = tv.tv_sec * 1000000 + tv.tv_usec;
@@ -354,40 +320,21 @@ static void gtk_gridboard_repaint(GtkGridBoard * gridboard) {
   for (x=0; x<gridboard->height; x++) {
     for (y=0; y<gridboard->width; y++) {
       if (gridboard->changed[x][y]) {
-	/* Fill in the background. */
-	cairo_save (gridboard->cx);
-	cairo_rectangle (gridboard->cx, x, y, 1, 1);
-	cairo_clip_preserve (gridboard->cx);
-	/* The background. */
-	cairo_set_source_rgba (gridboard->cx, 0.43, 0.55, 0.65, 1.0);
-	cairo_fill_preserve (gridboard->cx);
-	/* The grid. */
-	cairo_set_line_width (gridboard->cx, 0.02);
-	cairo_set_source_rgba (gridboard->cx, 0.0, 0.0, 0.0, 1.0);
-	cairo_stroke (gridboard->cx);
+	gridboard->theme->draw_bg (cx, x, y);
+	gridboard->theme->draw_grid (cx, x, y);
 	if (gridboard->board[x][y] != EMPTY) {
 	  phase = gridboard->pixmaps[x][y];
 	  phase = (phase - 1.0)/30.0;
-	  cairo_save (gridboard->cx);
-	  gtk_gridboard_draw_pixmap(gridboard, phase, 
-				    x, y, 
-				    NULL);
-	  cairo_restore (gridboard->cx);
+	  gridboard->theme->draw_piece (cx, x, y, phase);
 	} else if (gridboard->selected[x][y]) {
-	  cairo_save (gridboard->cx);
-	  cairo_set_source_rgba (gridboard->cx, 1.0, 1.0, 1.0, 0.3);
-	  cairo_arc (gridboard->cx, x + 0.5, y + 0.5, COIN_RADIUS, 0,
-		     2*G_PI);
-	  cairo_fill (gridboard->cx);
-	  cairo_restore (gridboard->cx);
+	  gridboard->theme->draw_hilight (cx, x, y);
 	}
 	gridboard->changed[x][y] = FALSE;
-	cairo_restore (gridboard->cx);
       }
     }
   }
 
-  cairo_destroy (gridboard->cx);
+  cairo_destroy (cx);
   
 #ifdef DO_PROFILE
   gettimeofday (&tv, NULL);
@@ -396,36 +343,6 @@ static void gtk_gridboard_repaint(GtkGridBoard * gridboard) {
 }
 
 
-static void gtk_gridboard_draw_pixmap(GtkGridBoard * gridboard, gdouble phase, 
-				      gdouble x, gdouble y, 
-				      cairo_pattern_t *pattern) 
-{
-  x = x + 0.5;
-  y = y + 0.5;
-
-  /* We special-case the two "pure" ends of the flip to avoid
-   * floating point errors in calculating the phase. */
-  if (phase > 0.5) {
-    cairo_set_source_rgb (gridboard->cx, 1.0, 1.0, 1.0);
-  } else {
-    cairo_set_source_rgb (gridboard->cx, 0.0, 0.0, 0.0);
-  }
-
-  if ((phase > 0.98) || (phase < 0.02)) {
-    cairo_arc (gridboard->cx, x, y, COIN_RADIUS, 0, 2*G_PI);
-    cairo_fill (gridboard->cx);
-  } else {
-    cairo_save (gridboard->cx);
-    cairo_translate (gridboard->cx, x, y);
-    cairo_scale (gridboard->cx, cos (phase*G_PI), 1.0);
-    cairo_arc (gridboard->cx, 0, 0, COIN_RADIUS, 0, 2*G_PI);
-    cairo_fill (gridboard->cx);
-    cairo_restore (gridboard->cx);
-  }
-
-}
-
-#undef COIN_RADIUS
 
 void gtk_gridboard_set_selection(GtkGridBoard * gridboard, gint type, 
 				 gint x, gint y) 
@@ -488,30 +405,6 @@ static gint gtk_gridboard_flip_pixmaps(gpointer data)
         /* destroy the timeout if animate is false */
         return gridboard->animate;
 }
-
-static void gtk_gridboard_load_tiles (GtkGridBoard * gridboard) {
-        gchar *filepath=gridboard->tileset;
-        GdkPixbuf *image;
-
-        if (! g_file_test (filepath, G_FILE_TEST_EXISTS)) {
-                g_print ("Could not find \'%s\' pixmap file\n", 
-                                filepath);
-                exit (1);
-        }
-
-        image = gdk_pixbuf_new_from_file (filepath, NULL);
-        if (image==NULL) {
-                g_warning ("loading pixmaps failed\n");
-                exit(1);
-        }
-
-	if (gridboard->tiles_pixbuf != NULL)
-	  g_object_unref (gridboard->tiles_pixbuf);
-
-	gridboard->tiles_pixbuf = image;
-	gridboard->tiles_scale = gdk_pixbuf_get_height (image);
-}
-
 
 /* helper functions */
 
@@ -602,11 +495,22 @@ void gtk_gridboard_set_visibility(GtkGridBoard *gridboard, gboolean visibility) 
 	gridboard->visibility=visibility;
 }
 
-void gtk_gridboard_set_tileset(GtkGridBoard *gridboard, gchar * tileset) {
-        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
+void gtk_gridboard_set_theme (GtkGridBoard *gridboard, gchar * name)
+{
+        GtkGridBoardTheme *t;
 
-        gridboard->tileset=tileset;
-        gtk_gridboard_load_tiles(gridboard);
+        g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
+	g_return_if_fail (name != NULL);
+	g_return_if_fail (name[0] != '\0');
+
+	t = gtk_gridboard_themes;
+	while (t->name != NULL) {
+	  if (g_utf8_collate (t->name, name) == 0) {
+	    gridboard->theme = t;
+	    break;
+	  }
+	  t++;
+	}
 }
         
 /* board altering functions */

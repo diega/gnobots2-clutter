@@ -44,8 +44,20 @@
       <type>string</type>
       <default>classic.png</default>
       <locale name="C">
-        <short>Tileset</short>
-        <long>Tileset to use.</long>
+        <short>Tileset (obsolete)</short>
+        <long>Tileset to use (obsolete).</long>
+      </locale>
+      </schema>
+
+      <schema>
+      <key>/schemas/apps/gataxx/theme</key>
+      <applyto>/apps/gataxx/theme</applyto>
+      <owner>gataxx</owner>
+      <type>string</type>
+      <default>Plain</default>
+      <locale name="C">
+        <short>Theme</short>
+        <long>The name of the theme to use.</long>
       </locale>
       </schema>
       

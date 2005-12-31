@@ -1,3 +1,19 @@
+2005-12-31  Callum McKenzie  <callum@spooky-possum.org>
+
+	* gataxx.schemas.in:
+	* gataxx.c: 
+	* gataxx.h: 
+	* properties.c:
+	* properties.h: 
+	* gtkgridboard.c: 
+	* gtkgridboard.h:
+	* gtkgridboardthemes.c:
+	* gtkgridboardthemes.h:
+	* Makefile.am: Resurrected theme support. It is all internal
+	drawing code for now, image files are no longer supported. There
+	is still only one theme, but the framework for new themes - and
+	some degree of "inheritance" is there.
+
 2005-10-04  Callum McKenzie  <callum@spooky-possum.org>
 
 	* gataxx.schemas.in: 

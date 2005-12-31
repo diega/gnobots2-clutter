@@ -19,6 +19,8 @@ gataxx_SOURCES = \
 	appbar.h \
 	gtkgridboard.c \
 	gtkgridboard.h \
+	gtkgridboardthemes.c \
+	gtkgridboardthemes.h \
 	menus.c \
 	menus.h \
 	gataxx.c \

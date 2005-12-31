@@ -34,7 +34,7 @@ void show_properties_dialog(void);
 void reload_properties(void);
 gboolean props_get_animate(void);
 gboolean props_get_quick_moves(void);
-gchar * props_get_tile_set(void);
+gchar * props_get_theme(void);
 int props_is_human(int piece);
 void props_init(GtkWindow * window, char * title);
 

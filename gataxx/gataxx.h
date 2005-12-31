@@ -49,7 +49,6 @@ void about_cb(GtkWidget * widget, gpointer data);
 void boxclicked_cb(GtkWidget * widget, int x, int y);
 GnomeUIInfo * get_mainmenu(void);
 GConfClient * get_gconf_client(void);
-char * get_tileset_path(char * tileset);
 gboolean computer_move_cb(gpointer turn);
 void do_move(move m);
 void do_select(int x, int y);

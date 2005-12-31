@@ -361,9 +361,8 @@ void properties_cb(GtkWidget * widget, gpointer data) {
 /* this gets called whenever some setting has changed */
 void
 apply_changes() {
-	gtk_gridboard_set_animate(gridboard, props_get_animate());
-	gtk_gridboard_set_tileset(gridboard, 
-			get_tileset_path(props_get_tile_set()));
+	gtk_gridboard_set_animate (gridboard, props_get_animate());
+	gtk_gridboard_set_theme (gridboard, props_get_theme());
 	
 	if (props_get_quick_moves()) {
 		timeout=DEF_TIMEOUT/2;
@@ -476,10 +475,10 @@ static gint resize_cb (GtkWindow *window, GdkEventConfigure *e, gpointer data)
 }
 
 static void create_window() {
-	gchar * tileset;
 	GtkWidget *aspectbox;
 	gint width, height;
 	GConfClient *client;
+	gchar *theme;
 
 	client = gconf_client_get_default ();
 
@@ -507,32 +506,16 @@ static void create_window() {
 	gnome_app_install_menu_hints(GNOME_APP(window), mainmenu); 
 
 	props_init(GTK_WINDOW(window), "gataxx");
-	tileset=props_get_tile_set();
+	theme = props_get_theme();
 
 	aspectbox = games_grid_frame_new (BWIDTH, BHEIGHT);
 	gnome_app_set_contents(GNOME_APP(window), aspectbox);
-	gridboard = GTK_GRIDBOARD (gtk_gridboard_new(BWIDTH, BHEIGHT, get_tileset_path(tileset)));
+	gridboard = GTK_GRIDBOARD (gtk_gridboard_new(BWIDTH, BHEIGHT, theme));
 	gtk_container_add (GTK_CONTAINER (aspectbox), GTK_WIDGET (gridboard));
 	g_signal_connect(G_OBJECT (gridboard), "boxclicked",
 			G_CALLBACK(boxclicked_cb), NULL);
 	gtk_widget_show_all (window);
 	apply_changes();
-}
-
-char * get_tileset_path(char * tileset) {
-        static gchar *tilesetpath = NULL;
-      
-        if (tilesetpath)
-          g_free (tilesetpath);
-      
-        tilesetpath = g_build_filename (THEMEDIR, tileset, NULL);
-      
-	if (!g_file_test (tilesetpath, G_FILE_TEST_EXISTS)) {
-	  g_free (tilesetpath);
-	  tilesetpath = THEMEDIR "classic.png";
-	}
-
-        return tilesetpath;
 }
 
 /* this is where it all starts. After the window is brought up, the user

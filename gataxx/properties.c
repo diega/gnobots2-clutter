@@ -39,7 +39,7 @@
 #define GCONF_BLACKLEVEL GCONF_PREFIX "blacklevel"
 #define GCONF_WHITELEVEL GCONF_PREFIX "whitelevel"
 #define GCONF_QUICKMOVES GCONF_PREFIX "quickmoves"
-#define GCONF_TILESET GCONF_PREFIX "tileset"
+#define GCONF_THEME GCONF_PREFIX "theme"
 #define GCONF_ANIMATE GCONF_PREFIX "animate"
 
 typedef struct {
@@ -47,7 +47,7 @@ typedef struct {
 	gint white_level;
 	gboolean animate;
 	gboolean quick_moves;
-	gchar * tile_set;
+        gchar * theme;
 } PropertiesData;
 
 PropertiesData _props;
@@ -56,7 +56,6 @@ PropertiesData * props=&_props;
 static GtkWidget *propbox = NULL;
 static GtkWindow * mainwindow = NULL;
 static GtkTooltips *tooltips = NULL;
-static GamesFileList * theme_file_list = NULL;
 
 /* makes sure input lies between low and high */
 static gint clamp_int (gint input, gint low, gint high)
@@ -96,8 +95,8 @@ gboolean props_get_quick_moves() {
 	return props->quick_moves;
 }
 
-gchar * props_get_tile_set() {
-	return props->tile_set;
+gchar * props_get_theme() {
+	return props->theme;
 }
 
 /* functions to get things from gconf */
@@ -149,8 +148,8 @@ void load_properties (void)
 	props->black_level=props_get_int(GCONF_BLACKLEVEL, 0, 0, 3);
 	props->white_level=props_get_int(GCONF_WHITELEVEL, 0, 0, 3);
 
-	props->tile_set=props_get_string(GCONF_TILESET);
-	if (props->tile_set == NULL) props->tile_set = g_strdup("classic.png");
+	props->theme=props_get_string(GCONF_THEME);
+	if (props->theme == NULL) props->theme = g_strdup("Plain");
 
 	props->animate=props_get_bool(GCONF_ANIMATE, TRUE);
 	props->quick_moves=props_get_bool(GCONF_QUICKMOVES, FALSE);
@@ -165,8 +164,8 @@ save_properties (void)
 	                      props->white_level, NULL);
 	gconf_client_set_bool (get_gconf_client(), GCONF_QUICKMOVES,
 	                       props->quick_moves, NULL);
-	gconf_client_set_string (get_gconf_client(), GCONF_TILESET,
-	                         props->tile_set, NULL);
+	gconf_client_set_string (get_gconf_client(), GCONF_THEME,
+	                         props->theme, NULL);
 	gconf_client_set_bool (get_gconf_client(), GCONF_ANIMATE,
 	                      props->animate, NULL);
 }
@@ -196,18 +195,16 @@ set_variable_cb(GtkWidget * widget, gpointer data) {
 	apply_changes();
 }
 
-/* callback for the tileset menu */ 
 static void
 set_selection (GtkWidget *widget, gpointer data)
 {
         gchar *filename;
 
-	if (props->tile_set)
-		g_free (props->tile_set);
+	if (props->theme)
+		g_free (props->theme);
 
-	filename = games_file_list_get_nth (theme_file_list, 
-					    gtk_combo_box_get_active (GTK_COMBO_BOX (widget)));
-	props->tile_set = g_strdup (filename);
+	filename = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
+	props->theme = g_strdup (filename);
 
 	save_properties ();
 	apply_changes();
@@ -215,25 +212,25 @@ set_selection (GtkWidget *widget, gpointer data)
 
 /* fills the pixmap options menu */
 static GtkWidget *
-fill_tileset_menu (void)
+fill_theme_menu (void)
 {
-	/* Note that we are sharing pixmaps with iagno here. */
-	gchar *dname = gnome_program_locate_file (NULL,
-						  GNOME_FILE_DOMAIN_APP_PIXMAP,
-						  ("iagno"), FALSE, NULL);
+        GtkWidget *combo_box;
+	GtkGridBoardTheme *t;
+	int n;
 
+	combo_box = gtk_combo_box_new_text ();
 
-        if (theme_file_list)
-                g_object_unref (theme_file_list);
- 
-        theme_file_list = games_file_list_new_images (dname, NULL);
-        g_free (dname);
-        games_file_list_transform_basename (theme_file_list);
- 
-        return games_file_list_create_widget (theme_file_list, props->tile_set,
-                                              GAMES_FILE_LIST_REMOVE_EXTENSION
-|
-                                              GAMES_FILE_LIST_REPLACE_UNDERSCORES);
+	t = gtk_gridboard_themes;
+	n = 0;
+	while (t->name != NULL) {
+	  gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box), _(t->name));
+	  if (g_utf8_collate (t->name, props->theme) == 0)
+	    gtk_combo_box_set_active (GTK_COMBO_BOX (combo_box), n);
+	  n++;
+	  t++;
+	}
+
+	return combo_box;
 }
 
 /* makes a perty radio button for a particular computer level */
@@ -269,8 +266,6 @@ static gboolean quit_properties_dialog(GtkWidget * widget, gpointer data) {
 	apply_changes();
 	g_object_unref (tooltips);
 	tooltips = NULL;
-	g_object_unref (theme_file_list);
-	theme_file_list = NULL;
 	gtk_widget_destroy(propbox);
 	propbox = NULL;
 	return FALSE;
@@ -401,11 +396,11 @@ void show_properties_dialog (void) {
 	gtk_tooltips_set_tip(tooltips, button, _("Flip the pieces with some visual effects"), NULL);	
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 
-	/*  tileset select */
+	/*  theme select */
 	hbox=gtk_hbox_new(FALSE, 12);
 	label=gtk_label_new_with_mnemonic(_("_Tile set:"));
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
-	menu = fill_tileset_menu ();
+	menu = fill_theme_menu ();
 	g_signal_connect (G_OBJECT (menu), "changed",
 			  G_CALLBACK (set_selection), NULL);
 	gtk_tooltips_set_tip(tooltips, menu, _("The appearance of the pieces"), NULL);	
@@ -422,8 +417,8 @@ void show_properties_dialog (void) {
 void
 reload_properties (void)
 {
-	g_free (props->tile_set);
-	props->tile_set = NULL;
+	g_free (props->theme);
+	props->theme = NULL;
 	load_properties ();
 	apply_changes ();
 }

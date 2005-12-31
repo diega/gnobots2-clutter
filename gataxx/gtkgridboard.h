@@ -10,6 +10,8 @@
 #include <gtk/gtkwidget.h>
 #include <cairo/cairo.h>
 
+#include "gtkgridboardthemes.h"
+
 G_BEGIN_DECLS
 
 /* macro's */
@@ -68,13 +70,11 @@ struct _GtkGridBoard {
         guint timeoutid;
         GdkPixbuf *tiles_pixbuf;
         gint tiles_scale;
-        gchar * tileset;
         gboolean visibility;
         gboolean animate;
         gboolean showgrid;
 	StateList * statelist;
-        cairo_surface_t *themesurface;
-        cairo_t *cx;
+        GtkGridBoardTheme *theme;
 };
 	
 struct _GtkGridBoardClass {
@@ -99,7 +99,6 @@ void gtk_gridboard_set_selection (GtkGridBoard *widget, gint type,
 				  gint x, gint y);
 int gtk_gridboard_count_pieces(GtkGridBoard * gridboard, int piece);
 int gtk_gridboard_get_piece(GtkGridBoard * gridboard, int x, int y);
-void gtk_gridboard_set_tileset(GtkGridBoard * widget, gchar * tileset);
 void gtk_gridboard_clear_selections(GtkGridBoard * widget);
 void gtk_gridboard_clear_pieces(GtkGridBoard * widget);
 void gtk_gridboard_clear(GtkGridBoard * widget);
@@ -110,6 +109,7 @@ int gtk_gridboard_get_height(GtkGridBoard * widget);
 int gtk_gridboard_get_width(GtkGridBoard * widget);
 void gtk_gridboard_paint(GtkGridBoard * gridboard); 
 int gtk_gridboard_states_present(GtkGridBoard * widget);
+void gtk_gridboard_set_theme (GtkGridBoard *gridboard, gchar * name);
 
 G_END_DECLS
 
