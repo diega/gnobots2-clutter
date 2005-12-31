@@ -1,3 +1,8 @@
+2006-01-01  Callum McKenzie  <callum@spooky-possum.org>
+
+	* properties.c (set_selection): Fix the new code so it will work
+	when the UI is translated.
+
 2005-12-31  Callum McKenzie  <callum@spooky-possum.org>
 
 	* gataxx.schemas.in:

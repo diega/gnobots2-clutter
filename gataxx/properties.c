@@ -198,13 +198,15 @@ set_variable_cb(GtkWidget * widget, gpointer data) {
 static void
 set_selection (GtkWidget *widget, gpointer data)
 {
-        gchar *filename;
+	int n;
 
 	if (props->theme)
 		g_free (props->theme);
 
-	filename = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
-	props->theme = g_strdup (filename);
+	/* We can't use _get_active_text since the text may be
+	 * translated. */
+	n = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
+	props->theme = g_strdup (gtk_gridboard_themes[n].name);
 
 	save_properties ();
 	apply_changes();
