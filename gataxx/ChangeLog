@@ -1,5 +1,7 @@
 2006-01-01  Callum McKenzie  <callum@spooky-possum.org>
 
+	* gtkgridboardthemes.c: New theme: Squares and Diamonds.
+
 	* properties.c (set_selection): Fix the new code so it will work
 	when the UI is translated.
 
