@@ -661,7 +661,7 @@ you_won (void)
 {
         gint pos;
         time_t seconds;
-        gdouble score;
+	GamesScoreValue score;
         static GtkWidget *dialog = NULL;
 	gchar *message;
 	
@@ -669,8 +669,9 @@ you_won (void)
 
         seconds = games_clock_get_seconds (GAMES_CLOCK (chrono));
 
-        score = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
-	pos = games_scores_add_score (highscores, (GamesScoreValue) score);
+        score.plain = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
+	
+	pos = games_scores_add_score (highscores, score);
 	update_menu_sensitivities ();
         if (pos > 0) {
 		if (dialog) {

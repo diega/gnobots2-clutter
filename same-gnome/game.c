@@ -342,8 +342,11 @@ gboolean mark_shifting_balls (void)
 static void game_over (void)
 {
 	gint place;
+	GamesScoreValue hiscore;
 
-	place = games_scores_add_score (highscores, (GamesScoreValue)score);
+	hiscore.plain = score;
+
+	place = games_scores_add_score (highscores, hiscore);
 
 	game_over_dialog (place);
 	clear_savegame ();
