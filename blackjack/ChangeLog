@@ -1,3 +1,9 @@
+2006-01-14  Richard Hoelscher  <rah@rahga.com>
+
+	* src/hand.cpp (bj_hand_finish1, bj_count_live_hands): Dealer 
+	doesn't draw more cards if outcome of the round has been decided:
+	All player hands are surrendered, bust or blackjack. (#136116)
+
 2005-12-13  William Jon McCann  <mccann@jhu.edu>
 
 	* src/player.cpp (showCount): Show results of hand even

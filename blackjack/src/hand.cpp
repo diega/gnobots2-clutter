@@ -392,13 +392,30 @@ bj_hand_new ()
         bj_hand_new1 (NULL);
 }
 
+static gint
+bj_count_live_hands ()
+{
+	// Live hands compete with the dealer hand.
+	gint live_hands = 0; 
+	player = (PlayerHand*) g_list_nth_data (playerHands,0);
+	while (player != NULL) {
+		if ((player->getCount () < 22 ) 
+		    && !((player->getCards () == 2) && (player->getCount () == 21)))
+			live_hands++;
+		player = player->nextHand;
+	}
+	return live_hands;
+}
+
 static gboolean
 bj_hand_finish1 (gpointer data)
 {
-        if (dealer->getCount () < 17 
-            || (rules->getHitSoft17 () 
-                && dealer->getCount () == 17 
-                && dealer->getSoft ())) {
+        if (!allSettled
+	    && bj_count_live_hands () 
+	    && (dealer->getCount () < 17 
+                || (rules->getHitSoft17 () 
+                    && dealer->getCount () == 17 
+                    && dealer->getSoft ()))) {
                 // Finish dealer hand.
                 bj_deal_card_to_dealer_distribution ();
                 bj_draw_refresh_screen ();
