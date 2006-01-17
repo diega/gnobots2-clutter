@@ -428,6 +428,8 @@ main_prog (int argc, char *argv[])
         gtk_widget_pop_colormap ();
 
         gtk_main ();
+
+		gnome_accelerators_sync();
 }
 
 GConfClient *

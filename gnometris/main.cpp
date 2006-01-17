@@ -53,6 +53,8 @@ main(int argc, char *argv[])
 	gtk_main();
 
 	delete t;
+
+	gnome_accelerators_sync();
 	
 	return 0;
 }

@@ -169,5 +169,7 @@ int main (int argc, char *argv[])
 
   gtk_main ();
 
+  gnome_accelerators_sync();
+
   return 0;
 }

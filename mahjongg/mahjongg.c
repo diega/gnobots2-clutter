@@ -1503,6 +1503,8 @@ main (int argc, char *argv [])
   	message_flash (_("Remove matching pairs of tiles.")); 
 
 	gtk_main ();
+
+	gnome_accelerators_sync();
 	
 	return 0;
 }

@@ -1,3 +1,8 @@
+2006-01-17  Callum McKenzie  <callum@spooky-possum.org>
+
+	* src/blackjack.cpp: Patch from Scott Bronson to ensure user-edited
+	accelerators are saved (bug #327280).
+
 2006-01-14  Richard Hoelscher  <rah@rahga.com>
 
 	* src/hand.cpp (bj_hand_finish1, bj_count_live_hands): Dealer 
