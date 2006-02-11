@@ -498,6 +498,7 @@ void gtk_gridboard_set_visibility(GtkGridBoard *gridboard, gboolean visibility) 
 void gtk_gridboard_set_theme (GtkGridBoard *gridboard, gchar * name)
 {
         GtkGridBoardTheme *t;
+	gint x, y;
 
         g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
 	g_return_if_fail (name != NULL);
@@ -511,6 +512,10 @@ void gtk_gridboard_set_theme (GtkGridBoard *gridboard, gchar * name)
 	  }
 	  t++;
 	}
+
+	for (x=0; x<gridboard->width; x++)
+	  for (y=0; y<gridboard->height; y++)
+	    gridboard->changed[x][y] = TRUE;
 }
         
 /* board altering functions */

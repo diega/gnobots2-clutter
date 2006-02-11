@@ -1,3 +1,12 @@
+2006-02-11  Callum McKenzie  <callum@spooky-possum.org>
+
+	* gtkgridboard.c (gtk_gridboard_set_theme): Make a theme change
+	invalidate the backing pixmap. I'd become too clever with my
+	redraw-avoidance schemes and the theme didn't redraw properly.
+
+	* properties.c: Remove the custom clamp_int in favour of glib's
+	CLAMP macro. In the process also make sure it is used properly.
+
 2006-01-01  Callum McKenzie  <callum@spooky-possum.org>
 
 	* gtkgridboardthemes.c: New theme: Squares and Diamonds.

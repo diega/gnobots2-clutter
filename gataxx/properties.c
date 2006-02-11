@@ -57,17 +57,6 @@ static GtkWidget *propbox = NULL;
 static GtkWindow * mainwindow = NULL;
 static GtkTooltips *tooltips = NULL;
 
-/* makes sure input lies between low and high */
-static gint clamp_int (gint input, gint low, gint high)
-{
-	if (input < low)
-		input = low;
-	if (input > high)
-		input = high;
-
-	return input;
-}
-
 /* functions to get things from the PropertiesData struct */
 
 int props_is_human(int piece) {
@@ -109,8 +98,8 @@ static int props_get_int(const gchar * key, int def, int low, int high) {
 		g_error_free(error);
 		return def;
 	}
-	clamp_int(result, low, high);
-	return result;
+	
+	return CLAMP (result, low, high);
 }
 
 static gboolean props_get_bool(const gchar * key, gboolean def) {
