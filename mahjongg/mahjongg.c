@@ -669,8 +669,8 @@ you_won (void)
 
         seconds = games_clock_get_seconds (GAMES_CLOCK (chrono));
 
-        score.plain = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
-	
+        score.time_double = (seconds / 60) * 1.0 + (seconds % 60) / 100.0;
+
 	pos = games_scores_add_score (highscores, score);
 	update_menu_sensitivities ();
         if (pos > 0) {

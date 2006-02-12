@@ -1,3 +1,8 @@
+2006-02-05  Callum McKenzie  <callum@spooky-possum.org>
+
+	* mahjongg.c (you_won): Scores should be recorded as type
+	time_double, not type plain. Fixes bug #329628.
+
 2006-01-17  Callum McKenzie  <callum@spooky-possum.org>
 
 	* mahjongg.c: Patch from Scott Bronson to ensure user-edited
