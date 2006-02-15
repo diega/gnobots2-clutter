@@ -7,7 +7,7 @@
 #include <gtk/gtkmain.h>
 #include <gtk/gtksignal.h>
 #include <glib-object.h>
-#include <cairo/cairo.h>
+#include <cairo.h>
 #include <math.h>
 #include <string.h>
 

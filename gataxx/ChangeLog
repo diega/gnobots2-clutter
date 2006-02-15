@@ -1,3 +1,11 @@
+2006-02-15  Callum McKenzie  <callum@spooky-possum.org>
+
+	* gtkgridboardthemes.c: 
+	* gtkgridboardthemes.h: 
+	* gtkgridboard.h: 
+	* gtkgridboard.c: <cairo/cairo.h> -> <cairo.h>. Spotted by
+	l.hancock3@ntlworld.com.
+
 2006-02-11  Callum McKenzie  <callum@spooky-possum.org>
 
 	* gtkgridboard.c (gtk_gridboard_set_theme): Make a theme change

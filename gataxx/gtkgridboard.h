@@ -8,7 +8,7 @@
 #include <gdk/gdk.h>
 #include <gtk/gtkadjustment.h>
 #include <gtk/gtkwidget.h>
-#include <cairo/cairo.h>
+#include <cairo.h>
 
 #include "gtkgridboardthemes.h"
 

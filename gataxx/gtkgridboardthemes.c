@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2005 by Callum McKenzie
  *
- * Time-stamp: <2006-01-01 13:06:54 callum>
+ * Time-stamp: <2006-02-15 18:51:57 callum>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <cairo/cairo.h>
+#include <cairo.h>
 
 #include "gtkgridboardthemes.h"
 

@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2005 by Callum McKenzie
  *
- * Time-stamp: <2005-12-31 22:19:23 callum>
+ * Time-stamp: <2006-02-15 18:52:07 callum>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 #define GTK_GRIDBOARD_THEMES_H
 
 #include <gtk/gtk.h>
-#include <cairo/cairo.h>
+#include <cairo.h>
 
 typedef void GtkGridboardThemeBGFunc (cairo_t *, gdouble, gdouble);
 typedef void GtkGridboardThemePieceFunc (cairo_t *, gdouble, gdouble, gdouble);
