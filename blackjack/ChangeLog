@@ -1,3 +1,8 @@
+2006-02-18  Callum McKenzie  <callum@spooky-possum.org>
+
+	* src/splash.cpp: Only set the window icon once and set it from
+	the hard-coded location since the icon purge has fucked us over.
+
 2006-01-17  Callum McKenzie  <callum@spooky-possum.org>
 
 	* src/blackjack.cpp: Patch from Scott Bronson to ensure user-edited

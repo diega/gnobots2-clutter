@@ -92,7 +92,6 @@ splash_new ()
                                  GTK_WIN_POS_CENTER);
         gtk_window_set_title (GTK_WINDOW (splash), _("Blackjack"));
         gtk_window_set_resizable (GTK_WINDOW (splash), FALSE);
-        gtk_window_set_default_icon_name ("gnome-blackjack");
 
         g_signal_connect (splash, "destroy",
                           G_CALLBACK (splash_destroyed),
