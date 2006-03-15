@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2005 by Callum McKenzie
  *
- * Time-stamp: <2006-02-15 18:52:07 callum>
+ * Time-stamp: <2006-03-15 17:46:43 callum>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@
 typedef void GtkGridboardThemeBGFunc (cairo_t *, gdouble, gdouble);
 typedef void GtkGridboardThemePieceFunc (cairo_t *, gdouble, gdouble, gdouble);
 typedef void GtkGridboardThemeHiliteFunc (cairo_t *, gdouble, gdouble);
+typedef void GtkGridboardThemeSecondaryHiliteFunc (cairo_t *, gdouble, gdouble, gint);
 typedef void GtkGridboardThemeGridFunc (cairo_t *, gdouble, gdouble);
 
 typedef struct _GtkGridBoardTheme {
@@ -39,6 +40,7 @@ typedef struct _GtkGridBoardTheme {
   GtkGridboardThemeBGFunc *draw_bg;
   GtkGridboardThemePieceFunc *draw_piece;
   GtkGridboardThemeHiliteFunc *draw_hilight;
+  GtkGridboardThemeSecondaryHiliteFunc *draw_secondary_hilight;
   GtkGridboardThemeGridFunc *draw_grid;
 } GtkGridBoardTheme;
 

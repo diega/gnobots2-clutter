@@ -1,3 +1,13 @@
+2006-03-15  Callum McKenzie  <callum@spooky-possum.org>
+
+	* gtkgridboard.c:
+	* gtkgridboardthemes.c:
+	* gtkgridboardthemes.h:
+	* gataxx.c: As suggested by Karderio in bug #330063, hilight the
+	selected piece. In reality it already was, but not in a useful
+	way, so I've re-implemented the secondary selection in
+	GtkGridBoard.
+
 2006-02-15  Callum McKenzie  <callum@spooky-possum.org>
 
 	* gtkgridboardthemes.c: 

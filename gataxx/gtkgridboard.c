@@ -326,8 +326,12 @@ static void gtk_gridboard_repaint(GtkGridBoard * gridboard) {
 	  phase = gridboard->pixmaps[x][y];
 	  phase = (phase - 1.0)/30.0;
 	  gridboard->theme->draw_piece (cx, x, y, phase);
-	} else if (gridboard->selected[x][y]) {
+	} else if (gridboard->selected[x][y] == SELECTED_A) {
 	  gridboard->theme->draw_hilight (cx, x, y);
+	}
+	if (gridboard->selected[x][y] == SELECTED_B) {
+	  gridboard->theme->draw_secondary_hilight (cx, x, y, 
+						    gridboard->board[x][y]);
 	}
 	gridboard->changed[x][y] = FALSE;
       }

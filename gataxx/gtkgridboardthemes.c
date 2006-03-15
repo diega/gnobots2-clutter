@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2005 by Callum McKenzie
  *
- * Time-stamp: <2006-02-15 18:51:57 callum>
+ * Time-stamp: <2006-03-15 17:53:48 callum>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,6 +85,18 @@ static void default_draw_hilight (cairo_t *cx, gdouble x, gdouble y)
   cairo_fill (cx);
 }
 
+static void default_draw_secondary_hilight (cairo_t *cx, gdouble x, gdouble y,
+					    gint piece)
+{
+  x += 0.5;
+  y += 0.5;
+
+  cairo_set_source_rgba (cx, 1.0, 1.0, 1.0, 0.3);
+  cairo_set_line_width (cx, 0.02);
+  cairo_arc (cx, x, y, COIN_RADIUS*1.15, 0, 2*G_PI);
+  cairo_stroke (cx);
+}
+
 static void default_draw_grid (cairo_t *cx, gdouble x, gdouble y)
 {
   cairo_save (cx);
@@ -160,12 +172,34 @@ static void sandd_draw_hilight (cairo_t *cx, gdouble x, gdouble y)
   cairo_fill (cx);
 }
 
+static void sandd_draw_secondary_hilight (cairo_t *cx, gdouble x, gdouble y,
+					  gint piece)
+{
+  gdouble holesize;
+
+  x += 0.5;
+  y += 0.5;
+
+  holesize = 0.05;
+  /* Slightly increase the hole size for squares to allow for the lack of
+   * a visible border around the hole. */
+  if (piece != 1) 
+    holesize = 0.06;
+
+  cairo_set_line_width (cx, 0.02);
+  cairo_arc (cx, x, y, holesize, 0, 2*G_PI);
+  cairo_set_source_rgb (cx,  0.43, 0.55, 0.65);
+  cairo_fill_preserve (cx);
+  cairo_set_source_rgb (cx, 0.0, 0.0, 0.0);
+  cairo_stroke (cx);
+}
+
 /* This should be the only public interface. */
 
 GtkGridBoardTheme gtk_gridboard_themes[] = {
   { N_("Plain"), default_draw_bg, default_draw_piece, 
-    default_draw_hilight, default_draw_grid },
+    default_draw_hilight, default_draw_secondary_hilight, default_draw_grid },
   { N_("Squares and Diamonds"), default_draw_bg, sandd_draw_piece, 
-    sandd_draw_hilight, default_draw_grid },
+    sandd_draw_hilight, sandd_draw_secondary_hilight, default_draw_grid },
   { NULL, NULL, NULL, NULL, NULL }
 };

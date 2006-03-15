@@ -251,7 +251,7 @@ void do_select(int x, int y) {
 			}
 		}
 	}
-	gtk_gridboard_set_selection(gridboard, SELECTED_A, x, y);
+	gtk_gridboard_set_selection(gridboard, SELECTED_B, x, y);
 }
 
 /* Restore the state of the board from the command line. */
