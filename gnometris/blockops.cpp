@@ -27,10 +27,10 @@
 
 
 BlockOps::BlockOps() :
+     useTarget (false),
      blocknr (0),
      rot (0),
-     color (0),
-     useTarget (false)
+     color (0)
 {
 	field = new Block*[COLUMNS];
 	

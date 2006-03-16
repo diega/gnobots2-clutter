@@ -1,3 +1,8 @@
+2006-03-16  Callum McKenzie  <callum@spooky-possum.org>
+
+	* blockops.cpp (BlockOps): Fix the ordering of initialisers to
+	avoid a compiler warning.
+
 2006-01-17  Callum McKenzie  <callum@spooky-possum.org>
 
 	* main.cpp: Patch from Scott Bronson to ensure user-edited
