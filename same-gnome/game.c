@@ -452,7 +452,7 @@ gboolean restore_board_from_string (gchar* state)
 			p->colour = NONE;
 		else {
 			if (!g_ascii_isxdigit (state[i]))
-				return FALSE; // n.b. board state screwed, reset req.
+				return FALSE; /* n.b. board state screwed, reset req. */
 			p->colour = g_ascii_tolower (state[i]) - '0';
 			
 		}

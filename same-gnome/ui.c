@@ -51,7 +51,7 @@ gint theme_index_counter;
 /* All quit events must go through here to ensure consistant behaviour. */
 static void quit_cb (void)
 {
-	// need mutex on game_state to avoid funky save data?
+	/* need mutex on game_state to avoid funky save data? */
 	save_game ();
   
 	gtk_main_quit ();
