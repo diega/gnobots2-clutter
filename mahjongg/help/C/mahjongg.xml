@@ -643,30 +643,11 @@ and risk annoying the user.
    Bustamante (<email>pancho@nuclecu.unam.mx</email>), Michael Meeks 
    (<email>mmeeks@gnu.org</email>), Max Watson, Heinz Hempe, and 
    Philippe Chavin.  Tiles for <application>GNOME Mahjongg</application>
-   were made by Jonathan Buzzard and Max Watson.  To find more information about
-   <application>GNOME Mahjongg</application>, please visit the <ulink
-   url="http://www.gnome.org/projects/gnome-games/" type="http">Gnome Games
-   Web page</ulink>.  Please send all comments, suggestions, and bug
-   reports to the <ulink url="http://bugzilla.gnome.org" type="http">GNOME
-   bug tracking database</ulink>. (Instructions for submitting bug
-   reports can be found <ulink
-   url="http://bugzilla.gnome.org/bug-HOWTO.html" type="http">
-   on-line</ulink>.) If you are using
-   GNOME 1.1 or later, you can also use <application>Bug Report
-   Tool</application> (<command>bug-buddy</command>), available in the
-   <guisubmenu>Utilities</guisubmenu> submenu of <guimenu>Main
-   Menu</guimenu>, for submitting bug reports.
-  </para>
-
-  <para>
-   This manual was written by Eric Baudais
-   (<email>baudais@okstate.edu</email>). Please send all comments and
-   suggestions regarding this manual to the <ulink type="http"
-   url="http://developer.gnome.org/projects/gdp">GNOME Documentation Project</ulink> 
-   by sending an email to <email>docs@gnome.org</email>. You can also
-   add your comments online by using the <ulink type="http"
-   url="http://developer.gnome.org/projects/gdp/doctable/">GNOME Documentation Status
-   Table</ulink>.
+   were made by Jonathan Buzzard and Max Watson.    This manual was written by Eric Baudais
+   (<email>baudais@okstate.edu</email>).
+   To report a bug or make a suggestion regarding this application or
+   this manual, follow the directions in this 
+   <ulink url="ghelp:gnome-feedback" type="help">document</ulink>.
   </para>
 
   <!-- For translations: uncomment this:

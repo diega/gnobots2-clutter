@@ -234,6 +234,29 @@ application or
     </sect2>
    </sect1>
 
+<sect1 id="authors">
+  <title>Authors</title>
+  <para>
+   <application>Klotski</application> was written by J. Marcin Gorycki
+  (<email>janusz.gorycki@intel.com</email>). This manual was written
+  by Angela Boyle.
+   To report a bug or make a suggestion regarding this application or
+   this manual, follow the directions in this
+   <ulink url="ghelp:gnome-feedback" type="help">document</ulink>.
+  </para>
+
+  <!-- For translations: uncomment this:
+
+  <para>
+   Latin translation was done by ME
+   (<email>MYNAME@MYADDRESS</email>). Please send all  comments  and
+   suggestions regarding this translation to SOMEWHERE.
+  </para>
+
+  -->
+</sect1>
+
+
  <!-- ============= Application License ============================= -->
 
  <sect1 id="s1-license">
