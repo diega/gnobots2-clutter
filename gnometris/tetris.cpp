@@ -477,8 +477,8 @@ Tetris::initOptions ()
 	startingLevel = gconfGetInt (gconf_client, KEY_STARTING_LEVEL, 1);
 	if (startingLevel < 1) 
 		startingLevel = 1;
-	if (startingLevel > 10) 
-		startingLevel = 10;
+	if (startingLevel > 20) 
+		startingLevel = 20;
 
 	if (gconfGetBoolean (gconf_client, KEY_SOUND, TRUE)) 
 		sound->turnOn ();
@@ -785,8 +785,8 @@ Tetris::gameProperties(GtkAction *action, void *d)
 			  (GtkAttachOptions) 0,
 			  0, 0);
 
-	adj = gtk_adjustment_new (t->startingLevel, 1, 10, 1, 5, 10);
-	t->sentry = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 10, 0);
+	adj = gtk_adjustment_new (t->startingLevel, 1, 20, 1, 5, 20);
+	t->sentry = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 10.0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (t->sentry),
 					   GTK_UPDATE_ALWAYS);
 	gtk_spin_button_set_snap_to_ticks (GTK_SPIN_BUTTON (t->sentry), TRUE);

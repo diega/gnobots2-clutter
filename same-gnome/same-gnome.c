@@ -95,9 +95,10 @@ static void initialise_options (gint requested_size, gchar *requested_theme)
   board_sizes[CUSTOM][1] = CLAMP (intvalue, MINIMUM_CUSTOM_HEIGHT, 
 				  MAXIMUM_CUSTOM_HEIGHT);
 
-  if (requested_size != -1) 
-    game_size = requested_size;
-  else {
+  if (requested_size != -1) {
+    game_size = requested_size - 1 + SMALL;
+		clear_savegame ();
+  } else {
     game_size = gconf_client_get_int (gcclient, GCONF_SIZE_KEY, NULL);
     if (game_size == 0)
       game_size = DEFAULT_GAME_SIZE;
@@ -128,17 +129,19 @@ static void initialise_options (gint requested_size, gchar *requested_theme)
 
 int main (int argc, char *argv[])
 {
-  static gchar *requested_theme = NULL;
-  static gint   requested_size  = -1;
+  GnomeProgram   *program;
+  GOptionContext *context;
+  static gchar   *requested_theme = NULL;
+  static gint     requested_size  = -1;
 
-  static const struct poptOption options[] = {
-    { "theme", 't', POPT_ARG_STRING, &requested_theme, 0, N_("Set the theme"),
-      N_("NAME") },
-    { "scenario", 's', POPT_ARG_STRING, &requested_theme, 0, 
+  static const GOptionEntry options[] = {
+    { "theme", 't', 0, G_OPTION_ARG_STRING, &requested_theme,
+      N_("Set the theme"), N_("NAME") },
+    { "scenario", 's', 0, G_OPTION_ARG_STRING, &requested_theme,
       N_("For backwards compatibility"), N_("NAME") },
-    { "size", 'z', POPT_ARG_INT, &requested_size, 0, 
+    { "size", 'z', 0, G_OPTION_ARG_INT, &requested_size,
       N_("Game size (1=small, 3=large)"), N_("NUMBER") },
-    { NULL, '\0', 0, NULL, 0, NULL, NULL }};
+    { NULL, '\0', 0, 0, NULL, NULL, NULL }};
 
 	setgid_io_init ();
 
@@ -147,11 +150,14 @@ int main (int argc, char *argv[])
   textdomain (GETTEXT_PACKAGE);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
+  context = g_option_context_new ("");
+  g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
+
   /* Initialise GNOME. */
-  gnome_program_init (APPNAME, VERSION, LIBGNOMEUI_MODULE, argc, argv,
-											GNOME_PARAM_APP_DATADIR, DATADIR,
-											GNOME_PARAM_POPT_TABLE, options,  
-											NULL);
+  program = gnome_program_init (APPNAME, VERSION, LIBGNOMEUI_MODULE, argc, argv,
+                                GNOME_PARAM_APP_DATADIR, DATADIR,
+                                GNOME_PARAM_GOPTION_CONTEXT, context,
+                                NULL);
 
 	games_stock_init ();
 
@@ -170,6 +176,8 @@ int main (int argc, char *argv[])
   gtk_main ();
 
   gnome_accelerators_sync();
+
+  g_object_unref (program);
 
   return 0;
 }

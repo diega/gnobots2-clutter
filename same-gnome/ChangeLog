@@ -1,3 +1,12 @@
+2006-03-27  Callum McKenzie  <callum@spooky-possum.org>
+
+	* same-gnome.c (initialise_options): Make sure that the -z option
+	doesn't get over-ridden by the auto-save game and also make it use
+	the logical numbering (i.e. SMALL=1, not 2).
+
+	* same-gnome.c: Patch from Paolo Borelli to use GOption. See bug
+	#336095.
+
 2006-03-19  Callum McKenzie  <callum@spooky-possum.org>
 
 	* game.c: 

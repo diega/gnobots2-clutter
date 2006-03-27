@@ -44,7 +44,7 @@ ScoreFrame::ScoreFrame(int cmdlLevel)
 						      NULL);
 		g_object_unref (gconf_client);
 	}
-	startingLevel = CLAMP (startingLevel, 1, 10);
+	startingLevel = CLAMP (startingLevel, 1, 20);
 
 	level = startingLevel;
 	

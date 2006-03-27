@@ -1,3 +1,13 @@
+2006-03-27  Callum McKenzie  <callum@spooky-possum.org>
+
+	* scoreframe.cpp: 
+	* tetris.cpp: Raise the limit on the starting level to 20. This
+	should be practically the same as having an infinite upper limit
+	with the new level system.
+
+	* main.cpp: Patch from Paolo Borelli to migrate from popt to
+	GOption and set the appicon with a modern API. See bug #336095.
+
 2006-03-16  Callum McKenzie  <callum@spooky-possum.org>
 
 	* blockops.cpp (BlockOps): Fix the ordering of initialisers to

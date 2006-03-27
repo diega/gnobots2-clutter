@@ -20,7 +20,6 @@
 
 #include <config.h>
 #include "tetris.h"
-#include <libgnomeui/gnome-window-icon.h>
 #include "games-scores.h"
 
 int
@@ -31,30 +30,36 @@ main(int argc, char *argv[])
 	bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
         bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");	
 	textdomain(GETTEXT_PACKAGE);
-	
+
 	int cmdlineLevel = 0;
 
-	poptOption options[] = 
+	const GOptionEntry options[] = 
 	{
-		{"level", 'l', POPT_ARG_INT, &cmdlineLevel, 0, N_("Set starting level (1 or greater)"), N_("LEVEL")},
-		{0, '\0', 0, 0, 0}
+		{"level", 'l', 0, G_OPTION_ARG_INT, &cmdlineLevel, N_("Set starting level (1 or greater)"), N_("LEVEL")},
+		{NULL}
 	};
 
-	gnome_program_init ("gnometris", VERSION,
-			    LIBGNOMEUI_MODULE,
-			    argc, argv,
-			    GNOME_PARAM_POPT_TABLE, options,
-			    GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
-	
-	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-gtetris.png");
+	GOptionContext *context = g_option_context_new ("");
 
-	Tetris * t = new Tetris(cmdlineLevel);
+	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
+
+	GnomeProgram *program = gnome_program_init ("gnometris", VERSION,
+						    LIBGNOMEUI_MODULE,
+						    argc, argv,
+						    GNOME_PARAM_GOPTION_CONTEXT, context,
+						    GNOME_PARAM_APP_DATADIR, DATADIR,
+						    NULL);
+
+	gtk_window_set_default_icon_from_file (GNOME_ICONDIR"/gnome-gtetris.png", NULL);
+
+	Tetris *t = new Tetris(cmdlineLevel);
 
 	gtk_main();
 
-	delete t;
-
 	gnome_accelerators_sync();
-	
+
+	delete t;
+	g_object_unref (program);
+
 	return 0;
 }
