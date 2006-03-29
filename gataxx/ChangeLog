@@ -1,3 +1,9 @@
+2006-03-29  Callum McKenzie  <callum@spooky-possum.org>
+
+	* gataxx.c: Patch from Thomas Thurman to upgrade popt to
+	GOption. Also converted gnome_window_icon_... to
+	gtk_window_set_default... .
+
 2006-03-22  Callum McKenzie  <callum@spooky-possum.org>
 
 	* help/C/gataxx.xml: Remove the doctable link, it was broken

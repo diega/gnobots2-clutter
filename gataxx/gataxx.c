@@ -51,10 +51,13 @@ int timeout;			/* computer speed */
 /* Command-line handling. */
 static gint iturn = 1;
 static gchar * state = NULL;
-static const struct poptOption options[] = {
-  {"state", 's', POPT_ARG_STRING, &state, 0, "Set the state of the board at start-up.", NULL},
-  {"turn", 't', POPT_ARG_INT, &iturn, 0, "Set whose turn it is.", " 1 (Light) or 2 (Dark)"},
-  {NULL, '\0', POPT_ARG_NONE, NULL, 0, NULL, NULL}
+
+static const GOptionEntry options[] = {
+  {"state", 's', 0, G_OPTION_ARG_STRING, &state,
+   N_("Set the state of the board at start-up."), N_("STATE")},
+  {"turn", 't', 0, G_OPTION_ARG_INT, &iturn,
+   N_("Set whose turn it is."), N_("1 (Light) or 2 (Dark)")},
+  {NULL}
 };
 
 /* gettext i18n stuff */
@@ -445,13 +448,18 @@ static gboolean save_state_cb (GnomeClient * client, gint phase,
 
 static void initgnomeclient(int argc, char ** argv) {
 	GnomeClient * client;
+        GOptionContext * option_context;
 
+        option_context = g_option_context_new ("");
+        g_option_context_add_main_entries (option_context,
+                                           options, GETTEXT_PACKAGE);
 	gnome_program_init("gataxx", VERSION,
 			LIBGNOMEUI_MODULE,
 			argc, argv,
-			GNOME_PARAM_POPT_TABLE, options,
+                        GNOME_PARAM_GOPTION_CONTEXT, option_context,
 			GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
-	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gataxx.png");
+	gtk_window_set_default_icon_from_file (GNOME_ICONDIR"/gataxx.png", 
+					       NULL);
 	client=gnome_master_client();
 
 	g_signal_connect (G_OBJECT (client), "save_yourself",
