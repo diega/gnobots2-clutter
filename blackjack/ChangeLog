@@ -1,3 +1,10 @@
+2006-04-02  Callum McKenzie  <callum@spooky-possum.org>
+
+	* pixmaps/Makefile.am: 
+	* data/blackjack.desktop.in: 
+	* src/blackjack.cpp: 
+	* src/menu.cpp: Update the icon handling to use icon themes.
+
 2006-02-18  Callum McKenzie  <callum@spooky-possum.org>
 
 	* src/splash.cpp: Only set the window icon once and set it from

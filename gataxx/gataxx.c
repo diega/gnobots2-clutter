@@ -390,6 +390,7 @@ about_cb(GtkWidget *widget, gpointer data)
 			 "comments", _("A disk-flipping game where you attempt to dominate the board."),
 			 "authors", authors,
 			 "translator_credits", _("translator-credits"),
+			 "logo-icon-name", "gnome-ataxx",
 			 NULL);
 }
 
@@ -458,8 +459,7 @@ static void initgnomeclient(int argc, char ** argv) {
 			argc, argv,
                         GNOME_PARAM_GOPTION_CONTEXT, option_context,
 			GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
-	gtk_window_set_default_icon_from_file (GNOME_ICONDIR"/gataxx.png", 
-					       NULL);
+	gtk_window_set_default_icon_name ("gnome-ataxx");
 	client=gnome_master_client();
 
 	g_signal_connect (G_OBJECT (client), "save_yourself",

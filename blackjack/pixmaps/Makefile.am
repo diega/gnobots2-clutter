@@ -6,7 +6,7 @@ image_DATA    = blackjack-splash.png \
 		chip-1.svg \
 		baize.png
 
-icondir       = $(datadir)/pixmaps
+icondir       = $(datadir)/icons/hicolor/48x48/apps/
 icon_DATA     = gnome-blackjack.png 
 
 cardslotdir   = $(datadir)/pixmaps/cards/slots/

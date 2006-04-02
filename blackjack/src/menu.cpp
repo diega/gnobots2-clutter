@@ -154,22 +154,14 @@ on_help_about_activate (GtkAction *action,
                 while (authors[i] != NULL) { authors[i]=_(authors[i]); i++; }
         }
 
-	char *filename = NULL;
-	filename = g_build_filename (PIXMAPDIR, "gnome-blackjack.png", NULL);
-
-        GdkPixbuf *pixbuf = NULL;
-        if (filename != NULL) {
-                pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
-                g_free (filename);
-        }
-
         gtk_show_about_dialog (GTK_WINDOW (toplevel_window),
                                "logo", pixbuf,
                                "authors", authors,
                                "documenters", documenters,
                                "version", VERSION,
                                "copyright", "Copyright \xc2\xa9 2003-2004 William Jon McCann, Eric Farmer",
-                               "comments", _("Blackjack provides a casino-style blackjack card game."),
+                               "comments", _("Blackjack is a casino-style card game."),
+                               "logo-icon-name", "gnome-blackjack",
                                NULL);
 
         g_object_unref (pixbuf);

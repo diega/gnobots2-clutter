@@ -1,3 +1,10 @@
+2006-04-02  Callum McKenzie  <callum@spooky-possum.org>
+
+	* gataxx.desktop.in:
+	* gataxx.c:
+	* Makefile.am: Update the icon handling to use icon themes. Rename
+	the icon gnome-ataxx.png.
+
 2006-03-29  Callum McKenzie  <callum@spooky-possum.org>
 
 	* gataxx.c: Patch from Thomas Thurman to upgrade popt to

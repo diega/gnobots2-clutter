@@ -1,6 +1,6 @@
 themedir=$(datadir)/gnome-games/ataxx/themes/2.14/
 Gamesdir = $(datadir)/applications
-appicondir=$(datadir)/pixmaps
+icondir=$(datadir)/icons/hicolor/48x48/apps/
 
 INCLUDES = 			\
 	-I$(top_srcdir)/libgames-support \
@@ -34,7 +34,7 @@ gataxx_LDADD = \
 	$(CAIRO_LIBS)
 
 theme_DATA=classic.png
-appicon_DATA = gataxx.png
+icon_DATA = gnome-ataxx.png
 
 Games_in_files = gataxx.desktop.in
 Games_DATA = $(Games_in_files:.desktop.in=.desktop)
@@ -48,7 +48,7 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 EXTRA_DIST = AUTHORS \
 	gataxx.desktop.in 	\
 	$(theme_DATA) \
-	$(appicon_DATA) \
+	$(icon_DATA) \
 	$(schema_in_files)
 
 SUBDIRS = help

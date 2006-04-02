@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Icon=gataxx.png
+Icon=gnome-ataxx
 _Name=Ataxx
 _Comment=Compete to dominate the board in a Reversi-like game
 Exec=gataxx
