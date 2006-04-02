@@ -155,7 +155,6 @@ on_help_about_activate (GtkAction *action,
         }
 
         gtk_show_about_dialog (GTK_WINDOW (toplevel_window),
-                               "logo", pixbuf,
                                "authors", authors,
                                "documenters", documenters,
                                "version", VERSION,
@@ -163,8 +162,6 @@ on_help_about_activate (GtkAction *action,
                                "comments", _("Blackjack is a casino-style card game."),
                                "logo-icon-name", "gnome-blackjack",
                                NULL);
-
-        g_object_unref (pixbuf);
 
         return;
 }
