@@ -109,10 +109,11 @@ static const GamesScoresDescription scoredesc = {NULL,
 
 enum {
 	GAME_RUNNING = 0,
+	GAME_WAITING,
 	GAME_WON,
 	GAME_LOST,
 	GAME_DEAD
-} game_over = GAME_DEAD;
+} game_over = GAME_WAITING;
 
 static void clear_undo_queue (void);
 void you_won (void);
@@ -183,7 +184,9 @@ window_state_callback (GtkWidget *widget, GdkEventWindowState *event)
 static void 
 update_menu_sensitivities (void)
 {
-	gtk_action_set_sensitive (pause_action, game_over != GAME_WON);
+	gtk_action_set_sensitive (pause_action, 
+				  game_over != GAME_WON &&
+				  game_over != GAME_WAITING);
 	gtk_action_set_sensitive (restart_action, undo_state);
 
 	if (paused) {
@@ -196,6 +199,13 @@ update_menu_sensitivities (void)
 		gtk_action_set_sensitive (redo_action, redo_state);
 	}
 
+}
+
+static void clock_start (void)
+{
+	games_clock_start (GAMES_CLOCK (chrono));
+	game_over = GAME_RUNNING;
+	update_menu_sensitivities ();
 }
 
 /* Undo and redo sensitivity functionality. */
@@ -516,7 +526,7 @@ tile_event (gint tileno, gint button)
 		return;
 
 	if (!games_clock_get_seconds (GAMES_CLOCK(chrono))) 
-		games_clock_start (GAMES_CLOCK(chrono));
+		clock_start ();
 	
 	switch (button) {
 	case 1:
@@ -851,7 +861,7 @@ hint_callback (void)
 {
         gint i, j, free=0, type ;
 
-        if (paused || game_over)
+        if (paused || (game_over != GAME_RUNNING && game_over != GAME_WAITING))
                 return;
 
 	/* This prevents the flashing speeding up if the hint button is
@@ -862,6 +872,7 @@ hint_callback (void)
 	/* Snarfed from check free
 	 * Tile Free is now _so_ much quicker, it is more elegant to do a
 	 * British Library search, and safer. */
+	/* Note: British Library should probably read British Museum.  */
 
 	/* Clear any selection */
 	if (selected_tile < MAX_TILES) {
@@ -896,6 +907,7 @@ hint_callback (void)
                 
 	/* 30s penalty */
 	games_clock_add_seconds(GAMES_CLOCK(chrono), 30);
+	clock_start ();
 }
 
 static void
@@ -956,7 +968,7 @@ pause_callback (void)
         }
         else {
 		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (pause_action), FALSE);
-                games_clock_start (GAMES_CLOCK(chrono));
+                clock_start ();
                 message ("");
         }
 	noloops = FALSE;
@@ -999,7 +1011,7 @@ init_game (void)
 
         gtk_label_set_text (GTK_LABEL (tiles_label), MAX_TILES_STR);
         update_moves_left ();
-        game_over = GAME_RUNNING;
+        game_over = GAME_WAITING;
         sequence_number = 1 ;
         visible_tiles = MAX_TILES;
         selected_tile = MAX_TILES + 1;

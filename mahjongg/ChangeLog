@@ -1,3 +1,13 @@
+2006-04-03  Callum McKenzie  <callum@spooky-possum.org>
+
+	* mahjongg.c (hint_callback): Make sure the timer starts when a
+	hint is selected right at the beginning of the game. Bug #336763.
+	(update_menu_sensitivities): Make sure the pause button is
+	disabled at the start of the game. Also factorise out clock_start
+	to always set the game state properly when the clock is started
+	(this introduces a new state, GAME_WAITING, which is the time when
+	we have displayed the tiles but no actions have been taken).
+
 2006-03-22  Callum McKenzie  <callum@spooky-possum.org>
 
 	* help/C/mahjongg.xml: Remove the doctable link, it was broken
