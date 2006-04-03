@@ -1443,9 +1443,10 @@ Tetris::gameAbout(GtkAction *action, void *d)
 			       "comments", _("Written for my wife, Matylda\n"
 					     "Send comments and bug reports to: \n"
 					     "janusz.gorycki@intel.com"),
-				"copyright", "Copyright \xc2\xa9 2000 J. Marcin Gorycki",
-				"authors", authors,				
-				"translator_credits", _("translator-credits"),
+			       "copyright", "Copyright \xc2\xa9 2000 J. Marcin Gorycki",
+			       "authors", authors,				
+			       "translator_credits", _("translator-credits"),
+			       "logo-icon-name", "gnome-gnometris",
 				NULL);
 
 	return TRUE;

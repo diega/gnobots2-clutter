@@ -1,12 +1,12 @@
 pixmapdir= $(datadir)/pixmaps/gnometris
-appicondir=$(datadir)/pixmaps
+icondir=$(datadir)/icons/hicolor/48x48/apps/
 
 pixmap_DATA=\
 	7blocks-tig.png \
 	7blocks-gw.png
 
-appicon_DATA=gnome-gtetris.png
+icon_DATA=gnome-gnometris.png
 
-EXTRA_DIST=$(pixmap_DATA) $(appicon_DATA)
+EXTRA_DIST=$(pixmap_DATA) $(icon_DATA)
 
 

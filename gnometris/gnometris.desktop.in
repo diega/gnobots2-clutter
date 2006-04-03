@@ -2,7 +2,7 @@
 Encoding=UTF-8
 _Name=Gnometris
 _Comment=Fit falling blocks together
-Icon=gnome-gtetris.png
+Icon=gnome-gnometris
 Exec=gnometris
 Terminal=false
 Type=Application

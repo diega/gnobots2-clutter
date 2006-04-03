@@ -1,3 +1,11 @@
+2006-04-03  Callum McKenzie  <callum@spooky-possum.org>
+
+	* tetris.cpp: 
+	* main.cpp: 
+	* pix/Makefile.am:
+	* gnometris.desktop.in: Update the icon handling to use icon
+	themes. Rename gnome-gtetris.png to gnome-gnometris.png
+
 2006-03-27  Callum McKenzie  <callum@spooky-possum.org>
 
 	* scoreframe.cpp: 

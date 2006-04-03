@@ -50,7 +50,7 @@ main(int argc, char *argv[])
 						    GNOME_PARAM_APP_DATADIR, DATADIR,
 						    NULL);
 
-	gtk_window_set_default_icon_from_file (GNOME_ICONDIR"/gnome-gtetris.png", NULL);
+	gtk_window_set_default_icon_name ("gnome-gnometris");
 
 	Tetris *t = new Tetris(cmdlineLevel);
 
