@@ -24,7 +24,6 @@
 #include <gnome.h>
 #include <glib/gi18n.h>
 #include <gconf/gconf-client.h>
-#include <libgnomeui/gnome-window-icon.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <games-clock.h>
 #include <games-gconf.h>
@@ -942,6 +941,7 @@ about_callback (void)
 			       "copyright", "Copyright \xc2\xa9 1998-2005 Free Software Foundation, Inc.",
 			       "authors", authors,
 			       "translator_credits", _("translator-credits"),
+			       "logo-icon-name", "gnome-mahjongg",
 			       NULL);
 }
 
@@ -1416,7 +1416,7 @@ main (int argc, char *argv [])
 
 	games_stock_init ();
 
-	gnome_window_icon_set_default_from_file (GNOME_ICONDIR"/gnome-mahjongg.png");
+	gtk_window_set_default_icon_name ("gnome-mahjongg.png");
 
 	load_maps ();
 	init_scores ();

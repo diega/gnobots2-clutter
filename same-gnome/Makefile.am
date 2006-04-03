@@ -2,7 +2,7 @@
 
 
 pixmapdir = $(datadir)/gnome-games/same-gnome/themes/2.10
-sharedpixmapdir = $(datadir)/pixmaps
+icondir = $(datadir)/icons/hicolor/48x48/apps/
 Gamesdir = $(datadir)/applications
 
 SUBDIRS = help
@@ -39,8 +39,8 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 @INTLTOOL_SCHEMAS_RULE@
 
 pixmap_DATA = planets.png stones.png
-sharedpixmap_DATA = gnome-gsame.png
-EXTRA_DIST = same-gnome.desktop.in $(pixmap_DATA) $(sharedpixmap_DATA) $(schema_in_files)
+icon_DATA = gnome-same-gnome.png
+EXTRA_DIST = same-gnome.desktop.in $(pixmap_DATA) $(icon_DATA) $(schema_in_files)
 
 Games_in_files = same-gnome.desktop.in
 Games_DATA = $(Games_in_files:.desktop.in=.desktop)

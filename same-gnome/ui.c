@@ -105,13 +105,14 @@ static void about_cb (GtkWidget *widget)
   const gchar * const authors[] = { "Callum McKenzie", NULL };
   
   gtk_show_about_dialog (GTK_WINDOW (application),
-			 "authors", authors,
-			 "comments", _("I want to play that game! You know, they all go whirly-round and you click on them and they vanish!"),
-			 "copyright", "Copyright \xc2\xa9 2004 Callum McKenzie",
-			 "name", _(APPNAME_LONG),
-			 "translator_credits", _("translator-credits"),
-			 "version", VERSION,
-			 NULL);
+												 "authors", authors,
+												 "comments", _("I want to play that game! You know, they all go whirly-round and you click on them and they vanish!"),
+												 "copyright", "Copyright \xc2\xa9 2004 Callum McKenzie",
+												 "name", _(APPNAME_LONG),
+												 "translator_credits", _("translator-credits"),
+												 "version", VERSION,
+												 "logo-icon-name", "gnome-same-gnome",	 
+												 NULL);
 }
 
 static GtkWidget *generate_scores_dialog (void)
@@ -481,8 +482,7 @@ void build_gui (void)
   GtkUIManager *ui_manager;
   GtkActionGroup *action_group;
   
-	/* FIXME: Can we get a better name for the icon? */
-	gtk_window_set_default_icon_name ("gnome-gsame");
+	gtk_window_set_default_icon_name ("gnome-same-gnome");
 
   application = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title (GTK_WINDOW (application), _(APPNAME_LONG));

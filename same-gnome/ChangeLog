@@ -1,3 +1,10 @@
+2006-04-03  Callum McKenzie  <callum@spooky-possum.org>
+
+	* Makefile.am: 
+	* ui.c:
+	* same-gnome.desktop.in: Update the icon handling to use icon
+	themes. Rename gnome-gsame.png gnome-same-gnome.png.
+
 2006-03-27  Callum McKenzie  <callum@spooky-possum.org>
 
 	* same-gnome.c (initialise_options): Make sure that the -z option
