@@ -704,10 +704,11 @@ main (int argc, char *argv [])
                               GCONF_CLIENT_PRELOAD_NONE, NULL);
 
 #ifdef HAVE_GNOME
-        gnome_program_init ("Blackjack", VERSION,
-                            LIBGNOMEUI_MODULE,
-                            argc, argv,
-                            GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
+        GnomeProgram *program;
+        program = gnome_program_init ("Blackjack", VERSION,
+                                      LIBGNOMEUI_MODULE,
+                                      argc, argv,
+                                      GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
 #endif
 
         gtk_widget_push_colormap (gdk_rgb_get_colormap ());
@@ -721,6 +722,10 @@ main (int argc, char *argv [])
         main_prog (argc, argv);
 
         g_free (variation);
+
+#ifdef HAVE_GNOME
+        g_object_unref (program);
+#endif
 
         return 0;
 }

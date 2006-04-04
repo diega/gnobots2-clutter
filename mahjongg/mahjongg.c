@@ -1402,17 +1402,19 @@ main (int argc, char *argv [])
 	GtkUIManager *ui_manager;
 	GtkAccelGroup *accel_group;
 
+	GnomeProgram *program;
+
 	setgid_io_init ();
 
 	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
-	gnome_program_init (APPNAME, VERSION,
-			    LIBGNOMEUI_MODULE,
-			    argc, argv,
-			    GNOME_PARAM_APP_DATADIR, DATADIR,
-			    NULL);
+	program = gnome_program_init (APPNAME, VERSION,
+				      LIBGNOMEUI_MODULE,
+				      argc, argv,
+				      GNOME_PARAM_APP_DATADIR, DATADIR,
+				      NULL);
 
 	games_stock_init ();
 
@@ -1517,6 +1519,8 @@ main (int argc, char *argv [])
 	gtk_main ();
 
 	gnome_accelerators_sync();
+
+	g_object_unref (program);
 	
 	return 0;
 }

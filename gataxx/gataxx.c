@@ -48,6 +48,8 @@ gint turn;		        /* current player */
 position selection={0, 0, 0};	/* last selected position */
 int timeout;			/* computer speed */
 
+GnomeProgram *program;
+
 /* Command-line handling. */
 static gint iturn = 1;
 static gchar * state = NULL;
@@ -454,11 +456,11 @@ static void initgnomeclient(int argc, char ** argv) {
         option_context = g_option_context_new ("");
         g_option_context_add_main_entries (option_context,
                                            options, GETTEXT_PACKAGE);
-	gnome_program_init("gataxx", VERSION,
-			LIBGNOMEUI_MODULE,
-			argc, argv,
-                        GNOME_PARAM_GOPTION_CONTEXT, option_context,
-			GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
+	program = gnome_program_init("gataxx", VERSION,
+				     LIBGNOMEUI_MODULE,
+				     argc, argv,
+                        	     GNOME_PARAM_GOPTION_CONTEXT, option_context,
+				     GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
 	gtk_window_set_default_icon_name ("gnome-ataxx");
 	client=gnome_master_client();
 
@@ -541,6 +543,8 @@ int main(int argc, char ** argv) {
 	new_game ();
 
 	gtk_main();
+
+	g_object_unref (program);
 
 	return 0;
 }
