@@ -1,3 +1,12 @@
+2006-04-11  Callum McKenzie  <callum@spooky-possum.org>
+
+	* gataxx.c: Tweak the copyrights in the about dialog to be a bit
+	more accurate after Thomas' patch.
+
+2006-04-06  Thomas Andersen  <phomes@gmail.com>
+
+	* gataxx.c: Update About dialog
+
 2006-04-04  Callum McKenzie  <callum@spooky-possum.org>
 
 	* gataxx.c: Patch from Przemys©aw Grzegorczyk to unref

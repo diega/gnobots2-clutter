@@ -1,3 +1,7 @@
+2006-04-06  Thomas Andersen  <phomes@gmail.com>
+
+	* tetris.cpp: Update About dialog
+
 2006-04-03  Callum McKenzie  <callum@spooky-possum.org>
 
 	* tetris.cpp: 

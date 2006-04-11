@@ -924,7 +924,10 @@ about_callback (void)
 		_("Maps:"),
 		"Rexford Newbould",
 		"Krzysztof Foltman",
-		"",
+		NULL
+	};
+
+	const gchar *artists [] = {
 		_("Tiles:"),
 		"Jonathan Buzzard",
 		"Jim Evans",
@@ -934,14 +937,24 @@ about_callback (void)
 		NULL
 	};
 
+	const gchar *documenters [] = {
+		"Eric Baudais",
+		NULL
+	};
+
 	gtk_show_about_dialog (GTK_WINDOW (window),
 			       "name", _("Mahjongg"), 
 			       "version", VERSION,
 			       "comments", _("A matching game played with Mahjongg tiles."),
 			       "copyright", "Copyright \xc2\xa9 1998-2005 Free Software Foundation, Inc.",
+			       "license", "GPL 2+",
 			       "authors", authors,
+			       "artists", artists,
+			       "documenters", documenters,
 			       "translator_credits", _("translator-credits"),
 			       "logo-icon-name", "gnome-mahjongg",
+			       "website", "http://www.gnome.org/projects/gnome-games/",
+			       "wrap-license", TRUE,
 			       NULL);
 }
 

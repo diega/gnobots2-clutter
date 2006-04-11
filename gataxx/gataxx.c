@@ -384,15 +384,23 @@ about_cb(GtkWidget *widget, gpointer data)
   const gchar *authors[] = {"Chris Rogers", "Sjoerd Langkemper", 
 			    N_("Based on code from Iagno by Ian Peters"), NULL};
 
+  const gchar *documenters[] = {"Aaron Weber", 
+			    	NULL};
+
   gtk_show_about_dialog (GTK_WINDOW (window),
 			 "name", _("Ataxx"), 
 			 "version", VERSION,
 			 "copyright", "Copyright \xc2\xa9 1999-2003 Chris Rogers\n"
-				      "Copyright \xc2\xa9 2004-2005 Sjoerd Langkemper",
+				      "Copyright \xc2\xa9 2004-2005 Sjoerd Langkemper\n"
+			              "Copyright \xc2\xa9 2005-2006 Callum McKenzie",
+			 "license", "GPL 2+",
 			 "comments", _("A disk-flipping game where you attempt to dominate the board."),
 			 "authors", authors,
+			 "documenters", documenters,
 			 "translator_credits", _("translator-credits"),
 			 "logo-icon-name", "gnome-ataxx",
+			 "website", "http://www.gnome.org/projects/gnome-games/",
+			 "wrap-license", TRUE,
 			 NULL);
 }
 
