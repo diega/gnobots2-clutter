@@ -1,5 +1,8 @@
 2006-04-29  Callum McKenzie  <callum@spooky-possum.org>
 
+	* tetris.cpp (gameProperties): Move the mnemonic letter from "l"
+	to "w" for the "shadows" option.
+
 	* field.cpp (Field): Disable GTK+ double-buffering since we do our
 	own.
 

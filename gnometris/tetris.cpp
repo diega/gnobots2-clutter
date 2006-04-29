@@ -842,7 +842,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
  	gtk_box_pack_start (GTK_BOX (fvbox), t->rotate_counter_clock_wise_toggle,
 			    0, 0, 0);
 
-	t->useTargetToggle = gtk_check_button_new_with_mnemonic (_("Show where the block will _land"));
+	t->useTargetToggle = gtk_check_button_new_with_mnemonic (_("Show _where the block will land"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (t->useTargetToggle), 
 				      t->useTarget);
 	g_signal_connect (t->useTargetToggle, "clicked",
