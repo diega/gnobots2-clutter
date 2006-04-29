@@ -3,7 +3,7 @@
  * Copyright (C) 2003 by Callum McKenzie
  *
  * Created: <2003-09-07 05:02:22 callum>
- * Time-stamp: <2003-10-18 23:36:01 callum>
+ * Time-stamp: <2006-04-29 21:53:02 callum>
  *
  */
 
@@ -404,7 +404,9 @@ GtkWidget * create_mahjongg_board (void)
                     G_CALLBACK (configure_board), NULL);
   g_signal_connect (G_OBJECT (board), "button_press_event",
                     G_CALLBACK (board_click), NULL);
-  
+  /* We do our own double-buffering. */
+  gtk_widget_set_double_buffered (board, FALSE);
+
   return board;
 }
 

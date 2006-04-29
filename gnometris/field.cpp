@@ -42,6 +42,8 @@ Field::Field():
 
 	g_signal_connect (w, "expose_event", G_CALLBACK (expose), this);
 	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
+        /* We do our own double-buffering. */
+        gtk_widget_set_double_buffered(w, FALSE);
 
 	gtk_widget_set_size_request (w, COLUMNS*190/LINES, 190);
 

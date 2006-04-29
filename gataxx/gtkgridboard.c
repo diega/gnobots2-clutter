@@ -86,6 +86,8 @@ static void gtk_gridboard_init(GtkGridBoard * gridboard) {
         gridboard->height=0;
 	gridboard->statelist=NULL;
 	gridboard->theme = gtk_gridboard_themes;
+	/* We do our own double-buffering. */
+	gtk_widget_set_double_buffered(GTK_WIDGET (gridboard), FALSE);
 }
 
 GtkWidget * gtk_gridboard_new(gint width, gint height, char * theme) {

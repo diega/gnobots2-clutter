@@ -1,3 +1,7 @@
+2006-04-29  Callum McKenzie  <callum@spooky-possum.org>
+
+	* gtkgridboard.c: Disable GTK+ double-buffering since we do our own.
+
 2006-04-11  Callum McKenzie  <callum@spooky-possum.org>
 
 	* gataxx.c: Tweak the copyrights in the about dialog to be a bit
