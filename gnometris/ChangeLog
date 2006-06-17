@@ -1,3 +1,7 @@
+2006-06-15  Richard Hoelscher  <rah@rahga.com>
+
+	* COPYING: Delete a duplicate file found in gnome-games root.
+
 2006-04-29  Callum McKenzie  <callum@spooky-possum.org>
 
 	* tetris.cpp (gameProperties): Move the mnemonic letter from "l"

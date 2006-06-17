@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-#  Aisleriot Game Name Internationalizator
+#  Gnome-Games Game Name Internationalizator, Mahjongg Edition
 #
 #  Copyright (C) 2001 Free Software Foundation.
 #
@@ -32,12 +32,10 @@ print OUTFILE <<HERE;
  *\/
 HERE
 
-opendir(DIR, "rules/");
+open(FH, "mahjongg.map");
 
-while ($_ = readdir(DIR)) {
-  if (s/^(.)(.*).scm/\u$1$2/) { # Match scm filenames. Upcase first letter.
-    s/_(.)/ \u$1/g;             # Replace underscores and following letter
-				# with space and upcase letter.
-    print OUTFILE "gchar *s = N_(\"$_\")\n";
+while (<FH>) {
+  if (/map name=\"(.+?)\"/) { # Let's not even pretend this can read XML.
+    print OUTFILE "gchar *s = N_(\"$1\")\n";
   }
 }

@@ -1,3 +1,10 @@
+2006-06-17  Richard Hoelscher  <rah@rahga.com>
+
+	* mahjongg.map, maps.c: Convert all the layouts except Easy
+	to the xml format.
+	* get_titles.pl: Copy the aisleriot game internationalizer over here
+	to get the names for our mahjongg layouts.
+
 2006-04-29  Callum McKenzie  <callum@spooky-possum.org>
 
 	* drawing.c (create_mahjongg_board): Disable GTK+ double-buffering
