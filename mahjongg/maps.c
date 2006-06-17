@@ -31,11 +31,12 @@
 #include "mahjongg.h"
 #include "maps.h"
 
-/* FIXME: Delete most of these once they are migrated to external files.
- * (But keep easy_map as a default. */
 
 /* Sorted such that the bottom leftest are first, and layers decrease
  * Bottom left = high y, low x ! */
+
+/* Easy map is compiled in, the rest of the layouts were moved to 
+ * external files */
 
 tilepos easy_map [MAX_TILES] = {
  {13, 7,  4}, {12, 8,  3}, {14, 8,  3}, {12, 6,  3},
@@ -75,8 +76,6 @@ tilepos easy_map [MAX_TILES] = {
  {14, 0,  0}, {16, 0,  0}, {18, 0,  0}, {20, 0,  0},
  {22, 0,  0}, {24, 0,  0}, {26, 7, 0}, {28, 7, 0} 
 };
-
-/* FIXME: The games loaded from file won't have translated names. */
 
 map hardcoded[] = {
 	{ N_("mahjongg|Easy"), "easy", easy_map, TRUE, 0, 0 },
