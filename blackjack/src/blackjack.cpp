@@ -65,6 +65,9 @@ GtkUIManager     *ui = NULL;
 GtkWidget        *status_bar;
 GtkWidget        *balance_value_label;
 
+GtkAction *fullscreen_action;
+GtkAction *leave_fullscreen_action;
+
 guint32          seed;
 
 guint            x_spacing = 5;
@@ -158,6 +161,36 @@ bj_adjust_wager (gdouble offset)
         wager += offset;
         bj_set_wager (wager);
 }
+
+static void 
+set_fullscreen_actions (gboolean is_fullscreen)
+{
+        gtk_action_set_sensitive (leave_fullscreen_action, is_fullscreen);
+        gtk_action_set_visible (leave_fullscreen_action, is_fullscreen);
+
+        gtk_action_set_sensitive (fullscreen_action, !is_fullscreen);
+        gtk_action_set_visible (fullscreen_action, !is_fullscreen);
+}
+
+static void 
+fullscreen_cb (GtkAction *action)
+{
+	if (action == fullscreen_action) {
+		gtk_window_fullscreen (GTK_WINDOW (toplevel_window));
+	} else {
+		gtk_window_unfullscreen (GTK_WINDOW (toplevel_window));
+	}
+}
+
+/* Just in case something else takes us to/from fullscreen. */
+static void 
+window_state_cb (GtkWidget *widget, GdkEventWindowState *event)
+{
+	if (event->changed_mask & GDK_WINDOW_STATE_FULLSCREEN)
+        	set_fullscreen_actions (event->new_window_state &
+					GDK_WINDOW_STATE_FULLSCREEN);
+}
+
 
 static void
 bj_create_board (void)
@@ -266,8 +299,12 @@ create_main_window (void)
                 "      <menuitem name='Quit' action='quit-game' />"
                 "      <placeholder name='GameMenuAdditions' />"
                 "    </menu>"
-                "    <menu name='SettingsMenu' action='settings-menu'>"
+		"    <menu name='ViewMenu' action='view-menu'>"
                 "      <menuitem name='Toolbar' action='show-toolbar'/>"
+		"      <menuitem action='Fullscreen'/>"
+		"      <menuitem action='LeaveFullscreen'/>"
+		"    </menu>"
+                "    <menu name='SettingsMenu' action='settings-menu'>"
                 "      <menuitem name='Preferences' action='show-preferences'/>"
                 "    </menu>"
                 "    <menu name='ControlMenu' action='control-menu'>"
@@ -296,11 +333,14 @@ create_main_window (void)
 
         static GtkActionEntry entries [] = {
                 { "game-menu", NULL, N_("_Game") },
+		{ "view-menu", NULL, N_("_View") },
                 { "new-game", GAMES_STOCK_NEW_GAME, NULL, NULL, NULL, G_CALLBACK (on_game_new_activate) },
                 { "restart-game", GAMES_STOCK_RESTART_GAME, NULL, NULL, NULL, G_CALLBACK (on_game_restart_activate) },
                 { "show-hint", GAMES_STOCK_HINT, NULL, NULL, NULL, G_CALLBACK (on_game_hint_activate) },
                 { "quit-game", GTK_STOCK_QUIT, NULL, NULL, NULL, G_CALLBACK (on_game_quit_activate) },
                 { "settings-menu", NULL, N_("_Settings") },
+		{ "Fullscreen", GAMES_STOCK_FULLSCREEN, NULL, NULL, NULL, G_CALLBACK (fullscreen_cb) },
+		{ "LeaveFullscreen", GAMES_STOCK_LEAVE_FULLSCREEN, NULL, NULL, NULL, G_CALLBACK (fullscreen_cb) },
                 { "show-preferences", GTK_STOCK_PREFERENCES, NULL, NULL, NULL, G_CALLBACK (on_preferences_activate) },
                 { "control-menu", NULL, N_("_Control") },
                 { "hand-deal", NULL, N_("D_eal"), NULL, N_("Deal a new hand"), G_CALLBACK (on_control_deal_activate) },
@@ -390,12 +430,21 @@ create_main_window (void)
 
         gtk_window_set_default_size (GTK_WINDOW (toplevel_window), width, height);
 
+	fullscreen_action = gtk_action_group_get_action (actions, "Fullscreen");
+	leave_fullscreen_action = gtk_action_group_get_action (actions,
+							       "LeaveFullscreen");
+
         bj_update_control_menu ();
+
+	set_fullscreen_actions (FALSE);
 
         g_signal_connect (toplevel_window, "delete_event", 
                           G_CALLBACK (bj_quit_app), NULL);
         g_signal_connect (toplevel_window, "configure_event",
                           G_CALLBACK (bj_event_configure), NULL);
+	g_signal_connect (G_OBJECT (toplevel_window), "window_state_event",
+			  G_CALLBACK (window_state_cb), NULL);
+
 }
 
 static void
