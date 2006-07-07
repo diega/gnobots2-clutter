@@ -1431,7 +1431,7 @@ main (int argc, char *argv [])
 
 	games_stock_init ();
 
-	gtk_window_set_default_icon_name ("gnome-mahjongg.png");
+	gtk_window_set_default_icon_name ("gnome-mahjongg");
 
 	load_maps ();
 	init_scores ();

@@ -1,3 +1,8 @@
+2006-07-07  Andreas Røsdal <andrearo@stud.ntnu.no>
+
+        * mahjongg.c: Fix window icon.
+        Patch by me, bug reported by mclasen@redhat.com in bug #346913.
+
 2006-06-17  Richard Hoelscher  <rah@rahga.com>
 
 	* mahjongg.map, maps.c: Convert all the layouts except Easy
