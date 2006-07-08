@@ -334,9 +334,9 @@ create_main_window (void)
         static GtkActionEntry entries [] = {
                 { "game-menu", NULL, N_("_Game") },
 		{ "view-menu", NULL, N_("_View") },
-                { "new-game", GAMES_STOCK_NEW_GAME, NULL, NULL, NULL, G_CALLBACK (on_game_new_activate) },
-                { "restart-game", GAMES_STOCK_RESTART_GAME, NULL, NULL, NULL, G_CALLBACK (on_game_restart_activate) },
-                { "show-hint", GAMES_STOCK_HINT, NULL, NULL, NULL, G_CALLBACK (on_game_hint_activate) },
+                { "new-game", GAMES_STOCK_NEW_GAME, NULL, NULL, N_("Start a new game"), G_CALLBACK (on_game_new_activate) },
+                { "restart-game", GAMES_STOCK_RESTART_GAME, NULL, NULL, N_("Restart the current game"), G_CALLBACK (on_game_restart_activate) },
+                { "show-hint", GAMES_STOCK_HINT, NULL, NULL, N_("Show a hint"), G_CALLBACK (on_game_hint_activate) },
                 { "quit-game", GTK_STOCK_QUIT, NULL, NULL, NULL, G_CALLBACK (on_game_quit_activate) },
                 { "settings-menu", NULL, N_("_Settings") },
 		{ "Fullscreen", GAMES_STOCK_FULLSCREEN, NULL, NULL, NULL, G_CALLBACK (fullscreen_cb) },

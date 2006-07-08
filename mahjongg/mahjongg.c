@@ -1300,11 +1300,11 @@ static const GtkActionEntry actions[] = {
         { "GameMenu", NULL, N_("_Game") },
         { "SettingsMenu", NULL, N_("_Settings") },
         { "HelpMenu", NULL, N_("_Help") },
-        { "NewGame", GAMES_STOCK_NEW_GAME, NULL, NULL, NULL, G_CALLBACK (new_game_cb) },
-        { "RestartGame", GAMES_STOCK_RESTART_GAME, NULL, NULL, NULL, G_CALLBACK (restart_game_cb) },
-        { "UndoMove", GAMES_STOCK_UNDO_MOVE, NULL, NULL, NULL, G_CALLBACK (undo_tile_callback) },
-        { "RedoMove", GAMES_STOCK_REDO_MOVE, NULL, NULL, NULL, G_CALLBACK (redo_tile_callback) },
-        { "Hint", GAMES_STOCK_HINT, NULL, NULL, NULL, G_CALLBACK (hint_callback) },
+        { "NewGame", GAMES_STOCK_NEW_GAME, NULL, NULL, N_("Start a new game"), G_CALLBACK (new_game_cb) },
+        { "RestartGame", GAMES_STOCK_RESTART_GAME, NULL, NULL, N_("Restart the current game"), G_CALLBACK (restart_game_cb) },
+        { "UndoMove", GAMES_STOCK_UNDO_MOVE, NULL, NULL, N_("Undo the last move"), G_CALLBACK (undo_tile_callback) },
+        { "RedoMove", GAMES_STOCK_REDO_MOVE, NULL, NULL, N_("Redo the last move"), G_CALLBACK (redo_tile_callback) },
+        { "Hint", GAMES_STOCK_HINT, NULL, NULL, N_("Show a hint"), G_CALLBACK (hint_callback) },
         { "Scores", GAMES_STOCK_SCORES, NULL, NULL, NULL, G_CALLBACK (scores_callback) },
         { "Quit", GTK_STOCK_QUIT, NULL, NULL, NULL, G_CALLBACK (quit_cb) },
 	{ "Fullscreen", GAMES_STOCK_FULLSCREEN, NULL, NULL, NULL, G_CALLBACK (fullscreen_callback) },
@@ -1316,7 +1316,7 @@ static const GtkActionEntry actions[] = {
 
 static const GtkToggleActionEntry toggle_actions[] = {
         { "ShowToolbar", NULL, N_("_Toolbar"), NULL, N_("Show or hide the toolbar"), G_CALLBACK (show_tb_callback) },
-	{ "PauseGame", GAMES_STOCK_PAUSE_GAME, NULL, NULL, NULL, G_CALLBACK (pause_callback) }
+	{ "PauseGame", GAMES_STOCK_PAUSE_GAME, NULL, NULL, N_("Pause or continue the game"), G_CALLBACK (pause_callback) }
 };
 
 static const char ui_description[] =
