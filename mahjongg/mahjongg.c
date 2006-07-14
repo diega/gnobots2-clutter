@@ -56,6 +56,7 @@ GtkWidget *tiles_label;
 GtkWidget *toolbar;
 
 GtkAction *pause_action;
+GtkAction *resume_action;
 GtkAction *hint_action;
 GtkAction *redo_action;
 GtkAction *undo_action;
@@ -192,12 +193,15 @@ update_menu_sensitivities (void)
 		gtk_action_set_sensitive (hint_action, FALSE);
 		gtk_action_set_sensitive (undo_action, FALSE);
 		gtk_action_set_sensitive (redo_action, FALSE);
+		gtk_action_set_visible (pause_action, FALSE);
+		gtk_action_set_visible (resume_action, TRUE);
 	} else {
 		gtk_action_set_sensitive (hint_action, moves_left > 0);	
 		gtk_action_set_sensitive (undo_action, undo_state);
 		gtk_action_set_sensitive (redo_action, redo_state);
+		gtk_action_set_visible (pause_action, TRUE);
+		gtk_action_set_visible (resume_action, FALSE);
 	}
-
 }
 
 static void clock_start (void)
@@ -975,16 +979,18 @@ pause_callback (void)
 	draw_all_tiles ();
         update_menu_sensitivities ();
 	if (paused) {
-		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (pause_action), TRUE);
                 games_clock_stop (GAMES_CLOCK (chrono));
                 message(_("Game paused"));
         }
         else {
-		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (pause_action), FALSE);
                 clock_start ();
                 message ("");
         }
 	noloops = FALSE;
+
+	/* Force the toolbar to resize, since pause/resume buttons have changed. */
+	gtk_container_check_resize (GTK_CONTAINER(toolbar));
+
 }
 
 void ensure_pause_off (void)
@@ -1302,6 +1308,8 @@ static const GtkActionEntry actions[] = {
         { "HelpMenu", NULL, N_("_Help") },
         { "NewGame", GAMES_STOCK_NEW_GAME, NULL, NULL, N_("Start a new game"), G_CALLBACK (new_game_cb) },
         { "RestartGame", GAMES_STOCK_RESTART_GAME, NULL, NULL, N_("Restart the current game"), G_CALLBACK (restart_game_cb) },
+	{ "PauseGame", GAMES_STOCK_PAUSE_GAME, NULL, NULL, N_("Pause the game"), G_CALLBACK (pause_callback) },
+	{ "ResumeGame", GAMES_STOCK_RESUME_GAME, NULL, NULL, N_("Resume the paused game"), G_CALLBACK (pause_callback) },
         { "UndoMove", GAMES_STOCK_UNDO_MOVE, NULL, NULL, N_("Undo the last move"), G_CALLBACK (undo_tile_callback) },
         { "RedoMove", GAMES_STOCK_REDO_MOVE, NULL, NULL, N_("Redo the last move"), G_CALLBACK (redo_tile_callback) },
         { "Hint", GAMES_STOCK_HINT, NULL, NULL, N_("Show a hint"), G_CALLBACK (hint_callback) },
@@ -1315,8 +1323,7 @@ static const GtkActionEntry actions[] = {
 };
 
 static const GtkToggleActionEntry toggle_actions[] = {
-        { "ShowToolbar", NULL, N_("_Toolbar"), NULL, N_("Show or hide the toolbar"), G_CALLBACK (show_tb_callback) },
-	{ "PauseGame", GAMES_STOCK_PAUSE_GAME, NULL, NULL, N_("Pause or continue the game"), G_CALLBACK (pause_callback) }
+        { "ShowToolbar", NULL, N_("_Toolbar"), NULL, N_("Show or hide the toolbar"), G_CALLBACK (show_tb_callback) }
 };
 
 static const char ui_description[] =
@@ -1326,6 +1333,7 @@ static const char ui_description[] =
 "      <menuitem action='NewGame'/>"
 "      <menuitem action='RestartGame'/>"
 "      <menuitem action='PauseGame'/>"
+"      <menuitem action='ResumeGame'/>"
 "      <separator/>"
 "      <menuitem action='UndoMove'/>"
 "      <menuitem action='RedoMove'/>"
@@ -1351,6 +1359,7 @@ static const char ui_description[] =
 "    <toolitem action='NewGame'/>"
 "    <toolitem action='RestartGame'/>"
 "    <toolitem action='PauseGame'/>"
+"    <toolitem action='ResumeGame'/>"
 "    <separator/>"
 "    <toolitem action='UndoMove'/>"
 "    <toolitem action='RedoMove'/>"
@@ -1375,6 +1384,7 @@ create_menus (GtkUIManager *ui_manager)
         gtk_ui_manager_add_ui_from_string (ui_manager, ui_description, -1, NULL);
 	restart_action = gtk_action_group_get_action (action_group, "RestartGame");
 	pause_action = gtk_action_group_get_action (action_group, "PauseGame");
+	resume_action = gtk_action_group_get_action (action_group, "ResumeGame");
 	hint_action = gtk_action_group_get_action (action_group, "Hint");
 	undo_action = gtk_action_group_get_action (action_group, "UndoMove");
 	redo_action = gtk_action_group_get_action (action_group, "RedoMove");
