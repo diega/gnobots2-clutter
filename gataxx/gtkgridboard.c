@@ -373,7 +373,7 @@ static gint gtk_gridboard_flip_pixmaps(gpointer data)
         gint flipped_tiles;
 
 	if (!GTK_WIDGET_DRAWABLE (GTK_WIDGET (gridboard))) {
-	  return gridboard->animate;
+	  return FALSE;
 	}
 
 	flipped_tiles=0;
@@ -393,6 +393,10 @@ static gint gtk_gridboard_flip_pixmaps(gpointer data)
                                 gridboard->pixmaps[x][y]=pcepm;
                                 flipped_tiles++;
 				gridboard->changed[x][y] = TRUE;
+			} else if (!gridboard->animate) {
+				/* Disabled animations consist of the final frame.*/
+				gridboard->pixmaps[x][y] = pcepm;
+				gridboard->changed[x][y] = TRUE;
                         } else if (curpm < pcepm) {
                                 gridboard->pixmaps[x][y]++;
                                 flipped_tiles++;
@@ -408,8 +412,7 @@ static gint gtk_gridboard_flip_pixmaps(gpointer data)
 	if (flipped_tiles) 
 	  gtk_gridboard_paint (gridboard);
 
-        /* destroy the timeout if animate is false */
-        return gridboard->animate;
+        return TRUE;
 }
 
 /* helper functions */
@@ -486,13 +489,11 @@ void gtk_gridboard_set_animate(GtkGridBoard *gridboard, gboolean animate) {
         g_return_if_fail (GTK_IS_GRIDBOARD (gridboard));
 
         gridboard->animate=animate;
-        if (animate) {
-	  if (gridboard->timeoutid)
-	    return;
-	  gridboard->timeoutid = g_timeout_add(PIXMAP_FLIP_DELAY, 
-					       gtk_gridboard_flip_pixmaps,
-					       (gpointer) gridboard);
-        } else gridboard->timeoutid = 0;
+	if (gridboard->timeoutid)
+	  return;
+	gridboard->timeoutid = g_timeout_add(PIXMAP_FLIP_DELAY, 
+					     gtk_gridboard_flip_pixmaps,
+					     (gpointer) gridboard);
 }
 
 void gtk_gridboard_set_visibility(GtkGridBoard *gridboard, gboolean visibility) {
@@ -535,10 +536,6 @@ void gtk_gridboard_set_piece(GtkGridBoard *gridboard, int x, int y,
 
         gridboard->board[x][y]=piece;
 	
-	if (!gridboard->animate) {
-	  gridboard->pixmaps[x][y] = get_pixmap_num (gridboard->board[x][y]);
-	  gridboard->changed[x][y] = TRUE;
-	}
 }
 
 int gtk_gridboard_get_piece(GtkGridBoard *gridboard, int x, int y) 

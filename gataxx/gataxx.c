@@ -183,10 +183,10 @@ gboolean end_game_cb(gpointer data) {
 	} else {
 		appbar_set_status(_("The game was a draw."));
 	}
-	if (props_get_animate()) {
-		flip_final(gridboard, wc, bc);
-		gtk_gridboard_paint (gridboard);
-	}
+
+	flip_final (gridboard, wc, bc);
+	gtk_gridboard_paint (gridboard);
+
 	return FALSE; /* kill the timeout */
 }
 
