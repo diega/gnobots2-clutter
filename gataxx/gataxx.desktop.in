@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Icon=gnome-ataxx
 _Name=Ataxx
-_Comment=Compete to dominate the board in a Reversi-like game
+_Comment=Dominate the board in a modern variation of Reversi
 Exec=gataxx
 Terminal=false
 Type=Application
