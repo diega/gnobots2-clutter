@@ -1,3 +1,9 @@
+2006-08-01 Joachim Noreiko <jnoreiko@yahoo.com>
+
+  * help/C/gataxx.xml: rewrite of manual by Ryan Paul <gaerdin@gmail.com>
+  * help/C/figures/gataxx-startgame.png: image removed
+  * help/C/figures/gataxx-prefs.png: image removed
+
 2006-07-17  Andreas Røsdal  <andrearo@stud.ntnu.no>
 
 	* gataxx.c:
@@ -153,6 +159,7 @@
 	* gtkgridboard.c: Add a gtk_gridboard prefix to present_region,
 	setup_cairo_context, destroy_cairo_context.
 
+>>>>>>> 1.124
 2005-08-06  Callum McKenzie  <callum@physics.otago.ac.nz>
 
 	* help/C/gataxx.xml: Remove the mention of the
