@@ -5,7 +5,7 @@
   <!ENTITY legal SYSTEM "legal.xml">
   <!ENTITY appversion "2.12">
   <!ENTITY manrevision "2.12">
-  <!ENTITY date "September 2004">
+  <!ENTITY date "July 2006">
   <!ENTITY app "<application>Ataxx</application>">
   <!ENTITY appname "Ataxx">
 ]>
@@ -24,7 +24,11 @@
 <!-- appropriate code -->
 
  <articleinfo>
-  <title>&app; Manual V&manrevision;</title>
+  <title>&app; Manual</title>
+  <copyright>
+    <year>2006</year>
+    <holder>Ryan Paul</holder>
+  </copyright>
   <copyright>
    <year>2000-2002</year>
    <holder>Ximian, Inc.</holder>
@@ -53,13 +57,21 @@
 	
     <authorgroup> 
       <author> 
-	<firstname>Aaron</firstname> 
-	<surname>Weber</surname> 
-	<affiliation> 
-	  <orgname>Ximian, Inc</orgname> 
-	  <address> <email>aaron@helixcode.com</email> </address> 
-	</affiliation> 
+        <firstname>Aaron</firstname> 
+        <surname>Weber</surname> 
+        <affiliation> 
+          <orgname>Ximian, Inc</orgname> 
+          <address> <email>aaron@helixcode.com</email> </address> 
+        </affiliation> 
+      </author>
+      <author> 
+        <firstname>Ryan</firstname> 
+        <surname>Paul</surname> 
+        <affiliation> 
+          <orgname>GNOME Documentation Project</orgname> 
+        </affiliation> 
       </author> 
+
 <!-- This is appropriate place for other contributors: translators,
       maintainers,  etc. Commented out by default.
        <othercredit role="translator">
@@ -76,14 +88,24 @@
     
     <revhistory>
       <revision> 
-	<revnumber>&appname; Manual V&manrevision;</revnumber> 
-	<date>&date;</date> 
-	<revdescription> 
-	  <para role="author">Aaron Weber
-	    <email>aaron@helixcode.com</email>
-	  </para>
-	  <para role="publisher">GNOME Documentation Project</para>
-	</revdescription> 
+        <revnumber>&appname; Manual V&manrevision;</revnumber> 
+        <date>&date;</date> 
+        <revdescription> 
+          <para role="author">Ryan Paul
+            <email>ryankpaul@gmail.com</email>
+          </para>
+          <para role="publisher">GNOME Documentation Project</para>
+        </revdescription> 
+      </revision> 
+      <revision> 
+        <revnumber>&appname; Manual V2.12</revnumber> 
+        <date>September 2004</date> 
+        <revdescription> 
+          <para role="author">Aaron Weber
+            <email>aaron@helixcode.com</email>
+          </para>
+          <para role="publisher">GNOME Documentation Project</para>
+        </revdescription> 
       </revision> 
     </revhistory> 
 
@@ -113,31 +135,11 @@
  <!-- ============= Introduction ============================== -->
  <sect1 id="intro">
   <title>Introduction</title>
-
   <para>
-   <application>Ataxx</application>, part of the GNOME-games suite of
-   games, is a relative of other disc-flipping games such as
-   <application>Iagno</application>.
-   <application>Ataxx</application>, however, begins at the corners,
-   rather than at the center of the board, and has slightly different
-   rules for adding and moving discs.
+    &app; is a two-player disc-flipping game like Iagno. &app;, however, begins
+    at the corners, rather than at the center of the board, and has slightly
+    different rules for adding and moving discs.
   </para>
-
-  <para>
-   To run <application>Ataxx</application>, select
-   <guimenuitem>Ataxx</guimenuitem> from the
-   <guisubmenu>Games</guisubmenu> submenu of the <guimenu>Main
-   Menu</guimenu>, or type <command>gataxx</command> on the
-   command line. 
-  </para>
-
-  <para>
-   <application>Ataxx</application> is included in the
-   <filename>GNOME-games</filename> package, which is part of the
-   GNOME desktop environment. This document describes version
-   &version; of <application>Ataxx</application>.
-  </para>
-
  </sect1>
 
 
@@ -145,301 +147,176 @@
  <!-- This section should describe basic usage of the application. -->
 
   <sect1 id="usage">
-    <title>Playing Ataxx</title>
+    <title>Playing &app;</title>
     <para>
-      The basic rules of <application>Ataxx</application> are quite
-      easy to learn, especially if you are familiar with other
-      disc-flipping games.  The object of the game is to have more
-      discs of your color on the board than your opponent does.  The
-      game ends when one of the players is unable to make a move during
-      their turn.
+      &app; is played on a board with 49 squares
+      arranged in a grid composed of seven rows and seven columns. Players
+      attempt to fill the board with as many of their own pieces as possible.
+      The game ends when one player is unable to move a piece during a turn.
+      &app; can be played against another person, or against a
+      computer-controlled opponent. &app; can also be played by two
+      computer-controlled players without user intervention.
     </para>
-    <para>
-      Although <application>Ataxx</application> is a two player game,
-      one or both players can be controlled by the computer.
-  </para>
-
 
   <!-- ========= Basic Usage =========================== -->
   <sect2 id="mainwin">
-   <title>Basic usage</title>
-   <para>
-    Starting <application>Ataxx</application> presents you with the
-    <interface>game board</interface>, which is seven squares on a
-    side.  You can start a game by selecting <guimenuitem>New
-    Game</guimenuitem> from the <guimenu>Game</guimenu> menu.  A new
-    game is shown in <xref linkend="mainwindow-fig"/>.
-   </para>
-    <!-- ==== Figure ==== -->
-  
+    <title>Basic usage</title>
 
-  <figure id="mainwindow-fig">
-     <title>Ataxx Main Window</title>
-     <screenshot>
-       <mediaobject>
-         <imageobject>
-          <imagedata fileref="figures/gataxx-startgame" format="PNG"/>
- </imageobject></mediaobject></screenshot></figure>
-
-    <!-- ==== End of Figure ==== -->
-
-
+    <variablelist>
+      <varlistentry>
+        <term>To play &app;:</term>
+        <listitem>
+          <para>Choose <menuchoice><guimenu>Applications</guimenu><guisubmenu>Games</guisubmenu><guimenuitem>Ataxx</guimenuitem></menuchoice> or type gataxx on the command line.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>To start a new game:</term>
+        <listitem>
+          <para>
+            Choose <menuchoice><guimenu>Game</guimenu><guimenuitem>New Game</guimenuitem></menuchoice>.
+            <!-- <shortcut><keysym>Ctrl-N</keysym></shortcut> -->
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>To undo your last move:</term>
+        <listitem>
+          <para>
+            Choose <menuchoice><guimenu>Game</guimenu><guimenuitem>Undo Move</guimenuitem></menuchoice>.
+            <!-- <shortcut><keysym>Ctrl-Z</keysym></shortcut> -->
+          </para>
+          <para>If you perform this action during your own turn, your opponent's last move will also be reverted.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>To quit &app;:</term>
+        <listitem>
+          <para>
+            Choose <menuchoice><guimenu>Game</guimenu><guimenuitem>Quit</guimenuitem></menuchoice>.
+            <!-- <shortcut><keysym>Ctrl-Q</keysym></shortcut> -->
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>To edit game preferences:</term>
+        <listitem>
+          <para>Choose <menuchoice><guimenu>Settings</guimenu><guimenuitem>Preferences</guimenuitem></menuchoice>.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
   </sect2>
 
 
+  
   <!-- ========= Rulez =========================== -->
+  <sect2 id="rules"> 
+    <title>Rules</title>
+    <para>
+      Each player controls pieces of a specific color. When an &app; game
+      starts, one piece is set in each corner of the board. Each player starts
+      with control of two pieces placed on opposite sides of the board. A
+      player moves or adds one piece in each turn. The player that controls the
+      light pieces goes first.</para>
 
-    <sect2 id="rules"> 
-      <title>Basic Rules</title>
-      <para>
-        A game of <application>Ataxx</application> begins with four
-        pieces on the board: a dark colored piece in the upper left
-        and lower right corners, and a light colored piece in the
-        lower left and upper right corners.  Dark moves first; by
-        default, this player is human.
-      </para>
-      <para>
-        To make a move, click on one of your discs.  Available moves
-        for that disc will be outlined in white.  For a disc in the
-        middle of an unobstructed board, there are 24 possible moves,
-        illustrated in <xref linkend="moves-fig"/>.  Click on one of
-        the eight squares adjacent to the disc and you will add a new
-        disc to the board.  Click on one further away, and the disc
-        will move there, jumping any obstacles in its path.  You
-        cannot move a disc into an occupied square, nor can you remove
-        a disc from the board.
-      </para>
-      <para>
-        When you move or add a disc to a position adjacent to one or
-        more of your opponent's discs, you capture those discs.  When
-        you capture them they change color to indicate your
-        possession, and you can move them or add discs next to them as
-        you would any other disc in your possession.  This is good for
-        you and bad for your opponent.
-      </para>
-      <para>
-        This means that, strategically, an L-shaped formation of discs
-        is bad to have, because it allows an opponent to capture more
-        discs with a single move.  The worst sort of formation would
-        be donut-shaped, because it would allow the
-        capture of eight pieces at once.
-      </para>
-
+    <para>
+      To add a new piece, click a piece that you control and then click any
+      adjacent square that does not already contain a piece. To move an
+      existing piece, click a piece and then click on any empty square that
+      is two squares away from the original position of the piece.  When you
+      click on a piece,  a  transparent marker will appear in each square to
+      which you can move or add a piece. <xref linkend="moves-fig" /> shows
+      the available moves of a selected piece. You cannot remove a piece from
+      the board, or move a piece to an occupied square.
+    </para>
+    
     <!-- ==== Figure ==== -->
     <figure id="moves-fig">
-     <title>Available Moves</title>
-     <screenshot>
-      <mediaobject>
-       <imageobject>
-        <imagedata fileref="figures/gataxx-legalmoves" format="PNG"/>
-</imageobject></mediaobject>
-    </screenshot>
+      <title>Available Moves</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/gataxx-legalmoves" format="PNG" />
+          </imageobject>
+        </mediaobject>
+      </screenshot>
     </figure>
     <!-- ==== End of Figure ==== -->
 
+    <para>
+      To capture your opponent's pieces, move or add your your own pieces to
+      squares that are adjacent to squares occupied by your opponent. When
+      you capture a piece, its color changes to that of your own pieces, and
+      it becomes yours to control.
+    </para>
+  </sect2>
 
+  <!-- ========= Strategy ======================== -->
+  <sect2 id="strategy">
+    <title>Strategy</title>
+    <para>
+      To prevent your opponent from seizing control of your pieces, limit the
+      number of pieces that you place around any given empty space. An L-shaped
+      formation or an eight piece ring will enable the other player to take
+      control of many pieces with a single move.
+    </para>
+  </sect2>
+</sect1>
+
+  <!-- ========= Customization =================== -->
+  <sect1 id="prefs">
+    <title>Customizing &app;</title>
+    <para>
+      To change the application settings, Choose
+      <menuchoice><guimenu>Settings</guimenu><guimenuitem>Preferences</guimenuitem></menuchoice>.
+      This opens the Preferences dialog.
+    </para>
+
+    <sect2 id="playerprefs">
+      <title>Player Preferences</title>
+      <para>Player settings can be customized with the options on the <guilabel>Players</guilabel> tab.</para>
+      <variablelist>
+        <varlistentry>
+          <term>To allow a person to control the light pieces:</term>
+          <listitem>
+            <para>Select the <guilabel>Human</guilabel> option in the Light section.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>To give the computer control of the light pieces or change the difficulty level:</term>
+          <listitem>
+            <para>Select one of the five difficulty levels in the <guilabel>Light</guilabel> section.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>To allow a person to control the dark pieces:</term>
+          <listitem>
+            <para>Select the <guilabel>Human</guilabel> option in the Dark section.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>To give the computer control of the dark pieces or change the difficulty level:</term>
+          <listitem>
+            <para>Select one of the five difficulty levels in the <guilabel>Dark</guilabel> section.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>To make the computer controlled player move faster:</term>
+          <listitem>
+            <para>Select the <guilabel>Quick Moves</guilabel> checkbox.</para>
+          </listitem>
+        </varlistentry>
+       </variablelist>
     </sect2>
 
-
-  <!-- ========= Menus =========================== -->
-  <sect2 id="menubar">
-   <title>Menus</title>
-   <para>
-    The menu bar, located at the top of the <interface>game 
-    board</interface>, contains the following menus:
-   </para>
-
-   <variablelist>
-    <varlistentry>
-     <term><guimenu>Game</guimenu></term>
-     <listitem>
+    <sect2 id="appearanceprefs">
+      <title>Appearance Preferences</title>
+      <para>The appearance of the game can be customized with the options on the <guilabel>Appearance</guilabel> tab.</para>
       <para>
-       This menu contains three items:
-      <itemizedlist>	
-	<listitem>
-	  <para>
-            <menuchoice> 
-	       <shortcut><keysym>Ctrl-N</keysym></shortcut>
-               <guimenuitem>New Game</guimenuitem>
-               Start a new game. If a game is already being played, it will
-	       end.
-	    </menuchoice>
-           </para>
-         </listitem>     
-       
-	<listitem>
-	  <para>
-            <menuchoice>
-               <shortcut><keysym>Ctrl-Z</keysym></shortcut>
-               <guimenuitem>Undo Move</guimenuitem>
-               Undoes the last move a human player made (including any
-               intervening computer moves).
-            </menuchoice>
-        </para>
-       </listitem>
-
-       	<listitem>
-	<para>
-          <menuchoice>
-            <shortcut><keysym>Ctrl-Q</keysym></shortcut>
-            <guimenuitem>Exit</guimenuitem>
-            Stops play immediately and closes the program.
-          </menuchoice>
-        </para>
-       </listitem>
-     </itemizedlist>
+        When the <guilabel>Animation</guilabel> checkbox is selected, the pieces will visually
+        change when captured. The animation is different for each tile set.
       </para>
-     </listitem>
-    </varlistentry>
-
-	<varlistentry>
-	  <term><guimenu>Settings</guimenu></term>
-	  <listitem>
-	    <para>
-              The <guimenu>Settings</guimenu> menu contains only one item:
-              <itemizedlist>
-		<listitem>
-		  <para>
-                   <guimenuitem>Preferences</guimenuitem>
-                    , which brings up the preferences dialog box.
-                  </para>
-		</listitem>
-	      </itemizedlist>
-            </para>
-	  </listitem>
-	</varlistentry>
-
-    <varlistentry>
-     <term><guimenu>Help</guimenu></term>
-     <listitem>
-      <para>
-       This menu contains:
-       <itemizedlist>
-        <listitem>
-         <para>
-          <shortcut><keysym>F1</keysym></shortcut>
-          <guimenuitem>Contents</guimenuitem>&mdash;
-          shows this manual.
-         </para>
-        </listitem>
-
-        <listitem>
-         <para>
-          <guimenuitem>About</guimenuitem>&mdash; shows
-          basic information about
-          <application>Ataxx</application>, such as
-          the author's name and the application version number.
-         </para>
-        </listitem>
-       </itemizedlist>
-
-      </para>
-     </listitem>
-    </varlistentry>
-   </variablelist>
-  </sect2>
- </sect1>
-
-
- <!-- ============= Customization ============================= -->
- <sect1 id="prefs">
-  <title>Customization</title>
-  <para>
-   To change the application settings, select
-   <guimenuitem>Preferences&hellip;</guimenuitem> from the
-   <guimenu>Settings</guimenu> menu. This opens the
-   <interface>Preferences</interface> dialog, shown in <xref linkend="preferences-fig"/>.
-  </para>
-
-  <figure id="preferences-fig">
-   <title>Preferences Dialog</title>
-   <screenshot>
-   <mediaobject>
-   <imageobject>
-     <imagedata fileref="figures/gataxx-prefs" format="PNG"/>
-</imageobject></mediaobject>
-   </screenshot>
-  </figure>
-
-  <para>
-   The properties in the <guilabel>Players</guilabel> tab are:
-   <itemizedlist>
-
-    <listitem>
-     <para>
-      <guilabel>Light</guilabel> &mdash; Select the player who will
-      play the light discs.  You may choose from a
-      <guilabel>Human</guilabel> player (i.e. you), or five levels of
-      computer ability (<guilabel>Very Easy</guilabel> through
-      <guilabel>Very Hard</guilabel>.
-     </para>
-    </listitem>
-
-    <listitem>
-     <para>
-      <guilabel>Dark</guilabel> &mdash; Select the player who will
-      play the dark discs.  You have the same options.  If both
-      players are computerized, you can watch the game played for you.
-     </para>
-    </listitem>
-
-    <listitem>
-     <para>
-      <guilabel>Quick Moves</guilabel> &mdash; If this box is checked,
-      the computer will not pretend to think about its turn, but will
-      make its move immediately.
-     </para>
-    </listitem>
-   </itemizedlist>
-  </para>
-
-  <para>
-   The properties in the <guilabel>Appearance</guilabel> tab are:
-   <itemizedlist>
-
-    <listitem>
-     <para>
-      <guilabel>Animation</guilabel>&mdash; If this button is checked,
-      there will be no animation when discs change hands.
-     </para>
-    </listitem>
-
-    <listitem>
-     <para>
-      <guilabel>Flip final results</guilabel>&mdash; Click this button if you want to see
-      the results of your game displayed in an attractive visual
-      format: all the white pieces on the top and all the dark ones on
-      the bottom.
-     </para>
-    </listitem>
-
-    <listitem>
-     <para>
-      <guilabel>Show grid</guilabel>&mdash; This button 
-      enables or disables the grid of black lines.
-     </para>
-    </listitem>
-
-    <listitem>
-     <para>
-      <guilabel>Tile Set</guilabel> &mdash; Choose from one of several appearances for the
-      game.  The default is "classic."
-     </para>
-    </listitem>
-
-   </itemizedlist>
-
-
-  </para>
-
-  <para>
-    Any changes you make are saved and applied instantly.
-  </para>
-
+    </sect2>
   </sect1>
-
-
-
 
  <!-- ============= Bugs ================================== -->
  <!-- This section should describe known bugs and limitations of
