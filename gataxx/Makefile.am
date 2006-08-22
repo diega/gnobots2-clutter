@@ -51,6 +51,7 @@ EXTRA_DIST = AUTHORS \
 	gataxx.desktop.in 	\
 	$(theme_DATA) \
 	$(icon_DATA) \
+	$(svgicon_DATA) \
 	$(schema_in_files)
 
 SUBDIRS = help
