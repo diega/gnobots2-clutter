@@ -1,6 +1,7 @@
 themedir=$(datadir)/gnome-games/ataxx/themes/2.14/
 Gamesdir = $(datadir)/applications
 icondir=$(datadir)/icons/hicolor/48x48/apps/
+svgicondir = $(datadir)/icons/hicolor/scalable/apps/
 
 INCLUDES = 			\
 	-I$(top_srcdir)/libgames-support \
@@ -35,6 +36,7 @@ gataxx_LDADD = \
 
 theme_DATA=classic.png
 icon_DATA = gnome-ataxx.png
+svgicon_DATA = gnome-ataxx.svg
 
 Games_in_files = gataxx.desktop.in
 Games_DATA = $(Games_in_files:.desktop.in=.desktop)

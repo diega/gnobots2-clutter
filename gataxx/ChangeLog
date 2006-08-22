@@ -1,8 +1,14 @@
+2006-08-21 Jason Clinton <me@jasonclinton.com>
+
+	* gnome-ataxx.png:
+	* gnome-ataxx.svg:
+	* Makefile.am: Updated menu icon pixmap and added SVG version from Daniel Derozier <dcubed20@gmail.com>
+
 2006-08-01 Joachim Noreiko <jnoreiko@yahoo.com>
 
-  * help/C/gataxx.xml: rewrite of manual by Ryan Paul <gaerdin@gmail.com>
-  * help/C/figures/gataxx-startgame.png: image removed
-  * help/C/figures/gataxx-prefs.png: image removed
+	* help/C/gataxx.xml: rewrite of manual by Ryan Paul <gaerdin@gmail.com>
+	* help/C/figures/gataxx-startgame.png: image removed
+	* help/C/figures/gataxx-prefs.png: image removed
 
 2006-07-17  Andreas Røsdal  <andrearo@stud.ntnu.no>
 
