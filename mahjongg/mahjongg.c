@@ -1162,7 +1162,7 @@ undo_tile_callback (void)
         update_moves_left ();
 }
 
-/* You loose your re-do queue when you make a move */
+/* You lose your re-do queue when you make a move */
 static void
 clear_undo_queue (void)
 {
