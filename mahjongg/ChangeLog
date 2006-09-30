@@ -1,3 +1,8 @@
+2006-09-30  Andreas Røsdal  <andrearo@stud.ntnu.no>
+
+	* mahjongg.c: Implement a workaround for a bug in GtkToolbar,
+	to ensure that all buttons are shown. Bug #353964.
+
 2006-07-13  Andreas Røsdal  <andrearo@stud.ntnu.no>
 
 	* mahjongg.c: Add a Resume menu item and toolbar, 

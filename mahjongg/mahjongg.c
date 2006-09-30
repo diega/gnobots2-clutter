@@ -202,6 +202,20 @@ update_menu_sensitivities (void)
 		gtk_action_set_visible (pause_action, TRUE);
 		gtk_action_set_visible (resume_action, FALSE);
 	}
+
+	/* This is a workaround to make sure that all toolbar elements are
+	 * shown properly, due to a bug in GtkToolButton in Gtk+. 
+	 * See Bug #332573 for a description of the workaround.
+	 */ 
+	/*gtk_widget_queue_draw (toolbar);
+	gtk_widget_queue_resize (toolbar);
+	while (gtk_events_pending ())
+		gtk_main_iteration ();
+	gtk_widget_queue_draw (toolbar);
+	gtk_widget_queue_resize (toolbar);
+	while (gtk_events_pending ())
+		gtk_main_iteration ();*/
+
 }
 
 static void clock_start (void)
@@ -988,8 +1002,6 @@ pause_callback (void)
         }
 	noloops = FALSE;
 
-	/* Force the toolbar to resize, since pause/resume buttons have changed. */
-	gtk_container_check_resize (GTK_CONTAINER(toolbar));
 
 }
 
