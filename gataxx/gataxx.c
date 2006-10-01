@@ -29,6 +29,7 @@
 #include <gconf/gconf-client.h>
 #include <games-gconf.h>
 #include <games-gridframe.h>
+#include <games-stock.h>
 #include <libintl.h>
 #include <libgnome/libgnome.h>
 
@@ -386,6 +387,7 @@ about_cb(GtkWidget *widget, gpointer data)
 
   const gchar *documenters[] = {"Aaron Weber", 
 			    	NULL};
+  gchar *license = games_get_license (_("Ataxx"));
 
   gtk_show_about_dialog (GTK_WINDOW (window),
 			 "name", _("Ataxx"), 
@@ -393,7 +395,7 @@ about_cb(GtkWidget *widget, gpointer data)
 			 "copyright", "Copyright \xc2\xa9 1999-2003 Chris Rogers\n"
 				      "Copyright \xc2\xa9 2004-2005 Sjoerd Langkemper\n"
 			              "Copyright \xc2\xa9 2005-2006 Callum McKenzie",
-			 "license", "GPL 2+",
+			 "license", license,
 			 "comments", _("A disk-flipping game where you attempt to dominate the board."),
 			 "authors", authors,
 			 "documenters", documenters,
@@ -402,6 +404,8 @@ about_cb(GtkWidget *widget, gpointer data)
 			 "website", "http://www.gnome.org/projects/gnome-games/",
 			 "wrap-license", TRUE,
 			 NULL);
+  g_free (license);
+
 }
 
 

@@ -31,6 +31,8 @@
 
 using namespace std;
 
+#include <games-stock.h>
+
 #include "blackjack.h"
 #include "menu.h"
 #include "dialog.h"
@@ -147,6 +149,7 @@ on_help_about_activate (GtkAction *action,
                 "William Jon McCann <mccann@jhu.edu>",
                 NULL
         };
+	gchar *license = games_get_license (_("Blackjack"));
 
         gtk_show_about_dialog (GTK_WINDOW (toplevel_window),
                                "authors", authors,
@@ -155,12 +158,13 @@ on_help_about_activate (GtkAction *action,
                                "copyright", "Copyright \xc2\xa9 2003-2006 William Jon McCann, Eric Farmer",
                                "comments", _("Blackjack is a casino-style card game."),
                                "logo-icon-name", "gnome-blackjack",
-                               "license", "GPL 2+",
+                               "license", license,
                                "translator_credits", _("translator-credits"),
                                "logo-icon-name", "gnome-aisleriot.png",
                                "website", "http://www.gnome.org/projects/gnome-games/",
                                "wrap-license", TRUE,
                                NULL);
+	g_free (license);
 
         return;
 }

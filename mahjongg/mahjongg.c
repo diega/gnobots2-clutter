@@ -959,13 +959,14 @@ about_callback (void)
 		"Eric Baudais",
 		NULL
 	};
+	gchar *license = games_get_license (_("Mahjongg"));
 
 	gtk_show_about_dialog (GTK_WINDOW (window),
 			       "name", _("Mahjongg"), 
 			       "version", VERSION,
 			       "comments", _("A matching game played with Mahjongg tiles."),
 			       "copyright", "Copyright \xc2\xa9 1998-2005 Free Software Foundation, Inc.",
-			       "license", "GPL 2+",
+			       "license", license,
 			       "authors", authors,
 			       "artists", artists,
 			       "documenters", documenters,
@@ -974,6 +975,7 @@ about_callback (void)
 			       "website", "http://www.gnome.org/projects/gnome-games/",
 			       "wrap-license", TRUE,
 			       NULL);
+	g_free (license);
 }
 
 void

@@ -105,13 +105,16 @@ static void about_cb (GtkWidget *widget)
   const gchar * const authors[] = { "Callum McKenzie", NULL };
   
   const gchar * const documenters[] = { "Callum McKenzie", NULL };
+
+  gchar *license = games_get_license (_(APPNAME_LONG));
+
   
   gtk_show_about_dialog (GTK_WINDOW (application),
 												 "authors", authors,
 												 "documenters", documenters,
 												 "comments", _("I want to play that game! You know, they all go whirly-round and you click on them and they vanish!"),
 												 "copyright", "Copyright \xc2\xa9 2006 Callum McKenzie",
-												 "license", "GPL 2+",
+												 "license", license,
 												 "name", _(APPNAME_LONG),
 												 "translator_credits", _("translator-credits"),
 												 "version", VERSION,
@@ -119,6 +122,7 @@ static void about_cb (GtkWidget *widget)
 												 "website", "http://www.gnome.org/projects/gnome-games/",
 												 "wrap-license", TRUE,
 												 NULL);
+  g_free (license);
 }
 
 static GtkWidget *generate_scores_dialog (void)
