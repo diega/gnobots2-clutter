@@ -1,7 +1,5 @@
 themedir=$(datadir)/gnome-games/ataxx/themes/2.14/
 Gamesdir = $(datadir)/applications
-icondir=$(datadir)/icons/hicolor/48x48/apps/
-svgicondir = $(datadir)/icons/hicolor/scalable/apps/
 
 INCLUDES = 			\
 	-I$(top_srcdir)/libgames-support \
@@ -35,8 +33,18 @@ gataxx_LDADD = \
 	$(CAIRO_LIBS)
 
 theme_DATA=classic.png
-icon_DATA = gnome-ataxx.png
-svgicon_DATA = gnome-ataxx.svg
+icon16dir = $(datadir)/icons/hicolor/16x16/apps/
+icon16_DATA = 16x16/gnome-ataxx.png
+icon22dir = $(datadir)/icons/hicolor/22x22/apps/
+icon22_DATA = 22x22/gnome-ataxx.png
+icon24dir = $(datadir)/icons/hicolor/24x24/apps/
+icon24_DATA = 24x24/gnome-ataxx.png
+icon32dir = $(datadir)/icons/hicolor/32x32/apps/
+icon32_DATA = 32x32/gnome-ataxx.png
+icon48dir = $(datadir)/icons/hicolor/48x48/apps/
+icon48_DATA = 48x48/gnome-ataxx.png
+svgicondir = $(datadir)/icons/hicolor/scalable/apps/
+svgicon_DATA = scalable/gnome-ataxx.svg
 
 Games_in_files = gataxx.desktop.in
 Games_DATA = $(Games_in_files:.desktop.in=.desktop)
@@ -50,7 +58,10 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 EXTRA_DIST = AUTHORS \
 	gataxx.desktop.in 	\
 	$(theme_DATA) \
-	$(icon_DATA) \
+	$(icon16_DATA) \
+	$(icon22_DATA) \
+	$(icon32_DATA) \
+	$(icon48_DATA) \
 	$(svgicon_DATA) \
 	$(schema_in_files)
 
