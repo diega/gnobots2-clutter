@@ -10,7 +10,7 @@
 #ifndef DRAWING_H
 #define DRAWING_H
 
-GtkWidget * create_mahjongg_board (void);
+GtkWidget *create_mahjongg_board (void);
 void load_images (gchar * file);
 void set_background (gchar * colour);
 void draw_tile (gint tileno);

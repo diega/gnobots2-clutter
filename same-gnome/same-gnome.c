@@ -35,26 +35,33 @@
 gchar *localthemedir;
 
 gchar *theme;
-gint   game_size = UNSET;
+gint game_size = UNSET;
 
 GConfClient *gcclient;
 
 /* Keep this in sync with the enum above. */
-gint board_sizes[MAX_SIZE][3] = {{-1, -1, -1}, /* This is a dummy entry. */
-																 {-1, -1, -1}, /* Space for the custom size. */
-																 {15, 10, 3},
-																 {30, 20, 4},
-																 {45, 30, 4}};
+gint board_sizes[MAX_SIZE][3] = { {-1, -1, -1}
+,				/* This is a dummy entry. */
+{-1, -1, -1}
+,				/* Space for the custom size. */
+{15, 10, 3}
+,
+{30, 20, 4}
+,
+{45, 30, 4}
+};
 
-const GamesScoresCategory scorecats[] = {{"Small", N_("Small")},
-																				 {"Medium", N_("same-gnome|Medium")},
-																				 {"Large", N_("Large")},
-																				 GAMES_SCORES_LAST_CATEGORY};
+const GamesScoresCategory scorecats[] = { {"Small", N_("Small")},
+{"Medium", N_("same-gnome|Medium")},
+{"Large", N_("Large")},
+GAMES_SCORES_LAST_CATEGORY
+};
 
-static const GamesScoresDescription scoredesc = {scorecats,
-																								 "Small",
-																								 "same-gnome",
-																								 GAMES_SCORES_STYLE_PLAIN_DESCENDING};
+static const GamesScoresDescription scoredesc = { scorecats,
+  "Small",
+  "same-gnome",
+  GAMES_SCORES_STYLE_PLAIN_DESCENDING
+};
 
 GamesScores *highscores;
 gint board_width;
@@ -65,7 +72,8 @@ gint ncolours;
 gint window_width;
 gint window_height;
 
-static void initialise_options (gint requested_size, gchar *requested_theme)
+static void
+initialise_options (gint requested_size, gchar * requested_theme)
 {
   gint intvalue;
 
@@ -77,9 +85,9 @@ static void initialise_options (gint requested_size, gchar *requested_theme)
   if (requested_theme != NULL)
     theme = requested_theme;
 
-	localthemedir = g_build_filename (g_get_user_data_dir (), 
-																		"/gnome-games/same-gnome/themes/",
-																		THEME_VERSION, NULL);
+  localthemedir = g_build_filename (g_get_user_data_dir (),
+				    "/gnome-games/same-gnome/themes/",
+				    THEME_VERSION, NULL);
 
   gcclient = gconf_client_get_default ();
   games_gconf_sanity_check_string (gcclient, GCONF_THEME_KEY);
@@ -87,26 +95,26 @@ static void initialise_options (gint requested_size, gchar *requested_theme)
   intvalue = gconf_client_get_int (gcclient, GCONF_CUSTOM_WIDTH_KEY, NULL);
   if (intvalue == 0)
     intvalue = DEFAULT_CUSTOM_WIDTH;
-  board_sizes[CUSTOM][0] = CLAMP (intvalue, MINIMUM_CUSTOM_WIDTH, 
+  board_sizes[CUSTOM][0] = CLAMP (intvalue, MINIMUM_CUSTOM_WIDTH,
 				  MAXIMUM_CUSTOM_WIDTH);
   intvalue = gconf_client_get_int (gcclient, GCONF_CUSTOM_HEIGHT_KEY, NULL);
   if (intvalue == 0)
     intvalue = DEFAULT_CUSTOM_HEIGHT;
-  board_sizes[CUSTOM][1] = CLAMP (intvalue, MINIMUM_CUSTOM_HEIGHT, 
+  board_sizes[CUSTOM][1] = CLAMP (intvalue, MINIMUM_CUSTOM_HEIGHT,
 				  MAXIMUM_CUSTOM_HEIGHT);
 
   if (requested_size != -1) {
     game_size = requested_size - 1 + SMALL;
-		clear_savegame ();
+    clear_savegame ();
   } else {
     game_size = gconf_client_get_int (gcclient, GCONF_SIZE_KEY, NULL);
     if (game_size == 0)
       game_size = DEFAULT_GAME_SIZE;
   }
 
-	/* FIXME: This doesn't work for a custom size. */
+  /* FIXME: This doesn't work for a custom size. */
   game_size = CLAMP (game_size, SMALL, MAX_SIZE - 1);
-	set_sizes (game_size);
+  set_sizes (game_size);
 
   intvalue = gconf_client_get_int (gcclient, GCONF_WINDOW_WIDTH_KEY, NULL);
   if (intvalue == 0)
@@ -127,23 +135,25 @@ static void initialise_options (gint requested_size, gchar *requested_theme)
    * guarantee that theme != NULL. */
 }
 
-int main (int argc, char *argv[])
+int
+main (int argc, char *argv[])
 {
-  GnomeProgram   *program;
+  GnomeProgram *program;
   GOptionContext *context;
-  static gchar   *requested_theme = NULL;
-  static gint     requested_size  = -1;
+  static gchar *requested_theme = NULL;
+  static gint requested_size = -1;
 
   static const GOptionEntry options[] = {
-    { "theme", 't', 0, G_OPTION_ARG_STRING, &requested_theme,
-      N_("Set the theme"), N_("NAME") },
-    { "scenario", 's', 0, G_OPTION_ARG_STRING, &requested_theme,
-      N_("For backwards compatibility"), N_("NAME") },
-    { "size", 'z', 0, G_OPTION_ARG_INT, &requested_size,
-      N_("Game size (1=small, 3=large)"), N_("NUMBER") },
-    { NULL, '\0', 0, 0, NULL, NULL, NULL }};
+    {"theme", 't', 0, G_OPTION_ARG_STRING, &requested_theme,
+     N_("Set the theme"), N_("NAME")},
+    {"scenario", 's', 0, G_OPTION_ARG_STRING, &requested_theme,
+     N_("For backwards compatibility"), N_("NAME")},
+    {"size", 'z', 0, G_OPTION_ARG_INT, &requested_size,
+     N_("Game size (1=small, 3=large)"), N_("NUMBER")},
+    {NULL, '\0', 0, 0, NULL, NULL, NULL}
+  };
 
-	setgid_io_init ();
+  setgid_io_init ();
 
   /* Initialise i18n. */
   bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
@@ -154,28 +164,28 @@ int main (int argc, char *argv[])
   g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
 
   /* Initialise GNOME. */
-  program = gnome_program_init (APPNAME, VERSION, LIBGNOMEUI_MODULE, argc, argv,
-                                GNOME_PARAM_APP_DATADIR, DATADIR,
-                                GNOME_PARAM_GOPTION_CONTEXT, context,
-                                NULL);
+  program =
+    gnome_program_init (APPNAME, VERSION, LIBGNOMEUI_MODULE, argc, argv,
+			GNOME_PARAM_APP_DATADIR, DATADIR,
+			GNOME_PARAM_GOPTION_CONTEXT, context, NULL);
 
-	games_stock_init ();
+  games_stock_init ();
 
-	highscores = games_scores_new (&scoredesc);
+  highscores = games_scores_new (&scoredesc);
 
   initialise_options (requested_size, requested_theme);
 
   build_gui ();
 
-	/* FIXME: This should be one alternative of an if statement, the other
-	 * alternative should be to load an old game. */
-	if (!load_game ())
-		new_game ();
-	
+  /* FIXME: This should be one alternative of an if statement, the other
+   * alternative should be to load an old game. */
+  if (!load_game ())
+    new_game ();
+
 
   gtk_main ();
 
-  gnome_accelerators_sync();
+  gnome_accelerators_sync ();
 
   g_object_unref (program);
 

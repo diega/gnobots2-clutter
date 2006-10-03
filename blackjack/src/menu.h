@@ -21,33 +21,19 @@
 #ifndef BJ_MENU_H
 #define BJ_MENU_H
 
-void on_help_contents_activate   (GtkAction *action,
-                                  gpointer   data);
-void on_help_about_activate      (GtkAction *action,
-                                  gpointer   data);
-void on_game_quit_activate       (GtkAction *action,
-                                  gpointer   data);
-void on_game_new_activate        (GtkAction *action,
-                                  gpointer   data);
-void on_game_restart_activate    (GtkAction *action,
-                                  gpointer   data);
-void on_game_hint_activate       (GtkAction *action,
-                                  gpointer   data);
-void on_toolbar_activate         (GtkToggleAction *action,
-                                  gpointer         data);
-void on_preferences_activate     (GtkAction *action,
-                                  gpointer   data);
-void on_control_deal_activate    (GtkAction *action,
-                                  gpointer   data);
-void on_control_hit_activate     (GtkAction *action,
-                                  gpointer   data);
-void on_control_stand_activate   (GtkAction *action,
-                                  gpointer   data);
-void on_control_surrender_activate (GtkAction *action,
-                                    gpointer   data);
-void on_control_split_activate   (GtkAction *action,
-                                  gpointer   data);
-void on_control_double_activate  (GtkAction *action,
-                                  gpointer   data);
+void on_help_contents_activate (GtkAction * action, gpointer data);
+void on_help_about_activate (GtkAction * action, gpointer data);
+void on_game_quit_activate (GtkAction * action, gpointer data);
+void on_game_new_activate (GtkAction * action, gpointer data);
+void on_game_restart_activate (GtkAction * action, gpointer data);
+void on_game_hint_activate (GtkAction * action, gpointer data);
+void on_toolbar_activate (GtkToggleAction * action, gpointer data);
+void on_preferences_activate (GtkAction * action, gpointer data);
+void on_control_deal_activate (GtkAction * action, gpointer data);
+void on_control_hit_activate (GtkAction * action, gpointer data);
+void on_control_stand_activate (GtkAction * action, gpointer data);
+void on_control_surrender_activate (GtkAction * action, gpointer data);
+void on_control_split_activate (GtkAction * action, gpointer data);
+void on_control_double_activate (GtkAction * action, gpointer data);
 
 #endif

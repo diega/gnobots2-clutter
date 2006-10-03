@@ -29,54 +29,59 @@
 static int steps;
 
 
-static int alphabeta(GtkGridBoard * gridboard, int alpha, int beta, int mode, int me, int depth);
-static int get_possible_moves_size(move *pm);
-static move * get_possible_moves(GtkGridBoard *gridboard, int turn);
-static move get_best_move_to(GtkGridBoard *gridboard, int x, int y, int me);
-static void free_possible_moves(move *pm);
+static int alphabeta (GtkGridBoard * gridboard, int alpha, int beta, int mode,
+		      int me, int depth);
+static int get_possible_moves_size (move * pm);
+static move *get_possible_moves (GtkGridBoard * gridboard, int turn);
+static move get_best_move_to (GtkGridBoard * gridboard, int x, int y, int me);
+static void free_possible_moves (move * pm);
 
 
 /* take a random move */
-static move computer_move_random(GtkGridBoard * gridboard, int turn) {
-	move * pm;
-	move result;
-	int size, item;
+static move
+computer_move_random (GtkGridBoard * gridboard, int turn)
+{
+  move *pm;
+  move result;
+  int size, item;
 
-	pm=get_possible_moves(gridboard, turn);
-	size=get_possible_moves_size(pm);
-	if (size>0) {
-		item=g_random_int_range(0, size);
-	} else {
-		item=0;
-	}
-	result=pm[item];
-	free_possible_moves(pm);
-	return result;
+  pm = get_possible_moves (gridboard, turn);
+  size = get_possible_moves_size (pm);
+  if (size > 0) {
+    item = g_random_int_range (0, size);
+  } else {
+    item = 0;
+  }
+  result = pm[item];
+  free_possible_moves (pm);
+  return result;
 }
 
 /* makes a move which is not completely dumb, but not as hard as the move with
  * the highest heuristic value
  */
-static move computer_move_easy(GtkGridBoard * gridboard, int turn) {
-	move * pm;
-	move bm={ {0, 0, 0}, {0, 0, 0} };
-	int i, size, h, maxh=-100;
-	steps=0;
+static move
+computer_move_easy (GtkGridBoard * gridboard, int turn)
+{
+  move *pm;
+  move bm = { {0, 0, 0}, {0, 0, 0} };
+  int i, size, h, maxh = -100;
+  steps = 0;
 
-	pm=get_possible_moves(gridboard, turn);
-	size=get_possible_moves_size(pm);
-	for (i=0; i<size; i+=5) {
-		gtk_gridboard_save_state(gridboard, NULL);
-		gridboard_move(gridboard, pm[i]);
-		h=gtk_gridboard_count_pieces(gridboard, turn);
-		gtk_gridboard_revert_state(gridboard);
-		if (h>maxh) {
-			maxh=h;
-			bm=pm[i];
-		}
-	}
-	free_possible_moves(pm);
-	return bm;
+  pm = get_possible_moves (gridboard, turn);
+  size = get_possible_moves_size (pm);
+  for (i = 0; i < size; i += 5) {
+    gtk_gridboard_save_state (gridboard, NULL);
+    gridboard_move (gridboard, pm[i]);
+    h = gtk_gridboard_count_pieces (gridboard, turn);
+    gtk_gridboard_revert_state (gridboard);
+    if (h > maxh) {
+      maxh = h;
+      bm = pm[i];
+    }
+  }
+  free_possible_moves (pm);
+  return bm;
 }
 
 /* decides which move to take with alphabeta algorithm
@@ -84,173 +89,196 @@ static move computer_move_easy(GtkGridBoard * gridboard, int turn) {
  * @param depth the maximum search depth in the tree
  * @return the chosen move
  */
-static move computer_move_ab(GtkGridBoard * gridboard, int turn, int depth) {
-	move * pm; 				/* possible moves */
-	move bm={ {0, 0, 0}, {0, 0, 0} }; 	/* best move */
-	move * gm; 				/* good moves */
-	int i, pmsize, gmsize=0;
-	int h, maxh=-100;			/* heuristic values */
-	steps=0;				/* FIXME: debug var */
+static move
+computer_move_ab (GtkGridBoard * gridboard, int turn, int depth)
+{
+  move *pm;			/* possible moves */
+  move bm = { {0, 0, 0}, {0, 0, 0} };	/* best move */
+  move *gm;			/* good moves */
+  int i, pmsize, gmsize = 0;
+  int h, maxh = -100;		/* heuristic values */
+  steps = 0;			/* FIXME: debug var */
 
-	pm=get_possible_moves(gridboard, turn);
-	pmsize=get_possible_moves_size(pm);
-	gm=calloc(pmsize, sizeof(move));
-	for (i=0; i<pmsize; i++) {
-		gtk_gridboard_save_state(gridboard, NULL);
-		gridboard_move(gridboard, pm[i]);
-		h=alphabeta(gridboard, -100, 100, FALSE, turn, depth);
-		gtk_gridboard_revert_state(gridboard);
-		if (h>maxh) {
-			maxh=h;
-			gmsize=0;
-			gm[gmsize++]=pm[i];
-		} else if (h==maxh) {
-			gm[gmsize++]=pm[i];
-		}
-	}
-	free_possible_moves(pm);
+  pm = get_possible_moves (gridboard, turn);
+  pmsize = get_possible_moves_size (pm);
+  gm = calloc (pmsize, sizeof (move));
+  for (i = 0; i < pmsize; i++) {
+    gtk_gridboard_save_state (gridboard, NULL);
+    gridboard_move (gridboard, pm[i]);
+    h = alphabeta (gridboard, -100, 100, FALSE, turn, depth);
+    gtk_gridboard_revert_state (gridboard);
+    if (h > maxh) {
+      maxh = h;
+      gmsize = 0;
+      gm[gmsize++] = pm[i];
+    } else if (h == maxh) {
+      gm[gmsize++] = pm[i];
+    }
+  }
+  free_possible_moves (pm);
 
-	i=g_random_int_range(0, gmsize);
-	bm=gm[i];
-	free(gm);
-	return bm;
-	
+  i = g_random_int_range (0, gmsize);
+  bm = gm[i];
+  free (gm);
+  return bm;
+
 }
 
 /* this function gets called from gataxx */
-move computer_move(GtkGridBoard * gridboard, int turn) {
-        int level=props_get_level(turn);
-        move ai_move;
+move
+computer_move (GtkGridBoard * gridboard, int turn)
+{
+  int level = props_get_level (turn);
+  move ai_move;
 
-        gtk_gridboard_set_visibility (gridboard, FALSE);
+  gtk_gridboard_set_visibility (gridboard, FALSE);
 
-	if (level == 1) {
-		ai_move = computer_move_random(gridboard, turn);
-	} else if (level == 2) {
-		ai_move = computer_move_easy(gridboard, turn);
-	} else {
-		ai_move = computer_move_ab(gridboard, turn, level-3);
-        }
+  if (level == 1) {
+    ai_move = computer_move_random (gridboard, turn);
+  } else if (level == 2) {
+    ai_move = computer_move_easy (gridboard, turn);
+  } else {
+    ai_move = computer_move_ab (gridboard, turn, level - 3);
+  }
 
-        gtk_gridboard_set_visibility (gridboard, TRUE);
+  gtk_gridboard_set_visibility (gridboard, TRUE);
 
-        return ai_move;
+  return ai_move;
 }
 
 /* alphabeta search the possible moves */
-static int alphabeta(GtkGridBoard * gridboard, int alpha, int beta, int mode, int me, int depth) {
-	move * pm;
-	int size, i, h;
-	int notme=(me==WHITE ? BLACK : WHITE);
-	int mec, notmec;
+static int
+alphabeta (GtkGridBoard * gridboard, int alpha, int beta, int mode, int me,
+	   int depth)
+{
+  move *pm;
+  int size, i, h;
+  int notme = (me == WHITE ? BLACK : WHITE);
+  int mec, notmec;
 
-	steps++;
+  steps++;
 
-	if (depth==0) {
-		mec=gtk_gridboard_count_pieces(GTK_GRIDBOARD (gridboard), me);
-		if (mec==0) return -50;
-		notmec=gtk_gridboard_count_pieces(GTK_GRIDBOARD (gridboard), notme);
-		if (notmec==0) return 50;
-		return mec; /* -notmec; */
-	}
-	if (mode) { /* max */
-		pm=get_possible_moves(gridboard, me);
-		size=get_possible_moves_size(pm);
-		for (i=0; i<size; i++) {
-			gtk_gridboard_save_state(GTK_GRIDBOARD (gridboard), NULL);
-			gridboard_move(gridboard, pm[i]);
-			h=alphabeta(gridboard, alpha, beta, !mode, me, depth-1);
-			if (h>alpha) alpha=h;
-			gtk_gridboard_revert_state(GTK_GRIDBOARD (gridboard));
-			if (alpha>beta) break; 
-		}
-		free_possible_moves(pm);
-		return alpha;
-	} else {
-		pm=get_possible_moves(gridboard, notme);
-		size=get_possible_moves_size(pm);
-		for (i=0; i<size; i++) {
-			gtk_gridboard_save_state(GTK_GRIDBOARD (gridboard), NULL);
-			gridboard_move(gridboard, pm[i]);
-			h=alphabeta(gridboard, alpha, beta, !mode, me, depth-1);
-			if (h<beta) beta=h;
-			gtk_gridboard_revert_state(GTK_GRIDBOARD (gridboard));
-			if (alpha>beta) break; 
-		}
-		free_possible_moves(pm);
-		return beta;
-	}
+  if (depth == 0) {
+    mec = gtk_gridboard_count_pieces (GTK_GRIDBOARD (gridboard), me);
+    if (mec == 0)
+      return -50;
+    notmec = gtk_gridboard_count_pieces (GTK_GRIDBOARD (gridboard), notme);
+    if (notmec == 0)
+      return 50;
+    return mec;			/* -notmec; */
+  }
+  if (mode) {			/* max */
+    pm = get_possible_moves (gridboard, me);
+    size = get_possible_moves_size (pm);
+    for (i = 0; i < size; i++) {
+      gtk_gridboard_save_state (GTK_GRIDBOARD (gridboard), NULL);
+      gridboard_move (gridboard, pm[i]);
+      h = alphabeta (gridboard, alpha, beta, !mode, me, depth - 1);
+      if (h > alpha)
+	alpha = h;
+      gtk_gridboard_revert_state (GTK_GRIDBOARD (gridboard));
+      if (alpha > beta)
+	break;
+    }
+    free_possible_moves (pm);
+    return alpha;
+  } else {
+    pm = get_possible_moves (gridboard, notme);
+    size = get_possible_moves_size (pm);
+    for (i = 0; i < size; i++) {
+      gtk_gridboard_save_state (GTK_GRIDBOARD (gridboard), NULL);
+      gridboard_move (gridboard, pm[i]);
+      h = alphabeta (gridboard, alpha, beta, !mode, me, depth - 1);
+      if (h < beta)
+	beta = h;
+      gtk_gridboard_revert_state (GTK_GRIDBOARD (gridboard));
+      if (alpha > beta)
+	break;
+    }
+    free_possible_moves (pm);
+    return beta;
+  }
 }
 
 /* returns possible moves
  * The less moves this returns, the faster the search algorithm will work.
  * Therefore, this does not really return _all_ possible moves.
  */
-static move * get_possible_moves(GtkGridBoard * gridboard, int turn) {
-	int x, y, i=0;
-	move * pm;
-	move bm;
+static move *
+get_possible_moves (GtkGridBoard * gridboard, int turn)
+{
+  int x, y, i = 0;
+  move *pm;
+  move bm;
 
-	pm=calloc(sizeof(move), BWIDTH*BHEIGHT);
-	for (x=0; x<BWIDTH; x++) {
-		for (y=0; y<BHEIGHT; y++) {
-			bm=get_best_move_to(gridboard, x, y, turn);
-			if (bm.from.valid) pm[i++]=bm;
-		}
-	}
-	pm[0].from.valid=i;
-	return pm;
+  pm = calloc (sizeof (move), BWIDTH * BHEIGHT);
+  for (x = 0; x < BWIDTH; x++) {
+    for (y = 0; y < BHEIGHT; y++) {
+      bm = get_best_move_to (gridboard, x, y, turn);
+      if (bm.from.valid)
+	pm[i++] = bm;
+    }
+  }
+  pm[0].from.valid = i;
+  return pm;
 }
 
-static int get_possible_moves_size(move * pm) {
-	return pm[0].from.valid;
+static int
+get_possible_moves_size (move * pm)
+{
+  return pm[0].from.valid;
 }
 
-static void free_possible_moves(move * pm) {
-	free(pm);
+static void
+free_possible_moves (move * pm)
+{
+  free (pm);
 }
 
 /* only thing to make sure the returned move is the "best" move is to
  * prioritize normal moves over jumps
  */
-static move get_best_move_to(GtkGridBoard * gridboard, int x, int y, int me) {
-	move bm;
-	int _x, _y, piece;
-	
-	bm.from.x=bm.from.y=bm.from.valid=bm.to.x=bm.to.y=bm.to.valid=0;
-	if (gtk_gridboard_get_piece(gridboard, x, y)!=EMPTY) return bm;
+static move
+get_best_move_to (GtkGridBoard * gridboard, int x, int y, int me)
+{
+  move bm;
+  int _x, _y, piece;
 
-	/* search for normal moves */
-	for (_x=MAX(0, x-1); _x<MIN(BWIDTH, x+2); _x++) {
-		for (_y=MAX(0, y-1); _y<MIN(BHEIGHT, y+2); _y++) {
-			piece=gtk_gridboard_get_piece(gridboard, _x, _y);
-			if (piece==me) {
-				bm.from.x=_x;
-				bm.from.y=_y;
-				bm.from.valid=TRUE;
-				bm.to.x=x;
-				bm.to.y=y;
-				bm.to.valid=TRUE;
-				return bm;
-			}
-		}
-	}
+  bm.from.x = bm.from.y = bm.from.valid = bm.to.x = bm.to.y = bm.to.valid = 0;
+  if (gtk_gridboard_get_piece (gridboard, x, y) != EMPTY)
+    return bm;
 
-	/* search for jumps also */
-	for (_x=MAX(0, x-2); _x<MIN(BWIDTH, x+3); _x++) {
-		for (_y=MAX(0, y-2); _y<MIN(BHEIGHT, y+3); _y++) {
-			piece=gtk_gridboard_get_piece(gridboard, _x, _y);
-			if (piece==me) {
-				bm.from.x=_x;
-				bm.from.y=_y;
-				bm.from.valid=TRUE;
-				bm.to.x=x;
-				bm.to.y=y;
-				bm.to.valid=TRUE;
-				return bm;
-			}
-		}
-	}
-	
+  /* search for normal moves */
+  for (_x = MAX (0, x - 1); _x < MIN (BWIDTH, x + 2); _x++) {
+    for (_y = MAX (0, y - 1); _y < MIN (BHEIGHT, y + 2); _y++) {
+      piece = gtk_gridboard_get_piece (gridboard, _x, _y);
+      if (piece == me) {
+	bm.from.x = _x;
+	bm.from.y = _y;
+	bm.from.valid = TRUE;
+	bm.to.x = x;
+	bm.to.y = y;
+	bm.to.valid = TRUE;
 	return bm;
+      }
+    }
+  }
+
+  /* search for jumps also */
+  for (_x = MAX (0, x - 2); _x < MIN (BWIDTH, x + 3); _x++) {
+    for (_y = MAX (0, y - 2); _y < MIN (BHEIGHT, y + 3); _y++) {
+      piece = gtk_gridboard_get_piece (gridboard, _x, _y);
+      if (piece == me) {
+	bm.from.x = _x;
+	bm.from.y = _y;
+	bm.from.valid = TRUE;
+	bm.to.x = x;
+	bm.to.y = y;
+	bm.to.valid = TRUE;
+	return bm;
+      }
+    }
+  }
+
+  return bm;
 }

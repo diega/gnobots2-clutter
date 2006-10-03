@@ -11,11 +11,15 @@
 
 #include <gtk/gtk.h>
 
-gboolean mouse_movement_cb (GtkWidget *widget, GdkEventMotion *e, gpointer data);
-gboolean mouse_click_cb (GtkWidget *widget, GdkEventButton *e, gpointer data);
-gboolean mouse_enter_cb (GtkWidget *widget, GdkEventCrossing *e, gpointer data);
-gboolean mouse_leave_cb (GtkWidget *widget, GdkEventCrossing *e, gpointer data);
-gboolean keyboard_cb (GtkWidget *widget, GdkEventKey *event, gpointer data);
+gboolean mouse_movement_cb (GtkWidget * widget, GdkEventMotion * e,
+			    gpointer data);
+gboolean mouse_click_cb (GtkWidget * widget, GdkEventButton * e,
+			 gpointer data);
+gboolean mouse_enter_cb (GtkWidget * widget, GdkEventCrossing * e,
+			 gpointer data);
+gboolean mouse_leave_cb (GtkWidget * widget, GdkEventCrossing * e,
+			 gpointer data);
+gboolean keyboard_cb (GtkWidget * widget, GdkEventKey * event, gpointer data);
 
 void select_cells (void);
 

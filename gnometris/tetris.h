@@ -45,128 +45,137 @@ class BlockOps;
 class ScoreFrame;
 class HighScores;
 
-class Tetris
-{
+class Tetris {
 public:
-	Tetris(int cmdlLevel);
-	~Tetris();
-	
-	GtkWidget * getWidget()	{return w;}
-	void togglePause();
-	void generate();
-	void endOfGame();
-	void setupPixmap();
+  Tetris (int cmdlLevel);
+   ~Tetris ();
+
+  GtkWidget *getWidget () {
+    return w;
+  } void togglePause ();
+  void generate ();
+  void endOfGame ();
+  void setupPixmap ();
 
 private:
-	GtkWidget * w;
+  GtkWidget * w;
 
-        GList * themeList;
-        
-	char *bgPixmap;
-	gint themeno;
-	
-	Field *field;
-	Preview *preview;
-	BlockOps *ops;
-	ScoreFrame *scoreFrame;
-	HighScores *high_scores;
+  GList *themeList;
 
-	GConfClient *gconf_client;
-	
-	bool paused;
-	int timeoutId;
-	bool onePause;
-	
-	bool inPlay;
-	bool useTarget;
+  char *bgPixmap;
+  gint themeno;
 
-	void generateTimer(int level);
+  Field *field;
+  Preview *preview;
+  BlockOps *ops;
+  ScoreFrame *scoreFrame;
+  HighScores *high_scores;
 
-	static gint keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t);
-	static gint keyReleaseHandler(GtkWidget *widget, GdkEvent *event, Tetris *t);
-	static gchar *decodeDropData(gchar * data, gint type);
-	void saveBgOptions();
-	static void decodeColour (guint16 *data, Tetris *t);
-	static void resetColour (Tetris *t);
-	static void dragDrop(GtkWidget *widget, GdkDragContext *context,
-			     gint x, gint y, GtkSelectionData *data, 
-			     guint info, guint time, Tetris *t);
-	static gboolean configure (GtkWidget *widget, GdkEventConfigure *event, Tetris *t);
-	static int timeoutHandler(void *d);
-	static int gameQuit(GtkAction *action, void *d);
-	static int gameNew(GtkAction *action, void *d);
-	static int focusOut(GtkWidget *widget, GdkEvent *e, Tetris *t);
-	static int gamePause(GtkAction *action, void *d);
-	static int gameEnd(GtkAction *action, void *d);
-	static int gameHelp(GtkAction *action, void *d);
-	static int gameAbout(GtkAction *action, void *d);
-	static int gameTopTen(GtkAction *action, void *d);
-	static int gameProperties(GtkAction *action, void *d);
-	static void setupdialogDestroy(GtkWidget *widget, void *d);
-	static void setupdialogResponse(GtkWidget *dialog, gint response_id, void *d);
-	static void setSound (GtkWidget *widget, gpointer data);
-	static void setSelectionPreview(GtkWidget *widget, void *d);
-	static void setSelectionBlocks(GtkWidget *widget, void *d);
- 	static void setRotateCounterClockWise(GtkWidget *widget, void *d);
-	static void setTarget (GtkWidget *widget, void *d);
-	static void setSelection (GtkWidget *widget, void *data);
-	static void setBGSelection (GtkWidget *widget, void *data);
+  GConfClient *gconf_client;
 
-	static void lineFillHeightChanged (GtkWidget *spin, gpointer data);
-	static void lineFillProbChanged (GtkWidget *spin, gpointer data);
-	static void startingLevelChanged (GtkWidget *spin, gpointer data);
-	
-	static void gconfNotify (GConfClient *tmp_client, guint cnx_id, GConfEntry *tmp_entry, gpointer tmp_data);
-	static gchar *gconfGetString (GConfClient *client, const char *key, const char *default_val);
-	static int gconfGetInt (GConfClient *client, const char *key, int default_val);
-	static gboolean gconfGetBoolean (GConfClient *client, const char *key, gboolean default_val);
-	void initOptions ();
-	void setOptions ();
-	void writeOptions ();
-        void setupScoreState ();
-	void manageFallen();
-	
-	GdkPixbuf *bgimage;
-	gboolean usebg;
+  bool paused;
+  int timeoutId;
+  bool onePause;
 
-	GdkColor bgcolour;
+  bool inPlay;
+  bool useTarget;
 
-	void fillMenu(GtkWidget *menu, char *pixname, char *dirname, GList ** list, bool addnone = false);
-	
-	GtkWidget *setupdialog;
-	GtkWidget *sentry;
-	int startingLevel;
-	int cmdlineLevel;
+  void generateTimer (int level);
 
-	int line_fill_height;
-	int line_fill_prob;
+  static gint keyPressHandler (GtkWidget * widget, GdkEvent * event,
+			       Tetris * t);
+  static gint keyReleaseHandler (GtkWidget * widget, GdkEvent * event,
+				 Tetris * t);
+  static gchar *decodeDropData (gchar * data, gint type);
+  void saveBgOptions ();
+  static void decodeColour (guint16 * data, Tetris * t);
+  static void resetColour (Tetris * t);
+  static void dragDrop (GtkWidget * widget, GdkDragContext * context,
+			gint x, gint y, GtkSelectionData * data,
+			guint info, guint time, Tetris * t);
+  static gboolean configure (GtkWidget * widget, GdkEventConfigure * event,
+			     Tetris * t);
+  static int timeoutHandler (void *d);
+  static int gameQuit (GtkAction * action, void *d);
+  static int gameNew (GtkAction * action, void *d);
+  static int focusOut (GtkWidget * widget, GdkEvent * e, Tetris * t);
+  static int gamePause (GtkAction * action, void *d);
+  static int gameEnd (GtkAction * action, void *d);
+  static int gameHelp (GtkAction * action, void *d);
+  static int gameAbout (GtkAction * action, void *d);
+  static int gameTopTen (GtkAction * action, void *d);
+  static int gameProperties (GtkAction * action, void *d);
+  static void setupdialogDestroy (GtkWidget * widget, void *d);
+  static void setupdialogResponse (GtkWidget * dialog, gint response_id,
+				   void *d);
+  static void setSound (GtkWidget * widget, gpointer data);
+  static void setSelectionPreview (GtkWidget * widget, void *d);
+  static void setSelectionBlocks (GtkWidget * widget, void *d);
+  static void setRotateCounterClockWise (GtkWidget * widget, void *d);
+  static void setTarget (GtkWidget * widget, void *d);
+  static void setSelection (GtkWidget * widget, void *data);
+  static void setBGSelection (GtkWidget * widget, void *data);
 
-	GtkWidget *fill_height_spinner;
-	GtkWidget *fill_prob_spinner;
-	GtkWidget *do_preview_toggle;
-	GtkWidget *random_block_colors_toggle;
-	GtkWidget *rotate_counter_clock_wise_toggle;
-	GtkWidget *useTargetToggle;
-	GtkWidget *sound_toggle;
+  static void lineFillHeightChanged (GtkWidget * spin, gpointer data);
+  static void lineFillProbChanged (GtkWidget * spin, gpointer data);
+  static void startingLevelChanged (GtkWidget * spin, gpointer data);
 
-	Preview *theme_preview;
+  static void gconfNotify (GConfClient * tmp_client, guint cnx_id,
+			   GConfEntry * tmp_entry, gpointer tmp_data);
+  static gchar *gconfGetString (GConfClient * client, const char *key,
+				const char *default_val);
+  static int gconfGetInt (GConfClient * client, const char *key,
+			  int default_val);
+  static gboolean gconfGetBoolean (GConfClient * client, const char *key,
+				   gboolean default_val);
+  void initOptions ();
+  void setOptions ();
+  void writeOptions ();
+  void setupScoreState ();
+  void manageFallen ();
 
-	int moveLeft;
-	int moveRight;
-	int moveDown;
-	int moveDrop;
-	int moveRotate;
-	int movePause;
-	
-	GtkAction *new_game_action;
-	GtkAction *pause_action;
-	GtkAction *resume_action;
-	GtkAction *scores_action;
-	GtkAction *end_game_action;
-	GtkAction *preferences_action;
+  GdkPixbuf *bgimage;
+  gboolean usebg;
 
-	bool fastFall;
-        bool dropBlock;
+  GdkColor bgcolour;
+
+  void fillMenu (GtkWidget * menu, char *pixname, char *dirname,
+		 GList ** list, bool addnone = false);
+
+  GtkWidget *setupdialog;
+  GtkWidget *sentry;
+  int startingLevel;
+  int cmdlineLevel;
+
+  int line_fill_height;
+  int line_fill_prob;
+
+  GtkWidget *fill_height_spinner;
+  GtkWidget *fill_prob_spinner;
+  GtkWidget *do_preview_toggle;
+  GtkWidget *random_block_colors_toggle;
+  GtkWidget *rotate_counter_clock_wise_toggle;
+  GtkWidget *useTargetToggle;
+  GtkWidget *sound_toggle;
+
+  Preview *theme_preview;
+
+  int moveLeft;
+  int moveRight;
+  int moveDown;
+  int moveDrop;
+  int moveRotate;
+  int movePause;
+
+  GtkAction *new_game_action;
+  GtkAction *pause_action;
+  GtkAction *resume_action;
+  GtkAction *scores_action;
+  GtkAction *end_game_action;
+  GtkAction *preferences_action;
+
+  bool fastFall;
+  bool dropBlock;
 };
 
 #endif // __tetris_h__

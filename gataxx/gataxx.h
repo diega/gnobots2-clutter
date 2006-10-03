@@ -28,38 +28,38 @@
 
 #define BHEIGHT 7		/* board height */
 #define BWIDTH 7		/* board width  */
-#define DEF_TIMEOUT 1000 	/* computer timeout default */
+#define DEF_TIMEOUT 1000	/* computer timeout default */
 
 typedef struct {
-	int x;
-	int y;
-	int valid;
+  int x;
+  int y;
+  int valid;
 } position;
 
 typedef struct {
-	position from;
-	position to;
+  position from;
+  position to;
 } move;
 
-void new_game_cb(GtkWidget * widget, gpointer data);
-void undo_move_cb(GtkWidget * widget, gpointer data);
-gboolean quit_game_cb(GtkWidget * widget, gpointer data);
-void properties_cb(GtkWidget * widget, gpointer data);
-void about_cb(GtkWidget * widget, gpointer data);
-void boxclicked_cb(GtkWidget * widget, int x, int y);
-GnomeUIInfo * get_mainmenu(void);
-GConfClient * get_gconf_client(void);
-gboolean computer_move_cb(gpointer turn);
-void do_move(move m);
-void do_select(int x, int y);
-void gridboard_move(GtkGridBoard * gridboard, move m);
-void turn_pieces(GtkGridBoard * gridboard, int x, int y);
-void apply_changes(void);
-GConfClient * get_gconf_client(void);
-void menu_undo_set_sensitive(gboolean sens);
-gboolean move_possible(GtkGridBoard * gridboard, int turn);
-gboolean move_possible_to(GtkGridBoard * gridboard, int x, int y, int turn);
-gboolean end_game_cb(gpointer data);
-void flip_final(GtkGridBoard * gridboard, int wc, int bc);
+void new_game_cb (GtkWidget * widget, gpointer data);
+void undo_move_cb (GtkWidget * widget, gpointer data);
+gboolean quit_game_cb (GtkWidget * widget, gpointer data);
+void properties_cb (GtkWidget * widget, gpointer data);
+void about_cb (GtkWidget * widget, gpointer data);
+void boxclicked_cb (GtkWidget * widget, int x, int y);
+GnomeUIInfo *get_mainmenu (void);
+GConfClient *get_gconf_client (void);
+gboolean computer_move_cb (gpointer turn);
+void do_move (move m);
+void do_select (int x, int y);
+void gridboard_move (GtkGridBoard * gridboard, move m);
+void turn_pieces (GtkGridBoard * gridboard, int x, int y);
+void apply_changes (void);
+GConfClient *get_gconf_client (void);
+void menu_undo_set_sensitive (gboolean sens);
+gboolean move_possible (GtkGridBoard * gridboard, int turn);
+gboolean move_possible_to (GtkGridBoard * gridboard, int x, int y, int turn);
+gboolean end_game_cb (gpointer data);
+void flip_final (GtkGridBoard * gridboard, int wc, int bc);
 
 #endif /* GATAXX_H */

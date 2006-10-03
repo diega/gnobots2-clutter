@@ -26,16 +26,16 @@
 void load_properties (void);
 void reload_properties (void);
 void show_properties_dialog (void);
-int props_get_level(int piece);
-int props_get_white_level(void);
-int props_get_black_level(void);
-void load_properties(void);
-void show_properties_dialog(void);
-void reload_properties(void);
-gboolean props_get_animate(void);
-gboolean props_get_quick_moves(void);
-gchar * props_get_theme(void);
-int props_is_human(int piece);
-void props_init(GtkWindow * window, char * title);
+int props_get_level (int piece);
+int props_get_white_level (void);
+int props_get_black_level (void);
+void load_properties (void);
+void show_properties_dialog (void);
+void reload_properties (void);
+gboolean props_get_animate (void);
+gboolean props_get_quick_moves (void);
+gchar *props_get_theme (void);
+int props_is_human (int piece);
+void props_init (GtkWindow * window, char *title);
 
 #endif

@@ -41,15 +41,16 @@
 
 #define COIN_RADIUS 0.4
 
-static void default_draw_bg (cairo_t *cx, gdouble x, gdouble y)
+static void
+default_draw_bg (cairo_t * cx, gdouble x, gdouble y)
 {
   cairo_set_source_rgba (cx, 0.43, 0.55, 0.65, 1.0);
   cairo_rectangle (cx, x, y, 1.0, 1.0);
   cairo_fill (cx);
 }
 
-static void default_draw_piece (cairo_t *cx, gdouble x, gdouble y, 
-				gdouble phase)
+static void
+default_draw_piece (cairo_t * cx, gdouble x, gdouble y, gdouble phase)
 {
   x += 0.5;
   y += 0.5;
@@ -63,41 +64,44 @@ static void default_draw_piece (cairo_t *cx, gdouble x, gdouble y,
   /* We special-case the two "pure" ends of the flip to avoid
    * floating point errors in calculating the phase. */
   if ((phase > 0.98) || (phase < 0.02)) {
-    cairo_arc (cx, x, y, COIN_RADIUS, 0, 2*G_PI);
+    cairo_arc (cx, x, y, COIN_RADIUS, 0, 2 * G_PI);
     cairo_fill (cx);
   } else {
     cairo_save (cx);
     cairo_translate (cx, x, y);
-    cairo_scale (cx, cos (phase*G_PI), 1.0);
-    cairo_arc (cx, 0, 0, COIN_RADIUS, 0, 2*G_PI);
+    cairo_scale (cx, cos (phase * G_PI), 1.0);
+    cairo_arc (cx, 0, 0, COIN_RADIUS, 0, 2 * G_PI);
     cairo_fill (cx);
     cairo_restore (cx);
   }
 }
 
-static void default_draw_hilight (cairo_t *cx, gdouble x, gdouble y)
+static void
+default_draw_hilight (cairo_t * cx, gdouble x, gdouble y)
 {
   x += 0.5;
   y += 0.5;
 
   cairo_set_source_rgba (cx, 1.0, 1.0, 1.0, 0.3);
-  cairo_arc (cx, x, y, COIN_RADIUS, 0, 2*G_PI);
+  cairo_arc (cx, x, y, COIN_RADIUS, 0, 2 * G_PI);
   cairo_fill (cx);
 }
 
-static void default_draw_secondary_hilight (cairo_t *cx, gdouble x, gdouble y,
-					    gint piece)
+static void
+default_draw_secondary_hilight (cairo_t * cx, gdouble x, gdouble y,
+				gint piece)
 {
   x += 0.5;
   y += 0.5;
 
   cairo_set_source_rgba (cx, 1.0, 1.0, 1.0, 0.3);
   cairo_set_line_width (cx, 0.02);
-  cairo_arc (cx, x, y, COIN_RADIUS*1.15, 0, 2*G_PI);
+  cairo_arc (cx, x, y, COIN_RADIUS * 1.15, 0, 2 * G_PI);
   cairo_stroke (cx);
 }
 
-static void default_draw_grid (cairo_t *cx, gdouble x, gdouble y)
+static void
+default_draw_grid (cairo_t * cx, gdouble x, gdouble y)
 {
   cairo_save (cx);
 
@@ -115,8 +119,8 @@ static void default_draw_grid (cairo_t *cx, gdouble x, gdouble y)
 #define BLOCK_SIZE (0.8)
 #define BLOCK_OFFSET ((1.0 - BLOCK_SIZE)/2.0)
 
-static void sandd_draw_piece (cairo_t *cx, gdouble x, gdouble y, 
-			      gdouble phase)
+static void
+sandd_draw_piece (cairo_t * cx, gdouble x, gdouble y, gdouble phase)
 {
   gdouble ofs;
 
@@ -141,15 +145,15 @@ static void sandd_draw_piece (cairo_t *cx, gdouble x, gdouble y,
     cairo_close_path (cx);
   } else {
     cairo_translate (cx, 0.5, 0.5);
-    ofs = BLOCK_SIZE*(2.0 - phase)*0.25;
+    ofs = BLOCK_SIZE * (2.0 - phase) * 0.25;
 
-    cairo_move_to (cx, 0.0, -BLOCK_SIZE/2.0);
+    cairo_move_to (cx, 0.0, -BLOCK_SIZE / 2.0);
     cairo_line_to (cx, ofs, -ofs);
-    cairo_line_to (cx, BLOCK_SIZE/2.0, 0.0);
+    cairo_line_to (cx, BLOCK_SIZE / 2.0, 0.0);
     cairo_line_to (cx, ofs, ofs);
-    cairo_line_to (cx, 0.0, BLOCK_SIZE/2.0);
+    cairo_line_to (cx, 0.0, BLOCK_SIZE / 2.0);
     cairo_line_to (cx, -ofs, ofs);
-    cairo_line_to (cx, -BLOCK_SIZE/2.0, 0.0);
+    cairo_line_to (cx, -BLOCK_SIZE / 2.0, 0.0);
     cairo_line_to (cx, -ofs, -ofs);
     cairo_close_path (cx);
   }
@@ -162,18 +166,19 @@ static void sandd_draw_piece (cairo_t *cx, gdouble x, gdouble y,
   cairo_restore (cx);
 }
 
-static void sandd_draw_hilight (cairo_t *cx, gdouble x, gdouble y)
+static void
+sandd_draw_hilight (cairo_t * cx, gdouble x, gdouble y)
 {
   x += 0.5;
   y += 0.5;
 
   cairo_set_source_rgba (cx, 1.0, 1.0, 1.0, 1.0);
-  cairo_arc (cx, x, y, 0.1, 0, 2*G_PI);
+  cairo_arc (cx, x, y, 0.1, 0, 2 * G_PI);
   cairo_fill (cx);
 }
 
-static void sandd_draw_secondary_hilight (cairo_t *cx, gdouble x, gdouble y,
-					  gint piece)
+static void
+sandd_draw_secondary_hilight (cairo_t * cx, gdouble x, gdouble y, gint piece)
 {
   gdouble holesize;
 
@@ -183,12 +188,12 @@ static void sandd_draw_secondary_hilight (cairo_t *cx, gdouble x, gdouble y,
   holesize = 0.05;
   /* Slightly increase the hole size for squares to allow for the lack of
    * a visible border around the hole. */
-  if (piece != 1) 
+  if (piece != 1)
     holesize = 0.06;
 
   cairo_set_line_width (cx, 0.02);
-  cairo_arc (cx, x, y, holesize, 0, 2*G_PI);
-  cairo_set_source_rgb (cx,  0.43, 0.55, 0.65);
+  cairo_arc (cx, x, y, holesize, 0, 2 * G_PI);
+  cairo_set_source_rgb (cx, 0.43, 0.55, 0.65);
   cairo_fill_preserve (cx);
   cairo_set_source_rgb (cx, 0.0, 0.0, 0.0);
   cairo_stroke (cx);
@@ -197,9 +202,11 @@ static void sandd_draw_secondary_hilight (cairo_t *cx, gdouble x, gdouble y,
 /* This should be the only public interface. */
 
 GtkGridBoardTheme gtk_gridboard_themes[] = {
-  { N_("Plain"), default_draw_bg, default_draw_piece, 
-    default_draw_hilight, default_draw_secondary_hilight, default_draw_grid },
-  { N_("Squares and Diamonds"), default_draw_bg, sandd_draw_piece, 
-    sandd_draw_hilight, sandd_draw_secondary_hilight, default_draw_grid },
-  { NULL, NULL, NULL, NULL, NULL }
+  {N_("Plain"), default_draw_bg, default_draw_piece,
+   default_draw_hilight, default_draw_secondary_hilight, default_draw_grid}
+  ,
+  {N_("Squares and Diamonds"), default_draw_bg, sandd_draw_piece,
+   sandd_draw_hilight, sandd_draw_secondary_hilight, default_draw_grid}
+  ,
+  {NULL, NULL, NULL, NULL, NULL}
 };

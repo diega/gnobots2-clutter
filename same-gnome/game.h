@@ -30,39 +30,39 @@
 
 /* Animation styles. */
 enum {
-	ANI_STILL,
-	ANI_REDRAW,
-	ANI_SPIN,
-	ANI_SPINBACK,
-	ANI_DESTROY,
-	ANI_MOVE_DOWN,
-	ANI_MOVE_LEFT,
+  ANI_STILL,
+  ANI_REDRAW,
+  ANI_SPIN,
+  ANI_SPINBACK,
+  ANI_DESTROY,
+  ANI_MOVE_DOWN,
+  ANI_MOVE_LEFT,
 };
 
 /* The blank colour. */
 extern const gint NONE;
 
 enum {
-	GAME_IDLE,
-	GAME_SELECTED,
-	GAME_DESTROYING,
-	GAME_MOVING_DOWN,
-	GAME_MOVING_LEFT
+  GAME_IDLE,
+  GAME_SELECTED,
+  GAME_DESTROYING,
+  GAME_MOVING_DOWN,
+  GAME_MOVING_LEFT
 };
 
 extern gint game_state;
 
 typedef struct {
-	gint8 colour;   /* Colour of the ball. -1 = empty. */
-	gint8 frame;    /* Frame of the animation. */
-	guint8 style;   /* The animation style. i.e. what the ball is doing. */
-	guint8 visited; /* Scratch variable for connected component finding. */
+  gint8 colour;			/* Colour of the ball. -1 = empty. */
+  gint8 frame;			/* Frame of the animation. */
+  guint8 style;			/* The animation style. i.e. what the ball is doing. */
+  guint8 visited;		/* Scratch variable for connected component finding. */
 } game_cell;
 
 /* FIXME: We have implicitly assumed that the dimensions of the
 	 board can't exceed 127 x 127 */
 typedef struct {
-	gint8 x, y;
+  gint8 x, y;
 } coordinates;
 
 /* The list of cells in the currently selected region. */
@@ -82,13 +82,13 @@ gboolean save_game (void);
 void clear_savegame (void);
 void new_game (void);
 void restore_game_state (void);
-gchar * serialise_board_to_string (void);
-gboolean restore_board_from_string (gchar* state);
+gchar *serialise_board_to_string (void);
+gboolean restore_board_from_string (gchar * state);
 void undo (void);
 void redo (void);
 int calculate_score (gint nballs);
 void set_sizes (gint size);
-game_cell * get_game_cell (int x, int y);
+game_cell *get_game_cell (int x, int y);
 void find_connected_component (int x, int y);
 void destroy_balls (void);
 /* FIXME: Could this return gboolean too ? */
@@ -98,4 +98,3 @@ void fixup_marks (void);
 void end_of_move (void);
 
 #endif /* GAME_H */
-

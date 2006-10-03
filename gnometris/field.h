@@ -25,54 +25,53 @@
 #include "tetris.h"
 #include "blockops.h"
 
-class Field : public BlockOps
-{
+class Field:public BlockOps {
 public:
-	Field();
-	~Field();
+  Field ();
+  ~Field ();
 
-	void setBackground(GdkPixbuf *bgImage); //, bool tiled); fixme: move tiling here.
-	void setBackground(GdkColor *bgColor);
-	void placeBlock(int x, int y, int bcolor, bool remove);
-	void showPauseMessage();
-	void hidePauseMessage();
-	void showGameOverMessage();
-	void hideGameOverMessage();
-	void redraw();
-        void setTheme (gint id);
+  void setBackground (GdkPixbuf * bgImage);	//, bool tiled); fixme: move tiling here.
+  void setBackground (GdkColor * bgColor);
+  void placeBlock (int x, int y, int bcolor, bool remove);
+  void showPauseMessage ();
+  void hidePauseMessage ();
+  void showGameOverMessage ();
+  void hideGameOverMessage ();
+  void redraw ();
+  void setTheme (gint id);
 
-	GtkWidget * getWidget()	{return w;}
+  GtkWidget *getWidget () {
+    return w;
+} private:
+    GtkWidget * w;
 
-private:
-	GtkWidget *w;
+  int width;
+  int height;
 
-	int width;
-	int height;
+  cairo_surface_t *buffer;
+  cairo_surface_t *background;
+  cairo_surface_t **blocks;
 
-	cairo_surface_t *buffer;
-	cairo_surface_t *background;
-	cairo_surface_t **blocks;
+  bool showPause;
+  bool showGameOver;
 
-	bool showPause;
-	bool showGameOver;
+  GdkPixbuf *backgroundImage;
+  bool backgroundImageTiled;
+  bool useBGImage;
+  GdkColor *backgroundColor;
+  gint themeID;
 
-	GdkPixbuf *backgroundImage;
-	bool backgroundImageTiled;
-        bool useBGImage;
-	GdkColor *backgroundColor;
-        gint themeID;
+  void drawMessage (cairo_t * cr, const char *msg);
+  void redrawAll ();
+  void draw (gint x, gint y, gint w, gint h);
+  void draw ();
+  void rescaleBackground ();
 
-	void drawMessage(cairo_t *cr, const char *msg);
-	void redrawAll();
-	void draw (gint x, gint y, gint w, gint h);
-	void draw ();
-        void rescaleBackground ();
-
-	static gboolean configure(GtkWidget *widget, GdkEventConfigure *event, Field *field);
-	static gboolean expose(GtkWidget *widget, GdkEventExpose *event, Field *field);
+  static gboolean configure (GtkWidget * widget, GdkEventConfigure * event,
+			     Field * field);
+  static gboolean expose (GtkWidget * widget, GdkEventExpose * event,
+			  Field * field);
 
 };
 
 #endif //__field_h__
-
-

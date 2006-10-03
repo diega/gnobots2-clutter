@@ -11,20 +11,21 @@
 #ifndef DRAWING_H
 #define DRAWING_H
 
-gboolean expose_cb (GtkWidget *canvas, GdkEventExpose *event, gpointer data);
-gboolean configure_cb (GtkWidget *canvas, GdkEventConfigure *event);
+gboolean expose_cb (GtkWidget * canvas, GdkEventExpose * event,
+		    gpointer data);
+gboolean configure_cb (GtkWidget * canvas, GdkEventConfigure * event);
 
 void redraw (void);
 
 void cursor_draw (gint x, gint y);
 void cursor_erase (void);
 
-void pixels_to_logical (gint px, gint py, gint *lx, gint *ly);
+void pixels_to_logical (gint px, gint py, gint * lx, gint * ly);
 
 void start_spinning (void);
 void stop_spinning (void);
 
-void change_theme (gchar *newtheme);
+void change_theme (gchar * newtheme);
 void resize_graphics (void);
 
 void fast_animation_enable (gboolean);

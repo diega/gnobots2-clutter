@@ -26,7 +26,7 @@
  * Currently tailored for use with Blackjack.
  */
 
-void splash_new ( void );
-void splash_destroy ( void );
+void splash_new (void);
+void splash_destroy (void);
 
-void splash_update (gchar* text, gfloat percent);
+void splash_update (gchar * text, gfloat percent);

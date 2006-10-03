@@ -12,8 +12,8 @@
 #ifndef SOLUBILITY_H
 #define SOLUBILITY_H
 
-extern int  tile_free             (int);
-extern void generate_game         (guint seed);
+extern int tile_free (int);
+extern void generate_game (guint seed);
 extern void generate_dependencies (void);
 
 int shuffle (void);

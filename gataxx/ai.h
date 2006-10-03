@@ -21,6 +21,6 @@
 #ifndef AI_H
 #define AI_H
 
-move computer_move(GtkGridBoard *gridboard, int turn);
+move computer_move (GtkGridBoard * gridboard, int turn);
 
 #endif /* AI_H */

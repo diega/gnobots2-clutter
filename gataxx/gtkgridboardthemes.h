@@ -30,9 +30,11 @@
 #include <cairo.h>
 
 typedef void GtkGridboardThemeBGFunc (cairo_t *, gdouble, gdouble);
-typedef void GtkGridboardThemePieceFunc (cairo_t *, gdouble, gdouble, gdouble);
+typedef void GtkGridboardThemePieceFunc (cairo_t *, gdouble, gdouble,
+					 gdouble);
 typedef void GtkGridboardThemeHiliteFunc (cairo_t *, gdouble, gdouble);
-typedef void GtkGridboardThemeSecondaryHiliteFunc (cairo_t *, gdouble, gdouble, gint);
+typedef void GtkGridboardThemeSecondaryHiliteFunc (cairo_t *, gdouble,
+						   gdouble, gint);
 typedef void GtkGridboardThemeGridFunc (cairo_t *, gdouble, gdouble);
 
 typedef struct _GtkGridBoardTheme {

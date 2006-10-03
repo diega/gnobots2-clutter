@@ -22,31 +22,31 @@
 
 #include "player.h"
 
-void                    bj_game_find_rules (gchar *variation);
+void bj_game_find_rules (gchar * variation);
 
-gchar*                  bj_game_file_to_name (const gchar*);
-void                    bj_game_new (gchar*, guint *);
-void                    bj_clear_table (void);
+gchar *bj_game_file_to_name (const gchar *);
+void bj_game_new (gchar *, guint *);
+void bj_clear_table (void);
 
-void                    bj_game_show_hand_counts (void);
+void bj_game_show_hand_counts (void);
 
-gdouble                 bj_get_deal_delay (void);
+gdouble bj_get_deal_delay (void);
 
-gboolean                bj_game_is_active (void);
-void                    bj_game_set_active (gboolean);
-gboolean                bj_game_is_first_hand (void);
+gboolean bj_game_is_active (void);
+void bj_game_set_active (gboolean);
+gboolean bj_game_is_first_hand (void);
 
-char *                  bj_game_get_rules_name (void);
-char *                  bj_game_get_rules_file (void);
-GList *                 bj_game_get_rules_list (void);
+char *bj_game_get_rules_name (void);
+char *bj_game_get_rules_file (void);
+GList *bj_game_get_rules_list (void);
 
 // Extend BJRules
-class BJGameRules : public BJRules
-{
+class BJGameRules:public BJRules {
 public:
-  BJGameRules (bool hitSoft17, bool doubleAnyTotal, bool double9, bool doubleSoft,
-               bool doubleAfterHit, bool doubleAfterSplit, bool resplit,
-               bool resplitAces, bool lateSurrender, int numDecks, int dealerSpeed);
+  BJGameRules (bool hitSoft17, bool doubleAnyTotal, bool double9,
+	       bool doubleSoft, bool doubleAfterHit, bool doubleAfterSplit,
+	       bool resplit, bool resplitAces, bool lateSurrender,
+	       int numDecks, int dealerSpeed);
   int getDealerSpeed (void);
   int getNumDecks (void);
 
@@ -54,23 +54,23 @@ protected:
   int numDecks, dealerSpeed;
 };
 
-BJGameRules * bj_game_read_rules (gchar *filename);
-BJGameRules * bj_game_find_and_read_rules (gchar *filename);
+BJGameRules *bj_game_read_rules (gchar * filename);
+BJGameRules *bj_game_find_and_read_rules (gchar * filename);
 
 // GAME GLOBALS
 
-extern BJGameRules      *rules;
-extern LoadablePlayer   *strategy;
-extern Hand             *dealer;
-extern Probabilities    *dealerProbabilities;
-extern Shoe             *shoe;
-extern BJShoe           *distribution;
-extern gint             numDecks;
+extern BJGameRules *rules;
+extern LoadablePlayer *strategy;
+extern Hand *dealer;
+extern Probabilities *dealerProbabilities;
+extern Shoe *shoe;
+extern BJShoe *distribution;
+extern gint numDecks;
 
-extern PlayerHand       *player;
-extern GList            *playerHands;
+extern PlayerHand *player;
+extern GList *playerHands;
 
-extern Card             tempCard;
-extern PlayerHand       *tempHand;
+extern Card tempCard;
+extern PlayerHand *tempHand;
 
 #endif

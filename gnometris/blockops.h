@@ -25,62 +25,61 @@
 
 #include "tetris.h"
 
-enum SlotType 
-{
-	EMPTY,
-	TARGET,
-	FALLING, 
-	LAYING
+enum SlotType {
+  EMPTY,
+  TARGET,
+  FALLING,
+  LAYING
 };
 
-struct Block
-{
-	SlotType what;
-	int color;
+struct Block {
+  SlotType what;
+  int color;
 };
 
-class BlockOps
-{
+class BlockOps {
 public:
-	BlockOps();
-	~BlockOps();
-	
-	bool moveBlockLeft();
-	bool moveBlockRight();
-	bool moveBlockDown();
-	bool rotateBlock(bool);
-	int dropBlock();
-	void fallingToLaying();
-	int checkFullLines();
-	bool generateFallingBlock();
-	void emptyField(void);
-	void emptyField(int filled_lines, int fill_prob);
-	void putBlockInField(bool erase);
-	int getLinesToBottom();
-	bool isFieldEmpty (void);
-	void setUseTarget (bool);
-	bool getUseTarget () { return useTarget; };
+  BlockOps ();
+  ~BlockOps ();
+
+  bool moveBlockLeft ();
+  bool moveBlockRight ();
+  bool moveBlockDown ();
+  bool rotateBlock (bool);
+  int dropBlock ();
+  void fallingToLaying ();
+  int checkFullLines ();
+  bool generateFallingBlock ();
+  void emptyField (void);
+  void emptyField (int filled_lines, int fill_prob);
+  void putBlockInField (bool erase);
+  int getLinesToBottom ();
+  bool isFieldEmpty (void);
+  void setUseTarget (bool);
+  bool getUseTarget () {
+    return useTarget;
+  };
 
 private:
-	void putBlockInField (int bx, int by, int blocknr, int rotation,
-			      SlotType fill);
-	bool blockOkHere(int x, int y, int b, int r);
-	void eliminateLine(int l);
+  void putBlockInField (int bx, int by, int blocknr, int rotation,
+			SlotType fill);
+  bool blockOkHere (int x, int y, int b, int r);
+  void eliminateLine (int l);
 
-	bool useTarget;
+  bool useTarget;
 
 protected:
-	void clearTarget ();
-	void generateTarget ();
+  void clearTarget ();
+  void generateTarget ();
 
-	Block **field;
+  Block **field;
 
-	int blocknr;
-	int rot;
-	int color;
+  int blocknr;
+  int rot;
+  int color;
 
-	int posx;
-	int posy;
+  int posx;
+  int posy;
 };
 
 #endif //__blockops_h__

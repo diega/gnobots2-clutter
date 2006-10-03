@@ -66,65 +66,65 @@
 
 // Global variables
 
-extern GtkWidget        *toplevel_window;
-extern GtkWidget        *playing_area;
-extern GtkWidget        *option_dialog;
-extern GdkGC            *draw_gc;
-extern GdkGC            *bg_gc;
-extern GdkGC            *slot_gc;
-extern GdkPixmap        *surface;
+extern GtkWidget *toplevel_window;
+extern GtkWidget *playing_area;
+extern GtkWidget *option_dialog;
+extern GdkGC *draw_gc;
+extern GdkGC *bg_gc;
+extern GdkGC *slot_gc;
+extern GdkPixmap *surface;
 
-extern GObject          *card_deck;
-extern gchar            *card_style;
+extern GObject *card_deck;
+extern gchar *card_style;
 
-extern GtkProgressBar   *progress_bar;
-extern GtkWidget        *status_bar;
+extern GtkProgressBar *progress_bar;
+extern GtkWidget *status_bar;
 
-extern guint            timeout;
-extern guint            seed;
+extern guint timeout;
+extern guint seed;
 
-extern guint            x_spacing;
-extern guint            y_spacing;
-extern double           x_expanded_offset;
-extern double           y_expanded_offset;
+extern guint x_spacing;
+extern guint y_spacing;
+extern double x_expanded_offset;
+extern double y_expanded_offset;
 
-gboolean                bj_quit_app (void);
-void                    bj_make_window_title (gchar *game_name);
-void                    bj_update_control_menu (void);
+gboolean bj_quit_app (void);
+void bj_make_window_title (gchar * game_name);
+void bj_update_control_menu (void);
 
-void                    bj_show_balance (gfloat);
-void                    bj_show_shoe_cards (gfloat);
-void                    bj_gui_show_toolbar (gboolean do_toolbar);
+void bj_show_balance (gfloat);
+void bj_show_shoe_cards (gfloat);
+void bj_gui_show_toolbar (gboolean do_toolbar);
 
-gdouble                 bj_get_wager (void);
-void                    bj_set_wager (gdouble);
-void                    bj_adjust_wager (gdouble);
+gdouble bj_get_wager (void);
+void bj_set_wager (gdouble);
+void bj_adjust_wager (gdouble);
 
-void                    bj_adjust_balance (gdouble);
-gdouble                 bj_get_balance (void);
-void                    bj_set_balance (gdouble);
+void bj_adjust_balance (gdouble);
+gdouble bj_get_balance (void);
+void bj_set_balance (gdouble);
 
-gchar                  *bj_get_card_style (void);
-void                    bj_set_card_style (gchar *);
-gboolean                bj_get_show_probabilities (void);
-void                    bj_set_show_probabilities (gboolean);
-gboolean                bj_get_show_toolbar (void);
-void                    bj_set_show_toolbar (gboolean);
-gboolean                bj_get_quick_deal (void);
-void                    bj_set_quick_deal (gboolean);
-gboolean                bj_get_never_insurance (void);
-void                    bj_set_never_insurance (gboolean);
-gchar                  *bj_get_game_variation (void);
-void                    bj_set_game_variation (const gchar *);
+gchar *bj_get_card_style (void);
+void bj_set_card_style (gchar *);
+gboolean bj_get_show_probabilities (void);
+void bj_set_show_probabilities (gboolean);
+gboolean bj_get_show_toolbar (void);
+void bj_set_show_toolbar (gboolean);
+gboolean bj_get_quick_deal (void);
+void bj_set_quick_deal (gboolean);
+gboolean bj_get_never_insurance (void);
+void bj_set_never_insurance (gboolean);
+gchar *bj_get_game_variation (void);
+void bj_set_game_variation (const gchar *);
 
-GConfClient            *bj_gconf_client (void);
+GConfClient *bj_gconf_client (void);
 
-extern gint             dealerSpeed;
-extern gfloat           lastWager;
+extern gint dealerSpeed;
+extern gfloat lastWager;
 
-extern gint             numHands;
-extern gboolean         allSettled;
+extern gint numHands;
+extern gboolean allSettled;
 
-extern gchar*           start_game;
+extern gchar *start_game;
 
 #endif

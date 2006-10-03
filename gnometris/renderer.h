@@ -30,54 +30,51 @@
 #include "blockops.h"
 
 struct ThemeTableEntry {
-        gchar *name;
-        gchar *id;
+  gchar *name;
+  gchar *id;
 };
 
 extern const ThemeTableEntry ThemeTable[];
 
-class Renderer
-{
- public:
-        Renderer (cairo_surface_t *dst, cairo_surface_t *bg, Block **src, 
-                  int w, int h, int pxw, int pxh);
-        virtual ~Renderer ();
-        virtual void render ();
- protected:
-        cairo_surface_t *target;
-        cairo_surface_t *background;         
-        Block **data;
-        int width;
-        int height;
-        int pxwidth;
-        int pxheight;
+class Renderer {
+public:
+  Renderer (cairo_surface_t * dst, cairo_surface_t * bg, Block ** src,
+	    int w, int h, int pxw, int pxh);
+    virtual ~ Renderer ();
+  virtual void render ();
+protected:
+    cairo_surface_t * target;
+  cairo_surface_t *background;
+  Block **data;
+  int width;
+  int height;
+  int pxwidth;
+  int pxheight;
 
-	virtual void drawCell (cairo_t *cr, gint x, gint y);
-        virtual void drawBackground (cairo_t *cr);
-        virtual void drawForeground (cairo_t *cr);
+  virtual void drawCell (cairo_t * cr, gint x, gint y);
+  virtual void drawBackground (cairo_t * cr);
+  virtual void drawForeground (cairo_t * cr);
 };
 
-Renderer * rendererFactory (gint id, cairo_surface_t *dst, 
-                            cairo_surface_t *bg, Block **src, int w, 
-                            int h, int pxw, int pxh);
-gint themeNameToNumber (const gchar *id);
+Renderer *rendererFactory (gint id, cairo_surface_t * dst,
+			   cairo_surface_t * bg, Block ** src, int w,
+			   int h, int pxw, int pxh);
+gint themeNameToNumber (const gchar * id);
 
-class JoinedUp : public Renderer
-{
- public:
-        JoinedUp (cairo_surface_t *dst, cairo_surface_t *bg, Block **src, 
-                  int w, int h, int pxw, int pxh) :
-                Renderer (dst, bg, src, w, h, pxw, pxh) { }
+class JoinedUp:public Renderer {
+public:
+  JoinedUp (cairo_surface_t * dst, cairo_surface_t * bg, Block ** src,
+	    int w, int h, int pxw, int pxh):Renderer (dst, bg, src, w, h, pxw,
+						      pxh) {
+} protected:
+    virtual void drawCell (cairo_t * cr, gint x, gint y);
 
- protected:
-        virtual void drawCell (cairo_t *cr, gint x, gint y);
-
- private:
-        const static double border = 0.2;
-        void drawInnerCorner (cairo_t *cr);
-        void drawOuterCorner (cairo_t *cr);
-        void drawHEdge (cairo_t *cr);
-        void drawVEdge (cairo_t *cr);
+private:
+  const static double border = 0.2;
+  void drawInnerCorner (cairo_t * cr);
+  void drawOuterCorner (cairo_t * cr);
+  void drawHEdge (cairo_t * cr);
+  void drawVEdge (cairo_t * cr);
 };
 
 #endif // __renderer_h__

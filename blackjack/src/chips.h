@@ -29,7 +29,7 @@
 typedef struct {
 
   gint id;
-  GList* chips;
+  GList *chips;
   double x;
   double y;
   double dx;
@@ -46,13 +46,13 @@ typedef struct {
 
 } chip_stack_type;
 
-typedef chip_stack_type* hstack_type;
+typedef chip_stack_type *hstack_type;
 
 typedef struct {
   gfloat value;
 } chip_type;
 
-typedef chip_type* hchip_type;
+typedef chip_type *hchip_type;
 
 extern GList *chip_stack_list;
 extern GdkPixbuf *chip_pixbuf[4];
@@ -64,33 +64,34 @@ extern GdkPixbuf *chip_pixbuf[4];
 gint bj_chip_get_width (void);
 gint bj_chip_get_id (gfloat value);
 
-void bj_chip_set_size (gint width,
-                       gint height);
+void bj_chip_set_size (gint width, gint height);
 
-GdkPixbuf * bj_chip_get_scaled_pixbuf (gint chip);
+GdkPixbuf *bj_chip_get_scaled_pixbuf (gint chip);
 
 gdouble bj_chip_get_value (gint);
 
-gfloat bj_chip_stack_get_chips_value (GList *chips);
+gfloat bj_chip_stack_get_chips_value (GList * chips);
 
 void bj_chip_stack_add (gint, double, double);
 hchip_type bj_chip_new (gfloat);
 
 void bj_chip_stack_pressed (gint, gint, hstack_type *, gint *);
 
-GList * bj_chip_stack_get_list (void);
+GList *bj_chip_stack_get_list (void);
 
 void bj_chip_stack_delete (hstack_type);
 void bj_chip_stack_delete_all (void);
 void bj_chip_stack_delete_all_wagers (void);
 
-void bj_chip_stack_add_chips (GList*, hstack_type);
+void bj_chip_stack_add_chips (GList *, hstack_type);
 void bj_chip_stack_update_length (hstack_type);
 
-void bj_chip_stack_decompose_value (gfloat value, gint *blacks, 
-                                    gint *greens, gint *reds, gint *whites);
+void bj_chip_stack_decompose_value (gfloat value, gint * blacks,
+				    gint * greens, gint * reds,
+				    gint * whites);
 
-void bj_chip_stack_new_with_id_value (gint id, gfloat value, double x, double y);
+void bj_chip_stack_new_with_id_value (gint id, gfloat value, double x,
+				      double y);
 void bj_chip_stack_new_with_value (gfloat value, double x, double y);
 void bj_chip_stack_new_source_with_value (gfloat value, double x, double y);
 
@@ -106,4 +107,3 @@ enum {
 };
 
 #endif
-

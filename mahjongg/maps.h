@@ -13,9 +13,9 @@
 #define MAX_TILES 144
 
 typedef struct _tilepos {
-	int x;
-	int y;
-	int layer;
+  int x;
+  int y;
+  int layer;
 } tilepos;
 
 typedef struct _map {

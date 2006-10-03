@@ -24,105 +24,114 @@ gint pt_yloc = 0;
 
 gboolean kb_visible = FALSE;
 
-static gboolean in_selected_cells (gint x, gint y)
+static gboolean
+in_selected_cells (gint x, gint y)
 {
   gint i;
 
-  for (i=0; i<count; i++) 
-    if ((x == selected[i].x) && (y == selected[i].y)) 
+  for (i = 0; i < count; i++)
+    if ((x == selected[i].x) && (y == selected[i].y))
       return TRUE;
 
   return FALSE;
 }
 
-void select_cells (void)
+void
+select_cells (void)
 {
-	int x, y;
+  int x, y;
 
-	if ((game_state != GAME_IDLE) && (game_state != GAME_SELECTED))
-		return;
+  if ((game_state != GAME_IDLE) && (game_state != GAME_SELECTED))
+    return;
 
-	if (kb_visible) {
-		x = kb_xloc; y = kb_yloc;
-	} else {
-		x = pt_xloc; y = pt_yloc;
-	}
+  if (kb_visible) {
+    x = kb_xloc;
+    y = kb_yloc;
+  } else {
+    x = pt_xloc;
+    y = pt_yloc;
+  }
 
   /* We must search the entire list to stop the animation glitches when 
    * we move from ball to ball in an existing set. We automatically search 
-	 * on GAME_IDLE to catch some cases where the keyboard and mouse controls
-	 * can interact badly. */
+   * on GAME_IDLE to catch some cases where the keyboard and mouse controls
+   * can interact badly. */
   if (!in_selected_cells (x, y) || (game_state == GAME_IDLE)) {
-		if (game_state == GAME_SELECTED)
-			stop_spinning ();
-				find_connected_component (x, y);
-		start_spinning ();
-		game_state = GAME_SELECTED;
-  }  
+    if (game_state == GAME_SELECTED)
+      stop_spinning ();
+    find_connected_component (x, y);
+    start_spinning ();
+    game_state = GAME_SELECTED;
+  }
 }
 
-gboolean mouse_movement_cb (GtkWidget *widget, GdkEventMotion *e, gpointer data)
+gboolean
+mouse_movement_cb (GtkWidget * widget, GdkEventMotion * e, gpointer data)
 {
   gint x, y;
 
   pixels_to_logical (e->x, e->y, &x, &y);
-	pt_xloc = x;
-	pt_yloc = y;
+  pt_xloc = x;
+  pt_yloc = y;
 
-	select_cells ();
+  select_cells ();
 
   return FALSE;
 }
 
-gboolean mouse_click_cb (GtkWidget *widget, GdkEventButton *e, gpointer data)
+gboolean
+mouse_click_cb (GtkWidget * widget, GdkEventButton * e, gpointer data)
 {
-	if (e->type != GDK_BUTTON_PRESS)
-		return FALSE;
+  if (e->type != GDK_BUTTON_PRESS)
+    return FALSE;
 
   destroy_balls ();
 
   return FALSE;
 }
 
-gboolean mouse_leave_cb (GtkWidget *widget, GdkEventCrossing *e, gpointer data)
+gboolean
+mouse_leave_cb (GtkWidget * widget, GdkEventCrossing * e, gpointer data)
 {
-	/* Because sloppy focus is evil and produces extra leave and enter
-	 * events. */
-	if (e->mode != GDK_CROSSING_NORMAL)
-		return FALSE;
+  /* Because sloppy focus is evil and produces extra leave and enter
+   * events. */
+  if (e->mode != GDK_CROSSING_NORMAL)
+    return FALSE;
 
-	clear_message ();
+  clear_message ();
 
-	if (game_state == GAME_SELECTED) {		
-		stop_spinning ();
-		game_state = GAME_IDLE;
-	}
+  if (game_state == GAME_SELECTED) {
+    stop_spinning ();
+    game_state = GAME_IDLE;
+  }
 
   return FALSE;
 }
 
-static void keyboard_move (gint dx, gint dy)
+static void
+keyboard_move (gint dx, gint dy)
 {
-	if (kb_visible) 
-		cursor_erase ();
-	kb_visible = TRUE;
-	kb_xloc += dx;
-	kb_yloc += dy;
-	kb_xloc = (kb_xloc + board_width) % board_width;
-	kb_yloc = (kb_yloc + board_height) % board_height;
- 	cursor_draw (kb_xloc, kb_yloc);
-	select_cells ();
+  if (kb_visible)
+    cursor_erase ();
+  kb_visible = TRUE;
+  kb_xloc += dx;
+  kb_yloc += dy;
+  kb_xloc = (kb_xloc + board_width) % board_width;
+  kb_yloc = (kb_yloc + board_height) % board_height;
+  cursor_draw (kb_xloc, kb_yloc);
+  select_cells ();
 }
 
-gboolean keyboard_cb (GtkWidget *widget, GdkEventKey *event, gpointer data)
+gboolean
+keyboard_cb (GtkWidget * widget, GdkEventKey * event, gpointer data)
 {
-	/* FIXME: Diagonal keys. */
+  /* FIXME: Diagonal keys. */
 
   switch (event->keyval) {
   case GDK_Up:
   case GDK_KP_Up:
   case GDK_KP_8:
-    keyboard_move (0,-1);
+    keyboard_move (0, -1);
     break;
   case GDK_Down:
   case GDK_KP_Down:
@@ -144,10 +153,9 @@ gboolean keyboard_cb (GtkWidget *widget, GdkEventKey *event, gpointer data)
   case GDK_KP_Enter:
   case GDK_KP_0:
   case GDK_KP_Insert:
-    destroy_balls ();    
+    destroy_balls ();
     break;
   }
 
-	return FALSE;
+  return FALSE;
 }
-

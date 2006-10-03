@@ -24,62 +24,71 @@
 #include "gataxx.h"
 #include "appbar.h"
 
-static GtkWidget * white_score;
-static GtkWidget * white_label;
-static GtkWidget * black_score;
-static GtkWidget * black_label;
-static GtkWidget * appbar = NULL;
+static GtkWidget *white_score;
+static GtkWidget *white_label;
+static GtkWidget *black_score;
+static GtkWidget *black_label;
+static GtkWidget *appbar = NULL;
 
-GtkWidget * appbar_new() {
-	GtkWidget * hbox;
-
-	appbar = gtk_statusbar_new();
-	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (appbar), FALSE);
-
-	hbox=gtk_hbox_new(TRUE, 5);
-
-	white_label=gtk_label_new(_("Light:"));
-	gtk_box_pack_start(GTK_BOX(hbox), white_label, FALSE, FALSE, 0);
-
-	white_score=gtk_label_new("");
-	gtk_box_pack_start(GTK_BOX(hbox), white_score, FALSE, FALSE, 0);
-
-	black_label=gtk_label_new(_("Dark:"));
-	gtk_box_pack_start(GTK_BOX(hbox), black_label, FALSE, FALSE, 0);
-
-	black_score=gtk_label_new("");
-	gtk_box_pack_start(GTK_BOX(hbox), black_score, FALSE, FALSE, 0);
-
-	gtk_widget_show_all(hbox);
-	gtk_box_pack_end(GTK_BOX(appbar), hbox, FALSE, FALSE, 0);
-
-	return appbar;	
-}
-
-void appbar_set_white(int pieces) {
-	gchar * buf;
-
-	buf = g_strdup_printf ("%d", pieces);
-	gtk_label_set_text(GTK_LABEL(white_score), buf); 
-	g_free (buf);
-}
-
-void appbar_set_black(int pieces) {
-	gchar * buf;
-
-	buf = g_strdup_printf ("%d", pieces);
-	gtk_label_set_text(GTK_LABEL(black_score), buf); 
-	g_free (buf);
-}
-
-void appbar_set_status(gchar * status) {
-	gtk_statusbar_pop(GTK_STATUSBAR(appbar), 0);
-	gtk_statusbar_push(GTK_STATUSBAR(appbar), 0, status);
-}
-
-void appbar_set_turn (int player) 
+GtkWidget *
+appbar_new ()
 {
-	gtk_statusbar_pop(GTK_STATUSBAR(appbar), 0);
-	gtk_statusbar_push(GTK_STATUSBAR(appbar), 0,
-			   player == WHITE ? _("Light's move") : _("Dark's move"));
+  GtkWidget *hbox;
+
+  appbar = gtk_statusbar_new ();
+  gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (appbar), FALSE);
+
+  hbox = gtk_hbox_new (TRUE, 5);
+
+  white_label = gtk_label_new (_("Light:"));
+  gtk_box_pack_start (GTK_BOX (hbox), white_label, FALSE, FALSE, 0);
+
+  white_score = gtk_label_new ("");
+  gtk_box_pack_start (GTK_BOX (hbox), white_score, FALSE, FALSE, 0);
+
+  black_label = gtk_label_new (_("Dark:"));
+  gtk_box_pack_start (GTK_BOX (hbox), black_label, FALSE, FALSE, 0);
+
+  black_score = gtk_label_new ("");
+  gtk_box_pack_start (GTK_BOX (hbox), black_score, FALSE, FALSE, 0);
+
+  gtk_widget_show_all (hbox);
+  gtk_box_pack_end (GTK_BOX (appbar), hbox, FALSE, FALSE, 0);
+
+  return appbar;
+}
+
+void
+appbar_set_white (int pieces)
+{
+  gchar *buf;
+
+  buf = g_strdup_printf ("%d", pieces);
+  gtk_label_set_text (GTK_LABEL (white_score), buf);
+  g_free (buf);
+}
+
+void
+appbar_set_black (int pieces)
+{
+  gchar *buf;
+
+  buf = g_strdup_printf ("%d", pieces);
+  gtk_label_set_text (GTK_LABEL (black_score), buf);
+  g_free (buf);
+}
+
+void
+appbar_set_status (gchar * status)
+{
+  gtk_statusbar_pop (GTK_STATUSBAR (appbar), 0);
+  gtk_statusbar_push (GTK_STATUSBAR (appbar), 0, status);
+}
+
+void
+appbar_set_turn (int player)
+{
+  gtk_statusbar_pop (GTK_STATUSBAR (appbar), 0);
+  gtk_statusbar_push (GTK_STATUSBAR (appbar), 0,
+		      player == WHITE ? _("Light's move") : _("Dark's move"));
 }

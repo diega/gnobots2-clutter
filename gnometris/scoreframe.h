@@ -21,47 +21,53 @@
  * For more details see the file COPYING.
  */
 
-class ScoreFrame
-{
+class ScoreFrame {
 public:
-	ScoreFrame(int cmdlLevel);
-	
-	void show();
-	void resetScore();	
-	void setLevel(int l);
-	void setStartingLevel(int l);
-		
-	int getScore() {return score;}
-	int getLines() {return lines;}
-	int getLevel() {return level;}
-	
-	GtkWidget * getWidget()	{return w;}
-	
-	int scoreLines (int nlines);
-	void scoreLastLineBonus ();
+  ScoreFrame (int cmdlLevel);
+
+  void show ();
+  void resetScore ();
+  void setLevel (int l);
+  void setStartingLevel (int l);
+
+  int getScore () {
+    return score;
+  } int getLines () {
+    return lines;
+  }
+  int getLevel () {
+    return level;
+  }
+
+  GtkWidget *getWidget () {
+    return w;
+  }
+
+  int scoreLines (int nlines);
+  void scoreLastLineBonus ();
 
 private:
-	GtkWidget *w;
-	GtkWidget *scorew;
-	GtkWidget *linesw;
-	GtkWidget *levelw;
-	GtkWidget *scoreLabel;
-	GtkWidget *linesLabel;
-	GtkWidget *levelLabel;
-	GtkWidget *hbScore;
-	GtkWidget *hbLines;
-	GtkWidget *hbLevel;
-	GtkWidget *vb;
-	char b[20];
+  GtkWidget * w;
+  GtkWidget *scorew;
+  GtkWidget *linesw;
+  GtkWidget *levelw;
+  GtkWidget *scoreLabel;
+  GtkWidget *linesLabel;
+  GtkWidget *levelLabel;
+  GtkWidget *hbScore;
+  GtkWidget *hbLines;
+  GtkWidget *hbLevel;
+  GtkWidget *vb;
+  char b[20];
 
-	int level;
-	int score;
-	int lines;
-	int startingLevel;
-	
-	void setScore (int score);
-	void setLines (int lines);
-	void incScore (int score);
+  int level;
+  int score;
+  int lines;
+  int startingLevel;
+
+  void setScore (int score);
+  void setLines (int lines);
+  void incScore (int score);
 };
 
 #endif //__scoreframe_h__

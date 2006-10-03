@@ -41,8 +41,8 @@ extern GConfClient *gcclient;
 /* We start at 1 so we can distinguish the gconf "unset" from a valid
  * value. */
 enum {
-  UNSET  = 0,
-  CUSTOM = 1, /* FIXME: Are we going to use this. */
+  UNSET = 0,
+  CUSTOM = 1,			/* FIXME: Are we going to use this. */
   SMALL,
   MEDIUM,
   LARGE,
@@ -71,6 +71,6 @@ extern gchar *localthemedir;
 
 extern gchar *theme;
 
-extern gint  game_size;
+extern gint game_size;
 
 #endif /* GLOBALS_H */

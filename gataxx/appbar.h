@@ -23,7 +23,7 @@
 
 #include <glib.h>
 
-GtkWidget * appbar_new(void);
+GtkWidget *appbar_new (void);
 void appbar_set_white (int pieces);
 void appbar_set_black (int pieces);
 void appbar_set_status (gchar * status);

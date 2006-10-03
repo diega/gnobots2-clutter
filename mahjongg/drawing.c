@@ -25,7 +25,7 @@ typedef struct _view_geom_record {
   gint x;
   gint y;
   guint noverlaps;
-  guchar overlaps[MAX_TILES-1];
+  guchar overlaps[MAX_TILES - 1];
 } view_geom_record;
 
 view_geom_record view_geometry[MAX_TILES];
@@ -37,20 +37,20 @@ view_geom_record view_geometry[MAX_TILES];
  * 1.375 = 64/88 */
 #define ASPECT 1.375
 
-GtkWidget * board = NULL;
-GdkPixmap * buffer = NULL;
-GdkPixmap * tileimages = NULL;
-GdkPixmap * tilebuffer = NULL;
-GdkBitmap * tilemask = NULL;
+GtkWidget *board = NULL;
+GdkPixmap *buffer = NULL;
+GdkPixmap *tileimages = NULL;
+GdkPixmap *tilebuffer = NULL;
+GdkBitmap *tilemask = NULL;
 
-GdkGC * gc = NULL;
+GdkGC *gc = NULL;
 
 gboolean update_tileimages = TRUE;
 gboolean nowindow = TRUE;
 
 GdkColor bgcolour;
 
-GamesPreimage * tilepreimage = NULL;
+GamesPreimage *tilepreimage = NULL;
 
 static gint windowwidth;
 static gint windowheight;
@@ -74,47 +74,52 @@ gint yoffset;
 gint gridwidth;
 gint gridheight;
 
-gchar * warning_message = NULL;
+gchar *warning_message = NULL;
 
-static void recalculate_sizes (gint width, gint height)
+static void
+recalculate_sizes (gint width, gint height)
 {
   gdouble scale;
 
   /* This calculates four things: the size of the complete tile pixmap,
    * the offsets from the edge of the window, the offset for the 3-D effect
    * (i.e. the sides of the tile) and the size of the face of the tile. */
-  scale = MIN (width/gridwidth, height/(gridheight*ASPECT));
+  scale = MIN (width / gridwidth, height / (gridheight * ASPECT));
   tilebasewidth = scale;
-  tilebaseheight = scale*ASPECT;
-  xoffset = (width - (gridwidth-1)*tilebasewidth)/2;
-  yoffset = (height - (gridheight-1)*tilebaseheight)/2;
-  tileoffsetx = tilebasewidth/7;
-  tileoffsety = tilebaseheight/10;
+  tilebaseheight = scale * ASPECT;
+  xoffset = (width - (gridwidth - 1) * tilebasewidth) / 2;
+  yoffset = (height - (gridheight - 1) * tilebaseheight) / 2;
+  tileoffsetx = tilebasewidth / 7;
+  tileoffsety = tilebaseheight / 10;
   tilewidth = tilebasewidth + tileoffsetx;
   tileheight = tilebaseheight + tileoffsety;
 }
 
-static void calculate_tile_positions (void)
+static void
+calculate_tile_positions (void)
 {
   int i;
-  view_geom_record * v;
+  view_geom_record *v;
 
   v = view_geometry;
-  for (i=0; i<MAX_TILES; i++) {
-    v->x = pos[i].x*tilebasewidth/2 + pos[i].layer*tileoffsetx + xoffset;
-    v->y = pos[i].y*tilebaseheight/2 - pos[i].layer*tileoffsety + yoffset;
+  for (i = 0; i < MAX_TILES; i++) {
+    v->x =
+      pos[i].x * tilebasewidth / 2 + pos[i].layer * tileoffsetx + xoffset;
+    v->y =
+      pos[i].y * tilebaseheight / 2 - pos[i].layer * tileoffsety + yoffset;
     v++;
   }
 }
 
-void calculate_view_geometry (void)
+void
+calculate_view_geometry (void)
 {
-  gint i,j;
-  view_geom_record * v, * v2;
+  gint i, j;
+  view_geom_record *v, *v2;
 
   gridwidth = 0;
   gridheight = 0;
-  
+
   if (tilebasewidth == 0) {
     /* We may not yet have a valid window geometry, so supply some dummy
      * data. */
@@ -125,53 +130,54 @@ void calculate_view_geometry (void)
     tilebaseheight = tileheight - tileoffsety;
     xoffset = yoffset = 0;
   }
-  
+
   calculate_tile_positions ();
 
   v = view_geometry;
-  for (i=0; i<MAX_TILES; i++) {
+  for (i = 0; i < MAX_TILES; i++) {
     if (pos[i].x > gridwidth)
       gridwidth = pos[i].x;
     if (pos[i].y > gridheight)
       gridheight = pos[i].y;
     v->noverlaps = 0;
     v2 = view_geometry;
-    for (j=0; j<MAX_TILES; j++) {
+    for (j = 0; j < MAX_TILES; j++) {
       /* We include the tile as an overlap with itself. This simplifies the
        * drawing routines later. */
       if ((((v2->x >= v->x) && (v2->x < v->x + tilewidth)) ||
-           ((v2->x < v->x) && (v2->x + tilewidth > v->x))) &&
-          (((v2->y >= v->y) && (v2->y < v->y + tileheight)) ||
-           ((v2->y < v->y) && (v2->y + tileheight > v->y)))) {
-        v->overlaps[v->noverlaps] = j;
-        v->noverlaps++;
+	   ((v2->x < v->x) && (v2->x + tilewidth > v->x))) &&
+	  (((v2->y >= v->y) && (v2->y < v->y + tileheight)) ||
+	   ((v2->y < v->y) && (v2->y + tileheight > v->y)))) {
+	v->overlaps[v->noverlaps] = j;
+	v->noverlaps++;
       }
       v2++;
     }
     v++;
   }
-  
+
   /* The +2 allows for both a half-tile border and the fact that the
    * position information is for the upper left corner. */
-  gridwidth = gridwidth/2 + 2;
-  gridheight = gridheight/2 + 2;
-  
+  gridwidth = gridwidth / 2 + 2;
+  gridheight = gridheight / 2 + 2;
+
 }
 
-static gint find_tile (guint x, guint y)
+static gint
+find_tile (guint x, guint y)
 {
   gint i;
   gint tx, ty;
-  
+
   /* FIXME: this is a really naive way to do things. */
   /* Because of the ordering of things, this gets the top tile first. */
-  for (i=0; i<MAX_TILES; i++) {
+  for (i = 0; i < MAX_TILES; i++) {
     if (tiles[i].visible) {
       tx = view_geometry[i].x;
       ty = view_geometry[i].y;
       if ((x >= tx) && (x < (tx + tilewidth)) &&
-          (y >= ty) && (y < (ty + tileheight))) {
-        return i;
+	  (y >= ty) && (y < (ty + tileheight))) {
+	return i;
       }
     }
   }
@@ -179,70 +185,73 @@ static gint find_tile (guint x, guint y)
   return -1;
 }
 
-void set_background (gchar * colour)
+void
+set_background (gchar * colour)
 {
   if (!gdk_color_parse (colour, &bgcolour)) {
     bgcolour.red = bgcolour.green = bgcolour.blue = 0;
   }
 
   if (gc) {
-    gdk_colormap_alloc_color (gdk_colormap_get_system(), &bgcolour, FALSE, TRUE);
+    gdk_colormap_alloc_color (gdk_colormap_get_system (), &bgcolour, FALSE,
+			      TRUE);
     gdk_gc_set_foreground (gc, &bgcolour);
   }
 }
 
-void draw_tile (gint tileno)
+void
+draw_tile (gint tileno)
 {
   guint ox, oy;
   guint dx, dy;
   guint sx, sy;
-  gint i,j;
+  gint i, j;
 
   ox = view_geometry[tileno].x;
-  oy = view_geometry[tileno].y;  
+  oy = view_geometry[tileno].y;
   gdk_gc_set_clip_mask (gc, tilemask);
   gdk_gc_set_clip_origin (gc, 0, 0);
-  
-  gdk_draw_rectangle (tilebuffer, gc, TRUE, 0, 0, tilewidth, tileheight); 
 
-  for (i=view_geometry[tileno].noverlaps - 1; i>=0; i--) {
+  gdk_draw_rectangle (tilebuffer, gc, TRUE, 0, 0, tilewidth, tileheight);
+
+  for (i = view_geometry[tileno].noverlaps - 1; i >= 0; i--) {
     j = view_geometry[tileno].overlaps[i];
     if (tiles[j].visible) {
       dx = view_geometry[j].x - ox;
       dy = view_geometry[j].y - oy;
       sy = tiles[j].selected ? tileheight : 0;
-      sx = tiles[j].image*tilewidth;
+      sx = tiles[j].image * tilewidth;
       gdk_gc_set_clip_origin (gc, dx, dy);
       gdk_draw_drawable (tilebuffer, gc, tileimages,
-                         sx, sy, dx, dy, tilewidth, tileheight);
+			 sx, sy, dx, dy, tilewidth, tileheight);
     }
   }
-  
+
   gdk_gc_set_clip_origin (gc, ox, oy);
   gdk_draw_drawable (buffer, gc, tilebuffer, 0, 0, ox, oy,
-                     tilewidth, tileheight);
-  
+		     tilewidth, tileheight);
+
   /* We could queue this draw, but given that this function is at worst case
    * called twice in a short time span it doesn't seem worth the code. */
   gdk_draw_drawable (board->window, board->style->black_gc, buffer, ox, oy,
-                     ox, oy , tilewidth, tileheight);
+		     ox, oy, tilewidth, tileheight);
 }
 
-void draw_all_tiles (void)
+void
+draw_all_tiles (void)
 {
   gint i;
-  guint sx,sy;
-  guint dx,dy;
-  
+  guint sx, sy;
+  guint dx, dy;
+
   gdk_gc_set_clip_mask (gc, NULL);
-  gdk_draw_rectangle (buffer, gc, TRUE, 0, 0,
-                      windowwidth, windowheight);
+  gdk_draw_rectangle (buffer, gc, TRUE, 0, 0, windowwidth, windowheight);
 
   /* This works because of the way the tiles are sorted. We could
    * reverse them to make this look a little nicer, but when searching
    * for a tile we want it the other way around. */
-  
-  gdk_gc_set_clip_mask (gc, tilemask); 
+
+  gdk_gc_set_clip_mask (gc, tilemask);
   for (i = MAX_TILES - 1; i >= 0; i--) {
     if (!tiles[i].visible)
       continue;
@@ -251,32 +260,33 @@ void draw_all_tiles (void)
     dy = view_geometry[i].y;
 
     if (paused) {
-      sx = tilewidth*(NUM_PATTERNS - 1);
+      sx = tilewidth * (NUM_PATTERNS - 1);
       sy = 0;
     } else {
-      sx = tiles[i].image*tilewidth;
+      sx = tiles[i].image * tilewidth;
       sy = tiles[i].selected ? tileheight : 0;
     }
 
     gdk_gc_set_clip_origin (gc, dx, dy);
-    
+
     gdk_draw_drawable (buffer, gc, tileimages,
-                       sx, sy, dx, dy, tilewidth, tileheight);
+		       sx, sy, dx, dy, tilewidth, tileheight);
   }
 
   gtk_widget_queue_draw (board);
 }
 
-static void recreate_tile_images (void)
+static void
+recreate_tile_images (void)
 {
-  GdkPixbuf * fg = NULL;
-  
+  GdkPixbuf *fg = NULL;
+
   /* Now composite the tiles across it. */
-  
+
   if (tilepreimage) {
-    fg = games_preimage_render (tilepreimage, tilewidth*NUM_PATTERNS,
-                                tileheight*2, NULL);
-    
+    fg = games_preimage_render (tilepreimage, tilewidth * NUM_PATTERNS,
+				tileheight * 2, NULL);
+
     /* Handle corrupt images that were not caught during preimage creation. */
     if (fg == NULL) {
       g_object_unref (tilepreimage);
@@ -284,10 +294,10 @@ static void recreate_tile_images (void)
 
       g_free (warning_message);
       warning_message = g_strdup (_("The selected theme failed to render.\n\n"
-                                    "Please check that Mahjongg is installed correctly."));
-    }  
-  
-  } 
+				    "Please check that Mahjongg is installed correctly."));
+    }
+
+  }
 
   /* If there's a warning, display it. */
   if (warning_message) {
@@ -298,25 +308,26 @@ static void recreate_tile_images (void)
 
   /* If there's no theme pixbuf, provide a blank one. */
   if (fg == NULL) {
-    fg = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, 
-                         tilewidth*NUM_PATTERNS, tileheight*2);
+    fg = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
+			 tilewidth * NUM_PATTERNS, tileheight * 2);
     gdk_pixbuf_fill (fg, 0x00000000);
   }
 
   gdk_pixbuf_render_threshold_alpha (fg, tilemask, 0, 0, 0, 0,
-                                     tilewidth, tileheight, 128);
+				     tilewidth, tileheight, 128);
   gdk_draw_pixbuf (tileimages, NULL, fg, 0, 0, 0, 0,
-                   tilewidth*NUM_PATTERNS, tileheight*2,
-                   GDK_RGB_DITHER_MAX, 0, 0);
+		   tilewidth * NUM_PATTERNS, tileheight * 2,
+		   GDK_RGB_DITHER_MAX, 0, 0);
 
   g_object_unref (fg);
-  
+
 }
 
 /* This is for when the geometry changes. It is called both from the
  * normal configure event handler and from code which detects when
  * the "internal" geometry (i.e. the layout) has changed. */
-void configure_pixmaps (void)
+void
+configure_pixmaps (void)
 {
   if (nowindow)
     return;
@@ -326,18 +337,22 @@ void configure_pixmaps (void)
   recalculate_sizes (windowwidth, windowheight);
   calculate_tile_positions ();
 
-  if (buffer != NULL) g_object_unref (buffer);
+  if (buffer != NULL)
+    g_object_unref (buffer);
   buffer = gdk_pixmap_new (board->window, windowwidth, windowheight, -1);
 
   /* Recreate the tile images only if the theme or tile size changed. */
   if ((prior_tilebasewidth != tilebasewidth) || (update_tileimages)) {
 
-    if (tileimages != NULL) g_object_unref (tileimages);
-    if (tilemask != NULL) g_object_unref (tilemask);
-    if (tilebuffer != NULL) g_object_unref (tilebuffer);
+    if (tileimages != NULL)
+      g_object_unref (tileimages);
+    if (tilemask != NULL)
+      g_object_unref (tilemask);
+    if (tilebuffer != NULL)
+      g_object_unref (tilebuffer);
 
-    tileimages = gdk_pixmap_new (board->window, NUM_PATTERNS*tilewidth,
-                                 2*tileheight, -1);
+    tileimages = gdk_pixmap_new (board->window, NUM_PATTERNS * tilewidth,
+				 2 * tileheight, -1);
     tilemask = gdk_pixmap_new (NULL, tilewidth, tileheight, 1);
     tilebuffer = gdk_pixmap_new (board->window, tilewidth, tileheight, -1);
 
@@ -347,34 +362,38 @@ void configure_pixmaps (void)
 }
 
 /* Here is where we create the backing pixmap and set up the tile pixmaps. */
-static void configure_board (GtkWidget *w, GdkEventConfigure *e, gpointer data)
+static void
+configure_board (GtkWidget * w, GdkEventConfigure * e, gpointer data)
 {
   nowindow = FALSE;
 
   if (gc == NULL) {
     gc = gdk_gc_new (w->window);
     gdk_gc_copy (gc, w->style->black_gc);
-    gdk_colormap_alloc_color (gdk_colormap_get_system(), &bgcolour, FALSE, TRUE);
+    gdk_colormap_alloc_color (gdk_colormap_get_system (), &bgcolour, FALSE,
+			      TRUE);
     gdk_gc_set_foreground (gc, &bgcolour);
   }
-  
+
   windowwidth = e->width;
   windowheight = e->height;
 
   configure_pixmaps ();
-  
+
   draw_all_tiles ();
 }
 
 /* Handle exposes by dumping out the backing pixmap. */
-static void expose_board (GtkWidget *w, GdkEventExpose *e, gpointer data)
+static void
+expose_board (GtkWidget * w, GdkEventExpose * e, gpointer data)
 {
   gdk_draw_drawable (w->window, w->style->black_gc, buffer, e->area.x,
-                     e->area.y, e->area.x, e->area.y, e->area.width,
-                     e->area.height);
+		     e->area.y, e->area.x, e->area.y, e->area.width,
+		     e->area.height);
 }
 
-static void board_click (GtkWidget * w, GdkEventButton * e, gpointer data)
+static void
+board_click (GtkWidget * w, GdkEventButton * e, gpointer data)
 {
   gint tileno;
 
@@ -384,26 +403,28 @@ static void board_click (GtkWidget * w, GdkEventButton * e, gpointer data)
 
   tileno = find_tile (e->x, e->y);
 
-  if (tileno < 0) return;
+  if (tileno < 0)
+    return;
 
   tile_event (tileno, e->button);
 }
 
 /* Create the widget. */
 /* This is a public routine. */
-GtkWidget * create_mahjongg_board (void)
+GtkWidget *
+create_mahjongg_board (void)
 {
   board = gtk_drawing_area_new ();
   gtk_widget_set_size_request (board, MINWIDTH, MINHEIGHT);
-  
+
   gtk_widget_add_events (board, GDK_BUTTON_PRESS_MASK);
-  
+
   g_signal_connect (G_OBJECT (board), "expose_event",
-                    G_CALLBACK (expose_board), NULL);
+		    G_CALLBACK (expose_board), NULL);
   g_signal_connect (G_OBJECT (board), "configure_event",
-                    G_CALLBACK (configure_board), NULL);
+		    G_CALLBACK (configure_board), NULL);
   g_signal_connect (G_OBJECT (board), "button_press_event",
-                    G_CALLBACK (board_click), NULL);
+		    G_CALLBACK (board_click), NULL);
   /* We do our own double-buffering. */
   gtk_widget_set_double_buffered (board, FALSE);
 
@@ -411,37 +432,41 @@ GtkWidget * create_mahjongg_board (void)
 }
 
 /* Load the selected images. */
-void load_images (gchar * file)
+void
+load_images (gchar * file)
 {
-  gchar * filename;
-  gchar * temp;
+  gchar *filename;
+  gchar *temp;
 
   temp = g_strconcat ("mahjongg/", file, NULL);
-  
+
   filename = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
-                                        temp, TRUE, NULL);
+					temp, TRUE, NULL);
   g_free (temp);
 
   if (!filename) {
 
     filename = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
-					  "mahjongg/postmodern.svg", TRUE, NULL);
+					  "mahjongg/postmodern.svg", TRUE,
+					  NULL);
 
     if (!filename) {
       warning_message = g_strdup_printf (_("Unable to locate file:\n'%s'\n\n"
-                                           "Please check that Mahjongg is installed correctly."), file);
+					   "Please check that Mahjongg is installed correctly."),
+					 file);
     } else {
       warning_message = g_strdup_printf (_("Unable to locate file:\n'%s'\n\n"
-                                           "The default tile set will be loaded instead."), file);
+					   "The default tile set will be loaded instead."),
+					 file);
     }
 
   }
 
-  if (tilepreimage) 
+  if (tilepreimage)
     g_object_unref (tilepreimage);
 
   tilepreimage = NULL;
-  
+
   if (filename) {
     tilepreimage = games_preimage_new_from_file (filename, NULL);
 
@@ -449,13 +474,14 @@ void load_images (gchar * file)
     if (!tilepreimage) {
       g_free (warning_message);
       warning_message = g_strdup_printf (_("Unable to render file:\n'%s'\n\n"
-                                           "Please check that Mahjongg is installed correctly."), file);
+					   "Please check that Mahjongg is installed correctly."),
+					 file);
     }
 
   }
-  
+
   update_tileimages = TRUE;
-  
+
   if (tileset)
     g_free (tileset);
   tileset = g_strdup (file);

@@ -39,30 +39,30 @@ typedef struct {
   gint value;
   gboolean direction;
 } card_type;
-typedef card_type* hcard_type;
+typedef card_type *hcard_type;
 
 /*
  * Functions
  */
 
-GdkPixmap* bj_card_get_picture (gint, gint);
-GdkPixmap* bj_card_get_back_pixmap ( void );
+GdkPixmap *bj_card_get_picture (gint, gint);
+GdkPixmap *bj_card_get_back_pixmap (void);
 
-GdkBitmap* bj_card_get_mask (void);
+GdkBitmap *bj_card_get_mask (void);
 
-int bj_card_get_width ( void );
-int bj_card_get_height ( void );
-int bj_card_get_horiz_offset ( void );
-int bj_card_get_vert_offset ( void );
-int bj_card_get_vert_start ( void );
-int bj_card_get_horiz_start ( void );
+int bj_card_get_width (void);
+int bj_card_get_height (void);
+int bj_card_get_horiz_offset (void);
+int bj_card_get_vert_offset (void);
+int bj_card_get_vert_start (void);
+int bj_card_get_horiz_start (void);
 
 hcard_type bj_card_new (gint, gint, gint);
 
-GdkPixbuf* get_pixbuf (const char*);
-GdkPixmap* get_pixmap (const char*);
+GdkPixbuf *get_pixbuf (const char *);
+GdkPixmap *get_pixmap (const char *);
 
 void bj_card_set_size (gint width, gint height);
-void bj_card_set_theme (gchar *theme);
+void bj_card_set_theme (gchar * theme);
 
 #endif

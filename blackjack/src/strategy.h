@@ -50,63 +50,61 @@
 //
 
 class BJHand {
-    friend class BJShoe;
-    friend class BJDealer;
-    friend class BJPlayer;
+  friend class BJShoe;
+  friend class BJDealer;
+  friend class BJPlayer;
 
 public:
 
 // BJHand() creates an empty blackjack hand.
 
-    BJHand();
+    BJHand ();
 
 // BJHand(cards) creates a blackjack hand with cards[i - 1] number of cards of
 // value i, for each i in the range 1 (ace) through 10.
 
-    BJHand(const int cards[]);
+    BJHand (const int cards[]);
 
 // getCards(card) returns the number of cards with the given value in the hand,
 // where card is in the range 1 (ace) through 10.
 
-    int getCards(int card) const;
+  int getCards (int card) const;
 
 // getCards() returns the total number of cards in the hand.
 
-    int getCards() const;
+  int getCards () const;
 
 // getCount() returns the hand's (hard or soft) count.  Soft hands count ace as
 // 11.
 
-    int getCount() const;
+  int getCount () const;
 
 // getSoft() returns true iff the hand is soft.
 
-    bool getSoft() const;
+  bool getSoft () const;
 
 // reset() removes all cards from the hand.
 
-    void reset();
+  void reset ();
 
 // reset(cards) sets the hand to contain cards[i - 1] number of cards of value
 // i, for each i in the range 1 (ace) through 10.
 
-    void reset(const int cards[]);
+  void reset (const int cards[]);
 
 // deal(card) deals a card of the given value to the hand (possibly busting the
 // hand), where card is in the range 1 (ace) through 10.
 
-    void deal(int card);
+  void deal (int card);
 
 // undeal(card) removes a card of the given value from the hand, where card is
 // in the range 1 (ace) through 10.
 
-    void undeal(int card);
+  void undeal (int card);
 
 protected:
-    int cards[10],
-        numCards,
-        count;
-    bool soft;
+  int cards[10], numCards, count;
+  bool soft;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -119,71 +117,69 @@ protected:
 //
 
 class BJShoe {
-    friend class BJDealer;
-    friend class BJPlayer;
+  friend class BJDealer;
+  friend class BJPlayer;
 
 public:
 
 // BJShoe(numDecks) creates a blackjack shoe containing the given number of
 // 52-card decks, with all cards in the shoe (i.e., undealt).
 
-    BJShoe(int numDecks = 1);
+    BJShoe (int numDecks = 1);
 
 // BJShoe(cards) creates a blackjack shoe containing cards[i - 1] number of
 // cards of value i, for each i in the range 1 (ace) through 10, with all cards
 // in the shoe (i.e., undealt).
 
-    BJShoe(const int cards[]);
+    BJShoe (const int cards[]);
 
 // getCards(card) returns the number of undealt cards with the given value
 // remaining in the shoe, where card is in the range 1 (ace) through 10.
 
-    int getCards(int card) const;
+  int getCards (int card) const;
 
 // getCards() returns the total number of undealt cards remaining in the shoe.
 
-    int getCards() const;
+  int getCards () const;
 
 // getProbability(card) returns the probability of a card with the given value
 // being dealt next from the shoe, where card is in the range 1 (ace) through
 // 10.
 
-    double getProbability(int card) const;
+  double getProbability (int card) const;
 
 // reset() returns all dealt cards to the shoe.
 
-    void reset();
+  void reset ();
 
 // reset(hand) returns all dealt cards to the shoe, then deals the given
 // blackjack hand from the "full" shoe.
 
-    void reset(const BJHand & hand);
+  void reset (const BJHand & hand);
 
 // reset(numDecks) sets the shoe to contain the given number of 52-card decks,
 // with all cards in the shoe (i.e., undealt).
 
-    void reset(int numDecks);
+  void reset (int numDecks);
 
 // reset(cards) sets the shoe to contain cards[i - 1] number of cards of value
 // i, for each i in the range 1 (ace) through 10, with all cards in the shoe
 // (i.e., undealt).
 
-    void reset(const int cards[]);
+  void reset (const int cards[]);
 
 // deal(card) deals a card of the given value from the shoe, where card is in
 // the range 1 (ace) through 10.
 
-    void deal(int card);
+  void deal (int card);
 
 // undeal(card) returns a card of the given value to the shoe, where card is in
 // the range 1 (ace) through 10.
 
-    void undeal(int card);
+  void undeal (int card);
 
 protected:
-    int totalCards[10],
-        cards[10],
-        numCards;
+  int totalCards[10], cards[10], numCards;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -195,14 +191,14 @@ protected:
 //
 
 class BJDealer {
-    friend class BJPlayer;
+  friend class BJPlayer;
 
 public:
 
 // BJDealer(hitSoft17) prepares for computing probabilities, where hitSoft17 is
 // true iff the dealer hits soft 17.
 
-    BJDealer(bool hitSoft17);
+    BJDealer (bool hitSoft17);
 
 // computeProbabilities(shoe) computes the probabilities of outcomes of the
 // dealer's hand for the given shoe (i.e., for the distribution of undealt
@@ -210,66 +206,62 @@ public:
 // remains undealt; e.g., given a full shoe with no cards dealt, the
 // appropriate probabilities will be computed.
 
-    void computeProbabilities(const BJShoe & shoe);
+  void computeProbabilities (const BJShoe & shoe);
 
 // getProbabilityBust(upCard) returns the probability (computed by
 // computeProbabilities) of the dealer busting with the given up card, where
 // upCard is in the range 1 (ace) through 10.
 
-    double getProbabilityBust(int upCard) const;
+  double getProbabilityBust (int upCard) const;
 
 // getProbabilityBust() returns the overall probability (computed by
 // computeProbabilities) of the dealer busting.
 
-    double getProbabilityBust() const;
+  double getProbabilityBust () const;
 
 // getProbabilityCount(count, upCard) returns the probability (computed by
 // computeProbabilities) of the dealer drawing to the given count, where count
 // is in the range 17 through 21, for the given up card, where upCard is in the
 // range 1 (ace) through 10.
 
-    double getProbabilityCount(int count, int upCard) const;
+  double getProbabilityCount (int count, int upCard) const;
 
 // getProbabilityCount(count) returns the overall probability (computed by
 // computeProbabilities) of the dealer drawing to the given count, where count
 // is in the range 17 through 21.
 
-    double getProbabilityCount(int count) const;
+  double getProbabilityCount (int count) const;
 
 // getProbabilityBlackjack(upCard) returns the probability (computed by
 // computeProbabilities) of the dealer having blackjack, for the given up card,
 // where upCard is in the range 1 (ace) through 10.
 
-    double getProbabilityBlackjack(int upCard) const;
+  double getProbabilityBlackjack (int upCard) const;
 
 // getProbabilityBlackjack() returns the overall probability (computed by
 // computeProbabilities) of the dealer having blackjack.
 
-    double getProbabilityBlackjack() const;
+  double getProbabilityBlackjack () const;
 
 protected:
     bool hitSoft17;
-    struct DealerHand {
-        int cards[10],
-            multiplier[10];
-    };
-    struct DealerHandCount;
-    friend struct DealerHandCount; // make DealerHand accessible
-    struct DealerHandCount {
-        int numHands;
-        DealerHand dealerHands[423];
-    } dealerHandCount[5];
-    BJHand currentHand;
-    int upCard;
-    double probabilityBust[10],
-        probabilityCount[5][10],
-        probabilityBlackjack[10],
-        probabilityCard[10],
-        lookup[13][10][12];
-    static const int maxSvalues[10],
-        maxHvalues[10];
+  struct DealerHand {
+    int cards[10], multiplier[10];
+  };
+  struct DealerHandCount;
+  friend struct DealerHandCount;	// make DealerHand accessible
+  struct DealerHandCount {
+    int numHands;
+    DealerHand dealerHands[423];
+  } dealerHandCount[5];
+  BJHand currentHand;
+  int upCard;
+  double probabilityBust[10],
+    probabilityCount[5][10],
+    probabilityBlackjack[10], probabilityCard[10], lookup[13][10][12];
+  static const int maxSvalues[10], maxHvalues[10];
 
-    void countHands();
+  void countHands ();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -288,7 +280,7 @@ public:
 // equivalent to BJRules(false, true, true, true, false, true, true, false,
 // false).
 
-    BJRules();
+  BJRules ();
 
 // BJRules(...) is a convenience constructor for creating most common rule
 // variations, specified by:
@@ -306,56 +298,52 @@ public:
 //                          if resplit is true)
 // lateSurrender        true iff late surrender is allowed
 
-    BJRules(bool hitSoft17, bool doubleAnyTotal, bool double9, bool doubleSoft,
-            bool doubleAfterHit, bool doubleAfterSplit, bool resplit,
-            bool resplitAces, bool lateSurrender);
+  BJRules (bool hitSoft17, bool doubleAnyTotal, bool double9, bool doubleSoft,
+	   bool doubleAfterHit, bool doubleAfterSplit, bool resplit,
+	   bool resplitAces, bool lateSurrender);
 
 // ~BJRules() allows appropriate destruction of objects derived from BJRules.
 
-    virtual ~BJRules();
+  virtual ~ BJRules ();
 
 // getHitSoft17() returns true iff the dealer hits soft 17.
 
-    virtual bool getHitSoft17();
+  virtual bool getHitSoft17 ();
 
-    virtual bool getDoubleAnyTotal ();
-    virtual bool getDouble9 ();
-    virtual bool getDoubleSoft ();
-    virtual bool getDoubleAfterHit ();
-    virtual bool getDoubleAfterSplit ();
-    virtual bool getResplit ();
-    virtual bool getResplitAces ();
+  virtual bool getDoubleAnyTotal ();
+  virtual bool getDouble9 ();
+  virtual bool getDoubleSoft ();
+  virtual bool getDoubleAfterHit ();
+  virtual bool getDoubleAfterSplit ();
+  virtual bool getResplit ();
+  virtual bool getResplitAces ();
 
 // getDoubleDown(hand) returns true iff doubling down is allowed on the given
 // blackjack hand.
 
-    virtual bool getDoubleDown(const BJHand & hand);
+  virtual bool getDoubleDown (const BJHand & hand);
 
 // getDoubleAfterSplit(hand) returns true iff doubling down is allowed on the
 // given blackjack hand after splitting pairs.
 
-    virtual bool getDoubleAfterSplit(const BJHand & hand);
+  virtual bool getDoubleAfterSplit (const BJHand & hand);
 
 // getResplit(pairCard) returns the maximum number of hands to which the given
 // pairCard may be split.  Valid return values are 1 (no splits), 2 (no
 // resplit), 3, or 4.
 
-    virtual int getResplit(int pairCard);
+  virtual int getResplit (int pairCard);
 
 // getLateSurrender() returns true iff late surrender is allowed.
 
-    virtual bool getLateSurrender();
+  virtual bool getLateSurrender ();
 
 protected:
     bool hitSoft17,
-        doubleAnyTotal,
-        double9,
-        doubleSoft,
-        doubleAfterHit,
-        doubleAfterSplit,
-        resplit,
-        resplitAces,
-        lateSurrender;
+    doubleAnyTotal,
+    double9,
+    doubleSoft,
+    doubleAfterHit, doubleAfterSplit, resplit, resplitAces, lateSurrender;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -372,7 +360,7 @@ public:
 // ~BJStrategy() allows appropriate destruction of objects derived from
 // BJStrategy.
 
-    virtual ~BJStrategy();
+  virtual ~ BJStrategy ();
 
 // getOption(...) returns one of the constants BJ_* specified above, indicating
 // which player option is to be taken in the situation specified by:
@@ -392,8 +380,8 @@ public:
 //
 // BJStrategy::getOption(...) returns BJ_MAX_VALUE.
 
-    virtual int getOption(const BJHand & hand, int upCard, bool doubleDown,
-                          bool split, bool surrender);
+  virtual int getOption (const BJHand & hand, int upCard, bool doubleDown,
+			 bool split, bool surrender);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -410,14 +398,14 @@ public:
 // ~BJProgress() allows appropriate destruction of objects derived from
 // BJProgress.
 
-    virtual ~BJProgress();
+  virtual ~ BJProgress ();
 
 // indicate(percentComplete) is called repeatedly during the creation of a
 // BJPlayer object (or the execution of BJPlayer::reset()), indicating the
 // progress of the computation, where percentComplete is in the range 0 through
 // 100 (complete).
 
-    virtual void indicate(int percentComplete);
+  virtual void indicate (int percentComplete);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -429,7 +417,7 @@ public:
 // card, for a given blackjack shoe, rule variations, and playing strategy.
 //
 
-class BJPlayer : public BJStrategy {
+class BJPlayer:public BJStrategy {
 public:
 
 // BJPlayer(shoe, rules, strategy, progress) and reset(...) compute expected
@@ -438,10 +426,10 @@ public:
 // undealt cards in the shoe are considered; progress.indicate() is called
 // repeatedly during execution.
 
-    BJPlayer(const BJShoe & shoe, BJRules & rules, BJStrategy & strategy,
-             BJProgress & progress);
-    void reset(const BJShoe & shoe, BJRules & rules, BJStrategy & strategy,
-               BJProgress & progress);
+  BJPlayer (const BJShoe & shoe, BJRules & rules, BJStrategy & strategy,
+	    BJProgress & progress);
+  void reset (const BJShoe & shoe, BJRules & rules, BJStrategy & strategy,
+	      BJProgress & progress);
 
 // getValue*(hand, upCard) returns the expected value (as a fraction of initial
 // wager), conditioned on the dealer not having blackjack, of the indicated
@@ -450,9 +438,9 @@ public:
 // the hand is a bust hand or if the hand and up card are not possible in the
 // given shoe.
 
-    double getValueStand(const BJHand & hand, int upCard) const;
-    double getValueHit(const BJHand & hand, int upCard) const;
-    double getValueDoubleDown(const BJHand & hand, int upCard) const;
+  double getValueStand (const BJHand & hand, int upCard) const;
+  double getValueHit (const BJHand & hand, int upCard) const;
+  double getValueDoubleDown (const BJHand & hand, int upCard) const;
 
 // getValueSplit(pairCard, upCard) returns the expected value (as a fraction of
 // initial wager), conditioned on the dealer not having blackjack, of splitting
@@ -460,78 +448,70 @@ public:
 // pairCard and upCard are in the range 1 (ace) through 10.  Results are
 // undefined if the pair hand and up card are not possible in the given shoe.
 
-    double getValueSplit(int pairCard, int upCard) const;
+  double getValueSplit (int pairCard, int upCard) const;
 
 // getValue(upCard) returns the overall expected value (as a fraction of
 // initial wager) of a player hand against the given dealer up card, where
 // upCard is in the range 1 (ace) through 10.  Results are undefined if the up
 // card is not in the given shoe.
 
-    double getValue(int upCard) const;
+  double getValue (int upCard) const;
 
 // getValue() returns the overall expected value (as a fraction of initial
 // wager) of a player hand.
 
-    double getValue() const;
+  double getValue () const;
 
 // getOption() implements the BJStrategy interface, returning the player option
 // which maximizes the expected value of the hand (assuming, if necessary,
 // subsequent following of the given strategy).
 
-    int getOption(const BJHand & hand, int upCard, bool doubleDown, bool split,
-                  bool surrender);
+  int getOption (const BJHand & hand, int upCard, bool doubleDown, bool split,
+		 bool surrender);
 
 protected:
-    int numHands,
-        playerHandCount[22][2];
-    struct PlayerHand {
-        int cards[10],
-            hitHand[10],
-            nextHand;
-        float valueStand[2][10],
-            valueHit[2][10],
-            valueDoubleDown[2][10],
+  int numHands, playerHandCount[22][2];
+  struct PlayerHand {
+    int cards[10], hitHand[10], nextHand;
+    float valueStand[2][10],
+      valueHit[2][10],
+      valueDoubleDown[2][10],
+      probabilityBust[10], probabilityCount[5][10], probabilityBlackjack[10];
+  } playerHands[16373];
+  BJHand currentHand;
+  BJShoe shoe;
+  int resplit[10];
+  double valueSplit[10][10], overallValues[10], overallValue;
 
-            probabilityBust[10],
-            probabilityCount[5][10],
-            probabilityBlackjack[10];
-    } playerHands[16373];
-    BJHand currentHand;
-    BJShoe shoe;
-    int resplit[10];
-    double valueSplit[10][10],
-        overallValues[10],
-        overallValue;
+  int findHand (const BJHand & hand) const;
+  bool record (const BJHand & hand);
+  void countHands (int i, int maxCard);
+  void linkHands ();
+  void computeDealer (BJRules & rules, BJProgress & progress);
+  void linkHandCounts (bool split = false, int pairCard = 0,
+		       int splitHands = 1);
 
-    int findHand(const BJHand & hand) const;
-    bool record(const BJHand & hand);
-    void countHands(int i, int maxCard);
-    void linkHands();
-    void computeDealer(BJRules & rules, BJProgress & progress);
-    void linkHandCounts(bool split = false, int pairCard = 0,
-                        int splitHands = 1);
+  void computeStand (bool split = false, int pairCard = 0,
+		     int splitHands = 1);
+  void computeStandCount (int count, bool soft, bool split, int pairCard,
+			  int splitHands);
 
-    void computeStand(bool split = false, int pairCard = 0,
-                      int splitHands = 1);
-    void computeStandCount(int count, bool soft, bool split, int pairCard,
-                           int splitHands);
+  void computeDoubleDown (bool split = false, int pairCard = 0,
+			  int splitHands = 1);
+  void computeDoubleDownCount (int count, bool soft, bool split, int pairCard,
+			       int splitHands);
 
-    void computeDoubleDown(bool split = false, int pairCard = 0,
-                           int splitHands = 1);
-    void computeDoubleDownCount(int count, bool soft, bool split, int pairCard,
-                                int splitHands);
+  void computeHit (BJRules & rules, BJStrategy & strategy, bool split = false,
+		   int pairCard = 0, int splitHands = 1);
+  void computeHitCount (int count, bool soft, BJRules & rules,
+			BJStrategy & strategy, bool split, int pairCard,
+			int splitHands);
 
-    void computeHit(BJRules & rules, BJStrategy & strategy, bool split = false,
-                    int pairCard = 0, int splitHands = 1);
-    void computeHitCount(int count, bool soft, BJRules & rules,
-                         BJStrategy & strategy, bool split, int pairCard,
-                         int splitHands);
-
-    void computeSplit(BJRules & rules, BJStrategy & strategy);
-    void correctStandBlackjack();
-    void computeOverall(BJRules & rules, BJStrategy & strategy);
-    double computeSurrender(int upCard);
-    void conditionNoBlackjack();
+  void computeSplit (BJRules & rules, BJStrategy & strategy);
+  void correctStandBlackjack ();
+  void computeOverall (BJRules & rules, BJStrategy & strategy);
+  double computeSurrender (int upCard);
+  void conditionNoBlackjack ();
 };
 
 #endif

@@ -23,8 +23,8 @@
 
 gboolean get_insurance_choice (void);
 
-void show_preferences_dialog ( void );
-void show_hint_dialog ( void );
+void show_preferences_dialog (void);
+void show_hint_dialog (void);
 
 void pref_dialog_response (GtkWidget *, gint, gpointer);
 

@@ -23,11 +23,11 @@
 #include <gnome.h>
 
 static GnomeUIInfo game_menu[] = {
-  GNOMEUIINFO_MENU_NEW_GAME_ITEM(new_game_cb, NULL),
+  GNOMEUIINFO_MENU_NEW_GAME_ITEM (new_game_cb, NULL),
   GNOMEUIINFO_SEPARATOR,
-  GNOMEUIINFO_MENU_UNDO_MOVE_ITEM(undo_move_cb, NULL),
+  GNOMEUIINFO_MENU_UNDO_MOVE_ITEM (undo_move_cb, NULL),
   GNOMEUIINFO_SEPARATOR,
-  GNOMEUIINFO_MENU_QUIT_ITEM(quit_game_cb, NULL),
+  GNOMEUIINFO_MENU_QUIT_ITEM (quit_game_cb, NULL),
   GNOMEUIINFO_END
 };
 
@@ -37,20 +37,21 @@ static GnomeUIInfo settings_menu[] = {
 };
 
 static GnomeUIInfo help_menu[] = {
-  GNOMEUIINFO_HELP("gataxx"),
-  GNOMEUIINFO_MENU_ABOUT_ITEM(about_cb, NULL),
+  GNOMEUIINFO_HELP ("gataxx"),
+  GNOMEUIINFO_MENU_ABOUT_ITEM (about_cb, NULL),
   GNOMEUIINFO_END
 };
 
 GnomeUIInfo mainmenu[] = {
-  GNOMEUIINFO_MENU_GAME_TREE(game_menu),
-  GNOMEUIINFO_MENU_SETTINGS_TREE(settings_menu),
-  GNOMEUIINFO_MENU_HELP_TREE(help_menu),
+  GNOMEUIINFO_MENU_GAME_TREE (game_menu),
+  GNOMEUIINFO_MENU_SETTINGS_TREE (settings_menu),
+  GNOMEUIINFO_MENU_HELP_TREE (help_menu),
   GNOMEUIINFO_END
 };
 
-void menu_undo_set_sensitive(gboolean sens) {
-	GnomeUIInfo * gamemenu=mainmenu[0].moreinfo;
-	gtk_widget_set_sensitive(gamemenu[2].widget, sens);
+void
+menu_undo_set_sensitive (gboolean sens)
+{
+  GnomeUIInfo *gamemenu = mainmenu[0].moreinfo;
+  gtk_widget_set_sensitive (gamemenu[2].widget, sens);
 }
-	

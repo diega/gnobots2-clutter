@@ -38,14 +38,14 @@ enum {
 };
 
 class Sound {
- public:
+public:
   Sound ();
   void turnOn ();
   void turnOff ();
   void playSound (int soundId);
   gboolean isOn ();
- private:
-  gboolean soundOn;
+private:
+    gboolean soundOn;
   gboolean soundInit;
   gint sampleIds[N_SOUNDS];
   gint connection;

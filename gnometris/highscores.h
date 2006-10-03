@@ -26,14 +26,13 @@
 #include <games-scores.h>
 #include <games-scores-dialog.h>
 
-class HighScores
-{
+class HighScores {
 protected:
-  GtkWidget *dialog;
+  GtkWidget * dialog;
   GamesScores *highscores;
 
 public:
-  HighScores ();
+    HighScores ();
 
   gint add (gint score);
   gboolean empty (void);

@@ -31,7 +31,7 @@
 typedef struct {
 
   gint id;
-  GList* cards;
+  GList *cards;
   double x;
   double y;
   double dx;
@@ -48,7 +48,7 @@ typedef struct {
 
 } slot_type;
 
-typedef slot_type* hslot_type;
+typedef slot_type *hslot_type;
 
 extern GList *slot_list;
 
@@ -59,27 +59,25 @@ extern GList *slot_list;
 void bj_slot_load_pixmaps (void);
 void bj_slot_free_pixmaps (void);
 
-GdkPixbuf* bj_slot_get_scaled_pixbuf (void);
+GdkPixbuf *bj_slot_get_scaled_pixbuf (void);
 
-void bj_slot_set_size (gint width,
-                       gint height);
+void bj_slot_set_size (gint width, gint height);
 
 void delete_surface ();
-GdkPixmap* get_background_pixmap (void);
+GdkPixmap *get_background_pixmap (void);
 
 void bj_slot_add (gint);
 hslot_type bj_slot_add_before_slot (hslot_type, gint);
 
-void bj_slot_pressed (gint, gint, hslot_type *, gint*);
+void bj_slot_pressed (gint, gint, hslot_type *, gint *);
 
-GList* bj_slot_get_list ();
+GList *bj_slot_get_list ();
 
 void bj_slot_delete (hslot_type);
 hslot_type bj_slot_get (gint);
 void bj_slot_increase_length (hslot_type);
 void bj_slot_reduce_length (hslot_type);
-void bj_slot_add_cards (GList*, hslot_type hslot);
+void bj_slot_add_cards (GList *, hslot_type hslot);
 void bj_slot_update_length (hslot_type hslot);
 
 #endif
-

@@ -54,91 +54,91 @@ struct _typeinfo {
   int type;
   int placed;
   int image[2];
-  int tile; /* A back-reference so we can figure out which pictures 
-               are used. */
+  int tile;			/* A back-reference so we can figure out which pictures 
+				 * are used. */
 };
 typedef struct _typeinfo typeinfo;
 
-typeinfo type_info [MAX_TILES/2] = {
-  	{ 0, 0, {0, 0}, -1 },
-	{ 0, 0, {0, 0}, -1 },
-	{ 1, 0, {1, 1}, -1 },
-	{ 1, 0, {1, 1}, -1 },
-	{ 2, 0, {2, 2}, -1 },
-	{ 2, 0, {2, 2}, -1 },
-	{ 3, 0, {3, 3}, -1 },
-	{ 3, 0, {3, 3}, -1 },
-	{ 4, 0, {4, 4}, -1 },
-	{ 4, 0, {4, 4}, -1 },
-	{ 5, 0, {5, 5}, -1 },
-	{ 5, 0, {5, 5}, -1 },
-	{ 6, 0, {6, 6}, -1 },
-	{ 6, 0, {6, 6}, -1 },
-	{ 7, 0, {7, 7}, -1 },
-	{ 7, 0, {7, 7}, -1 },
-	{ 8, 0, {8, 8}, -1 },
-	{ 8, 0, {8, 8}, -1 },
-	{ 9, 0, {9, 9}, -1 },
-	{ 9, 0, {9, 9}, -1 },
-	{ 10, 0, {10, 10}, -1 },
-	{ 10, 0, {10, 10}, -1 },
-	{ 11, 0, {11, 11}, -1 },
-	{ 11, 0, {11, 11}, -1 },
-	{ 12, 0, {12, 12}, -1 },
-	{ 12, 0, {12, 12}, -1 },
-	{ 13, 0, {13, 13}, -1 },
-	{ 13, 0, {13, 13}, -1 },
-	{ 14, 0, {14, 14}, -1 },
-	{ 14, 0, {14, 14}, -1 },
-	{ 15, 0, {15, 15}, -1 },
-	{ 15, 0, {15, 15}, -1 },
-	{ 16, 0, {16, 16}, -1 },
-	{ 16, 0, {16, 16}, -1 },
-	{ 17, 0, {17, 17}, -1 },
-	{ 17, 0, {17, 17}, -1 },
-	{ 18, 0, {18, 18}, -1 },
-	{ 18, 0, {18, 18}, -1 },
-	{ 19, 0, {19, 19}, -1 },
-	{ 19, 0, {19, 19}, -1 },
-	{ 20, 0, {20, 20}, -1 },
-	{ 20, 0, {20, 20}, -1 },
-	{ 21, 0, {21, 21}, -1 },
-	{ 21, 0, {21, 21}, -1 },
-	{ 22, 0, {22, 22}, -1 },
-	{ 22, 0, {22, 22}, -1 },
-	{ 23, 0, {23, 23}, -1 },
-	{ 23, 0, {23, 23}, -1 },
-	{ 24, 0, {24, 24}, -1 },
-	{ 24, 0, {24, 24}, -1 },
-	{ 25, 0, {25, 25}, -1 },
-	{ 25, 0, {25, 25}, -1 },
-	{ 26, 0, {26, 26}, -1 },
-	{ 26, 0, {26, 26}, -1 },
-	{ 27, 0, {27, 27}, -1 },
-	{ 27, 0, {27, 27}, -1 },
-	{ 28, 0, {28, 28}, -1 },
-	{ 28, 0, {28, 28}, -1 },
-	{ 29, 0, {29, 29}, -1 },
-	{ 29, 0, {29, 29}, -1 },
-	{ 30, 0, {30, 30}, -1 },
-	{ 30, 0, {30, 30}, -1 },
-	{ 31, 0, {31, 31}, -1 },
-	{ 31, 0, {31, 31}, -1 },
-	{ 32, 0, {32, 32}, -1 },
-	{ 32, 0, {32, 32}, -1 },
-	{ 33, 0, {33, 34}, -1 },
-	{ 33, 0, {35, 36}, -1 },
-	{ 34, 0, {37, 37}, -1 },
-	{ 34, 0, {37, 37}, -1 },
-	{ 35, 0, {38, 39}, -1 },
-	{ 35, 0, {40, 41}, -1 }
+typeinfo type_info[MAX_TILES / 2] = {
+  {0, 0, {0, 0}, -1},
+  {0, 0, {0, 0}, -1},
+  {1, 0, {1, 1}, -1},
+  {1, 0, {1, 1}, -1},
+  {2, 0, {2, 2}, -1},
+  {2, 0, {2, 2}, -1},
+  {3, 0, {3, 3}, -1},
+  {3, 0, {3, 3}, -1},
+  {4, 0, {4, 4}, -1},
+  {4, 0, {4, 4}, -1},
+  {5, 0, {5, 5}, -1},
+  {5, 0, {5, 5}, -1},
+  {6, 0, {6, 6}, -1},
+  {6, 0, {6, 6}, -1},
+  {7, 0, {7, 7}, -1},
+  {7, 0, {7, 7}, -1},
+  {8, 0, {8, 8}, -1},
+  {8, 0, {8, 8}, -1},
+  {9, 0, {9, 9}, -1},
+  {9, 0, {9, 9}, -1},
+  {10, 0, {10, 10}, -1},
+  {10, 0, {10, 10}, -1},
+  {11, 0, {11, 11}, -1},
+  {11, 0, {11, 11}, -1},
+  {12, 0, {12, 12}, -1},
+  {12, 0, {12, 12}, -1},
+  {13, 0, {13, 13}, -1},
+  {13, 0, {13, 13}, -1},
+  {14, 0, {14, 14}, -1},
+  {14, 0, {14, 14}, -1},
+  {15, 0, {15, 15}, -1},
+  {15, 0, {15, 15}, -1},
+  {16, 0, {16, 16}, -1},
+  {16, 0, {16, 16}, -1},
+  {17, 0, {17, 17}, -1},
+  {17, 0, {17, 17}, -1},
+  {18, 0, {18, 18}, -1},
+  {18, 0, {18, 18}, -1},
+  {19, 0, {19, 19}, -1},
+  {19, 0, {19, 19}, -1},
+  {20, 0, {20, 20}, -1},
+  {20, 0, {20, 20}, -1},
+  {21, 0, {21, 21}, -1},
+  {21, 0, {21, 21}, -1},
+  {22, 0, {22, 22}, -1},
+  {22, 0, {22, 22}, -1},
+  {23, 0, {23, 23}, -1},
+  {23, 0, {23, 23}, -1},
+  {24, 0, {24, 24}, -1},
+  {24, 0, {24, 24}, -1},
+  {25, 0, {25, 25}, -1},
+  {25, 0, {25, 25}, -1},
+  {26, 0, {26, 26}, -1},
+  {26, 0, {26, 26}, -1},
+  {27, 0, {27, 27}, -1},
+  {27, 0, {27, 27}, -1},
+  {28, 0, {28, 28}, -1},
+  {28, 0, {28, 28}, -1},
+  {29, 0, {29, 29}, -1},
+  {29, 0, {29, 29}, -1},
+  {30, 0, {30, 30}, -1},
+  {30, 0, {30, 30}, -1},
+  {31, 0, {31, 31}, -1},
+  {31, 0, {31, 31}, -1},
+  {32, 0, {32, 32}, -1},
+  {32, 0, {32, 32}, -1},
+  {33, 0, {33, 34}, -1},
+  {33, 0, {35, 36}, -1},
+  {34, 0, {37, 37}, -1},
+  {34, 0, {37, 37}, -1},
+  {35, 0, {38, 39}, -1},
+  {35, 0, {40, 41}, -1}
 };
 
 typedef struct _dep_entry {
-  gint foundation[4]; /* Up to four we build on. */
-  gint left[2];       /* Up to two on the left. */
-  gint right[2];      /* and two on the right. */
-  gint overhead[4];   /* Up to four we support. */
+  gint foundation[4];		/* Up to four we build on. */
+  gint left[2];			/* Up to two on the left. */
+  gint right[2];		/* and two on the right. */
+  gint overhead[4];		/* Up to four we support. */
 } dep_entry;
 
 dep_entry dependencies[MAX_TILES];
@@ -147,18 +147,19 @@ gint numfree;
 
 /* These could be placed on the stack, but they're a little large, so
  * we use the depth variable as a sort of virtual stack pointer. */
-gboolean freetiles[MAX_TILES/2][MAX_TILES];
-gboolean filled[MAX_TILES]; /* This is changed incrementally with
-                               changes being undone as the program
-                               moves back towards the base of the
-                               tree. */
-guchar freelist[MAX_TILES/2][MAX_TILES];
+gboolean freetiles[MAX_TILES / 2][MAX_TILES];
+gboolean filled[MAX_TILES];	/* This is changed incrementally with
+				 * changes being undone as the program
+				 * moves back towards the base of the
+				 * tree. */
+guchar freelist[MAX_TILES / 2][MAX_TILES];
 
-GRand * generator;
+GRand *generator;
 
-int tile_free (int index)
+int
+tile_free (int index)
 {
-  dep_entry * dep;
+  dep_entry *dep;
   int i;
   gboolean free;
 
@@ -166,16 +167,16 @@ int tile_free (int index)
 
   if (tiles[index].visible == 0)
     return 0;
-  
+
   /* Check to see we aren't covered. */
-  for (i = 0; i<4; i++) {
+  for (i = 0; i < 4; i++) {
     if ((dep->overhead[i] != -1) && tiles[dep->overhead[i]].visible)
       return 0;
   }
 
   /* Look left. */
   free = TRUE;
-  for (i = 0; i<2; i++) {
+  for (i = 0; i < 2; i++) {
     if ((dep->left[i] != -1) && tiles[dep->left[i]].visible)
       free = FALSE;
   }
@@ -184,29 +185,30 @@ int tile_free (int index)
 
   /* Look right. */
   free = TRUE;
-  for (i = 0; i<2; i++) {
+  for (i = 0; i < 2; i++) {
     if ((dep->right[i] != -1) && tiles[dep->right[i]].visible)
       free = FALSE;
   }
 
   return free ? 1 : 0;
-  
+
 }
 
-void generate_dependencies ()
+void
+generate_dependencies ()
 {
-  int i,j;
+  int i, j;
   int fc, lc, rc, oc;
-  int x,y,l;
+  int x, y, l;
   int tx, ty, tl;
-  dep_entry * dep;
-  
+  dep_entry *dep;
+
   dep = dependencies;
-  for (i = 0; i<MAX_TILES; i++) {
+  for (i = 0; i < MAX_TILES; i++) {
     x = pos[i].x;
     y = pos[i].y;
     l = pos[i].layer;
-    
+
     dep->foundation[0] = dep->foundation[1] = dep->foundation[2]
       = dep->foundation[3] = -1;
     dep->left[0] = dep->left[1] = -1;
@@ -214,43 +216,43 @@ void generate_dependencies ()
     dep->overhead[0] = dep->overhead[1] = dep->overhead[2]
       = dep->overhead[3] = -1;
     fc = lc = rc = oc = 0;
-    for (j = 0; j<MAX_TILES; j++) {
+    for (j = 0; j < MAX_TILES; j++) {
       ty = pos[j].y;
-      
+
       /* Nothing we are interested in is outside +/- 1 units on the y axis. */
-      if (abs(ty - y) > 1)
-        continue;
+      if (abs (ty - y) > 1)
+	continue;
 
       tl = pos[j].layer;
       tx = pos[j].x;
-        
+
       /* First check if it is a foundation tile. */
-      if ((tl == (l - 1)) && (abs(tx - x) < 2)) {
-        dep->foundation[fc++] = j;
-        continue;
+      if ((tl == (l - 1)) && (abs (tx - x) < 2)) {
+	dep->foundation[fc++] = j;
+	continue;
       }
 
       /* Then do the overhead tiles. */
-      if ((tl == (l + 1)) && (abs(tx - x) < 2)) {
-        dep->overhead[oc++] = j;
-        continue;
+      if ((tl == (l + 1)) && (abs (tx - x) < 2)) {
+	dep->overhead[oc++] = j;
+	continue;
       }
 
       /* Everything else is on this layer. */
       if (tl != l)
-        continue;
-      
+	continue;
+
       /* Now look left ... */
       if (tx == (x - 2)) {
-        dep->left[lc++] = j;
-        continue;
+	dep->left[lc++] = j;
+	continue;
       }
 
       /* ... and right. */
       if (tx == (x + 2)) {
-        dep->right[rc++] = j;
-        continue;
-      }      
+	dep->right[rc++] = j;
+	continue;
+      }
     }
     dep++;
   }
@@ -259,11 +261,12 @@ void generate_dependencies ()
 
 /* This is the private version that additionally does some book
  * keeping for the generate game function. */
-static gboolean check_tile_is_free (gint index, gint depth)
+static gboolean
+check_tile_is_free (gint index, gint depth)
 {
   int i;
   gboolean ok;
-  dep_entry * dep;
+  dep_entry *dep;
 
   dep = dependencies + index;
 
@@ -272,9 +275,9 @@ static gboolean check_tile_is_free (gint index, gint depth)
 
   if (freetiles[depth][index])
     return TRUE;
-  
+
   /* First, check if we are covered above. */
-  for (i=0; i<4; i++) {
+  for (i = 0; i < 4; i++) {
     if (dep->overhead[i] == -1)
       break;
     if (filled[dep->overhead[i]])
@@ -283,7 +286,7 @@ static gboolean check_tile_is_free (gint index, gint depth)
 
   /* Now check to the left. */
   ok = TRUE;
-  for (i=0; i<2; i++) {
+  for (i = 0; i < 2; i++) {
     if (dep->left[i] == -1)
       break;
     if (filled[dep->left[i]]) {
@@ -299,7 +302,7 @@ static gboolean check_tile_is_free (gint index, gint depth)
 
   /* And now the right. */
   ok = TRUE;
-  for (i=0; i<2; i++) {
+  for (i = 0; i < 2; i++) {
     if (dep->right[i] == -1)
       break;
     if (filled[dep->right[i]]) {
@@ -317,13 +320,14 @@ static gboolean check_tile_is_free (gint index, gint depth)
 
 /* Check all the tiles around a given tile to see if they have become
  * free. This is called after a pair of tiles has been removed. */
-static void check_around (guint index, gint depth)
+static void
+check_around (guint index, gint depth)
 {
   guint i;
   guint target;
 
   /* See if we've freed anything below us. */
-  for (i=0; i<4; i++) {
+  for (i = 0; i < 4; i++) {
     target = dependencies[index].foundation[i];
     if (target == -1)
       break;
@@ -331,7 +335,7 @@ static void check_around (guint index, gint depth)
   }
 
   /* See if we've freed anything to the left or right. */
-  for (i=0; i<2; i++) {
+  for (i = 0; i < 2; i++) {
     target = dependencies[index].left[i];
     if (target != -1)
       check_tile_is_free (target, depth);
@@ -342,7 +346,8 @@ static void check_around (guint index, gint depth)
 }
 
 /* Assign a tile pair to a given pair of positions on the pile. */
-static void place_tiles (guint a, guint b, gint depth)
+static void
+place_tiles (guint a, guint b, gint depth)
 {
   tiles[a].visible = tiles[b].visible = TRUE;
   tiles[a].selected = tiles[b].selected = FALSE;
@@ -352,7 +357,8 @@ static void place_tiles (guint a, guint b, gint depth)
   type_info[depth].tile = a;
 }
 
-static gboolean walk_tree (gint depth)
+static gboolean
+walk_tree (gint depth)
 {
   gint i;
   gint j;
@@ -361,21 +367,21 @@ static gboolean walk_tree (gint depth)
   guchar a, b;
 
   /* The termination condition. */
-  if (numfree < 2) {/* We don't have enough tiles to continue. */
+  if (numfree < 2) {		/* We don't have enough tiles to continue. */
     return FALSE;
   }
-  
+
   /* Get a list of free tiles remaining. This is a compacted version
    * of freetiles. freetiles should have been constructed by the previous
    * iteration. */
   j = 0;
-  for (i=0; i<MAX_TILES; i++)
+  for (i = 0; i < MAX_TILES; i++)
     if (freetiles[depth][i]) {
       freelist[depth][j++] = i;
     }
 
-  if (depth == MAX_TILES/2 - 1) { /* We have reached the end with
-                                   * precisely two tiles to place. */
+  if (depth == MAX_TILES / 2 - 1) {	/* We have reached the end with
+					 * precisely two tiles to place. */
     place_tiles (freelist[depth][0], freelist[depth][1], depth);
     return TRUE;
   }
@@ -383,38 +389,39 @@ static gboolean walk_tree (gint depth)
   /* If we aren't at the end we make an exhaustive search for a walk down
    * the tree of possible games. While in principle this could take a very
    * long time, it will in general only affect the very end of any walk. */
-  
+
   /* Scramble the freelist. */
-  for (i = 0; i<numfree; i++) {
+  for (i = 0; i < numfree; i++) {
     j = g_rand_int_range (generator, i, numfree);
     swap = freelist[depth][i];
     freelist[depth][i] = freelist[depth][j];
     freelist[depth][j] = swap;
   }
-  
-  
+
+
   /* Try out all possibilities, bailing out if we can't find a path of
    * suitable depth. */
-  for (i=0; i<numfree-1; i++) {
-    for (j=i+1; j<numfree; j++) {
+  for (i = 0; i < numfree - 1; i++) {
+    for (j = i + 1; j < numfree; j++) {
       a = freelist[depth][i];
       b = freelist[depth][j];
       /* This is all a bit messy, but has a distinct advantage over the
        * cleaner, cleverer method I tried: it works. */
       oldnumfree = numfree;
       numfree -= 2;
-      memcpy(freetiles[depth+1], freetiles[depth], MAX_TILES*sizeof(gboolean));
-      freetiles[depth+1][a] = FALSE;
-      freetiles[depth+1][b] = FALSE;
+      memcpy (freetiles[depth + 1], freetiles[depth],
+	      MAX_TILES * sizeof (gboolean));
+      freetiles[depth + 1][a] = FALSE;
+      freetiles[depth + 1][b] = FALSE;
       filled[a] = FALSE;
       filled[b] = FALSE;
-      check_around (a, depth+1);
-      check_around (b, depth+1);
-      if (walk_tree (depth+1)) {
-        /* We have found a path to the end. Place a pair of tiles
-         * and go up to the next level. */
-        place_tiles (a, b, depth);
-        return TRUE;
+      check_around (a, depth + 1);
+      check_around (b, depth + 1);
+      if (walk_tree (depth + 1)) {
+	/* We have found a path to the end. Place a pair of tiles
+	 * and go up to the next level. */
+	place_tiles (a, b, depth);
+	return TRUE;
       }
       filled[a] = TRUE;
       filled[b] = TRUE;
@@ -426,16 +433,17 @@ static gboolean walk_tree (gint depth)
   return FALSE;
 }
 
-void generate_game (guint32 seed)
+void
+generate_game (guint32 seed)
 {
   guint i, j;
   typeinfo tile;
-  
+
   generator = g_rand_new_with_seed (seed);
 
   /* Scramble the tiles */
-  for (i=0; i<MAX_TILES; i++) {
-    j = g_rand_int_range (generator, 0, MAX_TILES/2);
+  for (i = 0; i < MAX_TILES; i++) {
+    j = g_rand_int_range (generator, 0, MAX_TILES / 2);
     tile = type_info[0];
     type_info[0] = type_info[j];
     type_info[j] = tile;
@@ -443,11 +451,11 @@ void generate_game (guint32 seed)
 
   /* Find which tiles are initially free. */
   numfree = 0;
-  for (i=0; i<MAX_TILES; i++) {
+  for (i = 0; i < MAX_TILES; i++) {
     filled[i] = TRUE;
     tiles[i].sequence = 0;
   }
-  for (i=0; i<MAX_TILES; i++) {
+  for (i = 0; i < MAX_TILES; i++) {
     freetiles[0][i] = FALSE;
     check_tile_is_free (i, 0);
   }
@@ -459,7 +467,8 @@ void generate_game (guint32 seed)
   /* FIXME: we should report the error that the pile cannot be solved. */
 }
 
-int shuffle (void)
+int
+shuffle (void)
 {
   int n = 0;
   int i, j;
@@ -467,19 +476,20 @@ int shuffle (void)
 
   /* Shuffle the images around so that we use the same set of tile images
    * as last time. */
-  for (i=0; i<MAX_TILES/2 - 1; i++) {
+  for (i = 0; i < MAX_TILES / 2 - 1; i++) {
     if (tiles[type_info[i].tile].visible)
       type_info[i].tile = 1;
     else
       type_info[i].tile = 0;
   }
-  i = 0; j = MAX_TILES/2 - 1;
+  i = 0;
+  j = MAX_TILES / 2 - 1;
   while (1) {
     while (j && type_info[j].tile)
       j--;
-    while ((i < MAX_TILES/2) && (type_info[i].tile == 0))
+    while ((i < MAX_TILES / 2) && (type_info[i].tile == 0))
       i++;
-    if (j<i)
+    if (j < i)
       break;
     temp = type_info[i];
     type_info[i] = type_info[j];
@@ -491,7 +501,7 @@ int shuffle (void)
   /* Figure out which ones are available and which aren't. 
    * Also figure out what depth in the tree we have to start
    * at, i.e. how far through the game we are. */
-  for (i=0; i<MAX_TILES; i++) {
+  for (i = 0; i < MAX_TILES; i++) {
     if (tiles[i].visible) {
       filled[i] = TRUE;
     } else {
@@ -503,11 +513,11 @@ int shuffle (void)
 
   /* Check which ones are playable. */
   numfree = 0;
-  for (i=0; i<MAX_TILES; i++) {
+  for (i = 0; i < MAX_TILES; i++) {
     freetiles[n][i] = FALSE;
     if (tiles[i].visible) {
       check_tile_is_free (i, n);
-    } 
+    }
   }
 
   /* Work out a new, random, solution. */
