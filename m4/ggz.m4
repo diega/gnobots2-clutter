@@ -40,7 +40,6 @@ dnl   AC_GGZ_CONFIG - find the ggz-config tool and set up configuration
 dnl   AC_GGZ_GGZMOD - find the ggzmod library
 dnl   AC_GGZ_GGZDMOD - find the ggzdmod library
 dnl   AC_GGZ_SERVER - set up game and room path for ggzd game servers
-dnl   AC_GGZ_INTL - ensure proper i18n tools installation
 dnl
 dnl   Each macro takes two arguments:
 dnl     1.  Action-if-found (or empty for no action).
@@ -50,20 +49,7 @@ dnl Internal functions:
 dnl   AC_GGZ_ERROR - user-friendly error messages
 dnl   AC_GGZ_FIND_FILE - macro for convenience (thanks kde)
 dnl   AC_GGZ_REMOVEDUPS - eliminate duplicate list elements
-dnl   AC_GGZ_UNQUOTEDPATH - unquote a shell variable multiple times
 dnl
-
-dnl ------------------------------------------------------------------------
-dnl Unquote a shell variable until all variable occurrences in its value
-dnl are resolved.
-dnl Synopsis: AC_GGZ_UNQUOTEDPATH(<returnvar>, expression)
-dnl
-AC_DEFUN([AC_GGZ_UNQUOTEDPATH],
-[
-eval $1=`echo $2`
-eval $1=`echo $$1`
-eval $1=`echo $$1`
-])
 
 dnl ------------------------------------------------------------------------
 dnl Find a directory containing a single file
@@ -959,55 +945,41 @@ fi
 
 ])
 
-dnl ------------------------------------------------------------------------
-dnl Find internationalization tools
-dnl ------------------------------------------------------------------------
-dnl
-AC_DEFUN([AC_GGZ_INTL],
+# AC_GGZ_CHECK_SERVER
+#   Check for presence of GGZ server libraries.
+#
+#   Simply call this function in programs that use GGZ.  GGZ_SERVER will
+#   be #defined in config.h, and created as a conditional
+#   in Makefile.am files, if server libraries are present.
+AC_DEFUN([AC_GGZ_CHECK_SERVER],
 [
-AC_PATH_PROG(GETTEXT, xgettext)
-AC_PATH_PROG(MSGFMT, msgfmt)
-AC_PATH_PROG(MSGMERGE, msgmerge)
-
-intl=1
-if test "x$GETTEXT" = "x"; then intl=0; fi
-if test "x$MSGFMT" = "x"; then intl=0; fi
-if test "x$MSGMERGE" = "x"; then intl=0; fi
-AM_ICONV
-LIBS="$LIBICONV $LIBS"
-AC_CHECK_LIB(intl, gettext, [LIBS="-lintl $LIBS"])
-AC_CHECK_FUNCS([gettext ngettext], [], [intl=0])
-AC_CHECK_HEADERS([libintl.h locale.h])
-if test "$intl" = 0; then
-  if test "x$2" = "xignore"; then
-    AC_MSG_WARN([Internationalization tools missing. (ignored)])
-  else
-    AC_MSG_RESULT([Internationalization tools missing.])
-    if test "x$2" = "x"; then
-      AC_MSG_ERROR([Internationalization tools missing.])
-    fi
-
-    # Perform actions given by argument 2.
-    $2
+  AC_GGZ_LIBGGZ([try_ggz="yes"], [try_ggz="no"])
+  if test "$try_ggz" = "yes"; then
+    # For now, version 0.0.14 is required.  This could be an additional
+    # parameter.
+    AC_GGZ_VERSION([0], [0], [14], [], [try_ggz=no])
   fi
-else
-  AC_MSG_RESULT([Internationalization tools found.])
 
-  XGETTEXT=$GETTEXT
-  GMSGFMT=$MSGFMT
+  ggz_server="no"
+  AC_ARG_WITH(ggz-server,
+              AC_HELP_STRING([--with-ggz-server], [Force GGZ server support]),
+              [try_ggz_server=$withval])
 
-  AC_SUBST(XGETTEXT)
-  AC_SUBST(GETTEXT)
-  AC_SUBST(GMSGFMT)
-  AC_SUBST(MSGFMT)
-  AC_SUBST(MSGMERGE)
+  if test "x$try_ggz_server" != "xno"; then
+    if test "$try_ggz" = "yes"; then
+      # Must pass something as the action-if-failed, or the macro will exit
+      AC_GGZ_GGZDMOD([ggz_server="yes"], [ggz_server="no"])
+    fi
+    if test "$ggz_server" = "yes"; then
+      AC_DEFINE(GGZ_SERVER, 1, [Server support for GGZ])
+    else
+      if test "$try_ggz_server" = "yes"; then
+        AC_MSG_ERROR([Could not configure GGZ server support. See above messages.])
+      fi
+    fi
+  fi
 
-  AC_DEFINE(ENABLE_NLS, 1, [Define if NLS is enabled])
-
-  # Perform actions given by argument 1.
-  $1
-fi
-
+  AM_CONDITIONAL(GGZ_SERVER, test "$ggz_server" = "yes")
 ])
 
 # AC_GGZ_CHECK
@@ -1030,28 +1002,10 @@ AC_DEFUN([AC_GGZ_CHECK],
     AC_GGZ_VERSION([0], [0], [14], [], [try_ggz=no])
   fi
 
-  ggz_server="no"
   ggz_client="no"
-  AC_ARG_WITH(ggz-server,
-              AC_HELP_STRING([--with-ggz-server], [Force GGZ server support]),
-              [try_ggz_server=$withval])
   AC_ARG_WITH(ggz-client,
               AC_HELP_STRING([--with-ggz-client], [Force GGZ client support]),
               [try_ggz_client=$withval])
-
-  if test "x$try_ggz_server" != "xno"; then
-    if test "$try_ggz" = "yes"; then
-      # Must pass something as the action-if-failed, or the macro will exit
-      AC_GGZ_GGZDMOD([ggz_server="yes"], [ggz_server="no"])
-    fi
-    if test "$ggz_server" = "yes"; then
-      AC_DEFINE(GGZ_SERVER, 1, [Server support for GGZ])
-    else
-      if test "$try_ggz_server" = "yes"; then
-        AC_MSG_ERROR([Could not configure GGZ server support. See above messages.])
-      fi
-    fi
-  fi
 
   if test "x$try_ggz_client" != "xno"; then
     if test "$try_ggz" = "yes"; then
@@ -1081,4 +1035,6 @@ AC_DEFUN([AC_GGZ_CHECK],
   AM_CONDITIONAL(GGZ_CLIENT, test "$ggz_client" = "yes")
   AM_CONDITIONAL(GGZ_SERVER, test "$ggz_server" = "yes")
   AM_CONDITIONAL(GGZ_GTK, test "$ggz_gtk" = "yes")
+
+  AC_GGZ_CHECK_SERVER
 ])

@@ -1,0 +1,15 @@
+These are the current implementations of libgensecure.
+
+none.c:
+	Dummy wrapper for read/write calls. This implementation does therefore not
+	support encryption, nor authentication.
+
+gnutls.c:
+	GNUTLS support. It provides encryption via DHA, but no authentication
+	either.
+
+openssl.c:
+	OpenSSL doesn't support anon-DH, so a certificate and private key are
+	_essential_. However, both are not really examined, so the statement
+	encryption yes, authentication no applies here as well.
+

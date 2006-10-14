@@ -1,0 +1,329 @@
+The following is Brent's original API proposal.
+
+     FROM: Brent Hendricks
+     DATE: 09/21/2001 11:49:58
+     SUBJECT:  [ggz-dev] Object-style libggzdmod API
+      
+     This is my proposal for an object-style (it's not quite object
+     oriented) libggzdmod API.  It's much like what we've already discussed
+     except for one notable difference: Rather than have two entirely
+     separate objects/APIs, I've combined them into a single object that
+     comes in two "flavors".  I also only covered the functionality we
+     *currently* have.
+
+     Think of it this way.  Both ggzd and the game module instantiate a
+     GGZdMod object and perform operations on it.  Those objects are then
+     responsible for keeping themselves synchronized.  This cuts down on
+     much duplication in our API and makes for a conceptually simpler
+     system.
+
+     So without further ado, here is the API I'm proposing (in the form of
+     a .h file), followed by some sample code showing how various programs
+     would use it.  I think the function names are self-explanatory, but
+     please ask if something is not clear.
+
+     /* Common objects/functions */
+
+     /* Callback events: */
+     typedef enum {
+             GGZ_GAME_STATUS,      /* Module status changed (status) */
+             GGZ_GAME_JOIN,        /* Player joined (status) */
+             GGZ_GAME_LEAVE,       /* Player left (status)*/
+             GGZ_GAME_LOG,         /* Module log request (level, msg) */
+             GGZ_GAME_PLAYER_DATA, /* Data avilable from player */
+             GGZ_GAME_ERROR        /* Error (code) */
+     } GGZdModEvent;
+
+
+     typedef enum {
+             GGZ_SEAT_OPEN = -1,   /**< The seat is open (unoccupied). */
+             GGZ_SEAT_BOT = -2,    /**< The seat has a bot (AI) in it. */
+             GGZ_SEAT_RESV = -3,   /**< The seat is reserved for a player. */
+             GGZ_SEAT_NONE = -4,   /**< This seat does not exist. */
+             GGZ_SEAT_PLAYER = -5  /**< The seat has a regular player in it. */
+     } GGZdModSeat;
+
+
+     /* The "flavor" of GGZdmod object this is.  Affects what operations
+        are allowed */
+     typedef enum {
+             GGZMOD_SERVER,
+             GGZMOD_GAME
+     } GGZdModType;
+
+
+     /* GGZdMod event handler prototype */
+     typedef void (*GGZdModHandler)(GGZdMod *, GGZdModEvent e, void *data);
+
+
+     typdef struct _GGZSeat {
+             
+             /* Seat index */
+             int num;
+             
+             /* Type of seat */
+             GGZdModSeat type;
+
+             /* Name of player occupying seat */
+             char *name;
+
+             /* fd to communicate with seat occupant */
+             int fd;
+     } GGZSeat;
+
+
+     /* Creating/destroying a ggzdmod object */
+     GGZdMod* ggzdmod_new(GGZdModType type);
+     void ggzdmod_free(GGZdMod *mod);
+
+     /* Accesor functions for GGZdMod */
+     int         ggzdmod_get_fd(GGZdMod *mod);
+     GGZdModType ggzdmod_get_type(GGZdMod *mod);
+     int         ggzdmod_get_num_seats(GGZdMod *mod);
+     GGZSeat*    ggzdmod_get_seat(GGZdMod *mod, int seat);
+
+     void ggzdmod_set_num_seats(GGZdMod *mod);
+     void ggzdmod_set_handler(GGZdMod *mod, GGZdModEvent e, GGZdModHandler func);
+     void ggzdmod_set_seat(GGZdMod *mod, GGZSeat *seat);
+
+     /* Event/Data handling */
+     int ggzdmod_dispatch(GGZdMod *mod);
+     int ggzdmod_io_pending(GGZdMod *mod);
+     int ggzdmod_loop(GGZdMod *mod);
+
+     /* ggzd specific actions */
+     int ggzdmod_launch_game(GGZdMod *mod, char **args);
+     int ggzdmod_halt_game(GGZdMod *mod);
+
+     /* module specific actions */ 
+     int ggzdmod_connect(GGZdMod *mod);
+     int ggzdmod_disconnect(GGZdMod *mod);
+     int ggzdmod_log(GGZdMod *mod, char* fmt, ...);
+
+     /* Use case #1: Server using ggzdmod event loop */
+
+     int table_launch(GGZTable *table, char **args)
+     {
+             int i;
+             GGZdMod *ggz;
+             GGZSeat seat;
+
+             /* Create new ggz game module object */
+             ggz = ggzdmod_new(GGZMOD_SERVER);
+
+             /* Setup initial seats for game */
+             ggzdmod_set_num_seats(ggz, seats_num(table));
+             for (i = 0; i < seats_num(table); i++) {
+                     seat.num = i;
+                     seat.type = seats_type(table, i);
+                     if (seat.type == GGZ_SEAT_RESV)
+                             seat.name = table.reserved[i];
+                     ggzdmod_set_seat(ggz, &seat);
+             }
+             
+             /* Setup handlers for game module events */
+             ggzdmod_set_handler(ggz, GGZ_GAME_STATUS, &table_handle_status);
+             ggzdmod_set_handler(ggz, GGZ_GAME_JOIN, &table_handle_join);
+             ggzdmod_set_handler(ggz, GGZ_GAME_LEAVE, &table_handle_leave);
+             ggzdmod_set_handler(ggz, GGZ_GAME_LOG, &table_handle_log);
+             ggzdmod_set_handler(ggz, GGZ_GAME_ERROR, &table_handle_error);
+
+             /* Attempt to launch game */
+             if (ggzdmod_launch_game(ggz, args) < 0) {
+                     /* Error starting up game */
+                     ggzdmod_free(ggz);
+                     return -1;
+             }
+             
+             /* Use game module's main loop */
+             ggzdmod_loop(ggz);
+
+             /* Game is over, remove people from seats */
+             table_remove_players(table);
+             
+             /* Free up ggz module object */ 
+             ggzdmod_free(ggz);
+             
+             return 0;
+     }
+
+
+     /* Use case 2: Server using own event loop */
+     int table_launch(GGZTable *table, char **args)
+     {
+             int i, fd;
+             GGZdMod *ggz;
+             GGZSeat seat;
+
+             /* Create new ggz game module object */
+             ggz = ggzdmod_new(GGZMOD_SERVER);
+
+             /* Setup initial seats for game */
+             ggzdmod_set_num_seats(ggz, seats_num(table));
+             for (i = 0; i < seats_num(table); i++) {
+                     seat.num = i;
+                     seat.type = seats_type(table, i);
+                     if (seat.type == GGZ_SEAT_RESV)
+                             seat.name = table.reserved[i];
+                     ggzdmod_set_seat(ggz, &seat);
+             }
+             
+             /* Setup handlers for game module events */
+             ggzdmod_set_handler(ggz, GGZ_GAME_STATUS, &table_handle_status);
+             ggzdmod_set_handler(ggz, GGZ_GAME_JOIN, &table_handle_join);
+             ggzdmod_set_handler(ggz, GGZ_GAME_LEAVE, &table_handle_leave);
+             ggzdmod_set_handler(ggz, GGZ_GAME_LOG, &table_handle_log);
+             ggzdmod_set_handler(ggz, GGZ_GAME_ERROR, &table_handle_error);
+
+             /* Attempt to launch game */
+             if (ggzdmod_launch_game(ggz, args) < 0) {
+                     /* Error starting up game */
+                     ggzdmod_free(ggz);
+                     return -1;
+             }
+
+             /* Get fd and use it in our own event loop */
+             fd = ggzdmod_get_fd(ggz);
+             table_loop(fd, ggz);
+
+             /* Game is over, remove people from seats */
+             table_remove_players(table);
+             
+             /* Free up ggz module object */ 
+             ggzdmod_free(ggz);
+             
+             return 0;
+     }
+
+
+     /* Use case #3: Simple card/board game using ggzdmod event loop*/
+
+     int main(void)
+     {
+             GGZdMod *ggz;
+             
+             /* Setup game structures */
+             game_init();
+
+             ggz = ggzdmod_new(GGZMOD_GAME);
+
+             ggzdmod_set_handler(ggz, GGZ_GAME_STATUS, &game_handle_status);
+             ggzdmod_set_handler(ggz, GGZ_GAME_JOIN, &game_handle_join);
+             ggzdmod_set_handler(ggz, GGZ_GAME_LEAVE, &game_handle_leave);
+             ggzdmod_set_handler(ggz, GGZ_GAME_PLAYER_DATA, &game_handle_player_data);
+
+             if (ggzdmod_connect(ggz) < 0) {
+                     /* Error starting up game */
+                     game_cleanup();
+                     ggzdmod_free(ggz);
+                     exit(-1);
+             }
+
+             ggzd_log(ggz, "Starting game");
+             ggzdmod_loop(ggz);
+
+             /* Disconnect from ggzd server */
+             ggzdmod_disconnect(ggz);
+
+             /* Cleanup game structures */
+             game_cleanup();
+             
+             /* Free game module object */
+             ggzdmod_free(ggz);
+
+             return 0;
+     }
+
+
+     /* Use case #4: RT action Game */
+
+     int main(void)
+     {
+             GGZdMod *ggz;
+             
+             /* Setup game structures */
+             game_init();
+
+             ggz = ggzdmod_new(GGZMOD_GAME);
+
+             ggzdmod_set_handler(ggz, GGZ_GAME_STATUS, &game_handle_launch);
+             ggzdmod_set_handler(ggz, GGZ_GAME_JOIN, &game_handle_join);
+             ggzdmod_set_handler(ggz, GGZ_GAME_LEAVE, &game_handle_leave);
+             ggzdmod_set_handler(ggz, GGZ_GAME_PLAYER_DATA, &game_handle_player_data);
+
+             if (ggzdmod_connect(ggz) < 0) {
+                     /* Error starting up game */
+                     game_cleanup();
+                     ggzdmod_free(ggz);
+                     exit(-1);
+             }
+
+             ggzd_log(ggz, "Starting game");
+             
+             /* Main game loop */
+             while (!game_is_over()) {
+
+                     /* Do time sensitive calculations and stuff */
+                     game_do_stuff();
+
+                     /* Check for any data from players or ggzd */
+                     if (ggzdmod_io_is_pending(ggz))
+                             ggzdmod_dispatch(ggz);
+             }
+
+             /* Disconnect from ggzd server */
+             ggzdmod_disconnect(ggz);
+
+             /* Cleanup game structures */
+             game_cleanup();
+             
+             /* Free game module object */
+             ggzdmod_free(ggz);
+
+             return 0;
+     }       
+
+
+     /* Use case #5: game module that wants to do it (mostly) its own way */
+     int main(void)
+     {
+             int fd;
+             GGZdMod *ggz;
+             
+             /* Setup game structures */
+             game_init();
+
+             ggz = ggzdmod_new(GGZMOD_GAME);
+
+             
+             if (ggzdmod_connect(ggz) < 0) {
+                     /* Error starting up game */
+                     game_cleanup();
+                     ggzdmod_free(ggz);
+                     exit(-1);
+             }
+
+             fd = ggzdmod_get_fd(ggz);
+
+             /* My own customized game event loop*/
+             game_loop(fd, ggz);
+
+             /* Disconnect from ggzd server */
+             ggzdmod_disconnect(ggz);
+
+             /* Cleanup game structures */
+             game_cleanup();
+             
+             /* Free game module object */
+             ggzdmod_free(ggz);
+             
+             return 0;
+     }
+
+
+     Please note that the last use case that I didn't cover is that of the
+     game module that elects not to use libggzdmod at all.  This is (and
+     must be) doable.  Whatever communication mechanism we use for keeping
+     ggzdmod objects synchronized should be able to be used without
+     libggzdmod.
+

@@ -1,0 +1,39 @@
+The following items are quite disruptive changes which might require
+design changes. All smaller wishes and bug reports should use
+http://bugs.ggzgamingzone.org/.
+
+- using an XML writer library like libxml2
+  (see ggzd for the complementary issue)
+
+- renaming of all server events to GGZ_SERVER_* for consistency
+
+++++++++++++++++++++++++++++
+old todo items (from 2003 or so) below which might still be valid:
+
+- Finish up redoing net handler functions
+
+- Fix the player/table pointing problem (is this done?)
+
+- Convert to ggzcore_strdup()
+
+- Provide a "behind the scenes" method of launching games so the FE
+  doesn't have to take such an active hand in it
+
+- Provide a GGZ_AUTOLOAD option to automatically load room and type
+  lists (and motd?) upon logging in and the player and table lists
+  upon entering a room.
+
+- Allow option for non-blocking socket: to make this easier, the
+  protocol could be altered so that each message sends its length in
+  bytes right after the opcode.  This is also easier if there are no
+  "conditionals" in the messages.  The verbose information can be
+  obtained in a separate message
+
+
+- rather than permanently having a callback for events like
+  SERVER_ROOM_CHANGE, we will register one when the client makes a
+  request for a room change.  This hook then gets removed after it is
+  called.  We can use this mechanism to pass information such as
+  whether a verbose listing was requested, or what room was requested
+  (this is really a frontend TODO)
+
