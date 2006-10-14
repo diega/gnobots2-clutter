@@ -85,4 +85,4 @@ libggz_gtk_la_LDFLAGS = $(GGZCORE_LDFLAGS) $(LIBGGZ_LDFLAGS) -version-info 0:0:0
 #	i586-mingw32msvc-windres -i $< $@
 #endif
 
-EXTRA_DIST = $(pics)
+EXTRA_DIST = $(ggzgtkdata_DATA) $(pics)
