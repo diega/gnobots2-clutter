@@ -22,7 +22,7 @@
 #ifndef HIGH_SCORES_H
 #define HIGH_SCORES_H
 
-#include <gtk/gtk.h>
+#include <gnome.h>
 #include <games-scores.h>
 #include <games-scores-dialog.h>
 
