@@ -240,7 +240,7 @@ int ggzcore_game_read_data(GGZGame * game)
 void ggzcore_game_set_server_fd(GGZGame *game, unsigned int fd)
 {
 	if (game)
-		return _ggzcore_game_set_server_fd(game, fd);
+		_ggzcore_game_set_server_fd(game, fd);
 }
 
 
@@ -744,9 +744,9 @@ int _ggzcore_game_get_control_fd(struct _GGZGame *game)
  */
 static void abort_game(struct _GGZGame *game)
 {
-      GGZTableLeaveEventData event_data = { reason:GGZ_LEAVE_NORMAL,
-	      player:NULL
-	};
+      GGZTableLeaveEventData event_data;
+      event_data.reason = GGZ_LEAVE_NORMAL;
+      event_data.player = NULL;
 	GGZServer *server = game->server;
 	GGZRoom *room = _ggzcore_server_get_cur_room(server);
 

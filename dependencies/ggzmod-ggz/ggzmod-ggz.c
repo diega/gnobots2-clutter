@@ -417,9 +417,10 @@ static void _ggzmod_ggz_set_seat(GGZMod *ggzmod, GGZSeat *seat)
 
 static GGZSeat _ggzmod_ggz_get_seat(GGZMod *ggzmod, int num)
 {
-	GGZSeat seat = {num: num,
-			type: GGZ_SEAT_NONE,
-			name: NULL};
+	GGZSeat seat;
+ 	seat.num = num,
+	seat.type = GGZ_SEAT_NONE,
+	seat.name = NULL;
 
 	if (num >= 0 && num < ggzmod->num_seats) {
 		GGZListEntry *entry;
@@ -479,7 +480,9 @@ static void _ggzmod_ggz_set_spectator_seat(GGZMod * ggzmod, GGZSpectatorSeat *se
 
 static GGZSpectatorSeat _ggzmod_ggz_get_spectator_seat(GGZMod * ggzmod, int num)
 {
-	GGZSpectatorSeat seat = {num: num, name: NULL};
+	GGZSpectatorSeat seat;
+	seat.num = num;
+	seat.name = NULL;
 
 	if (num >= 0 && num < ggzmod->num_spectator_seats) {
 		GGZListEntry *entry;

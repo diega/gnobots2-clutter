@@ -1227,7 +1227,8 @@ static void _ggzcore_net_handle_result(GGZNet * net,
 		_ggzcore_room_set_table_leave_status(room, code);
 	else if (strcasecmp(action, "chat") == 0) {
 		if (code != E_OK) {
-		      GGZErrorEventData error = { status:code };
+		      GGZErrorEventData error;
+		      error.status = code;
 
 			switch (code) {
 			case E_NOT_IN_ROOM:
@@ -1272,7 +1273,8 @@ static void _ggzcore_net_handle_result(GGZNet * net,
 	}
 	else if (strcasecmp(action, "admin") == 0) {
 		if (code != E_OK) {
-		    GGZErrorEventData error = { status:code };
+		    GGZErrorEventData error;
+		    error.status = code;
 			snprintf(error.message,
 				 sizeof(error.message),
 				 "Admin action error");

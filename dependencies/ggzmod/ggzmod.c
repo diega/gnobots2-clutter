@@ -484,9 +484,10 @@ int ggzmod_get_num_spectator_seats(GGZMod * ggzmod)
 
 GGZSeat ggzmod_get_seat(GGZMod *ggzmod, int num)
 {
-	GGZSeat seat = {num: num,
-			type: GGZ_SEAT_NONE,
-			name: NULL};
+	GGZSeat seat;
+	seat.num = num;
+	seat.type = GGZ_SEAT_NONE;
+	seat.name = NULL;
 
 	if (num >= 0 && num < ggzmod->num_seats) {
 		GGZListEntry *entry;
@@ -500,7 +501,9 @@ GGZSeat ggzmod_get_seat(GGZMod *ggzmod, int num)
 
 GGZSpectatorSeat ggzmod_get_spectator_seat(GGZMod * ggzmod, int num)
 {
-	GGZSpectatorSeat seat = {num: num, name: NULL};
+	GGZSpectatorSeat seat;
+	seat.num = num;
+	seat.name = NULL;
 
 	if (num >= 0 && num < ggzmod->num_spectator_seats) {
 		GGZListEntry *entry;
@@ -527,9 +530,10 @@ void _ggzmod_handle_seat(GGZMod * ggzmod, GGZSeat *seat)
 	/* Copy current seat to old_seat */
 	entry = ggz_list_search(ggzmod->seats, &seat);
 	if (!entry) {
-		GGZSeat myseat = {num:seat->num,
-				  type:GGZ_SEAT_NONE,
-				  name: NULL};
+		GGZSeat myseat;
+		myseat.num = seat->num;
+		myseat.type = GGZ_SEAT_NONE;
+		myseat.name = NULL;
 		old_seat = seat_copy(&myseat);
 	} else {
 		old_seat = ggz_list_get_data(entry);
@@ -571,8 +575,9 @@ void _ggzmod_handle_spectator_seat(GGZMod * ggzmod, GGZSpectatorSeat * seat)
 	/* Copy current seat to old_seat */
 	entry = ggz_list_search(ggzmod->spectator_seats, seat);
 	if (!entry) {
-		GGZSpectatorSeat myseat = {num:seat->num,
-					   name: NULL};
+		GGZSpectatorSeat myseat;
+		myseat.num = seat->num;
+		myseat.name = NULL;
 
 		old_seat = spectator_seat_copy(&myseat);
 	} else {

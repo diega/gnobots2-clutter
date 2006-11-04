@@ -53,12 +53,12 @@ extern "C" {
 #endif
 
 #if defined __GNUC__ && (__GNUC__ >= 3)
-#  define _GGZFUNCTION_
+#  define _GGZFUNCTION_ ""
 #else
 #  ifndef __cplusplus
 #    define _GGZFUNCTION_ __FUNCTION__
 #  else
-#    define _GGZFUNCTION_
+#    define _GGZFUNCTION_ ""
 #  endif
 #endif
 
