@@ -1,3 +1,8 @@
+2006-11-05  Callum McKenzie  <callum@spooky-possum.org>
+
+	* highscores.cpp: Import g18n.h explicitly since
+	games-scores-dialog.h doesn't do it implicitly anymore.
+
 2006-11-04  Andreas Røsdal  <andrearo@pvv.ntnu.no>
 
 	* highscores.h: Add missing include. 
