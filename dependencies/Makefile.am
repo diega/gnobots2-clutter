@@ -1,3 +1,3 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS=        libggz ggzdmod ggzmod-ggz ggzcore ggzmod ggz-gtk
+SUBDIRS=        libggz ggzdmod ggzmod-ggz ggzcore ggzmod ggz-gtk gnuchess
