@@ -37,8 +37,7 @@
  * Include "uint64_t" and similar types using the ac_need_stdint_h ac macro
  */
 
-#include "GCint.h"
-
+#include <stdint.h>
 #include <stdio.h>
 #include <sys/types.h>
 
