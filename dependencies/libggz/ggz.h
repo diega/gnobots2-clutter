@@ -53,6 +53,8 @@ extern "C" {
 #endif
 
 #if defined __GNUC__ && (__GNUC__ >= 3)
+#  define _GGZFUNCTION_ __FUNCTION_
+#elif defined(__sun)
 #  define _GGZFUNCTION_ ""
 #else
 #  ifndef __cplusplus
