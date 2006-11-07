@@ -1,3 +1,8 @@
+2006-11-07  Callum McKenzie  <callum@spooky-possum.org>
+
+	* mahjongg.map: Fix the Difficult map's score file name. Bug
+	#361071.
+
 2006-09-30  Andreas Røsdal  <andrearo@stud.ntnu.no>
 
 	* mahjongg.c: Implement a workaround for a bug in GtkToolbar,
