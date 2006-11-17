@@ -30,7 +30,8 @@ mahjongg_SOURCES = 	\
 	maps.c		\
 	maps.h		\
 	solubility.c	\
-	solubility.h	
+	solubility.h	\
+	translatable_game_names.h
 
 mahjongg_LDADD =					\
 	../libgames-support/libgames-support.la		\

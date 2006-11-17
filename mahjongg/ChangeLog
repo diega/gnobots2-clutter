@@ -1,3 +1,7 @@
+2006-10-16  Andreas Røsdal  <andrearo@stud.ntnu.no>
+
+	* Makefile.am: Add translatable_game_names.h to Makefile.am.
+
 2006-11-07  Callum McKenzie  <callum@spooky-possum.org>
 
 	* mahjongg.map: Fix the Difficult map's score file name. Bug
