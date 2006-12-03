@@ -1,3 +1,8 @@
+2006-12-03  Andreas Røsdal  <andrearo@stud.ntnu.no>
+
+	* mahjongg.c: Ungrey "Scores..." when the game is won,
+	patch from Thomas Andersen in Bug #380623. 
+
 2006-10-16  Andreas Røsdal  <andrearo@stud.ntnu.no>
 
 	* Makefile.am: Add translatable_game_names.h to Makefile.am.

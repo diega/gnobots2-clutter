@@ -705,6 +705,7 @@ you_won (void)
     gtk_dialog_run (GTK_DIALOG (dialog));
     gtk_widget_hide (dialog);
   }
+  update_score_state ();
 }
 
 static void
