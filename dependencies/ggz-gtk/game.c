@@ -374,15 +374,10 @@ gboolean can_launch_gametype(GGZGameType *gt)
 	const char *version = ggzcore_gametype_get_prot_version(gt);
 	const int num = ggzcore_module_get_num_by_type(game, engine, version);
 
-	if (num == 0) {
-		return FALSE;
+	if (embedded_protocol_engine && embedded_protocol_version) {
+	  return (strcmp(engine, embedded_protocol_engine) == 0
+		  && strcmp(version, embedded_protocol_version) == 0);
+	} else {
+	  return (num > 0);
 	}
-
-	if (embedded_protocol_engine && embedded_protocol_version
-	    && (strcmp(engine, embedded_protocol_engine) != 0
-		|| strcmp(version, embedded_protocol_version) != 0)) {
-		return FALSE;
-	}
-
-	return TRUE;
 }

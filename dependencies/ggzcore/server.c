@@ -40,6 +40,7 @@
 #include <winsock2.h>
 #endif
 #include <signal.h>
+#include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
 

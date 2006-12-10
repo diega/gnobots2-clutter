@@ -1,0 +1,7 @@
+2006-12-10  Andreas Røsdal  <andrearo@pvv.ntnu.no>
+
+	* ggzcore:
+	* libggz:
+	* ggzmod:
+	* ggz-gtk: Update GGZ libraries to latest SVN version,
+	closing several known bugs in the process.

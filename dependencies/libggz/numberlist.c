@@ -40,10 +40,7 @@
 
 GGZNumberList ggz_numberlist_new(void)
 {
-	GGZNumberList list;
-	list.values = 0;
-	list.min = -1;
-	list.max = -1;
+	GGZNumberList list = {.values = 0, .min = -1, .max = -1};
 	return list;
 }
 
