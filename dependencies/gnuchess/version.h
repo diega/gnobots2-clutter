@@ -23,5 +23,5 @@
      bug-gnu-chess@gnu.org
      cracraft@ai.mit.edu, cracraft@stanfordalumni.org, cracraft@earthlink.net
 */
-#define PROGRAM	  "GNU Chess"
+#define PROGRAM	  "GNU Chess for GNOME"
 #define AUTHOR	  "Chua Kong Sian / Stuart Cracraft" 
