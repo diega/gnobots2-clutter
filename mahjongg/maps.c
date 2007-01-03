@@ -367,16 +367,18 @@ parse_start_el (GMarkupParseContext * context,
     z = m->layer_t;
   }
 
+  /* NOTE: We can't use atof() since it uses the locale to decide on the format.
+   * For instance in Russian the number "1.5" will be decoded as "1" (Bug #386213) */
   while (*attribute_names) {
     a = attributes;
     while (a->type != ATTR_END) {
       if (g_ascii_strncasecmp (*attribute_names, a->name, a->length) == 0) {
 	switch (a->type) {
 	case ATTR_INT:
-	  *(gint *) (a->value) = (gint) (atof (*attribute_values));
+	  *(gint *) (a->value) = (gint) (g_ascii_strtod (*attribute_values, NULL));
 	  break;
 	case ATTR_HALFINT:
-	  *(gint *) (a->value) = (gint) (2 * atof (*attribute_values));
+	  *(gint *) (a->value) = (gint) (2 * g_ascii_strtod (*attribute_values, NULL));
 	  break;
 	case ATTR_STRING:
 	  *(const gchar **) (a->value) = *attribute_values;

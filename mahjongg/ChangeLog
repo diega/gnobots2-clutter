@@ -1,3 +1,8 @@
+2007-01-04  Robert Ancell  <robert.ancell@gmail.com>
+
+	* mahjongg.c: Changed atof() to g_ascii_strtod() so map files are
+	correctly decoded in all locales (Bug #386213).
+
 2006-12-03  Andreas Røsdal  <andrearo@stud.ntnu.no>
 
 	* mahjongg.c: Ungrey "Scores..." when the game is won,
