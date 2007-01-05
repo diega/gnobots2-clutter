@@ -1,3 +1,8 @@
+2007-01-05  Andreas Røsdal  <andreasr@gnome.org>
+
+	* tetris.cpp: Always show "Pause" when starting a new game.
+	Patch from Thomas Andersen in Bug #391638.
+
 2006-11-05  Callum McKenzie  <callum@spooky-possum.org>
 
 	* highscores.cpp: Import g18n.h explicitly since

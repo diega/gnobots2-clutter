@@ -1408,6 +1408,8 @@ Tetris::gameNew(GtkAction *action, void *d)
 	t->preview->previewBlock(blocknr_next, rot_next, color_next);
 	gtk_widget_queue_draw(t->preview->getWidget());
 
+	gtk_action_set_visible(t->pause_action, TRUE);
+	gtk_action_set_visible(t->resume_action, FALSE);
 	gtk_action_set_sensitive(t->pause_action, TRUE);
 	gtk_action_set_sensitive(t->end_game_action, TRUE);
 	gtk_action_set_sensitive(t->preferences_action, FALSE);
