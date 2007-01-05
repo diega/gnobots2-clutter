@@ -290,30 +290,3 @@ GtkWidget *create_dlg_types(void)
 
 	return dlg_types;
 }
-
-#if 0	/* currently unused */
-GtkWidget *create_menu1(void)
-{
-	GtkWidget *menu1;
-	GtkAccelGroup *menu1_accels;
-	GtkWidget *upgrage_game;
-	GtkWidget *goto_web_site;
-
-	menu1 = gtk_menu_new();
-	g_object_set_data(G_OBJECT(menu1), "menu1", menu1);
-	menu1_accels = gtk_menu_ensure_uline_accel_group(GTK_MENU(menu1));
-
-	upgrage_game = gtk_menu_item_new_with_label(_("Upgrage Game"));
-	gtk_container_add(GTK_CONTAINER(menu1), upgrage_game);
-
-	goto_web_site = gtk_menu_item_new_with_label(_("Goto Web Site"));
-	gtk_container_add(GTK_CONTAINER(menu1), goto_web_site);
-
-	g_signal_connect(GTK_OBJECT(upgrage_game), "activate",
-			 GTK_SIGNAL_FUNC(types_upgrade), NULL);
-	g_signal_connect(GTK_OBJECT(goto_web_site), "activate",
-			 GTK_SIGNAL_FUNC(types_URL), NULL);
-
-	return menu1;
-}
-#endif
