@@ -122,7 +122,7 @@ about_cb (GtkWidget * widget)
 			 _
 			 ("I want to play that game! You know, they all go whirly-round and you click on them and they vanish!"),
 			 "copyright",
-			 "Copyright \xc2\xa9 2006 Callum McKenzie", "license",
+			 "Copyright \xc2\xa9 2007 Callum McKenzie", "license",
 			 license, "name", _(APPNAME_LONG),
 			 "translator_credits", _("translator-credits"),
 			 "version", VERSION, "logo-icon-name",

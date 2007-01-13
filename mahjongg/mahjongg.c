@@ -949,7 +949,7 @@ about_callback (void)
 			 "comments",
 			 _("A matching game played with Mahjongg tiles."),
 			 "copyright",
-			 "Copyright \xc2\xa9 1998-2005 Free Software Foundation, Inc.",
+			 "Copyright \xc2\xa9 1998-2007 Free Software Foundation, Inc.",
 			 "license", license, "authors", authors, "artists",
 			 artists, "documenters", documenters,
 			 "translator_credits", _("translator-credits"),

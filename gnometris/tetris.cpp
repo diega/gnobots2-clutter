@@ -1449,7 +1449,7 @@ Tetris::gameAbout(GtkAction *action, void *d)
 			       "comments", _("Written for my wife, Matylda\n"
 					     "Send comments and bug reports to: \n"
 					     "janusz.gorycki@intel.com"),
-			       "copyright", "Copyright \xc2\xa9 1999-2006 J. Marcin Gorycki",
+			       "copyright", "Copyright \xc2\xa9 1999-2007 J. Marcin Gorycki",
 			       "license", license,
 			       "authors", authors,
 			       "documenters", documenters,				
