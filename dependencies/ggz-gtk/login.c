@@ -597,7 +597,7 @@ GtkWidget *create_dlg_login(const char *default_profile)
 	gtk_entry_set_max_length(GTK_ENTRY(host_entry), 256);
 	gtk_box_pack_start(GTK_BOX(server_box), host_entry, FALSE, FALSE,
 			   5);
-	gtk_entry_set_text(GTK_ENTRY(host_entry), _("localhost"));
+	gtk_entry_set_text(GTK_ENTRY(host_entry), "localhost");
 
 	port_label = gtk_label_new(_("Port:"));
 	gtk_box_pack_start(GTK_BOX(server_box), port_label, FALSE, TRUE,
@@ -609,7 +609,7 @@ GtkWidget *create_dlg_login(const char *default_profile)
 	gtk_entry_set_max_length(GTK_ENTRY(port_entry), 5);
 	gtk_box_pack_start(GTK_BOX(server_box), port_entry, FALSE, FALSE,
 			   0);
-	gtk_entry_set_text(GTK_ENTRY(port_entry), _("5688"));
+	gtk_entry_set_text(GTK_ENTRY(port_entry), "5688");
 
 	msg_label = gtk_label_new("");
 	g_object_set_data(G_OBJECT(dlg_login), "msg_label", msg_label);
@@ -707,12 +707,6 @@ GtkWidget *create_dlg_login(const char *default_profile)
 			   TRUE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(hbuttonbox), 5);
 
-	connect_button = stockbutton_new(GTK_STOCK_JUMP_TO, _("Connect"));
-	g_object_set_data(G_OBJECT(dlg_login),
-			  "connect_button", connect_button);
-	gtk_container_add(GTK_CONTAINER(hbuttonbox), connect_button);
-	GTK_WIDGET_SET_FLAGS(connect_button, GTK_CAN_DEFAULT);
-
 	if (ggz_closed_cb) {
 		cancel_button = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
 	} else {
@@ -720,6 +714,12 @@ GtkWidget *create_dlg_login(const char *default_profile)
 	}
 	gtk_container_add(GTK_CONTAINER(hbuttonbox), cancel_button);
 	GTK_WIDGET_SET_FLAGS(cancel_button, GTK_CAN_DEFAULT);
+
+	connect_button = stockbutton_new(GTK_STOCK_JUMP_TO, _("Connect"));
+	g_object_set_data(G_OBJECT(dlg_login),
+			  "connect_button", connect_button);
+	gtk_container_add(GTK_CONTAINER(hbuttonbox), connect_button);
+	GTK_WIDGET_SET_FLAGS(connect_button, GTK_CAN_DEFAULT);
 
 	g_signal_connect(GTK_OBJECT(dlg_login), "realize",
 			 GTK_SIGNAL_FUNC(login_fill_defaults),
