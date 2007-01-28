@@ -475,9 +475,9 @@ const GtkActionEntry actions[] = {
 };
 
 const GtkRadioActionEntry radio_actions[] = {
-  {"SizeSmall", NULL, N_("_Small"), NULL, NULL, SMALL},
-  {"SizeMedium", NULL, N_("_Medium"), NULL, NULL, MEDIUM},
-  {"SizeLarge", NULL, N_("_Large"), NULL, NULL, LARGE}
+  {"SizeSmall", NULL, N_("same-gnome|_Small"), NULL, NULL, SMALL},
+  {"SizeMedium", NULL, N_("same-gnome|_Medium"), NULL, NULL, MEDIUM},
+  {"SizeLarge", NULL, N_("same-gnome|_Large"), NULL, NULL, LARGE}
 };
 
 const GtkToggleActionEntry toggle_actions[] = {

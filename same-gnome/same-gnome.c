@@ -51,9 +51,9 @@ gint board_sizes[MAX_SIZE][3] = { {-1, -1, -1}
 {45, 30, 4}
 };
 
-const GamesScoresCategory scorecats[] = { {"Small", N_("Small")},
+const GamesScoresCategory scorecats[] = { {"Small", N_("same-gnome|Small")},
 {"Medium", N_("same-gnome|Medium")},
-{"Large", N_("Large")},
+{"Large", N_("same-gnome|Large")},
 GAMES_SCORES_LAST_CATEGORY
 };
 
