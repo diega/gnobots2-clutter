@@ -759,7 +759,7 @@ properties_callback (void)
   gtk_table_set_row_spacings (GTK_TABLE (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 12);
 
-  label = gtk_label_new_with_mnemonic (_("mahjongg|_Tile set:"));
+  label = gtk_label_new_with_mnemonic (_("_Tile set:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
 		    (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) 0, 0, 0);
