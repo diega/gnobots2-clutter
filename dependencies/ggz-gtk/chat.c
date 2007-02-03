@@ -47,6 +47,10 @@
 #  include <winsock.h>
 #endif
 
+#ifndef HAVE_INADDR_NONE
+#  define INADDR_NONE ((unsigned long) -1)
+#endif
+
 #include <glib.h>
 
 #include "chat.h"
