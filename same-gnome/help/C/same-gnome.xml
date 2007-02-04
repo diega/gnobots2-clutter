@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY app "Same GNOME">
   <!ENTITY appversion "2.12">
   <!ENTITY manrevision "2.10">
   <!ENTITY date "February 2005">
+  <!ENTITY appname "Same GNOME">
   <!ENTITY app "<application>Same GNOME</application>">
 ]>
 <!-- 
@@ -19,7 +19,7 @@
 <!-- please do not change the id; for translations, change lang to -->
 <!-- appropriate code -->
   <articleinfo> 
-    <title><application>&app;</application> Manual V&manrevision;</title>       
+    <title><application>&app;</application> Manual</title>       
 
     <copyright> 
       <year>2005</year> 
@@ -35,7 +35,7 @@
 
    -->
 
-    <publisher> 
+    <publisher role="maintainer"> 
       <publishername> GNOME Documentation Project </publishername> 
     </publisher> 
 
@@ -71,15 +71,13 @@
 
     <revhistory>
       <revision> 
-		<revnumber>Same GNOME Manual V2.10</revnumber> 
-		<date>February 2005</date> 
-		<revdescription> 
-	  		<para role="author">Callum McKenzie
-	    	<email>callum@physics.otago.ac.nz</email>
-	  		</para>
-	  		<para role="publisher">GNOME Documentation Project</para>
-			<revremark>Initial version for the new Same GNOME.</revremark>
-		</revdescription> 
+		    <revnumber>Same GNOME Manual V2.10</revnumber>
+		    <date>February 2005</date> 
+		    <revdescription> 
+    			<para>Initial version for the new Same GNOME.</para>		    
+	  		  <para role="author">Callum McKenzie <email>callum@physics.otago.ac.nz</email></para>
+	  		  <para role="publisher">GNOME Documentation Project</para>
+    		</revdescription> 
       </revision> 
     </revhistory> 
 
@@ -87,7 +85,7 @@
     </releaseinfo> 
     <legalnotice> 
       <title>Feedback</title> 
-      <para>To report a bug or make a suggestion regarding the <application>&app;</application> game or
+      <para>To report a bug or make a suggestion regarding the &app; game or
       this manual, follow the directions in the <ulink url="ghelp:gnome-feedback" type="help">GNOME Feedback Page</ulink>. 
       </para>
 <!-- Translators may also add here feedback address for translations -->
@@ -95,7 +93,7 @@
   </articleinfo> 
 
   <indexterm zone="index"> 
-    <primary>&app;</primary> 
+    <primary>&appname;</primary> 
   </indexterm> 
 
 <!-- ============= Document Body ============================= -->
@@ -105,19 +103,20 @@
     <para>&app; is a puzzle game. The goal is to remove as many objects as possible in as few moves as possible. Objects that are adjacent to each other get removed as a group. The remaining objects then collapse to fill in the gaps and new groups are formed. You cannot remove single objects.</para>
 
     <figure id="start-up">
+      <title>&app; at the beginning of a new game.</title>
       <screenshot>
         <mediaobject>
           <imageobject>
             <imagedata fileref="figures/start-up.png" format="PNG"/>
-	  </imageobject>
-	</mediaobject>
+	        </imageobject>
+	      </mediaobject>
       </screenshot>
-      <title>&app; at the beginning of a new game.</title>
     </figure>
 
     <para>The board starts as a full grid of objects. Depending on the size of board you select, there are either three or four types of object. If a group of objects are adjacent and all the same type, then they can be removed simply by clicking them with the mouse (or by pressing the space bar). When you move the mouse over a group you can remove, the objects will start moving. The number of objects in the group, and the points you will score for removing that group, is shown in the lower left corner of the window.  The more objects in the group, the more points you will score. Once the group has been removed the objects above them fall down to fill the space. If an entire column is cleared then the objects slide leftward to fill the gap.</para>
 
     <figure id="play">
+      <title>Playing &app;.</title>
       <screenshot>
         <mediaobject>
           <imageobject>
@@ -125,11 +124,11 @@
 	  </imageobject>
 	</mediaobject>
       </screenshot>
-      <title>Playing &app;.</title>
     </figure>
 
     <para>Scoring is based on the number of objects you delete:</para>
-    <table frame="topbot" align="center">
+    
+    <informaltable frame="topbot">
     <tgroup cols="2" align="center">
     <thead><row>
     <entry>Number of Objects</entry>
@@ -145,10 +144,10 @@
     <row><entry>8</entry><entry>36</entry></row>
     <row><entry>9</entry><entry>49</entry></row>
     <row><entry>&vellip;</entry><entry>&vellip;</entry></row>
-    <row><entry><inlineequation>p</inlineequation></entry><entry><inlineequation>(n - 2)<superscript>2</superscript></inlineequation></entry></row>
+    <row><entry>p</entry><entry>(n - 2)<superscript>2</superscript></entry></row>
     </tbody>
     </tgroup>
-    </table>
+    </informaltable>
     <para>If you clear the board there is a 1000 point bonus.</para>
   </sect1>
 
@@ -190,10 +189,10 @@
 
 <!-- ============= About ================================== -->
   <sect1 id="same-gnome-about"> 
-    <title>About <application>&app;</application></title> 
-    <para> <application>&app;</application> was written by Callum McKenzie
+    <title>About &app;</title> 
+    <para>&app; was written by Callum McKenzie
       (<email>callum@physics.otago.ac.nz</email>). To find more information about
-      <application>&app;</application>, please visit the 
+      &app;, please visit the 
       <ulink url="http://www.gnome.org/projects/gnome-games/" type="http">GNOME Games web page</ulink>. </para>
     <para>
       To report a bug or make a suggestion regarding this application or
