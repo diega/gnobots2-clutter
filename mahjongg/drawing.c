@@ -362,7 +362,7 @@ configure_pixmaps (void)
 }
 
 /* Here is where we create the backing pixmap and set up the tile pixmaps. */
-static void
+static gboolean
 configure_board (GtkWidget * w, GdkEventConfigure * e, gpointer data)
 {
   nowindow = FALSE;
@@ -381,6 +381,8 @@ configure_board (GtkWidget * w, GdkEventConfigure * e, gpointer data)
   configure_pixmaps ();
 
   draw_all_tiles ();
+
+  return FALSE;
 }
 
 /* Handle exposes by dumping out the backing pixmap. */

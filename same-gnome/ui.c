@@ -362,14 +362,16 @@ animation_cb (GtkToggleAction * action)
 }
 
 /* Just in case something else takes us to/from fullscreen. */
-static void
+static gboolean
 window_state_cb (GtkWidget * widget, GdkEventWindowState * event)
 {
   if (!(event->changed_mask & GDK_WINDOW_STATE_FULLSCREEN))
-    return;
+    return FALSe;
 
   set_fullscreen_actions (event->new_window_state &
 			  GDK_WINDOW_STATE_FULLSCREEN);
+    
+  return FALSE;
 }
 
 static void
@@ -440,7 +442,7 @@ custom_size_cb (void)
 }
 #endif
 
-static gint
+static gboolean
 window_resize_cb (GtkWidget * window, GdkEventConfigure * event)
 {
   gconf_client_set_int (gcclient, GCONF_WINDOW_WIDTH_KEY, event->width, NULL);

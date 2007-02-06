@@ -172,14 +172,16 @@ fullscreen_callback (GtkAction * action)
     gtk_window_unfullscreen (GTK_WINDOW (window));
 }
 
-static void
+static gboolean
 window_state_callback (GtkWidget * widget, GdkEventWindowState * event)
 {
   if (!(event->changed_mask & GDK_WINDOW_STATE_FULLSCREEN))
-    return;
+    return FALSE;
 
   set_fullscreen_actions (event->new_window_state &
 			  GDK_WINDOW_STATE_FULLSCREEN);
+    
+  return FALSE;
 }
 
 /* At the end of the game, hint, shuffle and pause all become unavailable. */
