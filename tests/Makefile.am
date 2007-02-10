@@ -17,21 +17,5 @@ SUBDIRS = \
 	$(SUBDIRS_TESTS) 
 
 DIST_SUBDIRS = \
-	aisleriot  \
-	glines \
-	gnobots2 \
-	gnomine \
-	gtali \
-	mahjongg \
-	blackjack \
-	gnect \
-	gnome-sudoku \
-	gnotravex \
-	iagno \
-	glchess \
-	gnibbles \
-	gnometris \
-	gnotski \
-	libgames-support \
-	same-gnome
+	libgames-support 
 
