@@ -47,7 +47,8 @@
 #  include <winsock.h>
 #endif
 
-#ifndef HAVE_INADDR_NONE
+/* Supposedly not present on some systems (solaris). */
+#ifndef INADDR_NONE
 #  define INADDR_NONE ((unsigned long) -1)
 #endif
 
