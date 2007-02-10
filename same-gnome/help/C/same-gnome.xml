@@ -6,6 +6,7 @@
   <!ENTITY date "February 2005">
   <!ENTITY appname "Same GNOME">
   <!ENTITY app "<application>Same GNOME</application>">
+  <!ENTITY plainapp "Same GNOME">
 ]>
 <!-- 
       (Do not remove this comment block.)
@@ -20,6 +21,12 @@
 <!-- appropriate code -->
   <articleinfo> 
     <title><application>&app;</application> Manual</title>       
+    
+    <abstract role="description">
+      <para>
+        Same GNOME is a puzzle game. The goal is to remove as many objects as possible in as few moves as possible.
+      </para>
+    </abstract>
 
     <copyright> 
       <year>2005</year> 
@@ -81,7 +88,7 @@
       </revision> 
     </revhistory> 
 
-    <releaseinfo>This manual describes version &appversion; of &app;.
+    <releaseinfo>This manual describes version &appversion; of &plainapp;.
     </releaseinfo> 
     <legalnotice> 
       <title>Feedback</title> 
