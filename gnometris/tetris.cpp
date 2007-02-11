@@ -1364,7 +1364,7 @@ Tetris::endOfGame()
 	if (scoreFrame->getScore() > 0) 
 	{
 		int pos = high_scores->add (scoreFrame->getScore());
-		high_scores->show (pos);
+		high_scores->show (GTK_WINDOW (w), pos);
 	}
 
 	field->setUseTarget (false);

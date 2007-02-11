@@ -50,10 +50,10 @@ gboolean HighScores::empty (void)
   return games_scores_get (highscores) == NULL;
 }
 
-void HighScores::show (gint highlight)
+void HighScores::show (GtkWindow *parent_window, gint highlight)
 {
   if (!dialog)
-    dialog = games_scores_dialog_new (highscores, _("Gnometris Scores"));
+    dialog = games_scores_dialog_new (parent_window, highscores, _("Gnometris Scores"));
 
   games_scores_dialog_set_hilight (GAMES_SCORES_DIALOG (dialog), highlight);
   gtk_dialog_run (GTK_DIALOG (dialog));    

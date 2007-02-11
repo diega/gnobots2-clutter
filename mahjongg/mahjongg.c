@@ -692,7 +692,7 @@ you_won (void)
     if (dialog) {
       gtk_window_present (GTK_WINDOW (dialog));
     } else {
-      dialog = games_scores_dialog_new (highscores, _("Mahjongg Scores"));
+      dialog = games_scores_dialog_new (GTK_WINDOW (window), highscores, _("Mahjongg Scores"));
       games_scores_dialog_set_category_description (GAMES_SCORES_DIALOG
 						    (dialog), _("Map:"));
       message =
@@ -1004,7 +1004,7 @@ scores_callback (GtkAction * action, gpointer data)
   if (dialog) {
     gtk_window_present (GTK_WINDOW (dialog));
   } else {
-    dialog = games_scores_dialog_new (highscores, _("Mahjongg Scores"));
+    dialog = games_scores_dialog_new (GTK_WINDOW (window), highscores, _("Mahjongg Scores"));
     games_scores_dialog_set_category_description (GAMES_SCORES_DIALOG
 						  (dialog), _("Map:"));
   }

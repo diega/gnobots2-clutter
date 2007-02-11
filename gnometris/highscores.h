@@ -36,7 +36,7 @@ public:
 
   gint add (gint score);
   gboolean empty (void);
-  void show (gint highlight = 0);
+  void show (GtkWindow *parent_window, gint highlight = 0);
 };
 
 #endif

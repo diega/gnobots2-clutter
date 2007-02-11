@@ -137,7 +137,7 @@ generate_scores_dialog (void)
 {
   GtkWidget *dialog;
 
-  dialog = games_scores_dialog_new (highscores, _("Same GNOME Scores"));
+  dialog = games_scores_dialog_new (GTK_WINDOW (application), highscores, _("Same GNOME Scores"));
 
   games_scores_dialog_set_category_description (GAMES_SCORES_DIALOG (dialog),
 						_("Size:"));
