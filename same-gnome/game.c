@@ -6,7 +6,6 @@
  *
  */
 
-#include <libgnome/gnome-score.h>
 #include <glib/gi18n.h>
 
 #include <games-gconf.h>
