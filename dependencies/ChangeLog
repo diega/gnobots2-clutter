@@ -1,3 +1,9 @@
+2007-04-24  Andreas Røsdal  <andrearo@pvv.ntnu.no>
+
+	* ggzcore/Makefile.am:
+	* ggzcore/init.c: Closes bug #431300 – ggzcore uses wrong locale dir.
+	Patch from Christian Persch with changes from me.
+
 2007-01-13  Andreas Røsdal  <andrearo@pvv.ntnu.no>
 
 	* ggz-gtk/login.c: Swap connect and cancel buttons, to make

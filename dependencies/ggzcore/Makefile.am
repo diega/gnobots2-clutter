@@ -12,7 +12,7 @@ endif
 libggzcore_la_CPPFLAGS = -I$(srcdir)/../ggzmod-ggz \
 	$(LIBGGZ_INCLUDES) \
 	-DGGZCONFDIR=\"$(sysconfdir)\" \
-	-DPREFIX=\"$(prefix)\"
+	-DLOCALEDIR="\"$(datadir)/locale\""
 
 libggzcore_la_LIBADD = ../ggzmod-ggz/libggzmod-ggz.la \
 		       $(LIBEXPAT)

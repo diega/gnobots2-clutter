@@ -59,7 +59,7 @@ int ggzcore_init(GGZOptions options)
 #endif
 
 	/* This catalog must be preloaded by applications */
-	bindtextdomain("ggzcore", PREFIX "/share/locale");
+	bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
 
 	/* Initialize various systems */
 	if (options.flags & GGZ_OPT_MODULES)
