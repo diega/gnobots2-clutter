@@ -160,7 +160,6 @@ on_help_about_activate (GtkAction *action,
                                "logo-icon-name", "gnome-blackjack",
                                "license", license,
                                "translator_credits", _("translator-credits"),
-                               "logo-icon-name", "gnome-aisleriot.png",
                                "website", "http://www.gnome.org/projects/gnome-games/",
                                "wrap-license", TRUE,
                                NULL);

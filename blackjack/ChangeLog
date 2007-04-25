@@ -1,3 +1,7 @@
+2007-04-25  Robert Ancell  <robert.ancell@gmail.com>
+
+	* src/menu.cpp: Remove duplicate logo-icon-name from about dialog (Bug #421931)
+
 2006-06-21  Andreas Røsdal <andrearo@stud.ntnu.no>
 
 	* src/blackjack.cpp: Add fullscreen mode.
