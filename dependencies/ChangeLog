@@ -1,3 +1,7 @@
+2007-04-25  Robert Ancell  <robert.ancell@gmail.com>
+
+	* gnuchess/move.c: Make inline function static (Bug #430195)
+
 2007-04-24  Andreas Røsdal  <andrearo@pvv.ntnu.no>
 
 	* ggzcore/Makefile.am:

@@ -499,7 +499,7 @@ void SANMove (int move, int ply)
 #define ATOH(a) ((a) >= 'a' && (a) <= 'h')
 #define ITO8(a) ((a) >= '1' && (a) <= '8')
 
-inline int piece_id(const char c)
+static inline int piece_id(const char c)
 {
 /* Given c, what is the piece id.  This only takes one char, which
  * isn't enough to handle two-character names (common in Russian text
