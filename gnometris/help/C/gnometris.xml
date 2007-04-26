@@ -25,6 +25,13 @@
 <!-- appropriate code -->
   <articleinfo>
     <title>&app; Manual V&manrevision;</title>
+
+    <abstract role="description">
+      <para>
+      Gnometris is the classic game of interlocking quadrominoes.
+      </para>
+    </abstract>
+
     <copyright>
       <year>2004</year>
       <holder>Angela Boyle</holder>
@@ -52,7 +59,7 @@ and
 	any of this. -->
 	
     <authorgroup> 
-      <author> 
+      <author role="maintainer"> 
 	<firstname>Angela</firstname> 
 	<surname>Boyle</surname> 
 	<affiliation> 

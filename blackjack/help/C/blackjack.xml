@@ -27,6 +27,13 @@
 <!-- appropriate code -->
   <articleinfo> 
     <title>&app; Manual V&manrevision;</title>       
+    <abstract role="description">
+      <para>
+      Blackjack is a casino rules, multiple deck blackjack game for the GNOME
+      Project.  The object of the game is to obtain a hand value that is closer
+      to 21 than that of the dealer, without going over 21.
+      </para>
+    </abstract>
 
     <copyright> 
       <year>2003</year> 
@@ -54,7 +61,7 @@
 	any of this. -->
 
     <authorgroup> 
-      <author> 
+      <author role="maintainer">
 		<firstname>William Jon</firstname> 
 		<surname>McCann</surname> 
 		<affiliation> 

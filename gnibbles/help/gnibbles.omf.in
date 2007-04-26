@@ -3,7 +3,7 @@
   <resource>
     <subject category="GNOME|Games"/>
     <type>manual</type>
-    <relation seriesid="52ee583d-42e4-4959-b5c7-8887cc4fbdee"/>
-    <rights type="GNU FDL" license.version="1.1" holder="Callum McKenzie"/>
+    <relation seriesid="ffe9621d-d289-4457-8be0-daa525224815"/>
+    <rights type="GNU FDL" license.version="1.1" holder="Kevin Breit"/>
   </resource>
 </omf>

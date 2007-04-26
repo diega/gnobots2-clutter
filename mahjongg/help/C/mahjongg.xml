@@ -23,6 +23,11 @@
   <articleinfo>
   
     <title>&app; Manual V&manrevision;</title>
+    <abstract role="description">
+      <para>
+      GNOME Mahjongg is a solitaire version of the classic Eastern tile game Mahjongg.
+      </para>
+    </abstract>
     <copyright>
       <year>1998</year>
       <holder>Free Software Foundation</holder>
@@ -52,7 +57,7 @@
 	any of this. -->
 
     <authorgroup> 
-      <author> 
+      <author role="maintainer">
 	<firstname>Eric</firstname> 
 	<surname>Baudais</surname> 
 	<affiliation> 
