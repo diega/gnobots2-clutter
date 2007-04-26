@@ -521,10 +521,10 @@
 	      <itemizedlist mark="opencircle">
 		<listitem>
 		  <para>
+		    <menuchoice>
                       <shortcut>
 			<keysym>F1</keysym>
 		      </shortcut>
-		    <menuchoice>
 		      <guimenuitem>Contents</guimenuitem>
 		    </menuchoice> &mdash; 
 		    This item shows this manual.
@@ -611,8 +611,7 @@
 	<listitem>
 	  <para>
 	    <guilabel>Warn when tiles don't match</guilabel> &mdash;
-	    Select whether you see an <link
-	    linkend="info-fig2">dialog</link> when the two tiles you
+	    Select whether you see a dialog when the two tiles you
 	    selected don't match.  If this option is not selected then
 	    the warning message will appear in the status bar in the
 	    lower left corner of the <interface>main

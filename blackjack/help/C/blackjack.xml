@@ -94,7 +94,7 @@
 <!-- to V3.0, and so on. -->  
     <revhistory>
       <revision> 
-		<revnumber>&app; Manual V&manrevision;</revnumber> 
+		<revnumber>&appname; Manual V&manrevision;</revnumber> 
 		<date>&date;</date> 
 		<revdescription> 
 	  		<para role="author">William Jon McCann
@@ -105,7 +105,7 @@
       </revision> 
     </revhistory> 
 
-    <releaseinfo>This manual describes version &appversion; of &app;.
+    <releaseinfo>This manual describes version &appversion; of &appname;.
     </releaseinfo> 
     <legalnotice> 
       <title>Feedback</title> 
@@ -285,7 +285,7 @@
 
     <sect2 id="blackjack-start">
     <title>To Start &app;</title>
-    <para>You can start <application>&app;</application> in the following ways:
+    <para>You can start &app; in the following ways:
     </para> 
     <variablelist>
     	<varlistentry>
@@ -294,14 +294,14 @@
     		<para>Choose 
     		<menuchoice>
     		<guisubmenu>Games </guisubmenu>
-    		<guimenuitem>&app;</guimenuitem>
+    		<guimenuitem>&appname;</guimenuitem>
     		</menuchoice>. </para>
     		</listitem>
     	</varlistentry>
     	<varlistentry>
     		<term>Command line</term>
     		<listitem>
-    		<para>To start <application>&app;</application> from a command line, type the following command, 
+    		<para>To start &app; from a command line, type the following command, 
     		then press <keycap>Return</keycap>:</para>
     		<para> 
 			<command>blackjack</command> 
@@ -313,7 +313,7 @@
 
     <sect2 id="blackjack-when-start">
     <title>When You Start &app;</title>
-    <para>When you start <application>&app;</application>, the following window is displayed.</para>
+    <para>When you start &app;, the following window is displayed.</para>
 
     <!-- ==== Figure ==== -->
       <figure id="mainwindow-fig"> 
@@ -349,7 +349,7 @@
 	<term>Menubar</term>
 	<listitem>
 	<para>The menus on the menubar contain all of the commands you need to work with files in 
-	<application>&app;</application>.</para>
+	&app;.</para>
 	</listitem>
 	</varlistentry>
 
@@ -363,7 +363,7 @@
 	<varlistentry>
 	<term>Statusbar</term>
 	<listitem>
-	<para>The statusbar displays information about current <application>&app;</application> 
+	<para>The statusbar displays information about current &app; 
 	activity and contextual information about the menu items. </para>
 	</listitem>
 	</varlistentry>
