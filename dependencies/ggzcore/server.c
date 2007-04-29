@@ -891,7 +891,7 @@ void _ggzcore_server_set_negotiate_status(GGZServer * server, GGZNet * net,
 					  GGZClientReqError status)
 {
 	if (net != server->net && net != server->channel) {
-		_ggzcore_server_net_error(server, _("Unknown negotation"));
+		_ggzcore_server_net_error(server, _("Unknown negotiation"));
 	} else if (server->is_channel == 0) {
 		if (net == server->channel) {
 			_ggzcore_server_channel_negotiate_status(server, status);
