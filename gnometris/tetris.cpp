@@ -61,7 +61,6 @@ bool rotateCounterClockWise = true;
 #define KEY_BASE "/apps/gnometris"
 
 #define KEY_OPTIONS_DIR KEY_BASE "/options"
-
 #define KEY_SOUND KEY_OPTIONS_DIR "/sound"
 #define KEY_BLOCK_PIXMAP KEY_OPTIONS_DIR "/block_pixmap"
 #define KEY_THEME KEY_OPTIONS_DIR "/theme"
@@ -72,6 +71,8 @@ bool rotateCounterClockWise = true;
 #define KEY_ROTATE_COUNTER_CLOCKWISE KEY_OPTIONS_DIR "/rotate_counter_clock_wise"
 #define KEY_LINE_FILL_HEIGHT KEY_OPTIONS_DIR "/line_fill_height"
 #define KEY_LINE_FILL_PROBABILITY KEY_OPTIONS_DIR "/line_fill_probability"
+#define KEY_BG_COLOUR KEY_OPTIONS_DIR "/bgcolor"
+#define KEY_USE_BG_IMAGE KEY_OPTIONS_DIR "/usebgimage"
 
 #define KEY_CONTROLS_DIR KEY_BASE "/controls"
 #define KEY_MOVE_LEFT KEY_CONTROLS_DIR "/key_left"
@@ -81,11 +82,9 @@ bool rotateCounterClockWise = true;
 #define KEY_MOVE_ROTATE KEY_CONTROLS_DIR "/key_rotate"
 #define KEY_MOVE_PAUSE KEY_CONTROLS_DIR "/key_pause"
 
-#define KEY_BG_COLOUR KEY_OPTIONS_DIR "/bgcolor"
-#define KEY_USE_BG_IMAGE KEY_OPTIONS_DIR "/usebgimage"
-
-#define KEY_HEIGHT KEY_OPTIONS_DIR "/height"
-#define KEY_WIDTH KEY_OPTIONS_DIR "/width"
+#define KEY_SAVED_DIR KEY_BASE "/saved"
+#define KEY_HEIGHT KEY_SAVED_DIR "/height"
+#define KEY_WIDTH KEY_SAVED_DIR "/width"
 
 #define TILE_THRESHOLD 65
 
