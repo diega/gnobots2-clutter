@@ -2,7 +2,7 @@
 # remove your language code from SUBDIRS here and from AC_CONFIG_FILES
 # in configure.in once you've migrated.
 
-# SUBDIRS = es ru
+# SUBDIRS = ru
 # these aren't even using the previous docs framework
 
 # GNOME doc utils
