@@ -38,6 +38,26 @@ icon22_DATA = 22x22/gnome-aisleriot.png \
 22x22/gnome-tali.png \
 22x22/gnome-tetravex.png
 
+icon24dir = $(datadir)/icons/hicolor/24x24/apps/
+icon24_DATA = 24x24/gnome-aisleriot.png \
+24x24/gnome-ataxx.png \
+24x24/gnome-blackjack.png \
+24x24/gnome-freecell.png \
+24x24/gnome-glchess.png \
+24x24/gnome-glines.png \
+24x24/gnome-gnect.png \
+24x24/gnome-gnibbles.png \
+24x24/gnome-gnometris.png \
+24x24/gnome-iagno.png \
+24x24/gnome-klotski.png \
+24x24/gnome-mahjongg.png \
+24x24/gnome-mines.png \
+24x24/gnome-robots.png \
+24x24/gnome-samegnome.png \
+24x24/gnome-sudoku.png \
+24x24/gnome-tali.png \
+24x24/gnome-tetravex.png
+
 icon32dir = $(datadir)/hicolor/32x32/apps/
 icon32_DATA =32x32/gnome-aisleriot.png \
 32x32/gnome-blackjack.png \
