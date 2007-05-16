@@ -1,6 +1,5 @@
 icon16dir = $(datadir)/icons/hicolor/16x16/apps/
 icon16_DATA = 16x16/gnome-aisleriot.png \
-16x16/gnome-ataxx.png \
 16x16/gnome-blackjack.png \
 16x16/gnome-freecell.png \
 16x16/gnome-glchess.png \
@@ -20,7 +19,6 @@ icon16_DATA = 16x16/gnome-aisleriot.png \
 
 icon22dir = $(datadir)/icons/hicolor/22x22/apps/
 icon22_DATA = 22x22/gnome-aisleriot.png \
-22x22/gnome-ataxx.png \
 22x22/gnome-blackjack.png \
 22x22/gnome-freecell.png \
 22x22/gnome-glchess.png \
@@ -40,7 +38,6 @@ icon22_DATA = 22x22/gnome-aisleriot.png \
 
 icon24dir = $(datadir)/icons/hicolor/24x24/apps/
 icon24_DATA = 24x24/gnome-aisleriot.png \
-24x24/gnome-ataxx.png \
 24x24/gnome-blackjack.png \
 24x24/gnome-freecell.png \
 24x24/gnome-glchess.png \
@@ -62,7 +59,6 @@ icon32dir = $(datadir)/hicolor/32x32/apps/
 icon32_DATA =32x32/gnome-aisleriot.png \
 32x32/gnome-blackjack.png \
 32x32/gnome-freecell.png \
-32x32/gnome-gataxx.png \
 32x32/gnome-glchess.png \
 32x32/gnome-glines.png \
 32x32/gnome-gnect.png \
@@ -80,7 +76,6 @@ icon32_DATA =32x32/gnome-aisleriot.png \
 
 icon48dir = $(datadir)/icons/hicolor/48x48/apps/
 icon48_DATA = 48x48/gnome-aisleriot.png \
-48x48/gnome-ataxx.png \
 48x48/gnome-blackjack.png \
 48x48/gnome-freecell.png \
 48x48/gnome-glchess.png \
@@ -102,7 +97,6 @@ svgicondir = $(datadir)/icons/hicolor/scalable/apps/
 svgicon_DATA = scalable/gnome-aisleriot.svg \
 scalable/gnome-blackjack.svg \
 scalable/gnome-freecell.svg \
-scalable/gnome-gataxx.svg \
 scalable/gnome-glchess.svg \
 scalable/gnome-glines.svg \
 scalable/gnome-gnect.svg \
