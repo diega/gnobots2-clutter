@@ -125,9 +125,9 @@ about_cb (GtkWidget * widget)
 			 "Copyright \xc2\xa9 2007 Callum McKenzie", "license",
 			 license, "name", _(APPNAME_LONG),
 			 "translator_credits", _("translator-credits"),
-			 "version", VERSION, "logo-icon-name",
-			 "gnome-same-gnome", "website",
-			 "http://www.gnome.org/projects/gnome-games/",
+			 "version", VERSION,
+			 "logo-icon-name", "gnome-samegnome",
+			 "website", "http://www.gnome.org/projects/gnome-games/",
 			 "wrap-license", TRUE, NULL);
   g_free (license);
 }
@@ -523,7 +523,7 @@ build_gui (void)
   GtkUIManager *ui_manager;
   GtkActionGroup *action_group;
 
-  gtk_window_set_default_icon_name ("gnome-same-gnome");
+  gtk_window_set_default_icon_name ("gnome-samegnome");
 
   application = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (application), _(APPNAME_LONG));

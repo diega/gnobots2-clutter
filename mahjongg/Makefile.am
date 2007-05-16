@@ -4,7 +4,6 @@
 mapdir = $(datadir)/gnome-games/mahjongg/maps
 pixmapdir = $(datadir)/pixmaps/mahjongg
 Gamesdir = $(datadir)/applications
-icondir=$(datadir)/icons/hicolor/48x48/apps/
 
 schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_in_files = mahjongg.schemas.in
@@ -42,9 +41,7 @@ map_DATA = mahjongg.map
 
 pixmap_DATA = smooth.png postmodern.svg
 
-icon_DATA = gnome-mahjongg.png
-
-EXTRA_DIST = mahjongg.desktop.in $(pixmap_DATA) $(icon_DATA) \
+EXTRA_DIST = mahjongg.desktop.in $(pixmap_DATA) \
 	$(schema_in_files) $(map_DATA)
 
 Games_in_files = mahjongg.desktop.in
