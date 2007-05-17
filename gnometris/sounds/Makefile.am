@@ -1,7 +1,7 @@
 sounddir=$(datadir)/sounds/gnometris
 
 sound_DATA = \
-	gameover.wav gnometris.wav land.wav lines1.wav lines2.wav \
-	lines3.wav slide.wav turn.wav
+	gameover.ogg gnometris.ogg land.ogg lines1.ogg lines2.ogg \
+	lines3.ogg slide.ogg turn.ogg
 
 EXTRA_DIST = $(sound_DATA)

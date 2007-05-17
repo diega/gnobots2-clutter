@@ -26,7 +26,6 @@
 #include "blocks.h"
 #include "preview.h"
 #include "scoreframe.h"
-#include "sound.h"
 #include "highscores.h"
 #include "renderer.h"
 
@@ -34,6 +33,7 @@
 #include <games-frame.h>
 #include <games-controls.h>
 #include <games-stock.h>
+#include <games-sound.h>
 
 #include <libgnomevfs/gnome-vfs.h>
 
@@ -164,8 +164,6 @@ Tetris::Tetris(int cmdlLevel):
 	"  </menubar>"
 	"</ui>";
 	
-	if (!sound)
-		sound = new Sound();
 
 	/* Locate our background image. */
 	outdir = g_build_filename (gnome_user_dir_get (), "gnometris.d", 
@@ -479,10 +477,7 @@ Tetris::initOptions ()
 	if (startingLevel > 20) 
 		startingLevel = 20;
 
-	if (gconfGetBoolean (gconf_client, KEY_SOUND, TRUE)) 
-		sound->turnOn ();
-	else
-		sound->turnOff ();
+	games_sound_enable (gconfGetBoolean (gconf_client, KEY_SOUND, TRUE)); 
 
 	useTarget = gconfGetBoolean (gconf_client, KEY_USE_TARGET, FALSE);
 
@@ -529,7 +524,7 @@ Tetris::setOptions ()
 		gtk_spin_button_set_value (GTK_SPIN_BUTTON (sentry), startingLevel);
 		gtk_spin_button_set_value (GTK_SPIN_BUTTON (fill_prob_spinner), line_fill_prob);
 		gtk_spin_button_set_value (GTK_SPIN_BUTTON (fill_height_spinner), line_fill_height);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sound_toggle), sound->isOn ());
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sound_toggle), games_sound_is_enabled ());
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (do_preview_toggle), do_preview);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (random_block_colors_toggle), random_block_colors);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rotate_counter_clock_wise_toggle), rotateCounterClockWise);
@@ -805,7 +800,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	t->sound_toggle =
 		gtk_check_button_new_with_mnemonic (_("_Enable sounds"));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (t->sound_toggle),
-				     sound->isOn ());
+				     games_sound_is_enabled ());
 	g_signal_connect (t->sound_toggle, "clicked",
 			  G_CALLBACK (setSound), d);
 	gtk_box_pack_start (GTK_BOX (fvbox), t->sound_toggle, 0, 0, 0);
@@ -981,13 +976,13 @@ void
 Tetris::manageFallen()
 {
 	field->fallingToLaying();
-	sound->playSound (SOUND_LAND);
+	games_sound_play ("land");
 
 	int levelBefore = scoreFrame->getLevel();
 
 	int levelAfter = scoreFrame->scoreLines (field->checkFullLines());
 	if (levelAfter != levelBefore) 
-		sound->playSound (SOUND_GNOMETRIS);
+		games_sound_play ("gnometris");
 	if ((levelBefore != levelAfter) || fastFall)
 		generateTimer(levelAfter);
 	
@@ -1051,17 +1046,17 @@ Tetris::keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 	if (keyval == t->moveLeft) {
 		res = t->field->moveBlockLeft();
 		if (res)
-			sound->playSound (SOUND_SLIDE);
+			games_sound_play ("slide");
 		t->onePause = false;
 	} else if (keyval == t->moveRight) {
 		res = t->field->moveBlockRight();
 		if (res)
-			sound->playSound (SOUND_SLIDE);
+			games_sound_play ("slide");
 		t->onePause = false;
 	} else if (keyval == t->moveRotate) {
 		res = t->field->rotateBlock(rotateCounterClockWise);
 		if (res)
-			sound->playSound (SOUND_TURN);
+			games_sound_play ("turn");
 		t->onePause = false;
 	} else if (keyval == t->moveDown) {
 		if (!t->fastFall && !t->onePause) {
@@ -1357,7 +1352,7 @@ Tetris::endOfGame()
 	gtk_widget_queue_draw(preview->getWidget());
 	field->hidePauseMessage();
 	field->showGameOverMessage();
-	sound->playSound (SOUND_GAMEOVER);
+	games_sound_play ("gameover");
 	inPlay = false;
 
 	if (scoreFrame->getScore() > 0) 
@@ -1416,7 +1411,7 @@ Tetris::gameNew(GtkAction *action, void *d)
 	t->field->hidePauseMessage();
 	t->field->hideGameOverMessage();
 
-	sound->playSound (SOUND_GNOMETRIS);
+	games_sound_play ("gnometris");
 
 	return TRUE;
 }

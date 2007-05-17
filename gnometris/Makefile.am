@@ -1,6 +1,6 @@
 if HAVE_CXX
 
-SUBDIRS=pix help sounds
+SUBDIRS=pix help 
 
 Gamesdir=$(datadir)/applications
 
@@ -33,8 +33,6 @@ gnometris_SOURCES=\
 	renderer.h \
 	scoreframe.cpp \
 	scoreframe.h	\
-	sound.cpp \
-	sound.h \
 	tetris.cpp \
 	tetris.h
 
