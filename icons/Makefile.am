@@ -110,3 +110,11 @@ scalable/gnome-samegnome.svg \
 scalable/gnome-sudoku.svg \
 scalable/gnome-tali.svg \
 scalable/gnome-tetravex.svg
+
+EXTRA_DIST = \
+	   $(icon16_DATA) \
+	   $(icon22_DATA) \
+	   $(icon24_DATA) \
+	   $(icon32_DATA) \
+	   $(icon48_DATA) \
+	   $(svgicon_DATA)
