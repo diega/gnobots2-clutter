@@ -37,6 +37,7 @@
 
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
+#include <gnome.h>
 
 #include <ggz.h>
 #include <ggzcore.h>
@@ -73,6 +74,7 @@ static void login_first_toggled(GtkToggleButton * togglebutton,
 static void login_connect_button_clicked(GtkButton * button,
 					 gpointer data);
 static void login_cancel_button_clicked(GtkButton * button, gpointer data);
+static void login_help_button_clicked(GtkButton * button, gpointer data);
 static void login_start_session(void);
 static void login_relogin(void);
 #if 0	/* currently unused */
@@ -103,9 +105,6 @@ void login_failed(const GGZErrorEventData * error)
 
 	tmp = ggz_lookup_widget(login_dialog, "top_panel");
 	gtk_notebook_set_current_page(GTK_NOTEBOOK(tmp), 1);
-
-	tmp = ggz_lookup_widget(login_dialog, "profile_frame");
-	gtk_frame_set_label(GTK_FRAME(tmp), _("Sorry!"));
 
 	tmp = ggz_lookup_widget(login_dialog, "msg_label");
 
@@ -307,6 +306,10 @@ static void login_cancel_button_clicked(GtkButton * button, gpointer data)
 	}
 }
 
+static void login_help_button_clicked(GtkButton * button, gpointer data)
+{
+	gnome_help_display (embedded_game_help_file, "network-games", NULL);
+}
 
 static void login_start_session(void)
 {
@@ -493,7 +496,6 @@ void login_set_entries(Server server)
 GtkWidget *create_dlg_login(const char *default_profile)
 {
 	GtkWidget *dlg_login;
-	GtkWidget *profile_frame;
 	GtkWidget *entries_box;
 	GtkWidget *top_panel;
 	GtkWidget *top_box;
@@ -509,7 +511,6 @@ GtkWidget *create_dlg_login(const char *default_profile)
 	GtkWidget *port_label;
 	GtkWidget *port_entry;
 	GtkWidget *msg_label;
-	GtkWidget *hseparator;
 	GtkWidget *login_box;
 	GtkWidget *user_box;
 	GtkWidget *username_box;
@@ -519,6 +520,7 @@ GtkWidget *create_dlg_login(const char *default_profile)
 	GtkWidget *pass_label;
 	GtkWidget *pass_entry;
 	GtkWidget *email_box;
+	GtkWidget *title_label;
 	GtkWidget *email_label;
 	GtkWidget *email_entry;
 	GtkWidget *radio_box;
@@ -527,34 +529,50 @@ GtkWidget *create_dlg_login(const char *default_profile)
 	GtkWidget *guest_radio;
 	GtkWidget *first_radio;
 	GtkWidget *hbuttonbox;
+	GtkWidget *help_button;
 	GtkWidget *connect_button;
 	GtkWidget *cancel_button;
+	GtkWidget *salign;
+	gchar *markup;
 
 	dlg_login = gtk_vbox_new(FALSE, 0);
 
 	/* Set global value. */
 	login_dialog = dlg_login;
 
-	profile_frame = gtk_frame_new(_("Server Profile"));
-	g_object_set_data(G_OBJECT(dlg_login), "profile_frame", profile_frame);
-	gtk_box_pack_start(GTK_BOX(dlg_login), profile_frame, TRUE,
-			   TRUE, 0);
-	gtk_container_set_border_width(GTK_CONTAINER(profile_frame), 10);
-
 	entries_box = gtk_vbox_new(FALSE, 0);
-	gtk_container_add(GTK_CONTAINER(profile_frame), entries_box);
-	gtk_container_set_border_width(GTK_CONTAINER(entries_box), 5);
+
+	salign = gtk_alignment_new  (0.5, 0.5, 0.1, 0.1);
+
+	gtk_box_pack_start(GTK_BOX(dlg_login), salign, FALSE, FALSE, 0);
+        gtk_container_add(GTK_CONTAINER(salign), entries_box);
+
+	gtk_container_set_border_width(GTK_CONTAINER(entries_box), 10);
+
+	markup = g_strdup_printf ("<span size=\"x-large\">%s</span>", 
+				  _("Network Game"));
+	title_label = gtk_label_new(markup);
+	g_free (markup);
+	gtk_label_set_use_markup (GTK_LABEL (title_label), TRUE);
+	gtk_misc_set_alignment(GTK_MISC(title_label), 0.5, 0.5);
+	gtk_box_pack_start(GTK_BOX(entries_box), title_label, TRUE, TRUE, 0);
 
 	top_panel = gtk_notebook_new();
 	g_object_set_data(G_OBJECT(dlg_login), "top_panel", top_panel);
 	gtk_box_pack_start(GTK_BOX(entries_box), top_panel, TRUE, TRUE, 3);
-	GTK_WIDGET_UNSET_FLAGS(top_panel, GTK_CAN_FOCUS);
 	gtk_notebook_set_show_tabs(GTK_NOTEBOOK(top_panel), FALSE);
 	gtk_notebook_set_show_border(GTK_NOTEBOOK(top_panel), FALSE);
 
-	top_box = gtk_vbox_new(FALSE, 3);
+	top_box = gtk_vbox_new(FALSE, 4);
 	gtk_container_add(GTK_CONTAINER(top_panel), top_box);
-	gtk_container_set_border_width(GTK_CONTAINER(top_box), 3);
+	gtk_container_set_border_width(GTK_CONTAINER(top_box), 15);
+
+	markup = g_strdup_printf ("<span weight=\"bold\">%s</span>", _("Server Profile"));
+	title_label = gtk_label_new(markup);
+	g_free (markup);
+	gtk_label_set_use_markup (GTK_LABEL (title_label), TRUE);
+	gtk_misc_set_alignment(GTK_MISC(title_label), 0, 0.5);
+	gtk_box_pack_start(GTK_BOX(top_box), title_label, TRUE, TRUE, 0);
 
 	profile_box = gtk_hbox_new(FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(top_box), profile_box, TRUE, TRUE, 0);
@@ -579,7 +597,7 @@ GtkWidget *create_dlg_login(const char *default_profile)
 			   FALSE, 5);
 
 	edit_profiles_button = stockbutton_new(GTK_STOCK_PREFERENCES,
-					       _("Edit Profiles..."));
+					       _("Edit Profiles"));
 	gtk_container_add(GTK_CONTAINER(profile_button_box),
 			  edit_profiles_button);
 	GTK_WIDGET_SET_FLAGS(edit_profiles_button, GTK_CAN_DEFAULT);
@@ -615,17 +633,22 @@ GtkWidget *create_dlg_login(const char *default_profile)
 	g_object_set_data(G_OBJECT(dlg_login), "msg_label", msg_label);
 	gtk_container_add(GTK_CONTAINER(top_panel), msg_label);
 
-	hseparator = gtk_hseparator_new();
-	gtk_box_pack_start(GTK_BOX(entries_box), hseparator, TRUE, TRUE,
-			   7);
-
 	login_box = gtk_hbox_new(FALSE, 10);
 	gtk_box_pack_start(GTK_BOX(entries_box), login_box, FALSE, FALSE,
 			   1);
+	gtk_container_set_border_width(GTK_CONTAINER(login_box), 15);
 
 	user_box = gtk_vbox_new(TRUE, 5);
+
+	markup = g_strdup_printf ("<span weight=\"bold\">%s</span>", _("User Information"));
+	title_label = gtk_label_new(markup);
+	g_free (markup);
+	gtk_label_set_use_markup (GTK_LABEL (title_label), TRUE);
+	gtk_misc_set_alignment(GTK_MISC(title_label), 0, 0.5);
+	gtk_box_pack_start(GTK_BOX(user_box), title_label, TRUE, TRUE, 0);
+
 	gtk_box_pack_start(GTK_BOX(login_box), user_box, FALSE, FALSE, 0);
-	gtk_container_set_border_width(GTK_CONTAINER(user_box), 10);
+	gtk_container_set_border_width(GTK_CONTAINER(user_box), 15);
 
 	username_box = gtk_hbox_new(FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(user_box), username_box, TRUE, TRUE, 0);
@@ -672,8 +695,16 @@ GtkWidget *create_dlg_login(const char *default_profile)
 			   0);
 	gtk_entry_set_visibility(GTK_ENTRY(pass_entry), FALSE);
 
-	radio_box = gtk_vbox_new(FALSE, 0);
+	radio_box = gtk_vbox_new(FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(login_box), radio_box, FALSE, FALSE, 0);
+	gtk_container_set_border_width(GTK_CONTAINER(radio_box), 25);
+
+	markup = g_strdup_printf ("<span weight=\"bold\">%s</span>", _("Authentication type"));
+	title_label = gtk_label_new(markup);
+	g_free (markup);
+	gtk_label_set_use_markup (GTK_LABEL (title_label), TRUE);
+	gtk_misc_set_alignment(GTK_MISC(title_label), 0, 0.5);
+	gtk_box_pack_start(GTK_BOX(radio_box), title_label, TRUE, TRUE, 0);
 
 	normal_radio =
 	    gtk_radio_button_new_with_label(login_type_group,
@@ -703,9 +734,14 @@ GtkWidget *create_dlg_login(const char *default_profile)
 	gtk_box_pack_start(GTK_BOX(radio_box), first_radio, TRUE, TRUE, 0);
 
 	hbuttonbox = gtk_hbutton_box_new();
-	gtk_box_pack_start(GTK_BOX(dlg_login), hbuttonbox, TRUE,
-			   TRUE, 0);
+        gtk_button_box_set_layout(GTK_BUTTON_BOX(hbuttonbox), GTK_BUTTONBOX_END);
+	gtk_box_pack_start(GTK_BOX(entries_box), hbuttonbox, FALSE, FALSE, 3);
 	gtk_container_set_border_width(GTK_CONTAINER(hbuttonbox), 5);
+	gtk_box_set_spacing (GTK_BOX (hbuttonbox), 60);
+	help_button = gtk_button_new_from_stock(GTK_STOCK_HELP);
+	g_object_set_data(G_OBJECT(dlg_login),
+			  "help_button", help_button);
+	gtk_container_add(GTK_CONTAINER(hbuttonbox), help_button);
 
 	if (ggz_closed_cb) {
 		cancel_button = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
@@ -750,6 +786,8 @@ GtkWidget *create_dlg_login(const char *default_profile)
 	g_signal_connect(GTK_OBJECT(cancel_button), "clicked",
 			 GTK_SIGNAL_FUNC(login_cancel_button_clicked),
 			 NULL);
-
+	g_signal_connect(GTK_OBJECT(help_button), "clicked",
+			 GTK_SIGNAL_FUNC(login_help_button_clicked),
+			 NULL);
 	return dlg_login;
 }

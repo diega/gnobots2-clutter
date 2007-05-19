@@ -69,9 +69,9 @@ void (*launched_cb)(void);
 void (*ggz_closed_cb)(void);
 const char *embedded_protocol_engine, *embedded_protocol_version;
 const char *embedded_default_profile;
+const char *embedded_game_help_file; 
 
 static gint spectating = -1;
-static const char *embedded_game_help_file; 
 
 /* Maximum cache size for last entries */
 #define CHAT_MAXIMUM_CACHE 5

@@ -51,3 +51,4 @@ extern void (*launched_cb)(void);
 extern void (*ggz_closed_cb)(void);
 extern const char *embedded_protocol_engine, *embedded_protocol_version;
 extern const char *embedded_default_profile;
+extern const char *embedded_game_help_file;
