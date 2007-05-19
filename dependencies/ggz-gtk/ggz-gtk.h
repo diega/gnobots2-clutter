@@ -34,6 +34,7 @@ void ggz_gtk_initialize(gboolean reconnect,
 			void (*ggz_closed)(void),
 			const char *protocol_engine,
 			const char *protocol_version,
+			const char *game_help_file,
 			const char *default_profile);
 
 GtkWidget *ggz_gtk_create_main_area(GtkWidget *main_window);

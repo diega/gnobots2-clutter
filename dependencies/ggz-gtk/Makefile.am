@@ -41,8 +41,6 @@ libggz_gtk_la_SOURCES =	about.c \
 			ggz-gtk.h		\
 			launch.c \
 			launch.h \
-			license.c \
-			license.h \
 			login.c \
 			login.h \
 			motd.c \

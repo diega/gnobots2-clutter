@@ -38,6 +38,7 @@
 #include <ggz.h> /* For list functions */
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
+#include <gnome.h>
 #include <ggzcore.h>
 
 #include "about.h"
@@ -51,7 +52,6 @@
 #include "playerlist.h"
 #include "roominfo.h"
 #include "launch.h"
-#include "license.h"
 #include "login.h"
 #include "msgbox.h"
 #include "props.h"
@@ -71,6 +71,7 @@ const char *embedded_protocol_engine, *embedded_protocol_version;
 const char *embedded_default_profile;
 
 static gint spectating = -1;
+static const char *embedded_game_help_file; 
 
 /* Maximum cache size for last entries */
 #define CHAT_MAXIMUM_CACHE 5
@@ -90,11 +91,8 @@ static void client_player_toggle_activate(GtkMenuItem *menuitem,
 					  gpointer data);
 static void client_game_types_activate(GtkMenuItem *menuitem, gpointer data);
 static void client_motd_activate(GtkMenuItem *menuitem, gpointer data);
+static void client_contents_activate(GtkMenuItem *menuitem, gpointer data);
 static void client_about_activate(GtkMenuItem *menuitem, gpointer data);
-static void client_license_activate(GtkMenuItem *menuitem, gpointer data);
-static void client_ggz_help_activate(GtkMenuItem *menuitem, gpointer data);
-static void client_game_help_activate(GtkMenuItem *menuitem, gpointer data);
-static void client_goto_web1_activate(GtkMenuItem *menuitem, gpointer data);
 static void client_launch_button_clicked(GtkButton *button, gpointer data);
 static void client_join_button_clicked(GtkButton *button, gpointer data);
 static void client_watch_button_clicked(GtkButton *button, gpointer data);
@@ -277,48 +275,13 @@ client_about_activate			(GtkMenuItem	*menuitem,
 	about_create_or_raise();
 }
 
-
 static void
-client_license_activate			(GtkMenuItem	*menuitem,
-					 gpointer	 data)
+client_contents_activate			(GtkMenuItem	*menuitem,
+					 	 gpointer	 data)
 {
-	license_create_or_raise();
+	gnome_help_display (embedded_game_help_file, "network-games", NULL);
 }
 
-
-static void
-client_ggz_help_activate		(GtkMenuItem	*menuitem,
-					 gpointer	 data)
-{
-	if(!support_goto_url(GGZGTKDATADIR "/help/ggz-gtk-handbook.html")) {
-		msgbox(_("GGZ Gaming Zone help needs a browser to be "
-			 "configured.\n"
-			 "The configuration dialog will be invoked now."),
-		       "Help configuration",
-		       MSGBOX_OKONLY, MSGBOX_NONE, MSGBOX_NORMAL);
-		props_raise();
-	}
-}
-
-
-static void
-client_game_help_activate		(GtkMenuItem	*menuitem,
-					 gpointer	 data)
-{
-	msgbox(_("Inline game help is not implemented yet. Help\n"
-		 "is on our website. If\n"
-		 "you would like to help head over to\n"
-		 "http://www.ggzgamingzone.org/"), _("Not Implemented"),
-	       MSGBOX_OKONLY, MSGBOX_NONE, MSGBOX_NORMAL);
-}
-
-
-static void
-client_goto_web1_activate		(GtkMenuItem	*menuitem,
-					 gpointer	 data)
-{
-	support_goto_url("http://www.ggzgamingzone.org/");
-}
 
 static GtkWidget*
 main_xtext_chat_create			(gchar		*widget_name,
@@ -786,6 +749,7 @@ void ggz_gtk_initialize(gboolean reconnect,
 			void (*ggz_closed)(void),
 			const char *protocol_engine,
 			const char *protocol_version,
+			const char *game_help_file,
 			const char *default_profile)
 {
 	GGZOptions opt;
@@ -829,6 +793,7 @@ void ggz_gtk_initialize(gboolean reconnect,
 	embedded_protocol_engine = ggz_strdup(protocol_engine);
 	embedded_protocol_version = ggz_strdup(protocol_version);
 	embedded_default_profile = ggz_strdup(default_profile);
+	embedded_game_help_file = game_help_file;
 }
 
 static GtkWidget *create_main_dlg(GtkWidget *main_window)
@@ -865,13 +830,8 @@ static GtkWidget *create_main_dlg(GtkWidget *main_window)
   GtkWidget *motd;
   GtkWidget *help;
   GtkWidget *help_menu;
+  GtkWidget *contents;
   GtkWidget *about;
-  GtkWidget *license;
-  GtkWidget *separator6;
-  GtkWidget *ggz_help;
-  GtkWidget *game_help;
-  GtkWidget *separator7;
-  GtkWidget *goto_web1;
   GtkWidget *handlebox1;
   GtkWidget *toolbar;
   GtkToolItem *disconnect_button, *exit_button;
@@ -1076,41 +1036,19 @@ static GtkWidget *create_main_dlg(GtkWidget *main_window)
   g_object_set_data(G_OBJECT (win_main), "help_menu", help_menu);
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (help), help_menu);
 
+  contents = gtk_menu_item_new_with_label(_("Contents"));
+  g_object_set_data(G_OBJECT (win_main), "contents", contents);
+  gtk_container_add (GTK_CONTAINER (help_menu), contents);
+  gtk_widget_add_accelerator (contents, "activate", accel_group,
+                              GDK_A, GDK_CONTROL_MASK,
+                              GTK_ACCEL_VISIBLE);
+
   about = gtk_menu_item_new_with_label(_("About"));
   g_object_set_data(G_OBJECT (win_main), "about", about);
   gtk_container_add (GTK_CONTAINER (help_menu), about);
   gtk_widget_add_accelerator (about, "activate", accel_group,
                               GDK_A, GDK_CONTROL_MASK,
                               GTK_ACCEL_VISIBLE);
-
-  license = gtk_menu_item_new_with_label(_("Copyright"));
-  g_object_set_data(G_OBJECT (win_main), "license", license);
-  gtk_container_add (GTK_CONTAINER (help_menu), license);
-
-  separator6 = gtk_menu_item_new ();
-  g_object_set_data(G_OBJECT (win_main), "separator6", separator6);
-  gtk_container_add (GTK_CONTAINER (help_menu), separator6);
-  gtk_widget_set_sensitive (separator6, FALSE);
-
-  ggz_help = gtk_menu_item_new_with_label(_("GGZ Help"));
-  g_object_set_data(G_OBJECT (win_main), "ggz_help", ggz_help);
-  gtk_container_add (GTK_CONTAINER (help_menu), ggz_help);
-  gtk_widget_add_accelerator (ggz_help, "activate", accel_group,
-                              GDK_F1, 0,
-                              GTK_ACCEL_VISIBLE);
-
-  game_help = gtk_menu_item_new_with_label(_("Game Help"));
-  g_object_set_data(G_OBJECT (win_main), "game_help", game_help);
-  gtk_container_add (GTK_CONTAINER (help_menu), game_help);
-
-  separator7 = gtk_menu_item_new ();
-  g_object_set_data(G_OBJECT (win_main), "separator7", separator7);
-  gtk_container_add (GTK_CONTAINER (help_menu), separator7);
-  gtk_widget_set_sensitive (separator7, FALSE);
-
-  goto_web1 = gtk_menu_item_new_with_label(_("Goto Web"));
-  g_object_set_data(G_OBJECT (win_main), "goto_web1", goto_web1);
-  gtk_container_add (GTK_CONTAINER (help_menu), goto_web1);
 
   handlebox1 = gtk_handle_box_new ();
   g_object_set_data(G_OBJECT (win_main), "handlebox1", handlebox1);
@@ -1356,17 +1294,8 @@ static GtkWidget *create_main_dlg(GtkWidget *main_window)
   g_signal_connect (GTK_OBJECT (about), "activate",
                       GTK_SIGNAL_FUNC (client_about_activate),
                       NULL);
-  g_signal_connect (GTK_OBJECT (license), "activate",
-                      GTK_SIGNAL_FUNC (client_license_activate),
-                      NULL);
-  g_signal_connect (GTK_OBJECT (ggz_help), "activate",
-                      GTK_SIGNAL_FUNC (client_ggz_help_activate),
-                      NULL);
-  g_signal_connect (GTK_OBJECT (game_help), "activate",
-                      GTK_SIGNAL_FUNC (client_game_help_activate),
-                      NULL);
-  g_signal_connect (GTK_OBJECT (goto_web1), "activate",
-                      GTK_SIGNAL_FUNC (client_goto_web1_activate),
+  g_signal_connect (GTK_OBJECT (contents), "activate",
+                      GTK_SIGNAL_FUNC (client_contents_activate),
                       NULL);
   g_signal_connect (GTK_OBJECT (disconnect_button), "clicked",
                       GTK_SIGNAL_FUNC (client_disconnect_button_clicked),

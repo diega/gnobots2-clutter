@@ -53,6 +53,8 @@
 #endif
 
 #include <glib.h>
+#include <gnome.h>
+#include <libgnome/libgnome.h>
 
 #include "chat.h"
 #include "client.h"
@@ -704,6 +706,8 @@ int chat_checkurl(GtkXText *xtext, char *word)
 void chat_word_clicked(GtkXText *xtext, char *word,
         GdkEventButton *event)
 {
+	GError *err = NULL;
+
 	switch(chat_checkurl(xtext, word))
 	{
 		case WORD_GGZ:
@@ -711,7 +715,7 @@ void chat_word_clicked(GtkXText *xtext, char *word,
 			break;
 		case WORD_HOST:
 		case WORD_URL:
-			support_goto_url(word);
+			 gnome_url_show (word, &err);
 			break;
 		default:
 			break;

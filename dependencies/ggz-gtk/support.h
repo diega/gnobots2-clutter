@@ -93,11 +93,6 @@ GtkWidget*  ggz_lookup_widget              (GtkWidget       *widget,
 char *nocasestrstr (char *text, char *tofind);
 
 /*
- * Use this function to load a URL in netscape
- */
-int support_goto_url(gchar *url);
-
-/*
  * Use this function to fork a command
  */
 void support_exec(char *cmd);
