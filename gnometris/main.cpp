@@ -21,6 +21,7 @@
 #include <config.h>
 #include "tetris.h"
 #include "games-scores.h"
+#include "games-sound.h"
 
 int
 main(int argc, char *argv[])
@@ -39,9 +40,12 @@ main(int argc, char *argv[])
 		{NULL}
 	};
 
+	g_thread_init (NULL);
+
 	GOptionContext *context = g_option_context_new ("");
 
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
+	g_option_context_add_group (context, games_sound_get_option_group ());
 
 	GnomeProgram *program = gnome_program_init ("gnometris", VERSION,
 						    LIBGNOMEUI_MODULE,
