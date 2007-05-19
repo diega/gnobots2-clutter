@@ -1,3 +1,8 @@
+2007-05-19  Andreas Røsdal  <andrearo@pvv.ntnu.no>
+
+	* ggz-gtk/first.c: Remove strings which had binary symbols.
+	Reported by Nickolay V. Shmyrev in bug #406702.
+
 2007-04-25  Robert Ancell  <robert.ancell@gmail.com>
 
 	* gnuchess/move.c: Make inline function static (Bug #430195)

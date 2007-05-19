@@ -658,7 +658,6 @@ client_realize                    (GtkWidget       *widget,
 {
 	GtkTooltips *client_window_tips;
 	GtkXText *tmp, *tmp2;
-	char *buf;
 	char *font_str;
 
 	chat_init();
@@ -721,15 +720,6 @@ client_realize                    (GtkWidget       *widget,
 	gtk_range_set_adjustment(GTK_RANGE(tmp2), tmp->adj);
 
 	gtk_xtext_refresh(tmp,0);
-
-	/* Print out client information */
-	buf = g_strdup_printf(_("Client Version:\00314 %s"), VERSION);
-	chat_display_local(CHAT_LOCAL_NORMAL, NULL, buf); 
-	g_free(buf);
-	buf = g_strdup_printf(_("GTK+ Version:\00314 %d.%d.%d\n"),
-		gtk_major_version, gtk_minor_version, gtk_micro_version);
-	chat_display_local(CHAT_LOCAL_NORMAL, NULL, buf); 
-	g_free(buf);
 
 #ifdef DEBUG
 	chat_display_local(CHAT_LOCAL_HIGH, NULL,
