@@ -1039,9 +1039,6 @@ static GtkWidget *create_main_dlg(GtkWidget *main_window)
   contents = gtk_menu_item_new_with_label(_("Contents"));
   g_object_set_data(G_OBJECT (win_main), "contents", contents);
   gtk_container_add (GTK_CONTAINER (help_menu), contents);
-  gtk_widget_add_accelerator (contents, "activate", accel_group,
-                              GDK_A, GDK_CONTROL_MASK,
-                              GTK_ACCEL_VISIBLE);
 
   about = gtk_menu_item_new_with_label(_("About"));
   g_object_set_data(G_OBJECT (win_main), "about", about);
