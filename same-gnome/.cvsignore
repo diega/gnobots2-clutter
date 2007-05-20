@@ -1,8 +1,0 @@
-Makefile
-.deps
-_libs
-.libs
-same-gnome
-Makefile.in
-same-gnome.desktop
-same-gnome.schemas

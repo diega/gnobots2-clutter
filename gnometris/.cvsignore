@@ -1,7 +1,0 @@
-gnometris
-Makefile
-Makefile.in
-.deps
-.libs
-gnometris.desktop
-gnometris.schemas
