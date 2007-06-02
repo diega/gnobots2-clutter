@@ -86,6 +86,7 @@ gboolean show_toolbar = TRUE;
 gchar *game_variation = NULL;
 
 #define DEFAULT_VARIATION      "Vegas_Strip.rules"
+#define DEFAULT_THEME "bonded"
 
 void
 bj_make_window_title (gchar *game_name) 
@@ -553,7 +554,13 @@ bj_get_card_style ()
         lcard_style = gconf_client_get_string (bj_gconf_client (), 
                                                GCONF_KEY_CARD_STYLE,
                                                NULL);
-        return lcard_style;
+        /* Back compat */
+        if (g_str_has_suffix (lcard_style, ".svg"))
+          *g_strrstr (lcard_style, ".svg") = '\0';
+        else if (g_str_has_suffix (lcard_style, ".png"))
+          *g_strrstr (lcard_style, ".png") = '\0';
+
+        return lcard_style ? lcard_style : g_strdup (DEFAULT_THEME);
 }
 
 void
@@ -729,7 +736,7 @@ main (int argc, char *argv [])
         GError             *error      = NULL;
         char               *variation  = NULL;
         gboolean            retval;
-        static GOptionEntry entries [] = {
+        const GOptionEntry entries [] = {
                 { "variation", 0, 0, G_OPTION_ARG_STRING, &variation,
                   N_("Blackjack rule set to use"), NULL },
                 { NULL }
@@ -739,26 +746,43 @@ main (int argc, char *argv [])
         bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
         textdomain (GETTEXT_PACKAGE);
 
+#if defined(HAVE_GNOME) || defined(HAVE_RSVG_GNOMEVFS)
+  /* If we're going to use gnome-vfs, we need to init threads before
+   * calling any glib functions.
+   */
+  g_thread_init (NULL);
+#endif
+
         context = g_option_context_new (NULL);
-        g_option_context_set_ignore_unknown_options (context, TRUE);
-        g_option_context_add_main_entries (context, entries, NULL);
-        retval = g_option_context_parse (context, &argc, &argv, &error);
-        if (!variation)
-                variation = g_strdup (DEFAULT_VARIATION);
+#if GLIB_CHECK_VERSION (2, 12, 0)
+        g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
+#endif
+        g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
 
-        gtk_init_with_args (&argc, &argv, NULL, NULL, NULL, &error);
-
-        gconf_init (argc, argv, NULL);
-        gconf_client_add_dir (bj_gconf_client (), GCONF_KEY_DIR,
-                              GCONF_CLIENT_PRELOAD_NONE, NULL);
 
 #ifdef HAVE_GNOME
         GnomeProgram *program;
         program = gnome_program_init ("Blackjack", VERSION,
                                       LIBGNOMEUI_MODULE,
                                       argc, argv,
-                                      GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
+                                      GNOME_PARAM_GOPTION_CONTEXT, context,
+                                      GNOME_PARAM_APP_DATADIR, DATADIR,
+                                      NULL);
+#else
+        g_option_context_add_group (context, gtk_get_option_group (TRUE));
+        retval = g_option_context_parse (context, &argc, &argv, &error);
+        if (!retval) {
+                g_print ("Error parsing arguments: %s\n", error->message);
+                g_error_free (error);
+                goto cleanup;
+        }
 #endif
+
+        if (!variation)
+                variation = g_strdup (DEFAULT_VARIATION);
+
+        gconf_client_add_dir (bj_gconf_client (), GCONF_KEY_DIR,
+                              GCONF_CLIENT_PRELOAD_NONE, NULL);
 
         gtk_widget_push_colormap (gdk_rgb_get_colormap ());
 
@@ -769,6 +793,8 @@ main (int argc, char *argv [])
         bj_game_find_rules (variation);
 
         main_prog (argc, argv);
+
+   cleanup:
 
         g_free (variation);
 

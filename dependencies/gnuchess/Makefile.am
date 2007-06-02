@@ -1,6 +1,3 @@
-## Makefile.am for gnuchess. Process with automake to make Makefile.in
-if ENABLE_GNUCHESS 
-
 bin_PROGRAMS = gnome-gnuchess
 
 gnome_gnuchess_SOURCES = atak.c book.c cmd.c debug.c epd.c eval.c genmove.c \
@@ -13,4 +10,3 @@ gnome_gnuchess_SOURCES = atak.c book.c cmd.c debug.c epd.c eval.c genmove.c \
 AM_CFLAGS = $(PTHREAD_CFLAGS)
 
 AM_LDFLAGS = $(PTHREAD_LDFLAGS) $(PTHREAD_LIBS)
-endif

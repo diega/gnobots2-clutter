@@ -1,4 +1,4 @@
-imagedir      = $(datadir)/pixmaps/blackjack
+imagedir      = $(pkgdatadir)/blackjack/pixmaps
 image_DATA    = blackjack-splash.png \
 		chip-100.svg \
 		chip-25.svg \
@@ -6,9 +6,8 @@ image_DATA    = blackjack-splash.png \
 		chip-1.svg \
 		baize.png
 
-cardslotdir   = $(datadir)/pixmaps/cards/slots/
+cardslotdir   = $(pkgdatadir)/blackjack/pixmaps
 cardslot_DATA = white-outline.svg
 
 EXTRA_DIST    = $(image_DATA) \
 		$(cardslot_DATA)
-

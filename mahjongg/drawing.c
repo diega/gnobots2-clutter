@@ -285,7 +285,7 @@ recreate_tile_images (void)
 
   if (tilepreimage) {
     fg = games_preimage_render (tilepreimage, tilewidth * NUM_PATTERNS,
-				tileheight * 2, NULL);
+				tileheight * 2);
 
     /* Handle corrupt images that were not caught during preimage creation. */
     if (fg == NULL) {

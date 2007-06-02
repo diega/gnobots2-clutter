@@ -419,7 +419,7 @@ show_preferences_dialog (void)
                 g_free (current_rule);
                 
                 // Cards Tab
-                deck_edit = games_card_selector_new (bj_get_card_style ());
+                deck_edit = games_card_selector_new (TRUE, bj_get_card_style ());
                 gtk_box_pack_start (GTK_BOX (top_vbox), deck_edit, FALSE, FALSE, 0);
 
                 g_signal_connect (deck_edit, "changed",

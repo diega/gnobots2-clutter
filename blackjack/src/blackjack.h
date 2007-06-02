@@ -30,7 +30,8 @@
 
 // Constants
 
-#define BJ_RULES_DIR DATADIR
+#define BJ_RULES_DIR DATADIR G_DIR_SEPARATOR_S "blackjack" G_DIR_SEPARATOR_S "rules"
+
 #define GAME_EVENTS (GDK_EXPOSURE_MASK        |\
 		                 GDK_BUTTON_PRESS_MASK    |\
 		                 GDK_BUTTON_RELEASE_MASK  |\

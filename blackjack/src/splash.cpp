@@ -76,7 +76,7 @@ splash_new ()
         GtkWidget *splash_pixmap = NULL;
         GtkWidget *vbox;
 
-        image_file = g_build_filename (PIXMAPDIR, "blackjack", "blackjack-splash.png", NULL);
+        image_file = g_build_filename (PIXMAPDIR, "blackjack-splash.png", NULL);
 
         if (image_file != NULL)
                 splash_pixmap = gtk_image_new_from_file (image_file);

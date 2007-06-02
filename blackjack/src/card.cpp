@@ -25,10 +25,10 @@
 
 #include "blackjack.h"
 #include <gdk-pixbuf/gdk-pixbuf.h>
-#include <games-card-pixmaps.h>
+#include <games-card-images.h>
 #include "card.h"
-
 #include "chips.h"
+#include "draw.h"
 
 #include <sys/types.h>
 #include <string.h>
@@ -38,20 +38,20 @@ using namespace std;
 
 GdkBitmap *mask;
 
-GamesCardPixmaps *images = NULL;
+GamesCardImages *images = NULL;
 
 GdkPixmap *
 bj_card_get_picture (gint suit, gint rank) 
 {
-        return games_card_pixmaps_get_card (images,
-                                            suit, 
-                                            (rank == 14) ? 1 : rank);
+        return games_card_images_get_card_pixmap_by_suit_and_rank (images,
+                                                                   suit,
+                                                                   (rank == 14) ? 1 : rank);
 }
 
 GdkPixmap *
 bj_card_get_back_pixmap ()
 {
-        return games_card_pixmaps_get_back (images);
+        return games_card_images_get_card_pixmap_by_id (images, GAMES_CARD_BACK, FALSE);
 }
 
 GdkBitmap *
@@ -115,24 +115,43 @@ void
 bj_card_set_size (gint width, gint height)
 {
         GdkPixbuf *scaled = NULL;
-
-        bj_slot_set_size (width, height);
-        bj_chip_set_size (width / 2, width / 2);
+        CardSize card_size;
 
         if (!images) {
-                images = games_card_pixmaps_new (playing_area->window);
-                games_card_pixmaps_set_theme (images, bj_get_card_style ());
+                const char *env;
+                char *theme;
+                gboolean scalable, success;
+
+                env = g_getenv ("BLACKJACK_CARDS_SCALABLE");
+                scalable = env == NULL || g_ascii_strtoll (env, NULL, 10) != 0;
+
+                theme = bj_get_card_style ();
+                images = games_card_images_new (scalable);
+                games_card_images_set_cache_mode (images, CACHE_PIXMAPS);
+                games_card_images_set_drawable (images, playing_area->window);
+
+                if (!games_card_images_set_theme (images, theme)) {
+                        g_warning ("Failed to load theme %s!", theme);
+                }
+                g_free (theme);
         }
 
-        games_card_pixmaps_set_size (images, width, height);
-        mask = games_card_pixmaps_get_mask (images);
+        games_card_images_set_size (images, width, height, 1.0);
+        card_size = games_card_images_get_size (images);
+
+        bj_slot_set_size (card_size.width, card_size.height);
+        bj_chip_set_size (card_size.width / 2, card_size.width / 2);
+
+        mask = games_card_images_get_card_mask (images);
         gdk_gc_set_clip_mask (draw_gc, mask);
 }
 
 void
 bj_card_set_theme (gchar *theme)
 {
-        games_card_pixmaps_set_theme (images, theme);
-        mask = games_card_pixmaps_get_mask (images);
+        games_card_images_set_theme (images, theme);
+
+        bj_draw_rescale_cards ();
+        mask = games_card_images_get_card_mask (images);
         gdk_gc_set_clip_mask (draw_gc, mask);
 }

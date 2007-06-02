@@ -1,7 +1,7 @@
 INCLUDES =  \
 	-I$(top_srcdir)/libgames-support	\
-	-DPIXMAPDIR=\""$(datadir)/pixmaps"\"	\
-	-DDATADIR=\""$(datadir)/blackjack"\"	\
+	-DPIXMAPDIR=\""$(pkgdatadir)/blackjack/pixmaps"\"	\
+	-DDATADIR=\""$(pkgdatadir)"\"		\
 	-DHAVE_GNOME				\
 	$(GNOME_GAMES_CXXFLAGS)			\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"

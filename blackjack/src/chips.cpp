@@ -69,7 +69,7 @@ bj_chip_set_size (gint width,
         for (gint i = 0; i < 4; i++) {
                 gchar *fullname;
 
-                fullname = g_build_filename (PIXMAPDIR, "blackjack", names[i], NULL);
+                fullname = g_build_filename (PIXMAPDIR, names[i], NULL);
 
                 if (!fullname)
                         continue;
@@ -83,8 +83,7 @@ bj_chip_set_size (gint width,
 
                 chip_scaled_pixbuf[i] = games_preimage_render (chip_preimage[i],
                                                                width,
-                                                               height,
-                                                               NULL);
+                                                               height);
                 g_free (fullname);
         }
 }

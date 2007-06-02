@@ -60,6 +60,7 @@ int ggzcore_init(GGZOptions options)
 
 	/* This catalog must be preloaded by applications */
 	bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+        bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 
 	/* Initialize various systems */
 	if (options.flags & GGZ_OPT_MODULES)

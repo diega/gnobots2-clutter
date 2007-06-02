@@ -50,7 +50,7 @@ bj_slot_set_size (gint width,
 {
         gchar *name;
 
-        name = g_build_filename (PIXMAPDIR, "cards", "slots", SLOT_FILENAME, NULL);
+        name = g_build_filename (PIXMAPDIR, SLOT_FILENAME, NULL);
 
         if (!name)
                 return;
@@ -63,8 +63,7 @@ bj_slot_set_size (gint width,
 
         slot_scaled_pixbuf = games_preimage_render (slot_preimage,
                                                     width,
-                                                    height,
-                                                    NULL);
+                                                    height);
         g_free (name);
 }
 
@@ -79,7 +78,7 @@ bj_slot_load_pixmaps (void)
 {
         gchar *buffer;
 
-        buffer = g_build_filename (PIXMAPDIR, "blackjack", "baize.png", NULL);
+        buffer = g_build_filename (PIXMAPDIR, "baize.png", NULL);
         default_background_pixmap = get_pixmap (buffer);
         g_free (buffer);
 }
