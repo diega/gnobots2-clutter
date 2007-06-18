@@ -1,6 +1,3 @@
-
-
-
 mapdir = $(datadir)/gnome-games/mahjongg/maps
 pixmapdir = $(datadir)/pixmaps/mahjongg
 Gamesdir = $(datadir)/applications
@@ -41,11 +38,11 @@ map_DATA = mahjongg.map
 
 pixmap_DATA = smooth.png postmodern.svg
 
-EXTRA_DIST = mahjongg.desktop.in $(pixmap_DATA) \
+EXTRA_DIST = $(pixmap_DATA) \
 	$(schema_in_files) $(map_DATA)
 
-Games_in_files = mahjongg.desktop.in
-Games_DATA = $(Games_in_files:.desktop.in=.desktop)
+Games_in_files = mahjongg.desktop.in.in
+Games_DATA = $(Games_in_files:.desktop.in.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
 SUBDIRS = help

@@ -41,8 +41,8 @@ gnometris_LDADD=\
 	$(INTLLIBS)
 
 
-Games_in_files = gnometris.desktop.in
-Games_DATA = $(Games_in_files:.desktop.in=.desktop)
+Games_in_files = gnometris.desktop.in.in
+Games_DATA = $(Games_in_files:.desktop.in.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
 schemadir   = @GCONF_SCHEMA_FILE_DIR@
@@ -51,7 +51,6 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 @INTLTOOL_SCHEMAS_RULE@
 
 EXTRA_DIST = AUTHORS \
-             gnometris.desktop.in	\
              $(schema_in_files)
 
 install-data-local:

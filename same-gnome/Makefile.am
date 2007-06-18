@@ -1,6 +1,3 @@
-
-
-
 pixmapdir = $(datadir)/gnome-games/same-gnome/themes/2.10
 Gamesdir = $(datadir)/applications
 
@@ -38,10 +35,10 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 @INTLTOOL_SCHEMAS_RULE@
 
 pixmap_DATA = planets.png stones.png
-EXTRA_DIST = same-gnome.desktop.in $(pixmap_DATA) $(schema_in_files)
+EXTRA_DIST = $(pixmap_DATA) $(schema_in_files)
 
-Games_in_files = same-gnome.desktop.in
-Games_DATA = $(Games_in_files:.desktop.in=.desktop)
+Games_in_files = same-gnome.desktop.in.in
+Games_DATA = $(Games_in_files:.desktop.in.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
 SCOREFILES = Small Medium Large
