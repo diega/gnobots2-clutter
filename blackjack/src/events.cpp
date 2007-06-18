@@ -718,19 +718,3 @@ bj_event_playing_area_configure (GtkWidget *widget, GdkEventConfigure *event)
 
         return FALSE;
 }
-
-gint
-bj_event_configure (GtkWidget *widget, GdkEventConfigure *event)
-{
-        GConfClient *gconf_client = gconf_client_get_default ();
-
-        gconf_client_set_int (gconf_client, GCONF_KEY_WIDTH,
-                              event->width, NULL);
-        gconf_client_set_int (gconf_client, GCONF_KEY_HEIGHT,
-                              event->height, NULL);
-
-        g_object_unref (gconf_client);
-
-        return FALSE;
-}
-

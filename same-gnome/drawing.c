@@ -10,6 +10,8 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
+#include <games-conf.h>
+
 #include "same-gnome.h"
 
 #include "drawing.h"
@@ -127,7 +129,7 @@ fast_animation_enable (gboolean state)
 {
   fast_animation = state;
 
-  gconf_client_set_bool (gcclient, GCONF_FAST_ANIMATION_KEY, state, NULL);
+  games_conf_set_boolean (NULL, KEY_FAST_ANIMATION, state);
 }
 
 void
@@ -593,7 +595,7 @@ change_theme (gchar * newtheme)
     start_renderer ();
     redraw ();
 
-    gconf_client_set_string (gcclient, GCONF_THEME_KEY, theme, NULL);
+    games_conf_set_string (NULL, KEY_THEME, theme);
   }
 }
 

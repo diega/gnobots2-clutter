@@ -10,7 +10,7 @@
 
 #include <gnome.h>
 
-#include <games-gconf.h>
+#include <games-conf.h>
 #include <games-gridframe.h>
 #include <games-stock.h>
 #include <games-scores.h>
@@ -21,9 +21,6 @@
 #include "game.h"
 #include "input.h"
 #include "ui.h"
-
-#define DEFAULT_WINDOW_WIDTH 450
-#define DEFAULT_WINDOW_HEIGHT 350
 
 #define DEFAULT_CUSTOM_WIDTH 15
 #define DEFAULT_CUSTOM_HEIGHT 10
@@ -36,8 +33,6 @@ gchar *localthemedir;
 
 gchar *theme;
 gint game_size = UNSET;
-
-GConfClient *gcclient;
 
 /* Keep this in sync with the enum above. */
 gint board_sizes[MAX_SIZE][3] = { {-1, -1, -1}
@@ -89,15 +84,12 @@ initialise_options (gint requested_size, gchar * requested_theme)
 				    "/gnome-games/same-gnome/themes/",
 				    THEME_VERSION, NULL);
 
-  gcclient = gconf_client_get_default ();
-  games_gconf_sanity_check_string (gcclient, GCONF_THEME_KEY);
-
-  intvalue = gconf_client_get_int (gcclient, GCONF_CUSTOM_WIDTH_KEY, NULL);
+  intvalue = games_conf_get_integer (NULL, KEY_CUSTOM_WIDTH, NULL);
   if (intvalue == 0)
     intvalue = DEFAULT_CUSTOM_WIDTH;
   board_sizes[CUSTOM][0] = CLAMP (intvalue, MINIMUM_CUSTOM_WIDTH,
 				  MAXIMUM_CUSTOM_WIDTH);
-  intvalue = gconf_client_get_int (gcclient, GCONF_CUSTOM_HEIGHT_KEY, NULL);
+  intvalue = games_conf_get_integer (NULL, KEY_CUSTOM_HEIGHT, NULL);
   if (intvalue == 0)
     intvalue = DEFAULT_CUSTOM_HEIGHT;
   board_sizes[CUSTOM][1] = CLAMP (intvalue, MINIMUM_CUSTOM_HEIGHT,
@@ -107,7 +99,7 @@ initialise_options (gint requested_size, gchar * requested_theme)
     game_size = requested_size - 1 + SMALL;
     clear_savegame ();
   } else {
-    game_size = gconf_client_get_int (gcclient, GCONF_SIZE_KEY, NULL);
+    game_size = games_conf_get_integer (NULL, KEY_SIZE, NULL);
     if (game_size == 0)
       game_size = DEFAULT_GAME_SIZE;
   }
@@ -116,20 +108,10 @@ initialise_options (gint requested_size, gchar * requested_theme)
   game_size = CLAMP (game_size, SMALL, MAX_SIZE - 1);
   set_sizes (game_size);
 
-  intvalue = gconf_client_get_int (gcclient, GCONF_WINDOW_WIDTH_KEY, NULL);
-  if (intvalue == 0)
-    intvalue = DEFAULT_WINDOW_WIDTH;
-  window_width = intvalue;
-
-  intvalue = gconf_client_get_int (gcclient, GCONF_WINDOW_HEIGHT_KEY, NULL);
-  if (intvalue == 0)
-    intvalue = DEFAULT_WINDOW_HEIGHT;
-  window_height = intvalue;
-
   if (requested_theme != NULL)
     theme = requested_theme;
   else
-    theme = games_gconf_get_string (gcclient, GCONF_THEME_KEY, DEFAULT_THEME);
+    theme = games_conf_get_string_with_default (NULL, KEY_THEME, DEFAULT_THEME);
 
   /* An invalid theme will be picked up at load time. Although we can
    * guarantee that theme != NULL. */
@@ -169,6 +151,8 @@ main (int argc, char *argv[])
 			GNOME_PARAM_APP_DATADIR, DATADIR,
 			GNOME_PARAM_GOPTION_CONTEXT, context, NULL);
 
+  games_conf_initialise ("Same-GNOME");
+
   games_stock_init ();
 
   highscores = games_scores_new (&scoredesc);
@@ -182,10 +166,9 @@ main (int argc, char *argv[])
   if (!load_game ())
     new_game ();
 
-
   gtk_main ();
 
-  gnome_accelerators_sync ();
+  games_conf_shutdown ();
 
   g_object_unref (program);
 

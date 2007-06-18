@@ -10,11 +10,9 @@
 #define GLOBALS_H
 
 #include <glib.h>
-#include <gconf/gconf-client.h>
 #include <games-scores.h>
 
 #define APPNAME "same-gnome"
-#define APPNAME_LONG "Same GNOME"
 
 #define DEFAULT_GAME_SIZE SMALL
 
@@ -27,18 +25,14 @@
 
 #define MAX_COLOURS 4
 
-#define GCONF_THEME_KEY "/apps/same-gnome/tileset"
-#define GCONF_SIZE_KEY  "/apps/same-gnome/size"
-#define GCONF_CUSTOM_WIDTH_KEY "/apps/same-gnome/custom_width"
-#define GCONF_CUSTOM_HEIGHT_KEY "/apps/same-gnome/custom_height"
-#define GCONF_WINDOW_WIDTH_KEY "/apps/same-gnome/window_width"
-#define GCONF_WINDOW_HEIGHT_KEY "/apps/same-gnome/window_height"
-#define GCONF_FAST_ANIMATION_KEY "/apps/same-gnome/fast_animation"
-#define GCONF_SAVEGAME_KEY "/apps/same-gnome/savegame"
+#define KEY_THEME           "tileset"
+#define KEY_SIZE            "size"
+#define KEY_CUSTOM_WIDTH    "custom_width"
+#define KEY_CUSTOM_HEIGHT   "custom_height"
+#define KEY_FAST_ANIMATION  "fast_animation"
+#define KEY_SAVEGAME        "savegame"
 
-extern GConfClient *gcclient;
-
-/* We start at 1 so we can distinguish the gconf "unset" from a valid
+/* We start at 1 so we can distinguish "unset" from a valid
  * value. */
 enum {
   UNSET = 0,
@@ -61,10 +55,6 @@ extern gint board_width;
 extern gint board_height;
 extern gint board_ncells;
 extern gint ncolours;
-
-/* The size of the window. These are the parameters we save with gconf. */
-extern gint window_width;
-extern gint window_height;
 
 /* Where the user can stash their themes. */
 extern gchar *localthemedir;

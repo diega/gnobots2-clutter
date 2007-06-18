@@ -8,7 +8,7 @@
 
 #include <glib/gi18n.h>
 
-#include <games-gconf.h>
+#include <games-conf.h>
 #include <games-scores.h>
 #include <string.h>
 
@@ -173,7 +173,7 @@ set_sizes (gint size)
 
   board_ncells = board_height * board_width;
 
-  gconf_client_set_int (gcclient, GCONF_SIZE_KEY, size, NULL);
+  games_conf_set_integer (NULL, KEY_SIZE, size);
 
   games_scores_set_category (highscores, scorecats[size - SMALL].key);
 
@@ -487,7 +487,7 @@ restore_board_from_string (gchar * state)
 void
 clear_savegame (void)
 {
-  gconf_client_set_string (gcclient, GCONF_SAVEGAME_KEY, "", NULL);
+  games_conf_set_string (NULL, KEY_SAVEGAME, "");
 }
 
 gboolean
@@ -497,9 +497,9 @@ load_game (void)
 
   gint lsize, lscore, lversion;
 
-  savestring = games_gconf_get_string (gcclient, GCONF_SAVEGAME_KEY, "");
+  savestring = games_conf_get_string (NULL, KEY_SAVEGAME, NULL);
 
-  if (g_ascii_strcasecmp (savestring, "") == 0) {
+  if (!savestring || savestring[0] == '\0') {
     g_free (savestring);
     return FALSE;
   }
@@ -565,7 +565,7 @@ save_game (void)
 				SAVE_FORMAT_DIVIDER, score,
 				SAVE_FORMAT_DIVIDER, boardstring);
 
-  gconf_client_set_string (gcclient, GCONF_SAVEGAME_KEY, savestring, NULL);
+  games_conf_set_string (NULL, KEY_SAVEGAME, savestring);
 
   g_free (boardstring);
   g_free (savestring);

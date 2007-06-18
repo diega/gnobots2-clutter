@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <gconf/gconf-client.h>
+#include <games-conf.h>
 #include <games-stock.h>
 
 #ifdef HAVE_GNOME
@@ -74,8 +74,6 @@ guint            x_spacing = 5;
 guint            y_spacing = 15;
 double           x_expanded_offset = 0.21;
 double           y_expanded_offset = 0.21;
-
-static GConfClient *gconf_client = NULL;
 
 gfloat wager_value = 5.0;
 gfloat balance_value = 0.0;
@@ -235,7 +233,6 @@ bj_quit_app (void)
         g_object_unref (surface);
         g_object_unref (press_data->moving_cards);
 
-        g_object_unref (gconf_client);
         gtk_widget_destroy (toplevel_window);
         gtk_main_quit ();
 
@@ -361,7 +358,8 @@ create_main_window (void)
 
         toplevel_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-	games_stock_init();
+        games_conf_add_window (GTK_WINDOW (toplevel_window));
+
 	status_bar = gtk_statusbar_new ();
         ui = gtk_ui_manager_new ();
 
@@ -423,13 +421,6 @@ create_main_window (void)
 
         gtk_box_pack_start (GTK_BOX (hbox), status_bar, TRUE, TRUE, 0);
         
-        if (!gconf_client)
-                gconf_client = gconf_client_get_default ();
-
-        width = gconf_client_get_int (gconf_client, GCONF_KEY_WIDTH, NULL);
-        height = gconf_client_get_int (gconf_client, GCONF_KEY_HEIGHT, NULL);
-
-        gtk_window_set_default_size (GTK_WINDOW (toplevel_window), width, height);
 
 	fullscreen_action = gtk_action_group_get_action (actions, "Fullscreen");
 	leave_fullscreen_action = gtk_action_group_get_action (actions,
@@ -441,15 +432,12 @@ create_main_window (void)
 
         g_signal_connect (toplevel_window, "delete_event", 
                           G_CALLBACK (bj_quit_app), NULL);
-        g_signal_connect (toplevel_window, "configure_event",
-                          G_CALLBACK (bj_event_configure), NULL);
 	g_signal_connect (G_OBJECT (toplevel_window), "window_state_event",
 			  G_CALLBACK (window_state_cb), NULL);
-
 }
 
 static void
-main_prog (int argc, char *argv[])
+main_prog (void)
 {
         gchar *lcard_style;
         gchar *label_string;
@@ -478,72 +466,52 @@ main_prog (int argc, char *argv[])
         gtk_widget_pop_colormap ();
 
         gtk_main ();
-
-		gnome_accelerators_sync();
-}
-
-GConfClient *
-bj_gconf_client ()
-{
-        if (!gconf_client) 
-                gconf_client = gconf_client_get_default ();
-        return gconf_client;
 }
 
 static void
-bj_gconf_balance_cb (GConfClient *client, guint cnxn_id, 
-                     GConfEntry *entry, gpointer user_data)
+bj_conf_value_changed_cb (GamesConf *conf,
+                          const char *group,
+                          const char *key,
+                          gpointer user_data)
 {
-        balance_value = gconf_client_get_float (client, GCONF_KEY_BALANCE, NULL);
-        bj_show_balance (balance_value);
-}
+        if (!group) {
+                if (strcmp (key, KEY_SHOW_TOOLBAR) == 0) {
+                        gboolean lshow_toolbar;
 
-static void
-bj_gconf_card_style_cb (GConfClient *client, guint cnxn_id, 
-                        GConfEntry *entry, gpointer user_data)
-{
-        gchar *lcard_style;
+                        lshow_toolbar = games_conf_get_boolean (NULL, KEY_SHOW_TOOLBAR, NULL);
+                        bj_gui_show_toolbar (lshow_toolbar);
+                }
+        } else if (strcmp (group, KEY_DECK_GROUP) == 0) {
+                if (strcmp (key, KEY_CARD_STYLE) == 0) {
+                        gchar *lcard_style;
 
-        lcard_style = bj_get_card_style ();
-        bj_card_set_theme (lcard_style);
-        g_free (lcard_style);
-        bj_draw_refresh_screen ();
-}
-
-static void
-bj_gconf_show_probabilities_cb (GConfClient *client, guint cnxn_id, 
-                                GConfEntry *entry, gpointer user_data)
-{
-        show_probabilities = gconf_client_get_bool (client,
-                                                    GCONF_KEY_SHOW_PROBABILITIES,
-                                                    NULL);
-        bj_draw_refresh_screen ();
-}
-
-static void
-bj_gconf_quick_deal_cb (GConfClient *client, guint cnxn_id, 
-                        GConfEntry *entry, gpointer user_data)
-{
-        quick_deals = gconf_client_get_bool (client, GCONF_KEY_QUICK_DEAL, NULL);
-        bj_draw_refresh_screen ();
-}
-
-static void
-bj_gconf_never_insurance_cb (GConfClient *client, guint cnxn_id, 
-                             GConfEntry *entry, gpointer user_data)
-{
-        never_insurance = gconf_client_get_bool (client, GCONF_KEY_NEVER_INSURANCE, NULL);
-        bj_draw_refresh_screen ();
-}
-
-static void
-bj_gconf_show_toolbar_cb (GConfClient *client, guint cnxn_id, 
-                          GConfEntry *entry, gpointer user_data)
-{
-        gboolean lshow_toolbar;
-
-        lshow_toolbar = gconf_client_get_bool (client, GCONF_KEY_SHOW_TOOLBAR, NULL);
-        bj_gui_show_toolbar (lshow_toolbar);
+                        lcard_style = bj_get_card_style ();
+                        bj_card_set_theme (lcard_style);
+                        g_free (lcard_style);
+                        bj_draw_refresh_screen ();
+                }
+        } else if (strcmp (group, KEY_SETTINGS_GROUP) == 0) {
+                if (strcmp (key, KEY_SHOW_PROBABILITIES) == 0) {
+                        show_probabilities = games_conf_get_boolean (KEY_SETTINGS_GROUP,
+                                                                     KEY_SHOW_PROBABILITIES,
+                                                                     NULL);
+                        bj_draw_refresh_screen ();
+                } else if (strcmp (key, KEY_QUICK_DEAL) == 0) {
+                        quick_deals = games_conf_get_boolean (KEY_SETTINGS_GROUP,
+                                                              KEY_QUICK_DEAL, NULL);
+                        bj_draw_refresh_screen ();
+                } else if (strcmp (key, KEY_NEVER_INSURANCE) == 0) {
+                        never_insurance = games_conf_get_boolean (KEY_SETTINGS_GROUP,
+                                                                  KEY_NEVER_INSURANCE, NULL);
+                        bj_draw_refresh_screen ();
+                }
+        } else if (strcmp (group, KEY_GLOBAL_GROUP) == 0) {
+                if (strcmp (key, KEY_BALANCE) == 0) {
+                        balance_value = games_conf_get_double (KEY_GLOBAL_GROUP,
+                                                               KEY_BALANCE, NULL);
+                        bj_show_balance (balance_value);
+                }
+        }
 }
 
 gchar *
@@ -551,25 +519,22 @@ bj_get_card_style ()
 {
         gchar *lcard_style;
 
-        lcard_style = gconf_client_get_string (bj_gconf_client (), 
-                                               GCONF_KEY_CARD_STYLE,
-                                               NULL);
+        lcard_style = games_conf_get_string_with_default (KEY_DECK_GROUP,
+                                                          KEY_CARD_STYLE,
+                                                          DEFAULT_THEME);
         /* Back compat */
         if (g_str_has_suffix (lcard_style, ".svg"))
-          *g_strrstr (lcard_style, ".svg") = '\0';
+                *g_strrstr (lcard_style, ".svg") = '\0';
         else if (g_str_has_suffix (lcard_style, ".png"))
-          *g_strrstr (lcard_style, ".png") = '\0';
+                *g_strrstr (lcard_style, ".png") = '\0';
 
-        return lcard_style ? lcard_style : g_strdup (DEFAULT_THEME);
+        return lcard_style;
 }
 
 void
 bj_set_card_style (gchar *value)
 {
-        gconf_client_set_string (bj_gconf_client (), 
-                                 GCONF_KEY_CARD_STYLE,
-                                 value,
-                                 NULL);
+        games_conf_set_string (KEY_DECK_GROUP, KEY_CARD_STYLE, value);
 }
 
 gboolean
@@ -580,9 +545,7 @@ bj_get_show_probabilities ()
 void
 bj_set_show_probabilities (gboolean value)
 {
-        gconf_client_set_bool (bj_gconf_client (), 
-                               GCONF_KEY_SHOW_PROBABILITIES,
-                               value, NULL);
+        games_conf_set_boolean (KEY_SETTINGS_GROUP, KEY_SHOW_PROBABILITIES, value);
 }
 
 gboolean
@@ -595,9 +558,7 @@ bj_set_show_toolbar (gboolean value)
 {
         show_toolbar = value;
         bj_gui_show_toolbar (value);
-        gconf_client_set_bool (bj_gconf_client (), 
-                               GCONF_KEY_SHOW_TOOLBAR,
-                               value, NULL);
+        games_conf_set_boolean (NULL, KEY_SHOW_TOOLBAR, value);
 }
 
 gboolean
@@ -608,9 +569,7 @@ bj_get_quick_deal ()
 void
 bj_set_quick_deal (gboolean value)
 {
-        gconf_client_set_bool (bj_gconf_client (), 
-                               GCONF_KEY_QUICK_DEAL,
-                               value, NULL);
+        games_conf_set_boolean (KEY_SETTINGS_GROUP, KEY_QUICK_DEAL, value);
 }
 
 gboolean
@@ -621,9 +580,7 @@ bj_get_never_insurance ()
 void
 bj_set_never_insurance (gboolean value)
 {
-        gconf_client_set_bool (bj_gconf_client (), 
-                               GCONF_KEY_NEVER_INSURANCE,
-                               value, NULL);
+        games_conf_set_boolean (KEY_SETTINGS_GROUP, KEY_NEVER_INSURANCE, value);
 }
 
 gchar *
@@ -638,9 +595,7 @@ bj_set_game_variation (const gchar *value)
         if (game_variation)
                 g_free (game_variation);
         game_variation = g_strdup (value);
-        gconf_client_set_string (bj_gconf_client (), 
-                                 GCONF_KEY_GAME_VARIATION,
-                                 game_variation, NULL);
+        games_conf_set_string (KEY_SETTINGS_GROUP, KEY_GAME_VARIATION, game_variation);
 }
 
 gdouble
@@ -654,9 +609,7 @@ bj_set_balance (gdouble balance)
 {
         balance_value = balance;
         bj_show_balance (balance_value);
-        gconf_client_set_float (bj_gconf_client (),
-                                GCONF_KEY_BALANCE,
-                                balance, NULL);
+        games_conf_set_double (KEY_GLOBAL_GROUP, KEY_BALANCE, balance);
 }
 
 void
@@ -669,64 +622,29 @@ bj_adjust_balance (gdouble offset)
 }
 
 static void
-bj_gconf_init (GConfClient *client)
+bj_conf_init (void)
 {
-        gdouble balance;
-        gchar *variation_tmp;
+        balance_value = games_conf_get_double (KEY_GLOBAL_GROUP, KEY_BALANCE, NULL);
 
-        variation_tmp = gconf_client_get_string (client,
-                                                 GCONF_KEY_GAME_VARIATION,
-                                                 NULL);
-        if (variation_tmp) {
-                game_variation = g_strdup (variation_tmp);
-                g_free (variation_tmp);
-        }
-        else
-                game_variation = g_strdup (DEFAULT_VARIATION);
+        game_variation = games_conf_get_string_with_default (KEY_SETTINGS_GROUP,
+                                                             KEY_GAME_VARIATION,
+                                                             DEFAULT_VARIATION);
 
-        balance = gconf_client_get_float (client,
-                                          GCONF_KEY_BALANCE,
-                                          NULL);
-        if (balance)
-                balance_value = balance;
-
-        show_probabilities = gconf_client_get_bool (client,
-                                                    GCONF_KEY_SHOW_PROBABILITIES,
-                                                    NULL);
-        quick_deals = gconf_client_get_bool (client, 
-                                             GCONF_KEY_QUICK_DEAL,
-                                             NULL);
-        never_insurance = gconf_client_get_bool (client, 
-                                                 GCONF_KEY_NEVER_INSURANCE,
-                                                 NULL);
-        show_toolbar = gconf_client_get_bool (client, 
-                                              GCONF_KEY_SHOW_TOOLBAR,
+        show_probabilities = games_conf_get_boolean (KEY_SETTINGS_GROUP,
+                                                     KEY_SHOW_PROBABILITIES,
+                                                     NULL);
+        quick_deals = games_conf_get_boolean (KEY_SETTINGS_GROUP,
+                                              KEY_QUICK_DEAL,
                                               NULL);
+        never_insurance = games_conf_get_boolean (KEY_SETTINGS_GROUP,
+                                                  KEY_NEVER_INSURANCE,
+                                                  NULL);
+        show_toolbar = games_conf_get_boolean (NULL,
+                                               KEY_SHOW_TOOLBAR,
+                                               NULL);
 
-        gconf_client_notify_add (client,
-                                 GCONF_KEY_BALANCE,
-                                 bj_gconf_balance_cb,
-                                 NULL, NULL, NULL);
-        gconf_client_notify_add (client,
-                                 GCONF_KEY_CARD_STYLE,
-                                 bj_gconf_card_style_cb,
-                                 NULL, NULL, NULL);
-        gconf_client_notify_add (client,
-                                 GCONF_KEY_SHOW_PROBABILITIES,
-                                 bj_gconf_show_probabilities_cb,
-                                 NULL, NULL, NULL);
-        gconf_client_notify_add (client,
-                                 GCONF_KEY_QUICK_DEAL,
-                                 bj_gconf_quick_deal_cb,
-                                 NULL, NULL, NULL);
-        gconf_client_notify_add (client,
-                                 GCONF_KEY_NEVER_INSURANCE,
-                                 bj_gconf_never_insurance_cb,
-                                 NULL, NULL, NULL);
-        gconf_client_notify_add (client,
-                                 GCONF_KEY_SHOW_TOOLBAR,
-                                 bj_gconf_show_toolbar_cb,
-                                 NULL, NULL, NULL);
+        g_signal_connect (games_conf_get_default (), "value-changed",
+                          G_CALLBACK (bj_conf_value_changed_cb), NULL);
 }
 
 int
@@ -781,22 +699,25 @@ main (int argc, char *argv [])
         if (!variation)
                 variation = g_strdup (DEFAULT_VARIATION);
 
-        gconf_client_add_dir (bj_gconf_client (), GCONF_KEY_DIR,
-                              GCONF_CLIENT_PRELOAD_NONE, NULL);
-
         gtk_widget_push_colormap (gdk_rgb_get_colormap ());
 
         gtk_window_set_default_icon_name ("gnome-blackjack");
 
-        bj_gconf_init (bj_gconf_client ());
+        games_conf_initialise ("Blackjack");
+
+        games_stock_init();
+
+        bj_conf_init ();
 
         bj_game_find_rules (variation);
 
-        main_prog (argc, argv);
+        main_prog ();
 
    cleanup:
 
         g_free (variation);
+
+        games_conf_shutdown ();
 
 #ifdef HAVE_GNOME
         g_object_unref (program);

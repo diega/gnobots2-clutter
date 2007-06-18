@@ -12,6 +12,7 @@
 #include <glib/gi18n.h>
 #include <libgnome/gnome-help.h>
 
+#include <games-conf.h>
 #include <games-files.h>
 #include <games-gridframe.h>
 #include <games-scores-dialog.h>
@@ -23,6 +24,11 @@
 #include "game.h"
 #include "input.h"
 #include "ui.h"
+
+#define DEFAULT_WINDOW_WIDTH 450
+#define DEFAULT_WINDOW_HEIGHT 350
+
+#define APPNAME_LONG N_("Same GNOME")
 
 /* Define an alternative to ngettext if we don't have it. Of course it isn't
  * a proper substitute for ngettext, but it is the best we can do. */
@@ -442,17 +448,6 @@ custom_size_cb (void)
 }
 #endif
 
-static gboolean
-window_resize_cb (GtkWidget * window, GdkEventConfigure * event)
-{
-  gconf_client_set_int (gcclient, GCONF_WINDOW_WIDTH_KEY, event->width, NULL);
-  gconf_client_set_int (gcclient, GCONF_WINDOW_HEIGHT_KEY, event->height,
-			NULL);
-
-  return FALSE;
-}
-
-
 const GtkActionEntry actions[] = {
   {"GameMenu", NULL, N_("_Game")},
   {"ViewMenu", NULL, N_("_View")},
@@ -512,7 +507,10 @@ const char ui_description[] =
   "    </menu>"
   "    <menu action='HelpMenu'>"
   "      <menuitem action='Contents'/>"
-  "      <menuitem action='About'/>" "    </menu>" "  </menubar>" "</ui>";
+  "      <menuitem action='About'/>"
+  "    </menu>"
+  "  </menubar>"
+  "</ui>";
 
 void
 build_gui (void)
@@ -527,12 +525,12 @@ build_gui (void)
 
   application = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (application), _(APPNAME_LONG));
-  gtk_window_set_default_size (GTK_WINDOW (application), window_width,
-			       window_height);
+  gtk_window_set_default_size (GTK_WINDOW (application),
+                               DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+  games_conf_add_window (GTK_WINDOW (application));
+
   g_signal_connect (G_OBJECT (application), "delete_event",
 		    G_CALLBACK (quit_cb), NULL);
-  g_signal_connect (G_OBJECT (application), "configure_event",
-		    G_CALLBACK (window_resize_cb), NULL);
   g_signal_connect (G_OBJECT (application), "window_state_event",
 		    G_CALLBACK (window_state_cb), NULL);
 
@@ -562,9 +560,7 @@ build_gui (void)
   set_fullscreen_actions (FALSE);
 
   gtk_toggle_action_set_active (animation_action,
-				gconf_client_get_bool (gcclient,
-						       GCONF_FAST_ANIMATION_KEY,
-						       NULL));
+                                games_conf_get_boolean (NULL, KEY_FAST_ANIMATION, NULL));
 
   ui_manager = gtk_ui_manager_new ();
   gtk_ui_manager_insert_action_group (ui_manager, action_group, 1);

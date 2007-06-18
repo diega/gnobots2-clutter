@@ -15,7 +15,7 @@
 
     <schema>
       <key>/schemas/apps/blackjack/settings/variation</key>
-      <applyto>/apps/blackjack/variation</applyto>
+      <applyto>/apps/blackjack/settings/variation</applyto>
       <owner>blackjack</owner>
       <type>string</type>
       <default>Vegas_Strip.rules</default>

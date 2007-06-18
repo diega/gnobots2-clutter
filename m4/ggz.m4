@@ -181,7 +181,6 @@ if test "x$1" = "xexport" || test "x$2" = "xexport"; then
   LDFLAGS="$LDFLAGS -L${ac_ggz_prefix_libdir} -L/usr/local/lib"
 fi
 
-if test "x$GCC" = xyes; then
 save_cflags=$CFLAGS
 save_cxxflags=$CXXFLAGS
 CFLAGS="-Wall -Werror"
@@ -192,7 +191,6 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
 	 save_cxxflags="$save_cxxflags -fsigned-char"])
 CFLAGS=$save_cflags
 CXXFLAGS=$save_cxxflags
-fi
 ])
 
 dnl ------------------------------------------------------------------------

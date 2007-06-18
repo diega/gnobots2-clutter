@@ -23,7 +23,6 @@
 #define BLACKJACK_H
 
 #include <gtk/gtk.h>
-#include <gconf/gconf-client.h>
 
 #include "press_data.h"
 #include "strategy.h"
@@ -52,18 +51,19 @@
 #define PLAYER_SLOT_ORIGIN_Y 0.45
 #define PLAYER_SLOT_SPACING 0.1
 
-#define GCONF_KEY_DIR                "/apps/blackjack"
-#define GCONF_KEY_BALANCE            GCONF_KEY_DIR "/global/balance"
-#define GCONF_KEY_GAME_VARIATION     GCONF_KEY_DIR "/settings/variation"
-#define GCONF_KEY_SHOW_PROBABILITIES GCONF_KEY_DIR "/settings/show_probabilities"
-#define GCONF_KEY_QUICK_DEAL         GCONF_KEY_DIR "/settings/quick_deal"
-#define GCONF_KEY_NEVER_INSURANCE    GCONF_KEY_DIR "/settings/never_insurance"
-#define GCONF_KEY_SHOW_TOOLBAR       GCONF_KEY_DIR "/toolbar"
-#define GCONF_KEY_DECK_OPTIONS       GCONF_KEY_DIR "/deck/options"
-#define GCONF_KEY_CARD_STYLE         GCONF_KEY_DIR "/deck/card_style"
+#define KEY_SHOW_TOOLBAR       "toolbar"
 
-#define GCONF_KEY_WIDTH              GCONF_KEY_DIR "/width"
-#define GCONF_KEY_HEIGHT             GCONF_KEY_DIR "/height"
+#define KEY_GLOBAL_GROUP       "global"
+#define KEY_BALANCE            "balance"
+
+#define KEY_SETTINGS_GROUP     "settings"
+#define KEY_GAME_VARIATION     "variation"
+#define KEY_SHOW_PROBABILITIES "show_probabilities"
+#define KEY_QUICK_DEAL         "quick_deal"
+#define KEY_NEVER_INSURANCE    "never_insurance"
+
+#define KEY_DECK_GROUP         "deck"
+#define KEY_CARD_STYLE         "card_style"
 
 // Global variables
 
@@ -117,8 +117,6 @@ gboolean bj_get_never_insurance (void);
 void bj_set_never_insurance (gboolean);
 gchar *bj_get_game_variation (void);
 void bj_set_game_variation (const gchar *);
-
-GConfClient *bj_gconf_client (void);
 
 extern gint dealerSpeed;
 extern gfloat lastWager;

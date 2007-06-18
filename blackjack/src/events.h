@@ -27,7 +27,6 @@
 gboolean bj_event_key_press (GtkWidget *, GdkEventKey *, void *);
 gint bj_event_button_press (GtkWidget *, GdkEventButton *, void *);
 gint bj_event_button_release (GtkWidget *, GdkEventButton *, void *);
-gint bj_event_configure (GtkWidget *, GdkEventConfigure *);
 gint bj_event_playing_area_configure (GtkWidget *, GdkEventConfigure *);
 gint bj_event_enter_notify (GtkWidget *, GdkEventCrossing *, void *);
 gint bj_event_motion_notify (GtkWidget *, GdkEventMotion *);

@@ -188,7 +188,7 @@ find_tile (guint x, guint y)
 void
 set_background (gchar * colour)
 {
-  if (!gdk_color_parse (colour, &bgcolour)) {
+  if (!colour || !gdk_color_parse (colour, &bgcolour)) {
     bgcolour.red = bgcolour.green = bgcolour.blue = 0;
   }
 
