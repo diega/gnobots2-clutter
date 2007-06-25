@@ -1405,7 +1405,7 @@ main (int argc, char *argv[])
 				argc, argv,
 				GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
 
-  games_conf_initialise ("Mahjongg");
+  games_conf_initialise (APPNAME);
 
   games_stock_init ();
 

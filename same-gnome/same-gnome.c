@@ -151,7 +151,7 @@ main (int argc, char *argv[])
 			GNOME_PARAM_APP_DATADIR, DATADIR,
 			GNOME_PARAM_GOPTION_CONTEXT, context, NULL);
 
-  games_conf_initialise ("Same-GNOME");
+  games_conf_initialise (APPNAME);
 
   games_stock_init ();
 
