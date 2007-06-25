@@ -20,12 +20,15 @@
 
 #include <config.h>
 #include "tetris.h"
-#include "games-scores.h"
-#include "games-sound.h"
+#include <games-scores.h>
+#include <games-sound.h>
+#include <games-conf.h>
 
 int
 main(int argc, char *argv[])
 {
+        g_thread_init (NULL);
+
 	setgid_io_init ();
 
 	bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
@@ -40,9 +43,7 @@ main(int argc, char *argv[])
 		{NULL}
 	};
 
-	g_thread_init (NULL);
-
-	GOptionContext *context = g_option_context_new ("");
+	GOptionContext *context = g_option_context_new (NULL);
 
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
 	g_option_context_add_group (context, games_sound_get_option_group ());
@@ -56,13 +57,16 @@ main(int argc, char *argv[])
 
 	gtk_window_set_default_icon_name ("gnome-gnometris");
 
+        games_conf_initialise ("Gnometris");
+
 	Tetris *t = new Tetris(cmdlineLevel);
 
 	gtk_main();
 
-	gnome_accelerators_sync();
-
 	delete t;
+
+        games_conf_shutdown ();
+
 	g_object_unref (program);
 
 	return 0;

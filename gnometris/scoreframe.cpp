@@ -22,14 +22,13 @@
 
 #include <config.h>
 #include <gnome.h>
-#include <games-gconf.h>
+#include <games-conf.h>
 #include <games-frame.h>
 
 #include "scoreframe.h"
 #include <games-sound.h>
 
-// FIXME: This is also defined in tetris.cpp
-#define KEY_STARTING_LEVEL "/apps/gnometris/options/starting_level"
+#include "tetris.h"
 
 ScoreFrame::ScoreFrame(int cmdlLevel)
 	: score(0), lines(0)
@@ -37,12 +36,9 @@ ScoreFrame::ScoreFrame(int cmdlLevel)
 	if (cmdlLevel) 
 		startingLevel = cmdlLevel;
 	else {
-		GConfClient *gconf_client = gconf_client_get_default ();
-		
-		startingLevel = gconf_client_get_int (gconf_client,
-						      KEY_STARTING_LEVEL,
-						      NULL);
-		g_object_unref (gconf_client);
+		startingLevel = games_conf_get_integer (KEY_OPTIONS_GROUP,
+                                                        KEY_STARTING_LEVEL,
+                                                        NULL);
 	}
 	startingLevel = CLAMP (startingLevel, 1, 20);
 

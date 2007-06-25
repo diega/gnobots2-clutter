@@ -29,7 +29,6 @@
 #include "highscores.h"
 #include "renderer.h"
 
-#include <games-gconf.h>
 #include <games-frame.h>
 #include <games-controls.h>
 #include <games-stock.h>
@@ -58,35 +57,10 @@ bool rotateCounterClockWise = true;
 
 #define TETRIS_OBJECT "gnometris-tetris-object"
 
-#define KEY_BASE "/apps/gnometris"
-
-#define KEY_OPTIONS_DIR KEY_BASE "/options"
-#define KEY_SOUND KEY_OPTIONS_DIR "/sound"
-#define KEY_BLOCK_PIXMAP KEY_OPTIONS_DIR "/block_pixmap"
-#define KEY_THEME KEY_OPTIONS_DIR "/theme"
-#define KEY_STARTING_LEVEL KEY_OPTIONS_DIR "/starting_level"
-#define KEY_DO_PREVIEW KEY_OPTIONS_DIR "/do_preview"
-#define KEY_USE_TARGET KEY_OPTIONS_DIR "/use_target"
-#define KEY_RANDOM_BLOCK_COLORS KEY_OPTIONS_DIR "/random_block_colors"
-#define KEY_ROTATE_COUNTER_CLOCKWISE KEY_OPTIONS_DIR "/rotate_counter_clock_wise"
-#define KEY_LINE_FILL_HEIGHT KEY_OPTIONS_DIR "/line_fill_height"
-#define KEY_LINE_FILL_PROBABILITY KEY_OPTIONS_DIR "/line_fill_probability"
-#define KEY_BG_COLOUR KEY_OPTIONS_DIR "/bgcolor"
-#define KEY_USE_BG_IMAGE KEY_OPTIONS_DIR "/usebgimage"
-
-#define KEY_CONTROLS_DIR KEY_BASE "/controls"
-#define KEY_MOVE_LEFT KEY_CONTROLS_DIR "/key_left"
-#define KEY_MOVE_RIGHT KEY_CONTROLS_DIR "/key_right"
-#define KEY_MOVE_DOWN KEY_CONTROLS_DIR "/key_down"
-#define KEY_MOVE_DROP KEY_CONTROLS_DIR "/key_drop"
-#define KEY_MOVE_ROTATE KEY_CONTROLS_DIR "/key_rotate"
-#define KEY_MOVE_PAUSE KEY_CONTROLS_DIR "/key_pause"
-
-#define KEY_SAVED_DIR KEY_BASE "/saved"
-#define KEY_HEIGHT KEY_SAVED_DIR "/height"
-#define KEY_WIDTH KEY_SAVED_DIR "/width"
-
 #define TILE_THRESHOLD 65
+
+#define DEFAULT_WIDTH 440
+#define DEFAULT_HEIGHT 550
 
 enum {
 	URI_LIST,
@@ -182,30 +156,12 @@ Tetris::Tetris(int cmdlLevel):
 			  G_CALLBACK (dragDrop), this);
 	g_signal_connect (G_OBJECT (w), "focus_out_event",
 			  G_CALLBACK (focusOut), this);
-	g_signal_connect (G_OBJECT (w), "configure_event",
-			  G_CALLBACK (configure), this);
 
 	line_fill_height = 0;
 	line_fill_prob = 5;
 
-	/* init gconf */
-	gconf_client = gconf_client_get_default ();
-
-	gconf_client_add_dir (gconf_client, KEY_OPTIONS_DIR, GCONF_CLIENT_PRELOAD_NONE, NULL);
-	gconf_client_notify_add (gconf_client, KEY_OPTIONS_DIR, gconfNotify, this, NULL, NULL);
-
-	gconf_client_add_dir (gconf_client, KEY_CONTROLS_DIR, GCONF_CLIENT_PRELOAD_NONE, NULL);
-	gconf_client_notify_add (gconf_client, KEY_CONTROLS_DIR, gconfNotify, this, NULL, NULL);
-
-
-	width = gconf_client_get_int (gconf_client, KEY_WIDTH, NULL);
-	if (width <= 0)
-		width = 440;
-	height = gconf_client_get_int (gconf_client, KEY_HEIGHT, NULL);
-	if (height <= 0)
-		height = 550;
-
-	gtk_window_set_default_size (GTK_WINDOW (w), width, height);
+	gtk_window_set_default_size (GTK_WINDOW (w), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        games_conf_add_window (GTK_WINDOW (w));
 
 	preview = new Preview ();
 	field = new Field();
@@ -286,6 +242,11 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_action_set_sensitive(pause_action, FALSE);
 	gtk_action_set_sensitive(end_game_action, FALSE);
 	gtk_action_set_sensitive(preferences_action, TRUE);
+
+        confNotifyID = g_signal_connect (games_conf_get_default (),
+                                         "value-changed",
+                                         G_CALLBACK (confNotify),
+                                         this);
 }
 
 Tetris::~Tetris()
@@ -299,6 +260,9 @@ Tetris::~Tetris()
 
 	if (bgPixmap)
 		g_free(bgPixmap);
+
+        if (confNotifyID != 0)
+                g_signal_handler_disconnect (games_conf_get_default (), confNotifyID);
 }
 
 void
@@ -403,59 +367,38 @@ Tetris::setupPixmap()
 }
 
 void
-Tetris::gconfNotify (GConfClient *tmp_client, guint cnx_id, GConfEntry *tmp_entry, gpointer tmp_data)
+Tetris::confNotify (GamesConf *conf, const char *group, const char *key, gpointer data)
 {
-	Tetris *t = (Tetris *)tmp_data;
+        if (!group)
+          return;
+
+	Tetris *t = (Tetris *) data;
 
 	t->initOptions ();
 	t->setOptions ();
 }
 
 char *
-Tetris::gconfGetString (GConfClient *client, const char *key, const char *default_val)
+Tetris::confGetString (const char *group, const char *key, const char *default_val)
 {
-	char *val;
-	GError *error = NULL;
-
-	val = gconf_client_get_string (client, key, &error);
-	if (error) {
-		g_warning ("gconf error: %s\n", error->message);
-		g_error_free (error);
-		error = NULL;
-		val = g_strdup (default_val);
-	}
-
-	return val;
+        return games_conf_get_string_with_default (group, key, default_val);
 }
 
 int
-Tetris::gconfGetInt (GConfClient *client, const char *key, int default_val)
+Tetris::confGetInt (const char *group, const char *key, int default_val)
 {
-	int val;
-	GError *error = NULL;
-
-	val = gconf_client_get_int (client, key, &error);
-	if (error) {
-		g_warning ("gconf error: %s\n", error->message);
-		g_error_free (error);
-		error = NULL;
-		val = default_val;
-	}
-
-	return val;
+        return games_conf_get_integer_with_default (group, key, default_val);
 }
 
 gboolean
-Tetris::gconfGetBoolean (GConfClient *client, const char *key, gboolean default_val)
+Tetris::confGetBoolean (const char *group, const char *key, gboolean default_val)
 {
 	gboolean val;
 	GError *error = NULL;
 
-	val = gconf_client_get_bool (client, key, &error);
+	val = games_conf_get_boolean (group, key, &error);
 	if (error) {
-		g_warning ("gconf error: %s\n", error->message);
 		g_error_free (error);
-		error = NULL;
 		val = default_val;
 	}
 
@@ -467,54 +410,54 @@ Tetris::initOptions ()
 {
 	gchar *bgcolourstr;
 
-	themeno = themeNameToNumber (gconfGetString (gconf_client, KEY_THEME, "plain"));
+	themeno = themeNameToNumber (confGetString (KEY_OPTIONS_GROUP, KEY_THEME, "plain"));
 	field->setTheme (themeno);
 	preview->setTheme (themeno);
 
-	startingLevel = gconfGetInt (gconf_client, KEY_STARTING_LEVEL, 1);
+	startingLevel = confGetInt (KEY_OPTIONS_GROUP, KEY_STARTING_LEVEL, 1);
 	if (startingLevel < 1) 
 		startingLevel = 1;
 	if (startingLevel > 20) 
 		startingLevel = 20;
 
-	games_sound_enable (gconfGetBoolean (gconf_client, KEY_SOUND, TRUE)); 
+	games_sound_enable (confGetBoolean (KEY_OPTIONS_GROUP, KEY_SOUND, TRUE));
 
-	useTarget = gconfGetBoolean (gconf_client, KEY_USE_TARGET, FALSE);
+	useTarget = confGetBoolean (KEY_OPTIONS_GROUP, KEY_USE_TARGET, FALSE);
 
-	do_preview = gconfGetBoolean (gconf_client, KEY_DO_PREVIEW, TRUE);
+	do_preview = confGetBoolean (KEY_OPTIONS_GROUP, KEY_DO_PREVIEW, TRUE);
 	
 	if (preview) {
 		preview->enable(do_preview);
 	}
 
-	random_block_colors = gconfGetBoolean (gconf_client, KEY_RANDOM_BLOCK_COLORS, TRUE);
+	random_block_colors = confGetBoolean (KEY_OPTIONS_GROUP, KEY_RANDOM_BLOCK_COLORS, TRUE);
 
-	rotateCounterClockWise = gconfGetBoolean (gconf_client, KEY_ROTATE_COUNTER_CLOCKWISE, TRUE);
+	rotateCounterClockWise = confGetBoolean (KEY_OPTIONS_GROUP, KEY_ROTATE_COUNTER_CLOCKWISE, TRUE);
 
-	line_fill_height = gconfGetInt (gconf_client, KEY_LINE_FILL_HEIGHT, 0);
+	line_fill_height = confGetInt (KEY_OPTIONS_GROUP, KEY_LINE_FILL_HEIGHT, 0);
 	if (line_fill_height < 0)
 		line_fill_height = 0;
 	if (line_fill_height > 19)
 		line_fill_height = 19;
 
-	line_fill_prob = gconfGetInt (gconf_client, KEY_LINE_FILL_PROBABILITY, 0);
+	line_fill_prob = confGetInt (KEY_OPTIONS_GROUP, KEY_LINE_FILL_PROBABILITY, 0);
 	if (line_fill_prob < 0)
 		line_fill_prob = 0;
 	if (line_fill_prob > 10)
 		line_fill_prob = 10;
 
-	moveLeft = gconfGetInt (gconf_client, KEY_MOVE_LEFT, GDK_Left);
-	moveRight = gconfGetInt (gconf_client, KEY_MOVE_RIGHT, GDK_Right);
-	moveDown = gconfGetInt (gconf_client, KEY_MOVE_DOWN, GDK_Down);
-	moveDrop = gconfGetInt (gconf_client, KEY_MOVE_DROP, GDK_Pause);
-	moveRotate = gconfGetInt (gconf_client, KEY_MOVE_ROTATE, GDK_Up);
-	movePause = gconfGetInt (gconf_client, KEY_MOVE_PAUSE, GDK_space);
+	moveLeft = games_conf_get_keyval_with_default (KEY_CONTROLS_GROUP, KEY_MOVE_LEFT, GDK_Left);
+	moveRight = games_conf_get_keyval_with_default (KEY_CONTROLS_GROUP, KEY_MOVE_RIGHT, GDK_Right);
+	moveDown = games_conf_get_keyval_with_default (KEY_CONTROLS_GROUP, KEY_MOVE_DOWN, GDK_Down);
+	moveDrop = games_conf_get_keyval_with_default (KEY_CONTROLS_GROUP, KEY_MOVE_DROP, GDK_Pause);
+	moveRotate = games_conf_get_keyval_with_default (KEY_CONTROLS_GROUP, KEY_MOVE_ROTATE, GDK_Up);
+	movePause = games_conf_get_keyval_with_default (KEY_CONTROLS_GROUP, KEY_MOVE_PAUSE, GDK_space);
 
-	bgcolourstr = gconfGetString (gconf_client, KEY_BG_COLOUR, "Black");
+	bgcolourstr = confGetString (KEY_OPTIONS_GROUP, KEY_BG_COLOUR, "Black");
 	gdk_color_parse (bgcolourstr, &bgcolour);
 	g_free (bgcolourstr);
 
-	usebg = gconfGetBoolean (gconf_client, KEY_USE_BG_IMAGE, FALSE);
+	usebg = confGetBoolean (KEY_OPTIONS_GROUP, KEY_USE_BG_IMAGE, FALSE);
 }
 
 void
@@ -544,32 +487,32 @@ void
 Tetris::setSound (GtkWidget *widget, gpointer data)
 {
 	Tetris *t = (Tetris*)data;
-	gconf_client_set_bool (t->gconf_client, KEY_SOUND,
-			       GTK_TOGGLE_BUTTON (widget)->active, NULL);
+        games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_SOUND,
+			        GTK_TOGGLE_BUTTON (widget)->active);
 }
 
 void 
 Tetris::setSelectionPreview(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
-	gconf_client_set_bool (t->gconf_client, KEY_DO_PREVIEW,
-			       GTK_TOGGLE_BUTTON (widget)->active, NULL);
+        games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_DO_PREVIEW,
+			        GTK_TOGGLE_BUTTON (widget)->active);
 }
 
 void 
 Tetris::setSelectionBlocks(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
-	gconf_client_set_bool (t->gconf_client, KEY_RANDOM_BLOCK_COLORS,
-			       GTK_TOGGLE_BUTTON (widget)->active, NULL);
+        games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_RANDOM_BLOCK_COLORS,
+			        GTK_TOGGLE_BUTTON (widget)->active);
 }
 
 void 
 Tetris::setRotateCounterClockWise(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
-	gconf_client_set_bool (t->gconf_client, KEY_ROTATE_COUNTER_CLOCKWISE,
-			       GTK_TOGGLE_BUTTON (widget)->active, NULL);
+        games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_ROTATE_COUNTER_CLOCKWISE,
+			        GTK_TOGGLE_BUTTON (widget)->active);
 }
 
 void
@@ -582,8 +525,8 @@ Tetris::setSelection(GtkWidget *widget, void *data)
 
 	t->themeno = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
 	t->field->setTheme (t->themeno);
-	gconf_client_set_string (t->gconf_client, KEY_THEME,
-				 ThemeTable[t->themeno].id, NULL);
+        games_conf_set_string (KEY_OPTIONS_GROUP, KEY_THEME,
+			       ThemeTable[t->themeno].id);
 }
 
 void 
@@ -595,8 +538,8 @@ Tetris::setTarget (GtkWidget *widget, void *data)
 
 	t->useTarget = GTK_TOGGLE_BUTTON (widget)->active;
 
-	gconf_client_set_bool (t->gconf_client, KEY_USE_TARGET, 
-			       t->useTarget, NULL);
+        games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_USE_TARGET, 
+			        t->useTarget);
 }
 
 void
@@ -604,8 +547,7 @@ Tetris::lineFillHeightChanged (GtkWidget *spin, gpointer data)
 {
 	Tetris *t = (Tetris *)data;
 	gint value = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin));
-	gconf_client_set_int (t->gconf_client, KEY_LINE_FILL_HEIGHT,
-			      value, NULL);
+        games_conf_set_integer (KEY_OPTIONS_GROUP, KEY_LINE_FILL_HEIGHT, value);
 }
 
 void
@@ -613,8 +555,7 @@ Tetris::lineFillProbChanged (GtkWidget *spin, gpointer data)
 {
 	Tetris *t = (Tetris *)data;
 	gint value = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin));
-	gconf_client_set_int (t->gconf_client, KEY_LINE_FILL_PROBABILITY,
-			      value, NULL);
+        games_conf_set_integer (KEY_OPTIONS_GROUP, KEY_LINE_FILL_PROBABILITY, value);
 }
 
 void
@@ -622,8 +563,7 @@ Tetris::startingLevelChanged (GtkWidget *spin, gpointer data)
 {
 	Tetris *t = (Tetris *)data;
 	gint value = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin));
-	gconf_client_set_int (t->gconf_client, KEY_STARTING_LEVEL,
-			      value, NULL);
+        games_conf_set_integer (KEY_OPTIONS_GROUP, KEY_STARTING_LEVEL, value);
 }
 
 void
@@ -866,14 +806,14 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	fvbox = gtk_vbox_new (FALSE, 6);
 	gtk_container_add (GTK_CONTAINER (frame), fvbox);
 
-	controls_list = games_controls_list_new ();
+	controls_list = games_controls_list_new (KEY_CONTROLS_GROUP);
 	games_controls_list_add_controls (GAMES_CONTROLS_LIST (controls_list),
-					  KEY_MOVE_LEFT,
-					  KEY_MOVE_RIGHT,
-					  KEY_MOVE_DOWN,
-					  KEY_MOVE_DROP,
-					  KEY_MOVE_ROTATE,
-					  KEY_MOVE_PAUSE,
+					  KEY_MOVE_LEFT, _("Move left"), GDK_Left,
+					  KEY_MOVE_RIGHT, _("Move right"), GDK_Right,
+					  KEY_MOVE_DOWN, _("Move down"), GDK_Down,
+					  KEY_MOVE_DROP, _("Drop"), GDK_Pause,
+					  KEY_MOVE_ROTATE, _("Rotate"), GDK_Up,
+					  KEY_MOVE_PAUSE, _("Pause"), GDK_space,
 					  NULL);
 
 	gtk_box_pack_start (GTK_BOX (fvbox), controls_list, TRUE, TRUE, 0);
@@ -1108,16 +1048,13 @@ Tetris::keyReleaseHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 
 void Tetris::saveBgOptions ()
 {
-	gchar * cbuffer;
+	gchar cbuffer[64];
 
-	gconf_client_set_bool (gconf_client, KEY_USE_BG_IMAGE, 
-				  usebg, NULL);
+        games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_USE_BG_IMAGE, usebg);
 
-	cbuffer = g_strdup_printf ("#%04x%04x%04x", bgcolour.red,
-				   bgcolour.green, bgcolour.blue);
-	gconf_client_set_string (gconf_client, KEY_BG_COLOUR, cbuffer,
-				 NULL);
-	g_free (cbuffer);
+	g_snprintf (cbuffer, sizeof (cbuffer), "#%04x%04x%04x",
+                    bgcolour.red, bgcolour.green, bgcolour.blue);
+        games_conf_set_string (KEY_OPTIONS_GROUP, KEY_BG_COLOUR, cbuffer);
 }
 
 void
@@ -1438,7 +1375,11 @@ Tetris::gameAbout(GtkAction *action, void *d)
 	gchar *license = games_get_license (_("Gnometris"));
 
 	gtk_show_about_dialog (GTK_WINDOW (t->getWidget()),
+#if GTK_CHECK_VERSION (2, 11, 0)
+                               "program-name", _("Gnometris"),
+#else
 			       "name", _("Gnometris"),
+#endif
 			       "version", VERSION,
 			       "comments", _("Written for my wife, Matylda\n"
 					     "Send comments and bug reports to: \n"
@@ -1464,14 +1405,4 @@ Tetris::gameTopTen(GtkAction *action, void *d)
 	t->high_scores->show(0);
 
 	return TRUE;
-}
-
-gboolean Tetris::configure (GtkWidget *widget, GdkEventConfigure *event, Tetris *t)
-{
-
-	gconf_client_set_int (t->gconf_client, KEY_WIDTH, event->width, NULL);
-	gconf_client_set_int (t->gconf_client, KEY_HEIGHT, event->height, 
-			      NULL);
-
-	return FALSE;
 }
