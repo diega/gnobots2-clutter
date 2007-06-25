@@ -50,30 +50,6 @@
       </schema>
 
       <schema>
-        <key>/schemas/apps/same-gnome/window_width</key>
-        <applyto>/apps/same-gnome/window_width</applyto>
-        <owner>same-gnome</owner>
-        <type>int</type>
-        <default>450</default>
-        <locale name="C">
-          <short>The window width</short>
-          <long>The width of the main window. </long>
-        </locale>
-      </schema>
-
-      <schema>
-        <key>/schemas/apps/same-gnome/window_height</key>
-        <applyto>/apps/same-gnome/window_height</applyto>
-        <owner>same-gnome</owner>
-        <type>int</type>
-        <default>350</default>
-        <locale name="C">
-          <short>The window height</short>
-          <long>The height of the main window. </long>
-        </locale>
-      </schema>
-
-      <schema>
         <key>/schemas/apps/same-gnome/fast_animation</key>
         <applyto>/apps/same-gnome/fast_animation</applyto>
         <owner>same-gnome</owner>
