@@ -358,7 +358,7 @@ create_main_window (void)
 
         toplevel_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-        games_conf_add_window (GTK_WINDOW (toplevel_window));
+        games_conf_add_window (GTK_WINDOW (toplevel_window), NULL);
 
 	status_bar = gtk_statusbar_new ();
         ui = gtk_ui_manager_new ();

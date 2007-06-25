@@ -161,7 +161,7 @@ Tetris::Tetris(int cmdlLevel):
 	line_fill_prob = 5;
 
 	gtk_window_set_default_size (GTK_WINDOW (w), DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        games_conf_add_window (GTK_WINDOW (w));
+        games_conf_add_window (GTK_WINDOW (w), KEY_SAVED_GROUP);
 
 	preview = new Preview ();
 	field = new Field();

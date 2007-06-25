@@ -48,6 +48,8 @@
 #define KEY_MOVE_RIGHT      "key_right"
 #define KEY_MOVE_ROTATE     "key_rotate"
 
+#define KEY_SAVED_GROUP     "saved"
+
 extern int LINES;
 extern int COLUMNS;
 

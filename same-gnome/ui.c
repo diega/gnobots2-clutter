@@ -527,7 +527,7 @@ build_gui (void)
   gtk_window_set_title (GTK_WINDOW (application), _(APPNAME_LONG));
   gtk_window_set_default_size (GTK_WINDOW (application),
                                DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-  games_conf_add_window (GTK_WINDOW (application));
+  games_conf_add_window (GTK_WINDOW (application), NULL);
 
   g_signal_connect (G_OBJECT (application), "delete_event",
 		    G_CALLBACK (quit_cb), NULL);

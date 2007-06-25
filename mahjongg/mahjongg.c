@@ -1419,7 +1419,7 @@ main (int argc, char *argv[])
   load_preferences ();
 
   gtk_window_set_default_size (GTK_WINDOW (window), DEFAULT_WIDTH, DEFAULT_HEIGHT);
-  games_conf_add_window (GTK_WINDOW (window));
+  games_conf_add_window (GTK_WINDOW (window), NULL);
 
   g_signal_connect (G_OBJECT (window), "window_state_event",
 		    G_CALLBACK (window_state_callback), NULL);
