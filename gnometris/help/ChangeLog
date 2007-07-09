@@ -1,5 +1,9 @@
-2007-06-21  Jorge Gonzalez <jorgegonz@svn.gnome.org>                                      
+2007-07-09  Claude Paroz  <claude@2xlibre.net>
 
+	* fr/fr.po: Added French translation.
+	* Makefile.am: Added fr to DOC_LINGUAS.
+
+2007-06-21  Jorge Gonzalez <jorgegonz@svn.gnome.org>                                      
         * es/es.po: Updated Spanish translation.
 
 2007-06-02  Jorge Gonzalez <jorgegonz@svn.gnome.org>
