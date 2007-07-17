@@ -1,3 +1,11 @@
+2007-06-29  Christian Persch <chpe@gnome.org>
+
+	* drawing.[ch]:
+	* mahjongg.[ch]:
+	* maps.[ch]:
+	* solubility.c:
+	* Makefile.am: Allow building with gtk-only platform.
+
 2007-04-26  Claude Paroz  <claude@2xlibre.net>
 
 	* help/C/mahjongg.xml: Corrected DocBook syntax to make the document

@@ -1,3 +1,12 @@
+2007-06-29  Christian Persch <chpe@gnome.org>
+
+	* drawing.c:
+	* game.c:
+	* input.c:
+	* same-gnome.[ch]:
+	* ui.[ch]:
+	* Makefile.am: Allow building with gtk-only platform.
+
 2007-02-07  Mariano Suárez-Alvarez  <mariano@gnome.org>
 
 	* ui.c(window_state_cb): s/FALSe/FALSE/ (bug #405056)
