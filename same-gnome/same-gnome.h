@@ -10,7 +10,7 @@
 #define GLOBALS_H
 
 #include <glib.h>
-#include <games-scores.h>
+#include <libgames-support/games-scores.h>
 
 #define APPNAME "same-gnome"
 

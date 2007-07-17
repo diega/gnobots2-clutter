@@ -10,10 +10,10 @@
 
 #include <gnome.h>
 
-#include <games-conf.h>
-#include <games-gridframe.h>
-#include <games-stock.h>
-#include <games-scores.h>
+#include <libgames-support/games-conf.h>
+#include <libgames-support/games-gridframe.h>
+#include <libgames-support/games-stock.h>
+#include <libgames-support/games-scores.h>
 
 #include "same-gnome.h"
 

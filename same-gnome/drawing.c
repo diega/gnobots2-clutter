@@ -10,7 +10,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <games-conf.h>
+#include <libgames-support/games-conf.h>
 
 #include "same-gnome.h"
 

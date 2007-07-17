@@ -12,11 +12,11 @@
 #include <glib/gi18n.h>
 #include <libgnome/gnome-help.h>
 
-#include <games-conf.h>
-#include <games-files.h>
-#include <games-gridframe.h>
-#include <games-scores-dialog.h>
-#include <games-stock.h>
+#include <libgames-support/games-conf.h>
+#include <libgames-support/games-files.h>
+#include <libgames-support/games-gridframe.h>
+#include <libgames-support/games-scores-dialog.h>
+#include <libgames-support/games-stock.h>
 
 #include "same-gnome.h"
 

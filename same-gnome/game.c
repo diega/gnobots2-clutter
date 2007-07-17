@@ -8,8 +8,8 @@
 
 #include <glib/gi18n.h>
 
-#include <games-conf.h>
-#include <games-scores.h>
+#include <libgames-support/games-conf.h>
+#include <libgames-support/games-scores.h>
 #include <string.h>
 
 #include "same-gnome.h"
