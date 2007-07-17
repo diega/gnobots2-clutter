@@ -1,56 +1,93 @@
+SUBDIRS = help
+
+NULL =
+
 mapdir = $(datadir)/gnome-games/mahjongg/maps
+map_DATA = \
+	mahjongg.map	\
+	$(NULL)
+
 pixmapdir = $(datadir)/pixmaps/mahjongg
-Gamesdir = $(datadir)/applications
-
-schemadir   = @GCONF_SCHEMA_FILE_DIR@
-schema_in_files = mahjongg.schemas.in
-schema_DATA = $(schema_in_files:.schemas.in=.schemas)
-@INTLTOOL_SCHEMAS_RULE@
-
-INCLUDES =						\
-	-I$(top_srcdir)/libgames-support		\
-	-I..						\
-	-I$(srcdir)/..					\
-	$(GNOME_GAMES_CFLAGS)				\
-	-DDATADIR=\""$(datadir)"\"		   	\
-	-DMAPDIR=\""$(mapdir)"\"			\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"
+pixmap_DATA = \
+	smooth.png	\
+	postmodern.svg	\
+	$(NULL)
 
 bin_PROGRAMS = mahjongg
 
 mahjongg_SOURCES = 	\
-	mahjongg.c	\
-	mahjongg.h	\
 	drawing.c	\
 	drawing.h	\
+	mahjongg.c	\
+	mahjongg.h	\
 	maps.c		\
 	maps.h		\
 	solubility.c	\
 	solubility.h	\
-	translatable_game_names.h
+	translatable_game_names.h	\
+	$(NULL)
 
-mahjongg_LDADD =					\
-	../libgames-support/libgames-support.la		\
-	$(GNOME_GAMES_LIBS)				\
-	$(INTLLIBS)
+mahjongg_CPPFLAGS = \
+	-I$(top_srcdir)					\
+	-I$(top_srcdir)/libgames-support		\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
+	-DDATADIR="\"$(datadir)\""			\
+	-DPIXMAPDIR="\"$(pixmapdir)\""			\
+	-DMAPDIR="\"$(mapdir)\""			\
+	$(AM_CPPFLAGS)
 
-map_DATA = mahjongg.map
+mahjongg_CFLAGS = \
+	$(GTK_CFLAGS)	\
+	$(AM_CFLAGS)
+		
+mahjongg_LDADD = \
+	$(top_builddir)/libgames-support/libgames-support.la \
+	$(GTK_LIBS)	\
+	$(INTLLIBS)	\
+	$(NULL)
 
-pixmap_DATA = smooth.png postmodern.svg
-
-EXTRA_DIST = $(pixmap_DATA) \
-	$(schema_in_files) $(map_DATA)
-
-Games_in_files = mahjongg.desktop.in.in
-Games_DATA = $(Games_in_files:.desktop.in.in=.desktop)
-@INTLTOOL_DESKTOP_RULE@
-
-SUBDIRS = help
-
-install-data-local:
-if GCONF_SCHEMAS_INSTALL
-	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(top_builddir)/mahjongg/$(schema_DATA)
+if HAVE_GNOME
+mahjongg_CFLAGS += $(GNOME_CFLAGS)
+mahjongg_LDADD += $(GNOME_LIBS)
 endif
+
+if HAVE_RSVG
+mahjongg_CFLAGS += $(RSVG_CFLAGS)
+mahjongg_LDADD += $(RSVG_LIBS)
+endif
+
+if WITH_GTHREAD
+mahjongg_CFLAGS += $(GHTREAD_CFLAGS)
+mahjongg_LDADD += $(GTHREAD_LIBS)
+endif
+
+schema_in_files = mahjongg.schemas.in
+schemadir = $(GCONF_SCHEMA_FILE_DIR)
+schema_DATA = $(schema_in_files:.schemas.in=.schemas)
+
+desktop_in_files = mahjongg.desktop.in.in
+desktopdir = $(datadir)/applications
+desktop_DATA = $(desktop_in_files:.desktop.in.in=.desktop)
+
+EXTRA_DIST = \
+	$(pixmap_DATA)		\
+	$(schema_in_files)	\
+	$(map_DATA)		\
+	$(NULL)
+
+CLEANFILES = $(desktop_DATA) $(schema_DATA)
+DISTCLEANFILES = $(desktop_DATA) $(schema_DATA)
+
+install-schemas-local: $(schema_DATA)
+if GCONF_SCHEMAS_INSTALL
+	if test -z "$(DESTDIR)" ; then \
+		for p in $^ ; do \
+			GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $$p 2>&1 > /dev/null; \
+		done \
+	fi
+endif
+
+install-scorefiles-local:
 	-$(mkinstalldirs) $(DESTDIR)$(scoredir)
 	-for i in easy difficult confounding pyramid tictactoe cloud dragon bridges ziggurat; do \
 		touch $(DESTDIR)$(scoredir)/mahjongg.$$i.scores; \
@@ -58,6 +95,8 @@ endif
 		chmod 664 $(DESTDIR)$(scoredir)/mahjongg.$$i.scores; \
 	done
 	-if test "x$(setgid)" = "xtrue"; then chgrp $(scores_group) $(DESTDIR)$(bindir)/mahjongg && chmod 2555 $(DESTDIR)$(bindir)/mahjongg ; fi
-	$(mkinstalldirs) $(DESTDIR)$(Gamesdir)
 
-DISTCLEANFILES = $(Games_DATA) $(schema_DATA)
+install-data-local: install-schemas-local install-scorefiles-local
+
+@INTLTOOL_DESKTOP_RULE@
+@INTLTOOL_SCHEMAS_RULE@
