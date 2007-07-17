@@ -14,10 +14,9 @@
 #ifndef MAHJONGG_H
 #define MAHJONGG_H
 
-#include <gnome.h>
+#include <glib.h>
 
 #include "maps.h"
-
 
 #define MAX_TILES_STR "144"
 

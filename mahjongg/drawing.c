@@ -17,8 +17,11 @@
 
 #include <config.h>
 
-#include <gnome.h>
-#include <games-preimage.h>
+#include <glib/gi18n.h>
+
+#include <gtk/gtkdrawingarea.h>
+
+#include <libgames-support/games-preimage.h>
 
 #include "mahjongg.h"
 #include "drawing.h"
@@ -439,58 +442,41 @@ create_mahjongg_board (void)
 void
 load_images (gchar * file)
 {
-  gchar *filename;
-  gchar *temp;
-
-  temp = g_strconcat ("mahjongg/", file, NULL);
-
-  filename = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
-					temp, TRUE, NULL);
-  g_free (temp);
-
-  if (!filename) {
-
-    filename = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
-					  "mahjongg/postmodern.svg", TRUE,
-					  NULL);
-
-    if (!filename) {
-      warning_message = g_strdup_printf (_("Unable to locate file:\n'%s'\n\n"
-					   "Please check that Mahjongg is installed correctly."),
-					 file);
-    } else {
-      warning_message = g_strdup_printf (_("Unable to locate file:\n'%s'\n\n"
-					   "The default tile set will be loaded instead."),
-					 file);
-    }
-
-  }
+  char *filename;
+  GError *error = NULL;
 
   if (tilepreimage)
     g_object_unref (tilepreimage);
 
-  tilepreimage = NULL;
+  filename = g_build_filename (PIXMAPDIR, file, NULL);
+  tilepreimage = games_preimage_new_from_file (filename, &error);
+  g_free (filename);
 
-  if (filename) {
-    tilepreimage = games_preimage_new_from_file (filename, NULL);
+  if (!tilepreimage) {
+    warning_message = g_strdup_printf (_("Unable to render file:\n'%s'\n\n"
+                                         "Please check that Mahjongg is installed correctly."),
+                                       error->message);
+    g_clear_error (&error);
 
-    /* This usually happens with bad images or a missing image loader. */
+    /* Try the default tileset */
+    filename = g_build_filename (PIXMAPDIR, "postmodern.svg", NULL);
+    tilepreimage = games_preimage_new_from_file (filename, &error);
+    g_free (filename);
+
     if (!tilepreimage) {
+      /* This usually happens with bad images or a missing image loader. */
       g_free (warning_message);
       warning_message = g_strdup_printf (_("Unable to render file:\n'%s'\n\n"
 					   "Please check that Mahjongg is installed correctly."),
-					 file);
+					 error->message);
+      g_error_free (error);
     }
-
   }
 
   update_tileimages = TRUE;
 
-  if (tileset)
-    g_free (tileset);
+  g_free (tileset);
   tileset = g_strdup (file);
-
-  g_free (filename);
 
   /* We may be called before the window is created, in which case we let
    * the configure callback handle this. But if this is a change of tileset

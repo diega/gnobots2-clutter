@@ -10,6 +10,8 @@
 #ifndef MAPS_H
 #define MAPS_H
 
+#include <glib.h>
+
 #define MAX_TILES 144
 
 typedef struct _tilepos {

@@ -22,17 +22,21 @@
 #include <dirent.h>
 #include <config.h>
 
-#include <gtk/gtk.h>
-#include <gnome.h>
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
-#include <games-clock.h>
-#include <games-conf.h>
-#include <games-frame.h>
-#include <games-stock.h>
-#include <games-scores.h>
-#include <games-scores-dialog.h>
 
+#include <libgames-support/games-clock.h>
+#include <libgames-support/games-conf.h>
+#include <libgames-support/games-frame.h>
+#include <libgames-support/games-stock.h>
+#include <libgames-support/games-scores.h>
+#include <libgames-support/games-scores-dialog.h>
+
+#ifdef HAVE_GNOME
+#include <gnome.h>
+#endif /* HAVE_GNOME */
+    
 #include "mahjongg.h"
 #include "drawing.h"
 #include "solubility.h"
@@ -545,7 +549,7 @@ tile_event (gint tileno, gint button)
 }
 
 static void
-fill_tile_menu (GtkWidget * menu, gchar * sdir)
+fill_tile_menu (GtkWidget * menu)
 {
   struct dirent *e;
   DIR *dir;
@@ -559,8 +563,7 @@ fill_tile_menu (GtkWidget * menu, gchar * sdir)
 
   tileset_list = NULL;
 
-  dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP,
-				     (sdir), FALSE, NULL);
+  dname = g_build_filename (PIXMAPDIR, NULL);
   dir = opendir (dname);
 
   if (!dir) {
@@ -745,7 +748,7 @@ properties_callback (void)
 		    (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) 0, 0, 0);
 
   omenu = gtk_combo_box_new_text ();
-  fill_tile_menu (omenu, "mahjongg");
+  fill_tile_menu (omenu);
   g_signal_connect (G_OBJECT (omenu), "changed",
 		    G_CALLBACK (tileset_callback), NULL);
   gtk_table_attach_defaults (GTK_TABLE (table), omenu, 1, 2, 0, 1);
@@ -934,13 +937,15 @@ about_callback (void)
 			 _("A matching game played with Mahjongg tiles."),
 			 "copyright", "Copyright \xc2\xa9 1998-2007 Free Software Foundation, Inc.",
 			 "license", license,
+                         "wrap-license", TRUE,
                          "authors", authors,
                          "artists", artists,
                          "documenters", documenters,
 			 "translator-credits", _("translator-credits"),
 			 "logo-icon-name", "gnome-mahjongg",
-                         "website", "http://www.gnome.org/projects/gnome-games/",
-			 "wrap-license", TRUE, NULL);
+                         "website", "http://www.gnome.org/projects/gnome-games",
+                         "website-label", _("GNOME Games web site"),
+                         NULL);
   g_free (license);
 }
 
@@ -1253,7 +1258,11 @@ shuffle_tiles_callback (void)
 static void
 help_cb (GtkAction * action, gpointer data)
 {
+#ifdef HAVE_GNOME
   gnome_help_display ("mahjongg.xml", NULL, NULL);
+#else
+#warning need to port help to gtk-only!
+#endif /* HAVE_GNOME */
 }
 
 static const GtkActionEntry actions[] = {
@@ -1330,7 +1339,9 @@ static const char ui_description[] =
   "    <toolitem action='UndoMove'/>"
   "    <toolitem action='RedoMove'/>"
   "    <toolitem action='Hint'/>"
-  "    <toolitem action='LeaveFullscreen'/>" "  </toolbar>" "</ui>";
+  "    <toolitem action='LeaveFullscreen'/>"
+  "  </toolbar>"
+  "</ui>";
 
 
 static void
@@ -1394,7 +1405,22 @@ main (int argc, char *argv[])
   GtkUIManager *ui_manager;
   GtkAccelGroup *accel_group;
 
+  GOptionContext *context;
+
+#ifdef HAVE_GNOME
+  GnomeClient *client;
   GnomeProgram *program;
+#else
+  gboolean retval;
+  GError *error = NULL;
+#endif
+
+#if defined(HAVE_GNOME) || defined(HAVE_RSVG_GNOMEVFS)
+  /* If we're going to use gnome-vfs, we need to init threads before
+   * calling any glib functions.
+   */
+  g_thread_init (NULL);
+#endif
 
   setgid_io_init ();
 
@@ -1402,12 +1428,39 @@ main (int argc, char *argv[])
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
   textdomain (GETTEXT_PACKAGE);
 
+  context = g_option_context_new (NULL);
+#if GLIB_CHECK_VERSION (2, 12, 0)
+  g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
+#endif
+
+#ifdef HAVE_GNOME
   program = gnome_program_init (APPNAME, VERSION,
 				LIBGNOMEUI_MODULE,
 				argc, argv,
-				GNOME_PARAM_APP_DATADIR, DATADIR, NULL);
+                                GNOME_PARAM_GOPTION_CONTEXT, context,
+				GNOME_PARAM_APP_DATADIR, DATADIR,
+                                NULL);
+#else
+  g_option_context_add_group (context, gtk_get_option_group (TRUE));
 
-  games_conf_initialise (APPNAME);
+  retval = g_option_context_parse (context, &argc, &argv, &error);
+  g_option_context_free (context);
+  if (!retval) {
+    g_print ("%s", error->message);
+    g_error_free (error);
+    exit (1);
+  }
+#endif /* HAVE_GNOME */
+
+  g_set_application_name (_(APPNAME_LONG));
+
+  if (!games_conf_initialise (APPNAME)) {
+    /* Set the defaults */
+    games_conf_set_boolean (NULL, KEY_SHOW_TOOLBAR, TRUE);
+    games_conf_set_string (NULL, KEY_TILESET, "postmodern.svg");
+    games_conf_set_string (NULL, KEY_MAPSET, "Easy");
+    games_conf_set_string (NULL, KEY_BGCOLOUR, "#34385b");
+  }
 
   games_stock_init ();
 
@@ -1416,14 +1469,15 @@ main (int argc, char *argv[])
   load_maps ();
   init_scores ();
 
-  window = gnome_app_new (APPNAME, _(APPNAME_LONG));
-
-  load_preferences ();
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (window), _(APPNAME_LONG));
 
   gtk_window_set_default_size (GTK_WINDOW (window), DEFAULT_WIDTH, DEFAULT_HEIGHT);
   games_conf_add_window (GTK_WINDOW (window), NULL);
 
-  g_signal_connect (G_OBJECT (window), "window_state_event",
+  load_preferences ();
+
+  g_signal_connect (window, "window-state-event",
 		    G_CALLBACK (window_state_callback), NULL);
 
   /* Statusbar for a chrono, Tiles left and Moves left */
@@ -1484,7 +1538,7 @@ main (int argc, char *argv[])
   gtk_box_pack_end (GTK_BOX (statusbar), status_box, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (vbox), statusbar, FALSE, FALSE, 0);
 
-  gnome_app_set_contents (GNOME_APP (window), vbox);
+  gtk_container_add (GTK_CONTAINER (window), vbox);
 
   /* FIXME: get these in the best place (as per the comment below. */
   init_config ();
@@ -1507,7 +1561,9 @@ main (int argc, char *argv[])
 
   games_conf_shutdown ();
 
+#ifdef HAVE_GNOME
   g_object_unref (program);
+#endif /* HAVE_GNOME */
 
   return 0;
 }

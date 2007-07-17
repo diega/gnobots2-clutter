@@ -2,7 +2,7 @@ SUBDIRS = help
 
 NULL =
 
-mapdir = $(datadir)/gnome-games/mahjongg/maps
+mapdir = $(pkgdatadir)/mahjongg/maps
 map_DATA = \
 	mahjongg.map	\
 	$(NULL)
@@ -29,7 +29,6 @@ mahjongg_SOURCES = 	\
 
 mahjongg_CPPFLAGS = \
 	-I$(top_srcdir)					\
-	-I$(top_srcdir)/libgames-support		\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	-DDATADIR="\"$(datadir)\""			\
 	-DPIXMAPDIR="\"$(pixmapdir)\""			\

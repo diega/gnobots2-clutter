@@ -47,6 +47,8 @@
 
 #include <config.h>
 
+#include <string.h>
+
 #include "mahjongg.h"
 #include "solubility.h"
 

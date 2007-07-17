@@ -25,10 +25,12 @@
 
 #include <config.h>
 
-#include <gnome.h>
-/* #include <stdlib.h> */
+#include <string.h>
+#include <stdlib.h>
 
-#include <games-files.h>
+#include <glib/gi18n.h>
+
+#include <libgames-support/games-files.h>
 
 #include "mahjongg.h"
 #include "maps.h"
