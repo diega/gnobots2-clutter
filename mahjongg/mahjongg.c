@@ -12,6 +12,8 @@
  * pancho@nuclecu.unam.mx
  */
 
+#include <config.h>
+
 #include <sys/types.h>
 #include <sys/time.h>
 #include <string.h>

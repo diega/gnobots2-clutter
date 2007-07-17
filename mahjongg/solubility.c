@@ -45,6 +45,8 @@
  * - Callum, 20030819
  */
 
+#include <config.h>
+
 #include "mahjongg.h"
 #include "solubility.h"
 

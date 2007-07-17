@@ -15,6 +15,8 @@
 /* This is a step back from the old way which used gnome-canvas, but
  * the overhead was quite noticeable. */
 
+#include <config.h>
+
 #include <gnome.h>
 #include <games-preimage.h>
 

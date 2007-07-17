@@ -23,6 +23,8 @@
  * USA
  */
 
+#include <config.h>
+
 #include <gnome.h>
 /* #include <stdlib.h> */
 
