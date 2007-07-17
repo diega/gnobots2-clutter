@@ -6,11 +6,14 @@
  *
  */
 
-#include "config.h"
+#include <config.h>
 
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
+
+#ifdef HAVE_GNOME
 #include <libgnome/gnome-help.h>
+#endif /* HAVE_GNOME */
 
 #include <libgames-support/games-conf.h>
 #include <libgames-support/games-files.h>
@@ -27,8 +30,6 @@
 
 #define DEFAULT_WINDOW_WIDTH 450
 #define DEFAULT_WINDOW_HEIGHT 350
-
-#define APPNAME_LONG N_("Same GNOME")
 
 /* Define an alternative to ngettext if we don't have it. Of course it isn't
  * a proper substitute for ngettext, but it is the best we can do. */
@@ -122,19 +123,25 @@ about_cb (GtkWidget * widget)
 
 
   gtk_show_about_dialog (GTK_WINDOW (application),
+#if GTK_CHECK_VERSION (2, 11, 0)
+                         "program-name", _(APPNAME_LONG),
+#else
+                         "name", _(APPNAME_LONG),
+#endif
 			 "authors", authors,
 			 "documenters", documenters,
 			 "comments",
 			 _
 			 ("I want to play that game! You know, they all go whirly-round and you click on them and they vanish!"),
-			 "copyright",
-			 "Copyright \xc2\xa9 2007 Callum McKenzie", "license",
-			 license, "name", _(APPNAME_LONG),
-			 "translator_credits", _("translator-credits"),
+			 "copyright", "Copyright \xc2\xa9 2007 Callum McKenzie",
+                         "license", license,
+                         "wrap-license", TRUE,
+			 "translator-credits", _("translator-credits"),
 			 "version", VERSION,
 			 "logo-icon-name", "gnome-samegnome",
-			 "website", "http://www.gnome.org/projects/gnome-games/",
-			 "wrap-license", TRUE, NULL);
+			 "website", "http://www.gnome.org/projects/gnome-games",
+                         "website-label", _("GNOME Games web site"),
+                         NULL);
   g_free (license);
 }
 
@@ -436,7 +443,11 @@ size_change_cb (GtkRadioAction * action, gpointer data)
 static void
 help_cb (void)
 {
+#ifdef HAVE_GNOME
   gnome_help_display ("same-gnome.xml", NULL, NULL);
+#else
+#warning need to port help to gtk-only!
+#endif /* HAVE_GNOME */
 }
 
 /* FIXME: Will we ever want this ? */
@@ -448,7 +459,7 @@ custom_size_cb (void)
 }
 #endif
 
-const GtkActionEntry actions[] = {
+static const GtkActionEntry actions[] = {
   {"GameMenu", NULL, N_("_Game")},
   {"ViewMenu", NULL, N_("_View")},
   {"SizeMenu", NULL, N_("_Size")},
@@ -482,7 +493,7 @@ const GtkToggleActionEntry toggle_actions[] = {
    G_CALLBACK (animation_cb)}
 };
 
-const char ui_description[] =
+static const char ui_description[] =
   "<ui>"
   "  <menubar name='MainMenu'>"
   "    <menu action='GameMenu'>"
@@ -601,16 +612,15 @@ build_gui (void)
   gtk_box_pack_start (GTK_BOX (vbox), gtk_hseparator_new (), FALSE, FALSE, 0);
 
   hbox = gtk_hbox_new (TRUE, 0);
-  gtk_box_pack_end (GTK_BOX (vbox), hbox, FALSE, FALSE, 8);
+  gtk_box_pack_end (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
-  messagewidget = gtk_label_new ("");
+  messagewidget = gtk_label_new (NULL);
   gtk_box_pack_start (GTK_BOX (hbox), messagewidget, TRUE, FALSE, 0);
 
-  scorewidget = gtk_label_new ("");
+  scorewidget = gtk_label_new (NULL);
   gtk_box_pack_start (GTK_BOX (hbox), scorewidget, TRUE, FALSE, 0);
 
   gtk_widget_show_all (application);
-
 }
 
 void

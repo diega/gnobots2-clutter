@@ -6,9 +6,12 @@
  *
  */
 
-#include <gtk/gtk.h>
-#include <glib/gi18n.h>
+#include <config.h>
+
 #include <string.h>
+
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
 #include <libgames-support/games-conf.h>
 

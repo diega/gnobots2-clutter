@@ -13,6 +13,8 @@
 
 #define clear_message() set_message (0)
 
+#define APPNAME_LONG N_("Same GNOME")
+
 void show_score (gint score);
 void set_message (gint count);
 void set_message_general (gchar * message);

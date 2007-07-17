@@ -6,9 +6,17 @@
  *
  */
 
-#include "config.h"
+#include <config.h>
 
+#include <stdlib.h>
+
+#include <glib/gi18n.h>
+
+#include <gtk/gtk.h>
+
+#ifdef HAVE_GNOME
 #include <gnome.h>
+#endif /* HAVE_GNOME */
 
 #include <libgames-support/games-conf.h>
 #include <libgames-support/games-gridframe.h>
@@ -120,12 +128,11 @@ initialise_options (gint requested_size, gchar * requested_theme)
 int
 main (int argc, char *argv[])
 {
-  GnomeProgram *program;
   GOptionContext *context;
-  static gchar *requested_theme = NULL;
-  static gint requested_size = -1;
+  gchar *requested_theme = NULL;
+  gint requested_size = -1;
 
-  static const GOptionEntry options[] = {
+  const GOptionEntry options[] = {
     {"theme", 't', 0, G_OPTION_ARG_STRING, &requested_theme,
      N_("Set the theme"), N_("NAME")},
     {"scenario", 's', 0, G_OPTION_ARG_STRING, &requested_theme,
@@ -135,6 +142,21 @@ main (int argc, char *argv[])
     {NULL, '\0', 0, 0, NULL, NULL, NULL}
   };
 
+#ifdef HAVE_GNOME
+  GnomeClient *client;
+  GnomeProgram *program;
+#else
+  gboolean retval;
+  GError *error = NULL;
+#endif
+
+#if defined(HAVE_GNOME) || defined(HAVE_RSVG_GNOMEVFS)
+  /* If we're going to use gnome-vfs, we need to init threads before
+   * calling any glib functions.
+   */
+  g_thread_init (NULL);
+#endif
+
   setgid_io_init ();
 
   /* Initialise i18n. */
@@ -142,14 +164,31 @@ main (int argc, char *argv[])
   textdomain (GETTEXT_PACKAGE);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
-  context = g_option_context_new ("");
+  context = g_option_context_new (NULL);
+#if GLIB_CHECK_VERSION (2, 12, 0)
+  g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
+#endif
+
   g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
 
-  /* Initialise GNOME. */
+#ifdef HAVE_GNOME
   program =
     gnome_program_init (APPNAME, VERSION, LIBGNOMEUI_MODULE, argc, argv,
 			GNOME_PARAM_APP_DATADIR, DATADIR,
 			GNOME_PARAM_GOPTION_CONTEXT, context, NULL);
+#else
+  g_option_context_add_group (context, gtk_get_option_group (TRUE));
+
+  retval = g_option_context_parse (context, &argc, &argv, &error);
+  g_option_context_free (context);
+  if (!retval) {
+    g_print ("%s", error->message);
+    g_error_free (error);
+    exit (1);
+  }
+#endif /* HAVE_GNOME */
+
+  g_set_application_name (_(APPNAME_LONG));
 
   games_conf_initialise (APPNAME);
 
@@ -170,7 +209,9 @@ main (int argc, char *argv[])
 
   games_conf_shutdown ();
 
+#ifdef HAVE_GNOME
   g_object_unref (program);
+#endif /* HAVE_GNOME */
 
   return 0;
 }
