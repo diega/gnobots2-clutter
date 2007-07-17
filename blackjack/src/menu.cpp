@@ -159,7 +159,7 @@ on_help_about_activate (GtkAction *action,
                                "comments", _("Blackjack is a casino-style card game."),
                                "logo-icon-name", "gnome-blackjack",
                                "license", license,
-                               "translator_credits", _("translator-credits"),
+                               "translator-credits", _("translator-credits"),
                                "website", "http://www.gnome.org/projects/gnome-games/",
                                "wrap-license", TRUE,
                                NULL);
