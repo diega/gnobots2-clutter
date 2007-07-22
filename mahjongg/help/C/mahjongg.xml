@@ -123,7 +123,7 @@
       Mahjongg.  It has all the functionality you expect from a tile or 
       card game.  You can change the type of tiles, the background, and 
       the difficulty level, among other things, in the 
-      <link linkend="prefs">Preferences&hellip;</link> dialog.  
+      <link linkend="prefs">Preferences</link> dialog.  
       Other features, like the <link linkend="pause"><guibutton>Pause
       </guibutton> button</link>, make the game more 
       competitive when you play against the clock. This document describes 
@@ -194,7 +194,7 @@
     <para>
       You start with five levels of tiles which are stacked so some are 
       covered up by the tiles on top.  The harder the level you set in the 
-      <link linkend="prefs"><interface>Preferences&hellip;</interface> dialog</link>, 
+      <link linkend="prefs"><interface>Preferences</interface> dialog</link>, 
       the more tiles are covered when the game starts.  The object of 
       <application>GNOME Mahjongg</application> is to remove all the tiles 
       from the game.  To remove tiles you have to find matching pairs which 
@@ -340,7 +340,7 @@
 	</varlistentry>
       </variablelist>
       <para>
-      There status bar at the bottom of the window gives you
+      The status bar at the bottom of the window gives you
       information on the current state of the game:
       </para>
       <variablelist>
@@ -401,7 +401,7 @@
 		      <shortcut>
 			<keysym>Ctrl-N</keysym>
 		      </shortcut>
-		      <guimenuitem>New game</guimenuitem>
+		      <guimenuitem>New</guimenuitem>
 		    </menuchoice> &mdash; 
 		    This item starts a new game.
 		  </para>
@@ -409,7 +409,7 @@
 		<listitem>
 		  <para>
 		    <menuchoice>
-		      <guimenuitem>Restart game</guimenuitem>
+		      <guimenuitem>Restart</guimenuitem>
 		    </menuchoice> &mdash; 
 		    This item resets the current game to the start.
 		  </para>
@@ -417,7 +417,7 @@
 		<listitem>
 		  <para>
 		    <menuchoice>
-		      <guimenuitem>Pause game</guimenuitem>
+		      <guimenuitem>Pause</guimenuitem>
 		    </menuchoice> &mdash; 
                     This pauses the game, stopping the clock and
 		    hiding the tiles.
@@ -460,7 +460,7 @@
 		<listitem>
 		  <para>
 		    <menuchoice>
-		      <guimenuitem>Scores&hellip;</guimenuitem>
+		      <guimenuitem>Scores</guimenuitem>
 		    </menuchoice> &mdash; 
 		    This item brings up a dialog showing you the ten best scores.  The 
 		    dialog has the scores identified by user name, score, the 
@@ -508,9 +508,9 @@
 		<listitem>
 		  <para>
 		    <menuchoice>
-		      <guimenuitem>Preferences&hellip;</guimenuitem>
+		      <guimenuitem>Preferences</guimenuitem>
 		    </menuchoice> &mdash; 
-		    This item brings up the <link linkend="prefs">Preferences&hellip;
+		    This item brings up the <link linkend="prefs">Preferences
 		    </link> dialog.
 		  </para>
 		</listitem>
@@ -538,7 +538,7 @@
 		<listitem>
 		  <para>
 		    <menuchoice>
-		      <guimenuitem>About&hellip;</guimenuitem>
+		      <guimenuitem>About</guimenuitem>
 		    </menuchoice> &mdash; 
 		    This item gives you some basic information about 
 		    <application>GNOME Mahjongg</application>, such as 
@@ -558,16 +558,16 @@
     <title>Customization</title>
     <para>
       To change the application's settings, select
-      <guimenuitem>Preferences&hellip;</guimenuitem> from the
+      <guimenuitem>Preferences</guimenuitem> from the
       <guimenu>Settings</guimenu> menu. This opens the 
-      <link linkend="preferences-fig"><interface>Preferences&hellip;
+      <link linkend="preferences-fig"><interface>Preferences
       </interface> dialog</link>.
     </para>
     
     <figure id="preferences-fig">
 <!-- FIXME: This dialog is the old one. -->
 <!-- ALAN: looks correct like version 2.10 to me -->
-      <title>Preferences&hellip; Dialog</title>
+      <title>Preferences Dialog</title>
       <screenshot>
 	 <mediaobject> 
     <imageobject>
@@ -586,7 +586,7 @@
     </para>
     
     <para>
-      The properties in the <interface>Preferences&hellip;</interface> dialog are:
+      The properties in the <interface>Preferences</interface> dialog are:
     </para>
       
       <itemizedlist mark="opencircle">
@@ -611,16 +611,6 @@
 	    Change the color of the background 
 	    by bringing up a <interface>
 	    color picker</interface> to let you select a new color.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>
-	    <guilabel>Warn when tiles don't match</guilabel> &mdash;
-	    Select whether you see a dialog when the two tiles you
-	    selected don't match.  If this option is not selected then
-	    the warning message will appear in the status bar in the
-	    lower left corner of the <interface>main
-	    window</interface>.
 	  </para>
 	</listitem>
       </itemizedlist>
@@ -693,8 +683,8 @@ and risk annoying the user.
    url="http://www.fsf.org">their Web site</ulink> or by writing to
    <address>
     Free Software Foundation, Inc.
-    <street>59 Temple Place</street> - Suite 330
-    <city>Boston</city>, <state>MA</state> <postcode>02111-1307</postcode>
+    <street>51 Franklin Street, Fifth Floor</street>
+    <city>Boston</city>, <state>MA</state> <postcode>02110-1301</postcode>
     <country>USA</country>
    </address>
   </para>
