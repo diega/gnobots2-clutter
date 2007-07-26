@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: blackjack.HEAD.es\n"
 "POT-Creation-Date: 2007-06-26 03:28+0100\n"
-"PO-Revision-Date: 2007-07-26 14:43+0200\n"
+"PO-Revision-Date: 2007-07-26 19:21+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -237,7 +237,7 @@ msgstr "Aquí hay algunos términos importantes usados en el juego."
 msgid ""
 "A hand whose first two cards total 21; an instant win worth 150% of your "
 "wager"
-msgstr ""
+msgstr "Una mano cuyas primeras dos cartas suman 21; un valor instantáneo del 150% de su apuesta"
 
 #: C/blackjack.xml:163(term)
 msgid "Bust"
@@ -245,15 +245,15 @@ msgstr "Pasarse"
 
 #: C/blackjack.xml:165(para)
 msgid "When the value of a hand exceeds 21; a losing hand"
-msgstr ""
+msgstr "Cuando el valor de la mano excede de 21; una mano perdida"
 
 #: C/blackjack.xml:170(term)
 msgid "Double down"
-msgstr ""
+msgstr "Doblar"
 
 #: C/blackjack.xml:172(para)
 msgid "To double the initial wager and receive exactly one more card"
-msgstr ""
+msgstr "Doblar la apuesta iniciar y recibir sólo una carta más"
 
 #: C/blackjack.xml:178(term)
 msgid "Hit"
@@ -261,11 +261,11 @@ msgstr "Pedir"
 
 #: C/blackjack.xml:180(para)
 msgid "To request another card to be added to the hand"
-msgstr ""
+msgstr "Pedir otra carta para añadirla a la mano"
 
 #: C/blackjack.xml:185(term)
 msgid "Insurance"
-msgstr ""
+msgstr "Seguro"
 
 #: C/blackjack.xml:187(para)
 msgid ""
@@ -273,6 +273,9 @@ msgid ""
 "(aka blackjack) that is offered when the dealer's face up card is an ace. If "
 "the dealer has a natural 21 then the player is paid double."
 msgstr ""
+"Una apuesta lateral del 50% del valor de la apuesta original a que el repartidor tiene "
+"un 21 natural (un blackjack) que se ofrece cuando la carta levantada del repartidor es un as. "
+"Si e repartidor tiene un 21 natural, entonces se le paga doble al jugador."
 
 #: C/blackjack.xml:195(term)
 msgid "Push"
@@ -283,6 +286,8 @@ msgid ""
 "When the value of the player hand and the dealer hand are equal and the "
 "original wager is returned to the player"
 msgstr ""
+"Cuando el valor de la mano del jugador y del repartidor son iguales la apuesta "
+"inicial se devuelve al jugador"
 
 #: C/blackjack.xml:203(term)
 msgid "Split"
@@ -293,6 +298,8 @@ msgid ""
 "When a hand starts with two cards of the same value (or rank) it may be "
 "split to form two independent hands"
 msgstr ""
+"Cuando una mano comienza con dos cartas del mismo valor (o rango) puede "
+"dividirse para formar dos manos independientes"
 
 #: C/blackjack.xml:211(term)
 msgid "Stand"
@@ -300,7 +307,7 @@ msgstr "Plantarse"
 
 #: C/blackjack.xml:213(para)
 msgid "To stop adding cards to a hand"
-msgstr ""
+msgstr "Dejar de añadir cartas a una mano"
 
 #: C/blackjack.xml:218(term)
 msgid "Surrender"
@@ -308,11 +315,11 @@ msgstr "Rendirse"
 
 #: C/blackjack.xml:220(para)
 msgid "To give up half your wager to not complete the hand"
-msgstr ""
+msgstr "Perder la mitad de su apuesta para no completar la mano"
 
 #: C/blackjack.xml:229(title)
 msgid "Card Values"
-msgstr ""
+msgstr "Valor de las cartas"
 
 #: C/blackjack.xml:234(para)
 msgid "An Ace can count as either 1 or 11."
@@ -328,29 +335,29 @@ msgstr "El 10, la sota, la reina y el rey valen 10."
 
 #: C/blackjack.xml:230(para)
 msgid "In blackjack, each card is assigned a value. <placeholder-1/>"
-msgstr ""
+msgstr "En el blackjack cada carta tiene asignado un valor. <placeholder-1/>"
 
 #: C/blackjack.xml:245(para)
 msgid "The value of a hand is the sum of the values of each card in the hand."
-msgstr ""
+msgstr "El valor de una mano es la suma de los valores de cada carta de la mano."
 
 #: C/blackjack.xml:251(title)
 msgid "Dealer Rules"
-msgstr ""
+msgstr "Reglas del repartidor"
 
 #: C/blackjack.xml:258(term)
 msgid "Dealer stands on all 17s"
-msgstr ""
+msgstr "El repartidor aguanta hasta 17"
 
 #: C/blackjack.xml:260(para)
 msgid ""
 "The dealer must continue to draw cards (hit) until the hand total is at "
 "least 17."
-msgstr ""
+msgstr "El repartidor debe continuar pidiendo cartas hasta que el total de su mano sea al menos 17."
 
 #: C/blackjack.xml:266(term)
 msgid "Dealer hits soft 17"
-msgstr ""
+msgstr "El repartidor tiene 17 blando"
 
 #: C/blackjack.xml:268(para)
 msgid ""
@@ -358,6 +365,9 @@ msgid ""
 "least 17, except when the dealer has a soft total of 17 he must take another "
 "card. A soft total is one where an Ace card is counted as an 11."
 msgstr ""
+"El repartidor debe continuar pidiendo cartas hasta que el total de su mano sea al menos "
+"17, excepto cuando el repartidor tiene un total de 17 blando. Un total blando es cuando "
+"un as se cuenta como 11 en lugar de 1."
 
 #: C/blackjack.xml:252(para)
 msgid ""
@@ -365,6 +375,9 @@ msgid ""
 "two basic rule variations that determine what hand total the dealer must "
 "draw to. <placeholder-1/>"
 msgstr ""
+"El repartidor debe jugar su mano de acuerdo con reglas muy específicas. Existen "
+"dos variaciones básicas de las reglas que determinan el total al que debe llegar el "
+"repartidor. <placeholder-1/>"
 
 #: C/blackjack.xml:291(title)
 msgid "Getting Started"
@@ -386,7 +399,9 @@ msgstr "Menú <guimenu>Aplicaciones</guimenu>"
 msgid ""
 "Choose <menuchoice><guisubmenu>Games </guisubmenu><guimenuitem>Blackjack</"
 "guimenuitem></menuchoice>."
-msgstr "Elija <menuchoice><guisubmenu>Juegos</guisubmenu><guimenuitem>Blackjack</guimenuitem></menuchoice>."
+msgstr ""
+"Elija <menuchoice><guisubmenu>Juegos</guisubmenu><guimenuitem>Blackjack"
+"</guimenuitem></menuchoice>."
 
 #: C/blackjack.xml:309(term)
 msgid "Command line"
@@ -606,6 +621,10 @@ msgid ""
 "On a clear table they will appear as white outlines below the dealer "
 "position."
 msgstr ""
+"Aquí es donde se localizarán las manos del jugador. Inicialmente sólo habrá "
+"una posición para un jugador. Se crearán más si el jugador divide una mano. "
+"En un tablero limpio aparecerán como líneas blancas bajo la posición del "
+"repartidor."
 
 #: C/blackjack.xml:550(interface)
 msgid "Player wager stack"
@@ -616,6 +635,8 @@ msgid ""
 "The wager stack represents the initial wager on each hand. It consists of a "
 "stack of chips located directly to the left of each player position."
 msgstr ""
+"La pila de apuestas representa la apuesta iniciar en cada mano. Consiste en una "
+"pila de fichas ubicada directamente a la izquierda de la posición de cada jugador."
 
 #: C/blackjack.xml:558(interface)
 msgid "Player chips"
@@ -626,6 +647,8 @@ msgid ""
 "The player's chips represent an infinite stack of chips for each of the chip "
 "values 100, 25, 5, and 1. These chips are used to modify the wager."
 msgstr ""
+"Las fichas del jugador representan una pila infinita de fichas para cada uno de los valores "
+"100, 25, 5 y 1. Estas fichas se usan para modificar la apuesta."
 
 #: C/blackjack.xml:576(title)
 msgid "Usage"
@@ -640,58 +663,66 @@ msgid ""
 "Double click on the player chip, located along the lower edge of the playing "
 "area, that you wish to add to your wager."
 msgstr ""
+"Pulse dos veces sobre la ficha del jugador, ubicada a lo largo del borde inferior del área de "
+"juego, que desee añadir a su apuesta."
 
 #: C/blackjack.xml:626(para)
 msgid "Or, drag the desired chip onto your wager stack, located next to your hand."
-msgstr ""
+msgstr "O arrastre la ficha deseada en su pila de apuestas, ubicada junto a su mano."
 
 #: C/blackjack.xml:619(para)
 msgid "To increase the wager for the hand: <placeholder-1/>"
-msgstr ""
+msgstr "Aumentar la apuesta para la mano: <placeholder-1/>"
 
 #: C/blackjack.xml:634(title)
 msgid "To Deal a New Hand"
-msgstr ""
+msgstr "Repartir"
 
 #: C/blackjack.xml:635(para)
 msgid ""
 "A new hand can be dealt when the table is clear or when play has finished on "
 "the current hands."
 msgstr ""
+"Se puede repartir una nueva mano cuando el tablero está limpio o cuando se han "
+"terminado las manos de la partida actual."
 
 #: C/blackjack.xml:639(para)
 msgid ""
 "To deal a new hand on a clear table, click in the white outlines that "
 "indicate the dealer or player positions."
 msgstr ""
+"Para repartir una nueva mano en un tablero limpio, pulse en las líneas blancas "
+"que indican la posición del repartidor o del jugador."
 
 #: C/blackjack.xml:643(para)
 msgid ""
 "To deal a new hand after play has finished on the current hands, click once "
 "on any of the cards on the table."
 msgstr ""
+"Para repartir una nueva mano después de se haya acabado la mano de la partida actual, pulse una vez "
+"sobre cualquiera de las cartas en el tapete."
 
 #: C/blackjack.xml:651(title)
 msgid "To Add a Card to a Hand (Hit)"
-msgstr ""
+msgstr "Pedir"
 
 #: C/blackjack.xml:652(para)
 msgid "You may add cards to a hand until the hand total is 21 or over."
-msgstr ""
+msgstr "Puede querer añadir cartas a una mano hasta que la mano total sea 21 o más."
 
 #: C/blackjack.xml:655(para)
 msgid "To add a card to a player's hand, click once on any card in the hand."
-msgstr ""
+msgstr "Para añadir una carta a la mano de un jugador, pulse una vez sobre cualquiera de las cartas en la mano."
 
 #: C/blackjack.xml:662(title)
 msgid "To Stop Taking Cards (Stand)"
-msgstr ""
+msgstr "Pararse"
 
 #: C/blackjack.xml:663(para)
 msgid ""
 "You may stop taking cards at any time after the first two cards have been "
 "dealt."
-msgstr ""
+msgstr "Puede querer dejar de coger cartas en cualquier momento después de que se hayan repartido las dos primeras cartas."
 
 #: C/blackjack.xml:666(para)
 msgid ""
@@ -701,38 +732,47 @@ msgid ""
 "stand on the first player hand by clicking on the second player hand, or the "
 "dealer hand."
 msgstr ""
+"Para dejar de añadir cartas a una mano, pulse una vez sobre cualquier otra mano. Por ejemplo, "
+"cuando hay sólo una posición de jugador (ej. no ha dividido un par), pulse en la mano "
+"del repartidor para pararse. Cuando haya dividido un par, debe pararse en "
+"la mano del primer jugador pulsando en la mano del segundo jugador o en la mano "
+"del repartidor."
 
 #: C/blackjack.xml:676(title)
 msgid "To Double Down"
-msgstr ""
+msgstr "Doblar"
 
 #: C/blackjack.xml:677(para)
 msgid ""
 "To double down, double click on any of the player chips after the first two "
 "cards have been dealt."
 msgstr ""
+"Para doblar pulse dos veces sobre cualquiera de las fichas del jugador después de que las dos "
+"primeras cartas se hayan repartido."
 
 #: C/blackjack.xml:685(title)
 msgid "To Split Pairs"
-msgstr ""
+msgstr "Dividir pares"
 
 #: C/blackjack.xml:686(para)
 msgid ""
 "To split a pair, drag the top card of the hand off the player position and "
 "drop on any empty space on the table."
 msgstr ""
+"Para dividir un par, arrastre la carta superior de la mano fuera de la posición del jugador "
+"y suéltela sobre cualquier espacio vació del tapete."
 
 #: C/blackjack.xml:694(title)
 msgid "To Surrender"
-msgstr ""
+msgstr "Rendirse"
 
 #: C/blackjack.xml:695(para)
 msgid "Not yet implemented."
-msgstr ""
+msgstr "Aún no implementado."
 
 #: C/blackjack.xml:702(title)
 msgid "Get a hint"
-msgstr ""
+msgstr "Obtener una sugerencia"
 
 #: C/blackjack.xml:703(para)
 msgid ""
@@ -741,6 +781,9 @@ msgid ""
 "choose the <menuchoice><guisubmenu>Game </guisubmenu><guimenuitem>Hint</"
 "guimenuitem></menuchoice> menu item."
 msgstr ""
+"En cualquier momento puede pedir una sugerencia al juego. Para hacer esto puede pulsar "
+"sobre el botón <interface>Sugerencia</interface> en la <interface>barra de herramientas</interface> o "
+"puede elegir el elemento del menú <menuchoice><guisubmenu>Juego</guisubmenu><guimenuitem>Sugerencia</guimenuitem></menuchoice>."
 
 #: C/blackjack.xml:716(title)
 msgid "Keyboard control"
@@ -762,6 +805,14 @@ msgid ""
 "hand</entry><entry>P</entry></row><row><entry>Surrender hand</"
 "entry><entry>R</entry></row></tbody></tgroup></table>"
 msgstr ""
+"La mayoría de las operaciones del juego se pueden controlar desde el teclado. "
+"<table><placeholder-1/><tgroup cols=\"2\" align=\"left\" colsep=\"1\" rowsep="
+"\"1\"><thead><row><entry>Acción</entry><entry>Tecla</entry></row></"
+"thead><tbody><row><entry>Repartir</entry><entry>Intro</entry></"
+"row><row><entry>Pedir</entry><entry>H</entry></"
+"row><row><entry>Plantarse</entry><entry>S</entry></"
+"row><row><entry>Doblar</entry><entry>D</entry></row><row><entry>Dividir la mano</entry><entry>P</entry></row><row><entry>Rendirse</"
+"entry><entry>R</entry></row></tbody></tgroup></table>"
 
 #: C/blackjack.xml:740(para)
 msgid ""
@@ -769,17 +820,19 @@ msgid ""
 "<menuchoice><guimenu>Settings</guimenu><guimenuitem>Preferences</"
 "guimenuitem></menuchoice>. The <guilabel>Preferences</guilabel> dialog "
 "contains the following tabbed sections:"
-msgstr ""
+msgstr "Para configurar <application>Blackjack</application>, elija <menuchoice><guimenu>Ajustes</guimenu><guimenuitem>Preferencias</guimenuitem></menuchoice>. El diálogo <guilabel>Preferencias</guilabel> contiene las siguientes secciones:"
 
 #: C/blackjack.xml:769(guilabel)
 msgid "Display hand probabilities"
-msgstr ""
+msgstr "Mostrar probabilidades de la mano"
 
 #: C/blackjack.xml:771(para)
 msgid ""
 "Select this item to display dealer hand probabilities and expected values "
 "for the various player options."
 msgstr ""
+"Seleccione este elemento para mostrar las probabilidades de la mano y los valores "
+"esperados para las varias opciones del jugador."
 
 #: C/blackjack.xml:778(guilabel)
 msgid "Quick deals"
@@ -823,6 +876,11 @@ msgid ""
 "one means certain. These probabilities take into account all cards dealt "
 "from the shoe."
 msgstr ""
+"Cuando la opción <guilabel>Mostrar probabilidades del repartidor</guilabel> está seleccionada, "
+"en la solapa <guilabel>Juego</guilabel> del diálogo <guilabel>Preferencias</guilabel>, se mostrarán "
+"las probabilidades exactas de cada resultado posible sobre el tablero de juego, a la izquierda de la mano "
+"del repartidor. Las probabilidades están comprendidas entre cero y uno, donde cero significa imposibilidad "
+"y uno significa certeza. Estas probabilidades toman en cuenta todas las cartas repartidas."
 
 #: C/blackjack.xml:822(title)
 msgid "Player Expected Values"
@@ -840,6 +898,13 @@ msgid ""
 "current situation many, many times, standing each time, with a 1.00 initial "
 "wager, then on average you would lose 0.12345."
 msgstr ""
+"Cuando la opción <guilabel>Mostrar probabilidades del repartidor</guilabel> está seleccionada, "
+"en la solapa <guilabel>Juego</guilabel> del diálogo <guilabel>Preferencias</guilabel>, se mostrarán "
+"las probabilidades exactas de cada resultado posible de cada jugador (en porcentaje sobre la apuesta "
+"inicial) sobre el tablero de juego, a la izquierda de la mano del repartidor. Estos valores toman en cuenta "
+"todas las cartas de su mano actual y la carta mostrada del repartidor. Por ejemplo, suponga que el "
+"número mostrado es -12.345. Esto significa que si ha jugado fuera de la situación actual muchas, muchas "
+"veces plantándose cada vez, con una apuesta inicial 1.00, entonces de media perderá 0.12345."
 
 #: C/blackjack.xml:856(title)
 msgid "About <application>Blackjack</application>"
