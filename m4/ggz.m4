@@ -181,18 +181,25 @@ if test "x$1" = "xexport" || test "x$2" = "xexport"; then
   LDFLAGS="$LDFLAGS -L${ac_ggz_prefix_libdir} -L/usr/local/lib"
 fi
 
-if test "x$GCC" = xyes; then
 save_cflags=$CFLAGS
 save_cxxflags=$CXXFLAGS
+if test "x$GCC" = xyes; then
 CFLAGS="-Wall -Werror"
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
 	[[void signedness(void){char c;if(c==-1)c=0;}]])],
 	[],
 	[save_cflags="$save_cflags -fsigned-char"
 	 save_cxxflags="$save_cxxflags -fsigned-char"])
+else
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#if defined(__SUNPRO_C) || (__SUNPRO_C >= 0x550)
+#else
+# include "error: this is not Sun Studio."
+#endif
+]], [[]])], [ save_cflags="$save_cflags -xchar=signed"
+         save_cxxflags="$save_cxxflags -xchar=signed" ], [ ])
+fi
 CFLAGS=$save_cflags
 CXXFLAGS=$save_cxxflags
-fi
 ])
 
 dnl ------------------------------------------------------------------------
