@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnometris doc\n"
 "POT-Creation-Date: 2007-04-30 03:22+0100\n"
-"PO-Revision-Date: 2007-04-30 12:29+0100\n"
+"PO-Revision-Date: 2007-08-01 22:51+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -15,7 +15,7 @@ msgstr "Handbok för <application>Gnometris</application> v2.8"
 
 #: C/gnometris.xml:30(para)
 msgid "Gnometris is the classic game of interlocking quadrominoes."
-msgstr ""
+msgstr "Gnometris är det klassiska spelet som går ut på att låsa samma olikformade klossar."
 
 #: C/gnometris.xml:36(year)
 msgid "2004"
@@ -88,7 +88,7 @@ msgstr "Återkoppling"
 
 #: C/gnometris.xml:104(para)
 msgid "To report a bug or make a suggestion regarding the <application>Gnometris</application> application or this manual, follow the directions in the <ulink url=\"ghelp:gnome-feedback\" type=\"help\">GNOME Feedback Page</ulink>."
-msgstr ""
+msgstr "För att rapportera ett fel eller föreslå någonting angående programmet <application>Gnometris</application> eller den här handboken, följ anvisningarna på <ulink url=\"ghelp:gnome-feedback\" type=\"help\">GNOME:s återkopplingssida</ulink>."
 
 #: C/gnometris.xml:116(primary)
 msgid "GNOME Tali"
@@ -111,11 +111,11 @@ msgstr ""
 #. part of gnome-games
 #: C/gnometris.xml:131(para)
 msgid "<application>Gnometris</application> is included in the <filename>gnome-games</filename> package, which is part of the GNOME desktop environment. This document describes version 2.8 of <application>Gnometris</application>."
-msgstr ""
+msgstr "<application>Gnometris</application> är inkluderat i paketet <filename>gnome-games</filename>, som är en del av skrivbordsmiljön GNOME. Det här dokumentet beskriver version 2.8 av <application>Gnometris</application>."
 
 #: C/gnometris.xml:135(title)
 msgid "Playing <application>Gnometris</application>"
-msgstr ""
+msgstr "Spela <application>Gnometris</application>"
 
 #: C/gnometris.xml:136(para)
 msgid "You can score through two actions: completing lines and dropping blocks quickly."
@@ -123,7 +123,7 @@ msgstr ""
 
 #: C/gnometris.xml:138(title)
 msgid "Moving the Blocks"
-msgstr ""
+msgstr "Flytta klossarna"
 
 #: C/gnometris.xml:139(para)
 msgid "To play the game, you only need the four arrow keys."
@@ -143,7 +143,7 @@ msgstr ""
 
 #: C/gnometris.xml:153(title)
 msgid "Starting a New Game"
-msgstr ""
+msgstr "Starta ett nytt spel"
 
 #: C/gnometris.xml:154(para)
 msgid "To begin a new game, go to <menuchoice><guimenu>Game</guimenu><guimenuitem>New Game</guimenuitem></menuchoice>. The game will begin dropping blocks from the center of the top of the window. The default start-up of the game has no blocks in the game window and shows the next block that will fall in the upper right hand corner. <guilabel>Score</guilabel> shows the number of points you have earned. <guilabel>Lines</guilabel> shows the number of lines you have completed. <guilabel>Level</guilabel> shows the level of difficulty you are on."
@@ -151,7 +151,7 @@ msgstr ""
 
 #: C/gnometris.xml:157(title)
 msgid "Pausing the Game"
-msgstr ""
+msgstr "Pausa spelet"
 
 #: C/gnometris.xml:158(para)
 msgid "To pause your game, go to <menuchoice><guimenu>Game</guimenu><guimenuitem>Pause Game</guimenuitem></menuchoice>. You can only pause a game when you are playing. The time limit on pausing your game is unlimited. To unpause the game, go back to <menuchoice><guimenu>Game</guimenu><guimenuitem>Pause Game</guimenuitem></menuchoice>."
@@ -159,7 +159,7 @@ msgstr ""
 
 #: C/gnometris.xml:161(title)
 msgid "Ending the Game"
-msgstr ""
+msgstr "Avsluta spelet"
 
 #: C/gnometris.xml:162(para)
 msgid "Go to <menuchoice><guimenu>Game</guimenu><guimenuitem>End Game</guimenuitem></menuchoice> to end your current game without quiting Gnometris."
@@ -175,7 +175,7 @@ msgstr ""
 
 #: C/gnometris.xml:169(title)
 msgid "Scoring Points"
-msgstr ""
+msgstr "Hur man får poäng"
 
 #: C/gnometris.xml:170(para)
 msgid "You score points through two methods: dropping blocks faster and deleting complete lines of blocks. When you delete lines, you get more points, but dropping blocks faster will quickly add up. As you level up, the blocks will begin falling faster. The highest level is 10, at which point you will only have just over a second to manipulate each block."
@@ -195,7 +195,7 @@ msgstr ""
 
 #: C/gnometris.xml:182(title)
 msgid "Customizing Game Start-up"
-msgstr ""
+msgstr "Anpassa spelets uppstart"
 
 #: C/gnometris.xml:183(para)
 msgid "By going to <menuchoice><guimenu>Settings</guimenu><guimenuitem>Preferences</guimenuitem></menuchoice>, you can customize a variety of features for the start-up of each Gnometris game: number and density of pre-filled rows, and starting level. \"Pre-filled rows\" refers to how many rows will already have blocks in them when you start each new game."
@@ -203,7 +203,7 @@ msgstr ""
 
 #: C/gnometris.xml:185(title)
 msgid "Number of Pre-filled Rows"
-msgstr ""
+msgstr "Antal förifyllda rader"
 
 #: C/gnometris.xml:186(para)
 msgid "You can change the number of rows that already have blocks at the start-up of each new game by using the spin box. You can start with up to 19 rows pre-filled at the start-up of your game. The default number of pre-filled rows is zero."
@@ -211,7 +211,7 @@ msgstr ""
 
 #: C/gnometris.xml:189(title)
 msgid "Density of Pre-filled Rows"
-msgstr ""
+msgstr "Densitet för förifyllda rader"
 
 #: C/gnometris.xml:190(para)
 msgid "You can change the density of the blocks in the pre-filled rows at the start-up of each game. You can choose a density up to 10 blocks. You should first choose how many rows you want pre-filled under <guilabel>Number of Pre-filled Rows</guilabel>. The default density of blocks is three."
@@ -219,7 +219,7 @@ msgstr ""
 
 #: C/gnometris.xml:193(title)
 msgid "Level to Start On"
-msgstr ""
+msgstr "Startnivå"
 
 #: C/gnometris.xml:194(para)
 msgid "You can adjust the level of difficulty you start on. The highest level you can start on is 10, which is the highest level you can play to. The default starting level is one."
@@ -227,7 +227,7 @@ msgstr ""
 
 #: C/gnometris.xml:198(title)
 msgid "Customizing the Blocks"
-msgstr ""
+msgstr "Anpassa klossarna"
 
 #: C/gnometris.xml:199(para)
 msgid "From <menuchoice><guimenu>Settings</guimenu><guimenuitem>Preferences</guimenuitem></menuchoice>, you can customize a variety of features related to the blocks: previewing the next block, block colors, and block rotation."
@@ -243,7 +243,7 @@ msgstr ""
 
 #: C/gnometris.xml:205(title)
 msgid "Preview Next Block"
-msgstr ""
+msgstr "Förhandsgranska nästa kloss"
 
 #: C/gnometris.xml:206(para)
 msgid "Choose this option if you want to see the next block that is going to fall. This feature helps you plan the placement of your blocks."
@@ -251,7 +251,7 @@ msgstr ""
 
 #: C/gnometris.xml:209(title)
 msgid "Use Random Block Colors"
-msgstr ""
+msgstr "Använd slumpmässiga klossfärger"
 
 #: C/gnometris.xml:210(para)
 msgid "Choose if you want the various block configurations to be color coded or randomly colored. If you use the colors to help you identify blocks, random colors will make the game more difficult."
@@ -259,7 +259,7 @@ msgstr ""
 
 #: C/gnometris.xml:213(title)
 msgid "Rotate Blocks Counterclockwise"
-msgstr ""
+msgstr "Rotera klossar moturs"
 
 #: C/gnometris.xml:214(para)
 msgid "Choose this option if you want the blocks to rotate counterclockwise or not."
@@ -267,7 +267,7 @@ msgstr ""
 
 #: C/gnometris.xml:217(title)
 msgid "Show where the block will land"
-msgstr ""
+msgstr "Visa var klossen kommer att landa"
 
 #: C/gnometris.xml:218(para)
 msgid "If this feature is used a grey image of the block will show you where the block will land. This feature is very useful for beginning players, but experienced players will find it a distraction."
@@ -275,7 +275,7 @@ msgstr ""
 
 #: C/gnometris.xml:226(title)
 msgid "Customizing the Look of <application>Gnometris</application>"
-msgstr ""
+msgstr "Anpassa utseendet för <application>Gnometris</application>"
 
 #: C/gnometris.xml:227(para)
 msgid "Under <menuchoice><guimenu>Settings</guimenu><guimenuitem>Preferences</guimenuitem></menuchoice>, you can customize the look of <application>Gnometris</application>: images for the blocks."
@@ -283,7 +283,7 @@ msgstr ""
 
 #: C/gnometris.xml:229(title)
 msgid "Block Image"
-msgstr ""
+msgstr "Klossbild"
 
 #: C/gnometris.xml:230(para)
 msgid "You can change the style of the blocks, including image and size. There are a variety of pre-made styles."
