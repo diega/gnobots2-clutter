@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: blackjack doc\n"
 "POT-Creation-Date: 2007-04-30 03:22+0100\n"
-"PO-Revision-Date: 2007-04-30 09:19+0100\n"
+"PO-Revision-Date: 2007-08-01 22:32+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr "Handbok för <application>Tjugoett</application> v2.8"
 
 #: C/blackjack.xml:31(para)
 msgid "Blackjack is a casino rules, multiple deck blackjack game for the GNOME Project. The object of the game is to obtain a hand value that is closer to 21 than that of the dealer, without going over 21."
-msgstr ""
+msgstr "Tjugoett är ett blackjackspel med casinoregler och flera kortlekar för GNOME-projektet. Målet med spelet är att få en hand som är närmare 21 än vad givaren har, utan att gå över 21."
 
 #: C/blackjack.xml:39(year)
 msgid "2003"
@@ -93,7 +93,7 @@ msgstr "Återkoppling"
 
 #: C/blackjack.xml:119(para)
 msgid "To report a bug or make a suggestion regarding the <application>Blackjack</application> application or this manual, follow the directions in the <ulink url=\"ghelp:gnome-feedback\" type=\"help\">GNOME Feedback Page</ulink>."
-msgstr ""
+msgstr "För att rapportera ett fel eller föreslå någonting angående programmet <application>Tjugoett</application> eller den här handboken, följ anvisningarna på <ulink url=\"ghelp:gnome-feedback\" type=\"help\">GNOME:s återkopplingssida</ulink>."
 
 #: C/blackjack.xml:128(primary)
 #: C/blackjack.xml:156(term)
@@ -103,7 +103,7 @@ msgstr "Tjugoett"
 
 #: C/blackjack.xml:131(primary)
 msgid "mygnomeapp"
-msgstr ""
+msgstr "mygnomeapp"
 
 #: C/blackjack.xml:140(title)
 msgid "Introduction"
@@ -111,51 +111,51 @@ msgstr "Introduktion"
 
 #: C/blackjack.xml:142(para)
 msgid "<application>Blackjack</application> is a multiple deck, casino rules blackjack game. The object of the game is to hold cards having a higher count than those of the dealer without going over 21."
-msgstr ""
+msgstr "<application>Tjugoett</application> är ett blackjackspel med casinoregler och flera kortlekar för GNOME-projektet. Målet med spelet är att få en hand som är närmare 21 än vad givaren har, utan att gå över 21."
 
 #: C/blackjack.xml:148(title)
 msgid "Blackjack Basics"
-msgstr ""
+msgstr "Grundläggande"
 
 #: C/blackjack.xml:151(title)
 msgid "Blackjack Terminology"
-msgstr ""
+msgstr "Terminologi"
 
 #: C/blackjack.xml:152(para)
 msgid "Here are a few important terms that are used in the game."
-msgstr ""
+msgstr "Här är några viktiga termer som används i spelet."
 
 #: C/blackjack.xml:158(para)
 msgid "A hand whose first two cards total 21; an instant win worth 150% of your wager"
-msgstr ""
+msgstr "En hand vars två första kort ger totalt 21; en direktvinst som är värd 150% av din insats"
 
 #: C/blackjack.xml:163(term)
 msgid "Bust"
-msgstr ""
+msgstr "Tjock"
 
 #: C/blackjack.xml:165(para)
 msgid "When the value of a hand exceeds 21; a losing hand"
-msgstr ""
+msgstr "När värdet på en hand överstiger 21; förlust"
 
 #: C/blackjack.xml:170(term)
 msgid "Double down"
-msgstr ""
+msgstr "Dubblera ned"
 
 #: C/blackjack.xml:172(para)
 msgid "To double the initial wager and receive exactly one more card"
-msgstr ""
+msgstr "Dubbla startinsatsen och få exakt ett kort till"
 
 #: C/blackjack.xml:178(term)
 msgid "Hit"
-msgstr ""
+msgstr "Drag kort"
 
 #: C/blackjack.xml:180(para)
 msgid "To request another card to be added to the hand"
-msgstr ""
+msgstr "Begär ett kort till att lägga till handen"
 
 #: C/blackjack.xml:185(term)
 msgid "Insurance"
-msgstr ""
+msgstr "Försäkring"
 
 #: C/blackjack.xml:187(para)
 msgid "A side wager of 50% of the original wager that the dealer has a natural 21 (aka blackjack) that is offered when the dealer's face up card is an ace. If the dealer has a natural 21 then the player is paid double."
@@ -163,7 +163,7 @@ msgstr ""
 
 #: C/blackjack.xml:195(term)
 msgid "Push"
-msgstr ""
+msgstr "Oavgjort"
 
 #: C/blackjack.xml:197(para)
 msgid "When the value of the player hand and the dealer hand are equal and the original wager is returned to the player"
@@ -171,7 +171,7 @@ msgstr ""
 
 #: C/blackjack.xml:203(term)
 msgid "Split"
-msgstr ""
+msgstr "Dela"
 
 #: C/blackjack.xml:205(para)
 msgid "When a hand starts with two cards of the same value (or rank) it may be split to form two independent hands"
@@ -179,15 +179,15 @@ msgstr ""
 
 #: C/blackjack.xml:211(term)
 msgid "Stand"
-msgstr ""
+msgstr "Stanna"
 
 #: C/blackjack.xml:213(para)
 msgid "To stop adding cards to a hand"
-msgstr ""
+msgstr "Sluta lägg till kort till en hand"
 
 #: C/blackjack.xml:218(term)
 msgid "Surrender"
-msgstr ""
+msgstr "Ge upp"
 
 #: C/blackjack.xml:220(para)
 msgid "To give up half your wager to not complete the hand"
@@ -195,19 +195,19 @@ msgstr ""
 
 #: C/blackjack.xml:229(title)
 msgid "Card Values"
-msgstr ""
+msgstr "Kortvärden"
 
 #: C/blackjack.xml:234(para)
 msgid "An Ace can count as either 1 or 11."
-msgstr ""
+msgstr "Ett äss kan räknas som antingen 1 eller 11."
 
 #: C/blackjack.xml:237(para)
 msgid "The cards 2 through 9 are valued as indicated."
-msgstr ""
+msgstr "Korten 2 till 9 har samma värde som de indikerar."
 
 #: C/blackjack.xml:240(para)
 msgid "The 10, Jack, Queen, and King are all valued at 10."
-msgstr ""
+msgstr "10, knekt, dam och kung har alla värdet 10."
 
 #: C/blackjack.xml:230(para)
 msgid "In blackjack, each card is assigned a value. <placeholder-1/>"
@@ -247,19 +247,19 @@ msgstr "Komma igång"
 
 #: C/blackjack.xml:294(title)
 msgid "To Start <application>Blackjack</application>"
-msgstr ""
+msgstr "Starta <application>Tjugoett</application>"
 
 #: C/blackjack.xml:295(para)
 msgid "You can start <application>Blackjack</application> in the following ways:"
-msgstr ""
+msgstr "Du kan starta <application>Tjugoett</application> på följande sätt:"
 
 #: C/blackjack.xml:299(term)
 msgid "<guimenu>Applications</guimenu> menu"
-msgstr ""
+msgstr "<guimenu>Program</guimenu>-menyn"
 
 #: C/blackjack.xml:301(para)
 msgid "Choose <menuchoice><guisubmenu>Games </guisubmenu><guimenuitem>Blackjack</guimenuitem></menuchoice>."
-msgstr ""
+msgstr "Välj <menuchoice><guisubmenu>Spel </guisubmenu><guimenuitem>Tjugoett</guimenuitem></menuchoice>."
 
 #: C/blackjack.xml:309(term)
 msgid "Command line"
@@ -275,15 +275,15 @@ msgstr "blackjack"
 
 #: C/blackjack.xml:322(title)
 msgid "When You Start <application>Blackjack</application>"
-msgstr ""
+msgstr "När du startar <application>Tjugett</application>"
 
 #: C/blackjack.xml:323(para)
 msgid "When you start <application>Blackjack</application>, the following window is displayed."
-msgstr ""
+msgstr "När du startar <application>Tjugoett</application> kommer följande fönster att visas."
 
 #: C/blackjack.xml:327(title)
 msgid "<application>Blackjack</application> Start Up Window"
-msgstr ""
+msgstr "Uppstartsfönstret i <application>Tjugoett</application>"
 
 #: C/blackjack.xml:340(phrase)
 msgid "Shows <placeholder-1/> main window. Contains titlebar, menubar, toolbar, playing area, and scrollbars. Menubar contains Game, Settings, and Help menus."
@@ -296,7 +296,7 @@ msgstr ""
 
 #: C/blackjack.xml:356(term)
 msgid "Menubar"
-msgstr ""
+msgstr "Menyrad"
 
 #: C/blackjack.xml:358(para)
 msgid "The menus on the menubar contain all of the commands you need to work with files in <application>Blackjack</application>."
@@ -304,7 +304,7 @@ msgstr ""
 
 #: C/blackjack.xml:364(term)
 msgid "Toolbar"
-msgstr ""
+msgstr "Verktygsrad"
 
 #: C/blackjack.xml:366(para)
 msgid "The toolbar contains a subset of the commands that you can access from the menubar."
@@ -312,7 +312,7 @@ msgstr ""
 
 #: C/blackjack.xml:371(term)
 msgid "Statusbar"
-msgstr ""
+msgstr "Statusrad"
 
 #: C/blackjack.xml:373(para)
 msgid "The statusbar displays information about current <application>Blackjack</application> activity and contextual information about the menu items."
@@ -328,7 +328,7 @@ msgstr ""
 
 #: C/blackjack.xml:390(title)
 msgid "<application>Blackjack</application> Menus"
-msgstr ""
+msgstr "Menyer i <application>Tjugoett</application>"
 
 #: C/blackjack.xml:391(para)
 msgid "The menu bar, located above the <interface>game table</interface>, contains the following menus:"
@@ -337,7 +337,7 @@ msgstr ""
 #: C/blackjack.xml:401(guimenu)
 #: C/blackjack.xml:765(title)
 msgid "Game"
-msgstr ""
+msgstr "Spel"
 
 #: C/blackjack.xml:407(para)
 msgid "<menuchoice><shortcut><keysym>Ctrl-N</keysym></shortcut><guimenuitem>New game</guimenuitem></menuchoice>&mdash; This clears the table and starts a new game."
@@ -358,12 +358,12 @@ msgstr ""
 #: C/blackjack.xml:403(para)
 #: C/blackjack.xml:459(para)
 msgid "This menu contains these items: <placeholder-1/>"
-msgstr ""
+msgstr "Den här menyn innehåller dessa objekt: <placeholder-1/>"
 
 #: C/blackjack.xml:457(guimenu)
 #: C/blackjack.xml:739(title)
 msgid "Settings"
-msgstr ""
+msgstr "Inställningar"
 
 #: C/blackjack.xml:464(para)
 msgid "<guimenuitem>Show tool bar</guimenuitem>&mdash; This toggle switches the tool bar on and off."
@@ -375,7 +375,7 @@ msgstr ""
 
 #: C/blackjack.xml:488(guimenu)
 msgid "Help"
-msgstr ""
+msgstr "Hjälp"
 
 #: C/blackjack.xml:495(para)
 msgid "<guimenuitem>Contents</guimenuitem>&mdash; Opens your help browser and shows this manual."
@@ -387,7 +387,7 @@ msgstr ""
 
 #: C/blackjack.xml:490(para)
 msgid "This menu contains: <placeholder-1/>"
-msgstr ""
+msgstr "Den här menyn innehåller: <placeholder-1/>"
 
 #: C/blackjack.xml:522(title)
 msgid "<application>Blackjack</application> Playing Area"
@@ -511,11 +511,11 @@ msgstr ""
 
 #: C/blackjack.xml:695(para)
 msgid "Not yet implemented."
-msgstr ""
+msgstr "Ännu inte implementerat."
 
 #: C/blackjack.xml:702(title)
 msgid "Get a hint"
-msgstr ""
+msgstr "Få ett tips"
 
 #: C/blackjack.xml:703(para)
 msgid "At any time you may ask the game for a hint. To do this either click on the <interface>Hint</interface> button on the <interface>toolbar</interface>, or choose the <menuchoice><guisubmenu>Game </guisubmenu><guimenuitem>Hint</guimenuitem></menuchoice> menu item."
@@ -523,11 +523,11 @@ msgstr ""
 
 #: C/blackjack.xml:716(title)
 msgid "Keyboard control"
-msgstr ""
+msgstr "Tangentbordsstyrning"
 
 #: C/blackjack.xml:719(title)
 msgid "Control keys"
-msgstr ""
+msgstr "Styrtangenter"
 
 #: C/blackjack.xml:717(para)
 msgid "Most of the operations in the game can be controlled from keyboard input. <table><placeholder-1/><tgroup cols=\"2\" align=\"left\" colsep=\"1\" rowsep=\"1\"><thead><row><entry>Action</entry><entry>Key</entry></row></thead><tbody><row><entry>Deal new hand</entry><entry>ENTER</entry></row><row><entry>Hit / Add card</entry><entry>H</entry></row><row><entry>Stand / Finish hand</entry><entry>S</entry></row><row><entry>Double down</entry><entry>D</entry></row><row><entry>Split hand</entry><entry>P</entry></row><row><entry>Surrender hand</entry><entry>R</entry></row></tbody></tgroup></table>"
@@ -547,7 +547,7 @@ msgstr ""
 
 #: C/blackjack.xml:778(guilabel)
 msgid "Quick deals"
-msgstr ""
+msgstr "Snabba givar"
 
 #: C/blackjack.xml:780(para)
 msgid "Select this item to make the computer deal cards without a delay"
@@ -555,7 +555,7 @@ msgstr ""
 
 #: C/blackjack.xml:790(title)
 msgid "Rules"
-msgstr ""
+msgstr "Regler"
 
 #: C/blackjack.xml:791(para)
 msgid "Select rule variations from the list."
@@ -571,7 +571,7 @@ msgstr ""
 
 #: C/blackjack.xml:805(title)
 msgid "Advanced"
-msgstr ""
+msgstr "Avancerat"
 
 #: C/blackjack.xml:810(title)
 msgid "Dealer Probabilities"
@@ -583,7 +583,7 @@ msgstr ""
 
 #: C/blackjack.xml:822(title)
 msgid "Player Expected Values"
-msgstr ""
+msgstr "Spelarförväntade värden"
 
 #: C/blackjack.xml:823(para)
 msgid "When the <guilabel>Show dealer probabilities</guilabel> option is selected in the <guilabel>Game</guilabel> tab of the <guilabel>Preferences</guilabel> dialog, the exact expected values (in percent of initial bet) of each available player option are displayed over the table surface, to the left of the dealer's hand. These values take into account all cards in your current hand and the dealer's face up card. For example, suppose the number displayed for standing is -12.345. This means that if you played out the current situation many, many times, standing each time, with a 1.00 initial wager, then on average you would lose 0.12345."
@@ -591,15 +591,15 @@ msgstr ""
 
 #: C/blackjack.xml:856(title)
 msgid "About <application>Blackjack</application>"
-msgstr ""
+msgstr "Om <application>Tjugoett</application>"
 
 #: C/blackjack.xml:857(para)
 msgid "<application>Blackjack</application> was written by William Jon McCann (<email>mccann@jhu.edu</email>)."
-msgstr ""
+msgstr "<application>Tjugoett</application> skrevs av William Jon McCann (<email>mccann@jhu.edu</email>)."
 
 #: C/blackjack.xml:859(para)
 msgid "To report a bug or make a suggestion regarding this application or this manual, follow the directions in this <ulink url=\"ghelp:gnome-feedback\" type=\"help\">document</ulink>."
-msgstr ""
+msgstr "För att rapportera ett fel eller föreslå någoning angående det här programmet eller den här handboken, följ anvisningarna i det här <ulink url=\"ghelp:gnome-feedback\" type=\"help\">dokumentet</ulink>."
 
 #: C/blackjack.xml:865(para)
 msgid "This program is distributed under the terms of the GNU General Public license as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. A copy of this license can be found at this <ulink url=\"ghelp:gpl\" type=\"help\">link</ulink>, or in the file COPYING included with the source code of this program."
