@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mahjongg doc\n"
 "POT-Creation-Date: 2007-04-30 03:22+0100\n"
-"PO-Revision-Date: 2007-04-30 13:14+0100\n"
+"PO-Revision-Date: 2007-08-01 23:09+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgstr "Handbok för <application>GNOME Mah Jong</application> v2.10"
 
 #: C/mahjongg.xml:27(para)
 msgid "GNOME Mahjongg is a solitaire version of the classic Eastern tile game Mahjongg."
-msgstr ""
+msgstr "GNOME Mah Jong är en patiensversion av det klassiska brickspelet Mah Jong."
 
 #: C/mahjongg.xml:32(year)
 msgid "1998"
@@ -136,7 +136,7 @@ msgstr ""
 
 #: C/mahjongg.xml:134(title)
 msgid "A Brief History of Mahjongg"
-msgstr ""
+msgstr "Kort historik om Mah Jong"
 
 #. FIXME: Explain more about solitaire version.
 #: C/mahjongg.xml:137(para)
@@ -161,7 +161,7 @@ msgstr ""
 
 #: C/mahjongg.xml:192(title)
 msgid "Playing Mahjongg"
-msgstr ""
+msgstr "Spela Mahjongg"
 
 #: C/mahjongg.xml:194(para)
 msgid "You start with five levels of tiles which are stacked so some are covered up by the tiles on top. The harder the level you set in the <link linkend=\"prefs\"><interface>Preferences&hellip;</interface> dialog</link>, the more tiles are covered when the game starts. The object of <application>GNOME Mahjongg</application> is to remove all the tiles from the game. To remove tiles you have to find matching pairs which look alike. A matching tile will usually have the same number of buttons or markings on it or will look similar to each other."
@@ -173,7 +173,7 @@ msgstr ""
 
 #: C/mahjongg.xml:220(title)
 msgid "Mahjongg's Main Window"
-msgstr ""
+msgstr "Mah Jongs huvudfönster"
 
 #: C/mahjongg.xml:228(phrase)
 msgid "Main window."
@@ -193,15 +193,15 @@ msgstr ""
 
 #: C/mahjongg.xml:255(title)
 msgid "Information Dialog"
-msgstr ""
+msgstr "Informationsdialog"
 
 #: C/mahjongg.xml:263(phrase)
 msgid "Information Dialog."
-msgstr ""
+msgstr "Informationsdialog."
 
 #: C/mahjongg.xml:270(title)
 msgid "Toolbar"
-msgstr ""
+msgstr "Verktygsrad"
 
 #: C/mahjongg.xml:271(para)
 msgid "The <interface>toolbar</interface> can be moved around the <interface>desktop</interface>. If you click on the far left side of it, you will be able to drag it any place on the <interface>desktop</interface> you wish. The <interface>toolbar</interface> also snaps into place at the top and left side of the <interface>Main Window </interface> in <application>GNOME Mahjongg</application>, but the default place the toolbar is located, and the best in my opinion, is under the <interface>menubar</interface>."
@@ -285,7 +285,7 @@ msgstr ""
 
 #: C/mahjongg.xml:376(phrase)
 msgid "Toolbar."
-msgstr ""
+msgstr "Verktygsrad."
 
 #: C/mahjongg.xml:385(title)
 msgid "Menus"
@@ -297,7 +297,7 @@ msgstr ""
 
 #: C/mahjongg.xml:393(guimenu)
 msgid "Game"
-msgstr ""
+msgstr "Spel"
 
 #: C/mahjongg.xml:399(para)
 msgid "<menuchoice><shortcut><keysym>Ctrl-N</keysym></shortcut><guimenuitem>New game</guimenuitem></menuchoice>&mdash; This item starts a new game."
@@ -335,7 +335,7 @@ msgstr ""
 #: C/mahjongg.xml:491(para)
 #: C/mahjongg.xml:524(para)
 msgid "The menu contains: <placeholder-1/>"
-msgstr ""
+msgstr "Menyn innehåller: <placeholder-1/>"
 
 #: C/mahjongg.xml:489(guimenu)
 msgid "Settings"
