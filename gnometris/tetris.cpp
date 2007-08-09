@@ -43,7 +43,7 @@
 #include <math.h>
 
 int LINES = 20;
-int COLUMNS = 11;
+int COLUMNS = 14;
 
 int BLOCK_SIZE = 40;
 
@@ -59,7 +59,7 @@ bool rotateCounterClockWise = true;
 
 #define TILE_THRESHOLD 65
 
-#define DEFAULT_WIDTH 440
+#define DEFAULT_WIDTH 500
 #define DEFAULT_HEIGHT 550
 
 enum {
