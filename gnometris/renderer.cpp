@@ -165,6 +165,7 @@ void Renderer::render ()
 
 void JoinedUp::drawInnerCorner (cairo_t *cr)
 {
+	border = 0.2;
         cairo_move_to (cr, 0, 0);
         cairo_line_to (cr, border, border);
         cairo_line_to (cr, border, 0);
@@ -175,6 +176,7 @@ void JoinedUp::drawInnerCorner (cairo_t *cr)
 
 void JoinedUp::drawOuterCorner (cairo_t *cr)
 {
+	border = 0.2;
         cairo_move_to (cr, 0, 0.5);
         cairo_line_to (cr, 0, 0);
         cairo_line_to (cr, 0.5, 0);
@@ -188,6 +190,7 @@ void JoinedUp::drawOuterCorner (cairo_t *cr)
 
 void JoinedUp::drawHEdge (cairo_t *cr)
 {
+	border = 0.2;
         cairo_move_to (cr, 0, 0);
         cairo_line_to (cr, 0.5, 0);
         cairo_move_to (cr, 0, border);
@@ -197,6 +200,7 @@ void JoinedUp::drawHEdge (cairo_t *cr)
 
 void JoinedUp::drawVEdge (cairo_t *cr)
 {
+	border = 0.2;
         cairo_move_to (cr, 0, 0);
         cairo_line_to (cr, 0, 0.5);
         cairo_move_to (cr, border, 0);

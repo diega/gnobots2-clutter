@@ -70,7 +70,7 @@ public:
     virtual void drawCell (cairo_t * cr, gint x, gint y);
 
 private:
-  const static double border = 0.2;
+  double border;
   void drawInnerCorner (cairo_t * cr);
   void drawOuterCorner (cairo_t * cr);
   void drawHEdge (cairo_t * cr);
