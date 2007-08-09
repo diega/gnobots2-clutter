@@ -77,4 +77,17 @@ private:
   void drawVEdge (cairo_t * cr);
 };
 
+class TangoBlock:public Renderer {
+public:
+  TangoBlock (cairo_surface_t * dst, cairo_surface_t * bg, Block ** src,
+	    int w, int h, int pxw, int pxh, gboolean grad);
+
+protected:
+  virtual void drawCell (cairo_t * cr, gint x, gint y);
+  gboolean usegrads;
+
+private:
+  void drawRoundedRectangle (cairo_t * cr, gdouble x, gdouble y, gdouble w, gdouble h, gdouble r); 
+};
+
 #endif // __renderer_h__
