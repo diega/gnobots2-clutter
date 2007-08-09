@@ -362,7 +362,7 @@ void TangoBlock::drawCell (cairo_t *cr, gint x, gint y)
 {
 
         int i;
-        cairo_pattern_t *pat;
+        cairo_pattern_t *pat = NULL;
         /* the following garbage is derived from the official tango style guide */
         const gdouble colours[7][3][3] = {
                                           {{0.93725490196078431, 0.16078431372549021, 0.16078431372549021}, 
