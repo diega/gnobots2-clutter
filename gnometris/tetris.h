@@ -85,6 +85,7 @@ private:
   GList *themeList;
 
   char *bgPixmap;
+  char *defaultPixmap;
   gint themeno;
 
   Field *field;

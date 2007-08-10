@@ -150,8 +150,7 @@ Tetris::Tetris(int cmdlLevel):
 
 	/*  Use default background image, if none found in user's home dir.*/
 	if (!g_file_test (bgPixmap, G_FILE_TEST_EXISTS)) {
-	  g_free (bgPixmap);
-          bgPixmap = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_DATADIR,
+          defaultPixmap = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_DATADIR,
 					        "pixmaps/gnometris/gnometris.svg",
 						 TRUE, NULL);
 	  default_bgimage = true;
@@ -270,6 +269,8 @@ Tetris::~Tetris()
 
 	if (bgPixmap)
 		g_free(bgPixmap);
+	if (defaultPixmap)
+		g_free(defaultPixmap);
 
         if (confNotifyID != 0)
                 g_signal_handler_disconnect (games_conf_get_default (), confNotifyID);
@@ -314,6 +315,8 @@ Tetris::setupPixmap()
 	else {
 		if (g_file_test (bgPixmap, G_FILE_TEST_EXISTS)) 
 			bgimage = gdk_pixbuf_new_from_file (bgPixmap, NULL);
+		else if (g_file_test (defaultPixmap, G_FILE_TEST_EXISTS)) 
+			bgimage = gdk_pixbuf_new_from_file (defaultPixmap, NULL);
 		else 
 			bgimage = NULL;
 	}
