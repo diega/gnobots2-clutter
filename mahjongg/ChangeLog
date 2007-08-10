@@ -1,3 +1,8 @@
+2007-08-10  Andreas Røsdal  <andrearo@stud.ntnu.no>
+
+	* mahjongg.c: Fix Bug #406856 – Tile set list shouldn't show ".svg"
+	sufix.
+
 2007-06-29  Christian Persch <chpe@gnome.org>
 
 	* drawing.[ch]:

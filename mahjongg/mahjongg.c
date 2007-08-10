@@ -583,7 +583,10 @@ fill_tile_menu (GtkWidget * menu)
       continue;
     }
 
-    gtk_combo_box_append_text (GTK_COMBO_BOX (menu), s);
+    gchar** tileset_name = g_strsplit (s, ".", -1);
+    gtk_combo_box_append_text (GTK_COMBO_BOX (menu), tileset_name[0]);
+    g_strfreev (tileset_name);
+
     tileset_list = g_list_append (tileset_list, s);
     if (!strcmp (tileset, s)) {
       gtk_combo_box_set_active (GTK_COMBO_BOX (menu), itemno);
