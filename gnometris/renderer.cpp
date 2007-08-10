@@ -364,7 +364,7 @@ void TangoBlock::drawCell (cairo_t *cr, gint x, gint y)
         int i;
         cairo_pattern_t *pat = NULL;
         /* the following garbage is derived from the official tango style guide */
-        const gdouble colours[7][3][3] = {
+        const gdouble colours[8][3][3] = {
                                           {{0.93725490196078431, 0.16078431372549021, 0.16078431372549021}, 
                                            {0.8, 0.0, 0.0}, 
                                            {0.64313725490196083, 0.0, 0.0}}, /* red */
@@ -391,52 +391,53 @@ void TangoBlock::drawCell (cairo_t *cr, gint x, gint y)
 				          
                                           {{0.9882352941176471, 0.68627450980392157, 0.24313725490196078}, 
                                            {0.96078431372549022, 0.47450980392156861, 0.0}, 
-                                           {0.80784313725490198, 0.36078431372549019, 0.0}} /* orange (replacing cyan) */
+                                           {0.80784313725490198, 0.36078431372549019, 0.0}}, /* orange (replacing cyan) */
+
+                                          {{0.33, 0.34, 0.32},
+                                           {0.18, 0.2, 0.21},
+                                           {0.10, 0.12, 0.13}} /* grey */
                                          };
 
         if (data[x][y].what == EMPTY)
 	        return;
 
-        gboolean drawme = (data[x][y].what != TARGET);
-        if (!drawme) {
-                cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.0);
+        if (data[x][y].what == TARGET) {
+                i = 7;
         } else {
                 i = data[x][y].color;                       
                 i = CLAMP (i, 0, 6);
-                
-                if (usegrads) {
-                        pat = cairo_pattern_create_linear (x+0.35, y, x+0.55, y+0.9);
-                        cairo_pattern_add_color_stop_rgb (pat, 0.0, colours[i][0][0],
-                                                          colours[i][0][1],
-                                                          colours[i][0][2]);
-                        cairo_pattern_add_color_stop_rgb (pat, 1.0, colours[i][1][0],
-                                                          colours[i][1][1],
-                                                          colours[i][1][2]);
-                        cairo_set_source (cr, pat);
-                } else {
-                        cairo_set_source_rgb (cr, colours[i][0][0],
-                                              colours[i][0][1],
-                                              colours[i][0][2]);
-                }
         }
-
+        
+        if (usegrads) {
+                 pat = cairo_pattern_create_linear (x+0.35, y, x+0.55, y+0.9);
+                 cairo_pattern_add_color_stop_rgb (pat, 0.0, colours[i][0][0],
+                                                   colours[i][0][1],
+                                                   colours[i][0][2]);
+                 cairo_pattern_add_color_stop_rgb (pat, 1.0, colours[i][1][0],
+                                                   colours[i][1][1],
+                                                   colours[i][1][2]);
+                 cairo_set_source (cr, pat);
+        } else {
+                 cairo_set_source_rgb (cr, colours[i][0][0],
+                                       colours[i][0][1],
+                                       colours[i][0][2]);
+        }
+        
         drawRoundedRectangle (cr, x+0.05, y+0.05, 0.9, 0.9, 0.2);
         cairo_fill_preserve (cr);  /* fill with shaded gradient */
         
 
-        if (drawme) {
-                if (usegrads) 
-                        cairo_pattern_destroy(pat);
-                cairo_set_source_rgb(cr, colours[i][2][0],
-                                     colours[i][2][1],
-                                     colours[i][2][2]);
-        }
-
+        if (usegrads) 
+                cairo_pattern_destroy(pat);
+        cairo_set_source_rgb(cr, colours[i][2][0],
+                             colours[i][2][1],
+                             colours[i][2][2]);
+        
         cairo_set_line_width (cr, 0.1);
         cairo_stroke (cr);  /* add darker outline */
 
         drawRoundedRectangle (cr, x+0.15, y+0.15, 0.7, 0.7, 0.08);
-        if (drawme) {
+        if (data[x][y].what != TARGET) { 
                 if (usegrads) {
                         pat = cairo_pattern_create_linear (x-0.3, y-0.3, x+0.8, y+0.8);
                         switch (i) { /* yellow and white blocks need a brighter highlight */
@@ -447,9 +448,9 @@ void TangoBlock::drawCell (cairo_t *cr, gint x, gint y)
                                                                    1.0,
                                                                    1.0);
                                 cairo_pattern_add_color_stop_rgba (pat, 1.0, 1.0,
-                                                                  1.0,
-                                                                  1.0,
-                                                                  0.0);
+                                                                   1.0,
+                                                                   1.0,
+                                                                   0.0);
                                 break;
                         default:
                                 cairo_pattern_add_color_stop_rgba (pat, 0.0, 0.9295,
@@ -457,9 +458,9 @@ void TangoBlock::drawCell (cairo_t *cr, gint x, gint y)
                                                                    0.9295,
                                                                    1.0);
                                 cairo_pattern_add_color_stop_rgba (pat, 1.0, 0.9295,
-                                                                  0.9295,
-                                                                  0.9295,
-                                                                  0.0);
+                                                                   0.9295,
+                                                                   0.9295,
+                                                                   0.0);
                                 break;
                         }
                         cairo_set_source (cr, pat);
@@ -469,15 +470,16 @@ void TangoBlock::drawCell (cairo_t *cr, gint x, gint y)
                                                1.0,
                                                0.35);
                 }
-                                                 
+        } else {  /* black preview block, use a much weaker highlight */
+                cairo_set_source_rgba (cr, 1.0,
+                                       1.0,
+                                       1.0,
+                                       0.15);
         }
-
-        cairo_stroke (cr);
+        cairo_stroke (cr);  /* add inner edge highlight */
         
-        if (drawme && usegrads) {
+        if (usegrads && (data[x][y].what != TARGET)) 
                 cairo_pattern_destroy (pat);
-        }
-
 }
 
 void TangoBlock::drawRoundedRectangle (cairo_t * cr, gdouble x, gdouble y, gdouble w, gdouble h, gdouble r)
