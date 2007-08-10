@@ -1,3 +1,9 @@
+2007-08-11  Andreas Røsdal  <andreasr@gnome.org>
+
+	* tetris.cpp:
+	* gnometris.schemas.in:
+	* gnometris.svg: Add a background image to gnometris.
+
 2007-08-10  Andreas Røsdal  <andreasr@gnome.org>
 
 	* renderer.cpp: fixes tango theme to work with the "show where

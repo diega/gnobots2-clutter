@@ -1,6 +1,7 @@
 SUBDIRS = pix help
 
 Gamesdir=$(datadir)/applications
+pixmapdir=$(datadir)/pixmaps/gnometris
 
 AM_CPPFLAGS=\
 	-I$(top_srcdir)/libgames-support \
@@ -40,6 +41,7 @@ gnometris_LDADD=\
 	$(ESD_LIBS) \
 	$(INTLLIBS)
 
+pixmap_DATA = gnometris.svg
 
 Games_in_files = gnometris.desktop.in.in
 Games_DATA = $(Games_in_files:.desktop.in.in=.desktop)
@@ -51,6 +53,7 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 @INTLTOOL_SCHEMAS_RULE@
 
 EXTRA_DIST = AUTHORS \
+	     $(pixmap_DATA) \
              $(schema_in_files)
 
 install-data-local:

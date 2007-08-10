@@ -53,6 +53,7 @@ int color_next = -1;
 
 bool random_block_colors = false;
 bool do_preview = true;
+bool default_bgimage = false;
 bool rotateCounterClockWise = true;
 
 #define TETRIS_OBJECT "gnometris-tetris-object"
@@ -146,6 +147,15 @@ Tetris::Tetris(int cmdlLevel):
 	    mkdir (outdir, 0700);
 	bgPixmap = g_build_filename (outdir, "background.bin", NULL);
 	g_free (outdir);
+
+	/*  Use default background image, if none found in user's home dir.*/
+	if (!g_file_test (bgPixmap, G_FILE_TEST_EXISTS)) {
+	  g_free (bgPixmap);
+          bgPixmap = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_DATADIR,
+					        "pixmaps/gnometris/gnometris.svg",
+						 TRUE, NULL);
+	  default_bgimage = true;
+	}
 	
 	w = gnome_app_new("gnometris", _("Gnometris"));
 	g_signal_connect (w, "delete_event", G_CALLBACK (gameQuit), this);
@@ -310,7 +320,7 @@ Tetris::setupPixmap()
 
 	/* A nasty hack to tile the image if it looks tileable (i.e. it
 	 * is small enough. */
-	if (bgimage) {
+	if (bgimage && !default_bgimage) {
 		int width, height;
 		int bgwidth, bgheight;
 			
@@ -457,7 +467,7 @@ Tetris::initOptions ()
 	gdk_color_parse (bgcolourstr, &bgcolour);
 	g_free (bgcolourstr);
 
-	usebg = confGetBoolean (KEY_OPTIONS_GROUP, KEY_USE_BG_IMAGE, FALSE);
+	usebg = confGetBoolean (KEY_OPTIONS_GROUP, KEY_USE_BG_IMAGE, TRUE);
 }
 
 void
