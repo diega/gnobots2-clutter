@@ -132,7 +132,7 @@ about_cb (GtkWidget * widget)
 			 "documenters", documenters,
 			 "comments",
 			 _
-			 ("I want to play that game! You know, they all go whirly-round and you click on them and they vanish!"),
+			 ("I want to play that game! You know, they all go whirly-round and you click on them and they vanish!\n\nSame GNOME is a part of GNOME Games."),
 			 "copyright", "Copyright \xc2\xa9 2007 Callum McKenzie",
                          "license", license,
                          "wrap-license", TRUE,
