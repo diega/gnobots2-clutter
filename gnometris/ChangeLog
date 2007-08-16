@@ -1,3 +1,7 @@
+2007-08-16  Andreas Røsdal  <andreasr@gnome.org>
+
+	* gnometris.svg: Remove blur, to improve performance.
+
 2007-08-11  Andreas Røsdal  <andreasr@gnome.org>
 
 	* tetris.cpp:
