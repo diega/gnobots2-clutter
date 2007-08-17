@@ -1,3 +1,8 @@
+2007-08-17  Thomas H.P. Andersen  <phomes@gmail.com>
+
+	* mahjongg.c: Uncomment workaround for bug #353964. Workaround
+	originally comitted by Andreas Røsdal.
+
 2007-08-10  Andreas Røsdal  <andrearo@stud.ntnu.no>
 
 	* mahjongg.c: Fix Bug #406856 – Tile set list shouldn't show ".svg"

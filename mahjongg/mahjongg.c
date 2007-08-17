@@ -227,14 +227,14 @@ update_menu_sensitivities (void)
    * shown properly, due to a bug in GtkToolButton in Gtk+. 
    * See Bug #332573 for a description of the workaround.
    */
-  /*gtk_widget_queue_draw (toolbar);
-   * gtk_widget_queue_resize (toolbar);
-   * while (gtk_events_pending ())
-   * gtk_main_iteration ();
-   * gtk_widget_queue_draw (toolbar);
-   * gtk_widget_queue_resize (toolbar);
-   * while (gtk_events_pending ())
-   * gtk_main_iteration (); */
+  gtk_widget_queue_draw (toolbar);
+  gtk_widget_queue_resize (toolbar);
+  while (gtk_events_pending ())
+    gtk_main_iteration ();
+  gtk_widget_queue_draw (toolbar);
+  gtk_widget_queue_resize (toolbar);
+  while (gtk_events_pending ())
+    gtk_main_iteration ();
 
 }
 
