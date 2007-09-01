@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: blackjack.HEAD.es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-26 03:28+0100\n"
-"PO-Revision-Date: 2007-08-22 14:14+0200\n"
+"POT-Creation-Date: 2007-08-22 13:31+0100\n"
+"PO-Revision-Date: 2007-09-01 15:54+0200\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan (post 1500) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
 "MIME-Version: 1.0\n"
@@ -41,11 +41,11 @@ msgstr "2003"
 
 #: C/blackjack.xml:40(holder)
 msgid "William Jon McCann"
-msgstr ""
+msgstr "William Jon McCann"
 
 #: C/blackjack.xml:55(publishername)
 msgid "GNOME Documentation Project"
-msgstr ""
+msgstr "_Totjorn gropar la fenèstras"
 
 #: C/blackjack.xml:2(para)
 msgid ""
@@ -112,7 +112,7 @@ msgstr ""
 
 #: C/blackjack.xml:65(firstname)
 msgid "William Jon"
-msgstr ""
+msgstr "William Jon"
 
 #: C/blackjack.xml:66(surname)
 msgid "McCann"
@@ -132,7 +132,7 @@ msgstr "Setembre de 2004"
 
 #: C/blackjack.xml:107(para)
 msgid "William Jon McCann <email>mccann@jhu.edu</email>"
-msgstr ""
+msgstr "William Jon McCann <email>mccann@jhu.edu</email>"
 
 #: C/blackjack.xml:115(releaseinfo)
 msgid "This manual describes version 2.12 of Blackjack."
@@ -323,12 +323,13 @@ msgid "To Start <application>Blackjack</application>"
 msgstr ""
 
 #: C/blackjack.xml:295(para)
-msgid "You can start <application>Blackjack</application> in the following ways:"
+msgid ""
+"You can start <application>Blackjack</application> in the following ways:"
 msgstr ""
 
 #: C/blackjack.xml:299(term)
 msgid "<guimenu>Applications</guimenu> menu"
-msgstr ""
+msgstr "Menut <guimenu>Applications</guimenu>"
 
 #: C/blackjack.xml:301(para)
 msgid ""
@@ -566,7 +567,8 @@ msgid ""
 msgstr ""
 
 #: C/blackjack.xml:626(para)
-msgid "Or, drag the desired chip onto your wager stack, located next to your hand."
+msgid ""
+"Or, drag the desired chip onto your wager stack, located next to your hand."
 msgstr ""
 
 #: C/blackjack.xml:619(para)
@@ -794,5 +796,7 @@ msgstr ""
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2.
 #: C/blackjack.xml:0(None)
 msgid "translator-credits"
-msgstr "La còla occitana de revirada d'Ubuntu, 2007 - ubuntu-l10n-oci@lists.ubuntu.com"
+msgstr ""
+"La còla occitana de revirada d'Ubuntu, 2007 - ubuntu-l10n-oci@lists.ubuntu."
+"com"
 
