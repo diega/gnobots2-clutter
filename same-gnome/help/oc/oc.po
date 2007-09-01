@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: same-gnome documentation\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-21 20:39+0100\n"
-"PO-Revision-Date: 2007-08-22 23:54+0200\n"
+"POT-Creation-Date: 2007-08-23 22:15+0100\n"
+"PO-Revision-Date: 2007-09-01 16:28+0200\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan (post 1500) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
 "MIME-Version: 1.0\n"
@@ -19,91 +19,91 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: ../C/same-gnome.xml:117(None)
+#: C/same-gnome.xml:117(None)
 msgid "@@image: 'figures/start-up.png'; md5=e1ae130ce601d40e62b9ea8794ccdf87"
 msgstr "@@image: 'figures/start-up.png'; md5=e1ae130ce601d40e62b9ea8794ccdf87"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: ../C/same-gnome.xml:130(None)
+#: C/same-gnome.xml:130(None)
 msgid "@@image: 'figures/play.png'; md5=75c75a57ddf8d1a120a56566601022f5"
 msgstr "@@image: 'figures/play.png'; md5=75c75a57ddf8d1a120a56566601022f5"
 
-#: ../C/same-gnome.xml:23(title)
+#: C/same-gnome.xml:23(title)
 msgid "<application><application>Same GNOME</application></application> Manual"
 msgstr ""
 
-#: ../C/same-gnome.xml:26(para)
+#: C/same-gnome.xml:26(para)
 msgid ""
 "Same GNOME is a puzzle game. The goal is to remove as many objects as "
 "possible in as few moves as possible."
 msgstr ""
 
-#: ../C/same-gnome.xml:32(year)
+#: C/same-gnome.xml:32(year)
 msgid "2005"
 msgstr "2005"
 
-#: ../C/same-gnome.xml:33(holder)
+#: C/same-gnome.xml:33(holder)
 msgid "Callum McKenzie"
 msgstr "Callum McKenzie"
 
-#: ../C/same-gnome.xml:46(publishername) ../C/same-gnome.xml:59(orgname)
-#: ../C/same-gnome.xml:86(para)
+#: C/same-gnome.xml:46(publishername) C/same-gnome.xml:59(orgname)
+#: C/same-gnome.xml:86(para)
 msgid "GNOME Documentation Project"
 msgstr ""
 
-#: ../C/same-gnome.xml:56(firstname)
+#: C/same-gnome.xml:56(firstname)
 msgid "Callum"
 msgstr "Callum"
 
-#: ../C/same-gnome.xml:57(surname)
+#: C/same-gnome.xml:57(surname)
 msgid "McKenzie"
 msgstr "McKenzie"
 
-#: ../C/same-gnome.xml:60(email)
+#: C/same-gnome.xml:60(email)
 msgid "callum@physics.otago.ac.nz"
 msgstr "callum@physics.otago.ac.nz"
 
-#: ../C/same-gnome.xml:81(revnumber)
+#: C/same-gnome.xml:81(revnumber)
 msgid "Same GNOME Manual V2.10"
 msgstr ""
 
-#: ../C/same-gnome.xml:82(date)
+#: C/same-gnome.xml:82(date)
 msgid "February 2005"
-msgstr ""
+msgstr "Febrièr de 2005"
 
-#: ../C/same-gnome.xml:84(para)
+#: C/same-gnome.xml:84(para)
 msgid "Initial version for the new Same GNOME."
 msgstr ""
 
-#: ../C/same-gnome.xml:85(para)
+#: C/same-gnome.xml:85(para)
 msgid "Callum McKenzie <email>callum@physics.otago.ac.nz</email>"
-msgstr ""
+msgstr "Callum McKenzie <email>callum@physics.otago.ac.nz</email>"
 
-#: ../C/same-gnome.xml:91(releaseinfo)
+#: C/same-gnome.xml:91(releaseinfo)
 msgid "This manual describes version 2.12 of Same GNOME."
 msgstr ""
 
-#: ../C/same-gnome.xml:94(title)
+#: C/same-gnome.xml:94(title)
 msgid "Feedback"
 msgstr ""
 
-#: ../C/same-gnome.xml:95(para)
+#: C/same-gnome.xml:95(para)
 msgid ""
 "To report a bug or make a suggestion regarding the <application>Same GNOME</"
 "application> game or this manual, follow the directions in the <ulink url="
 "\"ghelp:gnome-feedback\" type=\"help\">GNOME Feedback Page</ulink>."
 msgstr ""
 
-#: ../C/same-gnome.xml:103(primary)
+#: C/same-gnome.xml:103(primary)
 msgid "Same GNOME"
 msgstr "Same GNOME"
 
-#: ../C/same-gnome.xml:109(title)
+#: C/same-gnome.xml:109(title)
 msgid "Playing <application>Same GNOME</application>"
 msgstr ""
 
-#: ../C/same-gnome.xml:110(para)
+#: C/same-gnome.xml:110(para)
 msgid ""
 "<application>Same GNOME</application> is a puzzle game. The goal is to "
 "remove as many objects as possible in as few moves as possible. Objects that "
@@ -112,11 +112,11 @@ msgid ""
 "remove single objects."
 msgstr ""
 
-#: ../C/same-gnome.xml:113(title)
+#: C/same-gnome.xml:113(title)
 msgid "<application>Same GNOME</application> at the beginning of a new game."
 msgstr ""
 
-#: ../C/same-gnome.xml:123(para)
+#: C/same-gnome.xml:123(para)
 msgid ""
 "The board starts as a full grid of objects. Depending on the size of board "
 "you select, there are either three or four types of object. If a group of "
@@ -130,113 +130,113 @@ msgid ""
 "entire column is cleared then the objects slide leftward to fill the gap."
 msgstr ""
 
-#: ../C/same-gnome.xml:126(title)
+#: C/same-gnome.xml:126(title)
 msgid "Playing <application>Same GNOME</application>."
 msgstr ""
 
-#: ../C/same-gnome.xml:136(para)
+#: C/same-gnome.xml:136(para)
 msgid "Scoring is based on the number of objects you delete:"
 msgstr ""
 
-#: ../C/same-gnome.xml:141(entry)
+#: C/same-gnome.xml:141(entry)
 msgid "Number of Objects"
 msgstr ""
 
-#: ../C/same-gnome.xml:142(entry)
+#: C/same-gnome.xml:142(entry)
 msgid "Points Scored"
 msgstr ""
 
-#: ../C/same-gnome.xml:145(entry) ../C/same-gnome.xml:154(superscript)
+#: C/same-gnome.xml:145(entry) C/same-gnome.xml:154(superscript)
 msgid "2"
 msgstr "2"
 
-#: ../C/same-gnome.xml:145(entry)
+#: C/same-gnome.xml:145(entry)
 msgid "0"
 msgstr "0"
 
-#: ../C/same-gnome.xml:146(entry)
+#: C/same-gnome.xml:146(entry)
 msgid "3"
 msgstr "3"
 
-#: ../C/same-gnome.xml:146(entry)
+#: C/same-gnome.xml:146(entry)
 msgid "1"
 msgstr "1"
 
-#: ../C/same-gnome.xml:147(entry)
+#: C/same-gnome.xml:147(entry)
 msgid "4"
 msgstr "4"
 
-#: ../C/same-gnome.xml:148(entry)
+#: C/same-gnome.xml:148(entry)
 msgid "5"
 msgstr "5"
 
-#: ../C/same-gnome.xml:148(entry) ../C/same-gnome.xml:152(entry)
+#: C/same-gnome.xml:148(entry) C/same-gnome.xml:152(entry)
 msgid "9"
 msgstr "9"
 
-#: ../C/same-gnome.xml:149(entry)
+#: C/same-gnome.xml:149(entry)
 msgid "6"
 msgstr "6"
 
-#: ../C/same-gnome.xml:149(entry)
+#: C/same-gnome.xml:149(entry)
 msgid "16"
 msgstr "16"
 
-#: ../C/same-gnome.xml:150(entry)
+#: C/same-gnome.xml:150(entry)
 msgid "7"
 msgstr "7"
 
-#: ../C/same-gnome.xml:150(entry)
+#: C/same-gnome.xml:150(entry)
 msgid "25"
 msgstr "25"
 
-#: ../C/same-gnome.xml:151(entry)
+#: C/same-gnome.xml:151(entry)
 msgid "8"
 msgstr "8"
 
-#: ../C/same-gnome.xml:151(entry)
+#: C/same-gnome.xml:151(entry)
 msgid "36"
 msgstr "36"
 
-#: ../C/same-gnome.xml:152(entry)
+#: C/same-gnome.xml:152(entry)
 msgid "49"
 msgstr "49"
 
-#: ../C/same-gnome.xml:154(entry)
+#: C/same-gnome.xml:154(entry)
 msgid "p"
 msgstr "p"
 
-#: ../C/same-gnome.xml:154(entry)
+#: C/same-gnome.xml:154(entry)
 msgid "(n - 2)<placeholder-1/>"
 msgstr ""
 
-#: ../C/same-gnome.xml:158(para)
+#: C/same-gnome.xml:158(para)
 msgid "If you clear the board there is a 1000 point bonus."
 msgstr ""
 
-#: ../C/same-gnome.xml:162(title)
+#: C/same-gnome.xml:162(title)
 msgid "Customization"
 msgstr ""
 
-#: ../C/same-gnome.xml:165(title)
+#: C/same-gnome.xml:165(title)
 msgid "Changing the Look"
 msgstr ""
 
-#: ../C/same-gnome.xml:166(para)
+#: C/same-gnome.xml:166(para)
 msgid ""
 "Changing the size of the objects is as simple as resizing the window. To "
 "make the maximum use of the screen choose the <guimenuitem>Fullscreen</"
 "guimenuitem> option from the <guimenu>View</guimenu> menu."
 msgstr ""
 
-#: ../C/same-gnome.xml:168(para)
+#: C/same-gnome.xml:168(para)
 msgid ""
 "To change the appearance of the objects use the <guimenuitem>Theme</"
 "guimenuitem> item in the <guimenu>View</guimenu> menu. Selecting an item "
 "from the list changes the theme immediately."
 msgstr ""
 
-#: ../C/same-gnome.xml:170(para)
+#: C/same-gnome.xml:170(para)
 msgid ""
 "You can also create your own themes, although the process is not very "
 "straight-forward yet. Use a copy of an existing theme as a template and "
@@ -247,22 +247,22 @@ msgid ""
 "is usually <filename>~/.local/share/</filename>."
 msgstr ""
 
-#: ../C/same-gnome.xml:174(title)
+#: C/same-gnome.xml:174(title)
 msgid "Changing the Size"
 msgstr ""
 
-#: ../C/same-gnome.xml:175(para)
+#: C/same-gnome.xml:175(para)
 msgid ""
 "The <guimenu>Size</guimenu> menu contains three settings: small, medium and "
 "large. Aside from increasing the number of objects, the large setting also "
 "increases the number of different objects."
 msgstr ""
 
-#: ../C/same-gnome.xml:179(title)
+#: C/same-gnome.xml:179(title)
 msgid "Changing the Speed"
 msgstr ""
 
-#: ../C/same-gnome.xml:180(para)
+#: C/same-gnome.xml:180(para)
 msgid ""
 "The default animation is designed to be smooth and graceful. If you like "
 "playing fast and furious then this may be too slow for you. By selecting the "
@@ -270,24 +270,24 @@ msgid ""
 "guimenu> menu you can speed up game-play at the expense of animation quality."
 msgstr ""
 
-#: ../C/same-gnome.xml:186(title)
+#: C/same-gnome.xml:186(title)
 msgid "Strategy"
 msgstr ""
 
-#: ../C/same-gnome.xml:188(para)
+#: C/same-gnome.xml:188(para)
 msgid ""
 "The most important rule when aiming for a high score is to think ahead: each "
 "group you remove will form and destroy other groups."
 msgstr ""
 
-#: ../C/same-gnome.xml:190(para)
+#: C/same-gnome.xml:190(para)
 msgid ""
 "Remove higher groups first, unless removing another group will make it "
 "larger. Vertically aligned objects can't be misaligned, but horizontal "
 "arrangements can."
 msgstr ""
 
-#: ../C/same-gnome.xml:192(para)
+#: C/same-gnome.xml:192(para)
 msgid ""
 "Since the score increases quadratically, big groups of objects are always "
 "better. For example, the points difference between a six object group and a "
@@ -298,7 +298,7 @@ msgid ""
 "overall."
 msgstr ""
 
-#: ../C/same-gnome.xml:194(para)
+#: C/same-gnome.xml:194(para)
 msgid ""
 "Don't forget the thousand point bonus for clearing all the balls. To get "
 "1000 points from a single group you need 34 objects. You are very unlikely "
@@ -306,11 +306,11 @@ msgid ""
 "the board."
 msgstr ""
 
-#: ../C/same-gnome.xml:199(title)
+#: C/same-gnome.xml:199(title)
 msgid "About <application>Same GNOME</application>"
 msgstr ""
 
-#: ../C/same-gnome.xml:200(para)
+#: C/same-gnome.xml:200(para)
 msgid ""
 "<application>Same GNOME</application> was written by Callum McKenzie "
 "(<email>callum@physics.otago.ac.nz</email>). To find more information about "
@@ -319,14 +319,14 @@ msgid ""
 "ulink>."
 msgstr ""
 
-#: ../C/same-gnome.xml:204(para)
+#: C/same-gnome.xml:204(para)
 msgid ""
 "To report a bug or make a suggestion regarding this application or this "
 "manual, follow the directions in this <ulink url=\"ghelp:gnome-feedback\" "
 "type=\"help\">document</ulink>."
 msgstr ""
 
-#: ../C/same-gnome.xml:210(para)
+#: C/same-gnome.xml:210(para)
 msgid ""
 "This program is distributed under the terms of the GNU General Public "
 "license as published by the Free Software Foundation; either version 2 of "
@@ -336,7 +336,9 @@ msgid ""
 msgstr ""
 
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2.
-#: ../C/same-gnome.xml:0(None)
+#: C/same-gnome.xml:0(None)
 msgid "translator-credits"
-msgstr "La còla occitana de revirada d'Ubuntu, 2007 - ubuntu-l10n-oci@lists.ubuntu.com"
+msgstr ""
+"La còla occitana de revirada d'Ubuntu, 2007 - ubuntu-l10n-oci@lists.ubuntu."
+"com"
 
