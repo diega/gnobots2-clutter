@@ -582,6 +582,8 @@ fill_tile_menu (GtkWidget * menu)
       g_free (s);
       continue;
     }
+      
+    // TODO: Strip off suffix (bug #406856)
 
     gchar** tileset_name = g_strsplit (s, ".", -1);
     gtk_combo_box_append_text (GTK_COMBO_BOX (menu), tileset_name[0]);
