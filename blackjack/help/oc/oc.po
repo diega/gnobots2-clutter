@@ -1,18 +1,21 @@
+# translation of oc.po to Occitan
 #
 # Yannig MARCHEGAY (yannig@marchegay.org) - 2006-2007
 #
+# Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: blackjack.HEAD.es\n"
+"Project-Id-Version: oc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-08-22 13:31+0100\n"
-"PO-Revision-Date: 2007-09-01 15:54+0200\n"
+"PO-Revision-Date: 2007-11-20 14:30+0100\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
-"Language-Team: Occitan (post 1500) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
+"Language-Team: Occitan <ubuntu-l10n-oci@lists.ubuntu.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);"
+"Plural-Forms: nplurals=2; plural=(n > 1);X-Generator: KBabel 1.11.4\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -45,7 +48,7 @@ msgstr "William Jon McCann"
 
 #: C/blackjack.xml:55(publishername)
 msgid "GNOME Documentation Project"
-msgstr "_Totjorn gropar la fenèstras"
+msgstr "Projècte de documentacion de GNOME"
 
 #: C/blackjack.xml:2(para)
 msgid ""
@@ -323,8 +326,7 @@ msgid "To Start <application>Blackjack</application>"
 msgstr ""
 
 #: C/blackjack.xml:295(para)
-msgid ""
-"You can start <application>Blackjack</application> in the following ways:"
+msgid "You can start <application>Blackjack</application> in the following ways:"
 msgstr ""
 
 #: C/blackjack.xml:299(term)
@@ -554,7 +556,7 @@ msgstr ""
 
 #: C/blackjack.xml:576(title)
 msgid "Usage"
-msgstr ""
+msgstr "Utilizacion"
 
 #: C/blackjack.xml:618(title)
 msgid "To Set the Wager"
@@ -567,8 +569,7 @@ msgid ""
 msgstr ""
 
 #: C/blackjack.xml:626(para)
-msgid ""
-"Or, drag the desired chip onto your wager stack, located next to your hand."
+msgid "Or, drag the desired chip onto your wager stack, located next to your hand."
 msgstr ""
 
 #: C/blackjack.xml:619(para)
@@ -796,5 +797,5 @@ msgstr ""
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2.
 #: C/blackjack.xml:0(None)
 msgid "translator-credits"
-msgstr "Yannig MARCHEGAY (Kokoyaya) <yannig@marchegay.org>"
+msgstr "Yannig Marchegay (Kokoyaya) <yannig@marchegay.org)"
 
