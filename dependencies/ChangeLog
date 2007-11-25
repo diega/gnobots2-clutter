@@ -1,3 +1,7 @@
+2007-11-25  Andreas Røsdal  <andrearo@pvv.ntnu.no>
+
+	* Remove embedded libggz and ggz-client-libs.
+
 2007-05-19  Andreas Røsdal  <andrearo@pvv.ntnu.no>
 
 	* ggz-gtk/first.c: Remove strings which had binary symbols.
