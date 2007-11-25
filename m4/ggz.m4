@@ -109,7 +109,10 @@ AC_DEFUN([AC_GGZ_ERROR],
   The library '$1' does not seem to be installed correctly.
   Headers searched in: $2
   Libraries searched in: $3
-  Please read QuickStart.GGZ in order to fix this.
+  Please read README.GGZ in order to fix this.
+
+  GNOME Games requires GGZ Gaming Zone support: 'libggz' and 'ggz-client-libs'
+  can be found at http://www.ggzgamingzone.org/.
   ])
   exit 1
 ])

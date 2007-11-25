@@ -5,5 +5,5 @@ SUBDIRS += gnuchess
 endif
 
 if WITH_INCLUDED_GGZ
-SUBDIRS += libggz ggzdmod ggzmod-ggz ggzcore ggzmod ggz-gtk
+SUBDIRS += ggz-gtk
 endif
