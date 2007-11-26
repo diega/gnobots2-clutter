@@ -990,8 +990,12 @@ AC_DEFUN([AC_GGZ_CHECK_SERVER],
       fi
     fi
   fi
+])
 
-  AM_CONDITIONAL(GGZ_SERVER, test "$ggz_server" = "yes")
+# AC_GGZ_CHECK_SERVER_DEFINES
+
+AC_DEFUN([AC_GGZ_CHECK_SERVER_DEFINES],[
+  AM_CONDITIONAL([GGZ_SERVER],[test "$ggz_server" = "yes"])
 ])
 
 # AC_GGZ_CHECK
