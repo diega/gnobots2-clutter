@@ -139,7 +139,7 @@ icons_svg = \
 	scalable/gnome-tetravex.svg \
 	$(NULL)
 
-if HAVE_MAEMO
+if HAVE_HILDON
 
 iconcontext = hildon
 icon16dir = $(datadir)/icons/hicolor/16x16/hildon
