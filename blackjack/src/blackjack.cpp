@@ -696,9 +696,6 @@ main (int argc, char *argv [])
         }
 #endif
 
-        if (!variation)
-                variation = g_strdup (DEFAULT_VARIATION);
-
         gtk_widget_push_colormap (gdk_rgb_get_colormap ());
 
         gtk_window_set_default_icon_name ("gnome-blackjack");
@@ -708,6 +705,9 @@ main (int argc, char *argv [])
         games_stock_init();
 
         bj_conf_init ();
+
+        if (!variation)
+                variation = game_variation;
 
         bj_game_find_rules (variation);
 

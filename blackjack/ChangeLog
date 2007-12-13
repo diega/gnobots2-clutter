@@ -1,3 +1,8 @@
+2007-12-13  John Bryant <bryantk@sover.net>
+
+	* src/blackjack.cpp: Use the global game_variation instead of
+	DEFAULT_VARIATION, so the stored preference is used (Bug #487423)
+
 2007-07-28  Andreas Røsdal <andrearo@stud.ntnu.no>
 
 	* src/game.cpp: Use g_utf8_strrchr instead of strrchr, which
