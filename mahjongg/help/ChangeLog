@@ -1,3 +1,9 @@
+2008-01-03  Andreas Røsdal  <andreasr@gnome.org>
+
+	* C/mahjongg.xml: Remove duplicate links to toolbar in
+	documentation. Reported by Aloriel <aloriel@gmail.com>
+	in bug #437705.
+
 2007-12-31  Yannig Marchegay <yannig@marchegay.org>
 
 	* oc.po: Updated Occitan translation.

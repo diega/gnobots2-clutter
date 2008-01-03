@@ -500,11 +500,10 @@
 		    </menuchoice> &mdash; 
 		    This item determines whether the <link linkend="toolbar">
 		    <interface>toolbar</interface></link> 
-		    is shown or not.  If the item is checked, the <link linkend="toolbar">
-		    <interface>toolbar</interface></link> is shown in the 
+		    is shown or not.  If the item is checked, the 
+		    <interface>toolbar</interface> is shown in the 
 		    last place you put it.  If the item is unchecked, the 
-		    <link linkend="toolbar"><interface>toolbar</interface>
-		    </link> is not shown.
+		    <interface>toolbar</interface> is not shown.
 		  </para>
 		</listitem>
 		<listitem>
