@@ -24,11 +24,15 @@
 <!-- please do not change the id; for translations, change lang to -->
 <!-- appropriate code -->
   <articleinfo>
-    <title>&app; Manual V&manrevision;</title>
+    <title>&app; Manual</title>
 
     <abstract role="description">
       <para>
-      Gnometris is the classic game of interlocking quadrominoes.
+	Gnometris is GNOME's version of Tetris, the classic game of 
+	interlocking four-piece blocks. As they fall from the top, 
+	the player must orient them to fit the other blocks at the 
+	bottom so that they form a complete horizontal line, in which 
+	case that line disappears and the player gains points.
       </para>
     </abstract>
 

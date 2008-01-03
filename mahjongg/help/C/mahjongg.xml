@@ -5,8 +5,8 @@
   <!ENTITY appversion "2.12">
   <!ENTITY manrevision "2.10">
   <!ENTITY date "June 2005">
-  <!ENTITY app "<application>GNOME Mahjongg</application>">
-  <!ENTITY appname "GNOME Mahjongg">
+  <!ENTITY app "<application>Mahjongg</application>">
+  <!ENTITY appname "Mahjongg">
 ]>
 
 <!-- 
@@ -22,10 +22,12 @@
 <!-- appropriate code -->
   <articleinfo>
   
-    <title>&app; Manual V&manrevision;</title>
+    <title>&app; Manual</title>
     <abstract role="description">
       <para>
-      GNOME Mahjongg is a solitaire version of the classic Eastern tile game Mahjongg.
+	Mahjongg is a solitaire version of the classic Eastern tile game. 
+	It involves clearing as much of the board as possible by matching 
+	corresponding tiles and taking them out of play.
       </para>
     </abstract>
     <copyright>

@@ -26,12 +26,13 @@
 <!-- please do not change the id; for translations, change lang to -->
 <!-- appropriate code -->
   <articleinfo> 
-    <title>&app; Manual V&manrevision;</title>       
+    <title>&app; Manual</title>       
     <abstract role="description">
       <para>
-      Blackjack is a casino rules, multiple deck blackjack game for the GNOME
-      Project.  The object of the game is to obtain a hand value that is closer
-      to 21 than that of the dealer, without going over 21.
+	Blackjack is a casino rules, multiple deck blackjack game for the GNOME
+	Project.  The object of the game is to obtain a hand value that is closer
+	to 21 than that of the dealer, without going over 21. The player bets
+	with virtual chips.
       </para>
     </abstract>
 

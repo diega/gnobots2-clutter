@@ -20,11 +20,15 @@
 <!-- please do not change the id; for translations, change lang to -->
 <!-- appropriate code -->
   <articleinfo> 
-    <title><application>&app;</application> Manual</title>       
+    <title>&app; Manual</title>       
     
     <abstract role="description">
       <para>
-        Same GNOME is a puzzle game. The goal is to remove as many objects as possible in as few moves as possible.
+	Same GNOME is a puzzle game, of which the objective is to clear 
+	the window of as many pieces as possible by clicking on groups 
+	of the same colored pieces. That group will vanish and the 
+	pieces on top will fall until there are none left or no more 
+	color groups.
       </para>
     </abstract>
 
