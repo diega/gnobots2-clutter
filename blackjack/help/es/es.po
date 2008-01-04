@@ -1,11 +1,12 @@
-# Jorge González <jorgegonz@svn.gnome.org>, 2007.
+# translation of blackjack.HEAD.po to Español
+# Jorge González <jorgegonz@svn.gnome.org>, 2007, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: blackjack.HEAD.es\n"
-"POT-Creation-Date: 2007-06-26 03:28+0100\n"
-"PO-Revision-Date: 2007-07-26 19:21+0200\n"
+"Project-Id-Version: blackjack.HEAD\n"
+"POT-Creation-Date: 2008-01-03 18:49+0000\n"
+"PO-Revision-Date: 2008-01-04 21:00+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
-"Language-Team: Spanish <traductores@es.gnome.org>\n"
+"Language-Team: Español <<gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,37 +15,39 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/blackjack.xml:331(None)
+#: C/blackjack.xml:332(None)
 msgid ""
 "@@image: 'figures/blackjack_start_window.png'; "
 "md5=639433a68f4f671a78ef838afabdb21b"
 msgstr ""
-"@@image: 'figures/blackjack_start_window.png'; "
+"\t@@image: 'figures/blackjack_start_window.png'; "
 "md5=639433a68f4f671a78ef838afabdb21b"
 
 #: C/blackjack.xml:29(title)
-msgid "<application>Blackjack</application> Manual V2.8"
-msgstr "Manual de <application>Blackjack</application> V2.8"
+msgid "<application>Blackjack</application> Manual"
+msgstr "Manual de <application>Blackjack</application>"
 
 #: C/blackjack.xml:31(para)
 msgid ""
 "Blackjack is a casino rules, multiple deck blackjack game for the GNOME "
 "Project. The object of the game is to obtain a hand value that is closer to "
-"21 than that of the dealer, without going over 21."
+"21 than that of the dealer, without going over 21. The player bets with "
+"virtual chips."
 msgstr ""
-"Blackjack es un juego de Blackjack con reglas tipo casino y varias barajas para el "
-"proyecto GNOME. El objetivo del juego es mantener cartas con una "
-"mayor puntuación que las del repartidor sin pasarse de 21."
+"Blackjack es un juego de Blackjack con reglas tipo casino y varias barajas "
+"para el proyecto GNOME. El objetivo del juego es obtener un valor de mano lo "
+"más cercano a 21 que el del repartidor, pero sin pasarse. El jugador apuesta con "
+"fichas virtuales."
 
-#: C/blackjack.xml:39(year)
+#: C/blackjack.xml:40(year)
 msgid "2003"
 msgstr "2003"
 
-#: C/blackjack.xml:40(holder)
+#: C/blackjack.xml:41(holder)
 msgid "William Jon McCann"
 msgstr "William Jon McCann"
 
-#: C/blackjack.xml:55(publishername)
+#: C/blackjack.xml:56(publishername)
 msgid "GNOME Documentation Project"
 msgstr "Proyecto de documentación de GNOME"
 
@@ -155,39 +158,39 @@ msgstr ""
 "LAS CONDICIONES ESTABLECIDAS EN LA LICENCIA DE DOCUMENTACIÓN LIBRE DE GNU "
 "(GFDL) Y TENIENDO EN CUENTA QUE: <placeholder-1/>"
 
-#: C/blackjack.xml:65(firstname)
+#: C/blackjack.xml:66(firstname)
 msgid "William Jon"
 msgstr "William Jon"
 
-#: C/blackjack.xml:66(surname)
+#: C/blackjack.xml:67(surname)
 msgid "McCann"
 msgstr "McCann"
 
-#: C/blackjack.xml:69(email)
+#: C/blackjack.xml:70(email)
 msgid "mccann@jhu.edu"
 msgstr "mccann@jhu.edu"
 
-#: C/blackjack.xml:104(revnumber)
+#: C/blackjack.xml:105(revnumber)
 msgid "Blackjack Manual V2.8"
 msgstr "Manual de Blackjack V2.8"
 
-#: C/blackjack.xml:105(date)
+#: C/blackjack.xml:106(date)
 msgid "September 2004"
 msgstr "Septiembre de 2004"
 
-#: C/blackjack.xml:107(para)
+#: C/blackjack.xml:108(para)
 msgid "William Jon McCann <email>mccann@jhu.edu</email>"
 msgstr "William Jon McCann <email>mccann@jhu.edu</email>"
 
-#: C/blackjack.xml:115(releaseinfo)
+#: C/blackjack.xml:116(releaseinfo)
 msgid "This manual describes version 2.12 of Blackjack."
 msgstr "Este manual describe la versión 2.12 de Blackjack."
 
-#: C/blackjack.xml:118(title)
+#: C/blackjack.xml:119(title)
 msgid "Feedback"
 msgstr "Comentarios"
 
-#: C/blackjack.xml:119(para)
+#: C/blackjack.xml:120(para)
 msgid ""
 "To report a bug or make a suggestion regarding the <application>Blackjack</"
 "application> application or this manual, follow the directions in the <ulink "
@@ -198,102 +201,105 @@ msgstr ""
 "indicaciones en la <ulink url=\"ghelp:gnome-feedback\" type=\"help\">Página "
 "de comentarios de GNOME</ulink>."
 
-#: C/blackjack.xml:128(primary) C/blackjack.xml:156(term)
+#: C/blackjack.xml:129(primary) C/blackjack.xml:157(term)
 #: C/blackjack.xml:0(application)
 msgid "Blackjack"
 msgstr "Blackjack"
 
-#: C/blackjack.xml:131(primary)
+#: C/blackjack.xml:132(primary)
 msgid "mygnomeapp"
 msgstr "mygnomeapp"
 
-#: C/blackjack.xml:140(title)
+#: C/blackjack.xml:141(title)
 msgid "Introduction"
 msgstr "Introducción"
 
-#: C/blackjack.xml:142(para)
+#: C/blackjack.xml:143(para)
 msgid ""
 "<application>Blackjack</application> is a multiple deck, casino rules "
 "blackjack game. The object of the game is to hold cards having a higher "
 "count than those of the dealer without going over 21."
 msgstr ""
-"<application>Blackjack</application> es un juego de Blackjack con reglas tipo "
-"casino y varias barajas. el objetivo del juego es mantener cartas con una "
-"mayor puntuación que las del repartidor sin pasarse de 21."
+"<application>Blackjack</application> es un juego de Blackjack con reglas "
+"tipo casino y varias barajas. el objetivo del juego es mantener cartas con "
+"una mayor puntuación que las del repartidor sin pasarse de 21."
 
-#: C/blackjack.xml:148(title)
+#: C/blackjack.xml:149(title)
 msgid "Blackjack Basics"
 msgstr "Bases del Blackjack"
 
-#: C/blackjack.xml:151(title)
+#: C/blackjack.xml:152(title)
 msgid "Blackjack Terminology"
 msgstr "Terminología del Blackjack"
 
-#: C/blackjack.xml:152(para)
+#: C/blackjack.xml:153(para)
 msgid "Here are a few important terms that are used in the game."
 msgstr "Aquí hay algunos términos importantes usados en el juego."
 
-#: C/blackjack.xml:158(para)
+#: C/blackjack.xml:159(para)
 msgid ""
 "A hand whose first two cards total 21; an instant win worth 150% of your "
 "wager"
-msgstr "Una mano cuyas primeras dos cartas suman 21; un valor instantáneo del 150% de su apuesta"
+msgstr ""
+"Una mano cuyas primeras dos cartas suman 21; un valor instantáneo del 150% "
+"de su apuesta"
 
-#: C/blackjack.xml:163(term)
+#: C/blackjack.xml:164(term)
 msgid "Bust"
 msgstr "Pasarse"
 
-#: C/blackjack.xml:165(para)
+#: C/blackjack.xml:166(para)
 msgid "When the value of a hand exceeds 21; a losing hand"
 msgstr "Cuando el valor de la mano excede de 21; una mano perdida"
 
-#: C/blackjack.xml:170(term)
+#: C/blackjack.xml:171(term)
 msgid "Double down"
 msgstr "Doblar"
 
-#: C/blackjack.xml:172(para)
+#: C/blackjack.xml:173(para)
 msgid "To double the initial wager and receive exactly one more card"
 msgstr "Doblar la apuesta iniciar y recibir sólo una carta más"
 
-#: C/blackjack.xml:178(term)
+#: C/blackjack.xml:179(term)
 msgid "Hit"
 msgstr "Pedir"
 
-#: C/blackjack.xml:180(para)
+#: C/blackjack.xml:181(para)
 msgid "To request another card to be added to the hand"
 msgstr "Pedir otra carta para añadirla a la mano"
 
-#: C/blackjack.xml:185(term)
+#: C/blackjack.xml:186(term)
 msgid "Insurance"
 msgstr "Seguro"
 
-#: C/blackjack.xml:187(para)
+#: C/blackjack.xml:188(para)
 msgid ""
 "A side wager of 50% of the original wager that the dealer has a natural 21 "
 "(aka blackjack) that is offered when the dealer's face up card is an ace. If "
 "the dealer has a natural 21 then the player is paid double."
 msgstr ""
-"Una apuesta lateral del 50% del valor de la apuesta original a que el repartidor tiene "
-"un 21 natural (un blackjack) que se ofrece cuando la carta levantada del repartidor es un as. "
-"Si e repartidor tiene un 21 natural, entonces se le paga doble al jugador."
+"Una apuesta lateral del 50% del valor de la apuesta original a que el "
+"repartidor tiene un 21 natural (un blackjack) que se ofrece cuando la carta "
+"levantada del repartidor es un as. Si e repartidor tiene un 21 natural, "
+"entonces se le paga doble al jugador."
 
-#: C/blackjack.xml:195(term)
+#: C/blackjack.xml:196(term)
 msgid "Push"
 msgstr "Empate"
 
-#: C/blackjack.xml:197(para)
+#: C/blackjack.xml:198(para)
 msgid ""
 "When the value of the player hand and the dealer hand are equal and the "
 "original wager is returned to the player"
 msgstr ""
-"Cuando el valor de la mano del jugador y del repartidor son iguales la apuesta "
-"inicial se devuelve al jugador"
+"Cuando el valor de la mano del jugador y del repartidor son iguales la "
+"apuesta inicial se devuelve al jugador"
 
-#: C/blackjack.xml:203(term)
+#: C/blackjack.xml:204(term)
 msgid "Split"
 msgstr "Dividir"
 
-#: C/blackjack.xml:205(para)
+#: C/blackjack.xml:206(para)
 msgid ""
 "When a hand starts with two cards of the same value (or rank) it may be "
 "split to form two independent hands"
@@ -301,172 +307,180 @@ msgstr ""
 "Cuando una mano comienza con dos cartas del mismo valor (o rango) puede "
 "dividirse para formar dos manos independientes"
 
-#: C/blackjack.xml:211(term)
+#: C/blackjack.xml:212(term)
 msgid "Stand"
 msgstr "Plantarse"
 
-#: C/blackjack.xml:213(para)
+#: C/blackjack.xml:214(para)
 msgid "To stop adding cards to a hand"
 msgstr "Dejar de añadir cartas a una mano"
 
-#: C/blackjack.xml:218(term)
+#: C/blackjack.xml:219(term)
 msgid "Surrender"
 msgstr "Rendirse"
 
-#: C/blackjack.xml:220(para)
+#: C/blackjack.xml:221(para)
 msgid "To give up half your wager to not complete the hand"
 msgstr "Perder la mitad de su apuesta para no completar la mano"
 
-#: C/blackjack.xml:229(title)
+#: C/blackjack.xml:230(title)
 msgid "Card Values"
 msgstr "Valor de las cartas"
 
-#: C/blackjack.xml:234(para)
+#: C/blackjack.xml:235(para)
 msgid "An Ace can count as either 1 or 11."
 msgstr "Un as puede contar 1 ó 11."
 
-#: C/blackjack.xml:237(para)
+#: C/blackjack.xml:238(para)
 msgid "The cards 2 through 9 are valued as indicated."
 msgstr "Las cartas del 2 al 9 valen lo que la carta."
 
-#: C/blackjack.xml:240(para)
+#: C/blackjack.xml:241(para)
 msgid "The 10, Jack, Queen, and King are all valued at 10."
 msgstr "El 10, la sota, la reina y el rey valen 10."
 
-#: C/blackjack.xml:230(para)
+#: C/blackjack.xml:231(para)
 msgid "In blackjack, each card is assigned a value. <placeholder-1/>"
 msgstr "En el blackjack cada carta tiene asignado un valor. <placeholder-1/>"
 
-#: C/blackjack.xml:245(para)
+#: C/blackjack.xml:246(para)
 msgid "The value of a hand is the sum of the values of each card in the hand."
 msgstr "El valor de una mano es la suma de los valores de cada carta de la mano."
 
-#: C/blackjack.xml:251(title)
+#: C/blackjack.xml:252(title)
 msgid "Dealer Rules"
 msgstr "Reglas del repartidor"
 
-#: C/blackjack.xml:258(term)
+#: C/blackjack.xml:259(term)
 msgid "Dealer stands on all 17s"
 msgstr "El repartidor aguanta hasta 17"
 
-#: C/blackjack.xml:260(para)
+#: C/blackjack.xml:261(para)
 msgid ""
 "The dealer must continue to draw cards (hit) until the hand total is at "
 "least 17."
-msgstr "El repartidor debe continuar pidiendo cartas hasta que el total de su mano sea al menos 17."
+msgstr ""
+"El repartidor debe continuar pidiendo cartas hasta que el total de su mano "
+"sea al menos 17."
 
-#: C/blackjack.xml:266(term)
+#: C/blackjack.xml:267(term)
 msgid "Dealer hits soft 17"
 msgstr "El repartidor tiene 17 blando"
 
-#: C/blackjack.xml:268(para)
+#: C/blackjack.xml:269(para)
 msgid ""
 "The dealer must continue to draw cards (hit) until the hand total is at "
 "least 17, except when the dealer has a soft total of 17 he must take another "
 "card. A soft total is one where an Ace card is counted as an 11."
 msgstr ""
-"El repartidor debe continuar pidiendo cartas hasta que el total de su mano sea al menos "
-"17, excepto cuando el repartidor tiene un total de 17 blando. Un total blando es cuando "
-"un as se cuenta como 11 en lugar de 1."
+"El repartidor debe continuar pidiendo cartas hasta que el total de su mano "
+"sea al menos 17, excepto cuando el repartidor tiene un total de 17 blando. "
+"Un total blando es cuando un as se cuenta como 11 en lugar de 1."
 
-#: C/blackjack.xml:252(para)
+#: C/blackjack.xml:253(para)
 msgid ""
 "The dealer must play his hand according to very specific rules. There are "
 "two basic rule variations that determine what hand total the dealer must "
 "draw to. <placeholder-1/>"
 msgstr ""
-"El repartidor debe jugar su mano de acuerdo con reglas muy específicas. Existen "
-"dos variaciones básicas de las reglas que determinan el total al que debe llegar el "
-"repartidor. <placeholder-1/>"
+"El repartidor debe jugar su mano de acuerdo con reglas muy específicas. "
+"Existen dos variaciones básicas de las reglas que determinan el total al que "
+"debe llegar el repartidor. <placeholder-1/>"
 
-#: C/blackjack.xml:291(title)
+#: C/blackjack.xml:292(title)
 msgid "Getting Started"
 msgstr "Inicio"
 
-#: C/blackjack.xml:294(title)
+#: C/blackjack.xml:295(title)
 msgid "To Start <application>Blackjack</application>"
 msgstr "Iniciar <application>Blackjack</application>"
 
-#: C/blackjack.xml:295(para)
+#: C/blackjack.xml:296(para)
 msgid "You can start <application>Blackjack</application> in the following ways:"
 msgstr "Puede iniciar <application>Blackjack</application> de las siguientes formas:"
 
-#: C/blackjack.xml:299(term)
+#: C/blackjack.xml:300(term)
 msgid "<guimenu>Applications</guimenu> menu"
 msgstr "Menú <guimenu>Aplicaciones</guimenu>"
 
-#: C/blackjack.xml:301(para)
+#: C/blackjack.xml:302(para)
 msgid ""
 "Choose <menuchoice><guisubmenu>Games </guisubmenu><guimenuitem>Blackjack</"
 "guimenuitem></menuchoice>."
 msgstr ""
-"Elija <menuchoice><guisubmenu>Juegos</guisubmenu><guimenuitem>Blackjack"
-"</guimenuitem></menuchoice>."
+"Elija <menuchoice><guisubmenu>Juegos</guisubmenu><guimenuitem>Blackjack</"
+"guimenuitem></menuchoice>."
 
-#: C/blackjack.xml:309(term)
+#: C/blackjack.xml:310(term)
 msgid "Command line"
 msgstr "Línea de comandos"
 
-#: C/blackjack.xml:311(para)
+#: C/blackjack.xml:312(para)
 msgid ""
 "To start <application>Blackjack</application> from a command line, type the "
 "following command, then press <keycap>Return</keycap>:"
 msgstr ""
-"Para iniciar <application>Blackjack</application> desde la línea de comandos, escriba el siguiente "
-"comando y después pulse <application>Intro</application>."
+"Para iniciar <application>Blackjack</application> desde la línea de "
+"comandos, escriba el siguiente comando y después pulse <application>Intro</"
+"application>."
 
-#: C/blackjack.xml:314(command)
+#: C/blackjack.xml:315(command)
 msgid "blackjack"
 msgstr "blackjack"
 
-#: C/blackjack.xml:322(title)
+#: C/blackjack.xml:323(title)
 msgid "When You Start <application>Blackjack</application>"
 msgstr "Al iniciar <application>Blackjack</application>"
 
-#: C/blackjack.xml:323(para)
+#: C/blackjack.xml:324(para)
 msgid ""
 "When you start <application>Blackjack</application>, the following window is "
 "displayed."
-msgstr "Se mostrará la siguiente ventana al iniciar <application>Blackjack</application>."
+msgstr ""
+"Se mostrará la siguiente ventana al iniciar <application>Blackjack</"
+"application>."
 
-#: C/blackjack.xml:327(title)
+#: C/blackjack.xml:328(title)
 msgid "<application>Blackjack</application> Start Up Window"
 msgstr "Ventana de inicio de <application>Blackjack</application>"
 
-#: C/blackjack.xml:340(phrase)
+#: C/blackjack.xml:341(phrase)
 msgid ""
 "Shows <placeholder-1/> main window. Contains titlebar, menubar, toolbar, "
 "playing area, and scrollbars. Menubar contains Game, Settings, and Help "
 "menus."
 msgstr ""
-"Muestra la ventana principal <placeholder-1/>. Contiene la barra de título, barra de menú, "
-"barra de herramientas, área de juego y barras de desplazamiento. La barra de menú contiene "
-"los menús Juego, Ver, Ajustes, Control y Ayuda."
+"Muestra la ventana principal <placeholder-1/>. Contiene la barra de título, "
+"barra de menú, barra de herramientas, área de juego y barras de "
+"desplazamiento. La barra de menú contiene los menús Juego, Ver, Ajustes, "
+"Control y Ayuda."
 
 #. for example, the items on the menubar and on the toolbar. This section is optional.
-#: C/blackjack.xml:351(para)
+#: C/blackjack.xml:352(para)
 msgid ""
 "The <application>Blackjack</application> window contains the following "
 "elements:"
-msgstr "La ventana de <application>Blackjack</application> contiene los siguientes elementos:"
+msgstr ""
+"La ventana de <application>Blackjack</application> contiene los siguientes "
+"elementos:"
 
-#: C/blackjack.xml:356(term)
+#: C/blackjack.xml:357(term)
 msgid "Menubar"
 msgstr "Barra de menú"
 
-#: C/blackjack.xml:358(para)
+#: C/blackjack.xml:359(para)
 msgid ""
 "The menus on the menubar contain all of the commands you need to work with "
 "files in <application>Blackjack</application>."
 msgstr ""
-"Los menús en la barra de menú contienen todos los comandos que necesita para trabajar "
-"con archivos en <application>Blackjack</application>."
+"Los menús en la barra de menú contienen todos los comandos que necesita para "
+"trabajar con archivos en <application>Blackjack</application>."
 
-#: C/blackjack.xml:364(term)
+#: C/blackjack.xml:365(term)
 msgid "Toolbar"
 msgstr "Barra de herramientas"
 
-#: C/blackjack.xml:366(para)
+#: C/blackjack.xml:367(para)
 msgid ""
 "The toolbar contains a subset of the commands that you can access from the "
 "menubar."
@@ -474,64 +488,73 @@ msgstr ""
 "La barra de herramientas contiene un subconjunto de comandos a los que puede "
 "acceder desde la barra de menús."
 
-#: C/blackjack.xml:371(term)
+#: C/blackjack.xml:372(term)
 msgid "Statusbar"
 msgstr "Barra de estado"
 
-#: C/blackjack.xml:373(para)
+#: C/blackjack.xml:374(para)
 msgid ""
 "The statusbar displays information about current <application>Blackjack</"
 "application> activity and contextual information about the menu items."
 msgstr ""
 "La barra de estado muestra información acerca de la actividad actual en "
-"<application>Blackjack</application> así como información contextual acerca de los elementos del menú."
+"<application>Blackjack</application> así como información contextual acerca "
+"de los elementos del menú."
 
-#: C/blackjack.xml:379(term)
+#: C/blackjack.xml:380(term)
 msgid "Playing area"
 msgstr "Área de juego"
 
-#: C/blackjack.xml:381(para)
+#: C/blackjack.xml:382(para)
 msgid ""
 "The playing area contains the dealer position, player position, player wager "
 "stack, and the player's chips."
 msgstr ""
-"El área de juego contiene la posición del repartidos, la posición del jugador, la pila "
-"de apuestas del jugador y las fichas del jugador."
+"El área de juego contiene la posición del repartidos, la posición del "
+"jugador, la pila de apuestas del jugador y las fichas del jugador."
 
-#: C/blackjack.xml:390(title)
+#: C/blackjack.xml:391(title)
 msgid "<application>Blackjack</application> Menus"
 msgstr "Los menús de <application>Blackjack</application>"
 
-#: C/blackjack.xml:391(para)
+#: C/blackjack.xml:392(para)
 msgid ""
 "The menu bar, located above the <interface>game table</interface>, contains "
 "the following menus:"
-msgstr "La barra de menú, ubicada encima del <interface>tablero de juego</interface>, contiene los siguientes menús:"
+msgstr ""
+"La barra de menú, ubicada encima del <interface>tablero de juego</"
+"interface>, contiene los siguientes menús:"
 
-#: C/blackjack.xml:401(guimenu) C/blackjack.xml:765(title)
+#: C/blackjack.xml:402(guimenu) C/blackjack.xml:766(title)
 msgid "Game"
 msgstr "Juego"
 
-#: C/blackjack.xml:407(para)
+#: C/blackjack.xml:408(para)
 msgid ""
 "<menuchoice><shortcut><keysym>Ctrl-N</keysym></shortcut><guimenuitem>New "
 "game</guimenuitem></menuchoice>&mdash; This clears the table and starts a "
 "new game."
-msgstr "<menuchoice><shortcut><keysym>Ctrl+N</keysym></shortcut><guimenuitem>Nuevo</guimenuitem></menuchoice>: Esto limpia el tablero e inicia un nuevo juego."
+msgstr ""
+"<menuchoice><shortcut><keysym>Ctrl+N</keysym></shortcut><guimenuitem>Nuevo</"
+"guimenuitem></menuchoice>: Esto limpia el tablero e inicia un nuevo juego."
 
-#: C/blackjack.xml:418(para)
+#: C/blackjack.xml:419(para)
 msgid ""
 "<menuchoice><guimenuitem>Restart game</guimenuitem></menuchoice>&mdash; This "
 "clears the table and restarts the game."
-msgstr "<menuchoice><guimenuitem>Reiniciar</guimenuitem></menuchoice>: Esto limpia el tablero y reinicia el juego."
+msgstr ""
+"<menuchoice><guimenuitem>Reiniciar</guimenuitem></menuchoice>: Esto limpia "
+"el tablero y reinicia el juego."
 
-#: C/blackjack.xml:428(para)
+#: C/blackjack.xml:429(para)
 msgid ""
 "<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>&mdash; This will "
 "give you the computer's best suggestion for your move."
-msgstr "<menuchoice><guimenuitem>Sugerencia</guimenuitem></menuchoice>: Esto le proporciona la mejor sugerencia del computador para su propia jugada."
+msgstr ""
+"<menuchoice><guimenuitem>Sugerencia</guimenuitem></menuchoice>: Esto le "
+"proporciona la mejor sugerencia del computador para su propia jugada."
 
-#: C/blackjack.xml:439(para)
+#: C/blackjack.xml:440(para)
 msgid ""
 "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Exit</"
 "guimenuitem></menuchoice>&mdash; This quits the game."
@@ -539,82 +562,85 @@ msgstr ""
 "<menuchoice><shortcut><keysym>Ctrl+Q</keysym></shortcut><guimenuitem>Salir</"
 "guimenuitem></menuchoice>: Esto sale del juego."
 
-#: C/blackjack.xml:403(para) C/blackjack.xml:459(para)
+#: C/blackjack.xml:404(para) C/blackjack.xml:460(para)
 msgid "This menu contains these items: <placeholder-1/>"
 msgstr "Este menú contiene los siguientes elementos: <placeholder-1/>"
 
-#: C/blackjack.xml:457(guimenu) C/blackjack.xml:739(title)
+#: C/blackjack.xml:458(guimenu) C/blackjack.xml:740(title)
 msgid "Settings"
 msgstr "Ajustes"
 
-#: C/blackjack.xml:464(para)
+#: C/blackjack.xml:465(para)
 msgid ""
 "<guimenuitem>Show tool bar</guimenuitem>&mdash; This toggle switches the "
 "tool bar on and off."
-msgstr "<guimenuitem>Mostrar la barra de herramientas</guimenuitem>: Esto conmuta la visión de la barra de herramientas."
+msgstr ""
+"<guimenuitem>Mostrar la barra de herramientas</guimenuitem>: Esto conmuta la "
+"visión de la barra de herramientas."
 
-#: C/blackjack.xml:472(para)
+#: C/blackjack.xml:473(para)
 msgid ""
 "<guimenuitem>Preferences&hellip;</guimenuitem>&mdash; This opens the "
 "<interface>Preferences Dialog</interface>, allowing you to configure the "
 "game."
 msgstr ""
-"<guimenuitem>Preferencias</guimenuitem>: Esto abre el <interface>Diálogo de preferencias</interface>, "
-"permitiéndole configurar el juego."
+"<guimenuitem>Preferencias</guimenuitem>: Esto abre el <interface>Diálogo de "
+"preferencias</interface>, permitiéndole configurar el juego."
 
-#: C/blackjack.xml:488(guimenu)
+#: C/blackjack.xml:489(guimenu)
 msgid "Help"
 msgstr "Ayuda"
 
-#: C/blackjack.xml:495(para)
+#: C/blackjack.xml:496(para)
 msgid ""
 "<guimenuitem>Contents</guimenuitem>&mdash; Opens your help browser and shows "
 "this manual."
 msgstr "<guimenuitem>Contenido</guimenuitem>: Abre y muestra este manual."
 
-#: C/blackjack.xml:503(para)
+#: C/blackjack.xml:504(para)
 msgid ""
 "<guimenuitem>About</guimenuitem>&mdash; Opens the <interface>About Dialog</"
 "interface>, showing basic information about <application>Blackjack</"
 "application> such as its version number and the names of its authors."
 msgstr ""
-"<guimenuitem>Acerca de</guimenuitem>: Abre el <interface>Diálogo acerca de</interface>, "
-"mostrando información básica acerca de <application>Blackjack</application>, tal como "
-"el número de versión y los nombres de los autores."
+"<guimenuitem>Acerca de</guimenuitem>: Abre el <interface>Diálogo acerca de</"
+"interface>, mostrando información básica acerca de <application>Blackjack</"
+"application>, tal como el número de versión y los nombres de los autores."
 
-#: C/blackjack.xml:490(para)
+#: C/blackjack.xml:491(para)
 msgid "This menu contains: <placeholder-1/>"
 msgstr "Este menú contiene: <placeholder-1/>"
 
-#: C/blackjack.xml:522(title)
+#: C/blackjack.xml:523(title)
 msgid "<application>Blackjack</application> Playing Area"
 msgstr "Área de juego de <application>Blackjack</application>"
 
-#: C/blackjack.xml:523(para)
+#: C/blackjack.xml:524(para)
 msgid ""
 "The playing area (or table), located below the <interface>toolbar</"
 "interface>, contains the following elements:"
 msgstr ""
-"El área de juego (tablero o tapete), ubicado debajo de la <interface>barra de herramientas</interface> "
-"contiene los siguientes elementos:"
+"El área de juego (tablero o tapete), ubicado debajo de la <interface>barra "
+"de herramientas</interface> contiene los siguientes elementos:"
 
-#: C/blackjack.xml:531(interface)
+#: C/blackjack.xml:532(interface)
 msgid "Dealer position"
 msgstr "Posición del repartidor"
 
-#: C/blackjack.xml:532(para)
+#: C/blackjack.xml:533(para)
 msgid ""
 "This is where the dealer hand will be placed. It is located at the top of "
 "the playing area. On a clear table it will appear as a white outlined region."
 msgstr ""
 "Aquí es donde el repartidor, o la mano, se sitúa. Está ubicado en la parte "
-"superior del área de juego. En un tablero limpio aparecerá como una región delimitada blanca."
+"superior del área de juego. En un tablero limpio aparecerá como una región "
+"delimitada blanca."
 
-#: C/blackjack.xml:540(interface)
+#: C/blackjack.xml:541(interface)
 msgid "Player positions"
 msgstr "Posición del jugador"
 
-#: C/blackjack.xml:541(para)
+#: C/blackjack.xml:542(para)
 msgid ""
 "This is where the player's hands will be placed. Initially, there will be "
 "only one player position. More will be created if the player splits a hand. "
@@ -626,105 +652,111 @@ msgstr ""
 "En un tablero limpio aparecerán como líneas blancas bajo la posición del "
 "repartidor."
 
-#: C/blackjack.xml:550(interface)
+#: C/blackjack.xml:551(interface)
 msgid "Player wager stack"
 msgstr "Pila de apuestas del jugador"
 
-#: C/blackjack.xml:551(para)
+#: C/blackjack.xml:552(para)
 msgid ""
 "The wager stack represents the initial wager on each hand. It consists of a "
 "stack of chips located directly to the left of each player position."
 msgstr ""
-"La pila de apuestas representa la apuesta iniciar en cada mano. Consiste en una "
-"pila de fichas ubicada directamente a la izquierda de la posición de cada jugador."
+"La pila de apuestas representa la apuesta iniciar en cada mano. Consiste en "
+"una pila de fichas ubicada directamente a la izquierda de la posición de "
+"cada jugador."
 
-#: C/blackjack.xml:558(interface)
+#: C/blackjack.xml:559(interface)
 msgid "Player chips"
 msgstr "Fichas del jugador"
 
-#: C/blackjack.xml:559(para)
+#: C/blackjack.xml:560(para)
 msgid ""
 "The player's chips represent an infinite stack of chips for each of the chip "
 "values 100, 25, 5, and 1. These chips are used to modify the wager."
 msgstr ""
-"Las fichas del jugador representan una pila infinita de fichas para cada uno de los valores "
-"100, 25, 5 y 1. Estas fichas se usan para modificar la apuesta."
+"Las fichas del jugador representan una pila infinita de fichas para cada uno "
+"de los valores 100, 25, 5 y 1. Estas fichas se usan para modificar la "
+"apuesta."
 
-#: C/blackjack.xml:576(title)
+#: C/blackjack.xml:577(title)
 msgid "Usage"
 msgstr "Uso"
 
-#: C/blackjack.xml:618(title)
+#: C/blackjack.xml:619(title)
 msgid "To Set the Wager"
 msgstr "Establecer la apuesta"
 
-#: C/blackjack.xml:622(para)
+#: C/blackjack.xml:623(para)
 msgid ""
 "Double click on the player chip, located along the lower edge of the playing "
 "area, that you wish to add to your wager."
 msgstr ""
-"Pulse dos veces sobre la ficha del jugador, ubicada a lo largo del borde inferior del área de "
-"juego, que desee añadir a su apuesta."
+"Pulse dos veces sobre la ficha del jugador, ubicada a lo largo del borde "
+"inferior del área de juego, que desee añadir a su apuesta."
 
-#: C/blackjack.xml:626(para)
+#: C/blackjack.xml:627(para)
 msgid "Or, drag the desired chip onto your wager stack, located next to your hand."
 msgstr "O arrastre la ficha deseada en su pila de apuestas, ubicada junto a su mano."
 
-#: C/blackjack.xml:619(para)
+#: C/blackjack.xml:620(para)
 msgid "To increase the wager for the hand: <placeholder-1/>"
 msgstr "Aumentar la apuesta para la mano: <placeholder-1/>"
 
-#: C/blackjack.xml:634(title)
+#: C/blackjack.xml:635(title)
 msgid "To Deal a New Hand"
 msgstr "Repartir"
 
-#: C/blackjack.xml:635(para)
+#: C/blackjack.xml:636(para)
 msgid ""
 "A new hand can be dealt when the table is clear or when play has finished on "
 "the current hands."
 msgstr ""
-"Se puede repartir una nueva mano cuando el tablero está limpio o cuando se han "
-"terminado las manos de la partida actual."
+"Se puede repartir una nueva mano cuando el tablero está limpio o cuando se "
+"han terminado las manos de la partida actual."
 
-#: C/blackjack.xml:639(para)
+#: C/blackjack.xml:640(para)
 msgid ""
 "To deal a new hand on a clear table, click in the white outlines that "
 "indicate the dealer or player positions."
 msgstr ""
-"Para repartir una nueva mano en un tablero limpio, pulse en las líneas blancas "
-"que indican la posición del repartidor o del jugador."
+"Para repartir una nueva mano en un tablero limpio, pulse en las líneas "
+"blancas que indican la posición del repartidor o del jugador."
 
-#: C/blackjack.xml:643(para)
+#: C/blackjack.xml:644(para)
 msgid ""
 "To deal a new hand after play has finished on the current hands, click once "
 "on any of the cards on the table."
 msgstr ""
-"Para repartir una nueva mano después de se haya acabado la mano de la partida actual, pulse una vez "
-"sobre cualquiera de las cartas en el tapete."
+"Para repartir una nueva mano después de se haya acabado la mano de la "
+"partida actual, pulse una vez sobre cualquiera de las cartas en el tapete."
 
-#: C/blackjack.xml:651(title)
+#: C/blackjack.xml:652(title)
 msgid "To Add a Card to a Hand (Hit)"
 msgstr "Pedir"
 
-#: C/blackjack.xml:652(para)
+#: C/blackjack.xml:653(para)
 msgid "You may add cards to a hand until the hand total is 21 or over."
 msgstr "Puede querer añadir cartas a una mano hasta que la mano total sea 21 o más."
 
-#: C/blackjack.xml:655(para)
+#: C/blackjack.xml:656(para)
 msgid "To add a card to a player's hand, click once on any card in the hand."
-msgstr "Para añadir una carta a la mano de un jugador, pulse una vez sobre cualquiera de las cartas en la mano."
+msgstr ""
+"Para añadir una carta a la mano de un jugador, pulse una vez sobre "
+"cualquiera de las cartas en la mano."
 
-#: C/blackjack.xml:662(title)
+#: C/blackjack.xml:663(title)
 msgid "To Stop Taking Cards (Stand)"
 msgstr "Pararse"
 
-#: C/blackjack.xml:663(para)
+#: C/blackjack.xml:664(para)
 msgid ""
 "You may stop taking cards at any time after the first two cards have been "
 "dealt."
-msgstr "Puede querer dejar de coger cartas en cualquier momento después de que se hayan repartido las dos primeras cartas."
+msgstr ""
+"Puede querer dejar de coger cartas en cualquier momento después de que se "
+"hayan repartido las dos primeras cartas."
 
-#: C/blackjack.xml:666(para)
+#: C/blackjack.xml:667(para)
 msgid ""
 "To stop adding cards to a hand, click once on any other hand. For example, "
 "when there is only one player position (ie. you have not split a pair), "
@@ -732,68 +764,70 @@ msgid ""
 "stand on the first player hand by clicking on the second player hand, or the "
 "dealer hand."
 msgstr ""
-"Para dejar de añadir cartas a una mano, pulse una vez sobre cualquier otra mano. Por ejemplo, "
-"cuando hay sólo una posición de jugador (ej. no ha dividido un par), pulse en la mano "
-"del repartidor para pararse. Cuando haya dividido un par, debe pararse en "
-"la mano del primer jugador pulsando en la mano del segundo jugador o en la mano "
-"del repartidor."
+"Para dejar de añadir cartas a una mano, pulse una vez sobre cualquier otra "
+"mano. Por ejemplo, cuando hay sólo una posición de jugador (ej. no ha "
+"dividido un par), pulse en la mano del repartidor para pararse. Cuando haya "
+"dividido un par, debe pararse en la mano del primer jugador pulsando en la "
+"mano del segundo jugador o en la mano del repartidor."
 
-#: C/blackjack.xml:676(title)
+#: C/blackjack.xml:677(title)
 msgid "To Double Down"
 msgstr "Doblar"
 
-#: C/blackjack.xml:677(para)
+#: C/blackjack.xml:678(para)
 msgid ""
 "To double down, double click on any of the player chips after the first two "
 "cards have been dealt."
 msgstr ""
-"Para doblar pulse dos veces sobre cualquiera de las fichas del jugador después de que las dos "
-"primeras cartas se hayan repartido."
+"Para doblar pulse dos veces sobre cualquiera de las fichas del jugador "
+"después de que las dos primeras cartas se hayan repartido."
 
-#: C/blackjack.xml:685(title)
+#: C/blackjack.xml:686(title)
 msgid "To Split Pairs"
 msgstr "Dividir pares"
 
-#: C/blackjack.xml:686(para)
+#: C/blackjack.xml:687(para)
 msgid ""
 "To split a pair, drag the top card of the hand off the player position and "
 "drop on any empty space on the table."
 msgstr ""
-"Para dividir un par, arrastre la carta superior de la mano fuera de la posición del jugador "
-"y suéltela sobre cualquier espacio vació del tapete."
+"Para dividir un par, arrastre la carta superior de la mano fuera de la "
+"posición del jugador y suéltela sobre cualquier espacio vació del tapete."
 
-#: C/blackjack.xml:694(title)
+#: C/blackjack.xml:695(title)
 msgid "To Surrender"
 msgstr "Rendirse"
 
-#: C/blackjack.xml:695(para)
+#: C/blackjack.xml:696(para)
 msgid "Not yet implemented."
 msgstr "Aún no implementado."
 
-#: C/blackjack.xml:702(title)
+#: C/blackjack.xml:703(title)
 msgid "Get a hint"
 msgstr "Obtener una sugerencia"
 
-#: C/blackjack.xml:703(para)
+#: C/blackjack.xml:704(para)
 msgid ""
 "At any time you may ask the game for a hint. To do this either click on the "
 "<interface>Hint</interface> button on the <interface>toolbar</interface>, or "
 "choose the <menuchoice><guisubmenu>Game </guisubmenu><guimenuitem>Hint</"
 "guimenuitem></menuchoice> menu item."
 msgstr ""
-"En cualquier momento puede pedir una sugerencia al juego. Para hacer esto puede pulsar "
-"sobre el botón <interface>Sugerencia</interface> en la <interface>barra de herramientas</interface> o "
-"puede elegir el elemento del menú <menuchoice><guisubmenu>Juego</guisubmenu><guimenuitem>Sugerencia</guimenuitem></menuchoice>."
+"En cualquier momento puede pedir una sugerencia al juego. Para hacer esto "
+"puede pulsar sobre el botón <interface>Sugerencia</interface> en la "
+"<interface>barra de herramientas</interface> o puede elegir el elemento del "
+"menú <menuchoice><guisubmenu>Juego</guisubmenu><guimenuitem>Sugerencia</"
+"guimenuitem></menuchoice>."
 
-#: C/blackjack.xml:716(title)
+#: C/blackjack.xml:717(title)
 msgid "Keyboard control"
 msgstr "Controles de teclado"
 
-#: C/blackjack.xml:719(title)
+#: C/blackjack.xml:720(title)
 msgid "Control keys"
 msgstr "Teclas de control"
 
-#: C/blackjack.xml:717(para)
+#: C/blackjack.xml:718(para)
 msgid ""
 "Most of the operations in the game can be controlled from keyboard input. "
 "<table><placeholder-1/><tgroup cols=\"2\" align=\"left\" colsep=\"1\" rowsep="
@@ -805,68 +839,73 @@ msgid ""
 "hand</entry><entry>P</entry></row><row><entry>Surrender hand</"
 "entry><entry>R</entry></row></tbody></tgroup></table>"
 msgstr ""
-"La mayoría de las operaciones del juego se pueden controlar desde el teclado. "
-"<table><placeholder-1/><tgroup cols=\"2\" align=\"left\" colsep=\"1\" rowsep="
-"\"1\"><thead><row><entry>Acción</entry><entry>Tecla</entry></row></"
+"La mayoría de las operaciones del juego se pueden controlar desde el "
+"teclado. <table><placeholder-1/><tgroup cols=\"2\" align=\"left\" colsep=\"1"
+"\" rowsep=\"1\"><thead><row><entry>Acción</entry><entry>Tecla</entry></row></"
 "thead><tbody><row><entry>Repartir</entry><entry>Intro</entry></"
-"row><row><entry>Pedir</entry><entry>H</entry></"
-"row><row><entry>Plantarse</entry><entry>S</entry></"
-"row><row><entry>Doblar</entry><entry>D</entry></row><row><entry>Dividir la mano</entry><entry>P</entry></row><row><entry>Rendirse</"
-"entry><entry>R</entry></row></tbody></tgroup></table>"
+"row><row><entry>Pedir</entry><entry>H</entry></row><row><entry>Plantarse</"
+"entry><entry>S</entry></row><row><entry>Doblar</entry><entry>D</entry></"
+"row><row><entry>Dividir la mano</entry><entry>P</entry></"
+"row><row><entry>Rendirse</entry><entry>R</entry></row></tbody></tgroup></"
+"table>"
 
-#: C/blackjack.xml:740(para)
+#: C/blackjack.xml:741(para)
 msgid ""
 "To configure <application>Blackjack</application>, choose "
 "<menuchoice><guimenu>Settings</guimenu><guimenuitem>Preferences</"
 "guimenuitem></menuchoice>. The <guilabel>Preferences</guilabel> dialog "
 "contains the following tabbed sections:"
-msgstr "Para configurar <application>Blackjack</application>, elija <menuchoice><guimenu>Ajustes</guimenu><guimenuitem>Preferencias</guimenuitem></menuchoice>. El diálogo <guilabel>Preferencias</guilabel> contiene las siguientes secciones:"
+msgstr ""
+"Para configurar <application>Blackjack</application>, elija "
+"<menuchoice><guimenu>Ajustes</guimenu><guimenuitem>Preferencias</"
+"guimenuitem></menuchoice>. El diálogo <guilabel>Preferencias</guilabel> "
+"contiene las siguientes secciones:"
 
-#: C/blackjack.xml:769(guilabel)
+#: C/blackjack.xml:770(guilabel)
 msgid "Display hand probabilities"
 msgstr "Mostrar probabilidades de la mano"
 
-#: C/blackjack.xml:771(para)
+#: C/blackjack.xml:772(para)
 msgid ""
 "Select this item to display dealer hand probabilities and expected values "
 "for the various player options."
 msgstr ""
-"Seleccione este elemento para mostrar las probabilidades de la mano y los valores "
-"esperados para las varias opciones del jugador."
+"Seleccione este elemento para mostrar las probabilidades de la mano y los "
+"valores esperados para las varias opciones del jugador."
 
-#: C/blackjack.xml:778(guilabel)
+#: C/blackjack.xml:779(guilabel)
 msgid "Quick deals"
 msgstr "Reparto rápido"
 
-#: C/blackjack.xml:780(para)
+#: C/blackjack.xml:781(para)
 msgid "Select this item to make the computer deal cards without a delay"
 msgstr "Seleccione este elemento para que los repartos no tengan retraso."
 
-#: C/blackjack.xml:790(title)
+#: C/blackjack.xml:791(title)
 msgid "Rules"
 msgstr "Reglas"
 
-#: C/blackjack.xml:791(para)
+#: C/blackjack.xml:792(para)
 msgid "Select rule variations from the list."
 msgstr "Seleccione las variaciones de las reglas de la lista."
 
-#: C/blackjack.xml:797(title)
+#: C/blackjack.xml:798(title)
 msgid "Cards"
 msgstr "Cartas"
 
-#: C/blackjack.xml:798(para)
+#: C/blackjack.xml:799(para)
 msgid "Customize the appearance of the playing cards."
 msgstr "Personalizar la apariencia de las cartas."
 
-#: C/blackjack.xml:805(title)
+#: C/blackjack.xml:806(title)
 msgid "Advanced"
 msgstr "Avanzado"
 
-#: C/blackjack.xml:810(title)
+#: C/blackjack.xml:811(title)
 msgid "Dealer Probabilities"
 msgstr "Probabilidades del repartidor"
 
-#: C/blackjack.xml:811(para)
+#: C/blackjack.xml:812(para)
 msgid ""
 "When the <guilabel>Show dealer probabilities</guilabel> option is selected "
 "in the <guilabel>Game</guilabel> tab of the <guilabel>Preferences</guilabel> "
@@ -876,17 +915,19 @@ msgid ""
 "one means certain. These probabilities take into account all cards dealt "
 "from the shoe."
 msgstr ""
-"Cuando la opción <guilabel>Mostrar probabilidades del repartidor</guilabel> está seleccionada, "
-"en la solapa <guilabel>Juego</guilabel> del diálogo <guilabel>Preferencias</guilabel>, se mostrarán "
-"las probabilidades exactas de cada resultado posible sobre el tablero de juego, a la izquierda de la mano "
-"del repartidor. Las probabilidades están comprendidas entre cero y uno, donde cero significa imposibilidad "
-"y uno significa certeza. Estas probabilidades toman en cuenta todas las cartas repartidas."
+"Cuando la opción <guilabel>Mostrar probabilidades del repartidor</guilabel> "
+"está seleccionada, en la solapa <guilabel>Juego</guilabel> del diálogo "
+"<guilabel>Preferencias</guilabel>, se mostrarán las probabilidades exactas "
+"de cada resultado posible sobre el tablero de juego, a la izquierda de la "
+"mano del repartidor. Las probabilidades están comprendidas entre cero y uno, "
+"donde cero significa imposibilidad y uno significa certeza. Estas "
+"probabilidades toman en cuenta todas las cartas repartidas."
 
-#: C/blackjack.xml:822(title)
+#: C/blackjack.xml:823(title)
 msgid "Player Expected Values"
 msgstr "Valores esperados por el jugador"
 
-#: C/blackjack.xml:823(para)
+#: C/blackjack.xml:824(para)
 msgid ""
 "When the <guilabel>Show dealer probabilities</guilabel> option is selected "
 "in the <guilabel>Game</guilabel> tab of the <guilabel>Preferences</guilabel> "
@@ -898,19 +939,22 @@ msgid ""
 "current situation many, many times, standing each time, with a 1.00 initial "
 "wager, then on average you would lose 0.12345."
 msgstr ""
-"Cuando la opción <guilabel>Mostrar probabilidades del repartidor</guilabel> está seleccionada, "
-"en la solapa <guilabel>Juego</guilabel> del diálogo <guilabel>Preferencias</guilabel>, se mostrarán "
-"las probabilidades exactas de cada resultado posible de cada jugador (en porcentaje sobre la apuesta "
-"inicial) sobre el tablero de juego, a la izquierda de la mano del repartidor. Estos valores toman en cuenta "
-"todas las cartas de su mano actual y la carta mostrada del repartidor. Por ejemplo, suponga que el "
-"número mostrado es -12.345. Esto significa que si ha jugado fuera de la situación actual muchas, muchas "
-"veces plantándose cada vez, con una apuesta inicial 1.00, entonces de media perderá 0.12345."
+"Cuando la opción <guilabel>Mostrar probabilidades del repartidor</guilabel> "
+"está seleccionada, en la solapa <guilabel>Juego</guilabel> del diálogo "
+"<guilabel>Preferencias</guilabel>, se mostrarán las probabilidades exactas "
+"de cada resultado posible de cada jugador (en porcentaje sobre la apuesta "
+"inicial) sobre el tablero de juego, a la izquierda de la mano del "
+"repartidor. Estos valores toman en cuenta todas las cartas de su mano actual "
+"y la carta mostrada del repartidor. Por ejemplo, suponga que el número "
+"mostrado es -12.345. Esto significa que si ha jugado fuera de la situación "
+"actual muchas, muchas veces plantándose cada vez, con una apuesta inicial "
+"1.00, entonces de media perderá 0.12345."
 
-#: C/blackjack.xml:856(title)
+#: C/blackjack.xml:857(title)
 msgid "About <application>Blackjack</application>"
 msgstr "Acerca de <application>Blackjack</application>"
 
-#: C/blackjack.xml:857(para)
+#: C/blackjack.xml:858(para)
 msgid ""
 "<application>Blackjack</application> was written by William Jon McCann "
 "(<email>mccann@jhu.edu</email>)."
@@ -918,7 +962,7 @@ msgstr ""
 "William Jon McCann (<email>mccann@jhu.edu</email>) escribió "
 "<application>Blackjack</application>."
 
-#: C/blackjack.xml:859(para)
+#: C/blackjack.xml:860(para)
 msgid ""
 "To report a bug or make a suggestion regarding this application or this "
 "manual, follow the directions in this <ulink url=\"ghelp:gnome-feedback\" "
@@ -928,7 +972,7 @@ msgstr ""
 "este manual, siga las indicaciones en este <ulink url=\"ghelp:gnome-feedback"
 "\" type=\"help\">documento</ulink>."
 
-#: C/blackjack.xml:865(para)
+#: C/blackjack.xml:866(para)
 msgid ""
 "This program is distributed under the terms of the GNU General Public "
 "license as published by the Free Software Foundation; either version 2 of "
@@ -946,5 +990,5 @@ msgstr ""
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2.
 #: C/blackjack.xml:0(None)
 msgid "translator-credits"
-msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2007"
+msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2007-2008."
 
