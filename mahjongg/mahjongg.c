@@ -1552,9 +1552,11 @@ main (int argc, char *argv[])
   init_game ();
   update_score_state ();
 
+  /* Don't leave the keyboard focus on the toolbar */
+  gtk_widget_grab_focus (board);
+
   /* Note: we have to have a layout loaded before here so that the
    * window knows how big to make the tiles. */
-
   gtk_widget_show_all (window);
 
   if (!games_conf_get_boolean (NULL, KEY_SHOW_TOOLBAR, NULL))

@@ -1,3 +1,9 @@
+2008-01-11  Christian Persch  <chpe@gnome.org>
+
+	* drawing.c: (create_mahjongg_board): Make the board focusable.
+	* mahjongg.c: (main): Grab focus on the board, so it doesn't stay on
+	the New button in the toolbar. Bug #503857.
+
 2007-08-17  Thomas H.P. Andersen  <phomes@gmail.com>
 
 	* mahjongg.c: Uncomment workaround for bug #353964. Workaround
