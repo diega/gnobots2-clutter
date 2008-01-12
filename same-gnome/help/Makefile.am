@@ -13,7 +13,8 @@ DOC_LINGUAS = en_GB es fr oc ru sv
 
 DOC_MODULE = same-gnome
 
-DOC_ENTITIES = \
+DOC_ENTITIES = 
+DOC_INCLUDES = \
 	legal.xml
 
 DOC_FIGURES = \
