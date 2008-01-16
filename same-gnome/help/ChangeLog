@@ -1,3 +1,9 @@
+2008-01-16  Gil Forcada  <gforcada@gnome.org>
+
+	* ca/ca.po: Added Catalan translation by Joan Duran.
+	* ca/figures/*.png: Added Catalan screenshots.
+	* Makefile.am: Added ca to DOC_LINGUAS.
+
 2008-01-12  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
 
 	* es/es.po: Updated Spanish translation
