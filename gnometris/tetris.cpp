@@ -1395,7 +1395,7 @@ Tetris::gameAbout(GtkAction *action, void *d)
 #endif
 			       "version", VERSION,
 			       "comments", _("A classic game of fitting falling blocks together.\n\nGnometris is a part of GNOME Games."),
-			       "copyright", "Copyright \xc2\xa9 1999-2007 J. Marcin Gorycki",
+			       "copyright", "Copyright \xc2\xa9 1999-2008 J. Marcin Gorycki",
 			       "license", license,
 		               "website-label", _("GNOME Games web site"),
 			       "authors", authors,

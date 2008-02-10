@@ -940,7 +940,7 @@ about_callback (void)
 			 "version", VERSION,
 			 "comments",
 			 _("A matching game played with Mahjongg tiles.\n\nMahjongg is a part of GNOME Games."),
-			 "copyright", "Copyright \xc2\xa9 1998-2007 Free Software Foundation, Inc.",
+			 "copyright", "Copyright \xc2\xa9 1998-2008 Free Software Foundation, Inc.",
 			 "license", license,
                          "wrap-license", TRUE,
                          "authors", authors,
