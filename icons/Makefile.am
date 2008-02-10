@@ -139,6 +139,16 @@ icons_svg = \
 	scalable/gnome-tetravex.svg \
 	$(NULL)
 
+private_icons = \
+	$(NULL)
+
+if !HAVE_HILDON
+private_icons += \
+	hicolor_actions_24x24_teleport.png \
+	hicolor_actions_24x24_teleport-random.png \
+	$(NULL)
+endif # !HAVE_HILDON
+
 if HAVE_HILDON
 
 iconcontext = hildon
@@ -186,9 +196,32 @@ EXTRA_DIST = \
 	$(icons_50)	\
 	$(icons_64_54)	\
 	$(icons_svg)	\
+	$(private_icons)\
 	$(NULL)
 
 gtk_update_icon_cache = gtk-update-icon-cache -f -t $(datadir)/icons/hicolor
+
+install-private-icons:
+	for icon in $(private_icons); do \
+		THEME=`echo $$icon | cut -d_ -f1`; \
+		CONTEXT=`echo $$icon | cut -d_ -f2`; \
+		SIZE=`echo $$icon | cut -d_ -f3`; \
+		ICONFILE=`echo $$icon | cut -d_ -f4`; \
+		$(mkdir_p) $(DESTDIR)$(pkgdatadir)/icons/$$THEME/$$SIZE/$$CONTEXT; \
+		$(INSTALL_DATA) $(srcdir)/$$icon $(DESTDIR)$(pkgdatadir)/icons/$$THEME/$$SIZE/$$CONTEXT/$$ICONFILE; \
+	done
+
+uninstall-private-icons:
+	for icon in $(private_icons); do \
+		THEME=`echo $$icon | cut -d_ -f1`; \
+		CONTEXT=`echo $$icon | cut -d_ -f2`; \
+		SIZE=`echo $$icon | cut -d_ -f3`; \
+		ICONFILE=`echo $$icon | cut -d_ -f4`; \
+		rm -f $(DESTDIR)$(pkgdatadir)/icons/$$THEME/$$SIZE/$$CONTEXT/$$ICONFILE; \
+	done
+
+install-data-local: install-private-icons
+uninstall-local: uninstall-private-icons
 
 install-data-hook: update-icon-cache
 uninstall-hook: update-icon-cache
