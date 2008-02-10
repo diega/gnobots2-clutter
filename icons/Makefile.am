@@ -140,6 +140,7 @@ icons_svg = \
 	$(NULL)
 
 private_icons = \
+	hicolor_actions_scalable_cards-deal.svg \
 	$(NULL)
 
 if !HAVE_HILDON
