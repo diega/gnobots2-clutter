@@ -84,7 +84,7 @@ gboolean show_toolbar = TRUE;
 gchar *game_variation = NULL;
 
 #define DEFAULT_VARIATION      "Vegas_Strip.rules"
-#define DEFAULT_THEME "gnomangelo_bitmap"
+#define DEFAULT_THEME "bonded"
 
 void
 bj_make_window_title (gchar *game_name) 

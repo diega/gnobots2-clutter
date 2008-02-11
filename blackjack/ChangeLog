@@ -1,3 +1,9 @@
+2008-02-12  Thomas H.P. Andersen  <phomes@gmail.com>
+
+	* data/blackjack.schemas.in:
+	* src/blackjack.cpp: Undo new default card as no freeze break was given 
+	for 2.22.
+
 2008-02-09  Christian Persch  <chpe@gnome.org>
 
 	* data/blackjack.schemas.in:
