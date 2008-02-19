@@ -24,6 +24,7 @@
 
 #include "tetris.h"
 #include "blockops.h"
+#include "renderer.h"
 
 class Field:public BlockOps {
 public:
@@ -54,6 +55,8 @@ public:
 
   bool showPause;
   bool showGameOver;
+  Renderer *renderer;
+  gint rendererTheme;
 
   GdkPixbuf *backgroundImage;
   bool backgroundImageTiled;

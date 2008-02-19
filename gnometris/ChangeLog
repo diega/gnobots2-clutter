@@ -1,3 +1,9 @@
+2008-02-19 Jordi Mas <jmas@softcatala.org>
+
+	* renderer.cpp: Cache Renderer object to avoid so many alloc/deallocs
+	* renderer.h: Cache Renderer object to avoid so many alloc/deallocs
+	* field.h: Cache Renderer object to avoid so many alloc/deallocs
+
 2007-08-19  Robert Ancell  <robert.ancell@gmail.com>
 
 	* tetris.cpp: Add translator comment for "<none>" (Bug #517320)

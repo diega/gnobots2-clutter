@@ -100,6 +100,18 @@ Renderer::~Renderer ()
         cairo_surface_destroy (background);
 }
 
+void Renderer::setTarget (cairo_surface_t * dst)
+{
+        cairo_surface_destroy (target);
+        target = cairo_surface_reference (dst);
+}
+
+void Renderer::setBackground (cairo_surface_t *bg)
+{
+        cairo_surface_destroy (background);
+        background = cairo_surface_reference (bg);
+}
+
 void Renderer::drawCell (cairo_t *cr, gint x, gint y)
 {
         int i;

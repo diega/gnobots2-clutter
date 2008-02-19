@@ -42,14 +42,19 @@ public:
 	    int w, int h, int pxw, int pxh);
     virtual ~ Renderer ();
   virtual void render ();
-protected:
-    cairo_surface_t * target;
-  cairo_surface_t *background;
+
+  void setTarget (cairo_surface_t *target);
+  void setBackground (cairo_surface_t *background);
+
   Block **data;
   int width;
   int height;
   int pxwidth;
   int pxheight;
+protected:
+
+  cairo_surface_t * target;
+  cairo_surface_t *background;
 
   virtual void drawCell (cairo_t * cr, gint x, gint y);
   virtual void drawBackground (cairo_t * cr);

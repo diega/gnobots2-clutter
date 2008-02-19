@@ -37,6 +37,8 @@ Field::Field():
 	backgroundColor(NULL)
 {
         themeID = 0;
+        renderer = NULL;
+        rendererTheme = -1;
 
 	w = gtk_drawing_area_new();
 
@@ -56,6 +58,9 @@ Field::~Field()
 		cairo_surface_destroy(buffer);
 	if (background)
 		cairo_surface_destroy(background);
+
+        if (renderer)
+                delete renderer;
 }
 
 void
@@ -209,17 +214,30 @@ void
 Field::redraw()
 {
 	cairo_t *cr;
-        Renderer *r;
         
 	g_return_if_fail(buffer);
 
         generateTarget ();
 
-        r = rendererFactory (themeID, buffer, background, field, 
-                             COLUMNS, LINES, width, height);
+        if (rendererTheme != themeID) {
 
-        r->render ();
-        delete r;
+                if (renderer)
+                        delete renderer;
+
+                renderer = rendererFactory (themeID, buffer, background, field, 
+                                     COLUMNS, LINES, width, height);
+                rendererTheme = themeID;
+        } else {
+                    renderer->setTarget (buffer);
+                    renderer->setBackground (background);
+                    renderer->data = field;
+                    renderer->width = COLUMNS;
+                    renderer->height = LINES;
+                    renderer->pxwidth = width;
+                    renderer->pxheight = height;
+        }
+
+        renderer->render ();
 
 	cr = cairo_create(buffer);
 
