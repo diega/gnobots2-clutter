@@ -1,3 +1,7 @@
+2007-08-19  Robert Ancell  <robert.ancell@gmail.com>
+
+	* tetris.cpp: Add translator comment for "<none>" (Bug #517320)
+
 2007-08-16  Andreas Røsdal  <andreasr@gnome.org>
 
 	* gnometris.svg: Remove blur, to improve performance.

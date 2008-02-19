@@ -628,6 +628,8 @@ Tetris::fillMenu(GtkWidget *menu, char *pixname, char *dirname,
 	
 	if (addnone)
 	{
+        /* Translators: This is the placeholder item in the theme combo box
+           (preferences dialog) when no themes are available */
 		s = g_strdup(_("<none>"));
 		gtk_combo_box_append_text (GTK_COMBO_BOX (menu), _("<none>"));
 		*listp = g_list_append (*listp, s);
