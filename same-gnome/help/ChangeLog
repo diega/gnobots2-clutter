@@ -1,3 +1,7 @@
+2008-02-28  Luca Ferretti  <elle.uca@libero.it>
+
+	* it/figures/*: Added Italian screenshots by Alessio Treglia.
+
 2008-02-27  Luca Ferretti  <elle.uca@libero.it>
 
 	* Makefile.am: include it in DOC_LINGUAS.
