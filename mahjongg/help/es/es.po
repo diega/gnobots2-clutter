@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mahjongg.HEAD\n"
-"POT-Creation-Date: 2008-01-03 19:05+0000\n"
+"POT-Creation-Date: 2008-02-12 11:05+0000\n"
 "PO-Revision-Date: 2008-02-12 11:40+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
@@ -36,8 +36,10 @@ msgstr "@@image: 'figures/toolbar.png'; md5=ee97ea171b1eb2510f7376734b590791"
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/mahjongg.xml:576(None)
-msgid "@@image: 'figures/preferences.png'; md5=0c04907f6aeaf7b3620e2c21e54d2025"
-msgstr "@@image: 'figures/preferences.png'; md5=0c04907f6aeaf7b3620e2c21e54d2025"
+msgid ""
+"@@image: 'figures/preferences.png'; md5=0c04907f6aeaf7b3620e2c21e54d2025"
+msgstr ""
+"@@image: 'figures/preferences.png'; md5=0c04907f6aeaf7b3620e2c21e54d2025"
 
 #: C/mahjongg.xml:25(title)
 msgid "<application>Mahjongg</application> Manual"
@@ -49,9 +51,9 @@ msgid ""
 "involves clearing as much of the board as possible by matching corresponding "
 "tiles and taking them out of play."
 msgstr ""
-"Mahjongg es una versión solitaria del clásico juego de piezas asiático. Implica "
-"limpiar el tablero tanto como sea posible haciendo coincidir piezas iguales "
-"y quitándolas del juego."
+"Mahjongg es una versión solitaria del clásico juego de piezas asiático. "
+"Implica limpiar el tablero tanto como sea posible haciendo coincidir piezas "
+"iguales y quitándolas del juego."
 
 #: C/mahjongg.xml:34(year)
 msgid "1998"
@@ -218,8 +220,9 @@ msgid ""
 "application> application or this manual, follow the directions in the <ulink "
 "url=\"ghelp:gnome-feedback\" type=\"help\">GNOME Feedback Page</ulink>."
 msgstr ""
-"Para informar de un fallo, o hacer alguna sugerencia concerniente la aplicación <application>Mahjongg</"
-"application> o este manual, siga las indicaciones en la <ulink url=\"ghelp:gnome-feedback\" type=\"help\">Página "
+"Para informar de un fallo, o hacer alguna sugerencia concerniente la "
+"aplicación <application>Mahjongg</application> o este manual, siga las "
+"indicaciones en la <ulink url=\"ghelp:gnome-feedback\" type=\"help\">Página "
 "de comentarios de GNOME</ulink>."
 
 #: C/mahjongg.xml:114(primary)
@@ -495,7 +498,8 @@ msgstr "Reiniciar"
 msgid ""
 "This button restarts the current game to the beginning without shuffling the "
 "tiles."
-msgstr "Este botón reinicia la partida actual al comienzo sin revolver las fichas."
+msgstr ""
+"Este botón reinicia la partida actual al comienzo sin revolver las fichas."
 
 #: C/mahjongg.xml:308(guibutton)
 msgid "Pause"
@@ -638,8 +642,8 @@ msgstr ""
 "movimiento</guimenuitem></menuchoice>: Este elemento rehace su movimiento "
 "anterior, el que el botón <guibutton>Deshacer</guibutton> deshizo. Cuando "
 "alcance el estado en el que comenzó a deshacer los movimientos, aparecerá el "
-"mensaje <quote>No existen más movimientos para rehacer</quote> en la "
-"esquina inferior izquierda de la <interface>Ventana principal</interface>."
+"mensaje <quote>No existen más movimientos para rehacer</quote> en la esquina "
+"inferior izquierda de la <interface>Ventana principal</interface>."
 
 #: C/mahjongg.xml:455(para)
 msgid ""
@@ -686,10 +690,11 @@ msgid ""
 "item is unchecked, the <interface>toolbar</interface> is not shown."
 msgstr ""
 "<menuchoice><guimenuitem>Barra de herramientas</guimenuitem></menuchoice>: "
-"Este elemento determina si se muestra la <link linkend=\"toolbar\"><interface>barra "
-"de herramientas</interface></link>. Si el elemento está seleccionado se "
-"mostrará la <interface>barra de herramientas</interface> en el último lugar donde la posicionó. Si el "
-"elemente no está seleccionado no se mostrará la <interface>barra de herramientas</interface>."
+"Este elemento determina si se muestra la <link linkend=\"toolbar"
+"\"><interface>barra de herramientas</interface></link>. Si el elemento está "
+"seleccionado se mostrará la <interface>barra de herramientas</interface> en "
+"el último lugar donde la posicionó. Si el elemente no está seleccionado no "
+"se mostrará la <interface>barra de herramientas</interface>."
 
 #: C/mahjongg.xml:510(para)
 msgid ""
@@ -861,12 +866,11 @@ msgstr ""
 "citetitle>. También puede obtener una copia de la <citetitle>Licencia "
 "Pública General GNU</citetitle> de la Free Software Foundation visitando "
 "<ulink url=\"http://www.fsf.org\" type=\"http\">su página web</ulink> o "
-"escribiendo a la <address>Free Software Foundation, Inc. <street>59 Temple Place</"
-"street> - Suite 330 <city>Boston</city>, <state>MA</state><postcode>02110-"
-"1301</postcode><country>USA</country></address>"
+"escribiendo a la <address>Free Software Foundation, Inc. <street>59 Temple "
+"Place</street> - Suite 330 <city>Boston</city>, <state>MA</"
+"state><postcode>02110-1301</postcode><country>USA</country></address>"
 
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2.
 #: C/mahjongg.xml:0(None)
 msgid "translator-credits"
 msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2007-2008."
-
