@@ -3,10 +3,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: blackjack.HEAD\n"
-"POT-Creation-Date: 2008-01-03 18:49+0000\n"
-"PO-Revision-Date: 2008-01-04 21:00+0100\n"
+"POT-Creation-Date: 2008-01-04 20:01+0000\n"
+"PO-Revision-Date: 2008-03-07 21:32+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
-"Language-Team: Español <<gnome-es-list@gnome.org>\n"
+"Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,7 +20,7 @@ msgid ""
 "@@image: 'figures/blackjack_start_window.png'; "
 "md5=639433a68f4f671a78ef838afabdb21b"
 msgstr ""
-"\t@@image: 'figures/blackjack_start_window.png'; "
+"@@image: 'figures/blackjack_start_window.png'; "
 "md5=639433a68f4f671a78ef838afabdb21b"
 
 #: C/blackjack.xml:29(title)
@@ -36,8 +36,8 @@ msgid ""
 msgstr ""
 "Blackjack es un juego de Blackjack con reglas tipo casino y varias barajas "
 "para el proyecto GNOME. El objetivo del juego es obtener un valor de mano lo "
-"más cercano a 21 que el del repartidor, pero sin pasarse. El jugador apuesta con "
-"fichas virtuales."
+"más cercano a 21 que el del repartidor, pero sin pasarse. El jugador apuesta "
+"con fichas virtuales."
 
 #: C/blackjack.xml:40(year)
 msgid "2003"
@@ -422,7 +422,7 @@ msgid ""
 msgstr ""
 "Para iniciar <application>Blackjack</application> desde la línea de "
 "comandos, escriba el siguiente comando y después pulse <application>Intro</"
-"application>."
+"application>:"
 
 #: C/blackjack.xml:315(command)
 msgid "blackjack"
@@ -879,7 +879,7 @@ msgstr "Reparto rápido"
 
 #: C/blackjack.xml:781(para)
 msgid "Select this item to make the computer deal cards without a delay"
-msgstr "Seleccione este elemento para que los repartos no tengan retraso."
+msgstr "Seleccione este elemento para que los repartos no tengan retraso"
 
 #: C/blackjack.xml:791(title)
 msgid "Rules"
