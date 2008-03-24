@@ -30,7 +30,7 @@
       <applyto>/apps/blackjack/deck/card_style</applyto>
       <owner>blackjack</owner>
       <type>string</type>
-      <default>bonded.png</default>
+      <default></default>
       <locale name="C">
         <short>Theme file name</short>
         <long>The name of the file with the graphics for the cards.</long>

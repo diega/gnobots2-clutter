@@ -1,3 +1,9 @@
+2008-03-24  Christian Persch  <chpe@gnome.org>
+
+	* data/blackjack.schemas.in: Use "" for the default theme.
+	* src/blackjack.cpp: Use the default theme for empty pref string. Bug
+	#513557.
+
 2008-02-12  Thomas H.P. Andersen  <phomes@gmail.com>
 
 	* data/blackjack.schemas.in:

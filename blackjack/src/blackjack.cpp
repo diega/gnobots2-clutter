@@ -84,7 +84,6 @@ gboolean show_toolbar = TRUE;
 gchar *game_variation = NULL;
 
 #define DEFAULT_VARIATION      "Vegas_Strip.rules"
-#define DEFAULT_THEME "bonded"
 
 void
 bj_make_window_title (gchar *game_name) 
@@ -519,14 +518,19 @@ bj_get_card_style ()
 {
         gchar *lcard_style;
 
-        lcard_style = games_conf_get_string_with_default (KEY_DECK_GROUP,
-                                                          KEY_CARD_STYLE,
-                                                          DEFAULT_THEME);
+        lcard_style = games_conf_get_string (KEY_DECK_GROUP, KEY_CARD_STYLE, NULL);
+        if (!lcard_style || !lcard_style[0]) {
+                g_free (lcard_style);
+                lcard_style = g_strdup (GAMES_CARD_THEME_DEFAULT);
+        }
+
+#ifdef HAVE_GNOME
         /* Back compat */
         if (g_str_has_suffix (lcard_style, ".svg"))
                 *g_strrstr (lcard_style, ".svg") = '\0';
         else if (g_str_has_suffix (lcard_style, ".png"))
                 *g_strrstr (lcard_style, ".png") = '\0';
+#endif /* HAVE_GNOME */
 
         return lcard_style;
 }
