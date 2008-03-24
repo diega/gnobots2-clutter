@@ -2,7 +2,7 @@ dnl ======================================
 dnl GGZ Gaming Zone - Configuration Macros
 dnl ======================================
 dnl
-dnl Copyright (C) 2001 - 2004 Josef Spillner, josef@ggzgamingzone.org
+dnl Copyright (C) 2001 - 2007 Josef Spillner, josef@ggzgamingzone.org
 dnl This file has heavily been inspired by KDE's acinclude :)
 dnl It is published under the conditions of the GNU General Public License.
 dnl
@@ -18,7 +18,7 @@ dnl
 dnl ======================================
 dnl
 dnl History:
-dnl   See the CVS log for a full history.
+dnl   See the SVN log for a full history.
 dnl
 dnl ------------------------------------------------------------------------
 dnl Content of this file:
@@ -30,6 +30,7 @@ dnl                  time whether to include GGZ support.  Server and client
 dnl                  are checked separately.  GGZ_SERVER and GGZ_CLIENT are
 dnl                  defined in config.h, and created as conditionals in
 dnl                  the Makefiles.
+dnl   AC_GGZ_CHECK_SERVER - The same, but server libs only.
 dnl
 dnl Low-level macros:
 dnl   AC_GGZ_INIT - initialization and paths/options setup
@@ -50,6 +51,9 @@ dnl   AC_GGZ_ERROR - user-friendly error messages
 dnl   AC_GGZ_FIND_FILE - macro for convenience (thanks kde)
 dnl   AC_GGZ_REMOVEDUPS - eliminate duplicate list elements
 dnl
+
+# Version number of this script
+# serial 0014
 
 dnl ------------------------------------------------------------------------
 dnl Find a directory containing a single file
@@ -130,7 +134,6 @@ fi
 if test "x$exec_prefix" = "xNONE"; then
   exec_prefix='${prefix}'
 fi
-AC_DEFINE_UNQUOTED([PREFIX], "${prefix}", [The installation prefix])
 
 ac_ggz_prefix=""
 AC_ARG_WITH(ggz-dir,
@@ -180,25 +183,29 @@ if test "x$1" = "xdefaults" || test "x$2" = "xdefaults"; then
   ac_ggz_stdetc="$ac_ggz_stdetc /usr/local/etc/ggzd /etc/ggzd"
 fi
 if test "x$1" = "xexport" || test "x$2" = "xexport"; then
+  CPPFLAGS="$CPPFLAGS -I ${ac_ggz_prefix_incdir} -I /usr/local/include"
   LDFLAGS="$LDFLAGS -L${ac_ggz_prefix_libdir} -L/usr/local/lib"
 fi
 
 save_cflags=$CFLAGS
 save_cxxflags=$CXXFLAGS
 if test "x$GCC" = xyes; then
-CFLAGS="-Wall -Werror"
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
-	[[void signedness(void){char c;if(c==-1)c=0;}]])],
-	[],
-	[save_cflags="$save_cflags -fsigned-char"
-	 save_cxxflags="$save_cxxflags -fsigned-char"])
+	CFLAGS="-Wall -Werror"
+	AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+		[[void signedness(void){char c;if(c==-1)c=0;}]])],
+		[],
+		[save_cflags="$save_cflags -fsigned-char"
+		 save_cxxflags="$save_cxxflags -fsigned-char"])
 else
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#if defined(__SUNPRO_C) || (__SUNPRO_C >= 0x550)
-#else
-# include "error: this is not Sun Studio."
-#endif
-]], [[]])], [ save_cflags="$save_cflags -xchar=signed"
-         save_cxxflags="$save_cxxflags -xchar=signed" ], [ ])
+	AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+		[[#if defined(__SUNPRO_C) || (__SUNPRO_C >= 0x550)
+		#else
+		# include "Error: Only GCC and Sun Studio are supported compilers."
+		#endif]], [[]])],
+		[save_cflags="$save_cflags -xchar=signed"
+		 save_cxxflags="$save_cxxflags -xchar=signed"],
+		[])
+
 fi
 CFLAGS=$save_cflags
 CXXFLAGS=$save_cxxflags
@@ -226,22 +233,37 @@ AC_DEFUN([AC_GGZ_VERSION],
 	testbody="$testbody if(LIBGGZ_VERSION_MICRO < $micro) return -1;"
 	testbody="$testbody return 0;"
 
+	save_libs=$LIBS
+	save_ldflags=$LDFLAGS
+	save_cppflags=$CPPFLAGS
+	save_ldlibrary_path=$LD_LIBRARY_PATH
+	LDFLAGS=$LIBGGZ_LDFLAGS
+	LIBS=$LIB_GGZ
+	CPPFLAGS=$LIBGGZ_INCLUDES
+	export LD_LIBRARY_PATH=$save_ldlibrary_path:$libggz_libraries
+
 	AC_MSG_CHECKING([for GGZ library version: $major.$minor.$micro])
 	AC_RUN_IFELSE(
 		[AC_LANG_PROGRAM([[$testprologue]], [[$testbody]])],
 		[ac_ggz_version_check=yes],
-		[ac_ggz_version_check=no]
+		[ac_ggz_version_check=no],
+		[ac_ggz_version_check="skipped due to cross-compiling"]
 	)
-	if test "x$ac_ggz_version_check" = "xyes"; then
-		AC_MSG_RESULT([yes])
-		$4
-	else
+	if test "$ac_ggz_version_check" = "no"; then
 		AC_MSG_RESULT([no])
 		if test "x$5" = "x"; then
 			AC_MSG_ERROR([The GGZ version is too old. Version $major.$minor.$micro is required.])
 		fi
 		$5
+	else
+		AC_MSG_RESULT($ac_ggz_version_check)
+		$4
 	fi
+
+	LIBS=$save_libs
+	LDFLAGS=$save_ldflags
+	CPPFLAGS=$save_cppflags
+	LD_LIBRARY_PATH=$save_ldlibrary_path
 ])
 
 dnl ------------------------------------------------------------------------
@@ -326,7 +348,7 @@ else
   AC_SUBST(libggz_libraries)
   AC_SUBST(libggz_includes)
 
-  LIBGGZ_INCLUDES="-isystem $libggz_includes"
+  LIBGGZ_INCLUDES="-I $libggz_includes"
   LIBGGZ_LDFLAGS="-L$libggz_libraries"
 
   AC_SUBST(LIBGGZ_INCLUDES)
@@ -340,7 +362,6 @@ else
 fi
 
 ])
-
 
 dnl ------------------------------------------------------------------------
 dnl Try to find the ggzcore headers and libraries.
@@ -425,7 +446,7 @@ else
   AC_SUBST(ggzcore_libraries)
   AC_SUBST(ggzcore_includes)
 
-  GGZCORE_INCLUDES="-isystem $ggzcore_includes"
+  GGZCORE_INCLUDES="-I $ggzcore_includes"
   GGZCORE_LDFLAGS="-L$ggzcore_libraries"
 
   AC_SUBST(GGZCORE_INCLUDES)
@@ -458,6 +479,8 @@ AC_ARG_WITH(ggzconfig,
     [  ac_ggz_config="$withval"
     ])
 
+ac_ggz_config_orig=$ac_ggz_config
+
 AC_CACHE_VAL(ac_cv_have_ggzconfig,
 [
 ggz_config_dirs="$ac_ggz_config $ac_ggz_stdbin"
@@ -480,13 +503,13 @@ if test "$have_ggz_config" != yes; then
   if test "x$2" = "xignore"; then
     AC_MSG_RESULT([$have_ggz_config (intentionally ignored)])
     GGZ_CONFIG="true"
-    ggzexecmoddir="\${prefix}/lib/ggz"
-    ggzdatadir="\${prefix}/share/ggz"
+    ggzexecmoddir="\${libdir}/ggz"
+    ggzdatadir="\${datadir}/ggz"
     AC_SUBST(GGZ_CONFIG)
     AC_SUBST(ggzexecmoddir)
     AC_SUBST(ggzdatadir)
-    AC_DEFINE_UNQUOTED(GAMEDIR, "${prefix}/lib/ggz", [Path where to install the games])
-    AC_DEFINE_UNQUOTED(GGZDATADIR, "${prefix}/share/ggz", [Path where the games should look for their data files])
+    AC_DEFINE_UNQUOTED(GAMEDIR, "${libdir}/ggz", [Path where to install the games])
+    AC_DEFINE_UNQUOTED(GGZDATADIR, "${datadir}/ggz", [Path where the games should look for their data files])
   else
     AC_MSG_RESULT([$have_ggz_config])
     if test "x$2" = "x"; then
@@ -500,17 +523,21 @@ else
   pathto_app=`echo $prefix/bin/ | tr -s "/"`
   pathto_ggz=`echo $ac_ggz_config/ | tr -s "/"`
 
+  if test "$ac_ggz_config_orig" != "NO"; then
+    pathto_app=$pathto_ggz
+  fi
+
   if test "x$pathto_app" != "x$pathto_ggz"; then
     AC_MSG_RESULT([$have_ggz_config (dismissed due to different prefix)])
     GGZ_CONFIG="true"
-    ggzexecmoddir="\${prefix}/lib/ggz"
-    ggzdatadir="\${prefix}/share/ggz"
+    ggzexecmoddir="\${libdir}/ggz"
+    ggzdatadir="\${datadir}/ggz"
     AC_SUBST(GGZ_CONFIG)
     AC_SUBST(ggzexecmoddir)
     AC_SUBST(ggzdatadir)
     AC_DEFINE_UNQUOTED(GGZMODULECONFDIR, "${prefix}/etc", [Path where the game registry is located])
-    AC_DEFINE_UNQUOTED(GAMEDIR, "${prefix}/lib/ggz", [Path where to install the games])
-    AC_DEFINE_UNQUOTED(GGZDATADIR, "${prefix}/share/ggz", [Path where the games should look for their data files])
+    AC_DEFINE_UNQUOTED(GAMEDIR, "${libdir}/ggz", [Path where to install the games])
+    AC_DEFINE_UNQUOTED(GGZDATADIR, "${datadir}/ggz", [Path where the games should look for their data files])
   else
     ac_cv_have_ggz_config="have_ggz_config=yes \
       ac_ggz_config=$ac_ggz_config"
@@ -537,6 +564,10 @@ else
     AC_DEFINE_UNQUOTED(GGZDATADIR, "${ggzdatadir}", [Path where the games should look for their data files])
     packagesrcdir=`cd $srcdir && pwd`
     AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}", [Path where the source is located])
+
+    if test "$ggzmoduleconfdir" = ""; then
+      AC_MSG_ERROR([ggz-config is unusable. Maybe LD_LIBRARY_PATH needs to be set.])
+    fi
 
     AC_SUBST(ggzmoduleconfdir)
     AC_SUBST(ggzexecmoddir)
@@ -633,7 +664,7 @@ else
   AC_SUBST(ggzmod_libraries)
   AC_SUBST(ggzmod_includes)
 
-  GGZMOD_INCLUDES="-isystem $ggzmod_includes"
+  GGZMOD_INCLUDES="-I $ggzmod_includes"
   GGZMOD_LDFLAGS="-L$ggzmod_libraries"
 
   AC_SUBST(GGZMOD_INCLUDES)
@@ -731,7 +762,7 @@ else
   AC_SUBST(ggzdmod_libraries)
   AC_SUBST(ggzdmod_includes)
 
-  GGZDMOD_INCLUDES="-isystem $ggzdmod_includes"
+  GGZDMOD_INCLUDES="-I $ggzdmod_includes"
   GGZDMOD_LDFLAGS="-L$ggzdmod_libraries"
 
   AC_SUBST(GGZDMOD_INCLUDES)
@@ -829,7 +860,7 @@ else
   AC_SUBST(ggz_gtk_libraries)
   AC_SUBST(ggz_gtk_includes)
 
-  GGZ_GTK_INCLUDES="-isystem $ggz_gtk_includes"
+  GGZ_GTK_INCLUDES="-I $ggz_gtk_includes"
   GGZ_GTK_LDFLAGS="-L$ggz_gtk_libraries"
 
   AC_SUBST(GGZ_GTK_INCLUDES)
@@ -903,9 +934,9 @@ if test "$have_ggzdconf" != yes; then
 	  AC_MSG_RESULT([$have_ggzdconf (but forced to ${ggzdconfdir})])
 	else
 	  AC_MSG_RESULT([$have_ggzdconf])
-      if test "x$2" = "x"; then
+	  if test "x$2" = "x"; then
 	    AC_MSG_ERROR([GGZ server configuration not found. Please check your installation! ])
-      fi
+	  fi
 
 	  # Perform actions given by argument 2.
 	  $2
@@ -913,7 +944,9 @@ if test "$have_ggzdconf" != yes; then
 else
 	prefixed=0
 	if test "x${prefix}" != "xNONE" && test "x${prefix}" != "x${ac_default_prefix}"; then
-		prefixed=1
+		if test "x$ac_ggzd_confdir" = "x"; then
+			prefixed=1
+		fi
 	fi
 	if test "x$ggzdconfdir" != "x${prefix}/etc/ggzd" && test "x$prefixed" = "x1"; then
 		AC_MSG_RESULT([$have_ggzdconf ($ggzdconfdir, but using ${prefix}/etc/ggzd nevertheless)])
@@ -926,7 +959,7 @@ fi
 if test "$have_ggzdconf" = yes || test "x$2" = "xforce"; then
 	AC_SUBST(ggzdconfdir)
 
-	ggzddatadir=${prefix}/share/${PACKAGE}
+	ggzddatadir=${datadir}/${PACKAGE}
 	AC_DEFINE_UNQUOTED(GGZDDATADIR, "${ggzddatadir}", [Game server data directory])
 	AC_SUBST(ggzddatadir)
 
@@ -934,14 +967,14 @@ if test "$have_ggzdconf" = yes || test "x$2" = "xforce"; then
 	  if test "x${exec_prefix}" = "xNONE"; then
 	    if test "x${prefix}" = "xNONE"; then
 	      ggzdexecmoddir="\${ac_default_prefix}/lib/ggzd"
-		  ggzdexecmodpath="${ac_default_prefix}/lib/ggzd"
+	      ggzdexecmodpath="${ac_default_prefix}/lib/ggzd"
 	    else
 	      ggzdexecmoddir="\${prefix}/lib/ggzd"
-		  ggzdexecmodpath="${prefix}/lib/ggzd"
+	      ggzdexecmodpath="${prefix}/lib/ggzd"
 	    fi
 	  else
 	    ggzdexecmoddir="\${exec_prefix}/lib/ggzd"
-		ggzdexecmodpath="${exec_prefix}/lib/ggzd"
+	    ggzdexecmodpath="${exec_prefix}/lib/ggzd"
 	  fi
 	else
 	  ggzdexecmoddir="\${libdir}/ggzd"
@@ -956,12 +989,15 @@ fi
 
 ])
 
-# AC_GGZ_CHECK_SERVER
-#   Check for presence of GGZ server libraries.
-#
-#   Simply call this function in programs that use GGZ.  GGZ_SERVER will
-#   be #defined in config.h, and created as a conditional
-#   in Makefile.am files, if server libraries are present.
+dnl ------------------------------------------------------------------------
+dnl AC_GGZ_CHECK_SERVER
+dnl   Check for presence of GGZ server libraries.
+dnl
+dnl   Simply call this function in programs that use GGZ.  GGZ_SERVER will
+dnl   be #defined in config.h, and created as a conditional
+dnl   in Makefile.am files, if server libraries are present.
+dnl ------------------------------------------------------------------------
+dnl
 AC_DEFUN([AC_GGZ_CHECK_SERVER],
 [
   AC_GGZ_LIBGGZ([try_ggz="yes"], [try_ggz="no"])
@@ -982,6 +1018,7 @@ AC_DEFUN([AC_GGZ_CHECK_SERVER],
       AC_GGZ_GGZDMOD([ggz_server="yes"], [ggz_server="no"])
     fi
     if test "$ggz_server" = "yes"; then
+      AC_GGZ_SERVER
       AC_DEFINE(GGZ_SERVER, 1, [Server support for GGZ])
     else
       if test "$try_ggz_server" = "yes"; then
@@ -997,18 +1034,21 @@ AC_DEFUN([AC_GGZ_CHECK_SERVER_DEFINES],[
   AM_CONDITIONAL([GGZ_SERVER],[test "$ggz_server" = "yes"])
 ])
 
-# AC_GGZ_CHECK
-#   Check for presence of GGZ client and server libraries.
-#
-#   Simply call this function in programs that use GGZ.  GGZ_SERVER and
-#   GGZ_CLIENT will be #defined in config.h, and created as conditionals
-#   in Makefile.am files.
-#
-#   The only argument accepted gives the frontend for client embedding:
-#      "gtk" => means the libggz-gtk library will be checked
+dnl ------------------------------------------------------------------------
+dnl AC_GGZ_CHECK
+dnl   Check for presence of GGZ client and server libraries.
+dnl
+dnl   Simply call this function in programs that use GGZ.  GGZ_SERVER and
+dnl   GGZ_CLIENT will be #defined in config.h, and created as conditionals
+dnl   in Makefile.am files.
+dnl
+dnl   The only argument accepted gives the frontend for client embedding:
+dnl      "gtk" => means the libggz-gtk library will be checked
+dnl ------------------------------------------------------------------------
+dnl
 AC_DEFUN([AC_GGZ_CHECK],
 [
-  AC_GGZ_INIT
+  AC_GGZ_INIT([defaults])
   AC_GGZ_LIBGGZ([try_ggz="yes"], [try_ggz="no"])
 
   if test "$try_ggz" = "yes"; then
@@ -1048,7 +1088,6 @@ AC_DEFUN([AC_GGZ_CHECK],
   fi
 
   AM_CONDITIONAL(GGZ_CLIENT, test "$ggz_client" = "yes")
-  AM_CONDITIONAL(GGZ_SERVER, test "$ggz_server" = "yes")
   AM_CONDITIONAL(GGZ_GTK, test "$ggz_gtk" = "yes")
 
   AC_GGZ_CHECK_SERVER
