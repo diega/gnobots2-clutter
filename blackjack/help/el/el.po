@@ -3,8 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: el\n"
-"POT-Creation-Date: 2008-03-16 07:41+0000\n"
-"PO-Revision-Date: 2008-03-20 18:26+0200\n"
+"POT-Creation-Date: 2008-04-10 07:41+0000\n"
+"PO-Revision-Date: 2008-04-10 18:26+0200\n"
 "Last-Translator: Kostas Papadimas <pkst@gnome.org>\n"
 "Language-Team: Greek <team@gnome.gr>\n"
 "MIME-Version: 1.0\n"
@@ -374,7 +374,7 @@ msgstr "<guimenuitem>Προβολή γραμμής εργαλίων</guimenuitem
 
 #: C/blackjack.xml:473(para)
 msgid "<guimenuitem>Preferences&hellip;</guimenuitem>&mdash; This opens the <interface>Preferences Dialog</interface>, allowing you to configure the game."
-msgstr "<guimenuitem>Προτιμήσεις&Βοήθεια;</guimenuitem>&mdash; Αυτό ανοίγει το <interface>Διάλογο Προτιμήσεις</interface>, επιτρέποντας να ρυθμίσετε το παιχνίδι."
+msgstr "<guimenuitem>Προτιμήσεις&hellip;</guimenuitem>&mdash; Αυτό ανοίγει το <interface>Διάλογο Προτιμήσεις</interface>, επιτρέποντας να ρυθμίσετε το παιχνίδι."
 
 #: C/blackjack.xml:489(guimenu)
 msgid "Help"
