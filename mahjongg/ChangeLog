@@ -1,3 +1,7 @@
+2008-04-10  Robert Ancell  <robert.ancell@gmail.com>
+
+	* mahjongg.c: Change title string to be easier to translate. Bug #517320.
+
 2008-01-11  Christian Persch  <chpe@gnome.org>
 
 	* drawing.c: (create_mahjongg_board): Make the board focusable.

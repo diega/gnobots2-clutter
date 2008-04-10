@@ -1011,8 +1011,8 @@ init_game (void)
 {
   gchar *newtitle;
 
-  newtitle = g_strdup_printf (_("%s - %s"), _("Mahjongg"),
-			      Q_ (maps[mapset].name));
+  /* Translators: This is the window title for Mahjongg which contains the map name, e.g. 'Mahjongg - Red Dragon' */
+  newtitle = g_strdup_printf (_("Mahjongg - %s"), Q_ (maps[mapset].name));
   gtk_window_set_title (GTK_WINDOW (window), newtitle);
   g_free (newtitle);
 
