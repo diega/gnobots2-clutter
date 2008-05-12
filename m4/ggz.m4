@@ -535,7 +535,7 @@ else
     AC_SUBST(GGZ_CONFIG)
     AC_SUBST(ggzexecmoddir)
     AC_SUBST(ggzdatadir)
-    AC_DEFINE_UNQUOTED(GGZMODULECONFDIR, "${prefix}/etc", [Path where the game registry is located])
+    AC_DEFINE_UNQUOTED(GGZMODULECONFDIR, "${sysconfdir}", [Path where the game registry is located])
     AC_DEFINE_UNQUOTED(GAMEDIR, "${libdir}/ggz", [Path where to install the games])
     AC_DEFINE_UNQUOTED(GGZDATADIR, "${datadir}/ggz", [Path where the games should look for their data files])
   else
@@ -927,7 +927,7 @@ if test "$have_ggzdconf" != yes; then
 	  AC_MSG_RESULT([$have_ggzdconf (intentionally ignored)])
 	elif test "x$2" = "xforce"; then
 	  if test "x$ac_ggzd_confdir" = "x"; then
-	    ggzdconfdir="\${prefix}/etc/ggzd"
+	    ggzdconfdir="\${sysconfdir}/ggzd"
 	  else
 	    ggzdconfdir=$ac_ggzd_confdir
 	  fi
@@ -948,9 +948,9 @@ else
 			prefixed=1
 		fi
 	fi
-	if test "x$ggzdconfdir" != "x${prefix}/etc/ggzd" && test "x$prefixed" = "x1"; then
-		AC_MSG_RESULT([$have_ggzdconf ($ggzdconfdir, but using ${prefix}/etc/ggzd nevertheless)])
-		ggzdconfdir="\${prefix}/etc/ggzd"
+	if test "x$ggzdconfdir" != "x${sysconfdir}/ggzd" && test "x$prefixed" = "x1"; then
+		AC_MSG_RESULT([$have_ggzdconf ($ggzdconfdir, but using ${sysconfdir}/ggzd nevertheless)])
+		ggzdconfdir="\${sysconfdir}/ggzd"
 	else
 		AC_MSG_RESULT([$have_ggzdconf ($ggzdconfdir)])
 	fi
@@ -983,8 +983,11 @@ if test "$have_ggzdconf" = yes || test "x$2" = "xforce"; then
 	AC_SUBST(ggzdexecmoddir)
 	AC_SUBST(ggzdexecmodpath)
 
-	# Perform actions given by argument 1.
-	$1
+    if test "x$1" != "xforce"; then
+	  # Perform actions given by argument 1.
+	  $1
+	  true
+	fi
 fi
 
 ])
@@ -1018,7 +1021,11 @@ AC_DEFUN([AC_GGZ_CHECK_SERVER],
       AC_GGZ_GGZDMOD([ggz_server="yes"], [ggz_server="no"])
     fi
     if test "$ggz_server" = "yes"; then
-      AC_GGZ_SERVER
+      if test "x$try_ggz_server" = "xforce"; then
+        AC_GGZ_SERVER([force],[force])
+      else
+        AC_GGZ_SERVER
+      fi
       AC_DEFINE(GGZ_SERVER, 1, [Server support for GGZ])
     else
       if test "$try_ggz_server" = "yes"; then
