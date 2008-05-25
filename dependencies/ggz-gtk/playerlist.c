@@ -343,11 +343,13 @@ GtkWidget *create_player_list(GtkWidget *parent)
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
 
 	renderer = gtk_cell_renderer_pixbuf_new();
+        /* Translators: L is short for 'Network Latency'.  */
 	column = gtk_tree_view_column_new_with_attributes(_("L"), renderer,
 				"pixbuf", PLAYER_COLUMN_LAG, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
 
 	renderer = gtk_cell_renderer_text_new();
+        /* Translators: T# is short for 'Table Number'.  */
 	column = gtk_tree_view_column_new_with_attributes(_("T#"), renderer,
 				"text", PLAYER_COLUMN_TABLE, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);

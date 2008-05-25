@@ -188,6 +188,7 @@ GtkWidget *create_table_list(GtkWidget * window)
 	g_object_unref(store);
 
 	renderer = gtk_cell_renderer_text_new();
+        /* Translators: T# is short for 'Table Number'.  */
 	column = gtk_tree_view_column_new_with_attributes(_("T#"), renderer,
 				"text", TABLE_COLUMN_ID, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
