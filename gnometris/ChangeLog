@@ -1,3 +1,10 @@
+2008-06-08  Jason D. Clinton  <me@jasonclinton.com>
+
+	* tetris.cpp:
+	* renderer.cpp:
+	* highscores.cpp:
+	* field.cpp: Fix GCC 4.3 compiler warnings.
+
 2008-02-19 Jordi Mas <jmas@softcatala.org>
 
 	* renderer.cpp: Cache Renderer object to avoid so many alloc/deallocs
