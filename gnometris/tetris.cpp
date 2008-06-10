@@ -93,12 +93,12 @@ Tetris::Tetris(int cmdlLevel):
 	GtkWidget *menubar;
 
 	gchar *outdir;
-	const GtkTargetEntry targets[] = {{"text/uri-list", 0, URI_LIST}, 
-					  {"property/bgimage", 0, URI_LIST},
-					  {"text/plain", 0, TEXT_PLAIN},
-					  {"STRING", 0, TEXT_PLAIN},
-					  {"application/x-color", 0, COLOUR},
-					  {"x-special/gnome-reset-background", 0, RESET}};
+	const GtkTargetEntry targets[] = {{(gchar*) "text/uri-list", 0, URI_LIST}, 
+					  {(gchar*) "property/bgimage", 0, URI_LIST},
+					  {(gchar*) "text/plain", 0, TEXT_PLAIN},
+					  {(gchar*) "STRING", 0, TEXT_PLAIN},
+					  {(gchar*) "application/x-color", 0, COLOUR},
+					  {(gchar*) "x-special/gnome-reset-background", 0, RESET}};
 
 	const GtkActionEntry actions[] = {
 	{ "GameMenu", NULL, N_("_Game") },
