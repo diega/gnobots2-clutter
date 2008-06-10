@@ -112,7 +112,6 @@ gboolean
 Field::configure(GtkWidget *widget, GdkEventConfigure *event, Field *field)
 {
 	cairo_t *cr;
-	cairo_t *bg_cr;
 
 	field->width = widget->allocation.width;
 	field->height = widget->allocation.height;
@@ -159,8 +158,6 @@ Field::draw (void)
 gboolean
 Field::expose(GtkWidget *widget, GdkEventExpose *event, Field *field)
 {
-	cairo_t *cr;
-
 	field->draw (event->area.x, event->area.y,
 		     event->area.width, event->area.height);
 

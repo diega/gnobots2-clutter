@@ -91,7 +91,6 @@ Tetris::Tetris(int cmdlLevel):
 	GtkWidget *vbox;
 	GtkWidget *aspect_frame;
 	GtkWidget *menubar;
-	gint width, height;
 
 	gchar *outdir;
 	const GtkTargetEntry targets[] = {{"text/uri-list", 0, URI_LIST}, 
@@ -499,7 +498,6 @@ Tetris::setOptions ()
 void
 Tetris::setSound (GtkWidget *widget, gpointer data)
 {
-	Tetris *t = (Tetris*)data;
         games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_SOUND,
 			        GTK_TOGGLE_BUTTON (widget)->active);
 }
@@ -507,7 +505,6 @@ Tetris::setSound (GtkWidget *widget, gpointer data)
 void 
 Tetris::setSelectionPreview(GtkWidget *widget, void *d)
 {
-	Tetris *t = (Tetris*) d;
         games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_DO_PREVIEW,
 			        GTK_TOGGLE_BUTTON (widget)->active);
 }
@@ -515,7 +512,6 @@ Tetris::setSelectionPreview(GtkWidget *widget, void *d)
 void 
 Tetris::setSelectionBlocks(GtkWidget *widget, void *d)
 {
-	Tetris *t = (Tetris*) d;
         games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_RANDOM_BLOCK_COLORS,
 			        GTK_TOGGLE_BUTTON (widget)->active);
 }
@@ -523,7 +519,6 @@ Tetris::setSelectionBlocks(GtkWidget *widget, void *d)
 void 
 Tetris::setRotateCounterClockWise(GtkWidget *widget, void *d)
 {
-	Tetris *t = (Tetris*) d;
         games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_ROTATE_COUNTER_CLOCKWISE,
 			        GTK_TOGGLE_BUTTON (widget)->active);
 }
@@ -532,8 +527,6 @@ void
 Tetris::setSelection(GtkWidget *widget, void *data)
 {
 	Tetris *t;
-	GList * item;
-
       	t = (Tetris *)data;
 
 	t->themeno = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
@@ -558,7 +551,6 @@ Tetris::setTarget (GtkWidget *widget, void *data)
 void
 Tetris::lineFillHeightChanged (GtkWidget *spin, gpointer data)
 {
-	Tetris *t = (Tetris *)data;
 	gint value = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin));
         games_conf_set_integer (KEY_OPTIONS_GROUP, KEY_LINE_FILL_HEIGHT, value);
 }
@@ -566,7 +558,6 @@ Tetris::lineFillHeightChanged (GtkWidget *spin, gpointer data)
 void
 Tetris::lineFillProbChanged (GtkWidget *spin, gpointer data)
 {
-	Tetris *t = (Tetris *)data;
 	gint value = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin));
         games_conf_set_integer (KEY_OPTIONS_GROUP, KEY_LINE_FILL_PROBABILITY, value);
 }
@@ -574,7 +565,6 @@ Tetris::lineFillProbChanged (GtkWidget *spin, gpointer data)
 void
 Tetris::startingLevelChanged (GtkWidget *spin, gpointer data)
 {
-	Tetris *t = (Tetris *)data;
 	gint value = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin));
         games_conf_set_integer (KEY_OPTIONS_GROUP, KEY_STARTING_LEVEL, value);
 }
@@ -1371,8 +1361,6 @@ Tetris::gameNew(GtkAction *action, void *d)
 int
 Tetris::gameHelp(GtkAction *action, void *d)
 {
-	Tetris *t = (Tetris*) d;
-
 	gnome_help_display ("gnometris.xml", NULL, NULL);
 
 	return TRUE;
