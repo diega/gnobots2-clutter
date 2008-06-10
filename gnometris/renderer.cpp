@@ -24,10 +24,10 @@
 
 #include "renderer.h"
 
-const ThemeTableEntry ThemeTable[] = {{N_("Plain"), "plain"},
-                                      {N_("Joined"), "joined"},
-                                      {N_("Tango Flat"), "tangoflat"},
-                                      {N_("Tango Shaded"), "tangoshaded"},
+const ThemeTableEntry ThemeTable[] = {{N_("Plain"), (gchar*) "plain"},
+                                      {N_("Joined"), (gchar*) "joined"},
+                                      {N_("Tango Flat"), (gchar*) "tangoflat"},
+                                      {N_("Tango Shaded"), (gchar*) "tangoshaded"},
                                       {NULL, NULL}};
 
 

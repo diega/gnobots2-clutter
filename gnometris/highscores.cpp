@@ -25,7 +25,7 @@
 #include "highscores.h"
 
 static const GamesScoresDescription scoredesc = {NULL, NULL,
-                                                 "gnometris",
+                                                 (gchar*)"gnometris",
                                                  GAMES_SCORES_STYLE_PLAIN_DESCENDING};
 
 
