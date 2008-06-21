@@ -9,7 +9,7 @@
 
 include $(top_srcdir)/gnome-doc-utils.make
 
-DOC_LINGUAS = ca en_GB es fr it oc ru sv
+DOC_LINGUAS = ca de en_GB es fr it oc ru sv
 
 DOC_MODULE = same-gnome
 
