@@ -41,6 +41,7 @@
 #include <dirent.h>
 #include <string.h>
 #include <math.h>
+#include <ctype.h>
 
 int LINES = 20;
 int COLUMNS = 14;
@@ -977,9 +978,9 @@ Tetris::keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 	if (t->timeoutId == 0)
 		return FALSE;
 
-	keyval = ((GdkEventKey*)event)->keyval;
+	keyval = toupper(((GdkEventKey*)event)->keyval);
 
-	if (keyval == t->movePause)
+	if (keyval == toupper(t->movePause))
 	{
 		t->togglePause();
 		return TRUE;
@@ -988,29 +989,29 @@ Tetris::keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 	if (t->paused)
 		return FALSE;
 
-	if (keyval == t->moveLeft) {
+	if (keyval == toupper(t->moveLeft)) {
 		res = t->field->moveBlockLeft();
 		if (res)
 			games_sound_play ("slide");
 		t->onePause = false;
-	} else if (keyval == t->moveRight) {
+	} else if (keyval == toupper(t->moveRight)) {
 		res = t->field->moveBlockRight();
 		if (res)
 			games_sound_play ("slide");
 		t->onePause = false;
-	} else if (keyval == t->moveRotate) {
+	} else if (keyval == toupper(t->moveRotate)) {
 		res = t->field->rotateBlock(rotateCounterClockWise);
 		if (res)
 			games_sound_play ("turn");
 		t->onePause = false;
-	} else if (keyval == t->moveDown) {
+	} else if (keyval == toupper(t->moveDown)) {
 		if (!t->fastFall && !t->onePause) {
 			t->fastFall = true;
 			g_source_remove (t->timeoutId);
 			t->timeoutId = g_timeout_add (10, timeoutHandler, t);
 			res = true;
 		}
-	} else if (keyval == t->moveDrop) {
+	} else if (keyval == toupper(t->moveDrop)) {
 		if (!t->dropBlock) {
 			t->dropBlock = true;
 			t->field->dropBlock();
