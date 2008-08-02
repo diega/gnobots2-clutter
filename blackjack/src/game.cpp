@@ -133,11 +133,11 @@ extension_pointer (const char * path)
         g_return_val_if_fail (path != NULL, NULL);
 
         /* get the dot in the last element of the path */
-        t = g_utf8_strrchr (path, -1, G_DIR_SEPARATOR);
+        t = strrchr (path, G_DIR_SEPARATOR);
         if (t != NULL)
-                s = g_utf8_strrchr (t, -1, '.');
+                s = strrchr (t, '.');
         else
-                s = g_utf8_strrchr (path, -1, '.');
+                s = strrchr (path, '.');
         
         if (s == NULL)
                 return path + strlen (path); /* There is no extension. */
