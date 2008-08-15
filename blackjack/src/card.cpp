@@ -25,7 +25,8 @@
 
 #include "blackjack.h"
 #include <gdk-pixbuf/gdk-pixbuf.h>
-#include <games-card-images.h>
+#include <libgames-support/games-card-theme.h>
+#include <libgames-support/games-card-images.h>
 #include "card.h"
 #include "chips.h"
 #include "draw.h"
@@ -38,6 +39,7 @@ using namespace std;
 
 GdkBitmap *mask;
 
+GamesCardTheme *theme = NULL;
 GamesCardImages *images = NULL;
 
 GdkPixmap *
@@ -117,26 +119,30 @@ bj_card_set_size (gint width, gint height)
         GdkPixbuf *scaled = NULL;
         CardSize card_size;
 
-        if (!images) {
+        if (!theme) {
                 const char *env;
-                char *theme;
+                char *card_theme;
                 gboolean scalable, success;
 
                 env = g_getenv ("BLACKJACK_CARDS_SCALABLE");
                 scalable = env == NULL || g_ascii_strtoll (env, NULL, 10) != 0;
 
-                theme = bj_get_card_style ();
-                images = games_card_images_new (scalable);
+                theme = games_card_theme_new (NULL, scalable);
+
+                images = games_card_images_new (theme);
+                g_object_unref (theme);
+
                 games_card_images_set_cache_mode (images, CACHE_PIXMAPS);
                 games_card_images_set_drawable (images, playing_area->window);
 
-                if (!games_card_images_set_theme (images, theme)) {
-                        g_warning ("Failed to load theme %s!", theme);
+                card_theme = bj_get_card_style ();
+                if (!games_card_theme_set_theme (theme, card_theme)) {
+                        g_warning ("Failed to load theme %s!", card_theme);
                 }
-                g_free (theme);
+                g_free (card_theme);
         }
 
-        games_card_images_set_size (images, width, height, 1.0);
+        games_card_theme_set_size (theme, width, height, 1.0);
         card_size = games_card_images_get_size (images);
 
         bj_slot_set_size (card_size.width, card_size.height);
@@ -147,9 +153,9 @@ bj_card_set_size (gint width, gint height)
 }
 
 void
-bj_card_set_theme (gchar *theme)
+bj_card_set_theme (gchar *card_theme)
 {
-        games_card_images_set_theme (images, theme);
+        games_card_theme_set_theme (theme, card_theme);
 
         bj_draw_rescale_cards ();
         mask = games_card_images_get_card_mask (images);

@@ -1,4 +1,5 @@
 INCLUDES =  \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgames-support	\
 	-DPIXMAPDIR=\""$(pkgdatadir)/blackjack/pixmaps"\"	\
 	-DDATADIR=\""$(pkgdatadir)"\"		\
