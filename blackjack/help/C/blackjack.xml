@@ -196,7 +196,7 @@
 	<term>Push</term>
 	<listitem>
 	<para>When the value of the player hand and the dealer hand are 
-        equal and the original wager is returned to the player</para>
+        equal, the original wager is returned to the player</para>
 	</listitem>
 	</varlistentry>
 
