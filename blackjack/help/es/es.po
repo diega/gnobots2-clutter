@@ -3,8 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: blackjack.HEAD\n"
-"POT-Creation-Date: 2008-01-04 20:01+0000\n"
-"PO-Revision-Date: 2008-03-07 21:32+0100\n"
+"POT-Creation-Date: 2008-09-04 14:58+0000\n"
+"PO-Revision-Date: 2008-09-10 20:12+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -289,7 +289,7 @@ msgstr "Empate"
 
 #: C/blackjack.xml:198(para)
 msgid ""
-"When the value of the player hand and the dealer hand are equal and the "
+"When the value of the player hand and the dealer hand are equal, the "
 "original wager is returned to the player"
 msgstr ""
 "Cuando el valor de la mano del jugador y del repartidor son iguales la "
@@ -345,7 +345,8 @@ msgstr "En el blackjack cada carta tiene asignado un valor. <placeholder-1/>"
 
 #: C/blackjack.xml:246(para)
 msgid "The value of a hand is the sum of the values of each card in the hand."
-msgstr "El valor de una mano es la suma de los valores de cada carta de la mano."
+msgstr ""
+"El valor de una mano es la suma de los valores de cada carta de la mano."
 
 #: C/blackjack.xml:252(title)
 msgid "Dealer Rules"
@@ -396,8 +397,10 @@ msgid "To Start <application>Blackjack</application>"
 msgstr "Iniciar <application>Blackjack</application>"
 
 #: C/blackjack.xml:296(para)
-msgid "You can start <application>Blackjack</application> in the following ways:"
-msgstr "Puede iniciar <application>Blackjack</application> de las siguientes formas:"
+msgid ""
+"You can start <application>Blackjack</application> in the following ways:"
+msgstr ""
+"Puede iniciar <application>Blackjack</application> de las siguientes formas:"
 
 #: C/blackjack.xml:300(term)
 msgid "<guimenu>Applications</guimenu> menu"
@@ -695,8 +698,10 @@ msgstr ""
 "inferior del área de juego, que desee añadir a su apuesta."
 
 #: C/blackjack.xml:627(para)
-msgid "Or, drag the desired chip onto your wager stack, located next to your hand."
-msgstr "O arrastre la ficha deseada en su pila de apuestas, ubicada junto a su mano."
+msgid ""
+"Or, drag the desired chip onto your wager stack, located next to your hand."
+msgstr ""
+"O arrastre la ficha deseada en su pila de apuestas, ubicada junto a su mano."
 
 #: C/blackjack.xml:620(para)
 msgid "To increase the wager for the hand: <placeholder-1/>"
@@ -736,7 +741,8 @@ msgstr "Pedir"
 
 #: C/blackjack.xml:653(para)
 msgid "You may add cards to a hand until the hand total is 21 or over."
-msgstr "Puede querer añadir cartas a una mano hasta que la mano total sea 21 o más."
+msgstr ""
+"Puede querer añadir cartas a una mano hasta que la mano total sea 21 o más."
 
 #: C/blackjack.xml:656(para)
 msgid "To add a card to a player's hand, click once on any card in the hand."
@@ -991,4 +997,3 @@ msgstr ""
 #: C/blackjack.xml:0(None)
 msgid "translator-credits"
 msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2007-2008."
-
