@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: blackjack doc\n"
-"POT-Creation-Date: 2008-01-03 18:49+0000\n"
-"PO-Revision-Date: 2008-07-21 15:55+0100\n"
+"POT-Creation-Date: 2008-09-04 14:58+0000\n"
+"PO-Revision-Date: 2008-09-18 00:51+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -166,8 +166,8 @@ msgid "Push"
 msgstr "Oavgjort"
 
 #: C/blackjack.xml:198(para)
-msgid "When the value of the player hand and the dealer hand are equal and the original wager is returned to the player"
-msgstr "När värdet på både spelaren och givarens hand är samma och den ursprungliga insatsen återgår till spelaren"
+msgid "When the value of the player hand and the dealer hand are equal, the original wager is returned to the player"
+msgstr "När värdet på både spelaren och givarens hand är samma går den ursprungliga insatsen tillbaka till spelaren"
 
 #: C/blackjack.xml:204(term)
 msgid "Split"
