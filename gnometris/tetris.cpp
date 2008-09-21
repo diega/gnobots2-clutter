@@ -1372,7 +1372,7 @@ Tetris::gameAbout(GtkAction *action, void *d)
 {
 	Tetris *t = (Tetris*) d;
 
-	const gchar * const authors[] = { "J. Marcin Gorycki", NULL };
+	const gchar * const authors[] = { "Gnome Games Team", NULL };
 
 	const gchar * const documenters[] = { "Angela Boyle", NULL };
 
@@ -1386,7 +1386,7 @@ Tetris::gameAbout(GtkAction *action, void *d)
 #endif
 			       "version", VERSION,
 			       "comments", _("A classic game of fitting falling blocks together.\n\nGnometris is a part of GNOME Games."),
-			       "copyright", "Copyright \xc2\xa9 1999-2008 J. Marcin Gorycki",
+			       "copyright", "Copyright \xc2\xa9 1999 J. Marcin Gorycki, 2000-2008 Others",
 			       "license", license,
 		               "website-label", _("GNOME Games web site"),
 			       "authors", authors,
