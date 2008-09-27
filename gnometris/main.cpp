@@ -23,11 +23,15 @@
 #include <games-scores.h>
 #include <games-sound.h>
 #include <games-conf.h>
+#include <games-runtime.h>
 
 int
 main(int argc, char *argv[])
 {
         g_thread_init (NULL);
+
+        if (!games_runtime_init ("gnometris"))
+                return 1;
 
 	setgid_io_init ();
 
@@ -68,6 +72,8 @@ main(int argc, char *argv[])
         games_conf_shutdown ();
 
 	g_object_unref (program);
+
+        games_runtime_shutdown ();
 
 	return 0;
 }

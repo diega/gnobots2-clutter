@@ -22,6 +22,7 @@
 #include <libgames-support/games-gridframe.h>
 #include <libgames-support/games-stock.h>
 #include <libgames-support/games-scores.h>
+#include <libgames-support/games-runtime.h>
 
 #include "same-gnome.h"
 
@@ -143,7 +144,6 @@ main (int argc, char *argv[])
   };
 
 #ifdef HAVE_GNOME
-  GnomeClient *client;
   GnomeProgram *program;
 #else
   gboolean retval;
@@ -156,6 +156,9 @@ main (int argc, char *argv[])
    */
   g_thread_init (NULL);
 #endif
+
+  if (!games_runtime_init ("same-gnome"))
+    return 1;
 
   setgid_io_init ();
 
@@ -212,6 +215,8 @@ main (int argc, char *argv[])
 #ifdef HAVE_GNOME
   g_object_unref (program);
 #endif /* HAVE_GNOME */
+
+  games_runtime_shutdown ();
 
   return 0;
 }

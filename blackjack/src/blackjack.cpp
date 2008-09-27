@@ -27,6 +27,7 @@
 #include <gtk/gtk.h>
 #include <games-conf.h>
 #include <games-stock.h>
+#include <games-runtime.h>
 
 #ifdef HAVE_GNOME
 #include <gnome.h>
@@ -675,6 +676,9 @@ main (int argc, char *argv [])
   g_thread_init (NULL);
 #endif
 
+        if (!games_runtime_init ("blackjack"))
+                return 1;
+
         context = g_option_context_new (NULL);
 #if GLIB_CHECK_VERSION (2, 12, 0)
         g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
@@ -726,6 +730,8 @@ main (int argc, char *argv [])
 #ifdef HAVE_GNOME
         g_object_unref (program);
 #endif
+
+        games_runtime_shutdown ();
 
         return 0;
 }
