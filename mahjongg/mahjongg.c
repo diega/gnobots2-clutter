@@ -155,7 +155,7 @@ mahjongg_theme_warning (gchar * message)
 				   GTK_BUTTONS_CLOSE,
 				   _("Could not load tile set"));
   gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-					    message);
+					    "%s", message);
 
   button = gtk_dialog_add_button (GTK_DIALOG (dialog),
 				  _("Preferences"), GTK_RESPONSE_ACCEPT);
