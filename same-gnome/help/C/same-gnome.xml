@@ -136,16 +136,44 @@
 
     <para>The board starts as a full grid of objects. Depending on the size of board you select, there are either three or four types of object. If a group of objects are adjacent and all the same type, then they can be removed simply by clicking them with the mouse (or by pressing the space bar). When you move the mouse over a group you can remove, the objects will start moving. The number of objects in the group, and the points you will score for removing that group, is shown in the lower left corner of the window.  The more objects in the group, the more points you will score. Once the group has been removed the objects above them fall down to fill the space. If an entire column is cleared then the objects slide leftward to fill the gap.</para>
 
-    <figure id="play">
-      <title>Playing &app;.</title>
-      <screenshot>
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="figures/play.png" format="PNG"/>
-	  </imageobject>
-	</mediaobject>
-      </screenshot>
-    </figure>
+    <table id="play" frame="all"><title>Playing &app;</title>
+      <tgroup cols="2" colsep="0" cellspacing="8">
+      <tbody>
+        <row><entry><para>1. Eliminate groups of two or more 
+         <screenshot>
+         <mediaobject>
+           <imageobject>
+             <imagedata fileref="figures/play1.png" format="PNG"/>
+           </imageobject>
+         </mediaobject>
+         </screenshot></para></entry>
+       <entry><para>2. Objects fall down to fill the gaps
+         <screenshot>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="figures/play2.png" format="PNG"/>
+            </imageobject>
+          </mediaobject>
+          </screenshot></para></entry></row>
+        <row><entry><para>3. Objects move left to fill empty columns
+         <screenshot>
+         <mediaobject>
+           <imageobject>
+             <imagedata fileref="figures/play3.png" format="PNG"/>
+           </imageobject>
+         </mediaobject>
+         </screenshot></para></entry>
+       <entry><para>4. New groups are formed and the cycle repeats
+         <screenshot>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="figures/play4.png" format="PNG"/>
+            </imageobject>
+          </mediaobject>
+          </screenshot></para></entry></row>
+      </tbody>
+      </tgroup>
+    </table>
 
     <para>Scoring is based on the number of objects you delete:</para>
     
