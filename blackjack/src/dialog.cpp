@@ -49,7 +49,7 @@ get_insurance_choice (void)
         gboolean    choice = FALSE;
 
         message = _("Would you like insurance?");
-        secondary_message = _("Insurance is a side wager of 50%% of the original wager"
+        secondary_message = _("Insurance is a side wager of 50% of the original wager"
                               " that the dealer has a natural 21 (aka blackjack) that is"
                               " offered when the dealer's face up card is an ace. If the"
                               " dealer has a natural 21 then the player is paid double.");
@@ -58,10 +58,10 @@ get_insurance_choice (void)
                                          GTK_DIALOG_MODAL,
                                          GTK_MESSAGE_QUESTION,
                                          GTK_BUTTONS_YES_NO,
-                                         message);
+                                         "%s", message);
 
         gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-                                                  secondary_message);
+                                                  "%s", secondary_message);
 
         gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
         gtk_window_set_title (GTK_WINDOW (dialog), "");
@@ -111,10 +111,10 @@ show_hint_dialog (void)
                                            GTK_DIALOG_DESTROY_WITH_PARENT,
                                            GTK_MESSAGE_INFO,
                                            GTK_BUTTONS_OK,
-                                           message);
+                                           "%s", message);
 
         gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (hint_dlg),
-                                                  secondary_message);
+                                                  "%s", secondary_message);
 
         gtk_container_set_border_width (GTK_CONTAINER (hint_dlg), 6);
         gtk_window_set_title (GTK_WINDOW (hint_dlg), "");
