@@ -41,5 +41,5 @@ blackjack_SOURCES = 	\
 
 blackjack_LDADD = 					\
 	../../libgames-support/libgames-support.la	\
-	$(GNOME_GAMES_LIBS)
+	$(GNOME_GAMES_LIBS) -lz
 

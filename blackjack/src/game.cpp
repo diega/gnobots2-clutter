@@ -128,7 +128,7 @@ bj_game_file_to_name (const gchar* file)
 static const char *
 extension_pointer (const char * path)
 {
-        char * s, * t;
+        const char * s, * t;
         
         g_return_val_if_fail (path != NULL, NULL);
 
