@@ -156,12 +156,12 @@ bj_get_hand_results (gint dealer_count, gint player_count)
 
         if (dealer_count > 21)
                 dealer_count = 0;
-        if (player_count <= 21)
+        if (player_count <= 21) {
                 if (player_count > dealer_count)
                         results = 1;
-                else 
-                        if (player_count == dealer_count)
-                                results = 0;
+                else if (player_count == dealer_count)
+                        results = 0;
+        }
 
         return results;
 }
@@ -261,7 +261,8 @@ bj_hand_new5 (gpointer data)
                                                                 FALSE);
                 }
                 if (dealer->cards[0].value () == 1) {
-                        if (insurance = get_insurance_choice ())
+                        insurance = get_insurance_choice ();
+                        if (insurance)
                                 bj_adjust_balance (-1 * player->wager / 2);
                 }
         }
@@ -429,11 +430,12 @@ bj_hand_finish1 (gpointer data)
                                 dealer_count = 0;
                         player = (PlayerHand*) g_list_nth_data (playerHands,0);
                         while (player != NULL) {
-                                if (player->getCount () <= 21)
+                                if (player->getCount () <= 21) {
                                         if (player->getCount () > dealer_count)
                                                 bj_adjust_balance (player->wager * 2);
                                         else if (player->getCount () == dealer_count)
                                                 bj_adjust_balance (player->wager);
+                                }
                                 player = player->nextHand;
                         }
                 }
@@ -657,7 +659,7 @@ bj_hand_finish_play ()
                         else
                                 check_splits = FALSE;
 
-                        if (player->getCount () >= 21) 
+                        if (player->getCount () >= 21) {
                                 if (player->nextHand == NULL) {
                                         check_splits = FALSE;
                                         allSettled = FALSE;
@@ -665,6 +667,7 @@ bj_hand_finish_play ()
                                 }
                                 else
                                         player = player->nextHand;
+                        }
                         
                         bj_hand_show_dealer_probabilities ();
                         bj_hand_show_options ();

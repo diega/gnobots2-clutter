@@ -60,7 +60,7 @@ gint             dealerSpeed;
 
 gint             numHands;
 
-gchar            *game_file = "";
+const gchar      *game_file = "";
 gchar            *game_name;
 
 gboolean         allSettled = FALSE;
@@ -190,7 +190,7 @@ bj_game_get_rules_name ()
         return game_name;
 }
 
-char *
+const char *
 bj_game_get_rules_file ()
 {
         return game_file;
@@ -434,7 +434,7 @@ bj_game_ensure_config_dir_exists (const char *dir)
 }
 
 static void
-bj_game_eval_installed_file (gchar *file)
+bj_game_eval_installed_file (const gchar *file)
 {
         char *installed_filename;
 
@@ -509,7 +509,7 @@ bj_game_cancel ()
 }
 
 void
-bj_game_new (gchar* file, guint *seedp )
+bj_game_new (const gchar* file, guint *seedp )
 {
         gint min_w, min_h;
 

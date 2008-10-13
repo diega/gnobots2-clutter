@@ -25,7 +25,7 @@
 void bj_game_find_rules (gchar * variation);
 
 gchar *bj_game_file_to_name (const gchar *);
-void bj_game_new (gchar *, guint *);
+void bj_game_new (const gchar *, guint *);
 void bj_clear_table (void);
 
 void bj_game_show_hand_counts (void);
@@ -37,7 +37,7 @@ void bj_game_set_active (gboolean);
 gboolean bj_game_is_first_hand (void);
 
 char *bj_game_get_rules_name (void);
-char *bj_game_get_rules_file (void);
+const char *bj_game_get_rules_file (void);
 GList *bj_game_get_rules_list (void);
 
 // Extend BJRules
