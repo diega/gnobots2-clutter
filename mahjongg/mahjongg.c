@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <dirent.h>
-#include <config.h>
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -33,10 +32,6 @@
 #include <libgames-support/games-scores.h>
 #include <libgames-support/games-scores-dialog.h>
 #include <libgames-support/games-runtime.h>
-
-#ifdef HAVE_GNOME
-#include <gnome.h>
-#endif /* HAVE_GNOME */
     
 #include "mahjongg.h"
 #include "drawing.h"
