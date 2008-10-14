@@ -1428,12 +1428,10 @@ main (int argc, char *argv[])
 
   GOptionContext *context;
 
-#ifdef HAVE_GNOME
-  GnomeProgram *program;
-#else
   gboolean retval;
   GError *error = NULL;
-#endif
+
+setlocale (LC_ALL, "");
 
 #if defined(HAVE_GNOME) || defined(HAVE_RSVG_GNOMEVFS)
   /* If we're going to use gnome-vfs, we need to init threads before
@@ -1447,7 +1445,7 @@ main (int argc, char *argv[])
 
   setgid_io_init ();
 
-  bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
+  bindtextdomain (GETTEXT_PACKAGE, games_runtime_get_directory (GAMES_RUNTIME_LOCALE_DIRECTORY));
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
   textdomain (GETTEXT_PACKAGE);
 
@@ -1456,14 +1454,6 @@ main (int argc, char *argv[])
   g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
 #endif
 
-#ifdef HAVE_GNOME
-  program = gnome_program_init (APPNAME, VERSION,
-				LIBGNOMEUI_MODULE,
-				argc, argv,
-                                GNOME_PARAM_GOPTION_CONTEXT, context,
-				GNOME_PARAM_APP_DATADIR, DATADIR,
-                                NULL);
-#else
   g_option_context_add_group (context, gtk_get_option_group (TRUE));
 
   retval = g_option_context_parse (context, &argc, &argv, &error);
@@ -1473,7 +1463,6 @@ main (int argc, char *argv[])
     g_error_free (error);
     exit (1);
   }
-#endif /* HAVE_GNOME */
 
   g_set_application_name (_(APPNAME_LONG));
 
@@ -1585,10 +1574,6 @@ main (int argc, char *argv[])
   gtk_main ();
 
   games_conf_shutdown ();
-
-#ifdef HAVE_GNOME
-  g_object_unref (program);
-#endif /* HAVE_GNOME */
 
   games_runtime_shutdown ();
 
