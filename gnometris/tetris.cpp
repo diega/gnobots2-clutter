@@ -1362,7 +1362,27 @@ Tetris::gameNew(GtkAction *action, void *d)
 int
 Tetris::gameHelp(GtkAction *action, void *d)
 {
-	gnome_help_display ("gnometris.xml", NULL, NULL);
+	GdkScreen *screen;
+	GError *error = NULL;
+	Tetris *t = (Tetris*) d;
+
+	screen = gtk_widget_get_screen (GTK_WIDGET (t->getWidget()));
+	gtk_show_uri (screen, "ghelp:gnometris", gtk_get_current_event_time (), &error);
+
+	if (error != NULL)
+	{
+		GtkWidget *d;
+		d = gtk_message_dialog_new (GTK_WINDOW (t->getWidget()), 
+				(GtkDialogFlags)(GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT),
+				GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, 
+				"%s", _("Unable to open help file"));
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (d),
+				"             %s", error->message);
+		g_signal_connect (d, "response", G_CALLBACK (gtk_widget_destroy), NULL);
+		gtk_window_present (GTK_WINDOW (d));
+
+		g_error_free (error);
+	}
 
 	return TRUE;
 }
