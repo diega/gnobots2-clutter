@@ -11,10 +11,6 @@
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 
-#ifdef HAVE_GNOME
-#include <libgnome/gnome-help.h>
-#endif /* HAVE_GNOME */
-
 #include <libgames-support/games-conf.h>
 #include <libgames-support/games-files.h>
 #include <libgames-support/games-gridframe.h>
