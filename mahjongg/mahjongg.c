@@ -1426,8 +1426,6 @@ main (int argc, char *argv[])
   gboolean retval;
   GError *error = NULL;
 
-setlocale (LC_ALL, "");
-
 #if defined(HAVE_GNOME) || defined(HAVE_RSVG_GNOMEVFS)
   /* If we're going to use gnome-vfs, we need to init threads before
    * calling any glib functions.
