@@ -25,9 +25,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <glib/gi18n.h>
-#ifdef HAVE_GNOME
-#include <gnome.h>
-#endif
+#include <gtk/gtk.h>
 
 using namespace std;
 
