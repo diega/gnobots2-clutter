@@ -30,8 +30,8 @@
 #include "blockops.h"
 
 struct ThemeTableEntry {
-  gchar *name;
-  gchar *id;
+  const gchar *name;
+  const gchar *id;
 };
 
 extern const ThemeTableEntry ThemeTable[];
