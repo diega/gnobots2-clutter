@@ -31,6 +31,7 @@
 #include <glib/gi18n.h>
 
 #include <libgames-support/games-files.h>
+#include <libgames-support/games-runtime.h>
 
 #include "mahjongg.h"
 #include "maps.h"
@@ -539,6 +540,7 @@ load_maps (void)
   int i;
   map *m;
   GamesFileList *filelist;
+  const char *dname;
 
   /* Initialise the parser. */
   parser.start_element = parse_start_el;
@@ -555,7 +557,8 @@ load_maps (void)
   }
 
   /* Now read the remainder in from file. */
-  filelist = games_file_list_new ("*.map", ".", MAPDIR, NULL);
+  dname =  games_runtime_get_directory (GAMES_RUNTIME_GAME_GAMES_DIRECTORY);
+  filelist = games_file_list_new ("*.map", ".", dname, NULL);
   games_file_list_for_each (filelist, (GFunc) load_map_from_file, NULL);
 
   /* FIXME: Ideally we would do this transformation, but the old code 

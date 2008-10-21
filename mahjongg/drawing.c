@@ -18,10 +18,10 @@
 #include <config.h>
 
 #include <glib/gi18n.h>
-
 #include <gtk/gtkdrawingarea.h>
 
 #include <libgames-support/games-preimage.h>
+#include <libgames-support/games-runtime.h>
 
 #include "mahjongg.h"
 #include "drawing.h"
@@ -445,12 +445,15 @@ void
 load_images (gchar * file)
 {
   char *filename;
+  const char *dname;
   GError *error = NULL;
 
   if (tilepreimage)
     g_object_unref (tilepreimage);
 
-  filename = g_build_filename (PIXMAPDIR, file, NULL);
+  dname =  games_runtime_get_directory (GAMES_RUNTIME_GAME_PIXMAP_DIRECTORY);
+
+  filename = g_build_filename (dname, file, NULL);
   tilepreimage = games_preimage_new_from_file (filename, &error);
   g_free (filename);
 
@@ -461,7 +464,7 @@ load_images (gchar * file)
     g_clear_error (&error);
 
     /* Try the default tileset */
-    filename = g_build_filename (PIXMAPDIR, "postmodern.svg", NULL);
+    filename = g_build_filename (dname, "postmodern.svg", NULL);
     tilepreimage = games_preimage_new_from_file (filename, &error);
     g_free (filename);
 

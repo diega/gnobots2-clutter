@@ -550,7 +550,7 @@ fill_tile_menu (GtkWidget * menu)
   struct dirent *e;
   DIR *dir;
   gint itemno = 0;
-  gchar *dname = NULL;
+  const char *dname = NULL;
 
   if (tileset_list) {
     g_list_foreach (tileset_list, (GFunc) g_free, NULL);
@@ -559,11 +559,10 @@ fill_tile_menu (GtkWidget * menu)
 
   tileset_list = NULL;
 
-  dname = g_build_filename (PIXMAPDIR, NULL);
+  dname = games_runtime_get_directory(GAMES_RUNTIME_GAME_PIXMAP_DIRECTORY);
   dir = opendir (dname);
 
   if (!dir) {
-    g_free (dname);
     return;
   }
 
@@ -594,7 +593,6 @@ fill_tile_menu (GtkWidget * menu)
   }
 
   closedir (dir);
-  g_free (dname);
 }
 
 static void

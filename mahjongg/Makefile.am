@@ -2,12 +2,12 @@ SUBDIRS = help
 
 NULL =
 
-mapdir = $(pkgdatadir)/mahjongg/maps
+mapdir = $(pkgdatadir)/mahjongg/games
 map_DATA = \
 	mahjongg.map	\
 	$(NULL)
 
-pixmapdir = $(datadir)/pixmaps/mahjongg
+pixmapdir = $(pkgdatadir)/mahjongg/pixmaps
 pixmap_DATA = \
 	smooth.png	\
 	postmodern.svg	\
