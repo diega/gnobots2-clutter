@@ -20,6 +20,22 @@
  * For more details see the file COPYING.
  */
 
+#include <config.h>
+
+#include <dirent.h>
+#include <string.h>
+#include <math.h>
+#include <ctype.h>
+
+#include <gdk/gdkkeysyms.h>
+#include <libgnomevfs/gnome-vfs.h>
+
+#include <libgames-support/games-controls.h>
+#include <libgames-support/games-frame.h>
+#include <libgames-support/games-runtime.h>
+#include <libgames-support/games-sound.h>
+#include <libgames-support/games-stock.h>
+
 #include "tetris.h"
 #include "field.h"
 #include "blockops.h"
@@ -28,20 +44,6 @@
 #include "scoreframe.h"
 #include "highscores.h"
 #include "renderer.h"
-
-#include <games-frame.h>
-#include <games-controls.h>
-#include <games-stock.h>
-#include <games-sound.h>
-
-#include <libgnomevfs/gnome-vfs.h>
-
-#include <gdk/gdkkeysyms.h>
-#include <config.h>
-#include <dirent.h>
-#include <string.h>
-#include <math.h>
-#include <ctype.h>
 
 int LINES = 20;
 int COLUMNS = 14;
@@ -94,6 +96,8 @@ Tetris::Tetris(int cmdlLevel):
 	GtkWidget *menubar;
 
 	gchar *outdir;
+	const char *dname;
+
 	const GtkTargetEntry targets[] = {{(gchar*) "text/uri-list", 0, URI_LIST}, 
 					  {(gchar*) "property/bgimage", 0, URI_LIST},
 					  {(gchar*) "text/plain", 0, TEXT_PLAIN},
@@ -141,8 +145,8 @@ Tetris::Tetris(int cmdlLevel):
 	
 
 	/* Locate our background image. */
-	outdir = g_build_filename (gnome_user_dir_get (), "gnometris.d", 
-				   NULL);
+
+	outdir = g_build_filename (g_get_user_data_dir (), "gnometris", NULL);
 	if (!g_file_test (outdir, G_FILE_TEST_EXISTS))
 	    mkdir (outdir, 0700);
 	bgPixmap = g_build_filename (outdir, "background.bin", NULL);
@@ -150,13 +154,14 @@ Tetris::Tetris(int cmdlLevel):
 
 	/*  Use default background image, if none found in user's home dir.*/
 	if (!g_file_test (bgPixmap, G_FILE_TEST_EXISTS)) {
-          defaultPixmap = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_DATADIR,
-					        "pixmaps/gnometris/gnometris.svg",
-						 TRUE, NULL);
+          dname = games_runtime_get_directory (GAMES_RUNTIME_GAME_PIXMAP_DIRECTORY);
+          defaultPixmap = g_build_filename (dname, "gnometris.svg", NULL);
 	  default_bgimage = true;
 	}
 	
-	w = gnome_app_new("gnometris", _("Gnometris"));
+	w = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_title (GTK_WINDOW (w), _("Gnometris"));
+
 	g_signal_connect (w, "delete_event", G_CALLBACK (gameQuit), this);
 	gtk_drag_dest_set (w, GTK_DEST_DEFAULT_ALL, targets, 
 			   G_N_ELEMENTS(targets), 
@@ -203,7 +208,7 @@ Tetris::Tetris(int cmdlLevel):
 	GtkWidget * hb = gtk_hbox_new(FALSE, 0);
 
 	vbox = gtk_vbox_new (FALSE, 0);
-	gnome_app_set_contents (GNOME_APP (w), vbox);
+	gtk_container_add (GTK_CONTAINER (w), vbox);
 	gtk_box_pack_start (GTK_BOX (vbox), menubar, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), hb, TRUE, TRUE, 0);
 
@@ -240,6 +245,7 @@ Tetris::Tetris(int cmdlLevel):
 
 	themeList = NULL;
 	
+	gtk_widget_show(vbox);
 	gtk_widget_show(hb);
 	gtk_widget_show(vb1);
 	gtk_widget_show(vb2);
@@ -568,65 +574,6 @@ Tetris::startingLevelChanged (GtkWidget *spin, gpointer data)
 {
 	gint value = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin));
         games_conf_set_integer (KEY_OPTIONS_GROUP, KEY_STARTING_LEVEL, value);
-}
-
-void
-Tetris::fillMenu(GtkWidget *menu, char *pixname, char *dirname, 
-		 GList ** listp, bool addnone /*= false*/)
-{
-	struct dirent *e;
-	char *dname = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, dirname, FALSE, NULL);
-	DIR *dir;
-	int itemno = 0;
-	GList * list;
-
-	list = *listp;
-
-	if (list) {
-		g_list_foreach (list, (GFunc) g_free, NULL);
-		g_list_free (list);
-		*listp = NULL;
-	}
-	
-	dir = opendir (dname);
-
-	if (!dir)
-		return;
-	
-	char *s;
-	
-	while ((e = readdir (dir)) != 0)
-	{
-		s = g_strdup(e->d_name);
-
-		if (!(strstr (e->d_name, ".png") || 
-		      strstr (e->d_name, ".jpg") ||
-		      strstr (e->d_name, ".svg"))) 
-		{
-			free(s);
-			continue;
-		}
-
-		gtk_combo_box_append_text (GTK_COMBO_BOX (menu), s);
-		*listp = g_list_append (*listp, s);
-			  
-		if (!strcmp(pixname, s))
-		{
-		  gtk_combo_box_set_active(GTK_COMBO_BOX (menu), itemno);
-		}
-		itemno++;
-	}
-	
-	if (addnone)
-	{
-        /* Translators: This is the placeholder item in the theme combo box
-           (preferences dialog) when no themes are available */
-		s = g_strdup(_("<none>"));
-		gtk_combo_box_append_text (GTK_COMBO_BOX (menu), _("<none>"));
-		*listp = g_list_append (*listp, s);
-	}
-	
-	closedir(dir);
 }
 
 int 
@@ -1360,11 +1307,11 @@ Tetris::gameNew(GtkAction *action, void *d)
 }
 
 int
-Tetris::gameHelp(GtkAction *action, void *d)
+Tetris::gameHelp(GtkAction *action, void *data)
 {
 	GdkScreen *screen;
 	GError *error = NULL;
-	Tetris *t = (Tetris*) d;
+	Tetris *t = (Tetris*) data;
 
 	screen = gtk_widget_get_screen (GTK_WIDGET (t->getWidget()));
 	gtk_show_uri (screen, "ghelp:gnometris", gtk_get_current_event_time (), &error);

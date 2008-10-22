@@ -1,7 +1,7 @@
 SUBDIRS = pix help
 
 Gamesdir=$(datadir)/applications
-pixmapdir=$(datadir)/pixmaps/gnometris
+pixmapdir=$(datadir)/gnome-games/gnometris/pixmaps
 
 AM_CPPFLAGS=\
 	-I$(top_srcdir)/libgames-support \

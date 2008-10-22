@@ -1,4 +1,4 @@
-pixmapdir= $(datadir)/pixmaps/gnometris
+pixmapdir= $(datadir)/gnome-games/gnometris/pixmaps
 
 pixmap_DATA=\
 	7blocks-tig.png \

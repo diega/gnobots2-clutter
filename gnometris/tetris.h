@@ -162,9 +162,6 @@ private:
 
   GdkColor bgcolour;
 
-  void fillMenu (GtkWidget * menu, char *pixname, char *dirname,
-		 GList ** list, bool addnone = false);
-
   GtkWidget *setupdialog;
   GtkWidget *sentry;
   int startingLevel;
