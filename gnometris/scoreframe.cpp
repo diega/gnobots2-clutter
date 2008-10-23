@@ -21,13 +21,12 @@
  */
 
 #include <config.h>
-#include <gnome.h>
-#include <games-conf.h>
-#include <games-frame.h>
+
+#include <libgames-support/games-conf.h>
+#include <libgames-support/games-frame.h>
+#include <libgames-support/games-sound.h>
 
 #include "scoreframe.h"
-#include <games-sound.h>
-
 #include "tetris.h"
 
 ScoreFrame::ScoreFrame(int cmdlLevel)

@@ -22,9 +22,12 @@
  */
 
 #include <config.h>
-#include <gnome.h>
+
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
-#include <games-conf.h>
+
+#include <libgames-support/games-conf.h>
 
 #define KEY_OPTIONS_GROUP             "options"
 #define KEY_BG_COLOUR                 "bgcolor"

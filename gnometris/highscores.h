@@ -22,9 +22,8 @@
 #ifndef HIGH_SCORES_H
 #define HIGH_SCORES_H
 
-#include <gnome.h>
-#include <games-scores.h>
-#include <games-scores-dialog.h>
+#include <libgames-support/games-scores.h>
+#include <libgames-support/games-scores-dialog.h>
 
 class HighScores {
 protected:

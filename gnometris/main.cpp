@@ -19,24 +19,29 @@
  */
 
 #include <config.h>
+
+#include <libgames-support/games-scores.h>
+#include <libgames-support/games-sound.h>
+#include <libgames-support/games-conf.h>
+#include <libgames-support/games-runtime.h>
+
 #include "tetris.h"
-#include <games-scores.h>
-#include <games-sound.h>
-#include <games-conf.h>
-#include <games-runtime.h>
 
 int
 main(int argc, char *argv[])
 {
-        g_thread_init (NULL);
+	gboolean retval;
+	GError *error = NULL;
 
-        if (!games_runtime_init ("gnometris"))
-                return 1;
+	g_thread_init (NULL);
+
+	if (!games_runtime_init ("gnometris"))
+		return 1;
 
 	setgid_io_init ();
 
-	bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
-        bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");	
+	bindtextdomain (GETTEXT_PACKAGE, games_runtime_get_directory (GAMES_RUNTIME_LOCALE_DIRECTORY));
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");	
 	textdomain(GETTEXT_PACKAGE);
 
 	int cmdlineLevel = 0;
@@ -49,19 +54,23 @@ main(int argc, char *argv[])
 
 	GOptionContext *context = g_option_context_new (NULL);
 
+	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
-        games_sound_add_option_group (context);
+	games_sound_add_option_group (context);
 
-	GnomeProgram *program = gnome_program_init ("gnometris", VERSION,
-						    LIBGNOMEUI_MODULE,
-						    argc, argv,
-						    GNOME_PARAM_GOPTION_CONTEXT, context,
-						    GNOME_PARAM_APP_DATADIR, DATADIR,
-						    NULL);
+	retval = g_option_context_parse (context, &argc, &argv, &error);
+	g_option_context_free (context);
+	if (!retval) {
+		g_print ("%s", error->message);
+		g_error_free (error);
+		return 1;
+	}
+
+	g_set_application_name (_("Five or More"));
 
 	gtk_window_set_default_icon_name ("gnome-gnometris");
 
-        games_conf_initialise ("Gnometris");
+	games_conf_initialise ("Gnometris");
 
 	Tetris *t = new Tetris(cmdlineLevel);
 
@@ -69,11 +78,9 @@ main(int argc, char *argv[])
 
 	delete t;
 
-        games_conf_shutdown ();
+	games_conf_shutdown ();
 
-	g_object_unref (program);
-
-        games_runtime_shutdown ();
+	games_runtime_shutdown ();
 
 	return 0;
 }

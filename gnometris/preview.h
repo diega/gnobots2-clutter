@@ -21,7 +21,6 @@
  * For more details see the file COPYING.
  */
 
-#include <gnome.h>
 #include "tetris.h"
 #include "blockops.h"
 #include "renderer.h"
