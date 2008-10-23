@@ -27,8 +27,10 @@
 #include <math.h>
 #include <ctype.h>
 
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-#include <libgnomevfs/gnome-vfs.h>
+#include <gio/gio.h>
 
 #include <libgames-support/games-controls.h>
 #include <libgames-support/games-frame.h>
@@ -1034,7 +1036,7 @@ Tetris::resetColour (Tetris *t)
 	t->saveBgOptions ();
 }
 
-gchar * 
+char * 
 Tetris::decodeDropData(gchar * data, gint type)
 {
 	gchar *start, *end;
@@ -1076,16 +1078,20 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 		 gint x, gint y, GtkSelectionData *data, guint info, 
 		 guint time, Tetris * t)
 {
-	gchar * fileuri;
-	GnomeVFSHandle *inhandle;
-	GnomeVFSHandle *outhandle;
-	GnomeVFSResult result;
-	GnomeVFSFileInfo fileinfo;
-	GnomeVFSFileSize bytesread;
-	GnomeVFSFileSize filesize;
-	GdkPixbufLoader * loader;
-	GdkPixbuf * pixbuf;
-	guchar * buffer;
+	const char *fileuri;
+
+	GError *error;
+	GFile *file;
+	GFile *outfile;
+	GFileInfo *fileinfo;
+	GFileInputStream *istream;
+	GFileOutputStream *outstream;
+	goffset filesize;
+	gssize bytesread, byteswrote;
+
+	GdkPixbufLoader *loader;
+	GdkPixbuf *pixbuf;
+	guchar *buffer;
 
 
 	/* Accept a dropped filename and try and load it as the
@@ -1114,40 +1120,35 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 		return;
 	}
 
-	fileuri = decodeDropData ((gchar *)data->data, info);
+	fileuri = decodeDropData ((char *)data->data, info);
 	/* Silently ignore bad data. */
 	if (fileuri == NULL)
 		goto error_exit;
 
 	/* Now that we have a URI we load it and test it to see if it is 
 	 * an image file. */
-
-	/* FIXME: All this is slow and synchronous. It also
-	 * doesn't give any feedback about errors. */
 	
-	result = gnome_vfs_open (&inhandle, fileuri, GNOME_VFS_OPEN_READ);
-	if (result != GNOME_VFS_OK)
+	file = g_file_new_for_uri (fileuri);
+	istream = g_file_read (file, NULL, &error);
+
+	if (error)
 		goto error_exit;
 
-	result = gnome_vfs_get_file_info_from_handle (inhandle, &fileinfo,
-						      GNOME_VFS_FILE_INFO_FOLLOW_LINKS);
-	if (result != GNOME_VFS_OK)
+	fileinfo =  g_file_input_stream_query_info (istream, (char *)G_FILE_ATTRIBUTE_STANDARD_SIZE, NULL, &error);
+
+	if (error)
 		goto error_exit_handle;
 
-	/* This is where Drag and Drop of URLs from mozilla fails. */
-
-	if (!(fileinfo.valid_fields & GNOME_VFS_FILE_INFO_FIELDS_SIZE))
-		goto error_exit_handle;
-
-	filesize = fileinfo.size;
+	filesize = g_file_info_get_size (fileinfo);
 
 	buffer = (guchar *)g_malloc (filesize);
 	if (buffer == NULL)
 		goto error_exit_handle;
 	
-	result = gnome_vfs_read (inhandle, buffer, filesize, &bytesread);
+	bytesread = g_input_stream_read (G_INPUT_STREAM (istream), buffer, filesize, NULL, &error);
+
 	/* FIXME: We should reread if not enough was read. */
-	if ((result != GNOME_VFS_OK) || (bytesread != filesize))
+	if (error || (bytesread != filesize))
 		goto error_exit_buffer;
 
 	loader = gdk_pixbuf_loader_new ();
@@ -1167,27 +1168,33 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	 * can handle. Now we save it to disk. This is necessary so that
 	 * "slow" URIs (e.g. http) behave well in the long run. */
 
-	result = gnome_vfs_create (&outhandle, t->bgPixmap, GNOME_VFS_OPEN_WRITE,
-				   FALSE, 0600);
-	if (result != GNOME_VFS_OK)
+	outfile = g_file_new_for_path (t->bgPixmap);
+	outstream = g_file_replace (outfile, NULL, FALSE, G_FILE_CREATE_PRIVATE,
+					NULL, &error);
+
+	if (error)
 		goto error_exit_loader;
 
-	result = gnome_vfs_write (outhandle, buffer, filesize, &bytesread);
-	if ((result != GNOME_VFS_OK) || (bytesread != filesize))
+	byteswrote = g_output_stream_write (G_OUTPUT_STREAM (outstream), buffer,
+						bytesread, NULL, &error);
+
+	if (byteswrote != filesize)
 	    goto error_exit_saver;
 
 	t->usebg = TRUE;
 	t->saveBgOptions ();
 
  error_exit_saver:
-	gnome_vfs_close (outhandle);
+	g_object_unref(outstream);
  error_exit_loader:
 	g_object_unref (loader);
  error_exit_buffer:
 	g_free (buffer);
  error_exit_handle:
-	gnome_vfs_close (inhandle);
+	g_object_unref(istream);
  error_exit:
+	if(error)
+		g_error_free(error);
 	return;
 }
 
