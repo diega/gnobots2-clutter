@@ -672,7 +672,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 			  (GtkAttachOptions) 0,
 			  0, 0);
 
-	adj = gtk_adjustment_new (t->startingLevel, 1, 20, 1, 5, 20);
+	adj = gtk_adjustment_new (t->startingLevel, 1, 20, 1, 5, 0);
 	t->sentry = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 10.0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (t->sentry),
 					   GTK_UPDATE_ALWAYS);
