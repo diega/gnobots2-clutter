@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <check.h>
-#include <gnome.h>
+
+#include <gtk/gtk.h>
 
 #include <games-clock.h>
 
