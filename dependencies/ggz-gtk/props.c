@@ -1187,7 +1187,7 @@ GtkWidget* create_props_dlg(void)
   gtk_box_pack_start (GTK_BOX (vbox9), color_table, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (color_table), 3);
 
-  h_spin_adj = gtk_adjustment_new (1, 0, 15, 1, 1, 1);
+  h_spin_adj = gtk_adjustment_new (1, 0, 15, 1, 1, 0);
   h_spin = gtk_spin_button_new (GTK_ADJUSTMENT (h_spin_adj), 1, 0);
   gtk_widget_ref (h_spin);
   g_object_set_data_full(G_OBJECT (dlg_props), "h_spin", h_spin,
@@ -1197,7 +1197,7 @@ GtkWidget* create_props_dlg(void)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (h_spin), TRUE);
 
-  n_spin_adj = gtk_adjustment_new (1, 0, 15, 1, 1, 1);
+  n_spin_adj = gtk_adjustment_new (1, 0, 15, 1, 1, 0);
   n_spin = gtk_spin_button_new (GTK_ADJUSTMENT (n_spin_adj), 1, 0);
   gtk_widget_ref (n_spin);
   g_object_set_data_full(G_OBJECT (dlg_props), "n_spin", n_spin,
@@ -1207,7 +1207,7 @@ GtkWidget* create_props_dlg(void)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (n_spin), TRUE);
 
-  f_spin_adj = gtk_adjustment_new (1, 0, 15, 1, 1, 1);
+  f_spin_adj = gtk_adjustment_new (1, 0, 15, 1, 1, 0);
   f_spin = gtk_spin_button_new (GTK_ADJUSTMENT (f_spin_adj), 1, 0);
   gtk_widget_ref (f_spin);
   g_object_set_data_full(G_OBJECT (dlg_props), "f_spin", f_spin,
