@@ -3,20 +3,9 @@ SUBDIRS = pix help
 Gamesdir=$(datadir)/applications
 pixmapdir=$(datadir)/gnome-games/gnometris/pixmaps
 
-AM_CPPFLAGS=\
-	-I$(top_srcdir)/libgames-support \
-	-DDATADIR=\""$(datadir)"\"		   \
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"
-
-AM_CXXFLAGS=\
-	$(GNOME_GAMES_CXXFLAGS) $(ESD_CFLAGS)
-
-AM_CFLAGS=\
-	$(GNOME_GAMES_CFLAGS)
-
 bin_PROGRAMS=gnometris
 
-gnometris_SOURCES=\
+gnometris_SOURCES = \
 	main.cpp \
 	blocks.cpp \
 	blocks.h \
@@ -35,7 +24,18 @@ gnometris_SOURCES=\
 	tetris.cpp \
 	tetris.h
 
-gnometris_LDADD=\
+gnometris_CPPFLAGS = \
+	-I$(top_srcdir) \
+	-DDATADIR=\""$(datadir)"\" \
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
+	$(AM_CPPFLAGS)
+
+gnometris_CXXFLAGS = \
+	$(GNOME_GAMES_CXXFLAGS) \
+	$(ESD_CFLAGS) \
+	$(AM_CXXFLAGS)
+
+gnometris_LDADD = \
 	$(top_builddir)/libgames-support/libgames-support.la \
 	$(GNOME_GAMES_LIBS) \
 	$(ESD_LIBS) \

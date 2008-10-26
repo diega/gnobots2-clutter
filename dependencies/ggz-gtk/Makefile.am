@@ -1,7 +1,10 @@
 ggzgtkdatadir=$(datadir)/ggz/$(PACKAGE)
-AM_CPPFLAGS = $(GTK_CFLAGS) -I$(top_srcdir)/intl \
+AM_CFLAGS = $(GTK_CFLAGS) -I$(top_srcdir)/intl \
 	$(GGZCORE_INCLUDES) $(LIBGGZ_INCLUDES) \
-	-DGGZGTKDATADIR=\"$(ggzgtkdatadir)\"
+	-DGGZGTKDATADIR=\"$(ggzgtkdatadir)\" \
+	-UG_DISABLE_SINGLE_INCLUDES \
+	-UGTK_DISABLE_SINGLE_INCLUDES \
+	-UGTK_DISABLE_DEPRECATED
 
 ggzgtkdata_DATA =	about_bg.png		\
 			ggz_gtk_admin.svg 	\
