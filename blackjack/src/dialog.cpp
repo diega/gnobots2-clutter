@@ -122,7 +122,7 @@ show_hint_dialog (void)
         if (hint_dlg)
                 g_signal_connect (hint_dlg,
                                   "destroy",
-                                  (GtkSignalFunc) hint_destroy_callback,
+                                  (GCallback) hint_destroy_callback,
                                   NULL);
 
 	gtk_dialog_run (GTK_DIALOG (hint_dlg));

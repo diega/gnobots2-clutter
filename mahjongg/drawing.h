@@ -10,7 +10,7 @@
 #ifndef DRAWING_H
 #define DRAWING_H
 
-#include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
 
 GtkWidget *create_mahjongg_board (void);
 void load_images (gchar * file);

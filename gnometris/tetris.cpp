@@ -223,8 +223,8 @@ Tetris::Tetris(int cmdlLevel):
 
 	GtkWidget *vb1 = gtk_vbox_new(FALSE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vb1), 10);
-	gtk_box_pack_start_defaults(GTK_BOX(vb1), aspect_frame);
-	gtk_box_pack_start_defaults(GTK_BOX(hb), vb1);
+	gtk_box_pack_start(GTK_BOX(vb1), aspect_frame, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(hb), vb1, TRUE, TRUE, 0);
 
 	setupPixmap();
 

@@ -18,7 +18,7 @@
 #include <config.h>
 
 #include <glib/gi18n.h>
-#include <gtk/gtkdrawingarea.h>
+#include <gtk/gtk.h>
 
 #include <libgames-support/games-preimage.h>
 #include <libgames-support/games-runtime.h>
