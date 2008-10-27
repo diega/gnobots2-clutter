@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h> /* For strcasecmp */
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <sys/types.h>
 #ifdef HAVE_SYS_SOCKET_H
@@ -53,8 +54,6 @@
 #endif
 
 #include <glib.h>
-#include <gnome.h>
-#include <libgnome/libgnome.h>
 
 #include "chat.h"
 #include "client.h"
@@ -634,11 +633,11 @@ int chat_checkurl(GtkXText *xtext, char *word)
 
 	/* Check for URLs */
 	if (!strncasecmp (word, "ftp.", 4))
-		return WORD_URL;
+		return WORD_HOST;
 	if (!strncasecmp (word, "ftp://", 6))
 		return WORD_URL;
 	if (!strncasecmp (word, "www.", 4))
-		return WORD_URL;
+		return WORD_HOST;
 	if (!strncasecmp (word, "http://", 7))
 		return WORD_URL;
 	if (!strncasecmp (word, "https://", 8))
@@ -707,6 +706,7 @@ void chat_word_clicked(GtkXText *xtext, char *word,
         GdkEventButton *event)
 {
 	GError *err = NULL;
+	char *url;
 
 	switch(chat_checkurl(xtext, word))
 	{
@@ -714,8 +714,12 @@ void chat_word_clicked(GtkXText *xtext, char *word,
 			login_goto_server(word);
 			break;
 		case WORD_HOST:
+			url = g_strconcat ("http://", word, NULL);
+			gtk_show_uri (NULL, url, GDK_CURRENT_TIME, &err);
+			g_free (url);
+			break;
 		case WORD_URL:
-			 gnome_url_show (word, &err);
+			gtk_show_uri (NULL, word, GDK_CURRENT_TIME, &err);
 			break;
 		default:
 			break;

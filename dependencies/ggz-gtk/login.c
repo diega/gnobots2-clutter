@@ -36,8 +36,8 @@
 #include <unistd.h>
 
 #include <gdk/gdkkeysyms.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <gnome.h>
 
 #include <ggz.h>
 #include <ggzcore.h>
@@ -308,7 +308,41 @@ static void login_cancel_button_clicked(GtkButton * button, gpointer data)
 
 static void login_help_button_clicked(GtkButton * button, gpointer data)
 {
-	gnome_help_display (embedded_game_help_file, "network-games", NULL);
+	GtkWidget *window;
+	GdkScreen *screen;
+	GError *error = NULL;
+	char *help_string;
+	char *game_name;
+	char *ptr;
+
+	game_name = g_strdup (embedded_game_help_file);
+	ptr = g_strrstr (game_name, ".xml");
+	if (ptr != NULL)
+		*ptr = 0;
+
+	window = gtk_widget_get_toplevel (GTK_WIDGET (button));
+	screen = gtk_widget_get_screen (GTK_WIDGET (window));
+
+	help_string = g_strconcat("ghelp:", game_name, "?", "network-games", NULL);
+
+	gtk_show_uri (NULL, help_string, gtk_get_current_event_time (), &error);
+
+	if (error != NULL)
+	{
+		GtkWidget *d;
+		d = gtk_message_dialog_new (GTK_WINDOW (window), 
+                                    GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                    GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, 
+                                    "%s", _("Unable to open help file"));
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (d),
+                                                  "%s", error->message);
+		g_signal_connect (d, "response", G_CALLBACK (gtk_widget_destroy), NULL);
+		gtk_window_present (GTK_WINDOW (d));
+
+		g_error_free (error);
+	}
+	g_free (game_name);
+	g_free (help_string);
 }
 
 static void login_start_session(void)
