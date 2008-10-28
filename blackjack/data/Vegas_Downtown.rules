@@ -2,12 +2,12 @@
 DealerHitsSoft17=true 
 DealerSpeed=500 
 DoubleDown9=true 
-DoubleDownAfterHit=FALSE 
-DoubleDownAfterSplit=FALSE 
+DoubleDownAfterHit=false 
+DoubleDownAfterSplit=false 
 DoubleDownAnyTotal=true 
 DoubleDownSoft=true 
 Name=Vegas Downtown
 NumberOfDecks=6 
-ResplitAcesAllowed=FALSE 
+ResplitAcesAllowed=false 
 ResplitAllowed=true 
-SurrenderAllowed=FALSE 
+SurrenderAllowed=false 

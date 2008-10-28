@@ -2,7 +2,7 @@
 DealerHitsSoft17=true 
 DealerSpeed=500 
 DoubleDown9=true 
-DoubleDownAfterHit=FALSE 
+DoubleDownAfterHit=false 
 DoubleDownAfterSplit=true 
 DoubleDownAnyTotal=true 
 DoubleDownSoft=true 
@@ -10,4 +10,4 @@ Name=Ameristar
 NumberOfDecks=6 
 ResplitAcesAllowed=true 
 ResplitAllowed=true 
-SurrenderAllowed=FALSE 
+SurrenderAllowed=false 

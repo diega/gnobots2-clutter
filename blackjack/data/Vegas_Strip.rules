@@ -1,8 +1,8 @@
 [Blackjack Rules]
-DealerHitsSoft17=FALSE 
+DealerHitsSoft17=false 
 DealerSpeed=500 
 DoubleDown9=true 
-DoubleDownAfterHit=FALSE 
+DoubleDownAfterHit=false 
 DoubleDownAfterSplit=true 
 DoubleDownAnyTotal=true 
 DoubleDownSoft=true 
