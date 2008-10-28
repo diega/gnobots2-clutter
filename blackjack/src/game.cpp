@@ -3,6 +3,7 @@
  * Blackjack - game.cpp
  *
  * Copyright (C) 2003-2004 William Jon McCann <mccann@jhu.edu>
+ * Copyright © 2008 Christian Persch
  *
  * This game is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,9 +27,6 @@
 #include <string.h>
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
-#include <libxml/tree.h>
-#include <libxml/parser.h>
-#include <libxml/xpath.h>
 
 #include "blackjack.h"
 #include "events.h"
@@ -38,6 +36,8 @@
 #include "player.h"
 #include "hand.h"
 #include "game.h"
+
+#define RULES_GROUP "Blackjack Rules"
 
 #include <iostream>
 using namespace std;
@@ -226,87 +226,6 @@ bj_get_deal_delay ()
         return (bj_get_quick_deal ()) ? 1 : dealerSpeed;
 }
 
-static xmlXPathObjectPtr
-getnodeset (xmlDocPtr doc,
-            xmlChar  *xpath)
-{	
-	xmlXPathContextPtr context;
-	xmlXPathObjectPtr  result;
-
-	context = xmlXPathNewContext (doc);
-	result = xmlXPathEvalExpression (xpath, context);
-	if (xmlXPathNodeSetIsEmpty (result->nodesetval)) {
-                g_warning ("Node set is empty for %s", xpath);
-		return NULL;
-        }
-
-	xmlXPathFreeContext (context);
-
-	return result;
-}
-
-static xmlChar *
-get_first_xpath_value (xmlDocPtr doc,
-                       xmlChar  *xpath)
-{ 
-        xmlChar          *keyword = NULL;
-	xmlXPathObjectPtr result;
-	xmlNodeSetPtr     nodeset;
-
-	result = getnodeset (doc, xpath);
-        if (result) {
-		nodeset = result->nodesetval;
-                if (nodeset->nodeNr > 0)
-                        keyword = xmlGetProp (nodeset->nodeTab[0], (const xmlChar *) "value");
-	}
-
-        return keyword;
-}
-
-static gboolean
-get_xml_rule_boolean (xmlDocPtr   doc,
-                      const char *name,
-                      gboolean    default_value)
-{
-        xmlChar *str;
-        gboolean value;
-        xmlChar *xpath;
-
-        xpath = (xmlChar *)g_strdup_printf ("/BlackjackRuleDefinition/%s", name);
-
-        str = get_first_xpath_value (doc, xpath);
-        if (str)
-                value = (strcmp ((char *)str, "TRUE") == 0);
-        else
-                value = default_value;
-
-        xmlFree (str);
-
-        return value;
-}
-
-static int
-get_xml_rule_int (xmlDocPtr   doc,
-                  const char *name,
-                  gint        default_value)
-{
-        xmlChar *str;
-        gint     value;
-        xmlChar *xpath;
-
-        xpath = (xmlChar *)g_strdup_printf ("/BlackjackRuleDefinition/%s", name);
-
-        str = get_first_xpath_value (doc, xpath);
-        if (str)
-                value = atoi ((char *)str);
-        else
-                value = default_value;
-
-        xmlFree (str);
-
-        return value;
-}
-
 BJGameRules *
 bj_game_read_rules (char *filename)
 {
@@ -323,9 +242,7 @@ bj_game_read_rules (char *filename)
                 lateSurrender;
         gint lnumDecks,
                 ldealerSpeed;
-        char   *contents;
-        gsize   length;
-        GError *error = NULL;
+        GKeyFile *key_file;
 
         lnumDecks = 6;
         hitSoft17 = FALSE;
@@ -339,46 +256,25 @@ bj_game_read_rules (char *filename)
         lateSurrender = TRUE;
         ldealerSpeed = 500;
 
-        if (!g_file_get_contents (filename, &contents, &length, &error))
-                use_default = TRUE;
+        key_file = g_key_file_new ();
+        if (g_key_file_load_from_file (key_file, filename, GKeyFileFlags(0), NULL) &&
+            g_key_file_has_group (key_file, RULES_GROUP)) {
 
-        if (!use_default) {
-             	xmlDocPtr  doc;
-                xmlNodePtr node;
+                lnumDecks = g_key_file_get_integer (key_file, RULES_GROUP, "NumberOfDecks", NULL);
+                ldealerSpeed = g_key_file_get_integer (key_file, RULES_GROUP, "DealerSpeed", NULL);
 
-                contents = (char *)g_realloc (contents, length + 1);
-                contents [length] = '\0';
-
-                doc = xmlParseMemory (contents, length);
-                if (doc == NULL)
-                        doc = xmlRecoverMemory (contents, length);
-
-                g_free (contents);
-
-                /* If the document has no root, or no name */
-                if (!doc || !doc->children || !doc->children->name) {
-                        if (doc != NULL)
-                                xmlFreeDoc (doc);
-                        use_default = TRUE;
-                } else {
-                        node = xmlDocGetRootElement (doc);
-
-                        lnumDecks = get_xml_rule_int (doc, "NumberOfDecks", lnumDecks);
-                        ldealerSpeed = get_xml_rule_int (doc, "DealerSpeed", ldealerSpeed);
-
-                        hitSoft17 = get_xml_rule_boolean (doc, "DealerHitsSoft17", hitSoft17);
-                        doubleAnyTotal = get_xml_rule_boolean (doc, "DoubleDownAnyTotal", doubleAnyTotal);
-                        double9 = get_xml_rule_boolean (doc, "DoubleDown9", double9);
-                        doubleSoft = get_xml_rule_boolean (doc, "DoubleDownSoft", doubleSoft);
-                        doubleAfterHit = get_xml_rule_boolean (doc, "DoubleDownAfterHit", doubleAfterHit);
-                        doubleAfterSplit = get_xml_rule_boolean (doc, "DoubleDownAfterSplit", doubleAfterSplit);
-                        resplit = get_xml_rule_boolean (doc, "ResplitAllowed", resplit);
-                        resplitAces = get_xml_rule_boolean (doc, "ResplitAcesAllowed", resplitAces);
-                        lateSurrender = get_xml_rule_boolean (doc, "SurrenderAllowed", lateSurrender);
-
-                        xmlFreeDoc (doc);
-                }
+                hitSoft17 = g_key_file_get_boolean (key_file, RULES_GROUP, "DealerHitsSoft17", NULL);
+                doubleAnyTotal = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDownAnyTotal", NULL);
+                double9 = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDown9", NULL);
+                doubleSoft = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDownSoft", NULL);
+                doubleAfterHit = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDownAfterHit", NULL);
+                doubleAfterSplit = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDownAfterSplit", NULL);
+                resplit = g_key_file_get_boolean (key_file, RULES_GROUP, "ResplitAllowed", NULL);
+                resplitAces = g_key_file_get_boolean (key_file, RULES_GROUP, "ResplitAcesAllowed", NULL);
+                lateSurrender = g_key_file_get_boolean (key_file, RULES_GROUP, "SurrenderAllowed", NULL);
         }
+
+        g_key_file_free (key_file);
 
         // Compute basic strategy.
         ruleset = new BJGameRules (hitSoft17, doubleAnyTotal, 
