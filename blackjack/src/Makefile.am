@@ -5,6 +5,7 @@ INCLUDES =  \
 	-DDATADIR=\""$(pkgdatadir)"\"		\
 	-DHAVE_GNOME				\
 	$(GNOME_GAMES_CXXFLAGS)			\
+	$(XML_CFLAGS)				\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"
 
 bin_PROGRAMS = blackjack
@@ -41,5 +42,5 @@ blackjack_SOURCES = 	\
 
 blackjack_LDADD = 					\
 	../../libgames-support/libgames-support.la	\
-	$(GNOME_GAMES_LIBS) -lz
+	$(GNOME_GAMES_LIBS) $(XML_LIBS) -lz
 
