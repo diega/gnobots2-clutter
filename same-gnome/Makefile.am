@@ -2,8 +2,8 @@ SUBDIRS = help
 
 NULL =
 
-pixmapdir = $(pkgdatadir)/same-gnome/themes/2.10
-pixmap_DATA = \
+themedir = $(pkgdatadir)/same-gnome/themes/2.10
+theme_DATA = \
 	planets.png	\
 	stones.png	\
 	$(NULL)
@@ -23,12 +23,7 @@ same_gnome_SOURCES = 	\
 	ui.h
 
 same_gnome_CPPFLAGS = \
-	-I$(top_srcdir)					\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
-	-DDATADIR="\"$(datadir)\""			\
-	-DPIXMAPDIR="\"$(pixmapdir)\""			\
-	-DMAPDIR="\"$(mapdir)\""			\
-	-DTHEMEDIR=\""$(pixmapdir)"\"
+	-I$(top_srcdir) \
 	$(AM_CPPFLAGS)
 
 same_gnome_CFLAGS = \
@@ -65,7 +60,7 @@ desktopdir = $(datadir)/applications
 desktop_DATA = $(desktop_in_files:.desktop.in.in=.desktop)
 
 EXTRA_DIST = \
-	$(pixmap_DATA)		\
+	$(theme_DATA)		\
 	$(schema_in_files)	\
 	$(NULL)
 

@@ -17,6 +17,7 @@
 #include <libgames-support/games-help.h>
 #include <libgames-support/games-scores-dialog.h>
 #include <libgames-support/games-stock.h>
+#include <libgames-support/games-runtime.h>
 
 #include "same-gnome.h"
 
@@ -279,6 +280,7 @@ theme_cb (void)
   GtkTreeSelection *selection;
   GtkListStore *list;
   GamesFileList *filelist;
+  char *themedir;
 
   if (dialog) {
     gtk_window_present (GTK_WINDOW (dialog));
@@ -313,10 +315,12 @@ theme_cb (void)
 
     current_theme_index = -1;
     theme_index_counter = 0;
-    filelist = games_file_list_new_images (THEMEDIR, localthemedir, NULL);
+    themedir = g_build_filename (games_runtime_get_directory (GAMES_RUNTIME_GAME_THEME_DIRECTORY), THEME_VERSION, NULL);
+    filelist = games_file_list_new_images (themedir, localthemedir, NULL);
     games_file_list_transform_basename (filelist);
     games_file_list_for_each (filelist, (GFunc) fill_list, list);
     g_object_unref (filelist);
+    g_free (themedir);
 
     listview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list));
     g_object_unref (list);

@@ -14,6 +14,7 @@
 #include <gtk/gtk.h>
 
 #include <libgames-support/games-conf.h>
+#include <libgames-support/games-runtime.h>
 
 #include "same-gnome.h"
 
@@ -319,7 +320,7 @@ render_cb (GtkWidget * canvas)
     if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
       g_free (filename);
       /* Then look in the system directory. */
-      filename = g_build_filename (THEMEDIR, theme, NULL);
+      filename = g_build_filename (games_runtime_get_directory (GAMES_RUNTIME_GAME_THEME_DIRECTORY), THEME_VERSION, theme, NULL);
       if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
 	/* Some old themes had a -sync just before the suffix. This was
 	 * hidden from the user and has been eliminated from the names
@@ -339,7 +340,7 @@ render_cb (GtkWidget * canvas)
 	  if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
 	    /* And finally fall back to the default. */
 	    g_free (filename);
-	    filename = g_build_filename (THEMEDIR, DEFAULT_THEME, NULL);
+            filename = g_build_filename (games_runtime_get_directory (GAMES_RUNTIME_GAME_THEME_DIRECTORY), THEME_VERSION, DEFAULT_THEME, NULL);
 	  }
 	}
       }
