@@ -21,8 +21,10 @@
  * USA
  */
 
+#include <config.h>
+
 #include <stdlib.h>
-#include <games-preimage.h>
+#include <libgames-support/games-preimage.h>
 
 #include "blackjack.h"
 #include "slot.h"

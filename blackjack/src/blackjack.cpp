@@ -26,9 +26,9 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include <games-conf.h>
-#include <games-stock.h>
-#include <games-runtime.h>
+#include <libgames-support/games-conf.h>
+#include <libgames-support/games-stock.h>
+#include <libgames-support/games-runtime.h>
 
 #include "blackjack.h"
 #include "events.h"
