@@ -29,10 +29,6 @@ mahjongg_SOURCES = 	\
 
 mahjongg_CPPFLAGS = \
 	-I$(top_srcdir)					\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
-	-DDATADIR="\"$(datadir)\""			\
-	-DPIXMAPDIR="\"$(pixmapdir)\""			\
-	-DMAPDIR="\"$(mapdir)\""			\
 	$(AM_CPPFLAGS)
 
 mahjongg_CFLAGS = \
