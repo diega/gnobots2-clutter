@@ -1,9 +1,7 @@
-pixmapdir= $(datadir)/gnome-games/gnometris/pixmaps
+pixmapdir = $(pkgdatadir)/gnometris/pixmaps
 
-pixmap_DATA=\
+pixmap_DATA = \
 	7blocks-tig.png \
 	7blocks-gw.png
 
-EXTRA_DIST=$(pixmap_DATA)
-
-
+EXTRA_DIST = $(pixmap_DATA)

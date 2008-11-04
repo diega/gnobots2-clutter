@@ -1,8 +1,5 @@
 SUBDIRS = pix help
 
-Gamesdir=$(datadir)/applications
-pixmapdir=$(datadir)/gnome-games/gnometris/pixmaps
-
 bin_PROGRAMS=gnometris
 
 gnometris_SOURCES = \
@@ -26,8 +23,6 @@ gnometris_SOURCES = \
 
 gnometris_CPPFLAGS = \
 	-I$(top_srcdir) \
-	-DDATADIR=\""$(datadir)"\" \
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	$(AM_CPPFLAGS)
 
 gnometris_CXXFLAGS = \
@@ -41,8 +36,10 @@ gnometris_LDADD = \
 	$(ESD_LIBS) \
 	$(INTLLIBS)
 
+pixmapdir = $(pkgdatadir)/gnometris/pixmaps
 pixmap_DATA = gnometris.svg
 
+Gamesdir = $(datadir)/applications
 Games_in_files = gnometris.desktop.in.in
 Games_DATA = $(Games_in_files:.desktop.in.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
