@@ -3,7 +3,7 @@
 
 #include <gtk/gtk.h>
 
-#include <games-clock.h>
+#include <libgames-support/games-clock.h>
 
 /*  Fixtures used to prepare and cleanup for testing. */
 static void
