@@ -76,7 +76,7 @@ libggz_gtk_la_SOURCES =	about.c \
 
 libggz_gtk_la_LIBADD = $(GTK_LIBS) $(LDADD) $(LIBS) $(INTLLIBS) \
 			$(LIB_GGZCORE) $(LIB_GGZ)
-libggz_gtk_la_LDFLAGS = $(GGZCORE_LDFLAGS) $(LIBGGZ_LDFLAGS) -version-info 0:0:0
+libggz_gtk_la_LDFLAGS = $(GGZCORE_LDFLAGS) $(LIBGGZ_LDFLAGS)
 
 #if WIN32
 #ggz_gtk_SOURCES += ggz-gtk-icon.rc
