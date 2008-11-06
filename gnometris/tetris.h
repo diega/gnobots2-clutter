@@ -157,7 +157,6 @@ private:
   void initOptions ();
   void setOptions ();
   void writeOptions ();
-  void setupScoreState ();
   void manageFallen ();
 
   GdkPixbuf *bgimage;

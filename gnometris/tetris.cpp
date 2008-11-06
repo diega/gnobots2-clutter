@@ -244,7 +244,6 @@ Tetris::Tetris(int cmdlLevel):
 	high_scores = new HighScores ();
 
 	setOptions ();
-	setupScoreState ();
 
 	themeList = NULL;
 	
@@ -283,16 +282,6 @@ Tetris::~Tetris()
 
         if (confNotifyID != 0)
                 g_signal_handler_disconnect (games_conf_get_default (), confNotifyID);
-}
-
-void
-Tetris::setupScoreState ()
-{
-	if (high_scores->empty ()) {
-		gtk_action_set_sensitive (scores_action, FALSE);
-	} else {
-		gtk_action_set_sensitive (scores_action, TRUE);
-	}
 }
 
 void 

@@ -439,15 +439,6 @@ message_flash (gchar * message)
 		 GUINT_TO_POINTER (flashid));
 }
 
-static void
-update_score_state ()
-{
-  GList *top;
-
-  top = games_scores_get (highscores);
-  gtk_action_set_sensitive (scores_action, top != NULL);
-}
-
 static gint
 update_moves_left (void)
 {
@@ -688,7 +679,6 @@ you_won (void)
     gtk_dialog_run (GTK_DIALOG (dialog));
     gtk_widget_hide (dialog);
   }
-  update_score_state ();
 }
 
 static void
@@ -1202,8 +1192,6 @@ new_game (void)
   draw_all_tiles ();
 
   init_game ();
-
-  update_score_state ();
 }
 
 void
@@ -1530,7 +1518,6 @@ main (int argc, char *argv[])
 
   do_game ();
   init_game ();
-  update_score_state ();
 
   /* Don't leave the keyboard focus on the toolbar */
   gtk_widget_grab_focus (board);

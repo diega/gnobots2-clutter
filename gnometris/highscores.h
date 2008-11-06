@@ -34,7 +34,6 @@ public:
     HighScores ();
 
   gint add (gint score);
-  gboolean empty (void);
   void show (GtkWindow *parent_window, gint highlight = 0);
 };
 

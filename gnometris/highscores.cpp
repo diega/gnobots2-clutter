@@ -45,11 +45,6 @@ gint HighScores::add (gint score)
   return games_scores_add_score (highscores, value);
 }
 
-gboolean HighScores::empty (void)
-{
-  return games_scores_get (highscores) == NULL;
-}
-
 void HighScores::show (GtkWindow *parent_window, gint highlight)
 {
   if (!dialog)
