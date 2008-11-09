@@ -72,7 +72,7 @@ bj_chip_set_size (gint width,
 
         pixmapdir = games_runtime_get_directory (GAMES_RUNTIME_GAME_PIXMAP_DIRECTORY);
 
-        for (gint i = 0; i < G_N_ELEMENTS (names); i++) {
+        for (guint i = 0; i < G_N_ELEMENTS (names); i++) {
                 gchar *fullname;
 
                 fullname = g_build_filename (pixmapdir, names[i], NULL);
