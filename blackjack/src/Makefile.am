@@ -1,46 +1,50 @@
-INCLUDES =  \
-	-I$(top_srcdir) \
-	-I$(top_srcdir)/libgames-support	\
-	-DPIXMAPDIR=\""$(pkgdatadir)/blackjack/pixmaps"\"	\
-	-DDATADIR=\""$(pkgdatadir)"\"		\
-	-DHAVE_GNOME				\
-	$(GNOME_GAMES_CXXFLAGS)			\
-	$(XML_CFLAGS)				\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"
+NULL =
 
 bin_PROGRAMS = blackjack
 
 blackjack_SOURCES = 	\
-	strategy.h	\
-	strategy.cpp	\
-	player.h	\
-        player.cpp	\
-	hand.h		\
-	hand.cpp	\
-	game.h		\
-	game.cpp	\
-	blackjack.h	\
 	blackjack.cpp	\
-	splash.h	\
-	splash.cpp	\
-	slot.h		\
-	slot.cpp	\
-	dialog.h	\
-	dialog.cpp	\
-	events.h	\
-	events.cpp	\
-	draw.h		\
-	draw.cpp	\
-	menu.h		\
-	menu.cpp	\
-	press_data.h    \
-	press_data.cpp  \
-	card.h		\
+	blackjack.h	\
 	card.cpp	\
+	card.h		\
+	chips.cpp	\
 	chips.h		\
-	chips.cpp
+	dialog.cpp	\
+	dialog.h	\
+	draw.cpp	\
+	draw.h		\
+	events.cpp	\
+	events.h	\
+	game.cpp	\
+	game.h		\
+	hand.cpp	\
+	hand.h		\
+	menu.cpp	\
+	menu.h		\
+        player.cpp	\
+	player.h	\
+	press_data.cpp  \
+	press_data.h    \
+	slot.cpp	\
+	slot.h		\
+	splash.cpp	\
+	splash.h	\
+	strategy.cpp	\
+	strategy.h	\
+	$(NULL)
 
-blackjack_LDADD = 					\
-	../../libgames-support/libgames-support.la	\
-	$(GNOME_GAMES_LIBS) $(XML_LIBS) -lz
+blackjack_CPPFLAGS = \
+	-I$(top_srcdir) \
+	$(AM_CPPFLAGS)
 
+blackjack_CXXFLAGS = \
+	$(GNOME_GAMES_CXXFLAGS) \
+	$(XML_CFLAGS) \
+	$(AM_CXXFLAGS)
+
+blackjack_LDADD = \
+	$(top_builddir)/libgames-support/libgames-support.la \
+	$(GNOME_GAMES_LIBS) \
+	$(XML_LIBS) \
+	-lz
+# FIXMEchpe: what's this -lz about??
