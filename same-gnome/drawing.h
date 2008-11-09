@@ -22,6 +22,8 @@ void cursor_erase (void);
 
 void pixels_to_logical (gint px, gint py, gint * lx, gint * ly);
 
+void start_animation (void);
+
 void start_spinning (void);
 void stop_spinning (void);
 

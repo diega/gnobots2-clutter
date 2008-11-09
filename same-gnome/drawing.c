@@ -62,6 +62,8 @@ gboolean draw_cursor = FALSE;
 
 gboolean fast_animation = FALSE;
 
+static gint animation_timer_id = 0;
+
 void
 pixels_to_logical (gint px, gint py, gint * lx, gint * ly)
 {
@@ -610,6 +612,7 @@ animation_timer (void)
   int i, j;
   game_cell *p;
   gboolean changestatep;
+  gboolean animating = FALSE;
 
   if (!pixmaps_ready)
     return TRUE;
@@ -697,6 +700,10 @@ animation_timer (void)
         }
         break;
       }
+
+      if(p->style != ANI_STILL)
+        animating = TRUE;
+
       p--;
     }
   }
@@ -709,6 +716,7 @@ animation_timer (void)
    * game_state. However we only want to do these things once, so
    * we flag them and check them down here once the loop has finished. */
   if (changestatep) {
+    animating = TRUE;
     /* FIXME: Is this really the place to change the game state ?
      * We do need to signal the end of the animation though so maybe ...
      * or maybe we move it over to game.c 
@@ -752,7 +760,20 @@ animation_timer (void)
     }
   }
 
-  return TRUE;
+  if (animating) {
+    return TRUE;
+  } else {
+    animation_timer_id = 0;
+    return FALSE;
+  }
+}
+
+void
+start_animation (void)
+{
+  /* 16 frames/second. */
+  if (animation_timer_id == 0)
+    animation_timer_id = g_timeout_add (62, (GSourceFunc) animation_timer, NULL);    
 }
 
 void
@@ -781,15 +802,6 @@ resize_graphics (void)
 gboolean
 configure_cb (GtkWidget * canvas, GdkEventConfigure * event)
 {
-  static gboolean first_run = TRUE;
-
-  if (first_run) {                /* Start the animation timer if necessary. */
-    /* 16 frames/second. */
-    g_timeout_add (62, (GSourceFunc) animation_timer, NULL);
-
-    first_run = FALSE;
-  }
-
   canvaswidget = canvas;
   drawing_area_width = event->width;
   resize_graphics ();
@@ -817,6 +829,8 @@ start_spinning (void)
     p->frame = 0;
     list++;
   }
+    
+  start_animation();
 }
 
 void
@@ -832,4 +846,6 @@ stop_spinning (void)
     p->style = ANI_SPINBACK;
     list++;
   }
+    
+  start_animation();
 }

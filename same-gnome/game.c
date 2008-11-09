@@ -284,6 +284,8 @@ destroy_balls (void)
 
   /* The end of game check is also not triggered here, we want the balls 
    * to settle first. It is called from the animation code. */
+    
+  start_animation();
 }
 
 gint
@@ -312,6 +314,9 @@ mark_falling_balls (void)
       }
       p--;
     }
+    
+  if (count)
+    start_animation();
 
   return count;
 }
@@ -352,6 +357,8 @@ mark_shifting_balls (void)
     p->frame = MOVELFRAMESOFS;
     p->style = ANI_MOVE_LEFT;
   }
+    
+  start_animation();
 
   return TRUE;
 }
