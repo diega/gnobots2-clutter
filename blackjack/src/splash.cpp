@@ -21,13 +21,13 @@
  * USA
  */
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
 
 #include "splash.h"
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+
+#include <libgames-support/games-runtime.h>
 
 static GtkWidget *progress = NULL;
 static GtkWidget *label = NULL;
@@ -75,8 +75,10 @@ splash_new ()
         gchar *image_file;
         GtkWidget *splash_pixmap = NULL;
         GtkWidget *vbox;
+        const char *pixmapdir;
 
-        image_file = g_build_filename (PIXMAPDIR, "blackjack-splash.png", NULL);
+        pixmapdir = games_runtime_get_directory (GAMES_RUNTIME_GAME_PIXMAP_DIRECTORY);
+        image_file = g_build_filename (pixmapdir, "blackjack-splash.png", NULL);
 
         if (image_file != NULL)
                 splash_pixmap = gtk_image_new_from_file (image_file);

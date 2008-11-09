@@ -28,6 +28,8 @@
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
 
+#include <libgames-support/games-runtime.h>
+
 #include "blackjack.h"
 #include "events.h"
 #include "draw.h"
@@ -160,8 +162,10 @@ bj_game_find_rules (gchar *variation)
         GDir *dir;
         G_CONST_RETURN gchar* file_name;
         gint n_games = 0;
+        const char *rulesdir;
 
-        dir = g_dir_open (BJ_RULES_DIR, 0, NULL);
+        rulesdir = games_runtime_get_directory (GAMES_RUNTIME_GAME_GAMES_DIRECTORY);
+        dir = g_dir_open (rulesdir, 0, NULL);
         if (dir == NULL)
                 return;
   
@@ -292,8 +296,10 @@ bj_game_find_and_read_rules (gchar *filename)
 {
         gchar *installed_filename;
         BJGameRules *ruleset = NULL;
+        const char *rulesdir;
 
-        installed_filename = g_build_filename (BJ_RULES_DIR, filename, NULL);
+        rulesdir = games_runtime_get_directory (GAMES_RUNTIME_GAME_GAMES_DIRECTORY);
+        installed_filename = g_build_filename (rulesdir, filename, NULL);
 
         if (g_file_test (installed_filename, G_FILE_TEST_EXISTS))
                 ruleset = bj_game_read_rules (installed_filename);
@@ -332,12 +338,14 @@ bj_game_ensure_config_dir_exists (const char *dir)
 static void
 bj_game_eval_installed_file (const gchar *file)
 {
+        const char *rulesdir;
         char *installed_filename;
 
         if (g_file_test (file, G_FILE_TEST_EXISTS))
                 return;
   
-        installed_filename = g_build_filename (BJ_RULES_DIR, file, NULL);
+        rulesdir = games_runtime_get_directory (GAMES_RUNTIME_GAME_GAMES_DIRECTORY);
+        installed_filename = g_build_filename (rulesdir, file, NULL);
 
         if (g_file_test (installed_filename, G_FILE_TEST_EXISTS)) {
                 rules = bj_game_read_rules (installed_filename);

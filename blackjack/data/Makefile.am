@@ -1,4 +1,4 @@
-rulesdir      = $(pkgdatadir)/blackjack/rules
+rulesdir      = $(pkgdatadir)/blackjack/games
 rules_DATA    = Ameristar.rules		\
 		Atlantic_City.rules	\
 		Vegas_Downtown.rules	\

@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <libgames-support/games-preimage.h>
+#include <libgames-support/games-runtime.h>
 
 #include "blackjack.h"
 #include "chips.h"
@@ -63,15 +64,18 @@ void
 bj_chip_set_size (gint width,
                   gint height)
 {
-        const gchar *names[4] = { CHIP_FILENAME_100,
-                                  CHIP_FILENAME_25,
-                                  CHIP_FILENAME_5,
-                                  CHIP_FILENAME_1 };
+        static const gchar *names[4] = { CHIP_FILENAME_100,
+                                         CHIP_FILENAME_25,
+                                         CHIP_FILENAME_5,
+                                         CHIP_FILENAME_1 };
+        const char *pixmapdir;
 
-        for (gint i = 0; i < 4; i++) {
+        pixmapdir = games_runtime_get_directory (GAMES_RUNTIME_GAME_PIXMAP_DIRECTORY);
+
+        for (gint i = 0; i < G_N_ELEMENTS (names); i++) {
                 gchar *fullname;
 
-                fullname = g_build_filename (PIXMAPDIR, names[i], NULL);
+                fullname = g_build_filename (pixmapdir, names[i], NULL);
 
                 if (!fullname)
                         continue;

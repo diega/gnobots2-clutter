@@ -25,6 +25,7 @@
 
 #include <stdlib.h>
 #include <libgames-support/games-preimage.h>
+#include <libgames-support/games-runtime.h>
 
 #include "blackjack.h"
 #include "slot.h"
@@ -50,9 +51,11 @@ void
 bj_slot_set_size (gint width,
                   gint height)
 {
+        const char *pixmapdir;
         gchar *name;
 
-        name = g_build_filename (PIXMAPDIR, SLOT_FILENAME, NULL);
+        pixmapdir = games_runtime_get_directory (GAMES_RUNTIME_GAME_PIXMAP_DIRECTORY);
+        name = g_build_filename (pixmapdir, SLOT_FILENAME, NULL);
 
         if (!name)
                 return;
@@ -78,9 +81,11 @@ bj_slot_get_scaled_pixbuf ()
 void
 bj_slot_load_pixmaps (void)
 {
+        const char *pixmapdir;
         gchar *buffer;
 
-        buffer = g_build_filename (PIXMAPDIR, "baize.png", NULL);
+        pixmapdir = games_runtime_get_directory (GAMES_RUNTIME_GAME_PIXMAP_DIRECTORY);
+        buffer = g_build_filename (pixmapdir, "baize.png", NULL);
         default_background_pixmap = get_pixmap (buffer);
         g_free (buffer);
 }
