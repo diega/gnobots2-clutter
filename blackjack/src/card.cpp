@@ -116,13 +116,12 @@ bj_card_new (gint value, gint suit, gint direction)
 void
 bj_card_set_size (gint width, gint height)
 {
-        GdkPixbuf *scaled = NULL;
         CardSize card_size;
 
         if (!theme) {
                 const char *env;
                 char *card_theme;
-                gboolean scalable, success;
+                gboolean scalable;
 
                 env = g_getenv ("BLACKJACK_CARDS_SCALABLE");
                 scalable = env == NULL || g_ascii_strtoll (env, NULL, 10) != 0;

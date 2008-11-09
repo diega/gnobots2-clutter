@@ -234,7 +234,6 @@ BJGameRules *
 bj_game_read_rules (char *filename)
 {
         BJGameRules *ruleset;
-        gboolean use_default = FALSE;
         gboolean hitSoft17,
                 doubleAnyTotal,
                 double9,

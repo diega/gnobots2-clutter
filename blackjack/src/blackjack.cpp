@@ -278,7 +278,6 @@ create_main_window (void)
         GtkWidget    *group_box;
         GtkWidget    *label;
         GError       *error       = NULL;
-        gint          width, height;
         char         *label_string;
         GtkActionGroup *actions;
 
@@ -436,8 +435,6 @@ create_main_window (void)
 static void
 main_prog (void)
 {
-        gchar *lcard_style;
-        gchar *label_string;
         guint context_id;
 
         create_main_window ();
