@@ -82,7 +82,7 @@ redraw (void)
  * This is the natural way given the directions the balls fall. */
 static void
 draw_ball_with_offset (GtkWidget * canvas, game_cell * p, int x,
-		       int y, int dx, int dy)
+                       int y, int dx, int dy)
 {
   int colour, frame;
   GdkPixmap *pixmap;
@@ -95,13 +95,13 @@ draw_ball_with_offset (GtkWidget * canvas, game_cell * p, int x,
      * the background. The background movement is compensated for when
      * the other tiles were created. */
     gdk_draw_drawable (canvas->window, canvas->style->black_gc,
-		       blank_pixmap, 0, 0, x * tile_size,
-		       y * tile_size, tile_size, tile_size);
+                       blank_pixmap, 0, 0, x * tile_size,
+                       y * tile_size, tile_size, tile_size);
   } else {
     pixmap = pixmaps[colour][frame];
     gdk_draw_drawable (canvas->window, canvas->style->black_gc,
-		       pixmap, 0, 0, x * tile_size + dx,
-		       y * tile_size - dy, tile_size, tile_size);
+                       pixmap, 0, 0, x * tile_size + dx,
+                       y * tile_size - dy, tile_size, tile_size);
   }
 
   /* Draw the cursor is needed. */
@@ -109,15 +109,15 @@ draw_ball_with_offset (GtkWidget * canvas, game_cell * p, int x,
     if (cursorgc == NULL) {
       cursorgc = gdk_gc_new (canvaswidget->window);
       gdk_colormap_alloc_color (gdk_colormap_get_system (),
-				&cursorcolor, TRUE, TRUE);
+                                &cursorcolor, TRUE, TRUE);
       gdk_gc_set_foreground (cursorgc, &cursorcolor);
       gdk_gc_set_line_attributes (cursorgc, 2, GDK_LINE_SOLID,
-				  GDK_CAP_BUTT, GDK_JOIN_MITER);
+                                  GDK_CAP_BUTT, GDK_JOIN_MITER);
     }
 
     gdk_draw_rectangle (canvaswidget->window, cursorgc,
-			FALSE, x * tile_size + 2, y * tile_size + 2,
-			tile_size - 3, tile_size - 3);
+                        FALSE, x * tile_size + 2, y * tile_size + 2,
+                        tile_size - 3, tile_size - 3);
   }
 
 }
@@ -141,7 +141,7 @@ cursor_erase (void)
 {
   draw_cursor = FALSE;
   draw_ball (canvaswidget, get_game_cell (cursor_x, cursor_y),
-	     cursor_x, cursor_y);
+             cursor_x, cursor_y);
 }
 
 void
@@ -163,12 +163,12 @@ expose_cb (GtkWidget * canvas, GdkEventExpose * event, gpointer data)
   if (gridgc == NULL) {
     gridgc = gdk_gc_new (canvas->window);
     gdk_colormap_alloc_color (gdk_colormap_get_system (),
-			      &gridcolor, TRUE, TRUE);
+                              &gridcolor, TRUE, TRUE);
     gdk_gc_set_foreground (gridgc, &gridcolor);
 
     bggc = gdk_gc_new (canvas->window);
     gdk_colormap_alloc_color (gdk_colormap_get_system (),
-			      &bgcolor, TRUE, TRUE);
+                              &bgcolor, TRUE, TRUE);
     gdk_gc_set_foreground (bggc, &bgcolor);
   }
 
@@ -181,50 +181,50 @@ expose_cb (GtkWidget * canvas, GdkEventExpose * event, gpointer data)
     p = board;
     for (y = 0; y < board_height; y++) {
       for (x = 0; x < board_width; x++) {
-	/* Only draw stationary frames. Fill the rest in as blanks 
-	 * and let the animation sort it out. */
-	if (p->frame == 0)
-	  draw_ball (canvas, p, x, y);
-	else
-	  draw_ball (canvas, &dummy, x, y);
-	p++;
+        /* Only draw stationary frames. Fill the rest in as blanks 
+         * and let the animation sort it out. */
+        if (p->frame == 0)
+          draw_ball (canvas, p, x, y);
+        else
+          draw_ball (canvas, &dummy, x, y);
+        p++;
       }
     }
 
     /* Fixup the left and bottom lines. */
     if ((event->area.y + event->area.height + 1) >= board_height * tile_size) {
       gdk_draw_line (canvas->window, gridgc,
-		     event->area.x, board_height * tile_size,
-		     event->area.x + event->area.width - 2,
-		     board_height * tile_size);
+                     event->area.x, board_height * tile_size,
+                     event->area.x + event->area.width - 2,
+                     board_height * tile_size);
     }
     if ((event->area.x + event->area.width + 1) >= board_width * tile_size) {
       gdk_draw_line (canvas->window, gridgc,
-		     board_width * tile_size, event->area.y,
-		     board_width * tile_size,
-		     event->area.y + event->area.height - 2);
+                     board_width * tile_size, event->area.y,
+                     board_width * tile_size,
+                     event->area.y + event->area.height - 2);
     }
 
-  } else {			/* Draw only the grid. */
+  } else {                        /* Draw only the grid. */
 
     gdk_draw_rectangle (canvas->window, bggc, TRUE,
-			event->area.x, event->area.y,
-			event->area.width, event->area.height);
+                        event->area.x, event->area.y,
+                        event->area.width, event->area.height);
 
     /* Vertical lines. */
     for (x = tile_size * (event->area.x / tile_size);
-	 x <= tile_size * ((event->area.x + event->area.width) / tile_size);
-	 x += tile_size) {
+         x <= tile_size * ((event->area.x + event->area.width) / tile_size);
+         x += tile_size) {
       gdk_draw_line (canvas->window, gridgc, x,
-		     event->area.y, x, event->area.y + event->area.height);
+                     event->area.y, x, event->area.y + event->area.height);
     }
 
     /* Horizontal lines. */
     for (x = tile_size * (event->area.y / tile_size);
-	 x <= tile_size * ((event->area.y + event->area.height) / tile_size);
-	 x += tile_size) {
+         x <= tile_size * ((event->area.y + event->area.height) / tile_size);
+         x += tile_size) {
       gdk_draw_line (canvas->window, gridgc,
-		     event->area.x, x, event->area.x + event->area.width, x);
+                     event->area.x, x, event->area.x + event->area.width, x);
     }
 
   }
@@ -263,7 +263,7 @@ render_cb (GtkWidget * canvas)
   GtkWidget *dialog;
   static guchar r, g, b, br, bg, bb;
   guchar tr, tg, tb;
-
+    
   if (idle_state == INIT) {
     last_tile_size = tile_size;
     ftile_size = tile_size - 1;
@@ -277,7 +277,7 @@ render_cb (GtkWidget * canvas)
 
     /* Draw up the background with the top and left grid lines. */
     bg_pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, tile_size,
-				tile_size);
+                                tile_size);
     /* FIXME: This is too large for this function, ship off else-where. */
     p = gdk_pixbuf_get_pixels (bg_pixbuf);
     l = gdk_pixbuf_get_rowstride (bg_pixbuf);
@@ -298,17 +298,17 @@ render_cb (GtkWidget * canvas)
       *p++ = g;
       *p++ = b;
       for (i = 1; i < tile_size; i++) {
-	*p++ = br;
-	*p++ = bg;
-	*p++ = bb;
+        *p++ = br;
+        *p++ = bg;
+        *p++ = bb;
       }
     }
     if (blank_pixmap != NULL)
       g_object_unref (blank_pixmap);
     blank_pixmap = gdk_pixmap_new (canvas->window, tile_size, tile_size, -1);
     gdk_draw_pixbuf (blank_pixmap, canvas->style->black_gc, bg_pixbuf,
-		     0, 0, 0, 0, tile_size, tile_size, GDK_RGB_DITHER_NORMAL,
-		     0, 0);
+                     0, 0, 0, 0, tile_size, tile_size, GDK_RGB_DITHER_NORMAL,
+                     0, 0);
 
     /* This code is far from perfect. For starters it only checks to
      * see if the file exists before deciding that the filename is the
@@ -322,34 +322,34 @@ render_cb (GtkWidget * canvas)
       /* Then look in the system directory. */
       filename = g_build_filename (games_runtime_get_directory (GAMES_RUNTIME_GAME_THEME_DIRECTORY), THEME_VERSION, theme, NULL);
       if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
-	/* Some old themes had a -sync just before the suffix. This was
-	 * hidden from the user and has been eliminated from the names
-	 * of reworked themes. Check in case we had one of this form. */
-	length = strlen (filename);
-	substring = g_strstr_len (filename, length, "-sync");
-	suffix = g_strrstr (filename, ".png");
-	if (substring && suffix) {
-	  g_stpcpy (substring, suffix);
-	}
-	if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
-	  /* We have changed some themes from .png to .svg, try that. */
-	  suffix = g_strrstr (filename, ".png");
-	  if (suffix) {
-	    g_stpcpy (suffix, ".svg");
-	  }
-	  if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
-	    /* And finally fall back to the default. */
-	    g_free (filename);
+        /* Some old themes had a -sync just before the suffix. This was
+         * hidden from the user and has been eliminated from the names
+         * of reworked themes. Check in case we had one of this form. */
+        length = strlen (filename);
+        substring = g_strstr_len (filename, length, "-sync");
+        suffix = g_strrstr (filename, ".png");
+        if (substring && suffix) {
+          g_stpcpy (substring, suffix);
+        }
+        if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
+          /* We have changed some themes from .png to .svg, try that. */
+          suffix = g_strrstr (filename, ".png");
+          if (suffix) {
+            g_stpcpy (suffix, ".svg");
+          }
+          if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
+            /* And finally fall back to the default. */
+            g_free (filename);
             filename = g_build_filename (games_runtime_get_directory (GAMES_RUNTIME_GAME_THEME_DIRECTORY), THEME_VERSION, DEFAULT_THEME, NULL);
-	  }
-	}
+          }
+        }
       }
     }
 
     file_pixbuf = gdk_pixbuf_new_from_file_at_size (filename,
-						    ftile_size * NFRAMESSPIN,
-						    ftile_size * MAX_COLOURS,
-						    NULL);
+                                                    ftile_size * NFRAMESSPIN,
+                                                    ftile_size * MAX_COLOURS,
+                                                    NULL);
     g_free (filename);
 
     idle_state = DRAW;
@@ -358,16 +358,16 @@ render_cb (GtkWidget * canvas)
     if (file_pixbuf == NULL) {
       /* FIXME: We haven't got the parent window right. */
       dialog = gtk_message_dialog_new (NULL,
-				       GTK_DIALOG_MODAL |
-				       GTK_DIALOG_DESTROY_WITH_PARENT,
-				       GTK_MESSAGE_ERROR,
-				       GTK_BUTTONS_NONE,
-				       _("No theme data was found."));
+                                       GTK_DIALOG_MODAL |
+                                       GTK_DIALOG_DESTROY_WITH_PARENT,
+                                       GTK_MESSAGE_ERROR,
+                                       GTK_BUTTONS_NONE,
+                                       _("No theme data was found."));
       gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_QUIT,
-			     GTK_RESPONSE_OK);
+                             GTK_RESPONSE_OK);
       gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-						_
-						("It is impossible to play the game. Please check that the game has been installed correctly and try again."));
+                                                _
+                                                ("It is impossible to play the game. Please check that the game has been installed correctly and try again."));
       gtk_dialog_run (GTK_DIALOG (dialog));
       gtk_main_quit ();
       return FALSE;
@@ -377,31 +377,31 @@ render_cb (GtkWidget * canvas)
       idle_state = INIT;
     } else {
       if (pixmaps[n][m] != NULL)
-	g_object_unref (pixmaps[n][m]);
+        g_object_unref (pixmaps[n][m]);
 
       tile = gdk_pixbuf_copy (bg_pixbuf);
       gdk_pixbuf_composite (file_pixbuf, tile, 1, 1, ftile_size,
-			    ftile_size, 1.0 - m * ftile_size,
-			    1.0 - n * ftile_size,
-			    1.0, 1.0, GDK_INTERP_TILES, 255);
+                            ftile_size, 1.0 - m * ftile_size,
+                            1.0 - n * ftile_size,
+                            1.0, 1.0, GDK_INTERP_TILES, 255);
 
       pixmaps[n][m] = gdk_pixmap_new (canvas->window, tile_size, tile_size,
-				      -1);
+                                      -1);
       gdk_draw_pixbuf (pixmaps[n][m], canvas->style->black_gc, tile,
-		       0, 0, 0, 0, tile_size, tile_size,
-		       GDK_RGB_DITHER_NORMAL, 0, 0);
+                       0, 0, 0, 0, tile_size, tile_size,
+                       GDK_RGB_DITHER_NORMAL, 0, 0);
 
       g_object_unref (tile);
 
       m++;
       if (m == NFRAMESSPIN) {
-	m = 0;
-	n++;
-	if (n == MAX_COLOURS) {
-	  idle_state = DEST;
-	  n = 0;
-	  m = DESTFRAMESOFS;
-	}
+        m = 0;
+        n++;
+        if (n == MAX_COLOURS) {
+          idle_state = DEST;
+          n = 0;
+          m = DESTFRAMESOFS;
+        }
       }
     }
   } else if (idle_state == DEST) {
@@ -409,7 +409,7 @@ render_cb (GtkWidget * canvas)
       idle_state = INIT;
     } else {
       if (pixmaps[n][m] != NULL)
-	g_object_unref (pixmaps[n][m]);
+        g_object_unref (pixmaps[n][m]);
 
       tile = gdk_pixbuf_copy (bg_pixbuf);
 
@@ -427,31 +427,31 @@ render_cb (GtkWidget * canvas)
       tg = bg + ((0xff - bg) >> shift);
       tb = bb + ((0xff - bb) >> shift);
       for (j = 1; j < tile_size; j++) {
-	p = bp + j * l + 3;
-	for (i = 1; i < tile_size; i++) {
-	  *p++ = tr;
-	  *p++ = tg;
-	  *p++ = tb;
-	}
+        p = bp + j * l + 3;
+        for (i = 1; i < tile_size; i++) {
+          *p++ = tr;
+          *p++ = tg;
+          *p++ = tb;
+        }
       }
 
       pixmaps[n][m] = gdk_pixmap_new (canvas->window, tile_size, tile_size,
-				      -1);
+                                      -1);
       gdk_draw_pixbuf (pixmaps[n][m], canvas->style->black_gc, tile,
-		       0, 0, 0, 0, tile_size, tile_size,
-		       GDK_RGB_DITHER_NORMAL, 0, 0);
+                       0, 0, 0, 0, tile_size, tile_size,
+                       GDK_RGB_DITHER_NORMAL, 0, 0);
 
       g_object_unref (tile);
 
       m++;
       if (m == MOVEDFRAMESOFS) {
-	m = DESTFRAMESOFS;
-	n++;
-	if (n == MAX_COLOURS) {
-	  idle_state = MOVED;
-	  n = 0;
-	  m = MOVEDFRAMESOFS;
-	}
+        m = DESTFRAMESOFS;
+        n++;
+        if (n == MAX_COLOURS) {
+          idle_state = MOVED;
+          n = 0;
+          m = MOVEDFRAMESOFS;
+        }
       }
     }
   } else if (idle_state == MOVED) {
@@ -459,7 +459,7 @@ render_cb (GtkWidget * canvas)
       idle_state = INIT;
     } else {
       if (pixmaps[n][m] != NULL)
-	g_object_unref (pixmaps[n][m]);
+        g_object_unref (pixmaps[n][m]);
 
       x = m - MOVEDFRAMESOFS;
       tile = gdk_pixbuf_copy (bg_pixbuf);
@@ -471,41 +471,41 @@ render_cb (GtkWidget * canvas)
       p = bp + 3;
       /* Remove the horizontal line... */
       for (i = 1; i < tile_size; i++) {
-	*p++ = br;
-	*p++ = bg;
-	*p++ = bb;
+        *p++ = br;
+        *p++ = bg;
+        *p++ = bb;
       }
       j = tile_size - 1 - ((x + 1) * (tile_size - 1)) / (NFRAMESMOVED);
       downoffsets[x] = j;
       p = bp + j * l + 3;
       /* ...and redraw it in the correct place. */
       for (i = 1; i < tile_size; i++) {
-	*p++ = r;
-	*p++ = g;
-	*p++ = b;
+        *p++ = r;
+        *p++ = g;
+        *p++ = b;
       }
 
       gdk_pixbuf_composite (file_pixbuf, tile, 1, 1, ftile_size,
-			    ftile_size, 1.0, 1.0 - n * ftile_size,
-			    1.0, 1.0, GDK_INTERP_TILES, 255);
+                            ftile_size, 1.0, 1.0 - n * ftile_size,
+                            1.0, 1.0, GDK_INTERP_TILES, 255);
 
       pixmaps[n][m] = gdk_pixmap_new (canvas->window, tile_size, tile_size,
-				      -1);
+                                      -1);
       gdk_draw_pixbuf (pixmaps[n][m], canvas->style->black_gc, tile,
-		       0, 0, 0, 0, tile_size, tile_size,
-		       GDK_RGB_DITHER_NORMAL, 0, 0);
+                       0, 0, 0, 0, tile_size, tile_size,
+                       GDK_RGB_DITHER_NORMAL, 0, 0);
 
       g_object_unref (tile);
 
       m++;
       if (m == MOVELFRAMESOFS) {
-	m = MOVEDFRAMESOFS;
-	n++;
-	if (n == MAX_COLOURS) {
-	  idle_state = MOVEL;
-	  n = 0;
-	  m = MOVELFRAMESOFS;
-	}
+        m = MOVEDFRAMESOFS;
+        n++;
+        if (n == MAX_COLOURS) {
+          idle_state = MOVEL;
+          n = 0;
+          m = MOVELFRAMESOFS;
+        }
       }
     }
   } else if (idle_state == MOVEL) {
@@ -513,7 +513,7 @@ render_cb (GtkWidget * canvas)
       idle_state = INIT;
     } else {
       if (pixmaps[n][m] != NULL)
-	g_object_unref (pixmaps[n][m]);
+        g_object_unref (pixmaps[n][m]);
 
       x = m - MOVELFRAMESOFS;
       tile = gdk_pixbuf_copy (bg_pixbuf);
@@ -525,42 +525,42 @@ render_cb (GtkWidget * canvas)
       p = bp + l;
       /* Remove the vertical line... */
       for (i = 1; i < tile_size; i++) {
-	*p++ = br;
-	*p++ = bg;
-	*p = bb;
-	p += l - 2;
+        *p++ = br;
+        *p++ = bg;
+        *p = bb;
+        p += l - 2;
       }
       j = ((x + 1) * (tile_size - 1)) / (NFRAMESMOVED);
       leftoffsets[x] = tile_size - j;
       p = bp + l + 3 * j;
       /* ...and redraw it in the correct place. */
       for (i = 1; i < tile_size; i++) {
-	*p++ = r;
-	*p++ = g;
-	*p = b;
-	p += l - 2;
+        *p++ = r;
+        *p++ = g;
+        *p = b;
+        p += l - 2;
       }
 
       gdk_pixbuf_composite (file_pixbuf, tile, 1, 1, ftile_size,
-			    ftile_size, 1.0, 1.0 - n * ftile_size,
-			    1.0, 1.0, GDK_INTERP_TILES, 255);
+                            ftile_size, 1.0, 1.0 - n * ftile_size,
+                            1.0, 1.0, GDK_INTERP_TILES, 255);
 
       pixmaps[n][m] = gdk_pixmap_new (canvas->window, tile_size, tile_size,
-				      -1);
+                                      -1);
       gdk_draw_pixbuf (pixmaps[n][m], canvas->style->black_gc, tile,
-		       0, 0, 0, 0, tile_size, tile_size,
-		       GDK_RGB_DITHER_NORMAL, 0, 0);
+                       0, 0, 0, 0, tile_size, tile_size,
+                       GDK_RGB_DITHER_NORMAL, 0, 0);
 
       g_object_unref (tile);
 
       m++;
       if (m == NFRAMES) {
-	m = MOVELFRAMESOFS;
-	n++;
-	if (n == MAX_COLOURS) {
-	  idle_state = DONE;
-	  pixmaps_ready = TRUE;
-	}
+        m = MOVELFRAMESOFS;
+        n++;
+        if (n == MAX_COLOURS) {
+          idle_state = DONE;
+          pixmaps_ready = TRUE;
+        }
       }
     }
   } else if (idle_state == DONE) {
@@ -572,7 +572,7 @@ render_cb (GtkWidget * canvas)
     idle_id = 0;
     redraw ();
 
-    if (pixmaps_ready)		/* Just in case this was reset after the last idle call. */
+    if (pixmaps_ready)                /* Just in case this was reset after the last idle call. */
       return FALSE;
   }
   return TRUE;
@@ -623,79 +623,79 @@ animation_timer (void)
     for (i = board_width - 1; i >= 0; i--) {
       switch (p->style) {
       case ANI_STILL:
-	if (p->frame != 0)
-	  p->style = ANI_SPINBACK;
-	break;
+        if (p->frame != 0)
+          p->style = ANI_SPINBACK;
+        break;
       case ANI_REDRAW:
-	draw_ball (canvaswidget, p, i, j);
-	p->style = ANI_STILL;
-	break;
+        draw_ball (canvaswidget, p, i, j);
+        p->style = ANI_STILL;
+        break;
       case ANI_SPIN:
-	p->frame = (p->frame + 1) % NFRAMESSPIN;
-	draw_ball (canvaswidget, p, i, j);
-	break;
+        p->frame = (p->frame + 1) % NFRAMESSPIN;
+        draw_ball (canvaswidget, p, i, j);
+        break;
       case ANI_SPINBACK:
-	if (p->frame > 4)
-	  p->frame = 4;
-	if (p->frame == 0)
-	  p->style = ANI_STILL;
-	else
-	  p->frame--;
-	draw_ball (canvaswidget, p, i, j);
-	break;
+        if (p->frame > 4)
+          p->frame = 4;
+        if (p->frame == 0)
+          p->style = ANI_STILL;
+        else
+          p->frame--;
+        draw_ball (canvaswidget, p, i, j);
+        break;
       case ANI_DESTROY:
-	if (fast_animation)
-	  p->frame = MOVEDFRAMESOFS;
-	else
-	  p->frame++;
-	if (p->frame < DESTFRAMESOFS) {
-	  p->frame = DESTFRAMESOFS;
-	} else if (p->frame < MOVEDFRAMESOFS) {
-
-	} else {
-	  p->colour = NONE;
-	  changestatep = TRUE;
-	  p->frame = 0;
-	  p->style = ANI_STILL;
-	}
-	draw_ball (canvaswidget, p, i, j);
-	break;
+        if (fast_animation)
+           p->frame = MOVEDFRAMESOFS;
+        else
+           p->frame++;
+        if (p->frame < DESTFRAMESOFS) {
+          p->frame = DESTFRAMESOFS;
+        } else if (p->frame < MOVEDFRAMESOFS) {
+              
+        } else {
+          p->colour = NONE;
+          changestatep = TRUE;
+          p->frame = 0;
+          p->style = ANI_STILL;
+        }
+        draw_ball (canvaswidget, p, i, j);
+        break;
       case ANI_MOVE_DOWN:
-	if (game_state == GAME_MOVING_DOWN) {
-	  if (fast_animation)
-	    /* This allows a fast, but not instant, animation. */
-	    p->frame = MOVELFRAMESOFS;
-	  else
-	    p->frame += speed;
-	  if (p->frame >= MOVELFRAMESOFS) {
-	    changestatep = TRUE;
-	    p->frame = 0;
-	    p->style = ANI_STILL;
-	    draw_ball (canvaswidget, p, i, j);
-	  } else {
-	    draw_ball_with_offset (canvaswidget, p, i, j, 0,
-				   downoffsets[p->frame - MOVEDFRAMESOFS]);
-	  }
-	}
-	break;
+        if (game_state == GAME_MOVING_DOWN) {
+          if (fast_animation)
+            /* This allows a fast, but not instant, animation. */
+            p->frame = MOVELFRAMESOFS;
+          else
+            p->frame += speed;
+          if (p->frame >= MOVELFRAMESOFS) {
+            changestatep = TRUE;
+            p->frame = 0;
+            p->style = ANI_STILL;
+            draw_ball (canvaswidget, p, i, j);
+          } else {
+            draw_ball_with_offset (canvaswidget, p, i, j, 0,
+                                   downoffsets[p->frame - MOVEDFRAMESOFS]);
+          }
+        }
+        break;
       case ANI_MOVE_LEFT:
-	if (game_state == GAME_MOVING_LEFT) {
-	  if (fast_animation)
-	    /* This allows a fast, but not instant, animation. */
-	    p->frame = NFRAMES;
-	  else
-	    p->frame += speed;
-	  if (p->frame >= NFRAMES) {
-	    changestatep = TRUE;
-	    p->frame = 0;
-	    p->style = ANI_STILL;
-	    draw_ball (canvaswidget, p, i, j);
-	  } else {
-	    draw_ball_with_offset (canvaswidget, p, i, j,
-				   leftoffsets[p->frame - MOVELFRAMESOFS], 0);
-	  }
-	}
-	break;
+        if (game_state == GAME_MOVING_LEFT) {
+          if (fast_animation)
+            /* This allows a fast, but not instant, animation. */
+            p->frame = NFRAMES;
+          else
+            p->frame += speed;
+            if (p->frame >= NFRAMES) {
+              changestatep = TRUE;
+              p->frame = 0;
+              p->style = ANI_STILL;
+              draw_ball (canvaswidget, p, i, j);
+            } else {
+              draw_ball_with_offset (canvaswidget, p, i, j,
+                                     leftoffsets[p->frame - MOVELFRAMESOFS], 0);
+            }
+        }
+        break;
       }
       p--;
     }
@@ -717,14 +717,14 @@ animation_timer (void)
     switch (game_state) {
     case GAME_DESTROYING:
       if (mark_falling_balls () == 0)
-	if (mark_shifting_balls ()) {
-	  game_state = GAME_MOVING_LEFT;
-	  speed = 1.0;
-	} else {
-	  end_of_move ();
+        if (mark_shifting_balls ()) {
+          game_state = GAME_MOVING_LEFT;
+          speed = 1.0;
+        } else {
+          end_of_move ();
       } else {
-	game_state = GAME_MOVING_DOWN;
-	speed = 1.0;
+        game_state = GAME_MOVING_DOWN;
+        speed = 1.0;
       }
       break;
       /* FIXME: Because of the way we do the drawing (with the offset)
@@ -732,26 +732,25 @@ animation_timer (void)
        * flicker. */
     case GAME_MOVING_DOWN:
       if (mark_falling_balls () == 0) {
-	if (mark_shifting_balls ()) {
-	  game_state = GAME_MOVING_LEFT;
-	} else {
-	  end_of_move ();
-	  select_cells ();
-	}
-	speed = 1.0;
+        if (mark_shifting_balls ()) {
+          game_state = GAME_MOVING_LEFT;
+        } else {
+          end_of_move ();
+          select_cells ();
+        }
+        speed = 1.0;
       } else {
 
       }
       break;
     case GAME_MOVING_LEFT:
       if (!mark_shifting_balls ()) {
-	end_of_move ();
-	select_cells ();
+        end_of_move ();
+        select_cells ();
       }
       break;
     }
   }
-
 
   return TRUE;
 }
@@ -765,7 +764,7 @@ resize_graphics (void)
   if (first_run) {
     for (n = 0; n < MAX_COLOURS; n++)
       for (m = 0; m < NFRAMES; m++)
-	pixmaps[n][m] = NULL;
+        pixmaps[n][m] = NULL;
 
     first_run = FALSE;
   }
@@ -784,7 +783,7 @@ configure_cb (GtkWidget * canvas, GdkEventConfigure * event)
 {
   static gboolean first_run = TRUE;
 
-  if (first_run) {		/* Start the animation timer if necessary. */
+  if (first_run) {                /* Start the animation timer if necessary. */
     /* 16 frames/second. */
     g_timeout_add (62, (GSourceFunc) animation_timer, NULL);
 
