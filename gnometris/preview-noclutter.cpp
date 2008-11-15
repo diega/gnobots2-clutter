@@ -20,7 +20,7 @@
  * For more details see the file COPYING.
  */
 
-#include "preview.h"
+#include "preview-noclutter.h"
 #include "blocks.h"
 
 #define PREVIEW_WIDTH 6
@@ -48,6 +48,7 @@ Preview::Preview():
 
 	w = gtk_drawing_area_new();
 
+	g_signal_connect (w, "expose_event", G_CALLBACK (expose), this);
 	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
 
 	/* FIXME: We should scale with the rest of the UI, but that requires
@@ -132,3 +133,49 @@ Preview::configure(GtkWidget * widget, GdkEventConfigure * event, Preview * prev
 	return TRUE;
 }
 
+gint
+Preview::expose(GtkWidget * widget, GdkEventExpose * event, Preview * preview)
+{
+	cairo_t *cr;
+	Renderer *r;
+
+	cr = gdk_cairo_create (widget->window);
+
+	if (!preview->enabled)
+	{
+		cairo_scale (cr, 1.0*widget->allocation.width/PREVIEW_WIDTH,
+			     1.0*widget->allocation.height/PREVIEW_HEIGHT);
+		cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
+
+		cairo_set_source_rgb (cr, 0, 0, 0);
+		cairo_paint (cr);
+
+		cairo_set_source_rgb (cr, 0.8, 0.1, 0.1);
+		cairo_set_line_width (cr, 0.5);
+
+		cairo_move_to (cr, 1, 1);
+		cairo_line_to (cr, PREVIEW_WIDTH-1, PREVIEW_HEIGHT-1);
+		cairo_move_to (cr, PREVIEW_WIDTH-1, 1);
+		cairo_line_to (cr, 1, PREVIEW_HEIGHT-1);
+
+		cairo_stroke (cr);
+	}
+	else 
+	{
+		cairo_surface_t *dst;
+		
+		dst = cairo_get_target (cr);
+
+		r = rendererFactory (preview->themeID, dst, 
+				     preview->background, preview->blocks,
+				     PREVIEW_WIDTH, PREVIEW_HEIGHT,
+				     preview->width, preview->height);
+
+		r->render ();
+		delete r;
+	}
+
+	cairo_destroy (cr);
+
+	return TRUE;
+}

@@ -73,9 +73,6 @@ private:
 
 	static gboolean configure (GtkWidget * widget, GdkEventConfigure * event,
 				   Field * field);
-	static gboolean expose (GtkWidget * widget, GdkEventExpose * event,
-				Field * field);
-
 };
 
 #endif //__field_h__

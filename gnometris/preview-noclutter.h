@@ -1,6 +1,6 @@
 /* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
-#ifndef __preview_h__
-#define __preview_h__
+#ifndef __preview_noclutter_h__
+#define __preview_noclutter_h__
 
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
@@ -55,7 +55,10 @@ private:
 
 	static gint configure (GtkWidget * widget, GdkEventConfigure * event,
 			       Preview * preview);
-	Block **blocks;
+	static gint expose (GtkWidget * widget, GdkEventExpose * event,
+			    Preview * preview);
+
+Block **blocks;
 };
 
 #endif //__preview_h__

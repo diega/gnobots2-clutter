@@ -39,13 +39,19 @@
 #include <libgames-support/games-stock.h>
 
 #include "tetris.h"
-#include "field.h"
 #include "blockops.h"
 #include "blocks.h"
-#include "preview.h"
 #include "scoreframe.h"
 #include "highscores.h"
 #include "renderer.h"
+
+#ifdef HAVE_CLUTTER
+#include "preview.h"
+#include "field.h"
+#else
+#include "preview-noclutter.h"
+#include "field-noclutter.h"
+#endif
 
 int LINES = 20;
 int COLUMNS = 14;

@@ -23,6 +23,8 @@
 #include "blocks.h"
 #include "renderer.h"
 
+#include <clutter-gtk/gtk-clutter-embed.h>
+
 #define FONT "Sans Bold"
 
 Field::Field():
@@ -40,9 +42,8 @@ useBGImage(false),
 	renderer = NULL;
 	rendererTheme = -1;
 
-	w = gtk_drawing_area_new();
+	w = gtk_clutter_embed_new();
 
-	g_signal_connect (w, "expose_event", G_CALLBACK (expose), this);
 	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
 	/* We do our own double-buffering. */
 	gtk_widget_set_double_buffered(w, FALSE);
@@ -153,15 +154,6 @@ void
 Field::draw (void)
 {
   draw (0, 0, width, height);
-}
-
-gboolean
-Field::expose(GtkWidget *widget, GdkEventExpose *event, Field *field)
-{
-	field->draw (event->area.x, event->area.y,
-		     event->area.width, event->area.height);
-
-	return TRUE;
 }
 
 void

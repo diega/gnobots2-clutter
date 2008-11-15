@@ -21,7 +21,12 @@
 
 #include "blockops.h"
 #include "blocks.h"
+
+#ifdef HAVE_CLUTTER
 #include "field.h"
+#else
+#include "field-noclutter.h"
+#endif
 
 #define NCOLOURS 7
 

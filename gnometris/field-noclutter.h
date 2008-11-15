@@ -1,6 +1,6 @@
 /* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
-#ifndef __field_h__
-#define __field_h__
+#ifndef __field_noclutter_h__
+#define __field_noclutter_h__
 
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
@@ -78,4 +78,4 @@ private:
 
 };
 
-#endif //__field_h__
+#endif //__field_noclutter_h__

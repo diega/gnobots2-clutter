@@ -80,8 +80,6 @@ main(int argc, char *argv[])
 
 	games_conf_initialise ("Gnometris");
 
-	Tetris *t = new Tetris(cmdlineLevel);
-
 #ifdef HAVE_CLUTTER
 	if (gtk_clutter_init (&argc, &argv) != CLUTTER_INIT_SUCCESS ) {
 		g_printerr ("Failed to initialise clutter: %s\n", error->message);
@@ -89,6 +87,8 @@ main(int argc, char *argv[])
 		return 1;
 	}
 #endif
+
+	Tetris *t = new Tetris(cmdlineLevel);
 
 	gtk_main();
 

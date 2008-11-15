@@ -19,7 +19,7 @@
  * For more details see the file COPYING.
  */
 
-#include "field.h"
+#include "field-noclutter.h"
 #include "blocks.h"
 #include "renderer.h"
 
