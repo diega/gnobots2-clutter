@@ -1,3 +1,4 @@
+/* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
 #ifndef __blocks_h__
 #define __blocks_h__
 

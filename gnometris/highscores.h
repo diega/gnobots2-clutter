@@ -1,3 +1,4 @@
+/* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
 /* highscores.cpp - wrap the high score dialog.
  *
  * Copyright 2005 (c) Callum McKenzie
@@ -27,14 +28,14 @@
 
 class HighScores {
 protected:
-  GtkWidget * dialog;
-  GamesScores *highscores;
+	GtkWidget * dialog;
+	GamesScores *highscores;
 
 public:
-    HighScores ();
+	HighScores ();
 
-  gint add (gint score);
-  void show (GtkWindow *parent_window, gint highlight = 0);
+	gint add (gint score);
+	void show (GtkWindow *parent_window, gint highlight = 0);
 };
 
 #endif

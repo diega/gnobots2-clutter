@@ -1,5 +1,4 @@
 /* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
-
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *
@@ -36,8 +35,8 @@ ScoreFrame::ScoreFrame(int cmdlLevel)
 		startingLevel = cmdlLevel;
 	else {
 		startingLevel = games_conf_get_integer (KEY_OPTIONS_GROUP,
-                                                        KEY_STARTING_LEVEL,
-                                                        NULL);
+							KEY_STARTING_LEVEL,
+							NULL);
 	}
 	startingLevel = CLAMP (startingLevel, 1, 20);
 
@@ -115,8 +114,8 @@ ScoreFrame::scoreLines(int newlines)
 
 	switch(newlines)
 	{
-        	case 0:
-	        	return level;
+		case 0:
+			return level;
 		case 1:
 			linescore = 40;
 			games_sound_play ("lines1");

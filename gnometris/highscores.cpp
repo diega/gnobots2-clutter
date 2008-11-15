@@ -1,3 +1,4 @@
+/* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
 /* highscores.cpp - wrap the high score dialog.
  *
  * Copyright 2005 (c) Callum McKenzie
@@ -25,32 +26,32 @@
 #include "highscores.h"
 
 static const GamesScoresDescription scoredesc = {NULL, NULL,
-                                                 "gnometris",
-                                                 GAMES_SCORES_STYLE_PLAIN_DESCENDING};
+						 "gnometris",
+						 GAMES_SCORES_STYLE_PLAIN_DESCENDING};
 
 
 HighScores::HighScores ()
 {
-  highscores = games_scores_new (&scoredesc);
+	highscores = games_scores_new (&scoredesc);
 
-  dialog = NULL;
+	dialog = NULL;
 }
 
 gint HighScores::add (gint score)
 {
-  GamesScoreValue value;
+	GamesScoreValue value;
 
-  value.plain = score;
+	value.plain = score;
 
-  return games_scores_add_score (highscores, value);
+	return games_scores_add_score (highscores, value);
 }
 
 void HighScores::show (GtkWindow *parent_window, gint highlight)
 {
-  if (!dialog)
-    dialog = games_scores_dialog_new (parent_window, highscores, _("Gnometris Scores"));
+	if (!dialog)
+		dialog = games_scores_dialog_new (parent_window, highscores, _("Gnometris Scores"));
 
-  games_scores_dialog_set_hilight (GAMES_SCORES_DIALOG (dialog), highlight);
-  gtk_dialog_run (GTK_DIALOG (dialog));    
-  gtk_widget_hide (dialog);
+	games_scores_dialog_set_hilight (GAMES_SCORES_DIALOG (dialog), highlight);
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_hide (dialog);
 }

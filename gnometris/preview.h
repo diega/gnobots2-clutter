@@ -1,3 +1,4 @@
+/* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
 #ifndef __preview_h__
 #define __preview_h__
 
@@ -27,35 +28,37 @@
 
 class Preview {
 public:
-  Preview ();
-  ~Preview ();
+	Preview ();
+	~Preview ();
 
-  GtkWidget *getWidget () {
-    return w;
-  } void enable (bool enable);
-  void previewBlock (int bnr, int brot, int bcolor);
-  void setTheme (int id);
+	GtkWidget *getWidget () {
+		return w;
+	}
+
+	void enable (bool enable);
+	void previewBlock (int bnr, int brot, int bcolor);
+	void setTheme (int id);
 
 private:
-  GtkWidget * w;
-  gint width;
-  gint height;
+	GtkWidget * w;
+	gint width;
+	gint height;
 
-  int blocknr;
-  int blockrot;
-  int blockcolor;
+	int blocknr;
+	int blockrot;
+	int blockcolor;
 
-  bool enabled;
+	bool enabled;
 
-  int themeID;
-  cairo_surface_t *background;
+	int themeID;
+	cairo_surface_t *background;
 
-  static gint configure (GtkWidget * widget, GdkEventConfigure * event,
-			 Preview * preview);
-  static gint expose (GtkWidget * widget, GdkEventExpose * event,
-		      Preview * preview);
+	static gint configure (GtkWidget * widget, GdkEventConfigure * event,
+			       Preview * preview);
+	static gint expose (GtkWidget * widget, GdkEventExpose * event,
+			    Preview * preview);
 
-  Block **blocks;
+Block **blocks;
 };
 
 #endif //__preview_h__

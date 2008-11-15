@@ -1,5 +1,4 @@
 /* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
-
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *
@@ -89,7 +88,7 @@ Tetris::Tetris(int cmdlLevel):
 	setupdialog(0), 
 	cmdlineLevel(cmdlLevel), 
 	fastFall(false),
-        dropBlock(false)
+	dropBlock(false)
 {
 	GtkUIManager *ui_manager;
 	GtkAccelGroup *accel_group;
@@ -157,9 +156,9 @@ Tetris::Tetris(int cmdlLevel):
 
 	/*  Use default background image, if none found in user's home dir.*/
 	if (!g_file_test (bgPixmap, G_FILE_TEST_EXISTS)) {
-          dname = games_runtime_get_directory (GAMES_RUNTIME_GAME_PIXMAP_DIRECTORY);
-          defaultPixmap = g_build_filename (dname, "gnometris.svg", NULL);
-	  default_bgimage = true;
+		dname = games_runtime_get_directory (GAMES_RUNTIME_GAME_PIXMAP_DIRECTORY);
+		defaultPixmap = g_build_filename (dname, "gnometris.svg", NULL);
+		default_bgimage = true;
 	}
 	
 	w = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -178,7 +177,7 @@ Tetris::Tetris(int cmdlLevel):
 	line_fill_prob = 5;
 
 	gtk_window_set_default_size (GTK_WINDOW (w), DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        games_conf_add_window (GTK_WINDOW (w), KEY_SAVED_GROUP);
+	games_conf_add_window (GTK_WINDOW (w), KEY_SAVED_GROUP);
 
 	preview = new Preview ();
 	field = new Field();
@@ -231,7 +230,7 @@ Tetris::Tetris(int cmdlLevel):
 
 	g_signal_connect (w, "key_press_event", G_CALLBACK (keyPressHandler), this);
 	g_signal_connect (w, "key_release_event", G_CALLBACK (keyReleaseHandler), this);
-  
+
 	GtkWidget *vb2 = gtk_vbox_new(FALSE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vb2), 10);
 	gtk_box_pack_end(GTK_BOX(hb), vb2, 0, 0, 0);
@@ -260,10 +259,10 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_action_set_sensitive(end_game_action, FALSE);
 	gtk_action_set_sensitive(preferences_action, TRUE);
 
-        confNotifyID = g_signal_connect (games_conf_get_default (),
-                                         "value-changed",
-                                         G_CALLBACK (confNotify),
-                                         this);
+	confNotifyID = g_signal_connect (games_conf_get_default (),
+					 "value-changed",
+					 G_CALLBACK (confNotify),
+					 this);
 }
 
 Tetris::~Tetris()
@@ -273,15 +272,15 @@ Tetris::~Tetris()
 	delete scoreFrame;
 
 	if (bgimage)
-		g_object_unref (G_OBJECT (bgimage));		
+		g_object_unref (G_OBJECT (bgimage));
 
 	if (bgPixmap)
 		g_free(bgPixmap);
 	if (defaultPixmap)
 		g_free(defaultPixmap);
 
-        if (confNotifyID != 0)
-                g_signal_handler_disconnect (games_conf_get_default (), confNotifyID);
+	if (confNotifyID != 0)
+		g_signal_handler_disconnect (games_conf_get_default (), confNotifyID);
 }
 
 void 
@@ -341,7 +340,7 @@ Tetris::setupPixmap()
 			int i, j;
 			
 			temp = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, 
-					       bgwidth, bgheight); 
+						bgwidth, bgheight); 
 		
 			for (i=0; i<=bgwidth/width; i++) {
 				for (j=0; j<=bgheight/height; j++) {
@@ -380,8 +379,8 @@ Tetris::setupPixmap()
 void
 Tetris::confNotify (GamesConf *conf, const char *group, const char *key, gpointer data)
 {
-        if (!group)
-          return;
+	if (!group)
+		return;
 
 	Tetris *t = (Tetris *) data;
 
@@ -392,13 +391,13 @@ Tetris::confNotify (GamesConf *conf, const char *group, const char *key, gpointe
 char *
 Tetris::confGetString (const char *group, const char *key, const char *default_val)
 {
-        return games_conf_get_string_with_default (group, key, default_val);
+	return games_conf_get_string_with_default (group, key, default_val);
 }
 
 int
 Tetris::confGetInt (const char *group, const char *key, int default_val)
 {
-        return games_conf_get_integer_with_default (group, key, default_val);
+	return games_conf_get_integer_with_default (group, key, default_val);
 }
 
 gboolean
@@ -497,40 +496,40 @@ Tetris::setOptions ()
 void
 Tetris::setSound (GtkWidget *widget, gpointer data)
 {
-        games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_SOUND,
-			        GTK_TOGGLE_BUTTON (widget)->active);
+	games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_SOUND,
+				GTK_TOGGLE_BUTTON (widget)->active);
 }
 
 void 
 Tetris::setSelectionPreview(GtkWidget *widget, void *d)
 {
-        games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_DO_PREVIEW,
-			        GTK_TOGGLE_BUTTON (widget)->active);
+	games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_DO_PREVIEW,
+				GTK_TOGGLE_BUTTON (widget)->active);
 }
 
 void 
 Tetris::setSelectionBlocks(GtkWidget *widget, void *d)
 {
-        games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_RANDOM_BLOCK_COLORS,
-			        GTK_TOGGLE_BUTTON (widget)->active);
+	games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_RANDOM_BLOCK_COLORS,
+				GTK_TOGGLE_BUTTON (widget)->active);
 }
 
 void 
 Tetris::setRotateCounterClockWise(GtkWidget *widget, void *d)
 {
-        games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_ROTATE_COUNTER_CLOCKWISE,
-			        GTK_TOGGLE_BUTTON (widget)->active);
+	games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_ROTATE_COUNTER_CLOCKWISE,
+				GTK_TOGGLE_BUTTON (widget)->active);
 }
 
 void
 Tetris::setSelection(GtkWidget *widget, void *data)
 {
 	Tetris *t;
-      	t = (Tetris *)data;
+	t = (Tetris *)data;
 
 	t->themeno = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
 	t->field->setTheme (t->themeno);
-        games_conf_set_string (KEY_OPTIONS_GROUP, KEY_THEME,
+	games_conf_set_string (KEY_OPTIONS_GROUP, KEY_THEME,
 			       ThemeTable[t->themeno].id);
 }
 
@@ -543,29 +542,29 @@ Tetris::setTarget (GtkWidget *widget, void *data)
 
 	t->useTarget = GTK_TOGGLE_BUTTON (widget)->active;
 
-        games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_USE_TARGET, 
-			        t->useTarget);
+	games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_USE_TARGET, 
+				t->useTarget);
 }
 
 void
 Tetris::lineFillHeightChanged (GtkWidget *spin, gpointer data)
 {
 	gint value = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin));
-        games_conf_set_integer (KEY_OPTIONS_GROUP, KEY_LINE_FILL_HEIGHT, value);
+	games_conf_set_integer (KEY_OPTIONS_GROUP, KEY_LINE_FILL_HEIGHT, value);
 }
 
 void
 Tetris::lineFillProbChanged (GtkWidget *spin, gpointer data)
 {
 	gint value = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin));
-        games_conf_set_integer (KEY_OPTIONS_GROUP, KEY_LINE_FILL_PROBABILITY, value);
+	games_conf_set_integer (KEY_OPTIONS_GROUP, KEY_LINE_FILL_PROBABILITY, value);
 }
 
 void
 Tetris::startingLevelChanged (GtkWidget *spin, gpointer data)
 {
 	gint value = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin));
-        games_conf_set_integer (KEY_OPTIONS_GROUP, KEY_STARTING_LEVEL, value);
+	games_conf_set_integer (KEY_OPTIONS_GROUP, KEY_STARTING_LEVEL, value);
 }
 
 int 
@@ -622,7 +621,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	label = gtk_label_new_with_mnemonic (_("_Number of pre-filled rows:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-	                  (GtkAttachOptions) GTK_FILL, 
+			  (GtkAttachOptions) GTK_FILL, 
 			  (GtkAttachOptions) 0,
 			  0, 0);
 
@@ -641,7 +640,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	label = gtk_label_new_with_mnemonic (_("_Density of blocks in a pre-filled row:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-	                  (GtkAttachOptions) GTK_FILL, 
+			  (GtkAttachOptions) GTK_FILL, 
 			  (GtkAttachOptions) 0,
 			  0, 0);
 
@@ -660,7 +659,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	label = gtk_label_new_with_mnemonic (_("_Starting level:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
-	                  (GtkAttachOptions) GTK_FILL, 
+			  (GtkAttachOptions) GTK_FILL, 
 			  (GtkAttachOptions) 0,
 			  0, 0);
 
@@ -885,12 +884,12 @@ Tetris::timeoutHandler(void *d)
 	if (t->paused)
 		return TRUE;
 
- 	if (t->onePause)
- 	{
+	if (t->onePause)
+	{
 		t->onePause = false;
 		t->field->redraw();
 	}
- 	else
+	else
 	{
 		bool res = t->field->moveBlockDown();
 
@@ -956,7 +955,7 @@ Tetris::keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 			t->field->dropBlock();
 			t->manageFallen();
 			res = TRUE;
-		}        
+		}
 	}
 
 	t->field->redraw();
@@ -995,11 +994,11 @@ void Tetris::saveBgOptions ()
 {
 	gchar cbuffer[64];
 
-        games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_USE_BG_IMAGE, usebg);
+	games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_USE_BG_IMAGE, usebg);
 
 	g_snprintf (cbuffer, sizeof (cbuffer), "#%04x%04x%04x",
-                    bgcolour.red, bgcolour.green, bgcolour.blue);
-        games_conf_set_string (KEY_OPTIONS_GROUP, KEY_BG_COLOUR, cbuffer);
+		    bgcolour.red, bgcolour.green, bgcolour.blue);
+	games_conf_set_string (KEY_OPTIONS_GROUP, KEY_BG_COLOUR, cbuffer);
 }
 
 void
@@ -1324,7 +1323,7 @@ Tetris::gameAbout(GtkAction *action, void *d)
 
 	gtk_show_about_dialog (GTK_WINDOW (t->getWidget()),
 #if GTK_CHECK_VERSION (2, 11, 0)
-                               "program-name", _("Gnometris"),
+			       "program-name", _("Gnometris"),
 #else
 			       "name", _("Gnometris"),
 #endif
@@ -1332,7 +1331,7 @@ Tetris::gameAbout(GtkAction *action, void *d)
 			       "comments", _("A classic game of fitting falling blocks together.\n\nGnometris is a part of GNOME Games."),
 			       "copyright", "Copyright \xc2\xa9 1999 J. Marcin Gorycki, 2000-2008 Others",
 			       "license", license,
-		               "website-label", _("GNOME Games web site"),
+			       "website-label", _("GNOME Games web site"),
 			       "authors", authors,
 			       "documenters", documenters,				
 			       "translator-credits", _("translator-credits"),

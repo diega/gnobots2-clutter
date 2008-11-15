@@ -1,4 +1,4 @@
-/* -*- mode:C; indent-tabs-mode:nil; tab-width:8; c-basic-offset:8 -*- */
+/* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *
@@ -33,19 +33,19 @@ Field::Field():
 	showGameOver(false),
 	backgroundImage(NULL),
 	backgroundImageTiled(false),
-        useBGImage(false),
+	useBGImage(false),
 	backgroundColor(NULL)
 {
-        themeID = 0;
-        renderer = NULL;
-        rendererTheme = -1;
+	themeID = 0;
+	renderer = NULL;
+	rendererTheme = -1;
 
 	w = gtk_drawing_area_new();
 
 	g_signal_connect (w, "expose_event", G_CALLBACK (expose), this);
 	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
-        /* We do our own double-buffering. */
-        gtk_widget_set_double_buffered(w, FALSE);
+	/* We do our own double-buffering. */
+	gtk_widget_set_double_buffered(w, FALSE);
 
 	gtk_widget_set_size_request (w, COLUMNS*190/LINES, 190);
 
@@ -59,35 +59,35 @@ Field::~Field()
 	if (background)
 		cairo_surface_destroy(background);
 
-        if (renderer)
-                delete renderer;
+	if (renderer)
+		delete renderer;
 }
 
 void
 Field::rescaleBackground ()
 {
-        cairo_t *bg_cr;
-        cairo_t *tmp_cr;
+	cairo_t *bg_cr;
+	cairo_t *tmp_cr;
 
-        if (!buffer)
-                return;
+	if (!buffer)
+		return;
 
-        tmp_cr = cairo_create (buffer);
+	tmp_cr = cairo_create (buffer);
 
-        if (background)
-                cairo_surface_destroy(background);
+	if (background)
+		cairo_surface_destroy(background);
 
 	background =  cairo_surface_create_similar (cairo_get_target (tmp_cr),
-                                                    CAIRO_CONTENT_COLOR,
-                                                    w->allocation.width,
-                                                    w->allocation.height);
+						    CAIRO_CONTENT_COLOR,
+						    w->allocation.width,
+						    w->allocation.height);
 
-        cairo_destroy (tmp_cr);
+	cairo_destroy (tmp_cr);
 
 	bg_cr = cairo_create (background);
 
 	if (useBGImage && backgroundImage) {
-        	gdouble xscale, yscale;
+		gdouble xscale, yscale;
 		cairo_matrix_t m;
 
 		/* FIXME: This doesn't handle tiled backgrounds in the obvious way. */
@@ -105,7 +105,7 @@ Field::rescaleBackground ()
 
 	cairo_destroy(bg_cr);
 
-        redraw ();
+	redraw ();
 }
 
 gboolean
@@ -130,7 +130,7 @@ Field::configure(GtkWidget *widget, GdkEventConfigure *event, Field *field)
 	cairo_destroy (cr);
 
 
-        field->rescaleBackground ();
+	field->rescaleBackground ();
 
 	return TRUE;
 }
@@ -138,7 +138,7 @@ Field::configure(GtkWidget *widget, GdkEventConfigure *event, Field *field)
 void
 Field::draw (gint x, gint y, gint wd, gint ht)
 {
-        cairo_t *cr;
+	cairo_t *cr;
 
 	cr = gdk_cairo_create (w->window);
 	
@@ -152,7 +152,7 @@ Field::draw (gint x, gint y, gint wd, gint ht)
 void
 Field::draw (void)
 {
-  draw (0, 0, width, height);
+	draw (0, 0, width, height);
 }
 
 gboolean
@@ -211,30 +211,30 @@ void
 Field::redraw()
 {
 	cairo_t *cr;
-        
+
 	g_return_if_fail(buffer);
 
-        generateTarget ();
+	generateTarget ();
 
-        if (rendererTheme != themeID) {
+	if (rendererTheme != themeID) {
 
-                if (renderer)
-                        delete renderer;
+		if (renderer)
+			delete renderer;
 
-                renderer = rendererFactory (themeID, buffer, background, field, 
-                                     COLUMNS, LINES, width, height);
-                rendererTheme = themeID;
-        } else {
-                    renderer->setTarget (buffer);
-                    renderer->setBackground (background);
-                    renderer->data = field;
-                    renderer->width = COLUMNS;
-                    renderer->height = LINES;
-                    renderer->pxwidth = width;
-                    renderer->pxheight = height;
-        }
+		renderer = rendererFactory (themeID, buffer, background, field, 
+					    COLUMNS, LINES, width, height);
+		rendererTheme = themeID;
+	} else {
+		    renderer->setTarget (buffer);
+		    renderer->setBackground (background);
+		    renderer->data = field;
+		    renderer->width = COLUMNS;
+		    renderer->height = LINES;
+		    renderer->pxwidth = width;
+		    renderer->pxheight = height;
+	}
 
-        renderer->render ();
+	renderer->render ();
 
 	cr = cairo_create(buffer);
 
@@ -252,23 +252,23 @@ void
 Field::setBackground(GdkPixbuf *bgImage)//, bool tiled)
 {
 	backgroundImage = (GdkPixbuf *) g_object_ref(bgImage);
-        useBGImage = true;
-//	backgroundImageTiled = tiled;
+	useBGImage = true;
+	// backgroundImageTiled = tiled;
 
-        rescaleBackground ();
+	rescaleBackground ();
 }
 
 void
 Field::setBackground(GdkColor *bgColor)
 {
 	backgroundColor = gdk_color_copy(bgColor);
-        if (backgroundImage) {
-                g_object_unref (backgroundImage);
-                backgroundImage = NULL;
-        }
-        useBGImage = false;
+	if (backgroundImage) {
+		g_object_unref (backgroundImage);
+		backgroundImage = NULL;
+	}
+	useBGImage = false;
 
-        rescaleBackground ();
+	rescaleBackground ();
 }
 
 void
@@ -306,5 +306,5 @@ Field::hideGameOverMessage()
 void 
 Field::setTheme (gint id)
 {
-        themeID = id;
+	themeID = id;
 }

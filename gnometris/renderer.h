@@ -1,4 +1,4 @@
-/* -*- mode:C; indent-tabs-mode:nil; tab-width:8; c-basic-offset:8 -*- */
+/* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
 /*
  * written by Callum McKenzie <callum@spooky-possum.org>
  *
@@ -30,35 +30,35 @@
 #include "blockops.h"
 
 struct ThemeTableEntry {
-  const gchar *name;
-  const gchar *id;
+	const gchar *name;
+	const gchar *id;
 };
 
 extern const ThemeTableEntry ThemeTable[];
 
 class Renderer {
 public:
-  Renderer (cairo_surface_t * dst, cairo_surface_t * bg, Block ** src,
-	    int w, int h, int pxw, int pxh);
-    virtual ~ Renderer ();
-  virtual void render ();
+	Renderer (cairo_surface_t * dst, cairo_surface_t * bg, Block ** src,
+		  int w, int h, int pxw, int pxh);
+	virtual ~ Renderer ();
+	virtual void render ();
 
-  void setTarget (cairo_surface_t *target);
-  void setBackground (cairo_surface_t *background);
+	void setTarget (cairo_surface_t *target);
+	void setBackground (cairo_surface_t *background);
 
-  Block **data;
-  int width;
-  int height;
-  int pxwidth;
-  int pxheight;
+	Block **data;
+	int width;
+	int height;
+	int pxwidth;
+	int pxheight;
 protected:
 
-  cairo_surface_t * target;
-  cairo_surface_t *background;
+	cairo_surface_t * target;
+	cairo_surface_t *background;
 
-  virtual void drawCell (cairo_t * cr, gint x, gint y);
-  virtual void drawBackground (cairo_t * cr);
-  virtual void drawForeground (cairo_t * cr);
+	virtual void drawCell (cairo_t * cr, gint x, gint y);
+	virtual void drawBackground (cairo_t * cr);
+	virtual void drawForeground (cairo_t * cr);
 };
 
 Renderer *rendererFactory (gint id, cairo_surface_t * dst,
@@ -68,31 +68,31 @@ gint themeNameToNumber (const gchar * id);
 
 class JoinedUp:public Renderer {
 public:
-  JoinedUp (cairo_surface_t * dst, cairo_surface_t * bg, Block ** src,
-	    int w, int h, int pxw, int pxh):Renderer (dst, bg, src, w, h, pxw,
-						      pxh) {
-} protected:
-    virtual void drawCell (cairo_t * cr, gint x, gint y);
+	JoinedUp (cairo_surface_t * dst, cairo_surface_t * bg, Block ** src,
+	int w, int h, int pxw, int pxh):Renderer (dst, bg, src, w, h, pxw,
+						  pxh) {}
+protected:
+	virtual void drawCell (cairo_t * cr, gint x, gint y);
 
 private:
-  double border;
-  void drawInnerCorner (cairo_t * cr);
-  void drawOuterCorner (cairo_t * cr);
-  void drawHEdge (cairo_t * cr);
-  void drawVEdge (cairo_t * cr);
+	double border;
+	void drawInnerCorner (cairo_t * cr);
+	void drawOuterCorner (cairo_t * cr);
+	void drawHEdge (cairo_t * cr);
+	void drawVEdge (cairo_t * cr);
 };
 
 class TangoBlock:public Renderer {
 public:
-  TangoBlock (cairo_surface_t * dst, cairo_surface_t * bg, Block ** src,
-	    int w, int h, int pxw, int pxh, gboolean grad);
+	TangoBlock (cairo_surface_t * dst, cairo_surface_t * bg, Block ** src,
+		    int w, int h, int pxw, int pxh, gboolean grad);
 
 protected:
-  virtual void drawCell (cairo_t * cr, gint x, gint y);
-  gboolean usegrads;
+	virtual void drawCell (cairo_t * cr, gint x, gint y);
+	gboolean usegrads;
 
 private:
-  void drawRoundedRectangle (cairo_t * cr, gdouble x, gdouble y, gdouble w, gdouble h, gdouble r); 
+	void drawRoundedRectangle (cairo_t * cr, gdouble x, gdouble y, gdouble w, gdouble h, gdouble r); 
 };
 
 #endif // __renderer_h__

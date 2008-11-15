@@ -1,3 +1,4 @@
+/* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *

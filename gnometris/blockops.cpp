@@ -1,4 +1,4 @@
-/* -*- mode:C; indent-tabs-mode:nill; tab-width:8; c-basic-offset:8 -*- */
+/* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  *
@@ -27,10 +27,10 @@
 
 
 BlockOps::BlockOps() :
-     useTarget (false),
-     blocknr (0),
-     rot (0),
-     color (0)
+	useTarget (false),
+	blocknr (0),
+	rot (0),
+	color (0)
 {
 	field = new Block*[COLUMNS];
 	
@@ -220,12 +220,12 @@ BlockOps::setUseTarget (bool use)
 int
 BlockOps::dropBlock()
 {
-        int count = 0;
-  
+	int count = 0;
+
 	while (!moveBlockDown())
 		count++;
 
-        return count;
+	return count;
 }
 
 void
@@ -320,7 +320,7 @@ BlockOps::emptyField(int filled_lines, int fill_prob)
 
 	for (int y = 0; y < LINES; ++y)
 	{
- 		// Allow for at least one blank per line
+		// Allow for at least one blank per line
 		blank = g_random_int_range(0, COLUMNS);
 
 		for (int x = 0; x < COLUMNS; ++x)
@@ -386,10 +386,10 @@ BlockOps::putBlockInField (bool erase)
 bool
 BlockOps::isFieldEmpty (void)
 {
-  for (int x = 0; x < COLUMNS; x++) {
-    if (field[x][LINES-1].what != EMPTY)
-      return false;
-  }
+	for (int x = 0; x < COLUMNS; x++) {
+		if (field[x][LINES-1].what != EMPTY)
+			return false;
+	}
 
-  return true;
+	return true;
 }
