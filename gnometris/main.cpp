@@ -66,7 +66,7 @@ main(int argc, char *argv[])
 		return 1;
 	}
 
-	g_set_application_name (_("Five or More"));
+	g_set_application_name (_("Gnometris"));
 
 	gtk_window_set_default_icon_name ("gnome-gnometris");
 
