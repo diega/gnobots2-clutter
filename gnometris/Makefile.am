@@ -6,8 +6,6 @@ gnometris_SOURCES = \
 	main.cpp \
 	blocks.cpp \
 	blocks.h \
-	preview.cpp \
-	preview.h \
 	blockops.cpp \
 	blockops.h \
 	highscores.cpp \
@@ -22,11 +20,15 @@ gnometris_SOURCES = \
 if HAVE_CLUTTER
 gnometris_SOURCES += \
 	field.cpp \
-	field.h
+	field.h \
+	preview.cpp \
+	preview.h
 else
 gnometris_SOURCES += \
 	field-noclutter.cpp \
-	field-noclutter.h
+	field-noclutter.h \
+	preview-noclutter.cpp \
+	preview-noclutter.h
 endif
 
 gnometris_CPPFLAGS = \
