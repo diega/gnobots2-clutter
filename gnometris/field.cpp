@@ -23,7 +23,7 @@
 #include "blocks.h"
 #include "renderer.h"
 
-#include <clutter-gtk/gtk-clutter-embed.h>
+#include <libgames-support/games-clutter-embed.h>
 
 #define FONT "Sans Bold"
 
@@ -42,7 +42,7 @@ useBGImage(false),
 	renderer = NULL;
 	rendererTheme = -1;
 
-	w = gtk_clutter_embed_new();
+	w = games_clutter_embed_new();
 
 	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
 	/* We do our own double-buffering. */
