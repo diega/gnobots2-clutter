@@ -608,7 +608,8 @@ check_free (void)
 
     update_menu_sensitivities ();
     if (!game_over) {
-      gint response_id;       
+      gint response_id;
+       
       mb = gtk_message_dialog_new (GTK_WINDOW (window),
 				   GTK_DIALOG_MODAL
 				   | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -616,10 +617,14 @@ check_free (void)
 				   GTK_BUTTONS_NONE,
 				   (_("There are no more moves.")));
       gtk_dialog_add_buttons (GTK_DIALOG (mb),
-			      GTK_STOCK_UNDO,
-			      GTK_RESPONSE_REJECT,
-                              _("_New game"), GTK_RESPONSE_CANCEL,
-			      _("_Shuffle"), GTK_RESPONSE_ACCEPT, NULL);
+			      GTK_STOCK_UNDO, GTK_RESPONSE_REJECT,
+                              _("_New game"), GTK_RESPONSE_CANCEL, NULL);
+
+      /* Can only shuffle if two tiles are visible to be matched. This cannot occur
+       * if all tiles are in a stack */
+      if (visible_tiles >= 2)
+        gtk_dialog_add_button(GTK_DIALOG (mb), _("_Shuffle"), GTK_RESPONSE_ACCEPT);
+
       gtk_dialog_set_default_response (GTK_DIALOG (mb), GTK_RESPONSE_ACCEPT);
       response_id = gtk_dialog_run (GTK_DIALOG (mb));
       switch (response_id) {
@@ -1197,8 +1202,6 @@ new_game (gboolean shuffle)
 void
 shuffle_tiles_callback (void)
 {
-  gboolean ok;
-
   if (paused || game_over == GAME_DEAD || game_over == GAME_WON)
     return;
 
@@ -1209,36 +1212,23 @@ shuffle_tiles_callback (void)
     unselect_tile (selected_tile);
   }
 
-  ok = shuffle ();
+  /* Shuffle the tiles - this should always succeed, the option should not be
+   * available if they cannot be shuffled */
+  if (!shuffle ())
+    return;
 
-  if (!ok) {
-    GtkWidget *mb;
-    game_over = GAME_DEAD;
-    games_clock_stop (GAMES_CLOCK (chrono));
-    mb = gtk_message_dialog_new (GTK_WINDOW (window),
-				 GTK_DIALOG_MODAL |
-				 GTK_DIALOG_DESTROY_WITH_PARENT,
-				 GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
-				 (_
-				  ("Sorry, I was unable to find a playable configuration.")));
-    gtk_dialog_run (GTK_DIALOG (mb));
-    gtk_widget_destroy (mb);
+  draw_all_tiles ();
 
-  } else {
+  game_over = GAME_RUNNING;
 
-    draw_all_tiles ();
+  /* 60s penalty */
+  games_clock_add_seconds (GAMES_CLOCK (chrono), 60);
 
-    game_over = GAME_RUNNING;
-
-    /* 60s penalty */
-    games_clock_add_seconds (GAMES_CLOCK (chrono), 60);
-
-    update_moves_left ();
-    /* Disable undo/redo after a shuffle. */
-    sequence_number = 1;
-    clear_undo_queue ();
-    set_undoredo_state (FALSE, FALSE);
-  }
+  update_moves_left ();
+  /* Disable undo/redo after a shuffle. */
+  sequence_number = 1;
+  clear_undo_queue ();
+  set_undoredo_state (FALSE, FALSE);
 
   update_menu_sensitivities ();
 }
