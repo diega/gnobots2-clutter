@@ -832,7 +832,8 @@ stop_hints (void)
 static void
 hint_callback (void)
 {
-  gint i, j, free = 0, type;
+  gint i, j, type;
+  gboolean have_match = FALSE;
 
   if (paused || (game_over != GAME_RUNNING && game_over != GAME_WAITING))
     return;
@@ -846,29 +847,44 @@ hint_callback (void)
    * Tile Free is now _so_ much quicker, it is more elegant to do a
    * British Library search, and safer. */
   /* Note: British Library should probably read British Museum.  */
-
-  /* Clear any selection */
+   
+  /* Check if the selected tile has a match */
   if (selected_tile < MAX_TILES) {
-    tiles[selected_tile].selected = 0;
+    type = tiles[selected_tile].type;
+    for (i = 0; i < MAX_TILES && !have_match; i++) {
+       if (tiles[i].type == type && i != selected_tile && tile_free (i)) {
+         have_match = TRUE;
+         hint_tiles[0] = selected_tile;
+         hint_tiles[1] = i;
+       }
+    }
+  }
+
+  /* Check if any tiles match */
+  for (i = 0; i < MAX_TILES && !have_match; i++) {
+    if (tile_free (i)) {
+      type = tiles[i].type;
+      for (j = 0; j < MAX_TILES && !have_match; j++) {
+	if (tiles[j].type == type && i != j && tile_free (j)) {
+          have_match = TRUE;
+          hint_tiles[0] = i;
+          hint_tiles[1] = j;
+        }
+      }
+    }
+  }
+   
+  /* Clear selection if no part of the hint */
+  if (selected_tile < MAX_TILES && hint_tiles[0] != selected_tile) {
+    tiles[selected_tile].selected &= ~SELECTED_FLAG;
     draw_tile (selected_tile);
     selected_tile = MAX_TILES + 1;
   }
 
-  for (i = 0; i < MAX_TILES && !free; i++)
-    if (tile_free (i)) {
-      type = tiles[i].type;
-      for (j = 0; j < MAX_TILES && !free; j++) {
-	free = (tiles[j].type == type && i != j && tile_free (j));
-	if (free) {
-	  tiles[i].selected ^= HINT_FLAG;
-	  tiles[j].selected ^= HINT_FLAG;
-	  draw_tile (i);
-	  draw_tile (j);
-	  hint_tiles[0] = i;
-	  hint_tiles[1] = j;
-	}
-      }
-    }
+  tiles[hint_tiles[0]].selected |= HINT_FLAG;
+  tiles[hint_tiles[1]].selected |= HINT_FLAG;
+  draw_tile (hint_tiles[0]);
+  draw_tile (hint_tiles[1]);
 
   /* This is a good way to test check_free
    * for (i=0;i<MAX_TILES;i++)
