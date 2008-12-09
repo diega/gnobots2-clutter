@@ -459,7 +459,7 @@ static void
 remove_pair (gint tile1, gint tile2)
 {
   gchar *tmpstr;
-
+   
   tiles[tile1].visible = tiles[tile2].visible = 0;
   tiles[tile1].selected &= ~SELECTED_FLAG;
   tiles[tile2].selected &= ~SELECTED_FLAG;
@@ -473,14 +473,13 @@ remove_pair (gint tile1, gint tile2)
   tmpstr = g_strdup_printf ("%3d", visible_tiles);
   gtk_label_set_text (GTK_LABEL (tiles_label), tmpstr);
   g_free (tmpstr);
-  update_moves_left ();
   set_undoredo_state (TRUE, FALSE);
 
+  update_moves_left ();   
   if (visible_tiles <= 0) {
     games_clock_stop (GAMES_CLOCK (chrono));
     you_won ();
   }
-
 }
 
 void
@@ -609,6 +608,7 @@ check_free (void)
 
     update_menu_sensitivities ();
     if (!game_over) {
+      gint response_id;       
       mb = gtk_message_dialog_new (GTK_WINDOW (window),
 				   GTK_DIALOG_MODAL
 				   | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -618,12 +618,21 @@ check_free (void)
       gtk_dialog_add_buttons (GTK_DIALOG (mb),
 			      GTK_STOCK_UNDO,
 			      GTK_RESPONSE_REJECT,
-			      _("Shuffle"), GTK_RESPONSE_ACCEPT, NULL);
+                              _("_New game"), GTK_RESPONSE_CANCEL,
+			      _("_Shuffle"), GTK_RESPONSE_ACCEPT, NULL);
       gtk_dialog_set_default_response (GTK_DIALOG (mb), GTK_RESPONSE_ACCEPT);
-      if (gtk_dialog_run (GTK_DIALOG (mb)) == GTK_RESPONSE_ACCEPT)
-	shuffle_tiles_callback ();
-      else
-	undo_tile_callback ();
+      response_id = gtk_dialog_run (GTK_DIALOG (mb));
+      switch (response_id) {
+      case GTK_RESPONSE_ACCEPT:
+	 shuffle_tiles_callback ();
+         break;
+      case GTK_RESPONSE_CANCEL:
+         new_game (TRUE);
+         break;
+      default:
+	 undo_tile_callback ();
+         break;
+      }       
 
       gtk_widget_destroy (mb);
     }
@@ -861,6 +870,9 @@ hint_callback (void)
     }
   }
    
+  if (!have_match)
+    return;
+
   /* Clear selection if no part of the hint */
   if (selected_tile < MAX_TILES && hint_tiles[0] != selected_tile) {
     tiles[selected_tile].selected &= ~SELECTED_FLAG;
@@ -995,7 +1007,6 @@ new_game_cb (GtkAction * action, gpointer data)
 static void
 restart_game_cb (GtkAction * action, gpointer data)
 {
-  stop_hints ();
   new_game (FALSE);
 }
 
@@ -1048,6 +1059,7 @@ redo_tile_callback (GtkAction * action, gpointer data)
       break;
     }
   }
+
   set_undoredo_state (TRUE, found);
 
   update_moves_left ();
