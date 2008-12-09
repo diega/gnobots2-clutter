@@ -60,59 +60,49 @@
 #define DEFAULT_TILESET "default.png"
 #define DEFAULT_MAPSET "Easy"
 
-tilepos *pos = 0;
+static GtkWidget *window, *statusbar;
+static GtkWidget *tiles_label;
+static GtkWidget *toolbar;
+static GtkWidget *moves_label, *chrono;
+static GtkWidget *warn_cb = NULL, *confirm_cb = NULL;
+static GtkWidget *colour_well = NULL;
+static GtkWidget *pref_dialog = NULL;
 
-tile tiles[MAX_TILES];
+static GtkAction *pause_action;
+static GtkAction *resume_action;
+static GtkAction *hint_action;
+static GtkAction *redo_action;
+static GtkAction *undo_action;
+static GtkAction *restart_action;
+static GtkAction *scores_action;
+static GtkAction *show_toolbar_action;
+static GtkAction *fullscreen_action;
+static GtkAction *leavefullscreen_action;
 
-GtkWidget *window, *statusbar;
-GtkWidget *tiles_label;
-GtkWidget *toolbar;
-
-GtkAction *pause_action;
-GtkAction *resume_action;
-GtkAction *hint_action;
-GtkAction *redo_action;
-GtkAction *undo_action;
-GtkAction *restart_action;
-GtkAction *scores_action;
-GtkAction *show_toolbar_action;
-GtkAction *fullscreen_action;
-GtkAction *leavefullscreen_action;
-
-gint selected_tile, visible_tiles;
-gint sequence_number;
-
-GList *tileset_list = NULL;
+/* Available tilsets */
+static GList *tileset_list = NULL;
 
 gchar *tileset = NULL;
-static gint mapset = -1;
-static gchar *score_current_mapset = NULL;
 
+tile tiles[MAX_TILES];
+static gint visible_tiles; /* Count of how many tiles are active */
+
+tilepos *pos = 0;
+static gint mapset = -1, active_mapset = -1;
 static gchar *selected_tileset = NULL;
+static gint selected_tile;
+static gint sequence_number;
+static gboolean undo_state = FALSE;
+static gboolean redo_state = FALSE;
+static gint moves_left = 0; /* The number of moves that can be made */
+gboolean paused = FALSE; /* true if the game is paused */
 
-gboolean undo_state = FALSE;
-gboolean redo_state = FALSE;
+/* Hint animation */
+static gint hint_tiles[2];
+static guint timer = 0;
+static guint timeout_counter = HINT_BLINK_NUM + 1;
 
-gint hint_tiles[2];
-guint timer;
-guint timeout_counter = HINT_BLINK_NUM + 1;
-
-GtkWidget *moves_label;
-gint moves_left = 0;
-GtkWidget *chrono;
-gint paused = 0;
-
-/* for the preferences */
-GtkWidget *warn_cb = NULL, *confirm_cb = NULL;
-GtkWidget *colour_well = NULL;
-GtkWidget *pref_dialog = NULL;
-
-/* Has the map been changed ? */
-gboolean new_map = TRUE;
-
-GamesScores *highscores;
-
-static gint get_mapset_index (void);
+static GamesScores *highscores;
 
 static const GamesScoresDescription scoredesc = { NULL,
   "Easy",
@@ -128,16 +118,15 @@ enum {
   GAME_DEAD
 } game_over = GAME_WAITING;
 
+static gint get_mapset_index (void);
 static void clear_undo_queue (void);
 void you_won (void);
 void check_free (void);
 void undo_tile_callback (void);
 void properties_callback (void);
 void shuffle_tiles_callback (void);
-void ensure_pause_off (void);
 void pause_callback (void);
-void new_game (void);
-void restart_game (void);
+void new_game (gboolean shuffle);
 
 void
 mahjongg_theme_warning (gchar * message)
@@ -310,11 +299,9 @@ conf_value_changed_cb (GamesConf *conf,
 
     mapset = get_mapset_index ();
 
-    new_map = TRUE;
-
     /* Skip the dialog if a game isn't in play. */
     if (game_over || !games_clock_get_seconds (GAMES_CLOCK (chrono))) {
-      new_game ();
+      new_game (TRUE);
       return;
     }
 
@@ -332,7 +319,7 @@ conf_value_changed_cb (GamesConf *conf,
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
     response = gtk_dialog_run (GTK_DIALOG (dialog));
     if (response == GTK_RESPONSE_ACCEPT)
-      new_game ();
+      new_game (TRUE);
     gtk_widget_destroy (dialog);
   }
 }
@@ -980,15 +967,6 @@ pause_callback (void)
     message ("");
   }
   noloops = FALSE;
-
-
-}
-
-void
-ensure_pause_off (void)
-{
-  if (paused)
-    pause_callback ();
 }
 
 static void
@@ -1009,63 +987,22 @@ scores_callback (GtkAction * action, gpointer data)
 }
 
 static void
-init_game (void)
-{
-  gchar *newtitle;
-
-  /* Translators: This is the window title for Mahjongg which contains the map name, e.g. 'Mahjongg - Red Dragon' */
-  newtitle = g_strdup_printf (_("Mahjongg - %s"), Q_ (maps[mapset].name));
-  gtk_window_set_title (GTK_WINDOW (window), newtitle);
-  g_free (newtitle);
-
-  score_current_mapset = maps[mapset].score_name;
-
-  gtk_label_set_text (GTK_LABEL (tiles_label), MAX_TILES_STR);
-  update_moves_left ();
-  game_over = GAME_WAITING;
-  sequence_number = 1;
-  visible_tiles = MAX_TILES;
-  selected_tile = MAX_TILES + 1;
-  set_undoredo_state (FALSE, FALSE);
-
-  games_clock_stop (GAMES_CLOCK (chrono));
-  games_clock_set_seconds (GAMES_CLOCK (chrono), 0);
-}
-
-static void
 new_game_cb (GtkAction * action, gpointer data)
 {
-  stop_hints ();
-  ensure_pause_off ();
-  new_game ();
+  new_game (TRUE);
 }
 
 static void
 restart_game_cb (GtkAction * action, gpointer data)
 {
   stop_hints ();
-  restart_game ();
+  new_game (FALSE);
 }
 
 static void
 quit_cb (GObject * object, gpointer data)
 {
   gtk_main_quit ();
-}
-
-void
-restart_game (void)
-{
-  gint i;
-
-  ensure_pause_off ();
-  for (i = 0; i < MAX_TILES; i++) {
-    tiles[i].visible = 1;
-    tiles[i].selected = 0;
-    tiles[i].sequence = 0;
-  }
-  draw_all_tiles ();
-  init_game ();
 }
 
 static void
@@ -1167,25 +1104,6 @@ clear_undo_queue (void)
 }
 
 static void
-load_map (void)
-{
-  new_map = FALSE;
-  pos = maps[mapset].map;
-  generate_dependencies ();
-  calculate_view_geometry ();
-  configure_pixmaps ();
-}
-
-static void
-do_game (void)
-{
-  games_scores_set_category (highscores, maps[mapset].score_name);
-  if (new_map)
-    load_map ();
-  generate_game (g_random_int ());	/* puts in the positions of the tiles */
-}
-
-static void
 load_preferences (void)
 {
   gchar *buf;
@@ -1202,13 +1120,66 @@ load_preferences (void)
 }
 
 void
-new_game (void)
+new_game (gboolean shuffle)
 {
-  do_game ();
+  gint i;
+  gchar *title;
 
+  /* Reset state */
+  game_over = GAME_WAITING;
+  sequence_number = 1;
+  visible_tiles = MAX_TILES;
+  selected_tile = MAX_TILES + 1;
+  undo_state = FALSE;
+  redo_state = FALSE;
+  hint_tiles[0] = MAX_TILES + 1;
+  hint_tiles[1] = MAX_TILES + 1;   
+  if (timer)
+    g_source_remove (timer);
+  timer = 0;
+  timeout_counter = HINT_BLINK_NUM + 1;
+  moves_left = 0;
+  paused = FALSE;
+  for (i = 0; i < MAX_TILES; i++) {
+    tiles[i].visible = 1;
+    tiles[i].selected = 0;
+    tiles[i].sequence = 0;
+  }
+
+  /* Load map */
+  if (active_mapset != mapset) {
+    active_mapset = mapset;
+    pos = maps[mapset].map;
+    generate_dependencies ();
+    calculate_view_geometry ();
+    configure_pixmaps ();
+    games_scores_set_category (highscores, maps[mapset].score_name);
+  }
+
+  /* Generate layout */
+  if (shuffle) {
+     generate_game (g_random_int ());
+  }
+   
+  /* Analyse layout */
+  update_moves_left ();
+  
+  /* Update menus */
+  update_menu_sensitivities ();
+
+  /* Set window title */
+  /* Translators: This is the window title for Mahjongg which contains the map name, e.g. 'Mahjongg - Red Dragon' */
+  title = g_strdup_printf (_("Mahjongg - %s"), Q_ (maps[mapset].name));
+  gtk_window_set_title (GTK_WINDOW (window), title);
+  g_free (title);
+  gtk_label_set_text (GTK_LABEL (tiles_label), MAX_TILES_STR);
+
+  /* Prepare clock */
+  games_clock_stop (GAMES_CLOCK (chrono));
+  games_clock_set_seconds (GAMES_CLOCK (chrono), 0);
+
+  /* Redraw */
   draw_all_tiles ();
-
-  init_game ();
 }
 
 void
@@ -1532,9 +1503,8 @@ main (int argc, char *argv[])
 
   /* FIXME: get these in the best place (as per the comment below. */
   init_config ();
-
-  do_game ();
-  init_game ();
+   
+  new_game (TRUE);
 
   /* Don't leave the keyboard focus on the toolbar */
   gtk_widget_grab_focus (board);

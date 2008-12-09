@@ -76,10 +76,9 @@ gint yoffset;
 #define MINHEIGHT 200
 
 /* These two are in units of tiles and do not include a half tile border. */
-gint gridwidth;
-gint gridheight;
+static gint gridwidth = 0, gridheight = 0;
 
-gchar *warning_message = NULL;
+static gchar *warning_message = NULL;
 
 static void
 recalculate_sizes (gint width, gint height)
@@ -165,7 +164,6 @@ calculate_view_geometry (void)
    * position information is for the upper left corner. */
   gridwidth = gridwidth / 2 + 2;
   gridheight = gridheight / 2 + 2;
-
 }
 
 static gint
@@ -211,6 +209,9 @@ draw_tile (gint tileno)
   guint dx, dy;
   guint sx, sy;
   gint i, j;
+   
+  if (nowindow)
+    return;
 
   ox = view_geometry[tileno].x;
   oy = view_geometry[tileno].y;
@@ -248,6 +249,9 @@ draw_all_tiles (void)
   gint i;
   guint sx, sy;
   guint dx, dy;
+   
+  if (nowindow)
+    return;
 
   gdk_gc_set_clip_mask (gc, NULL);
   gdk_draw_rectangle (buffer, gc, TRUE, 0, 0, windowwidth, windowheight);

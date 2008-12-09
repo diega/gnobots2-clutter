@@ -38,7 +38,7 @@ void tile_event (gint tileno, gint button);
 void mahjongg_theme_warning (gchar * message_format);
 
 extern tile tiles[MAX_TILES];
-extern gint paused;
+extern gboolean paused;
 extern gchar *tileset;
 
 #endif /* MAHJONGG_H */
