@@ -465,10 +465,8 @@
 		      <guimenuitem>Scores</guimenuitem>
 		    </menuchoice> &mdash; 
 		    This item brings up a dialog showing you the ten best scores.  The 
-		    dialog has the scores identified by user name, score, the 
-		    time it took to complete the game, and the date the game was 
-		    completed.
-
+		    dialog has the scores identified by user name and the time it took
+                    to complete the game.
 		  </para>
 		</listitem>
 		<listitem>
