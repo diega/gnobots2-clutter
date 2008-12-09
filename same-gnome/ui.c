@@ -197,7 +197,8 @@ game_over_dialog (gint place)
 				       GAMES_SCORES_QUIT_BUTTON |
 				       GAMES_SCORES_NEW_GAME_BUTTON);
       message = g_strdup_printf ("<b>%s</b>\n\n%s", _("Congratulations!"),
-				 _("Your score has made the top ten."));
+				 place == 1 ? _("Your score is the best!") :
+                                 _("Your score has made the top ten."));
       games_scores_dialog_set_message (gooddialog, message);
       g_free (message);
 
