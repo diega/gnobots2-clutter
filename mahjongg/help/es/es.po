@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mahjongg.HEAD\n"
-"POT-Creation-Date: 2008-02-12 11:05+0000\n"
-"PO-Revision-Date: 2008-02-12 11:40+0100\n"
+"POT-Creation-Date: 2008-12-09 16:21+0000\n"
+"PO-Revision-Date: 2008-12-15 21:32+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgstr "@@image: 'figures/toolbar.png'; md5=ee97ea171b1eb2510f7376734b590791"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/mahjongg.xml:576(None)
+#: C/mahjongg.xml:574(None)
 msgid ""
 "@@image: 'figures/preferences.png'; md5=0c04907f6aeaf7b3620e2c21e54d2025"
 msgstr ""
@@ -657,15 +657,14 @@ msgstr ""
 msgid ""
 "<menuchoice><guimenuitem>Scores</guimenuitem></menuchoice>&mdash; This item "
 "brings up a dialog showing you the ten best scores. The dialog has the "
-"scores identified by user name, score, the time it took to complete the "
-"game, and the date the game was completed."
+"scores identified by user name and the time it took to complete the game."
 msgstr ""
-"<menuchoice><guimenuitem>Puntuación</guimenuitem></menuchoice>: Este "
+"<menuchoice><guimenuitem>Puntuaciones</guimenuitem></menuchoice>: Este "
 "elemento le muestra un diálogo con las diez mejores puntuaciones. El diálogo "
-"identifica las puntuaciones con el nombre de usuario, puntuación, el tiempo "
-"que llevó completar la partida y la fecha en la que se completó."
+"identifica las puntuaciones con el nombre de usuario, puntuación y el tiempo "
+"que llevó completar la partida."
 
-#: C/mahjongg.xml:475(para)
+#: C/mahjongg.xml:473(para)
 msgid ""
 "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Exit</"
 "guimenuitem></menuchoice>&mdash; This item allows you to quit the game."
@@ -673,15 +672,15 @@ msgstr ""
 "<menuchoice><shortcut><keysym>Ctrl+Q</keysym></shortcut><guimenuitem>Salir</"
 "guimenuitem></menuchoice>: Este elemento le permite salir del juego."
 
-#: C/mahjongg.xml:397(para) C/mahjongg.xml:493(para) C/mahjongg.xml:525(para)
+#: C/mahjongg.xml:397(para) C/mahjongg.xml:491(para) C/mahjongg.xml:523(para)
 msgid "The menu contains: <placeholder-1/>"
 msgstr "El menú contiene: <placeholder-1/>"
 
-#: C/mahjongg.xml:491(guimenu)
+#: C/mahjongg.xml:489(guimenu)
 msgid "Settings"
 msgstr "Configuración"
 
-#: C/mahjongg.xml:497(para)
+#: C/mahjongg.xml:495(para)
 msgid ""
 "<menuchoice><guimenuitem>Toolbar</guimenuitem></menuchoice>&mdash; This item "
 "determines whether the <link linkend=\"toolbar\"><interface>toolbar</"
@@ -696,7 +695,7 @@ msgstr ""
 "el último lugar donde la posicionó. Si el elemente no está seleccionado no "
 "se mostrará la <interface>barra de herramientas</interface>."
 
-#: C/mahjongg.xml:510(para)
+#: C/mahjongg.xml:508(para)
 msgid ""
 "<menuchoice><guimenuitem>Preferences</guimenuitem></menuchoice>&mdash; This "
 "item brings up the <link linkend=\"prefs\">Preferences </link> dialog."
@@ -704,11 +703,11 @@ msgstr ""
 "<menuchoice><guimenuitem>Preferencias</guimenuitem></menuchoice>: Este "
 "elemento muestra el diálogo <link linkend=\"prefs\">Preferencias</link>."
 
-#: C/mahjongg.xml:523(guimenu)
+#: C/mahjongg.xml:521(guimenu)
 msgid "Help"
 msgstr "Ayuda"
 
-#: C/mahjongg.xml:529(para)
+#: C/mahjongg.xml:527(para)
 msgid ""
 "<menuchoice><shortcut><keysym>F1</keysym></shortcut><guimenuitem>Contents</"
 "guimenuitem></menuchoice>&mdash; This item shows this manual."
@@ -716,7 +715,7 @@ msgstr ""
 "<menuchoice><shortcut><keysym>F1</keysym></shortcut><guimenuitem>Contenido</"
 "guimenuitem></menuchoice>: Este elemento muestra este manual."
 
-#: C/mahjongg.xml:540(para)
+#: C/mahjongg.xml:538(para)
 msgid ""
 "<menuchoice><guimenuitem>About</guimenuitem></menuchoice>&mdash; This item "
 "gives you some basic information about <application>GNOME Mahjongg</"
@@ -727,11 +726,11 @@ msgstr ""
 "application>, tal como los nombres de los autores y el número de versión de "
 "la aplicación."
 
-#: C/mahjongg.xml:559(title)
+#: C/mahjongg.xml:557(title)
 msgid "Customization"
 msgstr "Personalizar"
 
-#: C/mahjongg.xml:560(para)
+#: C/mahjongg.xml:558(para)
 msgid ""
 "To change the application's settings, select <guimenuitem>Preferences</"
 "guimenuitem> from the <guimenu>Settings</guimenu> menu. This opens the <link "
@@ -744,23 +743,23 @@ msgstr ""
 "<interface>Preferencias</interface></link>."
 
 #. ALAN: looks correct like version 2.10 to me
-#: C/mahjongg.xml:571(title)
+#: C/mahjongg.xml:569(title)
 msgid "Preferences Dialog"
 msgstr "Diálogo de preferencias"
 
-#: C/mahjongg.xml:579(phrase)
+#: C/mahjongg.xml:577(phrase)
 msgid "Preferences dialog."
 msgstr "Diálogo de preferencias."
 
-#: C/mahjongg.xml:585(para)
+#: C/mahjongg.xml:583(para)
 msgid "All the options are applied and saved immediately."
 msgstr "Todas las opciones se aplican y guardan inmediatamente."
 
-#: C/mahjongg.xml:589(para)
+#: C/mahjongg.xml:587(para)
 msgid "The properties in the <interface>Preferences</interface> dialog are:"
 msgstr "Las propiedades en el diálogo <interface>Preferencias</interface> son:"
 
-#: C/mahjongg.xml:595(para)
+#: C/mahjongg.xml:593(para)
 msgid ""
 "<guilabel>Tile Set:</guilabel>&mdash; Select the look of the tiles from this "
 "list."
@@ -768,7 +767,7 @@ msgstr ""
 "<guilabel>Juego de fichas</guilabel>: Seleccione la apariencia de las fichas "
 "de esta lista."
 
-#: C/mahjongg.xml:601(para)
+#: C/mahjongg.xml:599(para)
 msgid ""
 "<guilabel>Select Map:</guilabel>&mdash; Change the difficulty of the game by "
 "altering how the tiles are stacked. The more spread out (easy) version lets "
@@ -780,7 +779,7 @@ msgstr ""
 "permite ver más fichas mientras que la versión más compacta (difícil) no le "
 "permite ver muchas fichas."
 
-#: C/mahjongg.xml:610(para)
+#: C/mahjongg.xml:608(para)
 msgid ""
 "<guilabel>Background Color:</guilabel>&mdash; Change the color of the "
 "background by bringing up a <interface> color picker</interface> to let you "
@@ -790,7 +789,7 @@ msgstr ""
 "<interface>selector de color</interface> para permitirle seleccionar un "
 "color nuevo."
 
-#: C/mahjongg.xml:619(para)
+#: C/mahjongg.xml:617(para)
 msgid ""
 "To alter the size of the tiles simply resize the window in the normal way. "
 "The tiles will expand to fill it."
@@ -798,11 +797,11 @@ msgstr ""
 "Para alterar el tamaño de las fichas, simplemente redimensione la ventana de "
 "una forma normal. Las fichas se expandirán para llenarla."
 
-#: C/mahjongg.xml:635(title)
+#: C/mahjongg.xml:633(title)
 msgid "Authors"
 msgstr "Autores"
 
-#: C/mahjongg.xml:636(para)
+#: C/mahjongg.xml:634(para)
 msgid ""
 "<application>GNOME Mahjongg</application> was written by Francisco "
 "Bustamante (<email>pancho@nuclecu.unam.mx</email>), Michael Meeks "
@@ -822,11 +821,11 @@ msgstr ""
 "aplicación o este manual, siga las indicaciones en este <ulink url=\"ghelp:"
 "gnome-feedback\" type=\"help\">documento</ulink>."
 
-#: C/mahjongg.xml:664(title)
+#: C/mahjongg.xml:662(title)
 msgid "License"
 msgstr "Licencia"
 
-#: C/mahjongg.xml:665(para)
+#: C/mahjongg.xml:663(para)
 msgid ""
 "This program and tile artwork is free software; you can redistribute it and/"
 "or modify it under the terms of the <citetitle>GNU General Public License</"
@@ -838,7 +837,7 @@ msgstr ""
 "GNU</citetitle> como se publicó por la Free Software Foundation, en la "
 "versión 2 de la licencia, o (a su elección) cualquier versión posterior."
 
-#: C/mahjongg.xml:672(para)
+#: C/mahjongg.xml:670(para)
 msgid ""
 "This program is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -850,7 +849,7 @@ msgstr ""
 "IDONEIDAD PARA UN PROPÓSITO PARTICULAR. Vea la <citetitle>Licencia Pública "
 "General GNU</citetitle> para más detalles."
 
-#: C/mahjongg.xml:678(para)
+#: C/mahjongg.xml:676(para)
 msgid ""
 "A copy of the <citetitle>GNU General Public License</citetitle> is included "
 "as an appendix to the <citetitle>GNOME Users Guide</citetitle>. You may also "
@@ -873,4 +872,4 @@ msgstr ""
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2.
 #: C/mahjongg.xml:0(None)
 msgid "translator-credits"
-msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2007-2008."
+msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2007-2008"
