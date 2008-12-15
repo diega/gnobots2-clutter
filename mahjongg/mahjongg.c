@@ -422,7 +422,7 @@ message_flash (gchar * message)
     gtk_statusbar_get_context_id (GTK_STATUSBAR (statusbar), "flash");
   flashid =
     gtk_statusbar_push (GTK_STATUSBAR (statusbar), context_id, message);
-  g_timeout_add (5000, (GSourceFunc) message_flash_remove,
+  g_timeout_add_seconds (5, (GSourceFunc) message_flash_remove,
 		 GUINT_TO_POINTER (flashid));
 }
 
