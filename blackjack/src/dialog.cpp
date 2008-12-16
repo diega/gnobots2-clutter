@@ -49,7 +49,7 @@ get_insurance_choice (void)
         gboolean    choice = FALSE;
 
         message = _("Would you like insurance?");
-        secondary_message = _("Insurance is a side wager of 50% of the original wager"
+        secondary_message = _("Insurance is a side wager of 50%% of the original wager"
                               " that the dealer has a natural 21 (aka blackjack) that is"
                               " offered when the dealer's face up card is an ace. If the"
                               " dealer has a natural 21 then the player is paid double.");
