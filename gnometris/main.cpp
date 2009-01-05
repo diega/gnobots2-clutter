@@ -27,7 +27,7 @@
 #include <libgames-support/games-runtime.h>
 
 #ifdef HAVE_CLUTTER
-#include <libgames-support/games-clutter-embed.h>
+#include <clutter-gtk/gtk-clutter-embed.h>
 #endif
 
 #include "tetris.h"
@@ -81,7 +81,7 @@ main(int argc, char *argv[])
 	games_conf_initialise ("Gnometris");
 
 #ifdef HAVE_CLUTTER
-        if (games_clutter_init_with_args (NULL, NULL, NULL, NULL, NULL, &error) != CLUTTER_INIT_SUCCESS) {
+        if (gtk_clutter_init (&argc, &argv) != CLUTTER_INIT_SUCCESS) {
 		g_printerr ("Failed to initialise clutter: %s\n", error->message);
 		g_error_free (error);
 		return 1;

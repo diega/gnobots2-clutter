@@ -39,13 +39,12 @@ extern const ThemeTableEntry ThemeTable[];
 
 class Renderer {
 public:
-	Renderer (cairo_surface_t * dst, cairo_surface_t * bg, Block ** src,
+	Renderer (cairo_surface_t * dst, Block ** src,
 		  int w, int h, int pxw, int pxh);
 	virtual ~ Renderer ();
 	virtual void render ();
 
 	void setTarget (cairo_surface_t *target);
-	void setBackground (cairo_surface_t *background);
 
 	Block **data;
 	int width;
@@ -55,22 +54,20 @@ public:
 protected:
 	GnometrisBlockCache *block_cache;
 	cairo_surface_t *target;
-	cairo_surface_t *background;
 
 	virtual void drawCell (cairo_t * cr, gint x, gint y);
-	virtual void drawBackground (cairo_t * cr);
 	virtual void drawForeground (cairo_t * cr);
 };
 
 Renderer *rendererFactory (gint id, cairo_surface_t * dst,
-			   cairo_surface_t * bg, Block ** src, int w,
+			   Block ** src, int w,
 			   int h, int pxw, int pxh);
 gint themeNameToNumber (const gchar * id);
 
 class JoinedUp:public Renderer {
 public:
-	JoinedUp (cairo_surface_t * dst, cairo_surface_t * bg, Block ** src,
-	int w, int h, int pxw, int pxh):Renderer (dst, bg, src, w, h, pxw,
+	JoinedUp (cairo_surface_t * dst, Block ** src,
+	int w, int h, int pxw, int pxh):Renderer (dst, src, w, h, pxw,
 						  pxh) {}
 protected:
 	virtual void drawCell (cairo_t * cr, gint x, gint y);
@@ -85,7 +82,7 @@ private:
 
 class TangoBlock:public Renderer {
 public:
-	TangoBlock (cairo_surface_t * dst, cairo_surface_t * bg, Block ** src,
+	TangoBlock (cairo_surface_t * dst, Block ** src,
 		    int w, int h, int pxw, int pxh, gboolean grad);
 
 protected:

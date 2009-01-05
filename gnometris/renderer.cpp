@@ -52,19 +52,19 @@ gint themeNameToNumber (const gchar *id)
 }
 
 Renderer * rendererFactory (gint id, cairo_surface_t *dst,
-			    cairo_surface_t *bg, Block **src, int w,
+			    Block **src, int w,
 			    int h, int pxw, int pxh)
 {
 	switch (id) {
 	case 3:
-		return new TangoBlock (dst, bg, src, w, h, pxw, pxh, TRUE);
+		return new TangoBlock (dst, src, w, h, pxw, pxh, TRUE);
 	case 2:
-		return new TangoBlock (dst, bg, src, w, h, pxw, pxh, FALSE);
+		return new TangoBlock (dst, src, w, h, pxw, pxh, FALSE);
 	case 1:
-		return new JoinedUp (dst, bg, src, w, h, pxw, pxh);
+		return new JoinedUp (dst, src, w, h, pxw, pxh);
 	case 0:
 	default:
-		return new Renderer (dst, bg, src, w, h, pxw, pxh);
+		return new Renderer (dst, src, w, h, pxw, pxh);
 	}
 }
 
@@ -82,11 +82,10 @@ Renderer * rendererFactory (gint id, cairo_surface_t *dst,
    for the preview widget and possibly the theme previewer, so make no
    assumptions. */
 
-Renderer::Renderer (cairo_surface_t *dst, cairo_surface_t *bg, Block **src,
+Renderer::Renderer (cairo_surface_t *dst, Block **src,
 		    int w, int h, int pxw, int pxh)
 {
 	target = cairo_surface_reference (dst);
-	background = cairo_surface_reference (bg);
 	block_cache = new GnometrisBlockCache(5);
 	data = src;
 	width = w;
@@ -98,19 +97,12 @@ Renderer::Renderer (cairo_surface_t *dst, cairo_surface_t *bg, Block **src,
 Renderer::~Renderer ()
 {
 	cairo_surface_destroy (target);
-	cairo_surface_destroy (background);
 }
 
 void Renderer::setTarget (cairo_surface_t * dst)
 {
 	cairo_surface_destroy (target);
 	target = cairo_surface_reference (dst);
-}
-
-void Renderer::setBackground (cairo_surface_t *bg)
-{
-	cairo_surface_destroy (background);
-	background = cairo_surface_reference (bg);
 }
 
 void Renderer::drawCell (cairo_t *cr, gint x, gint y)
@@ -143,12 +135,6 @@ void Renderer::drawCell (cairo_t *cr, gint x, gint y)
 	cairo_fill (cr);
 }
 
-void Renderer::drawBackground (cairo_t *cr)
-{
-	cairo_set_source_surface (cr, background, 0, 0);
-	cairo_paint (cr);
-}
-
 void Renderer::drawForeground (cairo_t *cr)
 {
 	int x, y;
@@ -168,7 +154,6 @@ void Renderer::render ()
 
 	cr = cairo_create (target);
 
-	drawBackground (cr);
 	drawForeground (cr);
 
 	cairo_destroy (cr);
@@ -365,8 +350,8 @@ void JoinedUp::drawCell (cairo_t *cr, gint x, gint y)
 
 /*--------------------------------------------------------*/
 
-TangoBlock::TangoBlock (cairo_surface_t * dst, cairo_surface_t * bg, Block ** src,
-	    int w, int h, int pxw, int pxh, gboolean grad) : Renderer (dst, bg, src, w, h, pxw, pxh)
+TangoBlock::TangoBlock (cairo_surface_t * dst, Block ** src,
+	    int w, int h, int pxw, int pxh, gboolean grad) : Renderer (dst, src, w, h, pxw, pxh)
 {
 	usegrads = grad;
 }

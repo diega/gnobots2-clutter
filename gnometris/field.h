@@ -50,8 +50,8 @@ private:
 	int width;
 	int height;
 
-	cairo_surface_t *buffer;
-	cairo_surface_t *background;
+	ClutterActor *background;
+	ClutterActor *foreground;
 	cairo_surface_t **blocks;
 
 	bool showPause;
@@ -69,7 +69,7 @@ private:
 	void redrawAll ();
 	void draw (gint x, gint y, gint w, gint h);
 	void draw ();
-	void rescaleBackground ();
+	void rescaleField ();
 	void rescaleBlockCache ();
 
 	static gboolean configure (GtkWidget * widget, GdkEventConfigure * event,

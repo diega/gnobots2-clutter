@@ -23,29 +23,31 @@
 #include "blocks.h"
 #include "renderer.h"
 
-#include <libgames-support/games-clutter-embed.h>
+#include <clutter-gtk/gtk-clutter-embed.h>
+#include <clutter-cairo/clutter-cairo.h>
 
 #define FONT "Sans Bold"
 
 Field::Field():
 	BlockOps(),
-	buffer(NULL),
 	background(NULL),
+	foreground(NULL),
 	showPause(false),
 	showGameOver(false),
 	backgroundImage(NULL),
 	backgroundImageTiled(false),
-useBGImage(false),
+	useBGImage(false),
 	backgroundColor(NULL)
 {
 	themeID = 0;
 	renderer = NULL;
 	rendererTheme = -1;
 
-	w = games_clutter_embed_new();
+	w = gtk_clutter_embed_new();
 
 	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
-	/* We do our own double-buffering. */
+
+	/* I don't know if this helps or not FIXME */
 	gtk_widget_set_double_buffered(w, FALSE);
 
 	gtk_widget_set_size_request (w, COLUMNS*190/LINES, 190);
@@ -93,8 +95,8 @@ Field::rescaleBackground ()
 
 		/* FIXME: This doesn't handle tiled backgrounds in the obvious way. */
 		gdk_cairo_set_source_pixbuf(bg_cr, backgroundImage, 0, 0);
-		xscale = 1.0*gdk_pixbuf_get_width (backgroundImage)/width;
-		yscale = 1.0*gdk_pixbuf_get_height (backgroundImage)/height;
+		xscale = 1.0*gdk_pixbuf_get_width (backgroundImage)/w->allocation.width;
+		yscale = 1.0*gdk_pixbuf_get_height (backgroundImage)/w->allocation.height;
 		cairo_matrix_init_scale (&m, xscale, yscale);
 		cairo_pattern_set_matrix (cairo_get_source (bg_cr), &m);
 	} else if (backgroundColor)
@@ -132,10 +134,10 @@ Field::draw (gint x, gint y, gint wd, gint ht)
 {
 	cairo_t *cr;
 
-	cr = gdk_cairo_create (w->window);
+	cr = clutter_cairo_create (CLUTTER_CAIRO(foreground));
 
-	cairo_set_source_surface (cr, buffer, 0, 0);
-	cairo_rectangle (cr, x, y, wd, ht);
+	//cairo_set_source_surface (cr, buffer, 0, 0);
+	//cairo_rectangle (cr, x, y, wd, ht);
 	cairo_fill (cr);
 
 	cairo_destroy (cr);
@@ -195,21 +197,20 @@ Field::redraw()
 {
 	cairo_t *cr;
 
-	g_return_if_fail(buffer);
-
 	generateTarget ();
+
+	cr = clutter_cairo_create (CLUTTER_CAIRO(foreground));
 
 	if (rendererTheme != themeID) {
 
-	if (renderer)
-		delete renderer;
+		if (renderer)
+			delete renderer;
 
-	renderer = rendererFactory (themeID, buffer, background, field,
-			     COLUMNS, LINES, width, height);
-	rendererTheme = themeID;
+		renderer = rendererFactory (themeID, cairo_get_target(cr), field,
+				     COLUMNS, LINES, width, height);
+		rendererTheme = themeID;
 	} else {
-		renderer->setTarget (buffer);
-		renderer->setBackground (background);
+		renderer->setTarget (cairo_get_target(cr));
 		renderer->data = field;
 		renderer->width = COLUMNS;
 		renderer->height = LINES;
@@ -238,7 +239,7 @@ Field::setBackground(GdkPixbuf *bgImage)//, bool tiled)
 	useBGImage = true;
 //	backgroundImageTiled = tiled;
 
-	rescaleBackground ();
+	rescaleField ();
 }
 
 void
@@ -251,7 +252,7 @@ Field::setBackground(GdkColor *bgColor)
 	}
 	useBGImage = false;
 
-	rescaleBackground ();
+	rescaleField ();
 }
 
 void

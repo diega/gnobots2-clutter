@@ -21,7 +21,6 @@
  */
 
 #include "preview.h"
-#include "blocks.h"
 
 #define PREVIEW_WIDTH 6
 #define PREVIEW_HEIGHT 6
@@ -46,7 +45,7 @@ Preview::Preview():
 		}
 	}
 
-	w = gtk_drawing_area_new();
+	w = gtk_clutter_embed_new();
 
 	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
 
@@ -71,7 +70,6 @@ void
 Preview::enable(bool en)
 {
 	enabled = en;
-	gtk_widget_queue_draw (w);
 }
 
 void
