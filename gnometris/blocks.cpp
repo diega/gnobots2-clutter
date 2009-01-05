@@ -259,10 +259,10 @@ int sizeTable[][4][2] =
 		{2, 2},
 	},
 };
-		
+
 int sizeTSize = sizeof(sizeTable)/sizeof(sizeTable[0]);
 
-int offsetTable[][4][2] = 
+int offsetTable[][4][2] =
 {
 	{
 		{0, 1},

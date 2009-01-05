@@ -51,8 +51,8 @@ gint themeNameToNumber (const gchar *id)
 	return 0;
 }
 
-Renderer * rendererFactory (gint id, cairo_surface_t *dst, 
-			    cairo_surface_t *bg, Block **src, int w, 
+Renderer * rendererFactory (gint id, cairo_surface_t *dst,
+			    cairo_surface_t *bg, Block **src, int w,
 			    int h, int pxw, int pxh)
 {
 	switch (id) {
@@ -82,7 +82,7 @@ Renderer * rendererFactory (gint id, cairo_surface_t *dst,
    for the preview widget and possibly the theme previewer, so make no
    assumptions. */
 
-Renderer::Renderer (cairo_surface_t *dst, cairo_surface_t *bg, Block **src, 
+Renderer::Renderer (cairo_surface_t *dst, cairo_surface_t *bg, Block **src,
 		    int w, int h, int pxw, int pxh)
 {
 	target = cairo_surface_reference (dst);
@@ -132,12 +132,12 @@ void Renderer::drawCell (cairo_t *cr, gint x, gint y)
 		i = data[x][y].color;
 		i = CLAMP (i, 0, 6);
 
-		cairo_set_source_rgb(cr, colours[i][0], 
-				     colours[i][1], 
+		cairo_set_source_rgb(cr, colours[i][0],
+				     colours[i][1],
 				     colours[i][2]);
 	}
 
-	cairo_rectangle(cr, x+0.05, y+0.05, 
+	cairo_rectangle(cr, x+0.05, y+0.05,
 			0.9, 0.9);
 	cairo_fill (cr);
 }
@@ -259,8 +259,8 @@ void JoinedUp::drawCell (cairo_t *cr, gint x, gint y)
 	if (data[x][y].what == TARGET) {
 		cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0);
 	} else {
-		cairo_set_source_rgb (cr, colours[i][0], 
-				      colours[i][1], 
+		cairo_set_source_rgb (cr, colours[i][0],
+				      colours[i][1],
 				      colours[i][2]);
 	}
 	cairo_rectangle (cr, -0.025, -0.025, 1.025, 1.025);
@@ -275,7 +275,7 @@ void JoinedUp::drawCell (cairo_t *cr, gint x, gint y)
 		if ((m < 0) || (n < 0) || (m >= width) || (n >= height))
 			neighbours[i] = 0;
 		else
-			neighbours[i] = ((data[m][n].what != EMPTY) && 
+			neighbours[i] = ((data[m][n].what != EMPTY) &&
 					 (data[m][n].color == c)) ? 1 : 0;
 	}
 
@@ -377,32 +377,32 @@ void TangoBlock::drawCell (cairo_t *cr, gint x, gint y)
 	cairo_pattern_t *pat = NULL;
 	/* the following garbage is derived from the official tango style guide */
 	const gdouble colours[8][3][3] = {
-					  {{0.93725490196078431, 0.16078431372549021, 0.16078431372549021}, 
-					   {0.8, 0.0, 0.0}, 
+					  {{0.93725490196078431, 0.16078431372549021, 0.16078431372549021},
+					   {0.8, 0.0, 0.0},
 					   {0.64313725490196083, 0.0, 0.0}}, /* red */
 
-					  {{0.54117647058823526, 0.88627450980392153, 0.20392156862745098}, 
-					   {0.45098039215686275, 0.82352941176470584, 0.086274509803921567}, 
+					  {{0.54117647058823526, 0.88627450980392153, 0.20392156862745098},
+					   {0.45098039215686275, 0.82352941176470584, 0.086274509803921567},
 					   {0.30588235294117649, 0.60392156862745094, 0.023529411764705882}}, /* green */
 
-					  {{0.44705882352941179, 0.62352941176470589, 0.81176470588235294}, 
-					   {0.20392156862745098, 0.396078431372549, 0.64313725490196083}, 
+					  {{0.44705882352941179, 0.62352941176470589, 0.81176470588235294},
+					   {0.20392156862745098, 0.396078431372549, 0.64313725490196083},
 					   {0.12549019607843137, 0.29019607843137257, 0.52941176470588236}}, /* blue */
 
-					  {{0.93333333333333335, 0.93333333333333335, 0.92549019607843142}, 
-					   {0.82745098039215681, 0.84313725490196079, 0.81176470588235294}, 
+					  {{0.93333333333333335, 0.93333333333333335, 0.92549019607843142},
+					   {0.82745098039215681, 0.84313725490196079, 0.81176470588235294},
 					   {0.72941176470588232, 0.74117647058823533, 0.71372549019607845}}, /* white */
 
-					  {{0.9882352941176471, 0.9137254901960784, 0.30980392156862746}, 
-					   {0.92941176470588238, 0.83137254901960789, 0.0}, 
+					  {{0.9882352941176471, 0.9137254901960784, 0.30980392156862746},
+					   {0.92941176470588238, 0.83137254901960789, 0.0},
 					   {0.7686274509803922, 0.62745098039215685, 0.0}}, /* yellow */
 
-					  {{0.67843137254901964, 0.49803921568627452, 0.6588235294117647}, 
-					   {0.45882352941176469, 0.31372549019607843, 0.4823529411764706}, 
+					  {{0.67843137254901964, 0.49803921568627452, 0.6588235294117647},
+					   {0.45882352941176469, 0.31372549019607843, 0.4823529411764706},
 					   {0.36078431372549019, 0.20784313725490197, 0.4}}, /* purple */
 
-					  {{0.9882352941176471, 0.68627450980392157, 0.24313725490196078}, 
-					   {0.96078431372549022, 0.47450980392156861, 0.0}, 
+					  {{0.9882352941176471, 0.68627450980392157, 0.24313725490196078},
+					   {0.96078431372549022, 0.47450980392156861, 0.0},
 					   {0.80784313725490198, 0.36078431372549019, 0.0}}, /* orange (replacing cyan) */
 
 					  {{0.33, 0.34, 0.32},
@@ -439,7 +439,7 @@ void TangoBlock::drawCell (cairo_t *cr, gint x, gint y)
 	cairo_fill_preserve (cr);  /* fill with shaded gradient */
 
 
-	if (usegrads) 
+	if (usegrads)
 		cairo_pattern_destroy(pat);
 	cairo_set_source_rgb(cr, colours[i][2][0],
 			     colours[i][2][1],
@@ -449,7 +449,7 @@ void TangoBlock::drawCell (cairo_t *cr, gint x, gint y)
 	cairo_stroke (cr);  /* add darker outline */
 
 	drawRoundedRectangle (cr, x+0.15, y+0.15, 0.7, 0.7, 0.08);
-	if (data[x][y].what != TARGET) { 
+	if (data[x][y].what != TARGET) {
 		if (usegrads) {
 			pat = cairo_pattern_create_linear (x-0.3, y-0.3, x+0.8, y+0.8);
 			switch (i) { /* yellow and white blocks need a brighter highlight */
@@ -490,7 +490,7 @@ void TangoBlock::drawCell (cairo_t *cr, gint x, gint y)
 	}
 	cairo_stroke (cr);  /* add inner edge highlight */
 
-	if (usegrads && (data[x][y].what != TARGET)) 
+	if (usegrads && (data[x][y].what != TARGET))
 		cairo_pattern_destroy (pat);
 }
 

@@ -46,12 +46,12 @@ main(int argc, char *argv[])
 	setgid_io_init ();
 
 	bindtextdomain (GETTEXT_PACKAGE, games_runtime_get_directory (GAMES_RUNTIME_LOCALE_DIRECTORY));
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");	
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
 
 	int cmdlineLevel = 0;
 
-	const GOptionEntry options[] = 
+	const GOptionEntry options[] =
 	{
 		{"level", 'l', 0, G_OPTION_ARG_INT, &cmdlineLevel, N_("Set starting level (1 or greater)"), N_("LEVEL")},
 		{NULL}

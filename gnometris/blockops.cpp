@@ -38,7 +38,7 @@ BlockOps::BlockOps() :
 	color (0)
 {
 	field = new Block*[COLUMNS];
-	
+
 	posx = COLUMNS / 2;
 	posy = 0;
 
@@ -52,11 +52,11 @@ BlockOps::~BlockOps()
 {
 	for (int i = 0; i < COLUMNS; ++i)
 		delete[] field[i];
-	
+
 	delete[] field;
 }
 
-bool 
+bool
 BlockOps::blockOkHere(int x, int y, int b, int r)
 {
 	x -= 2;
@@ -76,14 +76,14 @@ BlockOps::blockOkHere(int x, int y, int b, int r)
 		}
 	}
 
-	return true;	
+	return true;
 }
 
 int
 BlockOps::getLinesToBottom()
 {
 	int lines = LINES;
-	
+
 	for (int x = 0; x < 4; ++x)
 	{
 		for (int y = 3; y >= 0; --y)
@@ -105,7 +105,7 @@ BlockOps::getLinesToBottom()
 	return lines;
 }
 
-bool 
+bool
 BlockOps::moveBlockLeft()
 {
 	bool moved = false;
@@ -117,11 +117,11 @@ BlockOps::moveBlockLeft()
 		putBlockInField(false);
 		moved = true;
 	}
-	
+
 	return moved;
 }
 
-bool 
+bool
 BlockOps::moveBlockRight()
 {
 	bool moved = false;
@@ -133,7 +133,7 @@ BlockOps::moveBlockRight()
 		putBlockInField(false);
 		moved = true;
 	}
-	
+
 	return moved;
 }
 
@@ -141,9 +141,9 @@ bool
 BlockOps::rotateBlock(bool rotateCCW)
 {
 	bool moved = false;
-	
+
 	int r = rot;
-	
+
 	if ( rotateCCW )
 	{
 		if (--r < 0) r = 3;
@@ -152,7 +152,7 @@ BlockOps::rotateBlock(bool rotateCCW)
 	{
 		if (++r >= 4) r = 0;
 	}
-		
+
 	if (blockOkHere(posx, posy, blocknr, r))
 	{
 		putBlockInField(true);
@@ -160,11 +160,11 @@ BlockOps::rotateBlock(bool rotateCCW)
 		putBlockInField(false);
 		moved = true;
 	}
-	
+
 	return moved;
 }
 
-bool 
+bool
 BlockOps::moveBlockDown()
 {
 	bool fallen = false;
@@ -178,11 +178,11 @@ BlockOps::moveBlockDown()
 		++posy;
 		putBlockInField(false);
 	}
-	
+
 	return fallen;
 }
 
-void 
+void
 BlockOps::clearTarget ()
 {
 	for (int x = 0; x < COLUMNS; ++x)
@@ -202,7 +202,7 @@ BlockOps::generateTarget ()
 	clearTarget ();
 
 	// FIXME: Check that this is actually guaranteed
-	// to terminate (i.e. posx, posy, blocknr and rot 
+	// to terminate (i.e. posx, posy, blocknr and rot
 	// are guaranteed to be valid).
 	int n = 0;
 	do {
@@ -214,7 +214,7 @@ BlockOps::generateTarget ()
 	putBlockInField (posx, posy + n, blocknr, rot, TARGET);
 }
 
-void 
+void
 BlockOps::setUseTarget (bool use)
 {
 	useTarget = use;
@@ -306,12 +306,12 @@ BlockOps::generateFallingBlock()
 	int cn = random_block_colors ? g_random_int_range(0, NCOLOURS) :
 		blocknr % NCOLOURS;
 	color = color_next == -1 ? cn : color_next;
-	
+
 	blocknr_next = g_random_int_range(0, tableSize);
 	rot_next = g_random_int_range(0, 4);
 	color_next = random_block_colors ? g_random_int_range(0, NCOLOURS) :
 		blocknr_next % NCOLOURS;
-	
+
 	if (!blockOkHere(posx, posy, blocknr, rot))
 		return false;
 
@@ -331,12 +331,12 @@ BlockOps::emptyField(int filled_lines, int fill_prob)
 		for (int x = 0; x < COLUMNS; ++x)
 		{
 			field[x][y].what = EMPTY;
-			field[x][y].color = 0; 
+			field[x][y].color = 0;
 
 			if ((y>=(LINES - filled_lines)) && (x != blank) &&
-			    ((g_random_int_range(0, 10)) < fill_prob)) { 
+			    ((g_random_int_range(0, 10)) < fill_prob)) {
 				field[x][y].what = LAYING;
-				field[x][y].color = 
+				field[x][y].color =
 				  g_random_int_range(0, NCOLOURS);
 			}
 		}
@@ -362,7 +362,7 @@ BlockOps::putBlockInField (int bx, int by, int block, int rotation,
 				int i = bx - 2 + x;
 				int j = y + by;
 
-				if ((fill == TARGET) && 
+				if ((fill == TARGET) &&
 				    (field[i][j].what != EMPTY))
 					return;
 

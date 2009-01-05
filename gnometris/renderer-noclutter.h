@@ -92,7 +92,7 @@ protected:
 	gboolean usegrads;
 
 private:
-	void drawRoundedRectangle (cairo_t * cr, gdouble x, gdouble y, gdouble w, gdouble h, gdouble r); 
+	void drawRoundedRectangle (cairo_t * cr, gdouble x, gdouble y, gdouble w, gdouble h, gdouble r);
 };
 
 #endif // __renderer_h__

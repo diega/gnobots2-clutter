@@ -30,13 +30,13 @@
 class GnometrisBlockCache
 {
 public:
-	GnometrisBlockCache (int);	
+	GnometrisBlockCache (int);
 	~GnometrisBlockCache ();
 	CoglHandle get_block_by_id (int);
 	CoglHandle get_block_by_color (int);
 
 private:
 	int slots;
-	
+
 };
 #endif //__blockcache_h__

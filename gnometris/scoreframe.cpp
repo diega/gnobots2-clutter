@@ -31,7 +31,7 @@
 ScoreFrame::ScoreFrame(int cmdlLevel)
 	: score(0), lines(0)
 {
-	if (cmdlLevel) 
+	if (cmdlLevel)
 		startingLevel = cmdlLevel;
 	else {
 		startingLevel = games_conf_get_integer (KEY_OPTIONS_GROUP,
@@ -41,7 +41,7 @@ ScoreFrame::ScoreFrame(int cmdlLevel)
 	startingLevel = CLAMP (startingLevel, 1, 20);
 
 	level = startingLevel;
-	
+
 	w = gtk_table_new (3, 2, FALSE);
 
 	scoreLabel = gtk_label_new (_("Score:"));
@@ -83,11 +83,11 @@ ScoreFrame::show()
 	gtk_widget_show_all (w);
 }
 
-void 
+void
 ScoreFrame::setScore(int s)
 {
 	score = s;
-	
+
 	sprintf(b, "%7d", score);
 	gtk_label_set_text(GTK_LABEL(scorew), b);
 }
@@ -98,8 +98,8 @@ ScoreFrame::incScore(int s)
 	setScore (score + s);
 }
 
-// The bonus for clearing everything. 
-void 
+// The bonus for clearing everything.
+void
 ScoreFrame::scoreLastLineBonus ()
 {
 	incScore (10000*level);
@@ -143,7 +143,7 @@ ScoreFrame::scoreLines(int newlines)
 	return level;
 }
 
-void 
+void
 ScoreFrame::setLevel(int l)
 {
 	level = l;
@@ -151,7 +151,7 @@ ScoreFrame::setLevel(int l)
 	gtk_label_set_text(GTK_LABEL(levelw), b);
 }
 
-void 
+void
 ScoreFrame::setLines(int l)
 {
 	lines = l;

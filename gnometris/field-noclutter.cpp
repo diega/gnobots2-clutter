@@ -141,11 +141,11 @@ Field::draw (gint x, gint y, gint wd, gint ht)
 	cairo_t *cr;
 
 	cr = gdk_cairo_create (w->window);
-	
+
 	cairo_set_source_surface (cr, buffer, 0, 0);
 	cairo_rectangle (cr, x, y, wd, ht);
 	cairo_fill (cr);
-	
+
 	cairo_destroy (cr);
 }
 
@@ -187,7 +187,7 @@ Field::drawMessage(cairo_t *cr, const char *msg)
 	pango_layout_get_size(dummy_layout, &lw, &lh);
 	g_object_unref(dummy_layout);
 
-	// desired height : lh = widget width * 0.9 : lw 
+	// desired height : lh = widget width * 0.9 : lw
 	pango_font_description_set_absolute_size(desc, ((float) lh / lw) * PANGO_SCALE * width * 0.8);
 	pango_layout_set_font_description(layout, desc);
 	pango_font_description_free(desc);
@@ -221,7 +221,7 @@ Field::redraw()
 		if (renderer)
 			delete renderer;
 
-		renderer = rendererFactory (themeID, buffer, background, field, 
+		renderer = rendererFactory (themeID, buffer, background, field,
 					    COLUMNS, LINES, width, height);
 		rendererTheme = themeID;
 	} else {
@@ -303,7 +303,7 @@ Field::hideGameOverMessage()
 	redraw();
 }
 
-void 
+void
 Field::setTheme (gint id)
 {
 	themeID = id;

@@ -51,9 +51,9 @@ Preview::Preview():
 	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
 
 	/* FIXME: We should scale with the rest of the UI, but that requires
-	 * changes to the widget layout - i.e. wrap the preview in an 
+	 * changes to the widget layout - i.e. wrap the preview in an
 	 * fixed-aspect box. */
-	gtk_widget_set_size_request (w, PREVIEW_SIZE * 20, 
+	gtk_widget_set_size_request (w, PREVIEW_SIZE * 20,
 				     PREVIEW_SIZE * 20);
 
 	gtk_widget_show (w);
@@ -91,7 +91,7 @@ Preview::previewBlock(int bnr, int brot, int bcolor)
 
 	for (x = 1; x < PREVIEW_WIDTH - 1; x++) {
 		for (y = 1; y < PREVIEW_HEIGHT - 1; y++) {
-			if ((blocknr != -1) && 
+			if ((blocknr != -1) &&
 			    blockTable[blocknr][blockrot][x-1][y-1]) {
 				blocks[x][y].what = LAYING;
 				blocks[x][y].color = blockcolor;
@@ -116,12 +116,12 @@ Preview::configure(GtkWidget * widget, GdkEventConfigure * event, Preview * prev
 	if (preview->background)
 		cairo_surface_destroy (preview->background);
 
-	preview->background = 
+	preview->background =
 		cairo_surface_create_similar (cairo_get_target (cr),
 					      CAIRO_CONTENT_COLOR,
 					      event->width,
 					      event->height);
-	
+
 	cairo_destroy (cr);
 
 	cr = cairo_create (preview->background);

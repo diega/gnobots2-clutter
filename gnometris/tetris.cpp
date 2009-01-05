@@ -83,17 +83,17 @@ enum {
 };
 
 
-Tetris::Tetris(int cmdlLevel): 
+Tetris::Tetris(int cmdlLevel):
 	themeno (0),
 	field(0),
-	paused(false), 
-	timeoutId(0), 
-	onePause(false), 
+	paused(false),
+	timeoutId(0),
+	onePause(false),
 	inPlay(false),
 	useTarget(false),
 	bgimage(0),
-	setupdialog(0), 
-	cmdlineLevel(cmdlLevel), 
+	setupdialog(0),
+	cmdlineLevel(cmdlLevel),
 	fastFall(false),
 	dropBlock(false)
 {
@@ -107,7 +107,7 @@ Tetris::Tetris(int cmdlLevel):
 	gchar *outdir;
 	const char *dname;
 
-	const GtkTargetEntry targets[] = {{(gchar*) "text/uri-list", 0, URI_LIST}, 
+	const GtkTargetEntry targets[] = {{(gchar*) "text/uri-list", 0, URI_LIST},
 					  {(gchar*) "property/bgimage", 0, URI_LIST},
 					  {(gchar*) "text/plain", 0, TEXT_PLAIN},
 					  {(gchar*) "STRING", 0, TEXT_PLAIN},
@@ -151,7 +151,7 @@ Tetris::Tetris(int cmdlLevel):
 	"    </menu>"
 	"  </menubar>"
 	"</ui>";
-	
+
 
 	/* Locate our background image. */
 
@@ -167,15 +167,15 @@ Tetris::Tetris(int cmdlLevel):
 		defaultPixmap = g_build_filename (dname, "gnometris.svg", NULL);
 		default_bgimage = true;
 	}
-	
+
 	w = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title (GTK_WINDOW (w), _("Gnometris"));
 
 	g_signal_connect (w, "delete_event", G_CALLBACK (gameQuit), this);
-	gtk_drag_dest_set (w, GTK_DEST_DEFAULT_ALL, targets, 
-			   G_N_ELEMENTS(targets), 
+	gtk_drag_dest_set (w, GTK_DEST_DEFAULT_ALL, targets,
+			   G_N_ELEMENTS(targets),
 			   GDK_ACTION_MOVE);
-	g_signal_connect (G_OBJECT (w), "drag_data_received", 
+	g_signal_connect (G_OBJECT (w), "drag_data_received",
 			  G_CALLBACK (dragDrop), this);
 	g_signal_connect (G_OBJECT (w), "focus_out_event",
 			  G_CALLBACK (focusOut), this);
@@ -225,7 +225,7 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_frame_set_shadow_type (GTK_FRAME (aspect_frame), GTK_SHADOW_NONE);
 	gtk_container_add (GTK_CONTAINER (aspect_frame), field->getWidget());
 
-	gtk_widget_set_events(w, gtk_widget_get_events(w) | 
+	gtk_widget_set_events(w, gtk_widget_get_events(w) |
 						  GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 
 	GtkWidget *vb1 = gtk_vbox_new(FALSE, 0);
@@ -241,18 +241,18 @@ Tetris::Tetris(int cmdlLevel):
 	GtkWidget *vb2 = gtk_vbox_new(FALSE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vb2), 10);
 	gtk_box_pack_end(GTK_BOX(hb), vb2, 0, 0, 0);
-	
+
 	gtk_box_pack_start(GTK_BOX(vb2), preview->getWidget(), FALSE, FALSE, 0);
-	
+
 	scoreFrame = new ScoreFrame(cmdlineLevel);
-	
+
 	gtk_box_pack_end(GTK_BOX(vb2), scoreFrame->getWidget(), TRUE, FALSE, 0);
 	high_scores = new HighScores ();
 
 	setOptions ();
 
 	themeList = NULL;
-	
+
 	gtk_widget_show(vbox);
 	gtk_widget_show(hb);
 	gtk_widget_show(vb1);
@@ -290,7 +290,7 @@ Tetris::~Tetris()
 		g_signal_handler_disconnect (games_conf_get_default (), confNotifyID);
 }
 
-void 
+void
 Tetris::setupdialogDestroy(GtkWidget *widget, void *d)
 {
 	Tetris *t = (Tetris*) d;
@@ -317,11 +317,11 @@ Tetris::setupPixmap()
 	if (!usebg)
 		bgimage = NULL;
 	else {
-		if (g_file_test (bgPixmap, G_FILE_TEST_EXISTS)) 
+		if (g_file_test (bgPixmap, G_FILE_TEST_EXISTS))
 			bgimage = gdk_pixbuf_new_from_file (bgPixmap, NULL);
-		else if (g_file_test (defaultPixmap, G_FILE_TEST_EXISTS)) 
+		else if (g_file_test (defaultPixmap, G_FILE_TEST_EXISTS))
 			bgimage = gdk_pixbuf_new_from_file (defaultPixmap, NULL);
-		else 
+		else
 			bgimage = NULL;
 	}
 
@@ -330,7 +330,7 @@ Tetris::setupPixmap()
 	if (bgimage && !default_bgimage) {
 		int width, height;
 		int bgwidth, bgheight;
-			
+
 		bgwidth = COLUMNS*BLOCK_SIZE;
 		bgheight = LINES*BLOCK_SIZE;
 
@@ -345,10 +345,10 @@ Tetris::setupPixmap()
 		    ((width == height) && (width < bgwidth))) {
 			GdkPixbuf * temp;
 			int i, j;
-			
-			temp = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, 
-						bgwidth, bgheight); 
-		
+
+			temp = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
+						bgwidth, bgheight);
+
 			for (i=0; i<=bgwidth/width; i++) {
 				for (j=0; j<=bgheight/height; j++) {
 					int x, y, ww, hh;
@@ -375,7 +375,7 @@ Tetris::setupPixmap()
 		else
 			field->setBackground (&bgcolour);
 	}
-	
+
 	if (preview)
 	{
 		/* FIXME: We should do an update once the preview actually
@@ -432,9 +432,9 @@ Tetris::initOptions ()
 	preview->setTheme (themeno);
 
 	startingLevel = confGetInt (KEY_OPTIONS_GROUP, KEY_STARTING_LEVEL, 1);
-	if (startingLevel < 1) 
+	if (startingLevel < 1)
 		startingLevel = 1;
-	if (startingLevel > 20) 
+	if (startingLevel > 20)
 		startingLevel = 20;
 
 	games_sound_enable (confGetBoolean (KEY_OPTIONS_GROUP, KEY_SOUND, TRUE));
@@ -442,7 +442,7 @@ Tetris::initOptions ()
 	useTarget = confGetBoolean (KEY_OPTIONS_GROUP, KEY_USE_TARGET, FALSE);
 
 	do_preview = confGetBoolean (KEY_OPTIONS_GROUP, KEY_DO_PREVIEW, TRUE);
-	
+
 	if (preview) {
 		preview->enable(do_preview);
 	}
@@ -507,21 +507,21 @@ Tetris::setSound (GtkWidget *widget, gpointer data)
 				GTK_TOGGLE_BUTTON (widget)->active);
 }
 
-void 
+void
 Tetris::setSelectionPreview(GtkWidget *widget, void *d)
 {
 	games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_DO_PREVIEW,
 				GTK_TOGGLE_BUTTON (widget)->active);
 }
 
-void 
+void
 Tetris::setSelectionBlocks(GtkWidget *widget, void *d)
 {
 	games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_RANDOM_BLOCK_COLORS,
 				GTK_TOGGLE_BUTTON (widget)->active);
 }
 
-void 
+void
 Tetris::setRotateCounterClockWise(GtkWidget *widget, void *d)
 {
 	games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_ROTATE_COUNTER_CLOCKWISE,
@@ -540,16 +540,16 @@ Tetris::setSelection(GtkWidget *widget, void *data)
 			       ThemeTable[t->themeno].id);
 }
 
-void 
+void
 Tetris::setTarget (GtkWidget *widget, void *data)
 {
 	Tetris *t;
-	
+
 	t = (Tetris *)data;
 
 	t->useTarget = GTK_TOGGLE_BUTTON (widget)->active;
 
-	games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_USE_TARGET, 
+	games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_USE_TARGET,
 				t->useTarget);
 }
 
@@ -574,7 +574,7 @@ Tetris::startingLevelChanged (GtkWidget *spin, gpointer data)
 	games_conf_set_integer (KEY_OPTIONS_GROUP, KEY_STARTING_LEVEL, value);
 }
 
-int 
+int
 Tetris::gameProperties(GtkAction *action, void *d)
 {
 	GtkWidget *notebook;
@@ -587,7 +587,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	GtkWidget *controls_list;
 
 	Tetris *t = (Tetris*) d;
-	
+
 	if (t->setupdialog) {
 		gtk_window_present (GTK_WINDOW(t->setupdialog));
 		return FALSE;
@@ -595,7 +595,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 
 	/* create the dialog */
 	t->setupdialog =
-		gtk_dialog_new_with_buttons(_("Gnometris Preferences"), 
+		gtk_dialog_new_with_buttons(_("Gnometris Preferences"),
 					    GTK_WINDOW (t->w),
 					    (GtkDialogFlags)0,
 					    GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
@@ -628,7 +628,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	label = gtk_label_new_with_mnemonic (_("_Number of pre-filled rows:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-			  (GtkAttachOptions) GTK_FILL, 
+			  (GtkAttachOptions) GTK_FILL,
 			  (GtkAttachOptions) 0,
 			  0, 0);
 
@@ -636,7 +636,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	t->fill_height_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 10, 0);
 	gtk_spin_button_set_update_policy
 		(GTK_SPIN_BUTTON (t->fill_height_spinner), GTK_UPDATE_ALWAYS);
-	gtk_spin_button_set_snap_to_ticks 
+	gtk_spin_button_set_snap_to_ticks
 		(GTK_SPIN_BUTTON (t->fill_height_spinner), TRUE);
 	g_signal_connect (t->fill_height_spinner, "value_changed",
 			  G_CALLBACK (lineFillHeightChanged), t);
@@ -647,14 +647,14 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	label = gtk_label_new_with_mnemonic (_("_Density of blocks in a pre-filled row:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-			  (GtkAttachOptions) GTK_FILL, 
+			  (GtkAttachOptions) GTK_FILL,
 			  (GtkAttachOptions) 0,
 			  0, 0);
 
 	adj = gtk_adjustment_new (t->line_fill_prob, 0, 10, 1, 5, 0);
 	t->fill_prob_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 10, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (t->fill_prob_spinner),
-					  GTK_UPDATE_ALWAYS);			  
+					  GTK_UPDATE_ALWAYS);
 	gtk_spin_button_set_snap_to_ticks
 		(GTK_SPIN_BUTTON (t->fill_prob_spinner), TRUE);
 	g_signal_connect (t->fill_prob_spinner, "value_changed",
@@ -666,7 +666,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	label = gtk_label_new_with_mnemonic (_("_Starting level:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
-			  (GtkAttachOptions) GTK_FILL, 
+			  (GtkAttachOptions) GTK_FILL,
 			  (GtkAttachOptions) 0,
 			  0, 0);
 
@@ -681,7 +681,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	gtk_label_set_mnemonic_widget (GTK_LABEL (label), t->sentry);
 
 	gtk_container_add (GTK_CONTAINER (frame), table);
-	gtk_box_pack_start (GTK_BOX (vbox), frame, 
+	gtk_box_pack_start (GTK_BOX (vbox), frame,
 			    FALSE, FALSE, 0);
 
 	frame = games_frame_new (_("Operation"));
@@ -695,7 +695,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	g_signal_connect (t->sound_toggle, "clicked",
 			  G_CALLBACK (setSound), d);
 	gtk_box_pack_start (GTK_BOX (fvbox), t->sound_toggle, 0, 0, 0);
-	
+
 	/* preview next block */
 	t->do_preview_toggle =
 		gtk_check_button_new_with_mnemonic (_("_Preview next block"));
@@ -728,7 +728,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 			    0, 0, 0);
 
 	t->useTargetToggle = gtk_check_button_new_with_mnemonic (_("Show _where the block will land"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (t->useTargetToggle), 
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (t->useTargetToggle),
 				      t->useTarget);
 	g_signal_connect (t->useTargetToggle, "clicked",
 			  G_CALLBACK (setTarget), d);
@@ -736,7 +736,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 			    0, 0, 0);
 
 	gtk_container_add (GTK_CONTAINER (frame), fvbox);
-	gtk_box_pack_start (GTK_BOX (vbox), frame, 
+	gtk_box_pack_start (GTK_BOX (vbox), frame,
 			    FALSE, FALSE, 0);
 
 	frame = games_frame_new (_("Theme"));
@@ -803,7 +803,7 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	return TRUE;
 }
 
-int 
+int
 Tetris::focusOut(GtkWidget *widget, GdkEvent *e, Tetris *t)
 {
 	if (t->inPlay && !t->paused)
@@ -859,7 +859,7 @@ Tetris::generateTimer(int level)
 	int intv = (int) round (1000.0 * pow (0.8, level - 1));
 	if (intv <= 10)
 		intv = 10;
-		
+
 	timeoutId = g_timeout_add (intv, timeoutHandler, this);
 }
 
@@ -872,11 +872,11 @@ Tetris::manageFallen()
 	int levelBefore = scoreFrame->getLevel();
 
 	int levelAfter = scoreFrame->scoreLines (field->checkFullLines());
-	if (levelAfter != levelBefore) 
+	if (levelAfter != levelBefore)
 		games_sound_play ("gnometris");
 	if ((levelBefore != levelAfter) || fastFall)
 		generateTimer(levelAfter);
-	
+
 	if (field->isFieldEmpty ())
 		scoreFrame->scoreLastLineBonus ();
 
@@ -887,7 +887,7 @@ int
 Tetris::timeoutHandler(void *d)
 {
 	Tetris *t = (Tetris*) d;
-	
+
 	if (t->paused)
 		return TRUE;
 
@@ -911,7 +911,7 @@ Tetris::timeoutHandler(void *d)
 		}
 	}
 
-	return TRUE;	
+	return TRUE;
 }
 
 gboolean
@@ -977,7 +977,7 @@ Tetris::keyReleaseHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 
 	if (t->timeoutId == 0)
 		return FALSE;
-	
+
 	if (t->paused)
 		return FALSE;
 
@@ -1032,7 +1032,7 @@ Tetris::resetColour (Tetris *t)
 	t->saveBgOptions ();
 }
 
-char * 
+char *
 Tetris::decodeDropData(gchar * data, gint type)
 {
 	gchar *start, *end;
@@ -1071,7 +1071,7 @@ Tetris::decodeDropData(gchar * data, gint type)
 
 void
 Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
-		 gint x, gint y, GtkSelectionData *data, guint info, 
+		 gint x, gint y, GtkSelectionData *data, guint info,
 		 guint time, Tetris * t)
 {
 	const char *fileuri;
@@ -1093,7 +1093,7 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	/* Accept a dropped filename and try and load it as the
 	   background image. In the event of any kind of failure we
 	   silently ignore it. */
-	
+
 	/* FIXME: We don't handle colour gradients (e.g. from the gimp) */
 
 	/* FIXME: Dropped URLs from mozilla don't work (see below). */
@@ -1106,7 +1106,7 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	gtk_drag_finish (context, TRUE, FALSE, time);
 
 	if (info == COLOUR) {
-		if (data->length == 8) 
+		if (data->length == 8)
 			decodeColour ((guint16 *)data->data, t);
 		return;
 	}
@@ -1121,9 +1121,9 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	if (fileuri == NULL)
 		goto error_exit;
 
-	/* Now that we have a URI we load it and test it to see if it is 
+	/* Now that we have a URI we load it and test it to see if it is
 	 * an image file. */
-	
+
 	file = g_file_new_for_uri (fileuri);
 	istream = g_file_read (file, NULL, &error);
 
@@ -1140,7 +1140,7 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 	buffer = (guchar *)g_malloc (filesize);
 	if (buffer == NULL)
 		goto error_exit_handle;
-	
+
 	bytesread = g_input_stream_read (G_INPUT_STREAM (istream), buffer, filesize, NULL, &error);
 
 	/* FIXME: We should reread if not enough was read. */
@@ -1225,7 +1225,7 @@ Tetris::generate()
 		g_source_remove(timeoutId);
 		timeoutId = 0;
 		blocknr_next = -1;
-		
+
 		endOfGame();
 	}
 }
@@ -1248,7 +1248,7 @@ Tetris::endOfGame()
 	games_sound_play ("gameover");
 	inPlay = false;
 
-	if (scoreFrame->getScore() > 0) 
+	if (scoreFrame->getScore() > 0)
 	{
 		int pos = high_scores->add (scoreFrame->getScore());
 		high_scores->show (GTK_WINDOW (w), pos);
@@ -1262,7 +1262,7 @@ Tetris::gameNew(GtkAction *action, void *d)
 {
 	Tetris *t = (Tetris*) d;
 
-	if (t->timeoutId) 
+	if (t->timeoutId)
 	{
 		g_source_remove(t->timeoutId);
 		t->timeoutId = 0;
@@ -1278,7 +1278,7 @@ Tetris::gameNew(GtkAction *action, void *d)
 	int level = t->cmdlineLevel ? t->cmdlineLevel : t->startingLevel;
 
 	t->fastFall = false;
-	
+
 	t->scoreFrame->setLevel(level);
 	t->scoreFrame->setStartingLevel(level);
 
@@ -1289,7 +1289,7 @@ Tetris::gameNew(GtkAction *action, void *d)
 
 	t->scoreFrame->resetScore();
 	t->paused = false;
-	
+
 	t->field->generateFallingBlock();
 	t->field->redraw();
 	t->preview->previewBlock(blocknr_next, rot_next, color_next);
@@ -1340,7 +1340,7 @@ Tetris::gameAbout(GtkAction *action, void *d)
 			       "license", license,
 			       "website-label", _("GNOME Games web site"),
 			       "authors", authors,
-			       "documenters", documenters,				
+			       "documenters", documenters,
 			       "translator-credits", _("translator-credits"),
 			       "logo-icon-name", "gnome-gnometris",
 			       "website", "http://www.gnome.org/projects/gnome-games/",
