@@ -29,6 +29,7 @@
 
 #include "block-cache.h"
 #include "blockops.h"
+#include <clutter-cairo/clutter-cairo.h>
 
 struct ThemeTableEntry {
 	const gchar *name;
@@ -39,12 +40,12 @@ extern const ThemeTableEntry ThemeTable[];
 
 class Renderer {
 public:
-	Renderer (cairo_surface_t * dst, Block ** src,
+	Renderer (ClutterActor * dst, Block ** src,
 		  int w, int h, int pxw, int pxh);
 	virtual ~ Renderer ();
 	virtual void render ();
 
-	void setTarget (cairo_surface_t *target);
+	void setTarget (ClutterActor *target);
 
 	Block **data;
 	int width;
@@ -53,20 +54,20 @@ public:
 	int pxheight;
 protected:
 	GnometrisBlockCache *block_cache;
-	cairo_surface_t *target;
+	ClutterActor *target;
 
 	virtual void drawCell (cairo_t * cr, gint x, gint y);
 	virtual void drawForeground (cairo_t * cr);
 };
 
-Renderer *rendererFactory (gint id, cairo_surface_t * dst,
+Renderer *rendererFactory (gint id, ClutterActor * dst,
 			   Block ** src, int w,
 			   int h, int pxw, int pxh);
 gint themeNameToNumber (const gchar * id);
 
 class JoinedUp:public Renderer {
 public:
-	JoinedUp (cairo_surface_t * dst, Block ** src,
+	JoinedUp (ClutterActor * dst, Block ** src,
 	int w, int h, int pxw, int pxh):Renderer (dst, src, w, h, pxw,
 						  pxh) {}
 protected:
@@ -82,7 +83,7 @@ private:
 
 class TangoBlock:public Renderer {
 public:
-	TangoBlock (cairo_surface_t * dst, Block ** src,
+	TangoBlock (ClutterActor * dst, Block ** src,
 		    int w, int h, int pxw, int pxh, gboolean grad);
 
 protected:

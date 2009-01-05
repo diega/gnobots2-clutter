@@ -208,17 +208,20 @@ Field::redraw()
 	generateTarget ();
 
 	cr = clutter_cairo_create (CLUTTER_CAIRO(foreground));
+	cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+	cairo_paint(cr);
+	cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 
 	if (rendererTheme != themeID) {
 
 		if (renderer)
 			delete renderer;
 
-		renderer = rendererFactory (themeID, cairo_get_target(cr), field,
+		renderer = rendererFactory (themeID, foreground, field,
 				     COLUMNS, LINES, width, height);
 		rendererTheme = themeID;
 	} else {
-		renderer->setTarget (cairo_get_target(cr));
+		renderer->setTarget (foreground);
 		renderer->data = field;
 		renderer->width = COLUMNS;
 		renderer->height = LINES;
@@ -234,8 +237,6 @@ Field::redraw()
 		drawMessage(cr, _("Game Over"));
 
 	cairo_destroy(cr);
-
-	draw ();
 }
 
 void

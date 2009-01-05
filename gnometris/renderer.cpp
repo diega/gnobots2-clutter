@@ -51,7 +51,7 @@ gint themeNameToNumber (const gchar *id)
 	return 0;
 }
 
-Renderer * rendererFactory (gint id, cairo_surface_t *dst,
+Renderer * rendererFactory (gint id, ClutterActor *dst,
 			    Block **src, int w,
 			    int h, int pxw, int pxh)
 {
@@ -82,10 +82,10 @@ Renderer * rendererFactory (gint id, cairo_surface_t *dst,
    for the preview widget and possibly the theme previewer, so make no
    assumptions. */
 
-Renderer::Renderer (cairo_surface_t *dst, Block **src,
+Renderer::Renderer (ClutterActor *dst, Block **src,
 		    int w, int h, int pxw, int pxh)
 {
-	target = cairo_surface_reference (dst);
+	target = dst;
 	block_cache = new GnometrisBlockCache(5);
 	data = src;
 	width = w;
@@ -96,13 +96,12 @@ Renderer::Renderer (cairo_surface_t *dst, Block **src,
 
 Renderer::~Renderer ()
 {
-	cairo_surface_destroy (target);
+	delete block_cache;
 }
 
-void Renderer::setTarget (cairo_surface_t * dst)
+void Renderer::setTarget (ClutterActor * dst)
 {
-	cairo_surface_destroy (target);
-	target = cairo_surface_reference (dst);
+	target = dst;
 }
 
 void Renderer::drawCell (cairo_t *cr, gint x, gint y)
@@ -152,7 +151,7 @@ void Renderer::render ()
 {
 	cairo_t *cr;
 
-	cr = cairo_create (target);
+	cr = clutter_cairo_create (CLUTTER_CAIRO(target));
 
 	drawForeground (cr);
 
@@ -350,7 +349,7 @@ void JoinedUp::drawCell (cairo_t *cr, gint x, gint y)
 
 /*--------------------------------------------------------*/
 
-TangoBlock::TangoBlock (cairo_surface_t * dst, Block ** src,
+TangoBlock::TangoBlock (ClutterActor * dst, Block ** src,
 	    int w, int h, int pxw, int pxh, gboolean grad) : Renderer (dst, src, w, h, pxw, pxh)
 {
 	usegrads = grad;
