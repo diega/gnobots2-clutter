@@ -21,7 +21,7 @@
 
 #include "field-noclutter.h"
 #include "blocks.h"
-#include "renderer.h"
+#include "renderer-noclutter.h"
 
 #define FONT "Sans Bold"
 

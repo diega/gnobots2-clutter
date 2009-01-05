@@ -43,14 +43,15 @@
 #include "blocks.h"
 #include "scoreframe.h"
 #include "highscores.h"
-#include "renderer.h"
 
 #ifdef HAVE_CLUTTER
 #include "preview.h"
 #include "field.h"
+#include "renderer.h"
 #else
 #include "preview-noclutter.h"
 #include "field-noclutter.h"
+#include "renderer-noclutter.h"
 #endif
 
 int LINES = 20;

@@ -22,7 +22,7 @@
  */
 
 
-#include "renderer.h"
+#include "renderer-noclutter.h"
 
 const ThemeTableEntry ThemeTable[] = {{N_("Plain"), "plain"},
 				      {N_("Joined"), "joined"},
@@ -87,7 +87,6 @@ Renderer::Renderer (cairo_surface_t *dst, cairo_surface_t *bg, Block **src,
 {
 	target = cairo_surface_reference (dst);
 	background = cairo_surface_reference (bg);
-	block_cache = new GnometrisBlockCache(5);
 	data = src;
 	width = w;
 	height = h;

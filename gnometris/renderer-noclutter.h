@@ -27,7 +27,6 @@
 #include <cairo.h>
 #include <glib.h>
 
-#include "block-cache.h"
 #include "blockops.h"
 
 struct ThemeTableEntry {
@@ -53,8 +52,8 @@ public:
 	int pxwidth;
 	int pxheight;
 protected:
-	GnometrisBlockCache *block_cache;
-	cairo_surface_t *target;
+
+	cairo_surface_t * target;
 	cairo_surface_t *background;
 
 	virtual void drawCell (cairo_t * cr, gint x, gint y);

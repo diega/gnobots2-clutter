@@ -1,9 +1,9 @@
 /* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
-#ifndef __preview_noclutter_h__
-#define __preview_noclutter_h__
-
 /*
- * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
+ * written by Jason Clinton <me@jasonclinton.com>
+ * inspired by the cache code writen by Neil Roberts for Aiselriot
+ *
+ * Copyright (C) 2005 by Callum McKenzie
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,43 +22,21 @@
  * For more details see the file COPYING.
  */
 
-#include "tetris.h"
-#include "blockops.h"
-#include "renderer-noclutter.h"
+#ifndef __blockcache_h__
+#define __blockcache_h__
 
-class Preview {
+#include <cogl/cogl.h>
+
+class GnometrisBlockCache
+{
 public:
-	Preview ();
-	~Preview ();
-
-	GtkWidget *getWidget () {
-		return w;
-	}
-
-	void enable (bool enable);
-	void previewBlock (int bnr, int brot, int bcolor);
-	void setTheme (int id);
+	GnometrisBlockCache (int);	
+	~GnometrisBlockCache ();
+	CoglHandle get_block_by_id (int);
+	CoglHandle get_block_by_color (int);
 
 private:
-	GtkWidget * w;
-	gint width;
-	gint height;
-
-	int blocknr;
-	int blockrot;
-	int blockcolor;
-
-	bool enabled;
-
-	int themeID;
-	cairo_surface_t *background;
-
-	static gint configure (GtkWidget * widget, GdkEventConfigure * event,
-			       Preview * preview);
-	static gint expose (GtkWidget * widget, GdkEventExpose * event,
-			    Preview * preview);
-
-Block **blocks;
+	int slots;
+	
 };
-
-#endif //__preview_h__
+#endif //__blockcache_h__

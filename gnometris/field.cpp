@@ -109,30 +109,21 @@ Field::rescaleBackground ()
 	redraw ();
 }
 
+void
+Field::rescaleBlockCache ()
+{
+	return;
+}
+
 gboolean
 Field::configure(GtkWidget *widget, GdkEventConfigure *event, Field *field)
 {
-	cairo_t *cr;
-
 	field->width = widget->allocation.width;
 	field->height = widget->allocation.height;
 
-	cr = gdk_cairo_create (widget->window);
-
-	if (field->buffer)
-		cairo_surface_destroy(field->buffer);
-
-	// backing buffer
-	field->buffer =  cairo_surface_create_similar (cairo_get_target (cr),
-						       CAIRO_CONTENT_COLOR,
-						       widget->allocation.width,
-						       widget->allocation.height);
-
-	cairo_destroy (cr);
-
-
 	field->rescaleBackground ();
-
+	field->rescaleBlockCache ();
+	
 	return TRUE;
 }
 

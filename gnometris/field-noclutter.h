@@ -24,7 +24,7 @@
 
 #include "tetris.h"
 #include "blockops.h"
-#include "renderer.h"
+#include "renderer-noclutter.h"
 
 class Field:public BlockOps {
 public:

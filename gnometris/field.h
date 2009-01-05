@@ -70,6 +70,7 @@ private:
 	void draw (gint x, gint y, gint w, gint h);
 	void draw ();
 	void rescaleBackground ();
+	void rescaleBlockCache ();
 
 	static gboolean configure (GtkWidget * widget, GdkEventConfigure * event,
 				   Field * field);
