@@ -57,37 +57,65 @@ Field::Field():
 
 Field::~Field()
 {
-	if (buffer)
-		cairo_surface_destroy(buffer);
 	if (background)
-		cairo_surface_destroy(background);
+		clutter_actor_destroy(background);
 
 	if (renderer)
 		delete renderer;
 }
 
 void
-Field::rescaleBackground ()
+Field::rescaleField ()
 {
+	ClutterActor *stage;
 	cairo_t *bg_cr;
-	cairo_t *tmp_cr;
 
-	if (!buffer)
-		return;
+	if (background) {
+		clutter_actor_set_size (CLUTTER_ACTOR(background),
+					w->allocation.width,
+					w->allocation.height);
+		clutter_cairo_surface_resize (CLUTTER_CAIRO(background),
+					      w->allocation.width,
+					      w->allocation.height);
+	} else {
+		background = clutter_cairo_new (w->allocation.width,
+						w->allocation.height);
+		stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (w));
+		/*FIXMEjclinton: eventually allow solid color background
+		 * for software rendering case */
+		ClutterColor stage_color = { 0x61, 0x64, 0x8c, 0xff };
+		clutter_stage_set_color (CLUTTER_STAGE (stage),
+					 &stage_color);
+		clutter_group_add (CLUTTER_GROUP (stage),
+				   background);
+		clutter_actor_set_position (CLUTTER_ACTOR(background),
+					    0, 0);
+	}
 
-	tmp_cr = cairo_create (buffer);
+	if (foreground) {
+		clutter_actor_set_size (CLUTTER_ACTOR(foreground),
+					w->allocation.width,
+					w->allocation.height);
+		clutter_cairo_surface_resize (CLUTTER_CAIRO(foreground),
+					      w->allocation.width,
+					      w->allocation.height);
+	} else {
+		foreground = clutter_cairo_new (w->allocation.width,
+						w->allocation.height);
+		stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (w));
+		clutter_group_add (CLUTTER_GROUP (stage),
+				   foreground);
+		clutter_actor_set_position (CLUTTER_ACTOR(foreground),
+					    0, 0);
+		clutter_actor_raise (CLUTTER_ACTOR(foreground),
+				     CLUTTER_ACTOR(background));
+	}
 
-	if (background)
-		cairo_surface_destroy(background);
 
-	background =  cairo_surface_create_similar (cairo_get_target (tmp_cr),
-						    CAIRO_CONTENT_COLOR,
-						    w->allocation.width,
-						    w->allocation.height);
-
-	cairo_destroy (tmp_cr);
-
-	bg_cr = cairo_create (background);
+	bg_cr = clutter_cairo_create (CLUTTER_CAIRO(background));
+	cairo_set_operator (bg_cr, CAIRO_OPERATOR_CLEAR);
+	cairo_paint(bg_cr);
+	cairo_set_operator (bg_cr, CAIRO_OPERATOR_OVER);
 
 	if (useBGImage && backgroundImage) {
 		gdouble xscale, yscale;
@@ -123,30 +151,10 @@ Field::configure(GtkWidget *widget, GdkEventConfigure *event, Field *field)
 	field->width = widget->allocation.width;
 	field->height = widget->allocation.height;
 
-	field->rescaleBackground ();
+	field->rescaleField ();
 	field->rescaleBlockCache ();
 
 	return TRUE;
-}
-
-void
-Field::draw (gint x, gint y, gint wd, gint ht)
-{
-	cairo_t *cr;
-
-	cr = clutter_cairo_create (CLUTTER_CAIRO(foreground));
-
-	//cairo_set_source_surface (cr, buffer, 0, 0);
-	//cairo_rectangle (cr, x, y, wd, ht);
-	cairo_fill (cr);
-
-	cairo_destroy (cr);
-}
-
-void
-Field::draw (void)
-{
-  draw (0, 0, width, height);
 }
 
 void
@@ -219,8 +227,6 @@ Field::redraw()
 	}
 
 	renderer->render ();
-
-	cr = cairo_create(buffer);
 
 	if (showPause)
 		drawMessage(cr, _("Paused"));

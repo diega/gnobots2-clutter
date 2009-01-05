@@ -66,9 +66,6 @@ private:
 	gint themeID;
 
 	void drawMessage (cairo_t * cr, const char *msg);
-	void redrawAll ();
-	void draw (gint x, gint y, gint w, gint h);
-	void draw ();
 	void rescaleField ();
 	void rescaleBlockCache ();
 
