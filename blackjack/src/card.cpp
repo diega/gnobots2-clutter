@@ -125,19 +125,11 @@ bj_card_set_size (gint width, gint height)
         }
         if (!theme) {
                 char *card_theme;
-                GamesCardThemeInfo *theme_info;
 
                 card_theme = bj_get_card_style ();
-                theme_info = games_card_themes_get_theme_info_by_name (theme_manager, card_theme);
+                theme = games_card_themes_get_theme_by_name (theme_manager, card_theme);
                 g_free (card_theme);
 
-                if (!theme_info) {
-                        games_card_themes_request_themes (theme_manager);
-                        theme_info = games_card_themes_get_default_theme_info (theme_manager);
-                }
-                if (theme_info) {
-                        theme = games_card_themes_get_theme (theme_manager, theme_info);
-                }
                 if (!theme) {
                         /* Last-ditch fallback: try getting *any* theme */
                         theme = games_card_themes_get_theme_any (theme_manager);
@@ -169,19 +161,12 @@ bj_card_set_size (gint width, gint height)
 void
 bj_card_set_theme (gchar *card_theme)
 {
-        GamesCardThemeInfo *new_theme_info;
         GamesCardTheme *new_theme;
 
         g_assert (theme_manager != NULL);
         g_assert (theme != NULL);
 
-        new_theme_info = games_card_themes_get_theme_info_by_name (theme_manager, card_theme);
-        if (!new_theme_info) {
-                g_warning ("Failed to find theme %s\n", card_theme);
-                return;
-        }
-
-        new_theme = games_card_themes_get_theme (theme_manager, new_theme_info);
+        new_theme = games_card_themes_get_theme_by_name (theme_manager, card_theme);
         if (!new_theme) {
                 g_warning ("Failed to load theme %s\n", card_theme);
                 return;
