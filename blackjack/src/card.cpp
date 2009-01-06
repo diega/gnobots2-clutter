@@ -119,17 +119,10 @@ bj_card_set_size (gint width, gint height)
         CardSize card_size;
 
         if (!theme) {
-                const char *env;
                 char *card_theme;
                 gboolean scalable;
 
-                env = g_getenv ("BLACKJACK_CARDS_SCALABLE");
-                scalable = env == NULL || g_ascii_strtoll (env, NULL, 10) != 0;
-
-                if (scalable)
-                          theme = games_card_theme_svg_new ();
-                else
-                          theme = games_card_theme_fixed_new ();
+                theme = games_card_theme_svg_new ();
 
                 images = games_card_images_new (theme);
                 g_object_unref (theme);
