@@ -40,6 +40,7 @@ using namespace std;
 
 GdkBitmap *mask;
 
+GamesCardThemes *theme_manager = NULL;
 GamesCardTheme *theme = NULL;
 GamesCardImages *images = NULL;
 
@@ -119,14 +120,17 @@ bj_card_set_size (gint width, gint height)
 {
         CardSize card_size;
 
+        if (!theme_manager) {
+                theme_manager = games_card_themes_new ();
+        }
         if (!theme) {
                 char *card_theme;
 
                 card_theme = bj_get_card_style ();
-                theme = games_card_theme_get_by_name (card_theme);
+                theme = games_card_themes_get_theme_by_name (theme_manager, card_theme);
                 if (!theme) {
                         g_warning ("Failed to load theme %s!", card_theme);
-                        theme = games_card_theme_get_any ();
+                        theme = games_card_themes_get_theme_any (theme_manager);
                 }
                 if (!theme) {
                         g_warning ("Failed to load any theme !");
@@ -157,9 +161,10 @@ bj_card_set_theme (gchar *card_theme)
 {
         GamesCardTheme *new_theme;
 
+        g_assert (theme_manager != NULL);
         g_assert (theme != NULL);
 
-        new_theme = games_card_theme_get_by_name (card_theme);
+        new_theme = games_card_themes_get_theme_by_name (theme_manager, card_theme);
         if (!new_theme) {
                 g_warning ("Failed to load theme %s\n", card_theme);
                 return;
@@ -187,10 +192,10 @@ bj_get_card_theme_selector ()
 {
   GtkWidget *selector;
 
-  if (!theme)
+  if (!theme_manager || !theme)
     return NULL;
 
-  selector = games_card_selector_new (games_card_theme_get_theme_info (theme));
+  selector = games_card_selector_new (theme_manager, games_card_theme_get_theme_info (theme));
   g_signal_connect (selector, "changed",
                     G_CALLBACK (card_deck_options_changed), NULL);
 
