@@ -126,7 +126,10 @@ bj_card_set_size (gint width, gint height)
                 env = g_getenv ("BLACKJACK_CARDS_SCALABLE");
                 scalable = env == NULL || g_ascii_strtoll (env, NULL, 10) != 0;
 
-                theme = games_card_theme_new (NULL, scalable);
+                if (scalable)
+                          theme = games_card_theme_svg_new ();
+                else
+                          theme = games_card_theme_fixed_new ();
 
                 images = games_card_images_new (theme);
                 g_object_unref (theme);
@@ -135,7 +138,7 @@ bj_card_set_size (gint width, gint height)
                 games_card_images_set_drawable (images, playing_area->window);
 
                 card_theme = bj_get_card_style ();
-                if (!games_card_theme_set_theme (theme, card_theme)) {
+                if (!games_card_theme_set_theme (theme, NULL, card_theme)) {
                         g_warning ("Failed to load theme %s!", card_theme);
                 }
                 g_free (card_theme);
@@ -154,7 +157,7 @@ bj_card_set_size (gint width, gint height)
 void
 bj_card_set_theme (gchar *card_theme)
 {
-        games_card_theme_set_theme (theme, card_theme);
+        games_card_theme_set_theme (theme, NULL, card_theme);
 
         bj_draw_rescale_cards ();
         mask = games_card_images_get_card_mask (images);
