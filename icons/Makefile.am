@@ -137,6 +137,7 @@ icons_svg = \
 	scalable/gnome-sudoku.svg \
 	scalable/gnome-tali.svg \
 	scalable/gnome-tetravex.svg \
+	scalable/gnome-lightsoff.svg \
 	$(NULL)
 
 private_icons = \
