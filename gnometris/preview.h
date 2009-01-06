@@ -27,8 +27,8 @@
 #include "renderer.h"
 #include "blocks.h"
 
-#include <clutter-gtk/gtk-clutter-embed.h>
 #include <clutter-cairo/clutter-cairo.h>
+#include <libgames-support/games-clutter-embed.h>
 
 class Preview {
 public:

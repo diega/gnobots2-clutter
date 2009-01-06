@@ -23,8 +23,8 @@
 #include "blocks.h"
 #include "renderer.h"
 
-#include <clutter-gtk/gtk-clutter-embed.h>
 #include <clutter-cairo/clutter-cairo.h>
+#include <libgames-support/games-clutter-embed.h>
 
 #define FONT "Sans Bold"
 
@@ -43,7 +43,7 @@ Field::Field():
 	renderer = NULL;
 	rendererTheme = -1;
 
-	w = gtk_clutter_embed_new();
+	w = games_clutter_embed_new();
 
 	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
 
@@ -80,7 +80,7 @@ Field::rescaleField ()
 	} else {
 		background = clutter_cairo_new (w->allocation.width,
 						w->allocation.height);
-		stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (w));
+		stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
 		/*FIXMEjclinton: eventually allow solid color background
 		 * for software rendering case */
 		ClutterColor stage_color = { 0x61, 0x64, 0x8c, 0xff };
@@ -102,7 +102,7 @@ Field::rescaleField ()
 	} else {
 		foreground = clutter_cairo_new (w->allocation.width,
 						w->allocation.height);
-		stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (w));
+		stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
 		clutter_group_add (CLUTTER_GROUP (stage),
 				   foreground);
 		clutter_actor_set_position (CLUTTER_ACTOR(foreground),

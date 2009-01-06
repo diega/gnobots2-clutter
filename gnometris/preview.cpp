@@ -45,7 +45,7 @@ Preview::Preview():
 		}
 	}
 
-	w = gtk_clutter_embed_new();
+	w = games_clutter_embed_new();
 
 	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
 
