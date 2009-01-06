@@ -38,16 +38,10 @@ main(int argc, char *argv[])
 	gboolean retval;
 	GError *error = NULL;
 
-	g_thread_init (NULL);
-
 	if (!games_runtime_init ("gnometris"))
 		return 1;
 
 	setgid_io_init ();
-
-	bindtextdomain (GETTEXT_PACKAGE, games_runtime_get_directory (GAMES_RUNTIME_LOCALE_DIRECTORY));
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-	textdomain(GETTEXT_PACKAGE);
 
 	int cmdlineLevel = 0;
 

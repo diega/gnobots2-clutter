@@ -660,20 +660,8 @@ main (int argc, char *argv [])
                 { NULL }
         };
 
-#if defined(HAVE_GNOME) || defined(HAVE_RSVG_GNOMEVFS)
-  /* If we're going to use gnome-vfs, we need to init threads before
-   * calling any glib functions.
-   */
-  g_thread_init (NULL);
-#endif
-
         if (!games_runtime_init ("blackjack"))
                 return 1;
-
-        bindtextdomain (GETTEXT_PACKAGE, games_runtime_get_directory (GAMES_RUNTIME_LOCALE_DIRECTORY));
-        bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-        textdomain (GETTEXT_PACKAGE);
-
 
         context = g_option_context_new (NULL);
 #if GLIB_CHECK_VERSION (2, 12, 0)
