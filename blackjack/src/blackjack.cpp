@@ -532,7 +532,7 @@ bj_get_card_style ()
 }
 
 void
-bj_set_card_style (gchar *value)
+bj_set_card_style (const char *value)
 {
         games_conf_set_string (KEY_DECK_GROUP, KEY_CARD_STYLE, value);
 }

@@ -106,7 +106,7 @@ gdouble bj_get_balance (void);
 void bj_set_balance (gdouble);
 
 gchar *bj_get_card_style (void);
-void bj_set_card_style (gchar *);
+void bj_set_card_style (const char *);
 gboolean bj_get_show_probabilities (void);
 void bj_set_show_probabilities (gboolean);
 gboolean bj_get_show_toolbar (void);

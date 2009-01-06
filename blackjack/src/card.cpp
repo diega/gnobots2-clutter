@@ -157,15 +157,16 @@ bj_card_set_theme (gchar *card_theme)
 {
         GamesCardTheme *new_theme;
 
+        g_assert (theme != NULL);
+
         new_theme = games_card_theme_get_by_name (card_theme);
         if (!new_theme) {
-          g_warning ("Failed to load theme %s\n", card_theme);
-          return;
+                g_warning ("Failed to load theme %s\n", card_theme);
+                return;
         }
 
-        games_card_images_set_theme (images, theme);
-        
         theme = new_theme;
+        games_card_images_set_theme (images, theme);
         g_object_unref (theme);
 
         bj_draw_rescale_cards ();
@@ -176,7 +177,9 @@ bj_card_set_theme (gchar *card_theme)
 void
 card_deck_options_changed (GtkWidget *w, GamesCardThemeInfo *info, gpointer data)
 {
-#warning FIXMEchpe
+  g_assert (info != NULL);
+
+  bj_set_card_style (games_card_theme_info_get_persistent_name (info));
 }
 
 GtkWidget *
@@ -187,7 +190,7 @@ bj_get_card_theme_selector ()
   if (!theme)
     return NULL;
 
-  selector = games_card_selector_new (games_card_theme_get_theme (theme));
+  selector = games_card_selector_new (games_card_theme_get_theme_info (theme));
   g_signal_connect (selector, "changed",
                     G_CALLBACK (card_deck_options_changed), NULL);
 
