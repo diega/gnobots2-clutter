@@ -65,4 +65,6 @@ GdkPixmap *get_pixmap (const char *);
 void bj_card_set_size (gint width, gint height);
 void bj_card_set_theme (gchar * theme);
 
+GtkWidget *bj_get_card_theme_selector ();
+
 #endif

@@ -27,6 +27,7 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <libgames-support/games-card-theme.h>
 #include <libgames-support/games-card-images.h>
+#include <libgames-support/games-card-selector.h>
 #include "card.h"
 #include "chips.h"
 #include "draw.h"
@@ -120,21 +121,25 @@ bj_card_set_size (gint width, gint height)
 
         if (!theme) {
                 char *card_theme;
-                gboolean scalable;
 
-                theme = games_card_theme_svg_new ();
+                card_theme = bj_get_card_style ();
+                theme = games_card_theme_get_by_name (card_theme);
+                if (!theme) {
+                        g_warning ("Failed to load theme %s!", card_theme);
+                        theme = games_card_theme_get_any ();
+                }
+                if (!theme) {
+                        g_warning ("Failed to load any theme !");
+                        exit (1);
+                }
+                g_free (card_theme);
 
-                images = games_card_images_new (theme);
+                images = games_card_images_new ();
+                games_card_images_set_theme (images, theme);
                 g_object_unref (theme);
 
                 games_card_images_set_cache_mode (images, CACHE_PIXMAPS);
                 games_card_images_set_drawable (images, playing_area->window);
-
-                card_theme = bj_get_card_style ();
-                if (!games_card_theme_set_theme (theme, NULL, card_theme)) {
-                        g_warning ("Failed to load theme %s!", card_theme);
-                }
-                g_free (card_theme);
         }
 
         games_card_theme_set_size (theme, width, height, 1.0);
@@ -150,9 +155,41 @@ bj_card_set_size (gint width, gint height)
 void
 bj_card_set_theme (gchar *card_theme)
 {
-        games_card_theme_set_theme (theme, NULL, card_theme);
+        GamesCardTheme *new_theme;
+
+        new_theme = games_card_theme_get_by_name (card_theme);
+        if (!new_theme) {
+          g_warning ("Failed to load theme %s\n", card_theme);
+          return;
+        }
+
+        games_card_images_set_theme (images, theme);
+        
+        theme = new_theme;
+        g_object_unref (theme);
 
         bj_draw_rescale_cards ();
         mask = games_card_images_get_card_mask (images);
         gdk_gc_set_clip_mask (draw_gc, mask);
+}
+
+void
+card_deck_options_changed (GtkWidget *w, GamesCardThemeInfo *info, gpointer data)
+{
+#warning FIXMEchpe
+}
+
+GtkWidget *
+bj_get_card_theme_selector ()
+{
+  GtkWidget *selector;
+
+  if (!theme)
+    return NULL;
+
+  selector = games_card_selector_new (games_card_theme_get_theme (theme));
+  g_signal_connect (selector, "changed",
+                    G_CALLBACK (card_deck_options_changed), NULL);
+
+  return selector;
 }

@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <libgames-support/games-card-selector.h>
+#include <libgames-support/games-frame.h>
 #include "blackjack.h"
 #include "menu.h"
 #include "dialog.h"
@@ -136,12 +136,6 @@ void
 pref_dialog_response (GtkWidget *w, int response, gpointer data)
 {
         gtk_widget_hide (w);
-}
-
-void
-card_deck_options_changed (GtkWidget *w, gchar *name, gpointer data)
-{
-        bj_set_card_style (name);
 }
 
 void
@@ -419,12 +413,9 @@ show_preferences_dialog (void)
                 g_free (current_rule);
                 
                 // Cards Tab
-                deck_edit = games_card_selector_new (TRUE, bj_get_card_style ());
+                deck_edit = bj_get_card_theme_selector ();
                 gtk_box_pack_start (GTK_BOX (top_vbox), deck_edit, FALSE, FALSE, 0);
 
-                g_signal_connect (deck_edit, "changed",
-                                  G_CALLBACK (card_deck_options_changed), NULL);
-                
                 // General signals
                 g_signal_connect (pref_dialog, "response",
                                   G_CALLBACK (pref_dialog_response), NULL);
