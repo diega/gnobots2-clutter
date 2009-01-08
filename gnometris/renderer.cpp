@@ -21,8 +21,10 @@
  * For more details see the file COPYING.
  */
 
-
 #include <config.h>
+
+#include <string.h>
+
 #include "renderer.h"
 
 const ThemeTableEntry ThemeTable[] = {{N_("Plain"), "plain"},

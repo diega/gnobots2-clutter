@@ -23,6 +23,9 @@
 
 
 #include <config.h>
+
+#include <string.h>
+
 #include "renderer-noclutter.h"
 
 const ThemeTableEntry ThemeTable[] = {{N_("Plain"), "plain"},
