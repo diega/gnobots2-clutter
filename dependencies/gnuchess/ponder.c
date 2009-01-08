@@ -25,6 +25,7 @@
      lukas@debian.org
 */
 
+#include <config.h>
 #include "common.h"
 #include <stdlib.h>
 #include <unistd.h>

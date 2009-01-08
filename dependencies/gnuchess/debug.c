@@ -2,6 +2,7 @@
  * debug.c - Debugging output
  */
 
+#include <config.h>
 #include "common.h"
 
 #ifdef DEBUG

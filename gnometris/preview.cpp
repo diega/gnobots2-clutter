@@ -20,6 +20,7 @@
  * For more details see the file COPYING.
  */
 
+#include <config.h>
 #include "preview.h"
 
 #define PREVIEW_WIDTH 6

@@ -20,6 +20,7 @@
  * For more details see the file COPYING.
  */
 
+#include <config.h>
 #include "preview-noclutter.h"
 #include "blocks.h"
 

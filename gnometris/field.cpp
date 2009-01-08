@@ -19,6 +19,7 @@
  * For more details see the file COPYING.
  */
 
+#include <config.h>
 #include "field.h"
 #include "blocks.h"
 #include "renderer.h"

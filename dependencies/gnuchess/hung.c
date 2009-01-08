@@ -27,6 +27,7 @@
  *  Hung piece evaluation.
  */
 
+#include <config.h>
 #include <stdio.h>
 #include "common.h"
 

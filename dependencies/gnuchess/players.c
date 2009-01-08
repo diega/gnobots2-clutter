@@ -24,6 +24,7 @@
      bug-gnu-chess@gnu.org
      cracraft@ai.mit.edu, cracraft@stanfordalumni.org, cracraft@earthlink.net
 */
+#include <config.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

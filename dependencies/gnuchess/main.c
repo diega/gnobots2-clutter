@@ -24,6 +24,7 @@
      cracraft@ai.mit.edu, cracraft@stanfordalumni.org, cracraft@earthlink.net
 */
 
+#include <config.h>
 #include <time.h>
 #include <string.h>
 #include <stdio.h>

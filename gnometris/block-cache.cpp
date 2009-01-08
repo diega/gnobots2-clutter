@@ -22,6 +22,7 @@
  * For more details see the file COPYING.
  */
 
+#include <config.h>
 #include "block-cache.h"
 
 GnometrisBlockCache::GnometrisBlockCache (int total_slots)

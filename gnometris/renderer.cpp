@@ -22,6 +22,7 @@
  */
 
 
+#include <config.h>
 #include "renderer.h"
 
 const ThemeTableEntry ThemeTable[] = {{N_("Plain"), "plain"},

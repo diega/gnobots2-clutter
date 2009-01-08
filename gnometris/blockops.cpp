@@ -19,6 +19,7 @@
  * For more details see the file COPYING.
  */
 
+#include <config.h>
 #include "blockops.h"
 #include "blocks.h"
 

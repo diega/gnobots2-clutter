@@ -21,6 +21,7 @@
  * USA
  */
 
+#include <config.h>
 #include <gdk/gdk.h>
 #include "press_data.h"
 #include "card.h"

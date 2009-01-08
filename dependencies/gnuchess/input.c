@@ -31,6 +31,7 @@
  * libraries.
  */
 
+#include <config.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
