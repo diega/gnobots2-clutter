@@ -226,10 +226,9 @@ tilepos easy_map[MAX_TILES] = {
 };
 
 map hardcoded[] = {
-  {N_("mahjongg|Easy"), "easy", easy_map, TRUE, 0, 0}
+  { NC_("mahjongg map name", "Easy"), "easy", easy_map, TRUE, 0, 0}
   ,
 };
-
 
 GList *maplist;
 
@@ -563,8 +562,7 @@ load_maps (void)
 
   /* FIXME: Ideally we would do this transformation, but the old code 
    * expects an array, so we give it one. */
-  if (maps)
-    g_free (maps);
+  g_free (maps);
 
   nmaps = g_list_length (maplist);
 
@@ -577,5 +575,4 @@ load_maps (void)
       g_free (maplist->data);
     maplist = g_list_delete_link (maplist, maplist);
   }
-
 }

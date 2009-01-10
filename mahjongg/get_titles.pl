@@ -36,6 +36,6 @@ open(FH, "mahjongg.map");
 
 while (<FH>) {
   if (/map name=\"(.+?)\"/) { # Let's not even pretend this can read XML.
-    print OUTFILE "gchar *s = N_(\"$1\")\n";
+    print OUTFILE "NC_(\"mahjongg map name\", \"$1\")\n";
   }
 }

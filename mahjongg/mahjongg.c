@@ -1359,7 +1359,10 @@ init_scores (void)
                                  GAMES_SCORES_STYLE_TIME_ASCENDING);
 
   for (i = 0; i < nmaps; i++) {
-    games_scores_add_category (highscores, maps[i].score_name, maps[i].name);
+    const char *display_name;
+
+    display_name = g_dpgettext2 (NULL, "mahjongg map name", maps[i].name);
+    games_scores_add_category (highscores, maps[i].score_name, display_name);
   }
 }
 
