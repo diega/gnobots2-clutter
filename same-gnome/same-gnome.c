@@ -50,16 +50,10 @@ gint board_sizes[MAX_SIZE][3] = { {-1, -1, -1}
 {45, 30, 4}
 };
 
-const GamesScoresCategory scorecats[] = { {"Small", N_("Small")},
-{"Medium", N_("same-gnome|Medium")},
-{"Large", N_("Large")},
-GAMES_SCORES_LAST_CATEGORY
-};
-
-static const GamesScoresDescription scoredesc = { scorecats,
-  "Small",
-  "same-gnome",
-  GAMES_SCORES_STYLE_PLAIN_DESCENDING
+const GamesScoresCategory scorecats[] = {
+  { "Small",  N_("Small") },
+  { "Medium", N_("same-gnome|Medium") },
+  { "Large",  N_("Large") }
 };
 
 GamesScores *highscores;
@@ -168,7 +162,11 @@ main (int argc, char *argv[])
 
   games_stock_init ();
 
-  highscores = games_scores_new (&scoredesc);
+  highscores = games_scores_new ("same-gnome",
+                                 scorecats, G_N_ELEMENTS (scorecats),
+                                 NULL, NULL,
+                                 0 /* default category */,
+                                 GAMES_SCORES_STYLE_PLAIN_DESCENDING);
 
   initialise_options (requested_size, requested_theme);
 

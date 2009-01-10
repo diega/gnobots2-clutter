@@ -26,14 +26,13 @@
 #include <games-scores-dialog.h>
 #include "highscores.h"
 
-static const GamesScoresDescription scoredesc = {NULL, NULL,
-						 "gnometris",
-						 GAMES_SCORES_STYLE_PLAIN_DESCENDING};
-
-
 HighScores::HighScores ()
 {
-	highscores = games_scores_new (&scoredesc);
+	highscores = games_scores_new ("gnometris",
+                                       NULL, 0,
+                                       NULL, NULL,
+                                       0,
+                                       GAMES_SCORES_STYLE_PLAIN_DESCENDING);
 
 	dialog = NULL;
 }

@@ -104,12 +104,6 @@ static guint timeout_counter = HINT_BLINK_NUM + 1;
 
 static GamesScores *highscores;
 
-static const GamesScoresDescription scoredesc = { NULL,
-  "Easy",
-  "mahjongg",
-  GAMES_SCORES_STYLE_TIME_ASCENDING
-};
-
 enum {
   GAME_RUNNING = 0,
   GAME_WAITING,
@@ -1358,10 +1352,14 @@ init_scores (void)
 {
   int i;
 
-  highscores = games_scores_new (&scoredesc);
+  highscores = games_scores_new ("mahjongg",
+                                 NULL, 0,
+                                 NULL, NULL,
+                                 0 /* default category; FIXMEchpe: was: "Easy" */,
+                                 GAMES_SCORES_STYLE_TIME_ASCENDING);
 
   for (i = 0; i < nmaps; i++) {
-    games_scores_add_category (highscores, maps[i].score_name, maps[i].name);
+    games_scores_add_category (highscores, maps[i].score_name, maps[i].name); // FIXMEchpe
   }
 }
 
