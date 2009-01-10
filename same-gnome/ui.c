@@ -29,12 +29,6 @@
 #define DEFAULT_WINDOW_WIDTH 450
 #define DEFAULT_WINDOW_HEIGHT 350
 
-/* Define an alternative to ngettext if we don't have it. Of course it isn't
- * a proper substitute for ngettext, but it is the best we can do. */
-#ifndef HAVE_NGETTEXT
-#define ngettext(one,lots,n) gettext(lots)
-#endif
-
 /* A collection of widgets we need to reference repeatedly. */
 GtkWidget *application;
 GtkWidget *messagewidget;
