@@ -1359,7 +1359,7 @@ init_scores (void)
                                  GAMES_SCORES_STYLE_TIME_ASCENDING);
 
   for (i = 0; i < nmaps; i++) {
-    games_scores_add_category (highscores, maps[i].score_name, maps[i].name); // FIXMEchpe
+    games_scores_add_category (highscores, maps[i].score_name, maps[i].name);
   }
 }
 
