@@ -573,7 +573,10 @@ fill_map_menu (GtkWidget * menu)
   gint lp;
 
   for (lp = 0; lp < nmaps; lp++) {
-    gtk_combo_box_append_text (GTK_COMBO_BOX (menu), Q_ (maps[lp].name));
+    const char *display_name;
+
+    display_name = g_dpgettext2 (NULL, "mahjongg map name", maps[lp].name);
+    gtk_combo_box_append_text (GTK_COMBO_BOX (menu), display_name);
   }
   gtk_combo_box_set_active (GTK_COMBO_BOX (menu), mapset);
 }
@@ -1135,6 +1138,7 @@ new_game (gboolean shuffle)
 {
   gint i;
   gchar *title;
+  const char *display_name;
 
   /* Reset state */
   game_over = GAME_WAITING;
@@ -1180,7 +1184,9 @@ new_game (gboolean shuffle)
 
   /* Set window title */
   /* Translators: This is the window title for Mahjongg which contains the map name, e.g. 'Mahjongg - Red Dragon' */
-  title = g_strdup_printf (_("Mahjongg - %s"), Q_ (maps[mapset].name));
+
+  display_name = g_dpgettext2 (NULL, "mahjongg map name", maps[mapset].name);
+  title = g_strdup_printf (_("Mahjongg - %s"), display_name);
   gtk_window_set_title (GTK_WINDOW (window), title);
   g_free (title);
   gtk_label_set_text (GTK_LABEL (tiles_label), MAX_TILES_STR);
