@@ -115,7 +115,7 @@ gboolean bj_get_quick_deal (void);
 void bj_set_quick_deal (gboolean);
 gboolean bj_get_never_insurance (void);
 void bj_set_never_insurance (gboolean);
-gchar *bj_get_game_variation (void);
+const gchar *bj_get_game_variation (void);
 void bj_set_game_variation (const gchar *);
 
 extern gint dealerSpeed;

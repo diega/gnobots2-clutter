@@ -377,8 +377,7 @@ show_preferences_dialog (void)
                 g_signal_connect (select, "changed", 
                                   G_CALLBACK (select_rule_cb), (gpointer) pref_dialog);
                 
-                gchar *current_rule;
-                current_rule = bj_get_game_variation ();
+                const gchar *current_rule = bj_get_game_variation ();
                 gint i = 0;
                 BJGameRules *ruleset;
                 for (GList *temptr = bj_game_get_rules_list (); temptr; temptr=temptr->next) {
@@ -402,7 +401,8 @@ show_preferences_dialog (void)
                                                     DEALER_SPEED_STRING, ruleset->getDealerSpeed (),
                                                     FILENAME_STRING, (gchar*)temptr->data, -1);
                                 delete ruleset;
-                                if (! g_ascii_strcasecmp (current_rule, (gchar*)temptr->data)) {
+                                if (current_rule && g_ascii_strcasecmp (current_rule, (gchar*)temptr->data) == 0) {
+                                        /* FIXMEchpe: this is soo wrong */
                                         gtk_tree_view_set_cursor (GTK_TREE_VIEW (list_view),
                                                                   gtk_tree_path_new_from_indices (i, -1),
                                                                   NULL, FALSE);
@@ -410,7 +410,6 @@ show_preferences_dialog (void)
                                 i++;
                         }
                 }
-                g_free (current_rule);
                 
                 // Cards Tab
                 deck_edit = bj_get_card_theme_selector ();

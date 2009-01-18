@@ -150,14 +150,8 @@ extension_pointer (const char * path)
 }
 
 
-int
-bj_is_ruleset (const gchar *file_name)
-{
-        return (!strcmp (extension_pointer (file_name), "rules"));
-}
-
 void
-bj_game_find_rules (gchar *variation)
+bj_game_find_rules (const gchar *variation)
 {
         GDir *dir;
         G_CONST_RETURN gchar* file_name;
@@ -170,7 +164,7 @@ bj_game_find_rules (gchar *variation)
                 return;
   
         while ((file_name = g_dir_read_name (dir)) != NULL) {
-                if (! bj_is_ruleset (file_name))
+                if (!g_str_has_suffix (file_name, ".rules"))
                         continue;
 
                 n_games++;
@@ -423,17 +417,20 @@ bj_game_new (const gchar* file, guint *seedp )
         bj_show_balance (bj_get_balance ());
 
         if (file && (!game_file || strcmp (file, game_file) != 0)) {
+                char *old_game_file = game_file;
+
                 game_file = g_strdup (file);
+                g_free (old_game_file);
                 
-                bj_game_eval_installed_file (file);
-                game_name = bj_game_file_to_name (file);
+                bj_game_eval_installed_file (game_file);
+                game_name = bj_game_file_to_name (game_file);
                 
                 if (option_dialog) {
                         gtk_widget_destroy (option_dialog);
                         option_dialog = NULL;
                 }
 
-                bj_set_game_variation (file);
+                bj_set_game_variation (game_file);
         }
 
         if (seedp)

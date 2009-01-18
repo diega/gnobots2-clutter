@@ -576,17 +576,24 @@ bj_set_never_insurance (gboolean value)
         games_conf_set_boolean (KEY_SETTINGS_GROUP, KEY_NEVER_INSURANCE, value);
 }
 
-gchar *
+const gchar *
 bj_get_game_variation ()
 {
-        return g_strdup (game_variation);
+        return game_variation;
 }
 
 void
 bj_set_game_variation (const gchar *value)
 {
-        g_free (game_variation);
+        char *old_value;
+
+        if (value == game_variation)
+                return;
+
+        old_value = game_variation;
         game_variation = g_strdup (value);
+        g_free (old_value);
+
         games_conf_set_string (KEY_SETTINGS_GROUP, KEY_GAME_VARIATION, game_variation);
 }
 
@@ -680,7 +687,7 @@ main (int argc, char *argv [])
         bj_conf_init ();
 
         if (!variation)
-                variation = game_variation;
+                variation = g_strdup (game_variation);
 
         bj_game_find_rules (variation);
 

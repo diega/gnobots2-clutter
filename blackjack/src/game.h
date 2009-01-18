@@ -22,7 +22,7 @@
 
 #include "player.h"
 
-void bj_game_find_rules (gchar * variation);
+void bj_game_find_rules (const gchar * variation);
 
 gchar *bj_game_file_to_name (const gchar *);
 void bj_game_new (const gchar *, guint *);
