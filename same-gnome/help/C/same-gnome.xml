@@ -192,7 +192,7 @@
     <row><entry>7</entry><entry>25</entry></row>
     <row><entry>8</entry><entry>36</entry></row>
     <row><entry>9</entry><entry>49</entry></row>
-    <row><entry>&vellip;</entry><entry>&vellip;</entry></row>
+    <row><entry>⋮</entry><entry>⋮</entry></row>
     <row><entry>p</entry><entry>(n - 2)<superscript>2</superscript></entry></row>
     </tbody>
     </tgroup>

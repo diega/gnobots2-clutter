@@ -370,8 +370,8 @@ msgid "<guimenuitem>Show tool bar</guimenuitem>— This toggle switches the tool
 msgstr "<guimenuitem>Visa verktygsrad</guimenuitem>— Detta visar eller döljer verktygsraden."
 
 #: C/blackjack.xml:473(para)
-msgid "<guimenuitem>Preferences&hellip;</guimenuitem>— This opens the <interface>Preferences Dialog</interface>, allowing you to configure the game."
-msgstr "<guimenuitem>Inställningar&hellip;</guimenuitem>— Detta öppnar dialogrutan <interface>Inställningar</interface> som låter dig konfigurera spelet."
+msgid "<guimenuitem>Preferences…</guimenuitem>— This opens the <interface>Preferences Dialog</interface>, allowing you to configure the game."
+msgstr "<guimenuitem>Inställningar…</guimenuitem>— Detta öppnar dialogrutan <interface>Inställningar</interface> som låter dig konfigurera spelet."
 
 #: C/blackjack.xml:489(guimenu)
 msgid "Help"

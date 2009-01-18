@@ -373,7 +373,7 @@ msgid "<guimenuitem>Show tool bar</guimenuitem>— This toggle switches the tool
 msgstr "<guimenuitem>Werkzeugleiste</guimenuitem>— Dies aktiviert oder deaktiviert die Anzeige der Werkzeugleiste. "
 
 #: C/blackjack.xml:473(para)
-msgid "<guimenuitem>Preferences&hellip;</guimenuitem>— This opens the <interface>Preferences Dialog</interface>, allowing you to configure the game."
+msgid "<guimenuitem>Preferences…</guimenuitem>— This opens the <interface>Preferences Dialog</interface>, allowing you to configure the game."
 msgstr "<guimenuitem>Einstellungen</guimenuitem>— Dies öffnet den <interface>Einstellungsdialog</interface>, der Ihnen die Anpassung des Spiels ermöglicht."
 
 #: C/blackjack.xml:489(guimenu)

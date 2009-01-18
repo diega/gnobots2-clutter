@@ -131,7 +131,7 @@ msgid "Introduction"
 msgstr "Introduktion"
 
 #: C/mahjongg.xml:120(para)
-msgid "<application>GNOME Mahjongg</application>, or Mahjongg for short, is a solitaire (one player) version of the classic Eastern tile game, Mahjongg. It has all the functionality you expect from a tile or card game. You can change the type of tiles, the background, and the difficulty level, among other things, in the <link linkend=\"prefs\">Preferences&hellip;</link> dialog. Other features, like the <link linkend=\"pause\"><guibutton>Pause </guibutton> button</link>, make the game more competitive when you play against the clock. This document describes <application>Mahjongg</application>."
+msgid "<application>GNOME Mahjongg</application>, or Mahjongg for short, is a solitaire (one player) version of the classic Eastern tile game, Mahjongg. It has all the functionality you expect from a tile or card game. You can change the type of tiles, the background, and the difficulty level, among other things, in the <link linkend=\"prefs\">Preferences…</link> dialog. Other features, like the <link linkend=\"pause\"><guibutton>Pause </guibutton> button</link>, make the game more competitive when you play against the clock. This document describes <application>Mahjongg</application>."
 msgstr ""
 
 #: C/mahjongg.xml:134(title)
@@ -164,7 +164,7 @@ msgid "Playing Mahjongg"
 msgstr "Spela Mahjongg"
 
 #: C/mahjongg.xml:194(para)
-msgid "You start with five levels of tiles which are stacked so some are covered up by the tiles on top. The harder the level you set in the <link linkend=\"prefs\"><interface>Preferences&hellip;</interface> dialog</link>, the more tiles are covered when the game starts. The object of <application>GNOME Mahjongg</application> is to remove all the tiles from the game. To remove tiles you have to find matching pairs which look alike. A matching tile will usually have the same number of buttons or markings on it or will look similar to each other."
+msgid "You start with five levels of tiles which are stacked so some are covered up by the tiles on top. The harder the level you set in the <link linkend=\"prefs\"><interface>Preferences…</interface> dialog</link>, the more tiles are covered when the game starts. The object of <application>GNOME Mahjongg</application> is to remove all the tiles from the game. To remove tiles you have to find matching pairs which look alike. A matching tile will usually have the same number of buttons or markings on it or will look similar to each other."
 msgstr ""
 
 #: C/mahjongg.xml:205(para)
@@ -324,7 +324,7 @@ msgid "<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>— This item giv
 msgstr ""
 
 #: C/mahjongg.xml:461(para)
-msgid "<menuchoice><guimenuitem>Scores&hellip;</guimenuitem></menuchoice>— This item brings up a dialog showing you the ten best scores. The dialog has the scores identified by user name, score, the time it took to complete the game, and the date the game was completed."
+msgid "<menuchoice><guimenuitem>Scores…</guimenuitem></menuchoice>— This item brings up a dialog showing you the ten best scores. The dialog has the scores identified by user name, score, the time it took to complete the game, and the date the game was completed."
 msgstr ""
 
 #: C/mahjongg.xml:473(para)
@@ -346,7 +346,7 @@ msgid "<menuchoice><guimenuitem>Toolbar</guimenuitem></menuchoice>— This item 
 msgstr ""
 
 #: C/mahjongg.xml:509(para)
-msgid "<menuchoice><guimenuitem>Preferences&hellip;</guimenuitem></menuchoice>— This item brings up the <link linkend=\"prefs\">Preferences&hellip;</link> dialog."
+msgid "<menuchoice><guimenuitem>Preferences…</guimenuitem></menuchoice>— This item brings up the <link linkend=\"prefs\">Preferences…</link> dialog."
 msgstr ""
 
 #: C/mahjongg.xml:522(guimenu)
@@ -358,7 +358,7 @@ msgid "<menuchoice><shortcut><keysym>F1</keysym></shortcut><guimenuitem>Contents
 msgstr ""
 
 #: C/mahjongg.xml:539(para)
-msgid "<menuchoice><guimenuitem>About&hellip;</guimenuitem></menuchoice>— This item gives you some basic information about <application>GNOME Mahjongg</application>, such as the author's names and the application version number."
+msgid "<menuchoice><guimenuitem>About…</guimenuitem></menuchoice>— This item gives you some basic information about <application>GNOME Mahjongg</application>, such as the author's names and the application version number."
 msgstr ""
 
 #: C/mahjongg.xml:558(title)
@@ -366,12 +366,12 @@ msgid "Customization"
 msgstr "Anpassning"
 
 #: C/mahjongg.xml:559(para)
-msgid "To change the application's settings, select <guimenuitem>Preferences&hellip;</guimenuitem> from the <guimenu>Settings</guimenu> menu. This opens the <link linkend=\"preferences-fig\"><interface>Preferences&hellip;</interface> dialog</link>."
+msgid "To change the application's settings, select <guimenuitem>Preferences…</guimenuitem> from the <guimenu>Settings</guimenu> menu. This opens the <link linkend=\"preferences-fig\"><interface>Preferences…</interface> dialog</link>."
 msgstr ""
 
 #. ALAN: looks correct like version 2.10 to me
 #: C/mahjongg.xml:570(title)
-msgid "Preferences&hellip; Dialog"
+msgid "Preferences… Dialog"
 msgstr ""
 
 #: C/mahjongg.xml:578(phrase)
@@ -383,7 +383,7 @@ msgid "All the options are applied and saved immediately."
 msgstr ""
 
 #: C/mahjongg.xml:588(para)
-msgid "The properties in the <interface>Preferences&hellip;</interface> dialog are:"
+msgid "The properties in the <interface>Preferences…</interface> dialog are:"
 msgstr ""
 
 #: C/mahjongg.xml:594(para)

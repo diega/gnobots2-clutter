@@ -373,8 +373,8 @@ msgid "<guimenuitem>Show tool bar</guimenuitem>— This toggle switches the tool
 msgstr "<guimenuitem>Προβολή γραμμής εργαλίων</guimenuitem>— Αυτό ενεργοποιεί και απενεργοποιεί τη γραμμή εργαλίων."
 
 #: C/blackjack.xml:473(para)
-msgid "<guimenuitem>Preferences&hellip;</guimenuitem>— This opens the <interface>Preferences Dialog</interface>, allowing you to configure the game."
-msgstr "<guimenuitem>Προτιμήσεις&hellip;</guimenuitem>— Αυτό ανοίγει το <interface>Διάλογο Προτιμήσεις</interface>, επιτρέποντας να ρυθμίσετε το παιχνίδι."
+msgid "<guimenuitem>Preferences…</guimenuitem>— This opens the <interface>Preferences Dialog</interface>, allowing you to configure the game."
+msgstr "<guimenuitem>Προτιμήσεις…</guimenuitem>— Αυτό ανοίγει το <interface>Διάλογο Προτιμήσεις</interface>, επιτρέποντας να ρυθμίσετε το παιχνίδι."
 
 #: C/blackjack.xml:489(guimenu)
 msgid "Help"

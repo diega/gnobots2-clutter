@@ -592,7 +592,7 @@ msgstr ""
 
 #: C/blackjack.xml:473(para)
 msgid ""
-"<guimenuitem>Preferences&hellip;</guimenuitem>— This opens the "
+"<guimenuitem>Preferences…</guimenuitem>— This opens the "
 "<interface>Preferences Dialog</interface>, allowing you to configure the "
 "game."
 msgstr ""
