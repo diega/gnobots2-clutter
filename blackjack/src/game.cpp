@@ -62,7 +62,7 @@ gint             dealerSpeed;
 
 gint             numHands;
 
-const gchar      *game_file = "";
+gchar            *game_file;
 gchar            *game_name;
 
 gboolean         allSettled = FALSE;
@@ -422,8 +422,8 @@ bj_game_new (const gchar* file, guint *seedp )
 
         bj_show_balance (bj_get_balance ());
 
-        if (file && strcmp (file, game_file)) {
-                game_file = file;
+        if (file && (!game_file || strcmp (file, game_file) != 0)) {
+                game_file = g_strdup (file);
                 
                 bj_game_eval_installed_file (file);
                 game_name = bj_game_file_to_name (file);
