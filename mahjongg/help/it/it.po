@@ -300,37 +300,37 @@ msgid "Game"
 msgstr "Gioco"
 
 #: C/mahjongg.xml:401(para)
-msgid "<menuchoice><shortcut><keysym>Ctrl-N</keysym></shortcut><guimenuitem>New</guimenuitem></menuchoice>&mdash; This item starts a new game."
-msgstr "<menuchoice><shortcut><keysym>Ctrl+N</keysym></shortcut><guimenuitem>Nuovo</guimenuitem></menuchoice>&mdash; Avvia una nuova partita."
+msgid "<menuchoice><shortcut><keysym>Ctrl-N</keysym></shortcut><guimenuitem>New</guimenuitem></menuchoice>— This item starts a new game."
+msgstr "<menuchoice><shortcut><keysym>Ctrl+N</keysym></shortcut><guimenuitem>Nuovo</guimenuitem></menuchoice>— Avvia una nuova partita."
 
 #: C/mahjongg.xml:412(para)
-msgid "<menuchoice><guimenuitem>Restart</guimenuitem></menuchoice>&mdash; This item resets the current game to the start."
-msgstr "<menuchoice><guimenuitem>Ricomincia</guimenuitem></menuchoice>&mdash; Azzera e riavvia la partita in corso."
+msgid "<menuchoice><guimenuitem>Restart</guimenuitem></menuchoice>— This item resets the current game to the start."
+msgstr "<menuchoice><guimenuitem>Ricomincia</guimenuitem></menuchoice>— Azzera e riavvia la partita in corso."
 
 #: C/mahjongg.xml:420(para)
-msgid "<menuchoice><guimenuitem>Pause</guimenuitem></menuchoice>&mdash; This pauses the game, stopping the clock and hiding the tiles."
-msgstr "<menuchoice><guimenuitem>Pausa</guimenuitem></menuchoice>&mdash; Mette in pausa il gioco, fermando l'orologio e oscurando le tessere."
+msgid "<menuchoice><guimenuitem>Pause</guimenuitem></menuchoice>— This pauses the game, stopping the clock and hiding the tiles."
+msgstr "<menuchoice><guimenuitem>Pausa</guimenuitem></menuchoice>— Mette in pausa il gioco, fermando l'orologio e oscurando le tessere."
 
 #: C/mahjongg.xml:429(para)
-msgid "<menuchoice><shortcut><keysym>Ctrl-Z</keysym></shortcut><guimenuitem>Undo move</guimenuitem></menuchoice>&mdash; This item takes back two tiles you removed until you reach the beginning of the game."
-msgstr "<menuchoice><shortcut><keysym>Ctrl+Z</keysym></shortcut><guimenuitem>Annulla mossa</guimenuitem></menuchoice>&mdash; Ripristina le posizioni delle ultime due tessere spostate, fino all'inizio del gioco."
+msgid "<menuchoice><shortcut><keysym>Ctrl-Z</keysym></shortcut><guimenuitem>Undo move</guimenuitem></menuchoice>— This item takes back two tiles you removed until you reach the beginning of the game."
+msgstr "<menuchoice><shortcut><keysym>Ctrl+Z</keysym></shortcut><guimenuitem>Annulla mossa</guimenuitem></menuchoice>— Ripristina le posizioni delle ultime due tessere spostate, fino all'inizio del gioco."
 
 # Ho tolto l'ultima mossa, quel messaggio non viene più visualizzato.
 #: C/mahjongg.xml:441(para)
-msgid "<menuchoice><shortcut><keysym>Ctrl-R</keysym></shortcut><guimenuitem>Redo move</guimenuitem></menuchoice>&mdash; This item replays your previous move the <guibutton>Undo</guibutton> button took back. When you reach the state you started undoing the message <quote>No more redo!</quote> appears at the bottom left corner of the <interface>Main Window</interface>."
-msgstr "<menuchoice><shortcut><keysym>Maiusc+Ctrl+Z</keysym></shortcut><guimenuitem>Ripeti mossa</guimenuitem></menuchoice>&mdash; Ripete l'ultima mossa precedentemente annullata con il pulsante <guibutton>Annulla mossa</guibutton>."
+msgid "<menuchoice><shortcut><keysym>Ctrl-R</keysym></shortcut><guimenuitem>Redo move</guimenuitem></menuchoice>— This item replays your previous move the <guibutton>Undo</guibutton> button took back. When you reach the state you started undoing the message <quote>No more redo!</quote> appears at the bottom left corner of the <interface>Main Window</interface>."
+msgstr "<menuchoice><shortcut><keysym>Maiusc+Ctrl+Z</keysym></shortcut><guimenuitem>Ripeti mossa</guimenuitem></menuchoice>— Ripete l'ultima mossa precedentemente annullata con il pulsante <guibutton>Annulla mossa</guibutton>."
 
 #: C/mahjongg.xml:455(para)
-msgid "<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>&mdash; This item gives you a pair of matching tiles to remove."
-msgstr "<menuchoice><guimenuitem>Suggerimento</guimenuitem></menuchoice>&mdash; Fornisce una coppia di tessere uguale da rimuovere."
+msgid "<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>— This item gives you a pair of matching tiles to remove."
+msgstr "<menuchoice><guimenuitem>Suggerimento</guimenuitem></menuchoice>— Fornisce una coppia di tessere uguale da rimuovere."
 
 #: C/mahjongg.xml:463(para)
-msgid "<menuchoice><guimenuitem>Scores</guimenuitem></menuchoice>&mdash; This item brings up a dialog showing you the ten best scores. The dialog has the scores identified by user name, score, the time it took to complete the game, and the date the game was completed."
-msgstr "<menuchoice><guimenuitem>Punteggi</guimenuitem></menuchoice>&mdash; Mostra una finestra di dialogo contenente l'elenco dei migliori 10 punteggi. I punteggi sono identificati da un nome utente, un punteggio, il tempo impiegato per completare la partita e la data in cui è stata completata."
+msgid "<menuchoice><guimenuitem>Scores</guimenuitem></menuchoice>— This item brings up a dialog showing you the ten best scores. The dialog has the scores identified by user name, score, the time it took to complete the game, and the date the game was completed."
+msgstr "<menuchoice><guimenuitem>Punteggi</guimenuitem></menuchoice>— Mostra una finestra di dialogo contenente l'elenco dei migliori 10 punteggi. I punteggi sono identificati da un nome utente, un punteggio, il tempo impiegato per completare la partita e la data in cui è stata completata."
 
 #: C/mahjongg.xml:475(para)
-msgid "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Exit</guimenuitem></menuchoice>&mdash; This item allows you to quit the game."
-msgstr "<menuchoice><shortcut><keysym>Ctrl+Q</keysym></shortcut><guimenuitem>Esci</guimenuitem></menuchoice>&mdash; Consente di uscire dal gioco."
+msgid "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Exit</guimenuitem></menuchoice>— This item allows you to quit the game."
+msgstr "<menuchoice><shortcut><keysym>Ctrl+Q</keysym></shortcut><guimenuitem>Esci</guimenuitem></menuchoice>— Consente di uscire dal gioco."
 
 #: C/mahjongg.xml:397(para)
 #: C/mahjongg.xml:493(para)
@@ -343,24 +343,24 @@ msgid "Settings"
 msgstr "Impostazioni"
 
 #: C/mahjongg.xml:497(para)
-msgid "<menuchoice><guimenuitem>Toolbar</guimenuitem></menuchoice>&mdash; This item determines whether the <link linkend=\"toolbar\"><interface>toolbar</interface></link> is shown or not. If the item is checked, the <interface>toolbar</interface> is shown in the last place you put it. If the item is unchecked, the <interface>toolbar</interface> is not shown."
-msgstr "<menuchoice><guimenuitem>Barra degli strumenti</guimenuitem></menuchoice>&mdash; Determina se la <link linkend=\"toolbar\"><interface>barra degli strumenti</interface></link> viene mostrata o no. Se selezionata, la <interface>barra degli strumenti</interface> viene mostrata nell'ultima posizione in cui la si è lasciata. Se non selezionata, la <interface>barra degli strumenti</interface> non viene mostrata."
+msgid "<menuchoice><guimenuitem>Toolbar</guimenuitem></menuchoice>— This item determines whether the <link linkend=\"toolbar\"><interface>toolbar</interface></link> is shown or not. If the item is checked, the <interface>toolbar</interface> is shown in the last place you put it. If the item is unchecked, the <interface>toolbar</interface> is not shown."
+msgstr "<menuchoice><guimenuitem>Barra degli strumenti</guimenuitem></menuchoice>— Determina se la <link linkend=\"toolbar\"><interface>barra degli strumenti</interface></link> viene mostrata o no. Se selezionata, la <interface>barra degli strumenti</interface> viene mostrata nell'ultima posizione in cui la si è lasciata. Se non selezionata, la <interface>barra degli strumenti</interface> non viene mostrata."
 
 #: C/mahjongg.xml:510(para)
-msgid "<menuchoice><guimenuitem>Preferences</guimenuitem></menuchoice>&mdash; This item brings up the <link linkend=\"prefs\">Preferences </link> dialog."
-msgstr "<menuchoice><guimenuitem>Preferenze</guimenuitem></menuchoice>&mdash; Apre la finestra di dialogo <link linkend=\"prefs\">Preferenze</link>."
+msgid "<menuchoice><guimenuitem>Preferences</guimenuitem></menuchoice>— This item brings up the <link linkend=\"prefs\">Preferences </link> dialog."
+msgstr "<menuchoice><guimenuitem>Preferenze</guimenuitem></menuchoice>— Apre la finestra di dialogo <link linkend=\"prefs\">Preferenze</link>."
 
 #: C/mahjongg.xml:523(guimenu)
 msgid "Help"
 msgstr "Aiuto"
 
 #: C/mahjongg.xml:529(para)
-msgid "<menuchoice><shortcut><keysym>F1</keysym></shortcut><guimenuitem>Contents</guimenuitem></menuchoice>&mdash; This item shows this manual."
-msgstr "<menuchoice><shortcut><keysym>F1</keysym></shortcut><guimenuitem>Sommario</guimenuitem></menuchoice>&mdash; Mostra questo manuale."
+msgid "<menuchoice><shortcut><keysym>F1</keysym></shortcut><guimenuitem>Contents</guimenuitem></menuchoice>— This item shows this manual."
+msgstr "<menuchoice><shortcut><keysym>F1</keysym></shortcut><guimenuitem>Sommario</guimenuitem></menuchoice>— Mostra questo manuale."
 
 #: C/mahjongg.xml:540(para)
-msgid "<menuchoice><guimenuitem>About</guimenuitem></menuchoice>&mdash; This item gives you some basic information about <application>GNOME Mahjongg</application>, such as the author's names and the application version number."
-msgstr "<menuchoice><guimenuitem>Informazioni</guimenuitem></menuchoice>&mdash; Fornisce brevi informazioni su <application>GNOME Mahjongg</application>, come i nomi degli autori e il numero di versione dell'applicazione."
+msgid "<menuchoice><guimenuitem>About</guimenuitem></menuchoice>— This item gives you some basic information about <application>GNOME Mahjongg</application>, such as the author's names and the application version number."
+msgstr "<menuchoice><guimenuitem>Informazioni</guimenuitem></menuchoice>— Fornisce brevi informazioni su <application>GNOME Mahjongg</application>, come i nomi degli autori e il numero di versione dell'applicazione."
 
 #: C/mahjongg.xml:559(title)
 msgid "Customization"
@@ -388,16 +388,16 @@ msgid "The properties in the <interface>Preferences</interface> dialog are:"
 msgstr "Le proprietà presenti nella finestra di dialogo <interface>Preferenze</interface> sono:"
 
 #: C/mahjongg.xml:595(para)
-msgid "<guilabel>Tile Set:</guilabel>&mdash; Select the look of the tiles from this list."
-msgstr "<guilabel>Set tessere:</guilabel>&mdash; Selezionare lo stile delle tessere da questo elenco."
+msgid "<guilabel>Tile Set:</guilabel>— Select the look of the tiles from this list."
+msgstr "<guilabel>Set tessere:</guilabel>— Selezionare lo stile delle tessere da questo elenco."
 
 #: C/mahjongg.xml:601(para)
-msgid "<guilabel>Select Map:</guilabel>&mdash; Change the difficulty of the game by altering how the tiles are stacked. The more spread out (easy) version lets you see more of the tiles while the more compact (hard) version does not let you see many tiles."
-msgstr "<guilabel>Disposizione:</guilabel>&mdash; Modifica la difficoltà del gioco cambiando la disposizione delle tessere. Le versioni con le tessere più allargate (facili) consentono di vedere un maggior numero di tessere rispetto alle versioni più compatte (difficili), che non consentono di vedere molti pezzi."
+msgid "<guilabel>Select Map:</guilabel>— Change the difficulty of the game by altering how the tiles are stacked. The more spread out (easy) version lets you see more of the tiles while the more compact (hard) version does not let you see many tiles."
+msgstr "<guilabel>Disposizione:</guilabel>— Modifica la difficoltà del gioco cambiando la disposizione delle tessere. Le versioni con le tessere più allargate (facili) consentono di vedere un maggior numero di tessere rispetto alle versioni più compatte (difficili), che non consentono di vedere molti pezzi."
 
 #: C/mahjongg.xml:610(para)
-msgid "<guilabel>Background Color:</guilabel>&mdash; Change the color of the background by bringing up a <interface> color picker</interface> to let you select a new color."
-msgstr "<guilabel>Colori:</guilabel>&mdash; Modifica il colore dello sfondo con la <interface>tavolozza dei colori</interface> per selezionare un nuovo colore."
+msgid "<guilabel>Background Color:</guilabel>— Change the color of the background by bringing up a <interface> color picker</interface> to let you select a new color."
+msgstr "<guilabel>Colori:</guilabel>— Modifica il colore dello sfondo con la <interface>tavolozza dei colori</interface> per selezionare un nuovo colore."
 
 #: C/mahjongg.xml:619(para)
 msgid "To alter the size of the tiles simply resize the window in the normal way. The tiles will expand to fill it."

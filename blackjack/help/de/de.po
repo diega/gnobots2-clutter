@@ -343,20 +343,20 @@ msgid "Game"
 msgstr "Spiel"
 
 #: C/blackjack.xml:408(para)
-msgid "<menuchoice><shortcut><keysym>Ctrl-N</keysym></shortcut><guimenuitem>New game</guimenuitem></menuchoice>&mdash; This clears the table and starts a new game."
-msgstr "<menuchoice><shortcut><keysym>Strg-N</keysym></shortcut><guimenuitem>Neu</guimenuitem></menuchoice>&mdash; Dies leert die Spielfäche und startet ein neues Spiel."
+msgid "<menuchoice><shortcut><keysym>Ctrl-N</keysym></shortcut><guimenuitem>New game</guimenuitem></menuchoice>— This clears the table and starts a new game."
+msgstr "<menuchoice><shortcut><keysym>Strg-N</keysym></shortcut><guimenuitem>Neu</guimenuitem></menuchoice>— Dies leert die Spielfäche und startet ein neues Spiel."
 
 #: C/blackjack.xml:419(para)
-msgid "<menuchoice><guimenuitem>Restart game</guimenuitem></menuchoice>&mdash; This clears the table and restarts the game."
-msgstr "<menuchoice><guimenuitem>Neu starten</guimenuitem></menuchoice>&mdash; Dies leert die Spielfäche und startet das Spiel neu."
+msgid "<menuchoice><guimenuitem>Restart game</guimenuitem></menuchoice>— This clears the table and restarts the game."
+msgstr "<menuchoice><guimenuitem>Neu starten</guimenuitem></menuchoice>— Dies leert die Spielfäche und startet das Spiel neu."
 
 #: C/blackjack.xml:429(para)
-msgid "<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>&mdash; This will give you the computer's best suggestion for your move."
-msgstr "<menuchoice><guimenuitem>Hinweis</guimenuitem></menuchoice>&mdash; Hier gibt Ihnen der Computer eine Empfehlung für Ihre nächste Aktion."
+msgid "<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>— This will give you the computer's best suggestion for your move."
+msgstr "<menuchoice><guimenuitem>Hinweis</guimenuitem></menuchoice>— Hier gibt Ihnen der Computer eine Empfehlung für Ihre nächste Aktion."
 
 #: C/blackjack.xml:440(para)
-msgid "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Exit</guimenuitem></menuchoice>&mdash; This quits the game."
-msgstr "<menuchoice><shortcut><keysym>Strg-Q</keysym></shortcut><guimenuitem>Beenden</guimenuitem></menuchoice>&mdash; Dies beendet das Spiel."
+msgid "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Exit</guimenuitem></menuchoice>— This quits the game."
+msgstr "<menuchoice><shortcut><keysym>Strg-Q</keysym></shortcut><guimenuitem>Beenden</guimenuitem></menuchoice>— Dies beendet das Spiel."
 
 #: C/blackjack.xml:404(para)
 #: C/blackjack.xml:460(para)
@@ -369,24 +369,24 @@ msgid "Settings"
 msgstr "Einstellungen"
 
 #: C/blackjack.xml:465(para)
-msgid "<guimenuitem>Show tool bar</guimenuitem>&mdash; This toggle switches the tool bar on and off."
-msgstr "<guimenuitem>Werkzeugleiste</guimenuitem>&mdash; Dies aktiviert oder deaktiviert die Anzeige der Werkzeugleiste. "
+msgid "<guimenuitem>Show tool bar</guimenuitem>— This toggle switches the tool bar on and off."
+msgstr "<guimenuitem>Werkzeugleiste</guimenuitem>— Dies aktiviert oder deaktiviert die Anzeige der Werkzeugleiste. "
 
 #: C/blackjack.xml:473(para)
-msgid "<guimenuitem>Preferences&hellip;</guimenuitem>&mdash; This opens the <interface>Preferences Dialog</interface>, allowing you to configure the game."
-msgstr "<guimenuitem>Einstellungen</guimenuitem>&mdash; Dies öffnet den <interface>Einstellungsdialog</interface>, der Ihnen die Anpassung des Spiels ermöglicht."
+msgid "<guimenuitem>Preferences&hellip;</guimenuitem>— This opens the <interface>Preferences Dialog</interface>, allowing you to configure the game."
+msgstr "<guimenuitem>Einstellungen</guimenuitem>— Dies öffnet den <interface>Einstellungsdialog</interface>, der Ihnen die Anpassung des Spiels ermöglicht."
 
 #: C/blackjack.xml:489(guimenu)
 msgid "Help"
 msgstr "Hilfe"
 
 #: C/blackjack.xml:496(para)
-msgid "<guimenuitem>Contents</guimenuitem>&mdash; Opens your help browser and shows this manual."
-msgstr "<guimenuitem>Inhalte</guimenuitem>&mdash; Öffnet Ihren Hilfebrowser und zeigt dieses Handbuch an."
+msgid "<guimenuitem>Contents</guimenuitem>— Opens your help browser and shows this manual."
+msgstr "<guimenuitem>Inhalte</guimenuitem>— Öffnet Ihren Hilfebrowser und zeigt dieses Handbuch an."
 
 #: C/blackjack.xml:504(para)
-msgid "<guimenuitem>About</guimenuitem>&mdash; Opens the <interface>About Dialog</interface>, showing basic information about <application>Blackjack</application> such as its version number and the names of its authors."
-msgstr "<guimenuitem>Info</guimenuitem>&mdash; Öffnet den <interface>Infodialog</interface>, welcher grundlegende Informationen über <application>Blackjack</application> anzeigt, wie beispielsweise die Versionsnummer und die Namen der Autoren."
+msgid "<guimenuitem>About</guimenuitem>— Opens the <interface>About Dialog</interface>, showing basic information about <application>Blackjack</application> such as its version number and the names of its authors."
+msgstr "<guimenuitem>Info</guimenuitem>— Öffnet den <interface>Infodialog</interface>, welcher grundlegende Informationen über <application>Blackjack</application> anzeigt, wie beispielsweise die Versionsnummer und die Namen der Autoren."
 
 #: C/blackjack.xml:491(para)
 msgid "This menu contains: <placeholder-1/>"

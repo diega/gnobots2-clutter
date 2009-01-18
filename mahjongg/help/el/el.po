@@ -340,36 +340,36 @@ msgid "Game"
 msgstr "Παιχνίδι"
 
 #: C/mahjongg.xml:401(para)
-msgid "<menuchoice><shortcut><keysym>Ctrl-N</keysym></shortcut><guimenuitem>New</guimenuitem></menuchoice>&mdash; This item starts a new game."
-msgstr "<menuchoice><shortcut><keysym>Ctrl+Ν</keysym></shortcut><guimenuitem> Νέο</guimenuitem></menuchoice>&mdash; Ξεκινάει νέο παιχνίδι."
+msgid "<menuchoice><shortcut><keysym>Ctrl-N</keysym></shortcut><guimenuitem>New</guimenuitem></menuchoice>— This item starts a new game."
+msgstr "<menuchoice><shortcut><keysym>Ctrl+Ν</keysym></shortcut><guimenuitem> Νέο</guimenuitem></menuchoice>— Ξεκινάει νέο παιχνίδι."
 
 #: C/mahjongg.xml:412(para)
-msgid "<menuchoice><guimenuitem>Restart</guimenuitem></menuchoice>&mdash; This item resets the current game to the start."
-msgstr "<menuchoice><guimenuitem>Επανεκκίνηση</guimenuitem></menuchoice>&mdash; Ξεκινάει το ίδιο παιχνίδι από την αρχή."
+msgid "<menuchoice><guimenuitem>Restart</guimenuitem></menuchoice>— This item resets the current game to the start."
+msgstr "<menuchoice><guimenuitem>Επανεκκίνηση</guimenuitem></menuchoice>— Ξεκινάει το ίδιο παιχνίδι από την αρχή."
 
 #: C/mahjongg.xml:420(para)
-msgid "<menuchoice><guimenuitem>Pause</guimenuitem></menuchoice>&mdash; This pauses the game, stopping the clock and hiding the tiles."
-msgstr "<menuchoice><guimenuitem>Παύση</guimenuitem></menuchoice>&mdash; Παύει το παιχνίδι. Σταματάει το ρολόι και κρύβει τα πλακίδια."
+msgid "<menuchoice><guimenuitem>Pause</guimenuitem></menuchoice>— This pauses the game, stopping the clock and hiding the tiles."
+msgstr "<menuchoice><guimenuitem>Παύση</guimenuitem></menuchoice>— Παύει το παιχνίδι. Σταματάει το ρολόι και κρύβει τα πλακίδια."
 
 #: C/mahjongg.xml:429(para)
-msgid "<menuchoice><shortcut><keysym>Ctrl-Z</keysym></shortcut><guimenuitem>Undo move</guimenuitem></menuchoice>&mdash; This item takes back two tiles you removed until you reach the beginning of the game."
-msgstr "<menuchoice><shortcut><keysym>Ctrl-Z</keysym></shortcut><guimenuitem>Αναίρεση κίνησης</guimenuitem></menuchoice>&mdash; Επαναφέρει τα δύο τελευταία πλακίδια που είχαν απομακρυνθεί. Αν επαναλάβετε αρκετές φορές, θα επιστρέψετε στην αρχή του παιχνιδιού."
+msgid "<menuchoice><shortcut><keysym>Ctrl-Z</keysym></shortcut><guimenuitem>Undo move</guimenuitem></menuchoice>— This item takes back two tiles you removed until you reach the beginning of the game."
+msgstr "<menuchoice><shortcut><keysym>Ctrl-Z</keysym></shortcut><guimenuitem>Αναίρεση κίνησης</guimenuitem></menuchoice>— Επαναφέρει τα δύο τελευταία πλακίδια που είχαν απομακρυνθεί. Αν επαναλάβετε αρκετές φορές, θα επιστρέψετε στην αρχή του παιχνιδιού."
 
 #: C/mahjongg.xml:441(para)
-msgid "<menuchoice><shortcut><keysym>Ctrl-R</keysym></shortcut><guimenuitem>Redo move</guimenuitem></menuchoice>&mdash; This item replays your previous move the <guibutton>Undo</guibutton> button took back. When you reach the state you started undoing the message <quote>No more redo!</quote> appears at the bottom left corner of the <interface>Main Window</interface>."
-msgstr "<menuchoice><shortcut><keysym>Ctrl-R</keysym></shortcut><guimenuitem>Επανάληψη κίνησης</guimenuitem></menuchoice>&mdash; Επαναλαμβάνει την προηγούμενη κίνηση, δηλαδή αυτή που είχε αναιρεθεί με το πάτημα στο <guibutton> Αναίρεση</guibutton>. Όταν φτάσετε στο σημείο από όπου είχατε ξεκινήσει να αναιρείτε, το μήνυμα <quote>Αδυναμία επανάληψης!</quote> εμφανίζεται στην κάτω αριστερή γωνία του <interface>κύριου παραθύρου</interface>."
+msgid "<menuchoice><shortcut><keysym>Ctrl-R</keysym></shortcut><guimenuitem>Redo move</guimenuitem></menuchoice>— This item replays your previous move the <guibutton>Undo</guibutton> button took back. When you reach the state you started undoing the message <quote>No more redo!</quote> appears at the bottom left corner of the <interface>Main Window</interface>."
+msgstr "<menuchoice><shortcut><keysym>Ctrl-R</keysym></shortcut><guimenuitem>Επανάληψη κίνησης</guimenuitem></menuchoice>— Επαναλαμβάνει την προηγούμενη κίνηση, δηλαδή αυτή που είχε αναιρεθεί με το πάτημα στο <guibutton> Αναίρεση</guibutton>. Όταν φτάσετε στο σημείο από όπου είχατε ξεκινήσει να αναιρείτε, το μήνυμα <quote>Αδυναμία επανάληψης!</quote> εμφανίζεται στην κάτω αριστερή γωνία του <interface>κύριου παραθύρου</interface>."
 
 #: C/mahjongg.xml:455(para)
-msgid "<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>&mdash; This item gives you a pair of matching tiles to remove."
-msgstr "<menuchoice><guimenuitem>Συμβουλή</guimenuitem></menuchoice>&mdash; Υποδεικνύει ένα ζευγάρι πλακιδίων που μπορούν να απομακρυνθούν."
+msgid "<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>— This item gives you a pair of matching tiles to remove."
+msgstr "<menuchoice><guimenuitem>Συμβουλή</guimenuitem></menuchoice>— Υποδεικνύει ένα ζευγάρι πλακιδίων που μπορούν να απομακρυνθούν."
 
 #: C/mahjongg.xml:463(para)
-msgid "<menuchoice><guimenuitem>Scores</guimenuitem></menuchoice>&mdash; This item brings up a dialog showing you the ten best scores. The dialog has the scores identified by user name and the time it took to complete the game."
+msgid "<menuchoice><guimenuitem>Scores</guimenuitem></menuchoice>— This item brings up a dialog showing you the ten best scores. The dialog has the scores identified by user name and the time it took to complete the game."
 msgstr ""
 
 #: C/mahjongg.xml:473(para)
-msgid "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Exit</guimenuitem></menuchoice>&mdash; This item allows you to quit the game."
-msgstr "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Έξοδος</guimenuitem></menuchoice>&mdash; Επιτρέπει την έξοδο από το παιχνίδι."
+msgid "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Exit</guimenuitem></menuchoice>— This item allows you to quit the game."
+msgstr "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Έξοδος</guimenuitem></menuchoice>— Επιτρέπει την έξοδο από το παιχνίδι."
 
 #: C/mahjongg.xml:397(para) C/mahjongg.xml:491(para) C/mahjongg.xml:523(para)
 msgid "The menu contains: <placeholder-1/>"
@@ -380,24 +380,24 @@ msgid "Settings"
 msgstr "Ρυθμίσεις"
 
 #: C/mahjongg.xml:495(para)
-msgid "<menuchoice><guimenuitem>Toolbar</guimenuitem></menuchoice>&mdash; This item determines whether the <link linkend=\"toolbar\"><interface>toolbar</interface></link> is shown or not. If the item is checked, the <interface>toolbar</interface> is shown in the last place you put it. If the item is unchecked, the <interface>toolbar</interface> is not shown."
-msgstr "<menuchoice><guimenuitem>Εργαλειοθήκη</guimenuitem></menuchoice>&mdash; Καθορίζει το αν εμφανίζεται ή όχι η <link linkend=\"toolbar\"><interface>εργαλειοθήκη</interface></link>. Αν είναι επιλεγμένο, η <interface> εργαλειοθήκη</interface> εμφανίζεται στη θέση που την είχατε τοποθετήσει την τελευταία φορά. Αν δεν είναι επιλεγμένο, η<interface> εργαλειοθήκη</interface> δεν εμφανίζεται."
+msgid "<menuchoice><guimenuitem>Toolbar</guimenuitem></menuchoice>— This item determines whether the <link linkend=\"toolbar\"><interface>toolbar</interface></link> is shown or not. If the item is checked, the <interface>toolbar</interface> is shown in the last place you put it. If the item is unchecked, the <interface>toolbar</interface> is not shown."
+msgstr "<menuchoice><guimenuitem>Εργαλειοθήκη</guimenuitem></menuchoice>— Καθορίζει το αν εμφανίζεται ή όχι η <link linkend=\"toolbar\"><interface>εργαλειοθήκη</interface></link>. Αν είναι επιλεγμένο, η <interface> εργαλειοθήκη</interface> εμφανίζεται στη θέση που την είχατε τοποθετήσει την τελευταία φορά. Αν δεν είναι επιλεγμένο, η<interface> εργαλειοθήκη</interface> δεν εμφανίζεται."
 
 #: C/mahjongg.xml:508(para)
-msgid "<menuchoice><guimenuitem>Preferences</guimenuitem></menuchoice>&mdash; This item brings up the <link linkend=\"prefs\">Preferences </link> dialog."
-msgstr "<menuchoice><guimenuitem> Προτιμήσεις</guimenuitem></menuchoice>&mdash; Εμφανίζει τον διάλογο με τις<link linkend=\"prefs\"> προτιμήσεις</link>."
+msgid "<menuchoice><guimenuitem>Preferences</guimenuitem></menuchoice>— This item brings up the <link linkend=\"prefs\">Preferences </link> dialog."
+msgstr "<menuchoice><guimenuitem> Προτιμήσεις</guimenuitem></menuchoice>— Εμφανίζει τον διάλογο με τις<link linkend=\"prefs\"> προτιμήσεις</link>."
 
 #: C/mahjongg.xml:521(guimenu)
 msgid "Help"
 msgstr "Βοήθεια"
 
 #: C/mahjongg.xml:527(para)
-msgid "<menuchoice><shortcut><keysym>F1</keysym></shortcut><guimenuitem>Contents</guimenuitem></menuchoice>&mdash; This item shows this manual."
-msgstr "<menuchoice><shortcut><keysym> F1</keysym></shortcut><guimenuitem> Περιεχόμενα</guimenuitem></menuchoice>&mdash; Εμφανίζει αυτή την τεκμηρίωση."
+msgid "<menuchoice><shortcut><keysym>F1</keysym></shortcut><guimenuitem>Contents</guimenuitem></menuchoice>— This item shows this manual."
+msgstr "<menuchoice><shortcut><keysym> F1</keysym></shortcut><guimenuitem> Περιεχόμενα</guimenuitem></menuchoice>— Εμφανίζει αυτή την τεκμηρίωση."
 
 #: C/mahjongg.xml:538(para)
-msgid "<menuchoice><guimenuitem>About</guimenuitem></menuchoice>&mdash; This item gives you some basic information about <application>GNOME Mahjongg</application>, such as the author's names and the application version number."
-msgstr "<menuchoice><guimenuitem>Περί</guimenuitem></menuchoice>&mdash; Παρέχει βασικές πληροφορίες για το <application> GNOME Ματζόνγκ</application>, όπως τα ονόματα των δημιουργών και τον αριθμό έκδοσης της εφαρμογής."
+msgid "<menuchoice><guimenuitem>About</guimenuitem></menuchoice>— This item gives you some basic information about <application>GNOME Mahjongg</application>, such as the author's names and the application version number."
+msgstr "<menuchoice><guimenuitem>Περί</guimenuitem></menuchoice>— Παρέχει βασικές πληροφορίες για το <application> GNOME Ματζόνγκ</application>, όπως τα ονόματα των δημιουργών και τον αριθμό έκδοσης της εφαρμογής."
 
 #: C/mahjongg.xml:557(title)
 msgid "Customization"
@@ -425,16 +425,16 @@ msgid "The properties in the <interface>Preferences</interface> dialog are:"
 msgstr "Οι ιδιότητες που εμφανίζονται στο διάλογο<interface> προτιμήσεων</interface> είναι:"
 
 #: C/mahjongg.xml:593(para)
-msgid "<guilabel>Tile Set:</guilabel>&mdash; Select the look of the tiles from this list."
-msgstr "<guilabel>Σετ πλακιδίων</guilabel>&mdash; Από αυτή τη λίστα επιλέγετε την επιθυμητή εμφάνιση των πλακιδίων."
+msgid "<guilabel>Tile Set:</guilabel>— Select the look of the tiles from this list."
+msgstr "<guilabel>Σετ πλακιδίων</guilabel>— Από αυτή τη λίστα επιλέγετε την επιθυμητή εμφάνιση των πλακιδίων."
 
 #: C/mahjongg.xml:599(para)
-msgid "<guilabel>Select Map:</guilabel>&mdash; Change the difficulty of the game by altering how the tiles are stacked. The more spread out (easy) version lets you see more of the tiles while the more compact (hard) version does not let you see many tiles."
-msgstr "<guilabel> Επιλογή χάρτη</guilabel>&mdash; Αλλάξτε τη δυσκολία του παιχνιδιού μεταβάλλοντας τη διάταξη των πλακιδίων. Οι πιο απλωμένες (εύκολες) εκδοχές σας επιτρέπουν να βλέπετε περισσότερα πλακίδια, ενώ οι πιο πυκνές (δύσκολες) δεν σας επιτρέπουν να βλέπετε πολλά."
+msgid "<guilabel>Select Map:</guilabel>— Change the difficulty of the game by altering how the tiles are stacked. The more spread out (easy) version lets you see more of the tiles while the more compact (hard) version does not let you see many tiles."
+msgstr "<guilabel> Επιλογή χάρτη</guilabel>— Αλλάξτε τη δυσκολία του παιχνιδιού μεταβάλλοντας τη διάταξη των πλακιδίων. Οι πιο απλωμένες (εύκολες) εκδοχές σας επιτρέπουν να βλέπετε περισσότερα πλακίδια, ενώ οι πιο πυκνές (δύσκολες) δεν σας επιτρέπουν να βλέπετε πολλά."
 
 #: C/mahjongg.xml:608(para)
-msgid "<guilabel>Background Color:</guilabel>&mdash; Change the color of the background by bringing up a <interface> color picker</interface> to let you select a new color."
-msgstr "<guilabel>Χρώμα φόντου</guilabel>&mdash; Αλλάξτε το χρώμα του φόντου, χρησιμοποιώντας <interface> επιλογέα χρωμάτων</interface>."
+msgid "<guilabel>Background Color:</guilabel>— Change the color of the background by bringing up a <interface> color picker</interface> to let you select a new color."
+msgstr "<guilabel>Χρώμα φόντου</guilabel>— Αλλάξτε το χρώμα του φόντου, χρησιμοποιώντας <interface> επιλογέα χρωμάτων</interface>."
 
 #: C/mahjongg.xml:617(para)
 msgid "To alter the size of the tiles simply resize the window in the normal way. The tiles will expand to fill it."

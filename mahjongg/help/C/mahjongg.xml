@@ -404,7 +404,7 @@
 			<keysym>Ctrl-N</keysym>
 		      </shortcut>
 		      <guimenuitem>New</guimenuitem>
-		    </menuchoice> &mdash; 
+		    </menuchoice> — 
 		    This item starts a new game.
 		  </para>
 		</listitem>
@@ -412,7 +412,7 @@
 		  <para>
 		    <menuchoice>
 		      <guimenuitem>Restart</guimenuitem>
-		    </menuchoice> &mdash; 
+		    </menuchoice> — 
 		    This item resets the current game to the start.
 		  </para>
 		</listitem>
@@ -420,7 +420,7 @@
 		  <para>
 		    <menuchoice>
 		      <guimenuitem>Pause</guimenuitem>
-		    </menuchoice> &mdash; 
+		    </menuchoice> — 
                     This pauses the game, stopping the clock and
 		    hiding the tiles.
 		  </para>
@@ -432,7 +432,7 @@
 			<keysym>Ctrl-Z</keysym>
 		      </shortcut>
 		      <guimenuitem>Undo move</guimenuitem>
-		    </menuchoice> &mdash; 
+		    </menuchoice> — 
 		    This item takes back two tiles you removed until 
 		    you reach the beginning of the game.
 		  </para>
@@ -444,7 +444,7 @@
 			<keysym>Ctrl-R</keysym>
 		      </shortcut>
 		      <guimenuitem>Redo move</guimenuitem>
-		    </menuchoice> &mdash; 
+		    </menuchoice> — 
 		    This item replays your previous move the <guibutton>Undo</guibutton> 
 		    button took back.  When you reach the state you started undoing the 
 		    message <quote>No more redo!</quote> appears at the bottom left corner 
@@ -455,7 +455,7 @@
 		  <para>
 		    <menuchoice>
 		      <guimenuitem>Hint</guimenuitem>
-		    </menuchoice> &mdash; 
+		    </menuchoice> — 
 		    This item gives you a pair of matching tiles to remove.
 		  </para>
 		</listitem>
@@ -463,7 +463,7 @@
 		  <para>
 		    <menuchoice>
 		      <guimenuitem>Scores</guimenuitem>
-		    </menuchoice> &mdash; 
+		    </menuchoice> — 
 		    This item brings up a dialog showing you the ten best scores.  The 
 		    dialog has the scores identified by user name and the time it took
                     to complete the game.
@@ -476,7 +476,7 @@
 			<keysym>Ctrl-Q</keysym>
 		      </shortcut>
 		      <guimenuitem>Exit</guimenuitem>
-		    </menuchoice> &mdash; 
+		    </menuchoice> — 
 		    This item allows you to quit the game.
 		  </para>
 		</listitem>
@@ -495,7 +495,7 @@
 		  <para>
 		    <menuchoice>
 		      <guimenuitem>Toolbar</guimenuitem>
-		    </menuchoice> &mdash; 
+		    </menuchoice> — 
 		    This item determines whether the <link linkend="toolbar">
 		    <interface>toolbar</interface></link> 
 		    is shown or not.  If the item is checked, the 
@@ -508,7 +508,7 @@
 		  <para>
 		    <menuchoice>
 		      <guimenuitem>Preferences</guimenuitem>
-		    </menuchoice> &mdash; 
+		    </menuchoice> — 
 		    This item brings up the <link linkend="prefs">Preferences
 		    </link> dialog.
 		  </para>
@@ -530,7 +530,7 @@
 			<keysym>F1</keysym>
 		      </shortcut>
 		      <guimenuitem>Contents</guimenuitem>
-		    </menuchoice> &mdash; 
+		    </menuchoice> — 
 		    This item shows this manual.
 		  </para>
 		</listitem>
@@ -538,7 +538,7 @@
 		  <para>
 		    <menuchoice>
 		      <guimenuitem>About</guimenuitem>
-		    </menuchoice> &mdash; 
+		    </menuchoice> — 
 		    This item gives you some basic information about 
 		    <application>GNOME Mahjongg</application>, such as 
 		    the author's names and the application version number.
@@ -591,13 +591,13 @@
       <itemizedlist mark="opencircle">
 	<listitem>
 	  <para>
-	    <guilabel>Tile Set:</guilabel> &mdash; 
+	    <guilabel>Tile Set:</guilabel> — 
 	    Select the look of the tiles from this list.
 	  </para>
 	</listitem>
 	<listitem>
 	  <para>
-	    <guilabel>Select Map:</guilabel> &mdash; 
+	    <guilabel>Select Map:</guilabel> — 
 	    Change the difficulty of the game by altering how 
 	    the tiles are stacked.  The more spread out (easy) version 
 	    lets you see more of the tiles while the more compact (hard) 
@@ -606,7 +606,7 @@
 	</listitem>
 	<listitem>
 	  <para>
-	    <guilabel>Background Color:</guilabel> &mdash; 
+	    <guilabel>Background Color:</guilabel> — 
 	    Change the color of the background 
 	    by bringing up a <interface>
 	    color picker</interface> to let you select a new color.

@@ -535,7 +535,7 @@ msgstr "Juego"
 #: C/blackjack.xml:408(para)
 msgid ""
 "<menuchoice><shortcut><keysym>Ctrl-N</keysym></shortcut><guimenuitem>New "
-"game</guimenuitem></menuchoice>&mdash; This clears the table and starts a "
+"game</guimenuitem></menuchoice>— This clears the table and starts a "
 "new game."
 msgstr ""
 "<menuchoice><shortcut><keysym>Ctrl+N</keysym></shortcut><guimenuitem>Nuevo</"
@@ -543,7 +543,7 @@ msgstr ""
 
 #: C/blackjack.xml:419(para)
 msgid ""
-"<menuchoice><guimenuitem>Restart game</guimenuitem></menuchoice>&mdash; This "
+"<menuchoice><guimenuitem>Restart game</guimenuitem></menuchoice>— This "
 "clears the table and restarts the game."
 msgstr ""
 "<menuchoice><guimenuitem>Reiniciar</guimenuitem></menuchoice>: Esto limpia "
@@ -551,7 +551,7 @@ msgstr ""
 
 #: C/blackjack.xml:429(para)
 msgid ""
-"<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>&mdash; This will "
+"<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>— This will "
 "give you the computer's best suggestion for your move."
 msgstr ""
 "<menuchoice><guimenuitem>Sugerencia</guimenuitem></menuchoice>: Esto le "
@@ -560,7 +560,7 @@ msgstr ""
 #: C/blackjack.xml:440(para)
 msgid ""
 "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Exit</"
-"guimenuitem></menuchoice>&mdash; This quits the game."
+"guimenuitem></menuchoice>— This quits the game."
 msgstr ""
 "<menuchoice><shortcut><keysym>Ctrl+Q</keysym></shortcut><guimenuitem>Salir</"
 "guimenuitem></menuchoice>: Esto sale del juego."
@@ -575,7 +575,7 @@ msgstr "Ajustes"
 
 #: C/blackjack.xml:465(para)
 msgid ""
-"<guimenuitem>Show tool bar</guimenuitem>&mdash; This toggle switches the "
+"<guimenuitem>Show tool bar</guimenuitem>— This toggle switches the "
 "tool bar on and off."
 msgstr ""
 "<guimenuitem>Mostrar la barra de herramientas</guimenuitem>: Esto conmuta la "
@@ -583,7 +583,7 @@ msgstr ""
 
 #: C/blackjack.xml:473(para)
 msgid ""
-"<guimenuitem>Preferences&hellip;</guimenuitem>&mdash; This opens the "
+"<guimenuitem>Preferences&hellip;</guimenuitem>— This opens the "
 "<interface>Preferences Dialog</interface>, allowing you to configure the "
 "game."
 msgstr ""
@@ -596,13 +596,13 @@ msgstr "Ayuda"
 
 #: C/blackjack.xml:496(para)
 msgid ""
-"<guimenuitem>Contents</guimenuitem>&mdash; Opens your help browser and shows "
+"<guimenuitem>Contents</guimenuitem>— Opens your help browser and shows "
 "this manual."
 msgstr "<guimenuitem>Contenido</guimenuitem>: Abre y muestra este manual."
 
 #: C/blackjack.xml:504(para)
 msgid ""
-"<guimenuitem>About</guimenuitem>&mdash; Opens the <interface>About Dialog</"
+"<guimenuitem>About</guimenuitem>— Opens the <interface>About Dialog</"
 "interface>, showing basic information about <application>Blackjack</"
 "application> such as its version number and the names of its authors."
 msgstr ""

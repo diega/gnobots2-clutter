@@ -410,7 +410,7 @@
                       <shortcut><keysym>Ctrl-N</keysym></shortcut>
                       <guimenuitem>New game</guimenuitem>
                     </menuchoice>
-                    &mdash;
+                    —
                     This clears the table and starts a new game.
                   </para>
                 </listitem>
@@ -420,7 +420,7 @@
                     <menuchoice>
                       <guimenuitem>Restart game</guimenuitem>
                     </menuchoice>
-                    &mdash;
+                    —
                     This clears the table and restarts the game.
                   </para>
                 </listitem>
@@ -430,7 +430,7 @@
                     <menuchoice>
                       <guimenuitem>Hint</guimenuitem>
                     </menuchoice>
-                    &mdash;
+                    —
                     This will give you the computer's best suggestion for your
                     move.
                   </para>
@@ -442,7 +442,7 @@
                       <shortcut><keysym>Ctrl-Q</keysym></shortcut>
                       <guimenuitem>Exit</guimenuitem>
                     </menuchoice>
-                    &mdash;
+                    —
                     This quits the game.
                   </para>
                 </listitem>
@@ -464,7 +464,7 @@
                 <listitem>
                   <para>
                     <guimenuitem>Show tool bar</guimenuitem>
-                    &mdash;
+                    —
                     This toggle switches the tool bar on and off.
                   </para>
                 </listitem>
@@ -472,7 +472,7 @@
                 <listitem>
                   <para>
                     <guimenuitem>Preferences&hellip;</guimenuitem>
-                    &mdash;
+                    —
                     This opens the <interface>Preferences Dialog</interface>,
                     allowing you to configure the game.
                   </para>
@@ -495,7 +495,7 @@
                 <listitem>
                   <para>
                     <guimenuitem>Contents</guimenuitem>
-                    &mdash;
+                    —
                     Opens your help browser and shows this manual.
                   </para>
                 </listitem>
@@ -503,7 +503,7 @@
                 <listitem>
                   <para>
                     <guimenuitem>About</guimenuitem>
-                    &mdash;
+                    —
                     Opens the <interface>About Dialog</interface>, showing
                     basic information about &app; such as its version
                     number and the names of its authors.

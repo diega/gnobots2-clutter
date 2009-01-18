@@ -542,36 +542,36 @@ msgstr "Jeu"
 #: C/blackjack.xml:408(para)
 msgid ""
 "<menuchoice><shortcut><keysym>Ctrl-N</keysym></shortcut><guimenuitem>New "
-"game</guimenuitem></menuchoice>&mdash; This clears the table and starts a "
+"game</guimenuitem></menuchoice>— This clears the table and starts a "
 "new game."
 msgstr ""
 "<menuchoice><shortcut><keysym>Ctrl-N</keysym></"
-"shortcut><guimenuitem>Nouveau</guimenuitem></menuchoice>&mdash; Cela efface "
+"shortcut><guimenuitem>Nouveau</guimenuitem></menuchoice>— Cela efface "
 "la table actuelle et démarre une nouvelle partie."
 
 #: C/blackjack.xml:419(para)
 msgid ""
-"<menuchoice><guimenuitem>Restart game</guimenuitem></menuchoice>&mdash; This "
+"<menuchoice><guimenuitem>Restart game</guimenuitem></menuchoice>— This "
 "clears the table and restarts the game."
 msgstr ""
-"<menuchoice><guimenuitem>Recommencer</guimenuitem></menuchoice>&mdash; Cela "
+"<menuchoice><guimenuitem>Recommencer</guimenuitem></menuchoice>— Cela "
 "efface la table actuelle et redémarre la partie."
 
 #: C/blackjack.xml:429(para)
 msgid ""
-"<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>&mdash; This will "
+"<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>— This will "
 "give you the computer's best suggestion for your move."
 msgstr ""
-"<menuchoice><guimenuitem>Astuce</guimenuitem></menuchoice>&mdash; "
+"<menuchoice><guimenuitem>Astuce</guimenuitem></menuchoice>— "
 "L'ordinateur vous indique la meilleure action à exécuter, selon lui."
 
 #: C/blackjack.xml:440(para)
 msgid ""
 "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Exit</"
-"guimenuitem></menuchoice>&mdash; This quits the game."
+"guimenuitem></menuchoice>— This quits the game."
 msgstr ""
 "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></"
-"shortcut><guimenuitem>Quitter</guimenuitem></menuchoice>&mdash; Cela quitte "
+"shortcut><guimenuitem>Quitter</guimenuitem></menuchoice>— Cela quitte "
 "le jeu."
 
 #: C/blackjack.xml:404(para) C/blackjack.xml:460(para)
@@ -584,19 +584,19 @@ msgstr "Paramètres"
 
 #: C/blackjack.xml:465(para)
 msgid ""
-"<guimenuitem>Show tool bar</guimenuitem>&mdash; This toggle switches the "
+"<guimenuitem>Show tool bar</guimenuitem>— This toggle switches the "
 "tool bar on and off."
 msgstr ""
-"<guimenuitem>Barre d'outils</guimenuitem>&mdash; Cet élément de menu affiche "
+"<guimenuitem>Barre d'outils</guimenuitem>— Cet élément de menu affiche "
 "ou masque la barre d'outils."
 
 #: C/blackjack.xml:473(para)
 msgid ""
-"<guimenuitem>Preferences&hellip;</guimenuitem>&mdash; This opens the "
+"<guimenuitem>Preferences&hellip;</guimenuitem>— This opens the "
 "<interface>Preferences Dialog</interface>, allowing you to configure the "
 "game."
 msgstr ""
-"<guimenuitem>Préférences</guimenuitem>&mdash; Cela ouvre la boîte de "
+"<guimenuitem>Préférences</guimenuitem>— Cela ouvre la boîte de "
 "dialogue des <interface>Préférences</interface>, vous permettant de "
 "configurer le jeu."
 
@@ -606,19 +606,19 @@ msgstr "Aide"
 
 #: C/blackjack.xml:496(para)
 msgid ""
-"<guimenuitem>Contents</guimenuitem>&mdash; Opens your help browser and shows "
+"<guimenuitem>Contents</guimenuitem>— Opens your help browser and shows "
 "this manual."
 msgstr ""
-"<guimenuitem>Sommaire</guimenuitem>&mdash; Ouvre le navigateur d'aide et "
+"<guimenuitem>Sommaire</guimenuitem>— Ouvre le navigateur d'aide et "
 "affiche ce manuel."
 
 #: C/blackjack.xml:504(para)
 msgid ""
-"<guimenuitem>About</guimenuitem>&mdash; Opens the <interface>About Dialog</"
+"<guimenuitem>About</guimenuitem>— Opens the <interface>About Dialog</"
 "interface>, showing basic information about <application>Blackjack</"
 "application> such as its version number and the names of its authors."
 msgstr ""
-"<guimenuitem>À propos</guimenuitem>&mdash; Ouvre la boîte de dialogue "
+"<guimenuitem>À propos</guimenuitem>— Ouvre la boîte de dialogue "
 "<interface>À propos</interface>, affichant des informations élémentaires au "
 "sujet de <application>Blackjack</application>, telles que le numéro de "
 "version et les noms de ses auteurs."

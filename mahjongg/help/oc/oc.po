@@ -450,32 +450,32 @@ msgstr "Jòc"
 #: C/mahjongg.xml:399(para)
 msgid ""
 "<menuchoice><shortcut><keysym>Ctrl-N</keysym></shortcut><guimenuitem>New</"
-"guimenuitem></menuchoice>&mdash; This item starts a new game."
+"guimenuitem></menuchoice>— This item starts a new game."
 msgstr ""
 
 #: C/mahjongg.xml:410(para)
 msgid ""
-"<menuchoice><guimenuitem>Restart</guimenuitem></menuchoice>&mdash; This item "
+"<menuchoice><guimenuitem>Restart</guimenuitem></menuchoice>— This item "
 "resets the current game to the start."
 msgstr ""
 
 #: C/mahjongg.xml:418(para)
 msgid ""
-"<menuchoice><guimenuitem>Pause</guimenuitem></menuchoice>&mdash; This pauses "
+"<menuchoice><guimenuitem>Pause</guimenuitem></menuchoice>— This pauses "
 "the game, stopping the clock and hiding the tiles."
 msgstr ""
 
 #: C/mahjongg.xml:427(para)
 msgid ""
 "<menuchoice><shortcut><keysym>Ctrl-Z</keysym></shortcut><guimenuitem>Undo "
-"move</guimenuitem></menuchoice>&mdash; This item takes back two tiles you "
+"move</guimenuitem></menuchoice>— This item takes back two tiles you "
 "removed until you reach the beginning of the game."
 msgstr ""
 
 #: C/mahjongg.xml:439(para)
 msgid ""
 "<menuchoice><shortcut><keysym>Ctrl-R</keysym></shortcut><guimenuitem>Redo "
-"move</guimenuitem></menuchoice>&mdash; This item replays your previous move "
+"move</guimenuitem></menuchoice>— This item replays your previous move "
 "the <guibutton>Undo</guibutton> button took back. When you reach the state "
 "you started undoing the message <quote>No more redo!</quote> appears at the "
 "bottom left corner of the <interface>Main Window</interface>."
@@ -483,13 +483,13 @@ msgstr ""
 
 #: C/mahjongg.xml:453(para)
 msgid ""
-"<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>&mdash; This item "
+"<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>— This item "
 "gives you a pair of matching tiles to remove."
 msgstr ""
 
 #: C/mahjongg.xml:461(para)
 msgid ""
-"<menuchoice><guimenuitem>Scores</guimenuitem></menuchoice>&mdash; This item "
+"<menuchoice><guimenuitem>Scores</guimenuitem></menuchoice>— This item "
 "brings up a dialog showing you the ten best scores. The dialog has the "
 "scores identified by user name, score, the time it took to complete the "
 "game, and the date the game was completed."
@@ -498,7 +498,7 @@ msgstr ""
 #: C/mahjongg.xml:473(para)
 msgid ""
 "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Exit</"
-"guimenuitem></menuchoice>&mdash; This item allows you to quit the game."
+"guimenuitem></menuchoice>— This item allows you to quit the game."
 msgstr ""
 
 #: C/mahjongg.xml:395(para) C/mahjongg.xml:491(para) C/mahjongg.xml:524(para)
@@ -511,7 +511,7 @@ msgstr "Paramètres"
 
 #: C/mahjongg.xml:495(para)
 msgid ""
-"<menuchoice><guimenuitem>Toolbar</guimenuitem></menuchoice>&mdash; This item "
+"<menuchoice><guimenuitem>Toolbar</guimenuitem></menuchoice>— This item "
 "determines whether the <link linkend=\"toolbar\"><interface>toolbar</"
 "interface></link> is shown or not. If the item is checked, the <link linkend="
 "\"toolbar\"><interface>toolbar</interface></link> is shown in the last place "
@@ -521,7 +521,7 @@ msgstr ""
 
 #: C/mahjongg.xml:509(para)
 msgid ""
-"<menuchoice><guimenuitem>Preferences</guimenuitem></menuchoice>&mdash; This "
+"<menuchoice><guimenuitem>Preferences</guimenuitem></menuchoice>— This "
 "item brings up the <link linkend=\"prefs\">Preferences </link> dialog."
 msgstr ""
 
@@ -532,12 +532,12 @@ msgstr "Ajuda"
 #: C/mahjongg.xml:528(para)
 msgid ""
 "<menuchoice><shortcut><keysym>F1</keysym></shortcut><guimenuitem>Contents</"
-"guimenuitem></menuchoice>&mdash; This item shows this manual."
+"guimenuitem></menuchoice>— This item shows this manual."
 msgstr ""
 
 #: C/mahjongg.xml:539(para)
 msgid ""
-"<menuchoice><guimenuitem>About</guimenuitem></menuchoice>&mdash; This item "
+"<menuchoice><guimenuitem>About</guimenuitem></menuchoice>— This item "
 "gives you some basic information about <application>GNOME Mahjongg</"
 "application>, such as the author's names and the application version number."
 msgstr ""
@@ -573,13 +573,13 @@ msgstr ""
 
 #: C/mahjongg.xml:594(para)
 msgid ""
-"<guilabel>Tile Set:</guilabel>&mdash; Select the look of the tiles from this "
+"<guilabel>Tile Set:</guilabel>— Select the look of the tiles from this "
 "list."
 msgstr ""
 
 #: C/mahjongg.xml:600(para)
 msgid ""
-"<guilabel>Select Map:</guilabel>&mdash; Change the difficulty of the game by "
+"<guilabel>Select Map:</guilabel>— Change the difficulty of the game by "
 "altering how the tiles are stacked. The more spread out (easy) version lets "
 "you see more of the tiles while the more compact (hard) version does not let "
 "you see many tiles."
@@ -587,7 +587,7 @@ msgstr ""
 
 #: C/mahjongg.xml:609(para)
 msgid ""
-"<guilabel>Background Color:</guilabel>&mdash; Change the color of the "
+"<guilabel>Background Color:</guilabel>— Change the color of the "
 "background by bringing up a <interface> color picker</interface> to let you "
 "select a new color."
 msgstr ""
