@@ -585,8 +585,7 @@ bj_get_game_variation ()
 void
 bj_set_game_variation (const gchar *value)
 {
-        if (game_variation)
-                g_free (game_variation);
+        g_free (game_variation);
         game_variation = g_strdup (value);
         games_conf_set_string (KEY_SETTINGS_GROUP, KEY_GAME_VARIATION, game_variation);
 }
