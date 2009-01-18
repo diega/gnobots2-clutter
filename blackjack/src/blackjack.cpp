@@ -518,16 +518,8 @@ bj_get_card_style ()
         lcard_style = games_conf_get_string (KEY_DECK_GROUP, KEY_CARD_STYLE, NULL);
         if (!lcard_style || !lcard_style[0]) {
                 g_free (lcard_style);
-                lcard_style = g_strdup (GAMES_CARD_THEME_DEFAULT);
+		lcard_style = NULL;
         }
-
-#ifdef HAVE_GNOME
-        /* Back compat */
-        if (g_str_has_suffix (lcard_style, ".svg"))
-                *g_strrstr (lcard_style, ".svg") = '\0';
-        else if (g_str_has_suffix (lcard_style, ".png"))
-                *g_strrstr (lcard_style, ".png") = '\0';
-#endif /* HAVE_GNOME */
 
         return lcard_style;
 }
