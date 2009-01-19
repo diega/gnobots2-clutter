@@ -227,7 +227,7 @@ static GGZHookReturn ggz_logged_in(GGZServerEvent id,
 	ggzcore_server_add_event_hook(server, GGZ_ROOM_LIST,
 				      ggz_auto_join);
 	ggzcore_server_list_gametypes(server, 1);
-	ggzcore_server_list_rooms(server, 1);
+	ggzcore_server_list_rooms(server, -1, 1);
 
 
 	/* If this was a first-time login, get the password from the server */
@@ -309,7 +309,8 @@ static GGZHookReturn ggz_entered(GGZServerEvent id, const void *event_data,
 
 	/* Get player list */
 	/* FIXME: Player list should use the ggz update system */
-	ggzcore_room_list_tables(ggzcore_server_get_cur_room(server));
+	ggzcore_room_list_tables(ggzcore_server_get_cur_room(server), -1,
+				 0);
 	ggzcore_room_list_players(ggzcore_server_get_cur_room(server));
 
 
