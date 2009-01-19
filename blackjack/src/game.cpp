@@ -225,7 +225,7 @@ bj_get_deal_delay ()
 }
 
 BJGameRules *
-bj_game_read_rules (char *filename)
+bj_game_read_rules (const char *filename)
 {
         BJGameRules *ruleset;
         gboolean hitSoft17,
@@ -256,19 +256,41 @@ bj_game_read_rules (char *filename)
         key_file = g_key_file_new ();
         if (g_key_file_load_from_file (key_file, filename, GKeyFileFlags(0), NULL) &&
             g_key_file_has_group (key_file, RULES_GROUP)) {
+                GError *error = NULL;
+                int value;
 
-                lnumDecks = g_key_file_get_integer (key_file, RULES_GROUP, "NumberOfDecks", NULL);
-                ldealerSpeed = g_key_file_get_integer (key_file, RULES_GROUP, "DealerSpeed", NULL);
+#define CHECK_AND_ASSIGN(variable) \
+                if (error) {\
+                        g_printerr ("Failed to read value from rules file: %s\n", error->message);\
+                        g_clear_error(&error);\
+                } else {\
+                        variable = value;\
+                }
 
-                hitSoft17 = g_key_file_get_boolean (key_file, RULES_GROUP, "DealerHitsSoft17", NULL);
-                doubleAnyTotal = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDownAnyTotal", NULL);
-                double9 = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDown9", NULL);
-                doubleSoft = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDownSoft", NULL);
-                doubleAfterHit = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDownAfterHit", NULL);
-                doubleAfterSplit = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDownAfterSplit", NULL);
-                resplit = g_key_file_get_boolean (key_file, RULES_GROUP, "ResplitAllowed", NULL);
-                resplitAces = g_key_file_get_boolean (key_file, RULES_GROUP, "ResplitAcesAllowed", NULL);
-                lateSurrender = g_key_file_get_boolean (key_file, RULES_GROUP, "SurrenderAllowed", NULL);
+                value = g_key_file_get_integer (key_file, RULES_GROUP, "NumberOfDecks", &error);
+                CHECK_AND_ASSIGN (lnumDecks);
+                value = g_key_file_get_integer (key_file, RULES_GROUP, "DealerSpeed", &error);
+                CHECK_AND_ASSIGN (ldealerSpeed);
+                value = g_key_file_get_boolean (key_file, RULES_GROUP, "DealerHitsSoft17", &error);
+                CHECK_AND_ASSIGN (hitSoft17);
+                value = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDownAnyTotal", &error);
+                CHECK_AND_ASSIGN (doubleAnyTotal);
+                value = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDown9", &error);
+                CHECK_AND_ASSIGN (double9);
+                value = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDownSoft", &error);
+                CHECK_AND_ASSIGN (doubleSoft);
+                value = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDownAfterHit", &error);
+                CHECK_AND_ASSIGN (doubleAfterHit);
+                value = g_key_file_get_boolean (key_file, RULES_GROUP, "DoubleDownAfterSplit", &error);
+                CHECK_AND_ASSIGN (doubleAfterSplit);
+                value = g_key_file_get_boolean (key_file, RULES_GROUP, "ResplitAllowed", &error);
+                CHECK_AND_ASSIGN (resplit);
+                value = g_key_file_get_boolean (key_file, RULES_GROUP, "ResplitAcesAllowed", &error);
+                CHECK_AND_ASSIGN (resplitAces);
+                value = g_key_file_get_boolean (key_file, RULES_GROUP, "SurrenderAllowed", &error);
+                CHECK_AND_ASSIGN (lateSurrender);
+
+#undef CHECK_AND_ASSIGN
         }
 
         g_key_file_free (key_file);
@@ -285,7 +307,7 @@ bj_game_read_rules (char *filename)
 
 
 BJGameRules *
-bj_game_find_and_read_rules (gchar *filename)
+bj_game_find_and_read_rules (const gchar *filename)
 {
         gchar *installed_filename;
         BJGameRules *ruleset = NULL;

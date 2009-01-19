@@ -54,8 +54,8 @@ protected:
   int numDecks, dealerSpeed;
 };
 
-BJGameRules *bj_game_read_rules (gchar * filename);
-BJGameRules *bj_game_find_and_read_rules (gchar * filename);
+BJGameRules *bj_game_read_rules (const gchar * filename);
+BJGameRules *bj_game_find_and_read_rules (const gchar * filename);
 
 // GAME GLOBALS
 
