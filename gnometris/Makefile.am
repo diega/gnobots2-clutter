@@ -40,15 +40,28 @@ gnometris_CPPFLAGS = \
 	$(AM_CPPFLAGS)
 
 gnometris_CXXFLAGS = \
-	$(GNOME_GAMES_CXXFLAGS) \
-	$(ESD_CFLAGS) \
+	$(GTK_CFLAGS) \
 	$(AM_CXXFLAGS)
 
 gnometris_LDADD = \
 	$(top_builddir)/libgames-support/libgames-support.la \
-	$(GNOME_GAMES_LIBS) \
-	$(ESD_LIBS) \
+	$(GTK_LIBS) \
 	$(INTLLIBS)
+
+if HAVE_GNOME
+gnometris_CXXFLAGS += $(GNOME_CFLAGS)
+gnometris_LDADD += $(GNOME_LIBS)
+endif
+
+if HAVE_RSVG
+gnometris_CXXFLAGS += $(RSVG_CFLAGS)
+gnometris_LDADD += $(RSVG_LIBS)
+endif
+
+if WITH_GTHREAD
+gnometris_CXXFLAGS += $(GHTREAD_CFLAGS)
+gnometris_LDADD += $(GTHREAD_LIBS)
+endif
 
 if HAVE_CLUTTER
 noinst_PROGRAMS = gnometris-noclutter

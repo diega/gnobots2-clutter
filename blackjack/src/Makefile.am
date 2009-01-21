@@ -38,13 +38,28 @@ blackjack_CPPFLAGS = \
 	$(AM_CPPFLAGS)
 
 blackjack_CXXFLAGS = \
-	$(GNOME_GAMES_CXXFLAGS) \
+	$(GTK_CFLAGS) \
 	$(XML_CFLAGS) \
 	$(AM_CXXFLAGS)
 
 blackjack_LDADD = \
 	$(top_builddir)/libgames-support/libgames-support.la \
-	$(GNOME_GAMES_LIBS) \
+	$(GTK_LIBS) \
 	$(XML_LIBS) \
 	-lz
 # FIXMEchpe: what's this -lz about??
+
+if HAVE_GNOME
+blackjack_CXXFLAGS += $(GNOME_CFLAGS)
+blackjack_LDADD += $(GNOME_LIBS)
+endif
+
+if HAVE_RSVG
+blackjack_CXXFLAGS += $(RSVG_CFLAGS)
+blackjack_LDADD += $(RSVG_LIBS)
+endif
+
+if WITH_GTHREAD
+blackjack_CXXFLAGS += $(GHTREAD_CFLAGS)
+blackjack_LDADD += $(GTHREAD_LIBS)
+endif

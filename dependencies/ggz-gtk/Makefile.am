@@ -1,10 +1,10 @@
 ggzgtkdatadir=$(datadir)/ggz/$(PACKAGE)
-AM_CFLAGS = $(GTK_CFLAGS) -I$(top_srcdir)/intl \
-	$(GGZCORE_INCLUDES) $(LIBGGZ_INCLUDES) \
+libggz_gtk_la_CFLAGS = $(GTK_CFLAGS) \
+	-I$(top_srcdir)/intl \
+	$(GGZCORE_INCLUDES) \
+	$(LIBGGZ_INCLUDES) \
 	-DGGZGTKDATADIR=\"$(ggzgtkdatadir)\" \
-	-UG_DISABLE_SINGLE_INCLUDES \
-	-UGTK_DISABLE_SINGLE_INCLUDES \
-	-UGTK_DISABLE_DEPRECATED
+	$(AM_CFLAGS)
 
 ggzgtkdata_DATA =	about_bg.png		\
 			ggz_gtk_admin.svg 	\
@@ -17,8 +17,6 @@ ggzgtkdata_DATA =	about_bg.png		\
 			ggz_gtk_lag3.svg	\
 			ggz_gtk_lag4.svg	\
 			ggz_gtk_lag5.svg
-
-INCLUDES = $(GNOME_GAMES_CFLAGS)
 
 if INSTALL_GGZ_GTK
 lib_LTLIBRARIES = libggz-gtk.la
