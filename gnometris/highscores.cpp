@@ -23,7 +23,7 @@
 #include <config.h>
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include <games-scores-dialog.h>
+#include <libgames-support/games-scores-dialog.h>
 #include "highscores.h"
 
 HighScores::HighScores ()
