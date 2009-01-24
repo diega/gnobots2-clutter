@@ -1076,7 +1076,7 @@ Tetris::dragDrop(GtkWidget *widget, GdkDragContext *context,
 {
 	const char *fileuri;
 
-	GError *error;
+	GError *error = NULL;
 	GFile *file;
 	GFile *outfile;
 	GFileInfo *fileinfo;
