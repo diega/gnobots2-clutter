@@ -1,6 +1,5 @@
 ggzgtkdatadir=$(datadir)/ggz/$(PACKAGE)
 libggz_gtk_la_CFLAGS = $(GTK_CFLAGS) \
-	-I$(top_srcdir)/intl \
 	$(GGZCORE_INCLUDES) \
 	$(LIBGGZ_INCLUDES) \
 	-DGGZGTKDATADIR=\"$(ggzgtkdatadir)\" \
