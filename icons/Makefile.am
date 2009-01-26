@@ -131,6 +131,7 @@ icons_svg = \
 	scalable/gnome-gnometris.svg \
 	scalable/gnome-iagno.svg \
 	scalable/gnome-klotski.svg \
+	scalable/gnome-mahjongg.svg \
 	scalable/gnome-mines.svg \
 	scalable/gnome-robots.svg \
 	scalable/gnome-samegnome.svg \
