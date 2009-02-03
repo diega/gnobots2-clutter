@@ -58,9 +58,6 @@ Field::Field():
 
 Field::~Field()
 {
-	if (background)
-		clutter_actor_destroy(background);
-
 	if (renderer)
 		delete renderer;
 }
@@ -136,8 +133,6 @@ Field::rescaleField ()
 	cairo_paint(bg_cr);
 
 	cairo_destroy(bg_cr);
-
-	redraw ();
 }
 
 void
@@ -153,91 +148,64 @@ Field::configure(GtkWidget *widget, GdkEventConfigure *event, Field *field)
 	field->height = widget->allocation.height;
 
 	field->rescaleField ();
-	field->rescaleBlockCache ();
-
+	
 	return TRUE;
 }
 
 void
-Field::drawMessage(cairo_t *cr, const char *msg)
+Field::drawMessage()
 {
 	PangoLayout *dummy_layout;
 	PangoLayout *layout;
 	PangoFontDescription *desc;
 	int lw, lh;
-
-	cairo_save(cr);
-
-	// Center coordinates
-	cairo_translate(cr, width / 2, height / 2);
-
-	desc = pango_font_description_from_string(FONT);
-
-	layout = pango_cairo_create_layout(cr);
-	pango_layout_set_text(layout, msg, -1);
-
-	dummy_layout = pango_layout_copy(layout);
-	pango_layout_set_font_description(dummy_layout, desc);
-	pango_layout_get_size(dummy_layout, &lw, &lh);
-	g_object_unref(dummy_layout);
-
-	// desired height : lh = widget width * 0.9 : lw
-	pango_font_description_set_absolute_size(desc, ((float) lh / lw) * PANGO_SCALE * width * 0.8);
-	pango_layout_set_font_description(layout, desc);
-	pango_font_description_free(desc);
-
-	pango_layout_get_size(layout, &lw, &lh);
-	cairo_move_to(cr, -((double)lw / PANGO_SCALE) / 2, -((double)lh / PANGO_SCALE) / 2);
-	pango_cairo_layout_path(cr, layout);
-	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
-	cairo_fill_preserve (cr);
-	cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
-	/* A linewidth of 2 pixels at the default size. */
-	cairo_set_line_width (cr, width/220.0);
-	cairo_stroke (cr);
-
-	g_object_unref(layout);
-
-	cairo_restore(cr);
-}
-
-void
-Field::redraw()
-{
 	cairo_t *cr;
-
-	generateTarget ();
+	char *msg;
 
 	cr = clutter_cairo_create (CLUTTER_CAIRO(foreground));
 	cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
 	cairo_paint(cr);
 	cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 
-	if (rendererTheme != themeID) {
-
-		if (renderer)
-			delete renderer;
-
-		renderer = rendererFactory (themeID, foreground, field,
-				     COLUMNS, LINES, width, height);
-		rendererTheme = themeID;
-	} else {
-		renderer->setTarget (foreground);
-		renderer->data = field;
-		renderer->width = COLUMNS;
-		renderer->height = LINES;
-		renderer->pxwidth = width;
-		renderer->pxheight = height;
+	if (showPause)
+		msg =  _("Paused");
+	else if (showGameOver)
+		msg = _("Game Over");
+	else {
+		cairo_destroy (cr);
+		return;
 	}
 
-	renderer->render ();
+	// Center coordinates
+	cairo_translate(cr, width / 2, height / 2);
 
-	if (showPause)
-		drawMessage(cr, _("Paused"));
-	else if (showGameOver)
-		drawMessage(cr, _("Game Over"));
+	desc = pango_font_description_from_string(FONT);
 
-	cairo_destroy(cr);
+	layout = pango_cairo_create_layout (cr);
+	pango_layout_set_text (layout, msg, -1);
+
+	dummy_layout = pango_layout_copy (layout);
+	pango_layout_set_font_description (dummy_layout, desc);
+	pango_layout_get_size (dummy_layout, &lw, &lh);
+	g_object_unref (dummy_layout);
+
+	// desired height : lh = widget width * 0.9 : lw
+	pango_font_description_set_absolute_size (desc, ((float) lh / lw) * PANGO_SCALE * width * 0.8);
+	pango_layout_set_font_description (layout, desc);
+	pango_font_description_free (desc);
+
+	pango_layout_get_size (layout, &lw, &lh);
+	cairo_move_to (cr, -((double)lw / PANGO_SCALE) / 2, -((double)lh / PANGO_SCALE) / 2);
+	pango_cairo_layout_path (cr, layout);
+	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
+	cairo_fill_preserve (cr);
+	cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+	/* A linewidth of 2 pixels at the default size. */
+	cairo_set_line_width (cr, width/220.0);
+	cairo_stroke (cr);
+
+	g_object_unref(layout);
+	cairo_destroy (cr);
 }
 
 void
@@ -268,7 +236,7 @@ Field::showPauseMessage()
 {
 	showPause = true;
 
-	redraw();
+	drawMessage ();
 }
 
 void
@@ -276,7 +244,7 @@ Field::hidePauseMessage()
 {
 	showPause = false;
 
-	redraw();
+	drawMessage ();
 }
 
 void
@@ -284,7 +252,7 @@ Field::showGameOverMessage()
 {
 	showGameOver = true;
 
-	redraw();
+	drawMessage ();
 }
 
 void
@@ -292,7 +260,7 @@ Field::hideGameOverMessage()
 {
 	showGameOver = false;
 
-	redraw();
+	drawMessage ();
 }
 
 void

@@ -121,16 +121,12 @@ void Renderer::drawCell (cairo_t *cr, gint x, gint y)
 	if (data[x][y].what == EMPTY)
 		return;
 
-	if (data[x][y].what == TARGET) {
-		cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.3);
-	} else {
-		i = data[x][y].color;
-		i = CLAMP (i, 0, 6);
+	i = data[x][y].color;
+	i = CLAMP (i, 0, 6);
 
-		cairo_set_source_rgb(cr, colours[i][0],
-				     colours[i][1],
-				     colours[i][2]);
-	}
+	cairo_set_source_rgb(cr, colours[i][0],
+				colours[i][1],
+				colours[i][2]);
 
 	cairo_rectangle(cr, x+0.05, y+0.05,
 			0.9, 0.9);
@@ -244,13 +240,10 @@ void JoinedUp::drawCell (cairo_t *cr, gint x, gint y)
 	cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
 	cairo_set_line_width (cr, 0.05);
 
-	if (data[x][y].what == TARGET) {
-		cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0);
-	} else {
-		cairo_set_source_rgb (cr, colours[i][0],
-				      colours[i][1],
-				      colours[i][2]);
-	}
+	cairo_set_source_rgb (cr, colours[i][0],
+				colours[i][1],
+				colours[i][2]);
+
 	cairo_rectangle (cr, -0.025, -0.025, 1.025, 1.025);
 	cairo_fill (cr);
 	cairo_set_source_rgb (cr, 0.5, 0.5, 0.5);
@@ -401,12 +394,8 @@ void TangoBlock::drawCell (cairo_t *cr, gint x, gint y)
 	if (data[x][y].what == EMPTY)
 		return;
 
-	if (data[x][y].what == TARGET) {
-		i = 7;
-	} else {
-		i = data[x][y].color;
-		i = CLAMP (i, 0, 6);
-	}
+	i = data[x][y].color;
+	i = CLAMP (i, 0, 6);
 
 	if (usegrads) {
 		 pat = cairo_pattern_create_linear (x+0.35, y, x+0.55, y+0.9);
@@ -437,48 +426,41 @@ void TangoBlock::drawCell (cairo_t *cr, gint x, gint y)
 	cairo_stroke (cr);  /* add darker outline */
 
 	drawRoundedRectangle (cr, x+0.15, y+0.15, 0.7, 0.7, 0.08);
-	if (data[x][y].what != TARGET) {
-		if (usegrads) {
-			pat = cairo_pattern_create_linear (x-0.3, y-0.3, x+0.8, y+0.8);
-			switch (i) { /* yellow and white blocks need a brighter highlight */
-			case 3:
-			case 4:
-				cairo_pattern_add_color_stop_rgba (pat, 0.0, 1.0,
-								   1.0,
-								   1.0,
-								   1.0);
-				cairo_pattern_add_color_stop_rgba (pat, 1.0, 1.0,
-								   1.0,
-								   1.0,
-								   0.0);
-				break;
-			default:
-				cairo_pattern_add_color_stop_rgba (pat, 0.0, 0.9295,
-								   0.9295,
-								   0.9295,
-								   1.0);
-				cairo_pattern_add_color_stop_rgba (pat, 1.0, 0.9295,
-								   0.9295,
-								   0.9295,
-								   0.0);
-				break;
-			}
-			cairo_set_source (cr, pat);
-		} else {
-			cairo_set_source_rgba (cr, 1.0,
-					       1.0,
-					       1.0,
-					       0.35);
+	if (usegrads) {
+		pat = cairo_pattern_create_linear (x-0.3, y-0.3, x+0.8, y+0.8);
+		switch (i) { /* yellow and white blocks need a brighter highlight */
+		case 3:
+		case 4:
+			cairo_pattern_add_color_stop_rgba (pat, 0.0, 1.0,
+								1.0,
+								1.0,
+								1.0);
+			cairo_pattern_add_color_stop_rgba (pat, 1.0, 1.0,
+								1.0,
+								1.0,
+								0.0);
+			break;
+		default:
+			cairo_pattern_add_color_stop_rgba (pat, 0.0, 0.9295,
+								0.9295,
+								0.9295,
+								1.0);
+			cairo_pattern_add_color_stop_rgba (pat, 1.0, 0.9295,
+								0.9295,
+								0.9295,
+								0.0);
+			break;
 		}
-	} else {  /* black preview block, use a much weaker highlight */
+		cairo_set_source (cr, pat);
+	} else {
 		cairo_set_source_rgba (cr, 1.0,
 				       1.0,
 				       1.0,
-				       0.15);
+				       0.35);
 	}
 	cairo_stroke (cr);  /* add inner edge highlight */
 
-	if (usegrads && (data[x][y].what != TARGET))
+	if (usegrads)
 		cairo_pattern_destroy (pat);
 }
 

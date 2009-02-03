@@ -64,30 +64,30 @@ gnometris_LDADD += $(GTHREAD_LIBS)
 endif
 
 if HAVE_CLUTTER
-noinst_PROGRAMS = gnometris-noclutter
+#noinst_PROGRAMS = gnometris-noclutter
 
-gnometris_noclutter_SOURCES = \
-	main.cpp \
-	blocks.cpp \
-	blocks.h \
-	preview-noclutter.cpp \
-	preview-noclutter.h \
-	blockops.cpp \
-	blockops.h \
-	field-noclutter.cpp \
-	field-noclutter.h \
-	highscores.cpp \
-	highscores.h \
-	renderer-noclutter.cpp \
-	renderer-noclutter.h \
-	scoreframe.cpp \
-	scoreframe.h \
-	tetris.cpp \
-	tetris.h
+#gnometris_noclutter_SOURCES = \
+#	main.cpp \
+#	blocks.cpp \
+#	blocks.h \
+#	preview-noclutter.cpp \
+#	preview-noclutter.h \
+#	blockops.cpp \
+#	blockops.h \
+#	field-noclutter.cpp \
+#	field-noclutter.h \
+#	highscores.cpp \
+#	highscores.h \
+#	renderer-noclutter.cpp \
+#	renderer-noclutter.h \
+#	scoreframe.cpp \
+#	scoreframe.h \
+#	tetris.cpp \
+#	tetris.h
 
-gnometris_noclutter_CPPFLAGS = $(gnometris_CPPFLAGS) -UHAVE_CLUTTER
-gnometris_noclutter_CXXFLAGS = $(gnometris_CXXFLAGS) -UHAVE_CLUTTER
-gnometris_noclutter_LDADD = $(gnometris_LDADD)
+#gnometris_noclutter_CPPFLAGS = $(gnometris_CPPFLAGS) -UHAVE_CLUTTER
+#gnometris_noclutter_CXXFLAGS = $(gnometris_CXXFLAGS) -UHAVE_CLUTTER
+#gnometris_noclutter_LDADD = $(gnometris_LDADD)
 gnometris_CPPFLAGS += -DHAVE_CLUTTER
 gnometris_CXXFLAGS += $(CLUTTER_CFLAGS)
 gnometris_LDADD += $(CLUTTER_LIBS)

@@ -90,7 +90,9 @@ Tetris::Tetris(int cmdlLevel):
 	timeoutId(0),
 	onePause(false),
 	inPlay(false),
+#ifndef HAVE_CLUTTER
 	useTarget(false),
+#endif
 	bgimage(0),
 	setupdialog(0),
 	cmdlineLevel(cmdlLevel),
@@ -188,7 +190,9 @@ Tetris::Tetris(int cmdlLevel):
 
 	preview = new Preview ();
 	field = new Field();
+#ifndef HAVE_CLUTTER
 	field->setUseTarget (false);
+#endif
 
 	initOptions ();
 
@@ -439,7 +443,9 @@ Tetris::initOptions ()
 
 	games_sound_enable (confGetBoolean (KEY_OPTIONS_GROUP, KEY_SOUND, TRUE));
 
+#ifndef HAVE_CLUTTER
 	useTarget = confGetBoolean (KEY_OPTIONS_GROUP, KEY_USE_TARGET, FALSE);
+#endif
 
 	do_preview = confGetBoolean (KEY_OPTIONS_GROUP, KEY_DO_PREVIEW, TRUE);
 
@@ -540,6 +546,7 @@ Tetris::setSelection(GtkWidget *widget, void *data)
 			       ThemeTable[t->themeno].id);
 }
 
+#ifndef HAVE_CLUTTER
 void
 Tetris::setTarget (GtkWidget *widget, void *data)
 {
@@ -552,6 +559,7 @@ Tetris::setTarget (GtkWidget *widget, void *data)
 	games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_USE_TARGET,
 				t->useTarget);
 }
+#endif
 
 void
 Tetris::lineFillHeightChanged (GtkWidget *spin, gpointer data)
@@ -728,10 +736,12 @@ Tetris::gameProperties(GtkAction *action, void *d)
 			    0, 0, 0);
 
 	t->useTargetToggle = gtk_check_button_new_with_mnemonic (_("Show _where the block will land"));
+#ifndef HAVE_CLUTTER
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (t->useTargetToggle),
 				      t->useTarget);
 	g_signal_connect (t->useTargetToggle, "clicked",
 			  G_CALLBACK (setTarget), d);
+#endif
  	gtk_box_pack_start (GTK_BOX (fvbox), t->useTargetToggle,
 			    0, 0, 0);
 
@@ -894,13 +904,19 @@ Tetris::timeoutHandler(void *d)
 	if (t->onePause)
 	{
 		t->onePause = false;
+#ifdef HAVE_CLUTTER
+		t->field->drawMessage();
+#else
 		t->field->redraw();
+#endif
 	}
 	else
 	{
 		bool res = t->field->moveBlockDown();
 
+#ifndef HAVE_CLUTTER
 		t->field->redraw();
+#endif
 
 		if (res)
 		{
@@ -965,7 +981,9 @@ Tetris::keyPressHandler(GtkWidget *widget, GdkEvent *event, Tetris *t)
 		}
 	}
 
+#ifndef HAVE_CLUTTER
 	t->field->redraw();
+#endif
 
 	return res;
 }
@@ -1254,7 +1272,9 @@ Tetris::endOfGame()
 		high_scores->show (GTK_WINDOW (w), pos);
 	}
 
+#ifndef HAVE_CLUTTER
 	field->setUseTarget (false);
+#endif
 }
 
 int
@@ -1282,7 +1302,9 @@ Tetris::gameNew(GtkAction *action, void *d)
 	t->scoreFrame->setLevel(level);
 	t->scoreFrame->setStartingLevel(level);
 
+#ifndef HAVE_CLUTTER
 	t->field->setUseTarget (t->useTarget);
+#endif
 
 	t->generateTimer (level);
 	t->field->emptyField(t->line_fill_height,t->line_fill_prob);
@@ -1291,7 +1313,9 @@ Tetris::gameNew(GtkAction *action, void *d)
 	t->paused = false;
 
 	t->field->generateFallingBlock();
+#ifndef HAVE_CLUTTER
 	t->field->redraw();
+#endif
 	t->preview->previewBlock(blocknr_next, rot_next, color_next);
 	gtk_widget_queue_draw(t->preview->getWidget());
 

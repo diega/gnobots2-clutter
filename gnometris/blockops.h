@@ -26,7 +26,9 @@
 
 enum SlotType {
 	EMPTY,
+#ifndef HAVE_CLUTTER
 	TARGET,
+#endif
 	FALLING,
 	LAYING
 };
@@ -54,10 +56,12 @@ public:
 	void putBlockInField (bool erase);
 	int getLinesToBottom ();
 	bool isFieldEmpty (void);
+#ifndef HAVE_CLUTTER
 	void setUseTarget (bool);
 	bool getUseTarget () {
 		return useTarget;
 	};
+#endif
 
 private:
 	void putBlockInField (int bx, int by, int blocknr, int rotation,
@@ -65,11 +69,14 @@ private:
 	bool blockOkHere (int x, int y, int b, int r);
 	void eliminateLine (int l);
 
+#ifndef HAVE_CLUTTER
 	bool useTarget;
-
+#endif
 protected:
+#ifdef HAVE_CLUTTER
 	void clearTarget ();
 	void generateTarget ();
+#endif
 
 	Block **field;
 

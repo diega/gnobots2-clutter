@@ -33,7 +33,9 @@
 
 
 BlockOps::BlockOps() :
+#ifndef HAVE_CLUTTER
 	useTarget (false),
+#endif
 	blocknr (0),
 	rot (0),
 	color (0)
@@ -183,6 +185,7 @@ BlockOps::moveBlockDown()
 	return fallen;
 }
 
+#ifndef HAVE_CLUTTER
 void
 BlockOps::clearTarget ()
 {
@@ -222,6 +225,7 @@ BlockOps::setUseTarget (bool use)
 	if (!useTarget)
 		clearTarget ();
 }
+#endif
 
 int
 BlockOps::dropBlock()
@@ -363,9 +367,11 @@ BlockOps::putBlockInField (int bx, int by, int block, int rotation,
 				int i = bx - 2 + x;
 				int j = y + by;
 
+#ifndef HAVE_CLUTTER
 				if ((fill == TARGET) &&
 				    (field[i][j].what != EMPTY))
 					return;
+#endif
 
 				field[i][j].what = fill;
 				if ((fill == FALLING) || (fill == LAYING))

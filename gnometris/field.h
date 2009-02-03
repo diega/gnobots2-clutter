@@ -38,8 +38,8 @@ public:
 	void hidePauseMessage ();
 	void showGameOverMessage ();
 	void hideGameOverMessage ();
-	void redraw ();
 	void setTheme (gint id);
+	void drawMessage ();
 
 	GtkWidget *getWidget () {
 		return w;
