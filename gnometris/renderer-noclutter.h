@@ -28,7 +28,7 @@
 #include <glib.h>
 
 #include "blocks.h"
-#include "blockops.h"
+#include "blockops-noclutter.h"
 
 struct ThemeTableEntry {
 	const gchar *name;

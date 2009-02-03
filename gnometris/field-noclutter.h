@@ -23,7 +23,7 @@
  */
 
 #include "tetris.h"
-#include "blockops.h"
+#include "blockops-noclutter.h"
 #include "renderer-noclutter.h"
 
 class Field:public BlockOps {
