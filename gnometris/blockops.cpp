@@ -23,11 +23,6 @@
 #include "blockops.h"
 #include "blocks.h"
 
-// #include "field.h"
-
-#define NCOLOURS 7
-
-
 BlockOps::BlockOps() :
 	blocknr (0),
 	rot (0),

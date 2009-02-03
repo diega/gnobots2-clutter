@@ -53,18 +53,16 @@ gint themeNameToNumber (const gchar *id)
 	return 0;
 }
 
-Renderer * rendererFactory (gint id, ClutterActor *dst,
-			    Block **src, int w,
-			    int h, int pxw, int pxh)
+Renderer * rendererFactory (gint id, gint pxw, gint pxh)
 {
 	switch (id) {
 	case 2:
-		return new TangoBlock (dst, src, w, h, pxw, pxh, TRUE);
+		return new TangoBlock (pxw, pxh, TRUE);
 	case 1:
-		return new TangoBlock (dst, src, w, h, pxw, pxh, FALSE);
+		return new TangoBlock (pxw, pxh, FALSE);
 	case 0:
 	default:
-		return new Renderer (dst, src, w, h, pxw, pxh);
+		return new Renderer (pxw, pxh);
 	}
 }
 
@@ -82,23 +80,61 @@ Renderer * rendererFactory (gint id, ClutterActor *dst,
    for the preview widget and possibly the theme previewer, so make no
    assumptions. */
 
-Renderer::Renderer (ClutterActor *dst, Block **src,
-		    int w, int h, int pxw, int pxh)
+Renderer::Renderer (gint pxw, gint pxh)
 {
-	target = dst;
-	data = src;
-	width = w;
-	height = h;
 	pxwidth = pxw;
 	pxheight = pxh;
+
+	if (pxwidth == 0 || pxheight == 0) {
+		for (int i = 0; i<NCOLOURS; i++)
+			cache[i] = NULL;
+	} else {
+		for (int i = 0; i<NCOLOURS; i++) {
+			cache[i] = clutter_cairo_new (pxwidth, pxheight);
+			cairo_t *cr = clutter_cairo_create (CLUTTER_CAIRO(cache[i]));
+			drawCell (cr, i);
+			cairo_destroy (cr);
+		}
+	}
 }
 
 Renderer::~Renderer ()
 {
 }
 
-void Renderer::rescaleCache ()
+ClutterActor* Renderer::getCacheCellById (gint id)
 {
+	return cache[id];
+}
+
+void Renderer::rescaleCache (gint x, gint y)
+{
+	if (x == 0 or y == 0)
+		return;
+
+	pxwidth = x;
+	pxheight = y;
+
+	if(cache[0]) {
+		for (int i = 0; i<NCOLOURS; i++) {
+			clutter_actor_set_size (CLUTTER_ACTOR(cache[i]),
+						pxwidth, pxheight);
+			clutter_cairo_surface_resize (CLUTTER_CAIRO(cache[i]),
+						      pxwidth, pxheight);
+			cairo_t *cr = clutter_cairo_create (CLUTTER_CAIRO(cache[i]));
+			cairo_scale(cr, 1.0 * pxwidth, 1.0 * pxheight);
+			drawCell (cr, i);
+			cairo_destroy (cr);
+		}
+	} else {
+		for (int i = 0; i<NCOLOURS; i++) {
+			cache[i] = clutter_cairo_new (pxwidth, pxheight);
+			cairo_t *cr = clutter_cairo_create (CLUTTER_CAIRO(cache[i]));
+			cairo_scale(cr, 1.0 * pxwidth, 1.0 * pxheight);
+			drawCell (cr, i);
+			cairo_destroy (cr);
+		}
+	}
 }
 
 void Renderer::drawCell (cairo_t *cr, guint color)
@@ -119,30 +155,7 @@ void Renderer::drawCell (cairo_t *cr, guint color)
 	cairo_paint (cr);
 }
 
-void Renderer::drawForeground (cairo_t *cr)
-{
-	int color;
-
-	cairo_scale(cr, 1.0 * pxwidth / width, 1.0 * pxheight / height);
-
-	for (color = 0; color<7; color++) {
-		drawCell (cr, color);
-	}
-}
-
-void Renderer::render ()
-{
-	cairo_t *cr;
-
-	cr = clutter_cairo_create (CLUTTER_CAIRO(target));
-
-	drawForeground (cr);
-
-	cairo_destroy (cr);
-}
-
-TangoBlock::TangoBlock (ClutterActor * dst, Block ** src,
-	    int w, int h, int pxw, int pxh, gboolean grad) : Renderer (dst, src, w, h, pxw, pxh)
+TangoBlock::TangoBlock (gint pxw, gint pxh, gboolean grad) : Renderer (pxw, pxh)
 {
 	usegrads = grad;
 }
@@ -223,23 +236,23 @@ void TangoBlock::drawCell (cairo_t *cr, guint color)
 		case 3:
 		case 4:
 			cairo_pattern_add_color_stop_rgba (pat, 0.0, 1.0,
-								1.0,
-								1.0,
-								1.0);
+							   1.0,
+							   1.0,
+							   1.0);
 			cairo_pattern_add_color_stop_rgba (pat, 1.0, 1.0,
-								1.0,
-								1.0,
-								0.0);
+							   1.0,
+							   1.0,
+							   0.0);
 			break;
 		default:
 			cairo_pattern_add_color_stop_rgba (pat, 0.0, 0.9295,
-								0.9295,
-								0.9295,
-								1.0);
+							   0.9295,
+							   0.9295,
+							   1.0);
 			cairo_pattern_add_color_stop_rgba (pat, 1.0, 0.9295,
-								0.9295,
-								0.9295,
-								0.0);
+							   0.9295,
+							   0.9295,
+							   0.0);
 			break;
 		}
 		cairo_set_source (cr, pat);

@@ -83,7 +83,6 @@ enum {
 	RESET
 };
 
-
 Tetris::Tetris(int cmdlLevel):
 	themeno (0),
 	field(0),

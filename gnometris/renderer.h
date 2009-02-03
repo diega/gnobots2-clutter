@@ -28,6 +28,7 @@
 #include <glib.h>
 #include <clutter-cairo/clutter-cairo.h>
 
+#include "blocks.h"
 #include "blockops.h"
 
 struct ThemeTableEntry {
@@ -39,34 +40,25 @@ extern const ThemeTableEntry ThemeTable[];
 
 class Renderer {
 public:
-	Renderer (ClutterActor * dst, Block ** src,
-		  int w, int h, int pxw, int pxh);
+	Renderer (gint pxw, gint pxh);
 	virtual ~ Renderer ();
-	virtual void render ();
 
-	void rescaleCache ();
+	void rescaleCache (gint pxw, gint pxh);
+	ClutterActor* getCacheCellById (gint id);
 
-	Block **data;
-	int width;
-	int height;
-	int pxwidth;
-	int pxheight;
+	gint pxwidth;
+	gint pxheight;
 protected:
-	ClutterActor *target;
-
+	ClutterActor* cache[NCOLOURS];
 	virtual void drawCell (cairo_t * cr, guint color);
-	virtual void drawForeground (cairo_t * cr);
 };
 
-Renderer *rendererFactory (gint id, cairo_surface_t * dst,
-			   Block ** src, int w,
-			   int h, int pxw, int pxh);
+Renderer *rendererFactory (gint id, gint pxw, gint pxh);
 gint themeNameToNumber (const gchar * id);
 
 class TangoBlock:public Renderer {
 public:
-	TangoBlock (ClutterActor * dst, Block ** src,
-		    int w, int h, int pxw, int pxh, gboolean grad);
+	TangoBlock (gint pxw, gint pxh, gboolean grad);
 
 protected:
 	virtual void drawCell (cairo_t * cr, guint color);

@@ -23,11 +23,6 @@
 #include "blockops-noclutter.h"
 #include "blocks.h"
 
-// #include "field-noclutter.h"
-
-#define NCOLOURS 7
-
-
 BlockOps::BlockOps() :
 	useTarget (false),
 	blocknr (0),

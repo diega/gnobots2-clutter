@@ -26,12 +26,13 @@
 #include "blockops.h"
 #include "renderer.h"
 
+
 class Field:public BlockOps {
 public:
 	Field ();
 	~Field ();
 
-	void setBackground (GdkPixbuf * bgImage);	//, bool tiled); fixme: move tiling here.
+	void setBackground (GdkPixbuf * bgImage); //, bool tiled); fixme: move tiling here.
 	void setBackground (GdkColor * bgColor);
 	void placeBlock (int x, int y, int bcolor, bool remove);
 	void showPauseMessage ();
@@ -47,8 +48,10 @@ public:
 private:
 	GtkWidget * w;
 
-	int width;
-	int height;
+	guint width;
+	guint height;
+	guint cell_width;
+	guint cell_height;
 
 	ClutterActor *background;
 	ClutterActor *foreground;
@@ -57,7 +60,6 @@ private:
 	bool showPause;
 	bool showGameOver;
 	Renderer *renderer;
-	gint rendererTheme;
 
 	GdkPixbuf *backgroundImage;
 	bool backgroundImageTiled;

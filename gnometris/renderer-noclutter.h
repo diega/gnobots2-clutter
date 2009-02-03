@@ -27,6 +27,7 @@
 #include <cairo.h>
 #include <glib.h>
 
+#include "blocks.h"
 #include "blockops.h"
 
 struct ThemeTableEntry {

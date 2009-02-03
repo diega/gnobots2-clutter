@@ -22,6 +22,8 @@
  * For more details see the file COPYING.
  */
 
+#define NCOLOURS 7
+
 extern int blockTable[][4][4][4];
 extern int tableSize;
 

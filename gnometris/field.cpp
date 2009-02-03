@@ -42,7 +42,6 @@ Field::Field():
 {
 	themeID = 0;
 	renderer = NULL;
-	rendererTheme = -1;
 
 	w = games_clutter_embed_new();
 
@@ -65,20 +64,31 @@ Field::~Field()
 void
 Field::rescaleField ()
 {
+	// don't waste our time if GTK+ is just going through allocation
+	if (w->allocation.width < 5 or w->allocation.height < 5)
+		return;
+
 	ClutterActor *stage;
+	stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
+	width = w->allocation.width;
+	height = w->allocation.height;
+	cell_width = width/COLUMNS;
+	cell_height = height/LINES;
+
 	cairo_t *bg_cr;
 
+	if (renderer)
+		renderer->rescaleCache (cell_width, cell_height);
+	else {
+		renderer = rendererFactory (themeID, cell_width, cell_height);
+	}
+
 	if (background) {
-		clutter_actor_set_size (CLUTTER_ACTOR(background),
-					w->allocation.width,
-					w->allocation.height);
+		clutter_actor_set_size (CLUTTER_ACTOR(background), width, height);
 		clutter_cairo_surface_resize (CLUTTER_CAIRO(background),
-					      w->allocation.width,
-					      w->allocation.height);
+					      width, height);
 	} else {
-		background = clutter_cairo_new (w->allocation.width,
-						w->allocation.height);
-		stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
+		background = clutter_cairo_new (width, height);
 		/*FIXMEjclinton: eventually allow solid color background
 		 * for software rendering case */
 		ClutterColor stage_color = { 0x61, 0x64, 0x8c, 0xff };
@@ -92,15 +102,11 @@ Field::rescaleField ()
 
 	if (foreground) {
 		clutter_actor_set_size (CLUTTER_ACTOR(foreground),
-					w->allocation.width,
-					w->allocation.height);
+					width, height);
 		clutter_cairo_surface_resize (CLUTTER_CAIRO(foreground),
-					      w->allocation.width,
-					      w->allocation.height);
+					      width, height);
 	} else {
-		foreground = clutter_cairo_new (w->allocation.width,
-						w->allocation.height);
-		stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
+		foreground = clutter_cairo_new (width, height);
 		clutter_group_add (CLUTTER_GROUP (stage),
 				   foreground);
 		clutter_actor_set_position (CLUTTER_ACTOR(foreground),
@@ -121,8 +127,8 @@ Field::rescaleField ()
 
 		/* FIXME: This doesn't handle tiled backgrounds in the obvious way. */
 		gdk_cairo_set_source_pixbuf (bg_cr, backgroundImage, 0, 0);
-		xscale = 1.0*gdk_pixbuf_get_width (backgroundImage)/w->allocation.width;
-		yscale = 1.0*gdk_pixbuf_get_height (backgroundImage)/w->allocation.height;
+		xscale = 1.0*gdk_pixbuf_get_width (backgroundImage)/width;
+		yscale = 1.0*gdk_pixbuf_get_height (backgroundImage)/height;
 		cairo_matrix_init_scale (&m, xscale, yscale);
 		cairo_pattern_set_matrix (cairo_get_source (bg_cr), &m);
 	} else if (backgroundColor)
@@ -132,16 +138,13 @@ Field::rescaleField ()
 
 	cairo_paint (bg_cr);
 	cairo_destroy (bg_cr);
-	this->drawMessage ();
-	renderer->rescaleCache ();
+	drawMessage ();
+	clutter_actor_show_all (stage);
 }
 
 gboolean
 Field::configure(GtkWidget *widget, GdkEventConfigure *event, Field *field)
 {
-	field->width = widget->allocation.width;
-	field->height = widget->allocation.height;
-
 	field->rescaleField ();
 	return TRUE;
 }
@@ -260,5 +263,17 @@ Field::hideGameOverMessage()
 void
 Field::setTheme (gint id)
 {
+	// don't waste time if theme is the same (like from initOptions)
+	if (themeID == id)
+		return;
+
 	themeID = id;
+	if (renderer) {
+		delete renderer;
+		renderer = rendererFactory (themeID, cell_width,
+					    cell_height);
+	} else {
+		renderer = rendererFactory (themeID, cell_width,
+					    cell_height);
+	}
 }
