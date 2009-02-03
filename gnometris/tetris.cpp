@@ -39,7 +39,6 @@
 #include <libgames-support/games-stock.h>
 
 #include "tetris.h"
-#include "blockops.h"
 #include "blocks.h"
 #include "scoreframe.h"
 #include "highscores.h"
@@ -48,10 +47,12 @@
 #include "preview.h"
 #include "field.h"
 #include "renderer.h"
+#include "blockops.h"
 #else
 #include "preview-noclutter.h"
 #include "field-noclutter.h"
 #include "renderer-noclutter.h"
+#include "blockops-noclutter.h"
 #endif
 
 int LINES = 20;

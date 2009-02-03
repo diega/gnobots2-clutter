@@ -28,7 +28,6 @@
 #include "renderer.h"
 
 const ThemeTableEntry ThemeTable[] = {{N_("Plain"), "plain"},
-				      {N_("Joined"), "joined"},
 				      {N_("Tango Flat"), "tangoflat"},
 				      {N_("Tango Shaded"), "tangoshaded"},
 				      {NULL, NULL}};
@@ -59,12 +58,10 @@ Renderer * rendererFactory (gint id, ClutterActor *dst,
 			    int h, int pxw, int pxh)
 {
 	switch (id) {
-	case 3:
-		return new TangoBlock (dst, src, w, h, pxw, pxh, TRUE);
 	case 2:
-		return new TangoBlock (dst, src, w, h, pxw, pxh, FALSE);
+		return new TangoBlock (dst, src, w, h, pxw, pxh, TRUE);
 	case 1:
-		return new JoinedUp (dst, src, w, h, pxw, pxh);
+		return new TangoBlock (dst, src, w, h, pxw, pxh, FALSE);
 	case 0:
 	default:
 		return new Renderer (dst, src, w, h, pxw, pxh);
@@ -89,7 +86,6 @@ Renderer::Renderer (ClutterActor *dst, Block **src,
 		    int w, int h, int pxw, int pxh)
 {
 	target = dst;
-	block_cache = new GnometrisBlockCache(5);
 	data = src;
 	width = w;
 	height = h;
@@ -99,17 +95,14 @@ Renderer::Renderer (ClutterActor *dst, Block **src,
 
 Renderer::~Renderer ()
 {
-	delete block_cache;
 }
 
-void Renderer::setTarget (ClutterActor * dst)
+void Renderer::rescaleCache ()
 {
-	target = dst;
 }
 
-void Renderer::drawCell (cairo_t *cr, gint x, gint y)
+void Renderer::drawCell (cairo_t *cr, guint color)
 {
-	int i;
 	const gdouble colours[7][3] = {{1.0, 0.0, 0.0},
 				       {0.0, 1.0, 0.0},
 				       {0.0, 0.0, 1.0},
@@ -118,31 +111,22 @@ void Renderer::drawCell (cairo_t *cr, gint x, gint y)
 				       {1.0, 0.0, 1.0},
 				       {0.0, 1.0, 1.0}};
 
-	if (data[x][y].what == EMPTY)
-		return;
+	color = CLAMP (color, 0, 6);
 
-	i = data[x][y].color;
-	i = CLAMP (i, 0, 6);
-
-	cairo_set_source_rgb(cr, colours[i][0],
-				colours[i][1],
-				colours[i][2]);
-
-	cairo_rectangle(cr, x+0.05, y+0.05,
-			0.9, 0.9);
-	cairo_fill (cr);
+	cairo_set_source_rgb(cr, colours[color][0],
+				colours[color][1],
+				colours[color][2]);
+	cairo_paint (cr);
 }
 
 void Renderer::drawForeground (cairo_t *cr)
 {
-	int x, y;
+	int color;
 
 	cairo_scale(cr, 1.0 * pxwidth / width, 1.0 * pxheight / height);
 
-	for (y = 0; y<height; y++) {
-		for (x = 0; x<width; x++) {
-			drawCell (cr, x, y);
-		}
+	for (color = 0; color<7; color++) {
+		drawCell (cr, color);
 	}
 }
 
@@ -157,204 +141,15 @@ void Renderer::render ()
 	cairo_destroy (cr);
 }
 
-/*--------------------------------------------------------*/
-
-void JoinedUp::drawInnerCorner (cairo_t *cr)
-{
-	border = 0.2;
-	cairo_move_to (cr, 0, 0);
-	cairo_line_to (cr, border, border);
-	cairo_line_to (cr, border, 0);
-	cairo_move_to (cr, border, border);
-	cairo_line_to (cr, 0, border);
-	cairo_stroke (cr);
-}
-
-void JoinedUp::drawOuterCorner (cairo_t *cr)
-{
-	border = 0.2;
-	cairo_move_to (cr, 0, 0.5);
-	cairo_line_to (cr, 0, 0);
-	cairo_line_to (cr, 0.5, 0);
-	cairo_move_to (cr, 0, 0);
-	cairo_line_to (cr, border, border);
-	cairo_line_to (cr, 0.5, border);
-	cairo_move_to (cr, border, border);
-	cairo_line_to (cr, border, 0.5);
-	cairo_stroke (cr);
-}
-
-void JoinedUp::drawHEdge (cairo_t *cr)
-{
-	border = 0.2;
-	cairo_move_to (cr, 0, 0);
-	cairo_line_to (cr, 0.5, 0);
-	cairo_move_to (cr, 0, border);
-	cairo_line_to (cr, 0.5, border);
-	cairo_stroke (cr);
-}
-
-void JoinedUp::drawVEdge (cairo_t *cr)
-{
-	border = 0.2;
-	cairo_move_to (cr, 0, 0);
-	cairo_line_to (cr, 0, 0.5);
-	cairo_move_to (cr, border, 0);
-	cairo_line_to (cr, border, 0.5);
-	cairo_stroke (cr);
-}
-
-void JoinedUp::drawCell (cairo_t *cr, gint x, gint y)
-{
-	int i, m, n;
-	int segments[4];
-	double xofs;
-	double yofs;
-	int c;
-	int neighbours[8];
-	static const int formtable[4][8] = {{0, 7, 0, 7, 4, 9, 4, 8},
-					    {1, 4, 1, 4, 5, 10, 5, 8},
-					    {2, 6, 2, 6, 7, 11, 7, 8},
-					    {3, 5, 3, 5, 6, 12, 6, 8}};
-	static const gdouble colours[7][3] = {{1.0, 0.0, 0.0},
-					      {0.1, 0.8, 0.1},
-					      {0.1, 0.1, 0.8},
-					      {1.0, 1.0, 1.0},
-					      {1.0, 1.0, 0.0},
-					      {0.8, 0.1, 0.8},
-					      {0.0, 1.0, 1.0}};
-	static const int neighbourmap[8][2] = {{-1, -1}, {0, -1}, {+1, -1},
-					       {-1, 0}, {+1, 0},
-					       {-1, +1}, {0, +1}, {+1, +1}};
-
-	if (data[x][y].what == EMPTY)
-		return;
-
-	i = data[x][y].color;
-	i = CLAMP (i, 0, 6);
-
-	cairo_save (cr);
-	cairo_translate (cr, x, y);
-
-	cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
-	cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
-	cairo_set_line_width (cr, 0.05);
-
-	cairo_set_source_rgb (cr, colours[i][0],
-				colours[i][1],
-				colours[i][2]);
-
-	cairo_rectangle (cr, -0.025, -0.025, 1.025, 1.025);
-	cairo_fill (cr);
-	cairo_set_source_rgb (cr, 0.5, 0.5, 0.5);
-
-	// Enumerate the neighbours.
-	c = data[x][y].color;
-	for (i=0; i<8; i++) {
-		m = x + neighbourmap[i][0];
-		n = y + neighbourmap[i][1];
-		if ((m < 0) || (n < 0) || (m >= width) || (n >= height))
-			neighbours[i] = 0;
-		else
-			neighbours[i] = ((data[m][n].what != EMPTY) &&
-					 (data[m][n].color == c)) ? 1 : 0;
-	}
-
-	// Sort out which quadrant of the square is drawn in what way.
-	segments[0] = formtable [0][neighbours[3]*4 +
-				    neighbours[0]*2 +
-				    neighbours[1]];
-	segments[1] = formtable [1][neighbours[1]*4 +
-				    neighbours[2]*2 +
-				    neighbours[4]];
-	segments[2] = formtable [2][neighbours[6]*4 +
-				    neighbours[5]*2 +
-				    neighbours[3]];
-	segments[3] = formtable [3][neighbours[4]*4 +
-				    neighbours[7]*2 +
-				    neighbours[6]];
-
-	// Finally: do the actual drawing.
-	for (i=0; i<4; i++) {
-		cairo_save (cr);
-		xofs = 0.5*(i % 2);
-		yofs = 0.5*(i / 2);
-		cairo_translate (cr, xofs, yofs);
-		switch (segments[i]) {
-		case 0:
-			drawOuterCorner (cr);
-			break;
-		case 1:
-			cairo_scale (cr, -1.0, 1.0);
-			cairo_translate (cr, -0.5, 0);
-			drawOuterCorner (cr);
-			break;
-		case 2:
-			cairo_scale (cr, 1.0, -1.0);
-			cairo_translate (cr, 0, -0.5);
-			drawOuterCorner (cr);
-			break;
-		case 3:
-			cairo_scale (cr, -1.0, -1.0);
-			cairo_translate (cr, -0.5, -0.5);
-			drawOuterCorner (cr);
-			break;
-		case 4:
-			drawHEdge (cr);
-			break;
-		case 5:
-			cairo_scale (cr, -1.0, 1.0);
-			cairo_translate (cr, -0.5, 0);
-			drawVEdge (cr);
-			break;
-		case 6:
-			cairo_scale (cr, 1.0, -1.0);
-			cairo_translate (cr, 0, -0.5);
-			drawHEdge (cr);
-			break;
-		case 7:
-			drawVEdge (cr);
-			break;
-
-		case 8:
-			break;
-		case 9:
-			drawInnerCorner (cr);
-			break;
-		case 10:
-			cairo_scale (cr, -1.0, 1.0);
-			cairo_translate (cr, -0.5, 0);
-			drawInnerCorner (cr);
-			break;
-		case 11:
-			cairo_scale (cr, 1.0, -1.0);
-			cairo_translate (cr, 0, -0.5);
-			drawInnerCorner (cr);
-			break;
-		case 12:
-			cairo_scale (cr, -1.0, -1.0);
-			cairo_translate (cr, -0.5, -0.5);
-			drawInnerCorner (cr);
-			break;
-		}
-		cairo_restore (cr);
-	}
-
-	cairo_restore (cr);
-}
-
-/*--------------------------------------------------------*/
-
 TangoBlock::TangoBlock (ClutterActor * dst, Block ** src,
 	    int w, int h, int pxw, int pxh, gboolean grad) : Renderer (dst, src, w, h, pxw, pxh)
 {
 	usegrads = grad;
 }
 
-void TangoBlock::drawCell (cairo_t *cr, gint x, gint y)
+void TangoBlock::drawCell (cairo_t *cr, guint color)
 {
 
-	int i;
 	cairo_pattern_t *pat = NULL;
 	/* the following garbage is derived from the official tango style guide */
 	const gdouble colours[8][3][3] = {
@@ -391,44 +186,40 @@ void TangoBlock::drawCell (cairo_t *cr, gint x, gint y)
 					   {0.10, 0.12, 0.13}} /* grey */
 					 };
 
-	if (data[x][y].what == EMPTY)
-		return;
-
-	i = data[x][y].color;
-	i = CLAMP (i, 0, 6);
+	color = CLAMP (color, 0, 6);
 
 	if (usegrads) {
-		 pat = cairo_pattern_create_linear (x+0.35, y, x+0.55, y+0.9);
-		 cairo_pattern_add_color_stop_rgb (pat, 0.0, colours[i][0][0],
-						   colours[i][0][1],
-						   colours[i][0][2]);
-		 cairo_pattern_add_color_stop_rgb (pat, 1.0, colours[i][1][0],
-						   colours[i][1][1],
-						   colours[i][1][2]);
+		 pat = cairo_pattern_create_linear (0.35, 0, 0.55, 0.9);
+		 cairo_pattern_add_color_stop_rgb (pat, 0.0, colours[color][0][0],
+						   colours[color][0][1],
+						   colours[color][0][2]);
+		 cairo_pattern_add_color_stop_rgb (pat, 1.0, colours[color][1][0],
+						   colours[color][1][1],
+						   colours[color][1][2]);
 		 cairo_set_source (cr, pat);
 	} else {
-		 cairo_set_source_rgb (cr, colours[i][0][0],
-				       colours[i][0][1],
-				       colours[i][0][2]);
+		 cairo_set_source_rgb (cr, colours[color][0][0],
+				       colours[color][0][1],
+				       colours[color][0][2]);
 	}
 
-	drawRoundedRectangle (cr, x+0.05, y+0.05, 0.9, 0.9, 0.2);
+	drawRoundedRectangle (cr, 0.05, 0.05, 0.9, 0.9, 0.2);
 	cairo_fill_preserve (cr);  /* fill with shaded gradient */
 
 
 	if (usegrads)
 		cairo_pattern_destroy(pat);
-	cairo_set_source_rgb(cr, colours[i][2][0],
-			     colours[i][2][1],
-			     colours[i][2][2]);
+	cairo_set_source_rgb(cr, colours[color][2][0],
+			     colours[color][2][1],
+			     colours[color][2][2]);
 
 	cairo_set_line_width (cr, 0.1);
 	cairo_stroke (cr);  /* add darker outline */
 
-	drawRoundedRectangle (cr, x+0.15, y+0.15, 0.7, 0.7, 0.08);
+	drawRoundedRectangle (cr, 0.15, 0.15, 0.7, 0.7, 0.08);
 	if (usegrads) {
-		pat = cairo_pattern_create_linear (x-0.3, y-0.3, x+0.8, y+0.8);
-		switch (i) { /* yellow and white blocks need a brighter highlight */
+		pat = cairo_pattern_create_linear (-0.3, -0.3, 0.8, 0.8);
+		switch (color) { /* yellow and white blocks need a brighter highlight */
 		case 3:
 		case 4:
 			cairo_pattern_add_color_stop_rgba (pat, 0.0, 1.0,

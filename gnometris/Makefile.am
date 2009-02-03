@@ -6,8 +6,6 @@ gnometris_SOURCES = \
 	main.cpp \
 	blocks.cpp \
 	blocks.h \
-	blockops.cpp \
-	blockops.h \
 	highscores.cpp \
 	highscores.h \
 	scoreframe.cpp \
@@ -21,16 +19,18 @@ gnometris_SOURCES += \
 	field.h \
 	preview.cpp \
 	preview.h \
+	blockops.cpp \
+	blockops.h \
 	renderer.cpp \
-	renderer.h \
-	block-cache.cpp \
-	block-cache.h
+	renderer.h
 else
 gnometris_SOURCES += \
 	field-noclutter.cpp \
 	field-noclutter.h \
 	preview-noclutter.cpp \
 	preview-noclutter.h \
+	blockops-noclutter.cpp \
+	blockops-noclutter.h \
 	renderer-noclutter.cpp \
 	renderer-noclutter.h
 endif
@@ -72,8 +72,8 @@ if HAVE_CLUTTER
 #	blocks.h \
 #	preview-noclutter.cpp \
 #	preview-noclutter.h \
-#	blockops.cpp \
-#	blockops.h \
+#	blockops-noclutter.cpp \
+#	blockops-noclutter.h \
 #	field-noclutter.cpp \
 #	field-noclutter.h \
 #	highscores.cpp \

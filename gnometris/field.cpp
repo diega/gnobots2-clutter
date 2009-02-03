@@ -49,7 +49,7 @@ Field::Field():
 	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
 
 	/* I don't know if this helps or not FIXME */
-	gtk_widget_set_double_buffered(w, FALSE);
+	gtk_widget_set_double_buffered (w, FALSE);
 
 	gtk_widget_set_size_request (w, COLUMNS*190/LINES, 190);
 
@@ -120,25 +120,20 @@ Field::rescaleField ()
 		cairo_matrix_t m;
 
 		/* FIXME: This doesn't handle tiled backgrounds in the obvious way. */
-		gdk_cairo_set_source_pixbuf(bg_cr, backgroundImage, 0, 0);
+		gdk_cairo_set_source_pixbuf (bg_cr, backgroundImage, 0, 0);
 		xscale = 1.0*gdk_pixbuf_get_width (backgroundImage)/w->allocation.width;
 		yscale = 1.0*gdk_pixbuf_get_height (backgroundImage)/w->allocation.height;
 		cairo_matrix_init_scale (&m, xscale, yscale);
 		cairo_pattern_set_matrix (cairo_get_source (bg_cr), &m);
 	} else if (backgroundColor)
-		gdk_cairo_set_source_color(bg_cr, backgroundColor);
+		gdk_cairo_set_source_color (bg_cr, backgroundColor);
 	else
-		cairo_set_source_rgb(bg_cr, 0., 0., 0.);
+		cairo_set_source_rgb (bg_cr, 0., 0., 0.);
 
-	cairo_paint(bg_cr);
-
-	cairo_destroy(bg_cr);
-}
-
-void
-Field::rescaleBlockCache ()
-{
-	return;
+	cairo_paint (bg_cr);
+	cairo_destroy (bg_cr);
+	this->drawMessage ();
+	renderer->rescaleCache ();
 }
 
 gboolean
@@ -148,7 +143,6 @@ Field::configure(GtkWidget *widget, GdkEventConfigure *event, Field *field)
 	field->height = widget->allocation.height;
 
 	field->rescaleField ();
-	
 	return TRUE;
 }
 
@@ -177,7 +171,7 @@ Field::drawMessage()
 	}
 
 	// Center coordinates
-	cairo_translate(cr, width / 2, height / 2);
+	cairo_translate (cr, width / 2, height / 2);
 
 	desc = pango_font_description_from_string(FONT);
 
@@ -197,7 +191,7 @@ Field::drawMessage()
 	pango_layout_get_size (layout, &lw, &lh);
 	cairo_move_to (cr, -((double)lw / PANGO_SCALE) / 2, -((double)lh / PANGO_SCALE) / 2);
 	pango_cairo_layout_path (cr, layout);
-	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
+	cairo_set_source_rgb (cr, 1.0, 1.0, 1.0);
 	cairo_fill_preserve (cr);
 	cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
 	/* A linewidth of 2 pixels at the default size. */

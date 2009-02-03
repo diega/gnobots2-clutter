@@ -65,9 +65,7 @@ private:
 	GdkColor *backgroundColor;
 	gint themeID;
 
-	void drawMessage (cairo_t * cr, const char *msg);
 	void rescaleField ();
-	void rescaleBlockCache ();
 
 	static gboolean configure (GtkWidget * widget, GdkEventConfigure * event,
 				   Field * field);

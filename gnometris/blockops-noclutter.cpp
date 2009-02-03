@@ -20,15 +20,16 @@
  */
 
 #include <config.h>
-#include "blockops.h"
+#include "blockops-noclutter.h"
 #include "blocks.h"
 
-// #include "field.h"
+// #include "field-noclutter.h"
 
 #define NCOLOURS 7
 
 
 BlockOps::BlockOps() :
+	useTarget (false),
 	blocknr (0),
 	rot (0),
 	color (0)
@@ -178,6 +179,46 @@ BlockOps::moveBlockDown()
 	return fallen;
 }
 
+void
+BlockOps::clearTarget ()
+{
+	for (int x = 0; x < COLUMNS; ++x)
+		for (int y = 0; y < LINES; ++y)
+			if (field[x][y].what == TARGET)
+				field[x][y].what = EMPTY;
+}
+
+// The target is the set of blocks which the currently falling block
+// will occupy when it lands. It is an aid for beginners.
+void
+BlockOps::generateTarget ()
+{
+	if (!useTarget)
+		return;
+
+	clearTarget ();
+
+	// FIXME: Check that this is actually guaranteed
+	// to terminate (i.e. posx, posy, blocknr and rot
+	// are guaranteed to be valid).
+	int n = 0;
+	do {
+		n++;
+	} while (blockOkHere (posx, posy + n, blocknr, rot));
+	n--;
+
+	// Mark the relevant places.
+	putBlockInField (posx, posy + n, blocknr, rot, TARGET);
+}
+
+void
+BlockOps::setUseTarget (bool use)
+{
+	useTarget = use;
+	if (!useTarget)
+		clearTarget ();
+}
+
 int
 BlockOps::dropBlock()
 {
@@ -317,6 +358,10 @@ BlockOps::putBlockInField (int bx, int by, int block, int rotation,
 			{
 				int i = bx - 2 + x;
 				int j = y + by;
+
+				if ((fill == TARGET) &&
+				    (field[i][j].what != EMPTY))
+					return;
 
 				field[i][j].what = fill;
 				if ((fill == FALLING) || (fill == LAYING))
