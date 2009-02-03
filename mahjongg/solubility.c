@@ -200,7 +200,7 @@ tile_free (int index)
 }
 
 void
-generate_dependencies ()
+generate_dependencies (void)
 {
   int i, j;
   int fc, lc, rc, oc;

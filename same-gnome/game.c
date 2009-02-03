@@ -453,7 +453,7 @@ serialise_board_to_string (void)
 }
 
 void
-reset_undo ()
+reset_undo (void)
 {
   /* Free and reset the memory for the undo queue. */
   free_urlist (urlist);
