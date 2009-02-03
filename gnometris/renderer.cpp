@@ -84,22 +84,21 @@ Renderer::Renderer (gint pxw, gint pxh)
 {
 	pxwidth = pxw;
 	pxheight = pxh;
-
 	if (pxwidth == 0 || pxheight == 0) {
 		for (int i = 0; i<NCOLOURS; i++)
 			cache[i] = NULL;
 	} else {
 		for (int i = 0; i<NCOLOURS; i++) {
 			cache[i] = clutter_cairo_new (pxwidth, pxheight);
-			cairo_t *cr = clutter_cairo_create (CLUTTER_CAIRO(cache[i]));
-			drawCell (cr, i);
-			cairo_destroy (cr);
 		}
 	}
 }
 
 Renderer::~Renderer ()
 {
+	for (int i = 0; i<NCOLOURS; i++) {
+		g_object_unref (CLUTTER_ACTOR(cache[i]));
+	}
 }
 
 ClutterActor* Renderer::getCacheCellById (gint id)
