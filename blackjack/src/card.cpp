@@ -149,7 +149,7 @@ bj_card_set_size (gint width, gint height)
         }
 
         games_card_theme_set_size (theme, width, height, 1.0);
-        card_size = games_card_images_get_size (images);
+        games_card_images_get_size (images, &card_size);
 
         bj_slot_set_size (card_size.width, card_size.height);
         bj_chip_set_size (card_size.width / 2, card_size.width / 2);
