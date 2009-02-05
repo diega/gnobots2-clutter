@@ -119,7 +119,7 @@ private:
 
 	static gboolean configure (GtkWidget * widget, GdkEventConfigure * event,
 				   BlockOps * field);
-	static gboolean resize (GtkWidget * widget, GdkEventConfigure * event,
+	static gboolean resize (GtkWidget * widget, GtkAllocation * event,
 					   BlockOps * field);
 };
 

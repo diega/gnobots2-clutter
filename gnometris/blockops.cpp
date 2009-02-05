@@ -66,12 +66,13 @@ Block::operator= (const Block& b)
 BlockOps::BlockOps() :
 	background(NULL),
 	foreground(NULL),
-	blocknr (0),
-	rot (0),
-	color (0)
+	renderer(NULL),
+	blocknr(0),
+	rot(0),
+	color(0),
+	backgroundImage(NULL)
 {
 	field = new Block*[COLUMNS];
-	renderer = NULL;
 	themeID = -1;
 
 	posx = COLUMNS / 2;
@@ -420,7 +421,7 @@ BlockOps::configure(GtkWidget *widget, GdkEventConfigure *event, BlockOps *field
 }
 
 gboolean
-BlockOps::resize(GtkWidget *widget, GdkEventConfigure *event, BlockOps *field)
+BlockOps::resize(GtkWidget *widget, GtkAllocation *event, BlockOps *field)
 {
 	field->width = field->w->allocation.width;
 	field->height = field->w->allocation.height;
