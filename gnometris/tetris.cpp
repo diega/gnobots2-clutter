@@ -1329,8 +1329,6 @@ Tetris::gameNew(GtkAction *action, void *d)
 	t->scoreFrame->resetScore();
 	t->paused = false;
 
-
-	t->field->emptyField();
 	t->field->generateFallingBlock();
 #ifndef HAVE_CLUTTER
 	t->field->redraw();
