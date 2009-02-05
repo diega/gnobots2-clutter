@@ -584,8 +584,6 @@ BlockOps::setBackground(GdkPixbuf *bgImage)//, bool tiled)
 	backgroundImage = (GdkPixbuf *) g_object_ref(bgImage);
 	useBGImage = true;
 //	backgroundImageTiled = tiled;
-
-	rescaleField ();
 }
 
 void
@@ -597,8 +595,6 @@ BlockOps::setBackground(GdkColor *bgColor)
 		backgroundImage = NULL;
 	}
 	useBGImage = false;
-
-	rescaleField ();
 }
 
 void
