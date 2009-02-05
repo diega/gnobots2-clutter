@@ -82,15 +82,10 @@ Renderer * rendererFactory (gint id, gint pxw, gint pxh)
 
 Renderer::Renderer (gint pxw, gint pxh)
 {
-	pxwidth = pxw;
-	pxheight = pxh;
-	if (pxwidth == 0 || pxheight == 0) {
-		for (int i = 0; i<NCOLOURS; i++)
-			cache[i] = NULL;
-	} else {
-		for (int i = 0; i<NCOLOURS; i++) {
-			cache[i] = clutter_cairo_new (pxwidth, pxheight);
-		}
+	pxwidth = pxw == 0 ? 1 : pxw;
+	pxheight = pxh == 0 ? 1 : pxh;
+	for (int i = 0; i<NCOLOURS; i++) {
+		cache[i] = clutter_cairo_new (pxwidth, pxheight);
 	}
 }
 

@@ -448,10 +448,6 @@ BlockOps::rescaleBlockPos (ClutterActor* stage)
 void
 BlockOps::rescaleField ()
 {
-	// don't waste our time if GTK+ is just going through allocation
-	if (width < 1 or height < 1)
-		return;
-
 	ClutterActor *stage;
 	stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
 
