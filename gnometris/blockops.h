@@ -23,6 +23,9 @@
  */
 
 #include "tetris.h"
+#include "renderer.h"
+
+#include <clutter/clutter.h>
 
 enum SlotType {
 	EMPTY,
@@ -30,9 +33,18 @@ enum SlotType {
 	LAYING
 };
 
-struct Block {
+class Block {
+public:
+	Block ();
+	~Block ();
+
+	Block& operator=(const Block& b);
+
 	SlotType what;
-	int color;
+	ClutterActor* actor;
+
+	void createActor (ClutterActor* chamber, ClutterActor* texture_source);
+	void associateActor (ClutterActor* chamber, ClutterActor* other_actor);
 };
 
 class BlockOps {
@@ -54,21 +66,61 @@ public:
 	int getLinesToBottom ();
 	bool isFieldEmpty (void);
 
+	void setBackground (GdkPixbuf * bgImage); //, bool tiled); fixme: move tiling here.
+	void setBackground (GdkColor * bgColor);
+	void placeBlock (int x, int y, int bcolor, bool remove);
+	void showPauseMessage ();
+	void hidePauseMessage ();
+	void showGameOverMessage ();
+	void hideGameOverMessage ();
+	void setTheme (gint id);
+	void drawMessage ();
+
+	GtkWidget *getWidget () {
+		return w;
+	}
+
 private:
 	void putBlockInField (int bx, int by, int blocknr, int rotation,
 			      SlotType fill);
 	bool blockOkHere (int x, int y, int b, int r);
 	void eliminateLine (int l);
 
-protected:
+	GtkWidget * w;
+
+	ClutterActor *background;
+	ClutterActor *foreground;
+	guint width;
+	guint height;
+	guint cell_width;
+	guint cell_height;
+	Renderer *renderer;
+	gint themeID;
+
 	Block **field;
 
 	int blocknr;
 	int rot;
 	int color;
 
+	bool showPause;
+	bool showGameOver;
+
+	GdkPixbuf *backgroundImage;
+	bool backgroundImageTiled;
+	bool useBGImage;
+	GdkColor *backgroundColor;
+
+	void rescaleField ();
+	void rescaleBlockPos (ClutterActor *stage);
+
 	int posx;
 	int posy;
+
+	static gboolean configure (GtkWidget * widget, GdkEventConfigure * event,
+				   BlockOps * field);
+	static gboolean resize (GtkWidget * widget, GdkEventConfigure * event,
+					   BlockOps * field);
 };
 
 #endif //__blockops_h__

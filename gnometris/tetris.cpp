@@ -45,7 +45,6 @@
 
 #ifdef HAVE_CLUTTER
 #include "preview.h"
-#include "field.h"
 #include "renderer.h"
 #include "blockops.h"
 #else
@@ -189,8 +188,10 @@ Tetris::Tetris(int cmdlLevel):
 	games_conf_add_window (GTK_WINDOW (w), KEY_SAVED_GROUP);
 
 	preview = new Preview ();
+#ifdef HAVE_CLUTTER
+	field = new BlockOps ();
+#else
 	field = new Field();
-#ifndef HAVE_CLUTTER
 	field->setUseTarget (false);
 #endif
 
@@ -263,6 +264,7 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_widget_show(vb2);
 	gtk_widget_show(aspect_frame);
 	gtk_widget_show(field->getWidget());
+	gtk_widget_show(preview->getWidget());
 	scoreFrame->show();
 	gtk_widget_show(w);
 
@@ -281,6 +283,7 @@ Tetris::~Tetris()
 	delete field;
 	delete preview;
 	delete scoreFrame;
+	delete high_scores;
 
 	if (bgimage)
 		g_object_unref (G_OBJECT (bgimage));
@@ -497,7 +500,9 @@ Tetris::setOptions ()
 
 		if (theme_preview) {
 			theme_preview->setTheme (themeno);
+#ifndef HAVE_CLUTTER
 			gtk_widget_queue_draw(theme_preview->getWidget());
+#endif
 		}
 	}
 
@@ -805,7 +810,11 @@ Tetris::gameProperties(GtkAction *action, void *d)
 	t->theme_preview->setTheme (t->themeno);
 	gtk_box_pack_start(GTK_BOX(fvbox), t->theme_preview->getWidget(), TRUE, TRUE, 0);
 
+#ifndef HAVE_CLUTTER
 	t->theme_preview->previewBlock(4, 0, 0);
+#else
+	t->theme_preview->previewBlock(4, 0);
+#endif
 
 	gtk_widget_show_all (t->setupdialog);
 	gtk_action_set_sensitive(t->new_game_action, FALSE);
@@ -1234,8 +1243,12 @@ Tetris::generate()
 	if (field->generateFallingBlock())
 	{
 		field->putBlockInField(false);
+#ifndef HAVE_CLUTTER
 		preview->previewBlock(blocknr_next, rot_next, color_next);
 		gtk_widget_queue_draw(preview->getWidget());
+#else
+		preview->previewBlock(blocknr_next, color_next);
+#endif
 		onePause = true;
 	}
 	else
@@ -1259,8 +1272,12 @@ Tetris::endOfGame()
 	color_next = -1;
 	blocknr_next = -1;
 	rot_next = -1;
+#ifndef HAVE_CLUTTER
 	preview->previewBlock(-1, -1, -1);
 	gtk_widget_queue_draw(preview->getWidget());
+#else
+	preview->previewBlock(-1, -1);
+#endif
 	field->hidePauseMessage();
 	field->showGameOverMessage();
 	games_sound_play ("gameover");
@@ -1315,9 +1332,12 @@ Tetris::gameNew(GtkAction *action, void *d)
 	t->field->generateFallingBlock();
 #ifndef HAVE_CLUTTER
 	t->field->redraw();
-#endif
+
 	t->preview->previewBlock(blocknr_next, rot_next, color_next);
 	gtk_widget_queue_draw(t->preview->getWidget());
+#else
+	t->preview->previewBlock(blocknr_next, color_next);
+#endif
 
 	gtk_action_set_visible(t->pause_action, TRUE);
 	gtk_action_set_visible(t->resume_action, FALSE);

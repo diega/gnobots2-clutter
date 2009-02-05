@@ -27,7 +27,7 @@
 #include "renderer.h"
 #include "blocks.h"
 
-#include <clutter-cairo/clutter-cairo.h>
+#include <clutter/clutter.h>
 #include <libgames-support/games-clutter-embed.h>
 
 class Preview {
@@ -40,26 +40,27 @@ public:
 	}
 
 	void enable (bool enable);
-	void previewBlock (int bnr, int brot, int bcolor);
-	void setTheme (int id);
+	void setTheme (gint id);
+	void previewBlock (int bnr, int bcolor);
+	void positionRotar();
+	void regenerateRenderer ();
 
 private:
 	GtkWidget * w;
 	gint width;
 	gint height;
+	gint blocknr;
+	gint color;
+	gint themeID;
 
-	int blocknr;
-	int blockrot;
-	int blockcolor;
+	Block **blocks;
+	ClutterActor* rotar;
+	Renderer* renderer;
 
 	bool enabled;
 
-	int themeID;
-	cairo_surface_t *background;
-
 	static gint configure (GtkWidget * widget, GdkEventConfigure * event,
 			       Preview * preview);
-	Block **blocks;
 };
 
 #endif //__preview_h__

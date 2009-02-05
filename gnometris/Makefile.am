@@ -15,8 +15,6 @@ gnometris_SOURCES = \
 
 if HAVE_CLUTTER
 gnometris_SOURCES += \
-	field.cpp \
-	field.h \
 	preview.cpp \
 	preview.h \
 	blockops.cpp \

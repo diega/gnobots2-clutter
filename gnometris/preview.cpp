@@ -31,19 +31,13 @@
 
 Preview::Preview():
 	blocknr(-1),
-	blockrot(0),
-	blockcolor(0),
-	enabled(true),
-	themeID (0),
-	background (0)
+	themeID(-1),
+	renderer(NULL),
+	enabled(true)
 {
 	blocks = new Block*[PREVIEW_WIDTH];
 	for (int i = 0; i < PREVIEW_WIDTH; i++) {
 		blocks[i] = new Block [PREVIEW_HEIGHT];
-		for (int j = 0; j < PREVIEW_HEIGHT; j++) {
-			blocks[i][j].what = EMPTY;
-			blocks[i][j].color = 0;
-		}
 	}
 
 	w = games_clutter_embed_new();
@@ -55,8 +49,16 @@ Preview::Preview():
 	 * fixed-aspect box. */
 	gtk_widget_set_size_request (w, PREVIEW_SIZE * 20,
 				     PREVIEW_SIZE * 20);
+	ClutterActor *stage;
+	stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
 
-	gtk_widget_show (w);
+	ClutterColor stage_color = { 0x61, 0x64, 0x8c, 0xff };
+	clutter_stage_set_color (CLUTTER_STAGE (stage),
+				 &stage_color);
+	rotar = clutter_group_new ();
+	clutter_group_add (CLUTTER_GROUP (stage),
+			   rotar);
+	clutter_actor_show_all (stage);
 }
 
 Preview::~Preview ()
@@ -65,6 +67,7 @@ Preview::~Preview ()
 		delete[] blocks[i];
 
 	delete[] blocks;
+	delete renderer;
 }
 
 void
@@ -74,60 +77,84 @@ Preview::enable(bool en)
 }
 
 void
-Preview::setTheme (int id)
+Preview::setTheme (gint id)
 {
+	if (themeID == id)
+		return;
+
 	themeID = id;
+
+	if (renderer) {
+		delete renderer;
+		renderer = rendererFactory (themeID, PREVIEW_SIZE, PREVIEW_SIZE);
+	} else {
+		renderer = rendererFactory (themeID, PREVIEW_SIZE, PREVIEW_SIZE);
+	}
 }
 
 void
-Preview::previewBlock(int bnr, int brot, int bcolor)
+Preview::regenerateRenderer ()
 {
+	if (renderer)
+		renderer->rescaleCache (PREVIEW_SIZE, PREVIEW_SIZE);
+	else {
+		renderer = rendererFactory (themeID, PREVIEW_SIZE, PREVIEW_SIZE);
+	}
+}
+
+void
+Preview::previewBlock(gint bnr, gint bcol)
+{
+	ClutterActor *stage;
+	stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
+
 	int x, y;
 
 	blocknr = bnr;
-	blockrot = brot;
-	blockcolor = bcolor;
+	color = bcol;
 
 	for (x = 1; x < PREVIEW_WIDTH - 1; x++) {
 		for (y = 1; y < PREVIEW_HEIGHT - 1; y++) {
 			if ((blocknr != -1) &&
-			    blockTable[blocknr][blockrot][x-1][y-1]) {
+			    blockTable[blocknr][0][x-1][y-1]) {
 				blocks[x][y].what = LAYING;
-				blocks[x][y].color = blockcolor;
+				blocks[x][y].createActor (rotar,
+							  renderer->getCacheCellById (color));
+				clutter_actor_set_position (CLUTTER_ACTOR(blocks[x][y].actor),
+							    x*PREVIEW_SIZE, y*PREVIEW_SIZE);
 			} else {
 				blocks[x][y].what = EMPTY;
+				if (blocks[x][y].actor) {
+					clutter_actor_destroy (blocks[x][y].actor);
+					blocks[x][y].actor = NULL;
+				}
 			}
 		}
 	}
+	positionRotar ();
+	clutter_actor_show_all (stage);
+}
+
+void
+Preview::positionRotar()
+{
+	clutter_actor_set_anchor_pointu (CLUTTER_ACTOR(rotar),
+					 CLUTTER_UNITS_FROM_PARENT_WIDTH_PERCENTAGE(rotar, 50),
+					 CLUTTER_UNITS_FROM_PARENT_HEIGHT_PERCENTAGE(rotar, 50));
+	clutter_actor_set_positionu (CLUTTER_ACTOR(rotar),
+				     CLUTTER_UNITS_FROM_STAGE_WIDTH_PERCENTAGE(50),
+				     CLUTTER_UNITS_FROM_STAGE_HEIGHT_PERCENTAGE(50));
 
 }
 
 gint
 Preview::configure(GtkWidget * widget, GdkEventConfigure * event, Preview * preview)
 {
-	cairo_t *cr;
-
 	preview->width = event->width;
 	preview->height = event->height;
 
-	cr = gdk_cairo_create (widget->window);
-
-	if (preview->background)
-		cairo_surface_destroy (preview->background);
-
-	preview->background =
-		cairo_surface_create_similar (cairo_get_target (cr),
-					      CAIRO_CONTENT_COLOR,
-					      event->width,
-					      event->height);
-
-	cairo_destroy (cr);
-
-	cr = cairo_create (preview->background);
-	cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-	cairo_paint (cr);
-	cairo_destroy (cr);
-
+	preview->regenerateRenderer ();
+	preview->positionRotar ();
 	return TRUE;
 }
 

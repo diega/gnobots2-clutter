@@ -29,7 +29,7 @@
 #include <clutter-cairo/clutter-cairo.h>
 
 #include "blocks.h"
-#include "blockops.h"
+#include "tetris.h"
 
 struct ThemeTableEntry {
 	const gchar *name;
