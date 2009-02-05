@@ -67,13 +67,13 @@ BlockOps::BlockOps() :
 	background(NULL),
 	foreground(NULL),
 	renderer(NULL),
+	themeID(-1),
 	blocknr(0),
 	rot(0),
 	color(0),
 	backgroundImage(NULL)
 {
 	field = new Block*[COLUMNS];
-	themeID = -1;
 
 	posx = COLUMNS / 2;
 	posy = 0;
@@ -87,8 +87,6 @@ BlockOps::BlockOps() :
 	g_signal_connect (w, "size_allocate", G_CALLBACK (resize), this);
 
 	gtk_widget_set_size_request (w, COLUMNS*190/LINES, 190);
-
-	emptyField();
 }
 
 BlockOps::~BlockOps()
