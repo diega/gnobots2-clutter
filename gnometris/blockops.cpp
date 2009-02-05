@@ -66,6 +66,10 @@ Block::operator= (const Block& b)
 BlockOps::BlockOps() :
 	background(NULL),
 	foreground(NULL),
+	width(0),
+	height(0),
+	cell_width(0),
+	cell_height(0),
 	renderer(NULL),
 	themeID(-1),
 	blocknr(0),
@@ -419,10 +423,10 @@ BlockOps::configure(GtkWidget *widget, GdkEventConfigure *event, BlockOps *field
 }
 
 gboolean
-BlockOps::resize(GtkWidget *widget, GtkAllocation *event, BlockOps *field)
+BlockOps::resize(GtkWidget *widget, GtkAllocation *allocation, BlockOps *field)
 {
-	field->width = field->w->allocation.width;
-	field->height = field->w->allocation.height;
+	field->width = allocation->width;
+	field->height = allocation->height;
 	field->cell_width = field->width/COLUMNS;
 	field->cell_height = field->height/LINES;
 	field->rescaleField();
