@@ -55,6 +55,7 @@ Block::operator= (const Block& b)
 {
 	if (this != &b) {
 		what = b.what;
+		color = b.color;
 		if (actor) {
 			clutter_actor_destroy (CLUTTER_ACTOR(actor));
 		}
@@ -259,9 +260,8 @@ BlockOps::eliminateLine(int l)
 			field[x][y - 1].actor = NULL;
 		}
 	}
-	ClutterActor *stage;
-	stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
-	rescaleBlockPos (stage);
+	//FIXME remove me once we animate this
+	rescaleBlockPos ();
 }
 
 int
@@ -347,9 +347,10 @@ BlockOps::emptyField(int filled_lines, int fill_prob)
 
 			if ((y>=(LINES - filled_lines)) && (x != blank) &&
 			    ((g_random_int_range(0, 10)) < fill_prob)) {
+				guint tmpColor = g_random_int_range(0, NCOLOURS);
 				field[x][y].what = LAYING;
-				field[x][y].createActor (stage, renderer->getCacheCellById
-							 (g_random_int_range(0, NCOLOURS)));
+				field[x][y].color = tmpColor;
+				field[x][y].createActor (stage, renderer->getCacheCellById (tmpColor));
 				clutter_actor_set_position (CLUTTER_ACTOR(field[x][y].actor),
 							    x*(cell_height), y*(cell_height));
 			}
@@ -377,9 +378,10 @@ BlockOps::putBlockInField (int bx, int by, int block, int rotation,
 				int j = y + by;
 
 				field[i][j].what = fill;
+				field[i][j].color = color;
 				if ((fill == FALLING) || (fill == LAYING)) {
-					field[i][j].createActor (stage, renderer->getCacheCellById
-								 (color));
+					field[i][j].createActor (stage,
+								 renderer->getCacheCellById (color));
 					clutter_actor_set_position (CLUTTER_ACTOR(field[i][j].actor),
 								    i*(cell_height), j*(cell_height));
 				} else {
@@ -434,13 +436,16 @@ BlockOps::resize(GtkWidget *widget, GtkAllocation *allocation, BlockOps *field)
 }
 
 void
-BlockOps::rescaleBlockPos (ClutterActor* stage)
+BlockOps::rescaleBlockPos ()
 {
 	for (int y = 0; y < LINES; ++y) {
 		for (int x = 0; x < COLUMNS; ++x) {
-			if (field[x][y].actor)
+			if (field[x][y].actor) {
 				clutter_actor_set_position (CLUTTER_ACTOR(field[x][y].actor),
 							    x*(cell_height), y*(cell_height));
+				clutter_clone_texture_set_parent_texture (CLUTTER_CLONE_TEXTURE(field[x][y].actor),
+									  CLUTTER_TEXTURE(renderer->getCacheCellById (field[x][y].color)));
+			}
 		}
 	}
 }
@@ -476,7 +481,7 @@ BlockOps::rescaleField ()
 					    0, 0);
 	}
 
-	rescaleBlockPos (stage);
+	rescaleBlockPos ();
 
 	if (foreground) {
 		clutter_actor_set_size (CLUTTER_ACTOR(foreground),
@@ -643,4 +648,5 @@ BlockOps::setTheme (gint id)
 		renderer = rendererFactory (themeID, cell_width,
 					    cell_height);
 	}
+	rescaleBlockPos();
 }

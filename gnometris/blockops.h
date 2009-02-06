@@ -41,6 +41,7 @@ public:
 	Block& operator=(const Block& b);
 
 	SlotType what;
+	guint color;
 	ClutterActor* actor;
 
 	void createActor (ClutterActor* chamber, ClutterActor* texture_source);
@@ -112,7 +113,7 @@ private:
 	GdkColor *backgroundColor;
 
 	void rescaleField ();
-	void rescaleBlockPos (ClutterActor *stage);
+	void rescaleBlockPos ();
 
 	int posx;
 	int posy;
