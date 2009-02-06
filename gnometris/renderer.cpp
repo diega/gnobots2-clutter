@@ -84,15 +84,17 @@ Renderer::Renderer (gint pxw, gint pxh)
 {
 	pxwidth = pxw == 0 ? 1 : pxw;
 	pxheight = pxh == 0 ? 1 : pxh;
-	for (int i = 0; i<NCOLOURS; i++) {
-		cache[i] = clutter_cairo_new (pxwidth, pxheight);
+	for (int i = 0; i < NCOLOURS; i++) {
+		cache[i] = NULL;
 	}
+	rescaleCache (pxwidth, pxheight);
 }
 
 Renderer::~Renderer ()
 {
 	for (int i = 0; i<NCOLOURS; i++) {
-		g_object_unref (CLUTTER_ACTOR(cache[i]));
+		if (cache[i])
+			clutter_actor_destroy (CLUTTER_ACTOR(cache[i]));
 	}
 }
 

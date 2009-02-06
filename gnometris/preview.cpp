@@ -30,7 +30,10 @@
 #define PREVIEW_SIZE 5
 
 Preview::Preview():
+	width(0),
+	height(0),
 	blocknr(-1),
+	color(-1),
 	themeID(-1),
 	renderer(NULL),
 	enabled(true)
