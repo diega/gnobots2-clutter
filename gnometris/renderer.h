@@ -40,7 +40,7 @@ extern const ThemeTableEntry ThemeTable[];
 
 class Renderer {
 public:
-	Renderer (gint pxw, gint pxh);
+	Renderer (gint pxw, gint pxh, bool initFromSubclass);
 	virtual ~ Renderer ();
 
 	void rescaleCache (gint pxw, gint pxh);

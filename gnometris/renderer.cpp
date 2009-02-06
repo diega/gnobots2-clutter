@@ -62,7 +62,7 @@ Renderer * rendererFactory (gint id, gint pxw, gint pxh)
 		return new TangoBlock (pxw, pxh, FALSE);
 	case 0:
 	default:
-		return new Renderer (pxw, pxh);
+		return new Renderer (pxw, pxh, FALSE);
 	}
 }
 
@@ -80,14 +80,15 @@ Renderer * rendererFactory (gint id, gint pxw, gint pxh)
    for the preview widget and possibly the theme previewer, so make no
    assumptions. */
 
-Renderer::Renderer (gint pxw, gint pxh)
+Renderer::Renderer (gint pxw, gint pxh, bool initFromSubclass)
 {
 	pxwidth = pxw == 0 ? 1 : pxw;
 	pxheight = pxh == 0 ? 1 : pxh;
 	for (int i = 0; i < NCOLOURS; i++) {
 		cache[i] = NULL;
 	}
-	rescaleCache (pxwidth, pxheight);
+	if (!initFromSubclass)
+		rescaleCache (pxwidth, pxheight);
 }
 
 Renderer::~Renderer ()
@@ -151,9 +152,10 @@ void Renderer::drawCell (cairo_t *cr, guint color)
 	cairo_paint (cr);
 }
 
-TangoBlock::TangoBlock (gint pxw, gint pxh, gboolean grad) : Renderer (pxw, pxh)
+TangoBlock::TangoBlock (gint pxw, gint pxh, gboolean grad) : Renderer (pxw, pxh, TRUE)
 {
 	usegrads = grad;
+	rescaleCache (pxwidth, pxheight);
 }
 
 void TangoBlock::drawCell (cairo_t *cr, guint color)
