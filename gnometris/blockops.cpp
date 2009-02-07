@@ -32,17 +32,10 @@ GList *Block::destroy_actors = NULL;
 void
 Block::animation_destroy (ClutterTimeline *tml, gpointer *data)
 {
-	ClutterActor *tmp_actor;
-	g_list_foreach(destroy_actors, (GFunc)Block::reap_actor, tmp_actor);
+	ClutterActor *tmp_actor = NULL;
+	g_list_foreach(destroy_actors, (GFunc)clutter_actor_destroy, CLUTTER_ACTOR(tmp_actor));
 	g_list_free (destroy_actors);
 }
-
-void
-Block::reap_actor (ClutterActor *actor)
-{
-	clutter_actor_destroy (CLUTTER_ACTOR(actor));
-}
-
 
 Block::Block ():
 	what(EMPTY),
@@ -285,8 +278,6 @@ BlockOps::eliminateLine(int l)
 			field[x][y].move_from (field[x][y - 1]);
 		}
 	}
-	g_signal_connect (timeline, "completed",
-			  G_CALLBACK (Block::animation_destroy), NULL);
 }
 
 int
@@ -321,6 +312,9 @@ BlockOps::checkFullLines()
 		{
 			eliminateLine(fullLines[i]);
 		}
+		g_signal_connect (timeline, "completed",
+				  G_CALLBACK (Block::animation_destroy), (gpointer) NULL);
+		clutter_timeline_start (timeline);
 	}
 
 	return numFullLines;

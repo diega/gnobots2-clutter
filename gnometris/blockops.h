@@ -56,7 +56,6 @@ public:
 
 	static GList *destroy_actors;
 	static void animation_destroy (ClutterTimeline *timeline, gpointer *data);
-	static void reap_actor (ClutterActor *actor);
 };
 
 class BlockOps {
