@@ -26,11 +26,34 @@
 
 #define FONT "Sans Bold"
 
+//FIXME ... g_list_free somewhere during Tetris dtor?
+GList *Block::destroy_actors = NULL;
+
+void
+Block::animation_destroy (ClutterTimeline *tml, gpointer *data)
+{
+	ClutterActor *tmp_actor;
+	g_list_foreach(destroy_actors, (GFunc)Block::reap_actor, tmp_actor);
+	g_list_free (destroy_actors);
+}
+
+void
+Block::reap_actor (ClutterActor *actor)
+{
+	clutter_actor_destroy (CLUTTER_ACTOR(actor));
+}
+
 
 Block::Block ():
 	what(EMPTY),
-	actor(NULL)
+	actor(NULL),
+	x(0),
+	y(0)
 {
+	if (!timeline)
+		timeline = clutter_timeline_new_for_duration (180);
+	if (!tmpl)
+		tmpl = clutter_effect_template_new (timeline, CLUTTER_ALPHA_RAMP_INC);
 }
 
 Block::~Block ()
@@ -40,26 +63,30 @@ Block::~Block ()
 }
 
 void
-Block::createActor (ClutterActor* chamber, ClutterActor* texture_source)
+Block::createActor (ClutterActor *chamber, ClutterActor *texture_source)
 {
-	if (actor) {
+	if (actor)
 		clutter_actor_destroy (CLUTTER_ACTOR(actor));
-		actor = NULL;
-	}
 	actor = clutter_clone_texture_new (CLUTTER_TEXTURE(texture_source));
 	clutter_group_add (CLUTTER_GROUP (chamber), actor);
 }
 
 Block&
-Block::operator= (const Block& b)
+Block::move_from (Block& b)
 {
 	if (this != &b) {
 		what = b.what;
+		b.what = EMPTY;
 		color = b.color;
+		b.color = 0;
 		if (actor) {
-			clutter_actor_destroy (CLUTTER_ACTOR(actor));
+			clutter_effect_fade (tmpl, actor, 0, NULL, NULL);
+			destroy_actors = g_list_append (destroy_actors, actor);
 		}
+		if (b.actor)
+			clutter_effect_move (tmpl, b.actor, x, y, NULL, NULL);
 		actor = b.actor;
+		b.actor = NULL;
 	}
 	return *this;
 }
@@ -255,13 +282,11 @@ BlockOps::eliminateLine(int l)
 	{
 		for (int x = 0; x < COLUMNS; ++x)
 		{
-			field[x][y] = field[x][y - 1];
-			field[x][y - 1].what = EMPTY;
-			field[x][y - 1].actor = NULL;
+			field[x][y].move_from (field[x][y - 1]);
 		}
 	}
-	//FIXME remove me once we animate this
-	rescaleBlockPos ();
+	g_signal_connect (timeline, "completed",
+			  G_CALLBACK (Block::animation_destroy), NULL);
 }
 
 int
@@ -352,7 +377,7 @@ BlockOps::emptyField(int filled_lines, int fill_prob)
 				field[x][y].color = tmpColor;
 				field[x][y].createActor (stage, renderer->getCacheCellById (tmpColor));
 				clutter_actor_set_position (CLUTTER_ACTOR(field[x][y].actor),
-							    x*(cell_height), y*(cell_height));
+							    x*(cell_width), y*(cell_height));
 			}
 		}
 	}
@@ -383,7 +408,7 @@ BlockOps::putBlockInField (int bx, int by, int block, int rotation,
 					field[i][j].createActor (stage,
 								 renderer->getCacheCellById (color));
 					clutter_actor_set_position (CLUTTER_ACTOR(field[i][j].actor),
-								    i*(cell_height), j*(cell_height));
+								    i*(cell_width), j*(cell_height));
 				} else {
 					if (field[i][j].actor) {
 						clutter_actor_destroy (CLUTTER_ACTOR(field[i][j].actor));
@@ -442,10 +467,12 @@ BlockOps::rescaleBlockPos ()
 		for (int x = 0; x < COLUMNS; ++x) {
 			if (field[x][y].actor) {
 				clutter_actor_set_position (CLUTTER_ACTOR(field[x][y].actor),
-							    x*(cell_height), y*(cell_height));
+							    x*(cell_width), y*(cell_height));
 				clutter_clone_texture_set_parent_texture (CLUTTER_CLONE_TEXTURE(field[x][y].actor),
 									  CLUTTER_TEXTURE(renderer->getCacheCellById (field[x][y].color)));
 			}
+			field[x][y].x = x*(cell_width);
+			field[x][y].y = y*(cell_height);
 		}
 	}
 }

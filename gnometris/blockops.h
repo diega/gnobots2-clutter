@@ -27,6 +27,10 @@
 
 #include <clutter/clutter.h>
 
+//FIXME dtor these somewhere...?
+static ClutterTimeline *timeline = NULL;
+static ClutterEffectTemplate *tmpl = NULL;
+
 enum SlotType {
 	EMPTY,
 	FALLING,
@@ -38,14 +42,21 @@ public:
 	Block ();
 	~Block ();
 
-	Block& operator=(const Block& b);
+	Block& move_from (Block& b);
 
 	SlotType what;
 	guint color;
 	ClutterActor* actor;
 
-	void createActor (ClutterActor* chamber, ClutterActor* texture_source);
-	void associateActor (ClutterActor* chamber, ClutterActor* other_actor);
+	int x;
+	int y;
+
+	void createActor (ClutterActor *chamber, ClutterActor *texture_source);
+	void associateActor (ClutterActor *chamber, ClutterActor *other_actor);
+
+	static GList *destroy_actors;
+	static void animation_destroy (ClutterTimeline *timeline, gpointer *data);
+	static void reap_actor (ClutterActor *actor);
 };
 
 class BlockOps {
