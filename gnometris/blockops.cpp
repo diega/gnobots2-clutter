@@ -35,6 +35,7 @@ Block::animation_destroy (ClutterTimeline *tml, gpointer *data)
 	ClutterActor *tmp_actor = NULL;
 	g_list_foreach(destroy_actors, (GFunc)clutter_actor_destroy, CLUTTER_ACTOR(tmp_actor));
 	g_list_free (destroy_actors);
+	destroy_actors = NULL;
 }
 
 Block::Block ():
