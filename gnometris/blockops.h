@@ -96,6 +96,7 @@ private:
 			      SlotType fill);
 	bool blockOkHere (int x, int y, int b, int r);
 	void eliminateLine (int l);
+	bool checkFullLine(int l);
 
 	GtkWidget * w;
 

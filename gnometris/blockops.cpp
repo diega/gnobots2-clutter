@@ -26,7 +26,6 @@
 
 #define FONT "Sans Bold"
 
-//FIXME ... g_list_free somewhere during Tetris dtor?
 GList *Block::destroy_actors = NULL;
 
 void
@@ -272,47 +271,56 @@ BlockOps::fallingToLaying()
 void
 BlockOps::eliminateLine(int l)
 {
-	for (int y = l; y > 0; --y)
+	for (int x = 0; x < COLUMNS; ++x)
 	{
-		for (int x = 0; x < COLUMNS; ++x)
-		{
-			field[x][y].move_from (field[x][y - 1]);
+		if (field[x][l].actor) {
+			clutter_effect_fade (tmpl, field[x][l].actor, 0, NULL, NULL);
+			Block::destroy_actors = g_list_append (Block::destroy_actors,
+							       field[x][l].actor);
 		}
 	}
+}
+
+bool
+BlockOps::checkFullLine(int l)
+{
+	bool f = true;
+	for (int x = 0; x < COLUMNS; ++x)
+	{
+		if (field[x][l].what != LAYING)
+		{
+			f = false;
+			break;
+		}
+	}
+
+	return f;
 }
 
 int
 BlockOps::checkFullLines()
 {
 	// we can have at most 4 full lines (vertical block)
-	int fullLines[4] = {0, };
 	int numFullLines = 0;
 
-	for (int y = posy; y < MIN(posy + 4, LINES); ++y)
+	for (int y = MIN (posy + 4, LINES); y > 0; --y)
 	{
-		bool f = true;
-		for (int x = 0; x < COLUMNS; ++x)
+		if (checkFullLine (y))
 		{
-			if (field[x][y].what != LAYING)
-			{
-				f = false;
-				break;
-			}
-		}
-
-		if (f)
-		{
-			fullLines[numFullLines] = y;
 			++numFullLines;
+			eliminateLine(y);
+		}
+		else if (numFullLines > 0)
+		{
+			for (int x = 0; x < COLUMNS; ++x)
+			{
+				field[x][y+numFullLines].move_from (field[x][y]);
+			}
 		}
 	}
 
 	if (numFullLines > 0)
 	{
-		for (int i = 0; i < numFullLines; ++i)
-		{
-			eliminateLine(fullLines[i]);
-		}
 		g_signal_connect (timeline, "completed",
 				  G_CALLBACK (Block::animation_destroy), (gpointer) NULL);
 		clutter_timeline_start (timeline);
