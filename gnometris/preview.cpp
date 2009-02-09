@@ -55,7 +55,7 @@ Preview::Preview():
 	ClutterActor *stage;
 	stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
 
-	ClutterColor stage_color = { 0x61, 0x64, 0x8c, 0xff };
+	ClutterColor stage_color = { 0x0, 0x0, 0x0, 0xff };
 	clutter_stage_set_color (CLUTTER_STAGE (stage),
 				 &stage_color);
 	rotar = clutter_group_new ();
