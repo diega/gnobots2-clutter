@@ -42,7 +42,7 @@ public:
 	Block ();
 	~Block ();
 
-	Block& move_from (Block& b);
+	Block& move_from (Block &b, BlockOps *f);
 
 	SlotType what;
 	guint color;

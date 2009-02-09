@@ -108,7 +108,7 @@ Block::createActor (ClutterActor *chamber, ClutterActor *texture_source)
 }
 
 Block&
-Block::move_from (Block& b)
+Block::move_from (Block& b, BlockOps *f)
 {
 	if (this != &b) {
 		what = b.what;
@@ -121,8 +121,8 @@ Block::move_from (Block& b)
 			clutter_actor_raise_top (actor);
 			clutter_effect_fade (tmpl, actor, 0, NULL, NULL);
 			clutter_effect_move (tmpl, actor,
-					cur_x + g_random_int_range(-60, 60),
-					cur_y + g_random_int_range(-16, 60),
+					cur_x + g_random_int_range(f->cell_width * -5, f->cell_width * 5),
+					cur_y + g_random_int_range(f->cell_height * -5, f->cell_height * 5),
 					NULL, NULL);
 			destroy_actors = g_list_append (destroy_actors, actor);
 		}
@@ -397,7 +397,7 @@ BlockOps::checkFullLines()
 		{
 			for (int x = 0; x < COLUMNS; ++x)
 			{
-				field[x][y+numFullLines].move_from (field[x][y]);
+				field[x][y+numFullLines].move_from (field[x][y], this);
 			}
 			++numCascades;
 		}
