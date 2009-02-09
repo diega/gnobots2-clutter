@@ -62,6 +62,19 @@ Preview::Preview():
 	clutter_group_add (CLUTTER_GROUP (stage),
 			   rotar);
 	clutter_actor_show_all (stage);
+
+	rot_timeline = clutter_timeline_new_for_duration (5000);
+	clutter_timeline_set_loop (rot_timeline, true);
+	alpha = clutter_alpha_new_full (rot_timeline,
+			CLUTTER_ALPHA_RAMP_INC,
+			NULL, NULL);
+	rot_behav = clutter_behaviour_rotate_new (alpha,
+			CLUTTER_Z_AXIS, CLUTTER_ROTATE_CW, 0.0, 360.0);
+	clutter_behaviour_rotate_set_center (CLUTTER_BEHAVIOUR_ROTATE (rot_behav),
+			PREVIEW_SIZE*12, PREVIEW_SIZE*12, 0);
+	clutter_actor_set_position (CLUTTER_ACTOR(rotar), 0, 0);
+	clutter_behaviour_apply (rot_behav, rotar);
+	clutter_timeline_start (rot_timeline);
 }
 
 Preview::~Preview ()
@@ -89,9 +102,9 @@ Preview::setTheme (gint id)
 
 	if (renderer) {
 		delete renderer;
-		renderer = rendererFactory (themeID, PREVIEW_SIZE, PREVIEW_SIZE);
+		renderer = rendererFactory (themeID, PREVIEW_SIZE*4, PREVIEW_SIZE*4);
 	} else {
-		renderer = rendererFactory (themeID, PREVIEW_SIZE, PREVIEW_SIZE);
+		renderer = rendererFactory (themeID, PREVIEW_SIZE*4, PREVIEW_SIZE*4);
 	}
 }
 
@@ -99,9 +112,9 @@ void
 Preview::regenerateRenderer ()
 {
 	if (renderer)
-		renderer->rescaleCache (PREVIEW_SIZE, PREVIEW_SIZE);
+		renderer->rescaleCache (PREVIEW_SIZE*4, PREVIEW_SIZE*4);
 	else {
-		renderer = rendererFactory (themeID, PREVIEW_SIZE, PREVIEW_SIZE);
+		renderer = rendererFactory (themeID, PREVIEW_SIZE*4, PREVIEW_SIZE*4);
 	}
 }
 
@@ -124,7 +137,7 @@ Preview::previewBlock(gint bnr, gint bcol)
 				blocks[x][y].createActor (rotar,
 							  renderer->getCacheCellById (color));
 				clutter_actor_set_position (CLUTTER_ACTOR(blocks[x][y].actor),
-							    x*PREVIEW_SIZE, y*PREVIEW_SIZE);
+							    x*PREVIEW_SIZE*4, y*PREVIEW_SIZE*4);
 			} else {
 				blocks[x][y].what = EMPTY;
 				if (blocks[x][y].actor) {
@@ -141,13 +154,8 @@ Preview::previewBlock(gint bnr, gint bcol)
 void
 Preview::positionRotar()
 {
-	clutter_actor_set_anchor_pointu (CLUTTER_ACTOR(rotar),
-					 CLUTTER_UNITS_FROM_PARENT_WIDTH_PERCENTAGE(rotar, 50),
-					 CLUTTER_UNITS_FROM_PARENT_HEIGHT_PERCENTAGE(rotar, 50));
-	clutter_actor_set_positionu (CLUTTER_ACTOR(rotar),
-				     CLUTTER_UNITS_FROM_STAGE_WIDTH_PERCENTAGE(50),
-				     CLUTTER_UNITS_FROM_STAGE_HEIGHT_PERCENTAGE(50));
 
+	//
 }
 
 gint

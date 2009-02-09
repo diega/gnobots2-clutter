@@ -53,6 +53,10 @@ private:
 	gint color;
 	gint themeID;
 
+	ClutterTimeline *rot_timeline;
+	ClutterAlpha *alpha;
+	ClutterBehaviour *rot_behav;
+
 	Block **blocks;
 	ClutterActor* rotar;
 	Renderer* renderer;
