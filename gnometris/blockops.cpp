@@ -582,6 +582,7 @@ BlockOps::drawMessage()
 	char *msg;
 
 	cr = clutter_cairo_create (CLUTTER_CAIRO(foreground));
+	clutter_actor_raise_top (CLUTTER_ACTOR(foreground));
 	cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
 	cairo_paint(cr);
 	cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
