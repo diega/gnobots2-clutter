@@ -27,6 +27,9 @@
 #define FONT "Sans Bold"
 
 GList *Block::destroy_actors = NULL;
+GList *Block::destroy_behaviours = NULL;
+ClutterTimeline *Block::move_block_tml = NULL;
+ClutterAlpha *Block::move_block_alpha = NULL;
 
 void
 Block::animation_destroy (ClutterTimeline *tml, gpointer *data)
@@ -34,30 +37,58 @@ Block::animation_destroy (ClutterTimeline *tml, gpointer *data)
 	ClutterActor *tmp_actor = NULL;
 	g_list_foreach (destroy_actors,
 			(GFunc)clutter_actor_destroy,
-			CLUTTER_ACTOR(tmp_actor));
+			tmp_actor);
 	g_list_free (destroy_actors);
 	destroy_actors = NULL;
+}
+
+void
+Block::behaviours_destroy (ClutterTimeline *tml, gpointer *data)
+{
+	ClutterBehaviour *tmp_behav = NULL;
+	g_list_foreach (destroy_behaviours,
+			(GFunc)clutter_behaviour_remove_all,
+			tmp_behav);
+	g_list_free (destroy_behaviours);
+	destroy_behaviours = NULL;
 }
 
 Block::Block ():
 	what(EMPTY),
 	actor(NULL),
-	block_tml(NULL),
 	x(0),
-	y(0)
+	y(0),
+	move_block_path(NULL)
 {
+	//knot_line;
+
 	if (!timeline)
 		timeline = clutter_timeline_new_for_duration (180);
 	if (!tmpl)
 		tmpl = clutter_effect_template_new (timeline, CLUTTER_ALPHA_RAMP_INC);
+	if (!move_block_tml)
+		move_block_tml = clutter_timeline_new_for_duration (120);
+	if (!move_block_alpha)
+		move_block_alpha = clutter_alpha_new_full (move_block_tml,
+				CLUTTER_ALPHA_RAMP_INC,
+				NULL, NULL);
 }
 
 Block::~Block ()
 {
 	if (actor)
 		clutter_actor_destroy (CLUTTER_ACTOR(actor));
-	if (block_tml)
-		g_object_unref (block_tml);
+	if (move_block_path)
+		g_object_unref (move_block_path);
+}
+
+void
+Block::shift (gint cell_width, gint cell_height, gint shift_x, gint shift_y)
+{
+	const ClutterKnot knot_line[] = {{x - shift_x * cell_width, y - shift_y * cell_height}, {x, y}};
+	move_block_path = clutter_behaviour_path_new (move_block_alpha, knot_line, 2);
+	clutter_behaviour_apply (move_block_path, actor);
+	destroy_behaviours = g_list_append (destroy_behaviours, move_block_path);
 }
 
 void
@@ -502,18 +533,13 @@ BlockOps::updateBlockInField ()
 				field[i][j].what = FALLING;
 				field[i][j].color = color;
 				field[i][j].actor = blocks_tmp[x][y];
-				if (field[i][j].block_tml)
-				{
-					clutter_timeline_pause (field[i][j].block_tml);
-					g_object_unref (field[i][j].block_tml);
-				}
-				field[i][j].block_tml = clutter_effect_move (tmpl, field[i][j].actor,
-								field[i][j].x, field[i][j].y,
-								NULL, NULL);
-				g_object_ref (field[i][j].block_tml);
+				field[i][j].shift (cell_width, cell_height, shift_x, shift_y);
 			}
 		}
 	}
+	clutter_timeline_start (Block::move_block_tml);
+	g_signal_connect (Block::move_block_tml, "completed",
+			G_CALLBACK (Block::behaviours_destroy), (gpointer) NULL);
 	posx_old = posx;
 	posy_old = posy;
 }

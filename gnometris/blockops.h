@@ -47,16 +47,22 @@ public:
 	SlotType what;
 	guint color;
 	ClutterActor *actor;
-	ClutterTimeline *block_tml;
 
 	int x;
 	int y;
+
+	static ClutterTimeline *move_block_tml;
+	static ClutterAlpha *move_block_alpha;
+	ClutterBehaviour *move_block_path;
+	void shift (gint cell_width, gint cell_height, gint shift_x, gint shift_y);
 
 	void createActor (ClutterActor *chamber, ClutterActor *texture_source);
 	void associateActor (ClutterActor *chamber, ClutterActor *other_actor);
 
 	static GList *destroy_actors;
+	static GList *destroy_behaviours;
 	static void animation_destroy (ClutterTimeline *timeline, gpointer *data);
+	static void behaviours_destroy (ClutterTimeline *timeline, gpointer *data);
 };
 
 class BlockOps {
