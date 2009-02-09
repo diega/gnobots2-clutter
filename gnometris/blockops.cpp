@@ -32,7 +32,9 @@ void
 Block::animation_destroy (ClutterTimeline *tml, gpointer *data)
 {
 	ClutterActor *tmp_actor = NULL;
-	g_list_foreach(destroy_actors, (GFunc)clutter_actor_destroy, CLUTTER_ACTOR(tmp_actor));
+	g_list_foreach (destroy_actors,
+			(GFunc)clutter_actor_destroy,
+			CLUTTER_ACTOR(tmp_actor));
 	g_list_free (destroy_actors);
 	destroy_actors = NULL;
 }
@@ -73,7 +75,14 @@ Block::move_from (Block& b)
 		color = b.color;
 		b.color = 0;
 		if (actor) {
+			int cur_x, cur_y = 0;
+			g_object_get (G_OBJECT (actor), "x", &cur_x, "y", &cur_y, NULL);
+			clutter_actor_raise_top (actor);
 			clutter_effect_fade (tmpl, actor, 0, NULL, NULL);
+			clutter_effect_move (tmpl, actor,
+					cur_x + g_random_int_range(-60, 60),
+					cur_y + g_random_int_range(-16, 60),
+					NULL, NULL);
 			destroy_actors = g_list_append (destroy_actors, actor);
 		}
 		if (b.actor)
@@ -274,7 +283,14 @@ BlockOps::eliminateLine(int l)
 	for (int x = 0; x < COLUMNS; ++x)
 	{
 		if (field[x][l].actor) {
+			int cur_x, cur_y = 0;
+			g_object_get (G_OBJECT (field[x][l].actor), "x", &cur_x, "y", &cur_y, NULL);
+			clutter_actor_raise_top (field[x][l].actor);
 			clutter_effect_fade (tmpl, field[x][l].actor, 0, NULL, NULL);
+			clutter_effect_move (tmpl, field[x][l].actor,
+					cur_x + g_random_int_range(-60, 60),
+					cur_y + g_random_int_range(-60, 60),
+					NULL, NULL);
 			Block::destroy_actors = g_list_append (Block::destroy_actors,
 							       field[x][l].actor);
 		}
@@ -410,8 +426,6 @@ BlockOps::putBlockInField (int bx, int by, int block, int rotation,
 				if ((fill == FALLING) || (fill == LAYING)) {
 					field[i][j].createActor (stage,
 								 renderer->getCacheCellById (color));
-					clutter_actor_set_position (CLUTTER_ACTOR(field[i][j].actor),
-								    i*(cell_width), j*(cell_height));
 				} else {
 					if (field[i][j].actor) {
 						clutter_actor_destroy (CLUTTER_ACTOR(field[i][j].actor));
