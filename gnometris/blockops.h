@@ -132,6 +132,12 @@ private:
 	int posy_old;
 
 	ClutterActor *playingField;
+	static guint32 earthquake_alpha_func (ClutterAlpha *alpha, gpointer data);
+	ClutterTimeline *long_anim_tml;
+	ClutterEffectTemplate *effect_earthquake;
+
+	int center_anchor_x;
+	int center_anchor_y;
 
 	static gboolean configure (GtkWidget * widget, GdkEventConfigure * event,
 				   BlockOps * field);

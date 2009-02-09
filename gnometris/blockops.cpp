@@ -110,7 +110,9 @@ BlockOps::BlockOps() :
 	blocknr(0),
 	rot(0),
 	color(0),
-	backgroundImage(NULL)
+	backgroundImage(NULL),
+	center_anchor_x(0),
+	center_anchor_y(0)
 {
 	field = new Block*[COLUMNS];
 
@@ -129,6 +131,9 @@ BlockOps::BlockOps() :
 
 	playingField = clutter_group_new ();
 	clutter_group_add (CLUTTER_GROUP(stage), CLUTTER_ACTOR(playingField));
+
+	long_anim_tml = clutter_timeline_new_for_duration (600);
+	effect_earthquake = clutter_effect_template_new (long_anim_tml, earthquake_alpha_func);
 }
 
 BlockOps::~BlockOps()
@@ -282,6 +287,25 @@ BlockOps::fallingToLaying()
 				field[x][y].what = LAYING;
 }
 
+guint32
+BlockOps::earthquake_alpha_func (ClutterAlpha *alpha, gpointer data)
+{
+	ClutterTimeline *tmp_tml = clutter_alpha_get_timeline (alpha);
+	gdouble t = clutter_timeline_get_current_frame (tmp_tml);
+	gdouble d = clutter_timeline_get_n_frames (tmp_tml);
+	//t = d - t;
+	// Following code is temporary LGPLv2+ code from clutter-0.9. Will be removed in 2.27 cycle
+	// Copyright 2009 held by Intel Corp. (previously OpenedHand)
+	if ((t /= d) < (1 / 2.75))
+		return CLUTTER_ALPHA_MAX_ALPHA * (7.5625 * t * t);
+	else if (t < (2 / 2.75))
+		return CLUTTER_ALPHA_MAX_ALPHA * (7.5625 * (t -= (1.5 / 2.75)) * t + .75);
+	else if (t < (2.5 / 2.75))
+		return CLUTTER_ALPHA_MAX_ALPHA * (7.5625 * (t -= (2.25 / 2.75)) * t + .9375);
+	else
+		return CLUTTER_ALPHA_MAX_ALPHA * (7.5625 * (t -= (2.625 / 2.75)) * t + .984375);
+}
+
 void
 BlockOps::eliminateLine(int l)
 {
@@ -323,6 +347,7 @@ BlockOps::checkFullLines()
 {
 	// we can have at most 4 full lines (vertical block)
 	int numFullLines = 0;
+	int numCascades = 0;
 
 	for (int y = MIN (posy + 4, LINES); y > 0; --y)
 	{
@@ -337,6 +362,7 @@ BlockOps::checkFullLines()
 			{
 				field[x][y+numFullLines].move_from (field[x][y]);
 			}
+			++numCascades;
 		}
 	}
 
@@ -345,6 +371,11 @@ BlockOps::checkFullLines()
 		g_signal_connect (timeline, "completed",
 				  G_CALLBACK (Block::animation_destroy), (gpointer) NULL);
 		clutter_timeline_start (timeline);
+		float quake_ratio = ((float) numCascades) / (float) LINES;
+		clutter_actor_set_position (CLUTTER_ACTOR(playingField),
+				center_anchor_x, center_anchor_y + cell_height * quake_ratio);
+		clutter_effect_move (effect_earthquake, playingField,
+				center_anchor_x, center_anchor_y, NULL, NULL);
 	}
 
 	return numFullLines;
@@ -603,9 +634,10 @@ BlockOps::rescaleField ()
 	clutter_actor_lower_bottom (CLUTTER_ACTOR(background));
 	clutter_actor_set_position (CLUTTER_ACTOR(foreground), 0, 0);
 	clutter_actor_raise_top (CLUTTER_ACTOR(foreground));
+	center_anchor_x = (width - (cell_width * COLUMNS)) / 2;
+	center_anchor_y = (height - (cell_height * LINES)) / 2;
 	clutter_actor_set_position (CLUTTER_ACTOR (playingField),
-			((width - (cell_width * COLUMNS)) / 2),
-			((height - (cell_height * LINES)) / 2));
+			center_anchor_x, center_anchor_y);
 	clutter_actor_raise (CLUTTER_ACTOR (playingField),
 			CLUTTER_ACTOR(background));
 
