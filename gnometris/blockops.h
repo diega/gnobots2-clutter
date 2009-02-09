@@ -61,11 +61,12 @@ public:
 
 	static GList *destroy_actors;
 	static GList *destroy_behaviours;
-	static void animation_destroy (ClutterTimeline *timeline, gpointer *data);
+	static void animation_destroy (ClutterTimeline *timeline, BlockOps *f);
 	static void behaviours_destroy (ClutterTimeline *timeline, gpointer *data);
 };
 
 class BlockOps {
+	friend class Block;
 public:
 	BlockOps ();
 	~BlockOps ();
@@ -141,6 +142,8 @@ private:
 	static guint32 earthquake_alpha_func (ClutterAlpha *alpha, gpointer data);
 	ClutterTimeline *long_anim_tml;
 	ClutterEffectTemplate *effect_earthquake;
+
+	float quake_ratio;
 
 	int center_anchor_x;
 	int center_anchor_y;

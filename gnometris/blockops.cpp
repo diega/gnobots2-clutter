@@ -32,7 +32,7 @@ ClutterTimeline *Block::move_block_tml = NULL;
 ClutterAlpha *Block::move_block_alpha = NULL;
 
 void
-Block::animation_destroy (ClutterTimeline *tml, gpointer *data)
+Block::animation_destroy (ClutterTimeline *tml, BlockOps *f)
 {
 	ClutterActor *tmp_actor = NULL;
 	g_list_foreach (destroy_actors,
@@ -40,6 +40,11 @@ Block::animation_destroy (ClutterTimeline *tml, gpointer *data)
 			tmp_actor);
 	g_list_free (destroy_actors);
 	destroy_actors = NULL;
+
+	clutter_actor_set_position (CLUTTER_ACTOR(f->playingField),
+			f->center_anchor_x, f->center_anchor_y + f->cell_height * f->quake_ratio);
+	clutter_effect_move (f->effect_earthquake, f->playingField,
+			f->center_anchor_x, f->center_anchor_y, NULL, NULL);
 }
 
 void
@@ -142,6 +147,7 @@ BlockOps::BlockOps() :
 	rot(0),
 	color(0),
 	backgroundImage(NULL),
+	quake_ratio(0.0),
 	center_anchor_x(0),
 	center_anchor_y(0)
 {
@@ -400,13 +406,9 @@ BlockOps::checkFullLines()
 	if (numFullLines > 0)
 	{
 		g_signal_connect (timeline, "completed",
-				  G_CALLBACK (Block::animation_destroy), (gpointer) NULL);
+				  G_CALLBACK (Block::animation_destroy), this);
 		clutter_timeline_start (timeline);
-		float quake_ratio = ((float) numCascades) / (float) LINES;
-		clutter_actor_set_position (CLUTTER_ACTOR(playingField),
-				center_anchor_x, center_anchor_y + cell_height * quake_ratio);
-		clutter_effect_move (effect_earthquake, playingField,
-				center_anchor_x, center_anchor_y, NULL, NULL);
+		quake_ratio = ((float) numCascades) / (float) LINES;
 	}
 
 	return numFullLines;
