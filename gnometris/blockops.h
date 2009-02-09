@@ -46,7 +46,8 @@ public:
 
 	SlotType what;
 	guint color;
-	ClutterActor* actor;
+	ClutterActor *actor;
+	ClutterTimeline *block_tml;
 
 	int x;
 	int y;
@@ -73,7 +74,7 @@ public:
 	bool generateFallingBlock ();
 	void emptyField (void);
 	void emptyField (int filled_lines, int fill_prob);
-	void putBlockInField (bool erase);
+	void putBlockInField (SlotType fill);
 	int getLinesToBottom ();
 	bool isFieldEmpty (void);
 
@@ -92,8 +93,6 @@ public:
 	}
 
 private:
-	void putBlockInField (int bx, int by, int blocknr, int rotation,
-			      SlotType fill);
 	bool blockOkHere (int x, int y, int b, int r);
 	void eliminateLine (int l);
 	bool checkFullLine(int l);
@@ -125,9 +124,12 @@ private:
 
 	void rescaleField ();
 	void rescaleBlockPos ();
+	void updateBlockInField ();
 
 	int posx;
 	int posy;
+	int posx_old;
+	int posy_old;
 
 	static gboolean configure (GtkWidget * widget, GdkEventConfigure * event,
 				   BlockOps * field);

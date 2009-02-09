@@ -42,6 +42,7 @@ Block::animation_destroy (ClutterTimeline *tml, gpointer *data)
 Block::Block ():
 	what(EMPTY),
 	actor(NULL),
+	block_tml(NULL),
 	x(0),
 	y(0)
 {
@@ -55,6 +56,8 @@ Block::~Block ()
 {
 	if (actor)
 		clutter_actor_destroy (CLUTTER_ACTOR(actor));
+	if (block_tml)
+		g_object_unref (block_tml);
 }
 
 void
@@ -110,9 +113,6 @@ BlockOps::BlockOps() :
 	backgroundImage(NULL)
 {
 	field = new Block*[COLUMNS];
-
-	posx = COLUMNS / 2;
-	posy = 0;
 
 	for (int i = 0; i < COLUMNS; ++i)
 		field[i] = new Block[LINES];
@@ -189,9 +189,8 @@ BlockOps::moveBlockLeft()
 
 	if (blockOkHere(posx - 1, posy, blocknr, rot))
 	{
-		putBlockInField(true);
 		--posx;
-		putBlockInField(false);
+		updateBlockInField();
 		moved = true;
 	}
 
@@ -205,9 +204,8 @@ BlockOps::moveBlockRight()
 
 	if (blockOkHere(posx + 1, posy, blocknr, rot))
 	{
-		putBlockInField(true);
 		++posx;
-		putBlockInField(false);
+		updateBlockInField();
 		moved = true;
 	}
 
@@ -232,9 +230,9 @@ BlockOps::rotateBlock(bool rotateCCW)
 
 	if (blockOkHere(posx, posy, blocknr, r))
 	{
-		putBlockInField(true);
+		putBlockInField(EMPTY);
 		rot = r;
-		putBlockInField(false);
+		putBlockInField(FALLING);
 		moved = true;
 	}
 
@@ -251,9 +249,8 @@ BlockOps::moveBlockDown()
 
 	if (!fallen)
 	{
-		putBlockInField(true);
 		++posy;
-		putBlockInField(false);
+		updateBlockInField();
 	}
 
 	return fallen;
@@ -353,6 +350,9 @@ BlockOps::generateFallingBlock()
 	posx = COLUMNS / 2 + 1;
 	posy = 0;
 
+	posx_old = COLUMNS / 2 + 1;
+	posy_old = 0;
+
 	blocknr = blocknr_next == -1 ? g_random_int_range(0, tableSize) :
 		blocknr_next;
 	rot = rot_next == -1 ? g_random_int_range(0, 4) : rot_next;
@@ -411,21 +411,20 @@ BlockOps::emptyField(void)
 }
 
 void
-BlockOps::putBlockInField (int bx, int by, int block, int rotation,
-			   SlotType fill)
+BlockOps::putBlockInField (SlotType fill)
 {
 	ClutterActor *stage;
 	stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
 
 	for (int x = 0; x < 4; ++x) {
 		for (int y = 0; y < 4; ++y) {
-			if (blockTable[block][rotation][x][y]) {
-				int i = bx - 2 + x;
-				int j = y + by;
+			if (blockTable[blocknr][rot][x][y]) {
+				int i = posx - 2 + x;
+				int j = y + posy;
 
 				field[i][j].what = fill;
 				field[i][j].color = color;
-				if ((fill == FALLING) || (fill == LAYING)) {
+				if (fill == FALLING) {
 					field[i][j].createActor (stage,
 								 renderer->getCacheCellById (color));
 				} else {
@@ -439,16 +438,52 @@ BlockOps::putBlockInField (int bx, int by, int block, int rotation,
 	}
 }
 
-// This is now just a wrapper. I'm not sure which version should be
-// used in general: having the field keep track of the block worries
-// me, but I can't say it is definitely wrong.
 void
-BlockOps::putBlockInField (bool erase)
+BlockOps::updateBlockInField ()
 {
-	if (erase)
-		putBlockInField (posx, posy, blocknr, rot, EMPTY);
-	else
-		putBlockInField (posx, posy, blocknr, rot, FALLING);
+	int shift_x = posx - posx_old;
+	int shift_y = posy - posy_old;
+	if (shift_x == 0 && shift_y == 0)
+		return;
+
+	ClutterActor *blocks_tmp[4][4] = {{0, }};
+
+	for (int x = 0; x < 4; ++x) {
+		for (int y = 0; y < 4; ++y) {
+			if (blockTable[blocknr][rot][x][y]) {
+				int i = posx - 2 + x;
+				int j = y + posy;
+
+				blocks_tmp[x][y] = field[i-shift_x][j-shift_y].actor;
+				field[i-shift_x][j-shift_y].what = EMPTY;
+				field[i-shift_x][j-shift_y].color = 0;
+				field[i-shift_x][j-shift_y].actor = NULL;
+			}
+		}
+	}
+	for (int x = 0; x < 4; ++x) {
+		for (int y = 0; y < 4; ++y) {
+			if (blockTable[blocknr][rot][x][y]) {
+				int i = posx - 2 + x;
+				int j = y + posy;
+
+				field[i][j].what = FALLING;
+				field[i][j].color = color;
+				field[i][j].actor = blocks_tmp[x][y];
+				if (field[i][j].block_tml)
+				{
+					clutter_timeline_stop (field[i][j].block_tml);
+					g_object_unref (field[i][j].block_tml);
+				}
+				field[i][j].block_tml = clutter_effect_move (tmpl, field[i][j].actor,
+								field[i][j].x, field[i][j].y,
+								NULL, NULL);
+				g_object_ref (field[i][j].block_tml);
+			}
+		}
+	}
+	posx_old = posx;
+	posy_old = posy;
 }
 
 bool

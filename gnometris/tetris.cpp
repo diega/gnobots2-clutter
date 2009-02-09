@@ -1242,11 +1242,12 @@ Tetris::generate()
 {
 	if (field->generateFallingBlock())
 	{
-		field->putBlockInField(false);
 #ifndef HAVE_CLUTTER
+		field->putBlockInField(false);
 		preview->previewBlock(blocknr_next, rot_next, color_next);
 		gtk_widget_queue_draw(preview->getWidget());
 #else
+		field->putBlockInField(FALLING);
 		preview->previewBlock(blocknr_next, color_next);
 #endif
 		onePause = true;
@@ -1336,6 +1337,7 @@ Tetris::gameNew(GtkAction *action, void *d)
 	t->preview->previewBlock(blocknr_next, rot_next, color_next);
 	gtk_widget_queue_draw(t->preview->getWidget());
 #else
+	t->field->putBlockInField(FALLING);
 	t->preview->previewBlock(blocknr_next, color_next);
 #endif
 
