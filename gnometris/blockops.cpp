@@ -123,6 +123,12 @@ BlockOps::BlockOps() :
 	g_signal_connect (w, "size_allocate", G_CALLBACK (resize), this);
 
 	gtk_widget_set_size_request (w, COLUMNS*190/LINES, 190);
+
+	ClutterActor *stage;
+	stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
+
+	playingField = clutter_group_new ();
+	clutter_group_add (CLUTTER_GROUP(stage), CLUTTER_ACTOR(playingField));
 }
 
 BlockOps::~BlockOps()
@@ -374,8 +380,6 @@ BlockOps::generateFallingBlock()
 void
 BlockOps::emptyField(int filled_lines, int fill_prob)
 {
-	ClutterActor *stage;
-	stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
 	int blank;
 
 	for (int y = 0; y < LINES; ++y)
@@ -396,7 +400,7 @@ BlockOps::emptyField(int filled_lines, int fill_prob)
 				guint tmpColor = g_random_int_range(0, NCOLOURS);
 				field[x][y].what = LAYING;
 				field[x][y].color = tmpColor;
-				field[x][y].createActor (stage, renderer->getCacheCellById (tmpColor));
+				field[x][y].createActor (playingField, renderer->getCacheCellById (tmpColor));
 				clutter_actor_set_position (CLUTTER_ACTOR(field[x][y].actor),
 							    x*(cell_width), y*(cell_height));
 			}
@@ -413,9 +417,6 @@ BlockOps::emptyField(void)
 void
 BlockOps::putBlockInField (SlotType fill)
 {
-	ClutterActor *stage;
-	stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
-
 	for (int x = 0; x < 4; ++x) {
 		for (int y = 0; y < 4; ++y) {
 			if (blockTable[blocknr][rot][x][y]) {
@@ -425,7 +426,7 @@ BlockOps::putBlockInField (SlotType fill)
 				field[i][j].what = fill;
 				field[i][j].color = color;
 				if (fill == FALLING) {
-					field[i][j].createActor (stage,
+					field[i][j].createActor (playingField,
 								 renderer->getCacheCellById (color));
 				} else {
 					if (field[i][j].actor) {
@@ -472,7 +473,7 @@ BlockOps::updateBlockInField ()
 				field[i][j].actor = blocks_tmp[x][y];
 				if (field[i][j].block_tml)
 				{
-					clutter_timeline_stop (field[i][j].block_tml);
+					clutter_timeline_pause (field[i][j].block_tml);
 					g_object_unref (field[i][j].block_tml);
 				}
 				field[i][j].block_tml = clutter_effect_move (tmpl, field[i][j].actor,
@@ -522,8 +523,9 @@ BlockOps::rescaleBlockPos ()
 			if (field[x][y].actor) {
 				clutter_actor_set_position (CLUTTER_ACTOR(field[x][y].actor),
 							    x*(cell_width), y*(cell_height));
-				clutter_clone_texture_set_parent_texture (CLUTTER_CLONE_TEXTURE(field[x][y].actor),
-									  CLUTTER_TEXTURE(renderer->getCacheCellById (field[x][y].color)));
+				// FIXME jclinton - is this needed?
+				//clutter_clone_texture_set_parent_texture (CLUTTER_CLONE_TEXTURE(field[x][y].actor),
+				//					  CLUTTER_TEXTURE(renderer->getCacheCellById (field[x][y].color)));
 			}
 			field[x][y].x = x*(cell_width);
 			field[x][y].y = y*(cell_height);
@@ -558,8 +560,6 @@ BlockOps::rescaleField ()
 					 &stage_color);
 		clutter_group_add (CLUTTER_GROUP (stage),
 				   background);
-		clutter_actor_set_position (CLUTTER_ACTOR(background),
-					    0, 0);
 	}
 
 	rescaleBlockPos ();
@@ -573,12 +573,7 @@ BlockOps::rescaleField ()
 		foreground = clutter_cairo_new (width, height);
 		clutter_group_add (CLUTTER_GROUP (stage),
 				   foreground);
-		clutter_actor_set_position (CLUTTER_ACTOR(foreground),
-					    0, 0);
-		clutter_actor_raise (CLUTTER_ACTOR(foreground),
-				     CLUTTER_ACTOR(background));
 	}
-
 
 	bg_cr = clutter_cairo_create (CLUTTER_CAIRO(background));
 	cairo_set_operator (bg_cr, CAIRO_OPERATOR_CLEAR);
@@ -603,6 +598,17 @@ BlockOps::rescaleField ()
 	cairo_paint (bg_cr);
 	cairo_destroy (bg_cr);
 	drawMessage ();
+
+	clutter_actor_set_position (CLUTTER_ACTOR(background), 0, 0);
+	clutter_actor_lower_bottom (CLUTTER_ACTOR(background));
+	clutter_actor_set_position (CLUTTER_ACTOR(foreground), 0, 0);
+	clutter_actor_raise_top (CLUTTER_ACTOR(foreground));
+	clutter_actor_set_position (CLUTTER_ACTOR (playingField),
+			((width - (cell_width * COLUMNS)) / 2),
+			((height - (cell_height * LINES)) / 2));
+	clutter_actor_raise (CLUTTER_ACTOR (playingField),
+			CLUTTER_ACTOR(background));
+
 	clutter_actor_show_all (stage);
 }
 
