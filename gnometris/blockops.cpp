@@ -64,6 +64,8 @@ Block::createActor (ClutterActor *chamber, ClutterActor *texture_source)
 		clutter_actor_destroy (CLUTTER_ACTOR(actor));
 	actor = clutter_clone_texture_new (CLUTTER_TEXTURE(texture_source));
 	clutter_group_add (CLUTTER_GROUP (chamber), actor);
+	clutter_actor_set_position (CLUTTER_ACTOR(actor), x, y);
+	clutter_actor_show (CLUTTER_ACTOR(actor));
 }
 
 Block&
