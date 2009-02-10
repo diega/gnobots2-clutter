@@ -58,23 +58,20 @@ Preview::Preview():
 	ClutterColor stage_color = { 0x0, 0x0, 0x0, 0xff };
 	clutter_stage_set_color (CLUTTER_STAGE (stage),
 				 &stage_color);
-	rotar = clutter_group_new ();
+	piece = clutter_group_new ();
 	clutter_group_add (CLUTTER_GROUP (stage),
-			   rotar);
+			   piece);
 	clutter_actor_show_all (stage);
 
-	rot_timeline = clutter_timeline_new_for_duration (5000);
-	clutter_timeline_set_loop (rot_timeline, true);
-	alpha = clutter_alpha_new_full (rot_timeline,
-			CLUTTER_ALPHA_RAMP_INC,
+	piece_timeline = clutter_timeline_new_for_duration (180);
+	alpha = clutter_alpha_new_full (piece_timeline,
+			CLUTTER_ALPHA_SINE_HALF,
 			NULL, NULL);
-	rot_behav = clutter_behaviour_rotate_new (alpha,
-			CLUTTER_Z_AXIS, CLUTTER_ROTATE_CW, 0.0, 360.0);
-	clutter_behaviour_rotate_set_center (CLUTTER_BEHAVIOUR_ROTATE (rot_behav),
-			PREVIEW_SIZE*12, PREVIEW_SIZE*12, 0);
-	clutter_actor_set_position (CLUTTER_ACTOR(rotar), 0, 0);
-	clutter_behaviour_apply (rot_behav, rotar);
-	clutter_timeline_start (rot_timeline);
+	piece_behav = clutter_behaviour_scale_new (alpha,
+			1.0, 1.0, 1.4, 1.4);
+	clutter_actor_set_anchor_point (piece, PREVIEW_SIZE*10, PREVIEW_SIZE*10);
+	clutter_actor_set_position (CLUTTER_ACTOR(piece), PREVIEW_SIZE*10, PREVIEW_SIZE*10);
+	clutter_behaviour_apply (piece_behav, piece);
 }
 
 Preview::~Preview ()
@@ -134,7 +131,7 @@ Preview::previewBlock(gint bnr, gint bcol)
 			if ((blocknr != -1) &&
 			    blockTable[blocknr][0][x-1][y-1]) {
 				blocks[x][y].what = LAYING;
-				blocks[x][y].createActor (rotar,
+				blocks[x][y].createActor (piece,
 							  renderer->getCacheCellById (color));
 				clutter_actor_set_position (CLUTTER_ACTOR(blocks[x][y].actor),
 							    x*PREVIEW_SIZE*4, y*PREVIEW_SIZE*4);
@@ -147,15 +144,8 @@ Preview::previewBlock(gint bnr, gint bcol)
 			}
 		}
 	}
-	positionRotar ();
+	clutter_timeline_start (piece_timeline);
 	clutter_actor_show_all (stage);
-}
-
-void
-Preview::positionRotar()
-{
-
-	//
 }
 
 gint
@@ -165,7 +155,6 @@ Preview::configure(GtkWidget * widget, GdkEventConfigure * event, Preview * prev
 	preview->height = event->height;
 
 	preview->regenerateRenderer ();
-	preview->positionRotar ();
 	return TRUE;
 }
 

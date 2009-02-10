@@ -42,7 +42,6 @@ public:
 	void enable (bool enable);
 	void setTheme (gint id);
 	void previewBlock (int bnr, int bcolor);
-	void positionRotar();
 	void regenerateRenderer ();
 
 private:
@@ -53,12 +52,12 @@ private:
 	gint color;
 	gint themeID;
 
-	ClutterTimeline *rot_timeline;
+	ClutterTimeline *piece_timeline;
 	ClutterAlpha *alpha;
-	ClutterBehaviour *rot_behav;
+	ClutterBehaviour *piece_behav;
 
 	Block **blocks;
-	ClutterActor* rotar;
+	ClutterActor* piece;
 	Renderer* renderer;
 
 	bool enabled;
