@@ -45,7 +45,7 @@ Preview::Preview():
 
 	w = gtk_clutter_embed_new();
 
-	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
+	g_signal_connect (w, "size_allocate", G_CALLBACK (resize), this);
 
 	/* FIXME: We should scale with the rest of the UI, but that requires
 	 * changes to the widget layout - i.e. wrap the preview in an
@@ -149,12 +149,14 @@ Preview::previewBlock(gint bnr, gint bcol)
 }
 
 gint
-Preview::configure(GtkWidget * widget, GdkEventConfigure * event, Preview * preview)
+Preview::resize(GtkWidget *widget, GtkAllocation *allocation, Preview *preview)
 {
-	preview->width = event->width;
-	preview->height = event->height;
-
+	preview->width = allocation->width;
+	preview->height = allocation->height;
 	preview->regenerateRenderer ();
-	return TRUE;
+	clutter_actor_set_anchor_point (preview->piece, PREVIEW_SIZE*10, PREVIEW_SIZE*10);
+	clutter_actor_set_position (CLUTTER_ACTOR(preview->piece), PREVIEW_SIZE*10, PREVIEW_SIZE*10);
+	preview->previewBlock (preview->blocknr, preview->color);
+	return FALSE;
 }
 

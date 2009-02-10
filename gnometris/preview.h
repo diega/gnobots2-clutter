@@ -62,8 +62,8 @@ private:
 
 	bool enabled;
 
-	static gint configure (GtkWidget * widget, GdkEventConfigure * event,
-			       Preview * preview);
+	static gboolean resize(GtkWidget *widget, GtkAllocation *event,
+			       Preview *preview);
 };
 
 #endif //__preview_h__
