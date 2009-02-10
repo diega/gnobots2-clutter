@@ -22,7 +22,7 @@
 #include <config.h>
 #include "blockops.h"
 #include "blocks.h"
-#include <libgames-support/games-clutter-embed.h>
+#include <clutter-gtk/gtk-clutter-embed.h>
 
 #define FONT "Sans Bold"
 
@@ -156,15 +156,14 @@ BlockOps::BlockOps() :
 	for (int i = 0; i < COLUMNS; ++i)
 		field[i] = new Block[LINES];
 
-	w = games_clutter_embed_new ();
+	w = gtk_clutter_embed_new ();
 
-	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
 	g_signal_connect (w, "size_allocate", G_CALLBACK (resize), this);
 
 	gtk_widget_set_size_request (w, COLUMNS*190/LINES, 190);
 
 	ClutterActor *stage;
-	stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
+	stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (w));
 
 	playingField = clutter_group_new ();
 	clutter_group_add (CLUTTER_GROUP(stage), CLUTTER_ACTOR(playingField));
@@ -558,12 +557,6 @@ BlockOps::isFieldEmpty (void)
 }
 
 gboolean
-BlockOps::configure(GtkWidget *widget, GdkEventConfigure *event, BlockOps *field)
-{
-	return FALSE;
-}
-
-gboolean
 BlockOps::resize(GtkWidget *widget, GtkAllocation *allocation, BlockOps *field)
 {
 	field->width = allocation->width;
@@ -596,7 +589,7 @@ void
 BlockOps::rescaleField ()
 {
 	ClutterActor *stage;
-	stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
+	stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (w));
 
 	cairo_t *bg_cr;
 

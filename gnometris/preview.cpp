@@ -43,7 +43,7 @@ Preview::Preview():
 		blocks[i] = new Block [PREVIEW_HEIGHT];
 	}
 
-	w = games_clutter_embed_new();
+	w = gtk_clutter_embed_new();
 
 	g_signal_connect (w, "configure_event", G_CALLBACK (configure), this);
 
@@ -53,7 +53,7 @@ Preview::Preview():
 	gtk_widget_set_size_request (w, PREVIEW_SIZE * 20,
 				     PREVIEW_SIZE * 20);
 	ClutterActor *stage;
-	stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
+	stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (w));
 
 	ClutterColor stage_color = { 0x0, 0x0, 0x0, 0xff };
 	clutter_stage_set_color (CLUTTER_STAGE (stage),
@@ -119,7 +119,7 @@ void
 Preview::previewBlock(gint bnr, gint bcol)
 {
 	ClutterActor *stage;
-	stage = games_clutter_embed_get_stage (GAMES_CLUTTER_EMBED (w));
+	stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (w));
 
 	int x, y;
 

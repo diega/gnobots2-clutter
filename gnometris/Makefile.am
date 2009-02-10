@@ -87,8 +87,8 @@ if HAVE_CLUTTER
 #gnometris_noclutter_CXXFLAGS = $(gnometris_CXXFLAGS) -UHAVE_CLUTTER
 #gnometris_noclutter_LDADD = $(gnometris_LDADD)
 gnometris_CPPFLAGS += -DHAVE_CLUTTER
-gnometris_CXXFLAGS += $(CLUTTER_CFLAGS)
-gnometris_LDADD += $(CLUTTER_LIBS)
+gnometris_CXXFLAGS += $(CLUTTER_CFLAGS) $(CLUTTER_GTK_CFLAGS)
+gnometris_LDADD += $(CLUTTER_LIBS) $(CLUTTER_GTK_LIBS)
 endif
 
 pixmapdir = $(pkgdatadir)/gnometris/pixmaps

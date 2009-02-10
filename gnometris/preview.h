@@ -28,7 +28,7 @@
 #include "blocks.h"
 
 #include <clutter/clutter.h>
-#include <libgames-support/games-clutter-embed.h>
+#include <clutter-gtk/gtk-clutter-embed.h>
 
 class Preview {
 public:
@@ -45,7 +45,7 @@ public:
 	void regenerateRenderer ();
 
 private:
-	GtkWidget * w;
+	GtkWidget *w;
 	gint width;
 	gint height;
 	gint blocknr;
