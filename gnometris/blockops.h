@@ -27,10 +27,6 @@
 
 #include <clutter/clutter.h>
 
-//FIXME dtor these somewhere...?
-static ClutterTimeline *timeline = NULL;
-static ClutterEffectTemplate *tmpl = NULL;
-
 enum SlotType {
 	EMPTY,
 	FALLING,
@@ -50,19 +46,19 @@ public:
 
 	int x;
 	int y;
-
-	static ClutterTimeline *move_block_tml;
-	static ClutterAlpha *move_block_alpha;
-	ClutterBehaviour *move_block_path;
-	void shift (gint cell_width, gint cell_height, gint shift_x, gint shift_y);
+	static ClutterTimeline *fall_tml;
+	static ClutterAlpha *fall_alpha;
+	ClutterBehaviour *fall_path;
+	static ClutterEffectTemplate *explode_tmpl;
 
 	void createActor (ClutterActor *chamber, ClutterActor *texture_source);
 	void associateActor (ClutterActor *chamber, ClutterActor *other_actor);
 
 	static GList *destroy_actors;
-	static GList *destroy_behaviours;
-	static void animation_destroy (ClutterTimeline *timeline, BlockOps *f);
-	static void behaviours_destroy (ClutterTimeline *timeline, gpointer *data);
+	static GList *fall_behaviours;
+	static void explode_end (ClutterTimeline *timeline, BlockOps *f);
+	static void move_end (ClutterTimeline *timeline, gpointer *data);
+	static void fall_end (ClutterTimeline *timeline, gpointer *data);
 };
 
 class BlockOps {
@@ -140,18 +136,22 @@ private:
 
 	ClutterActor *playingField;
 	static guint32 earthquake_alpha_func (ClutterAlpha *alpha, gpointer data);
-	ClutterTimeline *long_anim_tml;
-	ClutterEffectTemplate *effect_earthquake;
+	static ClutterTimeline *long_anim_tml;
+	static ClutterEffectTemplate *effect_earthquake;
 
 	float quake_ratio;
 
 	int center_anchor_x;
 	int center_anchor_y;
 
-	static gboolean configure (GtkWidget * widget, GdkEventConfigure * event,
-				   BlockOps * field);
-	static gboolean resize (GtkWidget * widget, GtkAllocation * event,
-					   BlockOps * field);
+	ClutterTimeline *move_block_tml;
+	ClutterAlpha *move_block_alpha;
+	ClutterBehaviour *move_path[4][4];
+
+	static void move_end (ClutterTimeline *tml, BlockOps *f);
+
+	static gboolean resize(GtkWidget *widget, GtkAllocation *event,
+					   BlockOps *field);
 };
 
 #endif //__blockops_h__
