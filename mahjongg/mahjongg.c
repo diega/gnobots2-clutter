@@ -786,8 +786,8 @@ properties_callback (void)
 
   gtk_container_add (GTK_CONTAINER (frame), table);
 
-  gtk_box_pack_start_defaults (GTK_BOX (GTK_DIALOG (pref_dialog)->vbox),
-			       top_table);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (pref_dialog)->vbox),
+			       top_table, TRUE, TRUE, 0);
 
   g_object_unref (group);
   gtk_widget_show_all (pref_dialog);
