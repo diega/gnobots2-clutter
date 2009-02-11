@@ -106,17 +106,10 @@ Block::move_from (Block& b, BlockOps *f)
 		b.what = EMPTY;
 		color = b.color;
 		b.color = 0;
-/*		if (actor) {
-			int cur_x, cur_y = 0;
-			g_object_get (G_OBJECT (actor), "x", &cur_x, "y", &cur_y, NULL);
-			clutter_actor_raise_top (actor);
-			clutter_effect_fade (explode_tmpl, actor, 0, NULL, NULL);
-			clutter_effect_move (explode_tmpl, actor,
-					cur_x + g_random_int_range(f->cell_width * -5, f->cell_width * 5),
-					cur_y + g_random_int_range(f->cell_height * -5, f->cell_height * 5),
-					NULL, NULL);
+		if (actor) {
+			//this shouldn't happen
 			destroy_actors = g_list_append (destroy_actors, actor);
-		}*/
+		}
 		if (b.actor) {
 			const ClutterKnot knot_line[] = {{b.x, b.y}, {x, y}};
 			fall_path = clutter_behaviour_path_new (fall_alpha, knot_line, 2);
