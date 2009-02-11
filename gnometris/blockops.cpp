@@ -70,9 +70,9 @@ Block::Block ():
 	fall_path(NULL)
 {
 	if (!fall_tml)
-		fall_tml = clutter_timeline_new_for_duration (180);
+		fall_tml = clutter_timeline_new_for_duration (120);
 	if (!fall_alpha)
-		fall_alpha = clutter_alpha_new_full (fall_tml, CLUTTER_ALPHA_EXP_INC,
+		fall_alpha = clutter_alpha_new_full (fall_tml, CLUTTER_ALPHA_RAMP_INC,
 				NULL, NULL);
 	if (!explode_tmpl)
 		explode_tmpl = clutter_effect_template_new (fall_tml,
@@ -599,7 +599,7 @@ BlockOps::resize(GtkWidget *widget, GtkAllocation *allocation, BlockOps *field)
 		return FALSE;
 	field->cell_width = field->width/COLUMNS;
 	field->cell_height = field->height/LINES;
-	field->rescaleField();
+	field->rescaleField ();
 	return FALSE;
 }
 
