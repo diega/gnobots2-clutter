@@ -30,10 +30,11 @@ GList *Block::destroy_actors = NULL;
 GList *Block::fall_behaviours = NULL;
 ClutterTimeline *Block::fall_tml = NULL;
 ClutterAlpha *Block::fall_alpha = NULL;
+ClutterTimeline *Block::explode_tml = NULL;
 ClutterEffectTemplate *Block::explode_tmpl = NULL;
 
 void
-Block::explode_end (ClutterTimeline *tml, BlockOps *f)
+Block::explode_end (ClutterTimeline *tml, gpointer *f)
 {
 	ClutterActor *tmp_actor = NULL;
 	g_list_foreach (destroy_actors,
@@ -41,16 +42,10 @@ Block::explode_end (ClutterTimeline *tml, BlockOps *f)
 			tmp_actor);
 	g_list_free (destroy_actors);
 	destroy_actors = NULL;
-
-	//FIXME jclinton maybe this should be part of a ClutterScore?
-	clutter_actor_set_position (CLUTTER_ACTOR(f->playingField),
-			f->center_anchor_x, f->center_anchor_y + f->cell_height * f->quake_ratio);
-	clutter_effect_move (f->effect_earthquake, f->playingField,
-			f->center_anchor_x, f->center_anchor_y, NULL, NULL);
 }
 
 void
-Block::fall_end (ClutterTimeline *tml, gpointer *data)
+Block::fall_end (ClutterTimeline *tml, BlockOps *f)
 {
 	ClutterBehaviour *tmp_behav = NULL;
 	if (fall_behaviours) {
@@ -61,6 +56,12 @@ Block::fall_end (ClutterTimeline *tml, gpointer *data)
 	}
 	g_list_free (fall_behaviours);
 	fall_behaviours = NULL;
+
+	//FIXME jclinton maybe this should be part of a ClutterScore?
+	clutter_actor_set_position (CLUTTER_ACTOR(f->playingField),
+			f->center_anchor_x, f->center_anchor_y + f->cell_height * f->quake_ratio);
+	clutter_effect_move (f->effect_earthquake, f->playingField,
+			f->center_anchor_x, f->center_anchor_y, NULL, NULL);
 }
 
 Block::Block ():
@@ -75,8 +76,10 @@ Block::Block ():
 	if (!fall_alpha)
 		fall_alpha = clutter_alpha_new_full (fall_tml, CLUTTER_ALPHA_RAMP_INC,
 				NULL, NULL);
+	if (!explode_tml)
+		explode_tml = clutter_timeline_new_for_duration (360);
 	if (!explode_tmpl) {
-		explode_tmpl = clutter_effect_template_new (fall_tml,
+		explode_tmpl = clutter_effect_template_new (explode_tml,
 				CLUTTER_ALPHA_SINE_INC);
 		clutter_effect_template_set_timeline_clone (explode_tmpl, FALSE);
 	}
@@ -364,9 +367,11 @@ BlockOps::eliminateLine(int l)
 			clutter_actor_raise_top (field[x][l].actor);
 			clutter_effect_fade (Block::explode_tmpl, field[x][l].actor, 0, NULL, NULL);
 			clutter_effect_move (Block::explode_tmpl, field[x][l].actor,
-					cur_x + g_random_int_range(-60, 60),
-					cur_y + g_random_int_range(-60, 60),
+					cur_x + g_random_int_range(-60 - cell_width / 4, 60),
+					cur_y + g_random_int_range(-60 - cell_height / 4, 60),
 					NULL, NULL);
+			clutter_effect_scale (Block::explode_tmpl, field[x][l].actor,
+					1.5, 1.5, NULL, NULL);
 			Block::destroy_actors = g_list_append (Block::destroy_actors,
 							       field[x][l].actor);
 		}
@@ -416,10 +421,11 @@ BlockOps::checkFullLines()
 	if (numFullLines > 0)
 	{
 		g_signal_connect (Block::fall_tml, "completed",
-				G_CALLBACK (Block::fall_end), (gpointer) NULL);
-		g_signal_connect (Block::fall_tml, "completed",
-				  G_CALLBACK (Block::explode_end), this);
+				G_CALLBACK (Block::fall_end), this);
+		g_signal_connect (Block::explode_tml, "completed",
+				  G_CALLBACK (Block::explode_end), (gpointer) NULL);
 		clutter_timeline_start (Block::fall_tml);
+		clutter_timeline_start (Block::explode_tml);
 		quake_ratio = ((float) numCascades) / (float) LINES;
 	}
 

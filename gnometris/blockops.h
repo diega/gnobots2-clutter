@@ -49,6 +49,7 @@ public:
 	static ClutterTimeline *fall_tml;
 	static ClutterAlpha *fall_alpha;
 	ClutterBehaviour *fall_path;
+	static ClutterTimeline *explode_tml;
 	static ClutterEffectTemplate *explode_tmpl;
 
 	void createActor (ClutterActor *chamber, ClutterActor *texture_source);
@@ -56,9 +57,9 @@ public:
 
 	static GList *destroy_actors;
 	static GList *fall_behaviours;
-	static void explode_end (ClutterTimeline *timeline, BlockOps *f);
+	static void explode_end (ClutterTimeline *timeline, gpointer *f);
 	static void move_end (ClutterTimeline *timeline, gpointer *data);
-	static void fall_end (ClutterTimeline *timeline, gpointer *data);
+	static void fall_end (ClutterTimeline *timeline, BlockOps *f);
 };
 
 class BlockOps {
