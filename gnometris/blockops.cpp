@@ -42,6 +42,7 @@ Block::explode_end (ClutterTimeline *tml, BlockOps *f)
 	g_list_free (destroy_actors);
 	destroy_actors = NULL;
 
+	//FIXME jclinton maybe this should be part of a ClutterScore?
 	clutter_actor_set_position (CLUTTER_ACTOR(f->playingField),
 			f->center_anchor_x, f->center_anchor_y + f->cell_height * f->quake_ratio);
 	clutter_effect_move (f->effect_earthquake, f->playingField,
@@ -74,9 +75,11 @@ Block::Block ():
 	if (!fall_alpha)
 		fall_alpha = clutter_alpha_new_full (fall_tml, CLUTTER_ALPHA_RAMP_INC,
 				NULL, NULL);
-	if (!explode_tmpl)
+	if (!explode_tmpl) {
 		explode_tmpl = clutter_effect_template_new (fall_tml,
 				CLUTTER_ALPHA_SINE_INC);
+		clutter_effect_template_set_timeline_clone (explode_tmpl, FALSE);
+	}
 }
 
 Block::~Block ()
@@ -108,7 +111,7 @@ Block::move_from (Block& b, BlockOps *f)
 		b.color = 0;
 		if (actor) {
 			//this shouldn't happen
-			destroy_actors = g_list_append (destroy_actors, actor);
+			//destroy_actors = g_list_append (destroy_actors, actor);
 		}
 		if (b.actor) {
 			const ClutterKnot knot_line[] = {{b.x, b.y}, {x, y}};
