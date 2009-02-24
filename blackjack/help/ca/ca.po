@@ -1,12 +1,12 @@
 # Traducció de la documentació del blackjack de l'equip de Softcatalà.
-# Copyright © 2007, 2008 Free Software Foundation, Inc.
-# Joan Duran <jodufi@gmail.com>, 2007, 2008.
+# Copyright © 2007-2009 Free Software Foundation, Inc.
+# Joan Duran <jodufi@gmail.com>, 2007-2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: blackjack\n"
-"POT-Creation-Date: 2008-10-18 20:36+0000\n"
-"PO-Revision-Date: 2008-10-19 19:18+0100\n"
+"POT-Creation-Date: 2009-02-12 16:05+0000\n"
+"PO-Revision-Date: 2009-02-12 19:56+0100\n"
 "Last-Translator: Joan Duran <jodufi@gmail.com>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "MIME-Version: 1.0\n"
@@ -531,35 +531,35 @@ msgstr "Partida"
 #: C/blackjack.xml:408(para)
 msgid ""
 "<menuchoice><shortcut><keysym>Ctrl-N</keysym></shortcut><guimenuitem>New "
-"game</guimenuitem></menuchoice>— This clears the table and starts a "
-"new game."
+"game</guimenuitem></menuchoice> — This clears the table and starts a new "
+"game."
 msgstr ""
 "<menuchoice><shortcut><keysym>Ctrl-N</keysym></shortcut><guimenuitem>Nova</"
-"guimenuitem></menuchoice>— Neteja el tauler i inicia una partida nova."
+"guimenuitem></menuchoice> — Neteja el tauler i inicia una partida nova."
 
 #: C/blackjack.xml:419(para)
 msgid ""
-"<menuchoice><guimenuitem>Restart game</guimenuitem></menuchoice>— This "
+"<menuchoice><guimenuitem>Restart game</guimenuitem></menuchoice> — This "
 "clears the table and restarts the game."
 msgstr ""
-"<menuchoice><guimenuitem>Reinicia</guimenuitem></menuchoice>— Neteja "
-"el tauler i torna a iniciar la partida."
+"<menuchoice><guimenuitem>Reinicia</guimenuitem></menuchoice> — Neteja el "
+"tauler i torna a iniciar la partida."
 
 #: C/blackjack.xml:429(para)
 msgid ""
-"<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice>— This will "
-"give you the computer's best suggestion for your move."
+"<menuchoice><guimenuitem>Hint</guimenuitem></menuchoice> — This will give "
+"you the computer's best suggestion for your move."
 msgstr ""
-"<menuchoice><guimenuitem>Pista</guimenuitem></menuchoice>— L'ordinador "
-"us suggerirà el millor moviment."
+"<menuchoice><guimenuitem>Pista</guimenuitem></menuchoice> — L'ordinador us "
+"suggerirà el millor moviment."
 
 #: C/blackjack.xml:440(para)
 msgid ""
 "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Exit</"
-"guimenuitem></menuchoice>— This quits the game."
+"guimenuitem></menuchoice> — This quits the game."
 msgstr ""
 "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Surt</"
-"guimenuitem></menuchoice>— Surt del joc."
+"guimenuitem></menuchoice> — Surt del joc."
 
 #: C/blackjack.xml:404(para) C/blackjack.xml:460(para)
 msgid "This menu contains these items: <placeholder-1/>"
@@ -571,19 +571,19 @@ msgstr "Paràmetres"
 
 #: C/blackjack.xml:465(para)
 msgid ""
-"<guimenuitem>Show tool bar</guimenuitem>— This toggle switches the "
-"tool bar on and off."
+"<guimenuitem>Show tool bar</guimenuitem> — This toggle switches the tool bar "
+"on and off."
 msgstr ""
-"<guimenuitem>Barra d'eines</guimenuitem>— Commuta la visualització de "
-"la barra d'eines."
+"<guimenuitem>Barra d'eines</guimenuitem> — Commuta la visualització de la "
+"barra d'eines."
 
 #: C/blackjack.xml:473(para)
 msgid ""
-"<guimenuitem>Preferences…</guimenuitem>— This opens the "
+"<guimenuitem>Preferences…</guimenuitem> — This opens the "
 "<interface>Preferences Dialog</interface>, allowing you to configure the "
 "game."
 msgstr ""
-"<guimenuitem>Preferències…</guimenuitem>— Obre el diàleg "
+"<guimenuitem>Preferències…</guimenuitem> — Obre el diàleg "
 "<interface>Preferències del Blackjack</interface>, el qual us permet "
 "configurar el joc."
 
@@ -593,19 +593,19 @@ msgstr "Ajuda"
 
 #: C/blackjack.xml:496(para)
 msgid ""
-"<guimenuitem>Contents</guimenuitem>— Opens your help browser and shows "
-"this manual."
+"<guimenuitem>Contents</guimenuitem> — Opens your help browser and shows this "
+"manual."
 msgstr ""
-"<guimenuitem>Continguts</guimenuitem>— Obre el navegador d'ajuda i "
-"mostra aquest manual."
+"<guimenuitem>Continguts</guimenuitem> — Obre el navegador d'ajuda i mostra "
+"aquest manual."
 
 #: C/blackjack.xml:504(para)
 msgid ""
-"<guimenuitem>About</guimenuitem>— Opens the <interface>About Dialog</"
+"<guimenuitem>About</guimenuitem> — Opens the <interface>About Dialog</"
 "interface>, showing basic information about <application>Blackjack</"
 "application> such as its version number and the names of its authors."
 msgstr ""
-"<guimenuitem>Quant a</guimenuitem>— Obre el diàleg <interface>Quant a</"
+"<guimenuitem>Quant a</guimenuitem> — Obre el diàleg <interface>Quant a</"
 "interface>, on es mostra la informació bàsica sobre el "
 "<application>Blackjack</application>, com el número de versió de l'aplicació "
 "i el nom dels autors."
@@ -997,4 +997,4 @@ msgstr ""
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2.
 #: C/blackjack.xml:0(None)
 msgid "translator-credits"
-msgstr "Joan Duran <jodufi@gmail.com>, 2007, 2008"
+msgstr "Joan Duran <jodufi@gmail.com>, 2007-2009"
