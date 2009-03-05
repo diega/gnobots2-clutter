@@ -1,12 +1,12 @@
 # Traducció de la documentació del blackjack de l'equip de Softcatalà.
-# Copyright © 2007, 2008 Free Software Foundation, Inc.
-# Joan Duran <jodufi@gmail.com>, 2007, 2008.
+# Copyright © 2007-2009 Free Software Foundation, Inc.
+# Joan Duran <jodufi@gmail.com>, 2007-2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: same-gnome\n"
-"POT-Creation-Date: 2008-01-16 10:59+0000\n"
-"PO-Revision-Date: 2008-08-03 19:19+0100\n"
+"POT-Creation-Date: 2009-02-12 16:05+0000\n"
+"PO-Revision-Date: 2009-02-12 20:10+0100\n"
 "Last-Translator: Joan Duran <jodufi@gmail.com>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "MIME-Version: 1.0\n"
@@ -71,9 +71,9 @@ msgid ""
 "ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY DOCUMENT OR MODIFIED VERSION "
 "OF THE DOCUMENT IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS DISCLAIMER; AND"
 msgstr ""
-"EL DOCUMENT S'OFEREIX «TAL COM ÉS», SENSE CAP TIPUS DE GARANTIA, NI "
-"EXPLÍCITA NI IMPLÍCITA; AIXÒ INCLOU, SENSE LIMITAR-S'HI, LES GARANTIES QUE "
-"EL DOCUMENT O LA VERSIÓ MODIFICADA DEL DOCUMENT NO TINGUI DEFECTES, SIGUI "
+"EL DOCUMENT S'OFEREIX «TAL COM ÉS», SENSE CAP TIPUS DE GARANTIA, NI EXPLÍCITA "
+"NI IMPLÍCITA; AIXÒ INCLOU, SENSE LIMITAR-S'HI, LES GARANTIES QUE EL DOCUMENT "
+"O LA VERSIÓ MODIFICADA DEL DOCUMENT NO TINGUI DEFECTES, SIGUI "
 "COMERCIALITZABLE, SIGUI ADEQUAT PER A UN ÚS CONCRET O NO INFRINGEIXI CAP "
 "LLEI. TOT EL RISC PEL QUE FA A LA QUALITAT, EXACTITUD I RENDIMENT DEL "
 "DOCUMENT O LA VERSIÓ MODIFICADA DEL DOCUMENT ÉS VOSTRE. EN CAS QUE EL "
@@ -126,9 +126,27 @@ msgstr "@@image: 'figures/start-up.png'; md5=e1ae130ce601d40e62b9ea8794ccdf87"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/same-gnome.xml:144(None)
-msgid "@@image: 'figures/play.png'; md5=75c75a57ddf8d1a120a56566601022f5"
-msgstr "@@image: 'figures/play.png'; md5=75c75a57ddf8d1a120a56566601022f5"
+#: C/same-gnome.xml:146(None)
+msgid "@@image: 'figures/play1.png'; md5=c9fbbe88671363fc860acca6d9a8b32e"
+msgstr "@@image: 'figures/play1.png'; md5=c9fbbe88671363fc860acca6d9a8b32e"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/same-gnome.xml:154(None)
+msgid "@@image: 'figures/play2.png'; md5=7c1f2328f61fcb17268e18d222c6a05a"
+msgstr "@@image: 'figures/play2.png'; md5=7c1f2328f61fcb17268e18d222c6a05a"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/same-gnome.xml:162(None)
+msgid "@@image: 'figures/play3.png'; md5=40739ddda81595d4aa8df47305895ef5"
+msgstr "@@image: 'figures/play3.png'; md5=40739ddda81595d4aa8df47305895ef5"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/same-gnome.xml:170(None)
+msgid "@@image: 'figures/play4.png'; md5=0f79aacbfacbf291fcfa7956c18be3ba"
+msgstr "@@image: 'figures/play4.png'; md5=0f79aacbfacbf291fcfa7956c18be3ba"
 
 #: C/same-gnome.xml:20(title)
 msgid "<application>Same GNOME</application> Manual"
@@ -143,8 +161,8 @@ msgid ""
 msgstr ""
 "El Same GNOME és un joc de trencaclosques, on l'objectiu és netejar la "
 "finestra del màxim de peces possibles fent clic als grups de fitxes del "
-"mateix color. El grup desapareixerà i les peces de sobre cauran fins que "
-"no en quedin més o no hi hagin grups de colors."
+"mateix color. El grup desapareixerà i les peces de sobre cauran fins que no "
+"en quedin més o no hi hagin grups de colors."
 
 #: C/same-gnome.xml:33(year)
 msgid "2005"
@@ -227,7 +245,7 @@ msgstr ""
 msgid "Same GNOME"
 msgstr "Same GNOME"
 
-#: C/same-gnome.xml:123(title)
+#: C/same-gnome.xml:123(title) C/same-gnome.xml:139(title)
 msgid "Playing <application>Same GNOME</application>"
 msgstr "Jugar al <application>Same GNOME</application>"
 
@@ -272,99 +290,117 @@ msgstr ""
 "l'espai. Si es treu una columna sencera, llavors els objectes lliscaran cap "
 "a l'esquerra per a omplir el forat."
 
-#: C/same-gnome.xml:140(title)
-msgid "Playing <application>Same GNOME</application>."
-msgstr "Jugar al <application>Same GNOME</application>."
+#: C/same-gnome.xml:142(para)
+msgid "1. Eliminate groups of two or more <placeholder-1/>"
+msgstr "1. Suprimeix grups de dos o més <placeholder-1/>"
 
 #: C/same-gnome.xml:150(para)
-msgid "Scoring is based on the number of objects you delete:"
-msgstr "La puntuació està basada en el número d'objectes que treieu:"
+msgid "2. Objects fall down to fill the gaps <placeholder-1/>"
+msgstr "2. El objectes cauen per a omplir els forats <placeholder-1/>"
 
-#: C/same-gnome.xml:155(entry)
+#: C/same-gnome.xml:158(para)
+msgid "3. Objects move left to fill empty columns <placeholder-1/>"
+msgstr ""
+"3. Els objectes es mouen a l'esquerra per a omplir les columnes buides "
+"<placeholder-1/>"
+
+#: C/same-gnome.xml:166(para)
+msgid "4. New groups are formed and the cycle repeats <placeholder-1/>"
+msgstr "4. Es formen grups nous i es repeteix el cicle <placeholder-1/>"
+
+#: C/same-gnome.xml:178(para)
+msgid "Scoring is based on the number of objects you delete:"
+msgstr "La puntuació està basada en el número d'objectes que traieu:"
+
+#: C/same-gnome.xml:183(entry)
 msgid "Number of Objects"
 msgstr "Número d'objectes"
 
-#: C/same-gnome.xml:156(entry)
+#: C/same-gnome.xml:184(entry)
 msgid "Points Scored"
 msgstr "Punts obtinguts"
 
-#: C/same-gnome.xml:159(entry) C/same-gnome.xml:168(superscript)
+#: C/same-gnome.xml:187(entry) C/same-gnome.xml:196(superscript)
 msgid "2"
 msgstr "2"
 
-#: C/same-gnome.xml:159(entry)
+#: C/same-gnome.xml:187(entry)
 msgid "0"
 msgstr "0"
 
-#: C/same-gnome.xml:160(entry)
+#: C/same-gnome.xml:188(entry)
 msgid "3"
 msgstr "3"
 
-#: C/same-gnome.xml:160(entry)
+#: C/same-gnome.xml:188(entry)
 msgid "1"
 msgstr "1"
 
-#: C/same-gnome.xml:161(entry)
+#: C/same-gnome.xml:189(entry)
 msgid "4"
 msgstr "4"
 
-#: C/same-gnome.xml:162(entry)
+#: C/same-gnome.xml:190(entry)
 msgid "5"
 msgstr "5"
 
-#: C/same-gnome.xml:162(entry) C/same-gnome.xml:166(entry)
+#: C/same-gnome.xml:190(entry) C/same-gnome.xml:194(entry)
 msgid "9"
 msgstr "9"
 
-#: C/same-gnome.xml:163(entry)
+#: C/same-gnome.xml:191(entry)
 msgid "6"
 msgstr "6"
 
-#: C/same-gnome.xml:163(entry)
+#: C/same-gnome.xml:191(entry)
 msgid "16"
 msgstr "16"
 
-#: C/same-gnome.xml:164(entry)
+#: C/same-gnome.xml:192(entry)
 msgid "7"
 msgstr "7"
 
-#: C/same-gnome.xml:164(entry)
+#: C/same-gnome.xml:192(entry)
 msgid "25"
 msgstr "25"
 
-#: C/same-gnome.xml:165(entry)
+#: C/same-gnome.xml:193(entry)
 msgid "8"
 msgstr "8"
 
-#: C/same-gnome.xml:165(entry)
+#: C/same-gnome.xml:193(entry)
 msgid "36"
 msgstr "36"
 
-#: C/same-gnome.xml:166(entry)
+#: C/same-gnome.xml:194(entry)
 msgid "49"
 msgstr "49"
 
-#: C/same-gnome.xml:168(entry)
+#: C/same-gnome.xml:195(entry)
+msgid "⋮"
+msgstr "⋮"
+
+#: C/same-gnome.xml:196(entry)
 msgid "p"
 msgstr "n"
 
-#: C/same-gnome.xml:168(entry)
+#: C/same-gnome.xml:196(entry)
 msgid "(n - 2)<placeholder-1/>"
 msgstr "(n - 2)<placeholder-1/>"
 
-#: C/same-gnome.xml:172(para)
+#: C/same-gnome.xml:200(para)
 msgid "If you clear the board there is a 1000 point bonus."
 msgstr "Si netegeu el tauler obtindreu una bonificació de 1000 punts."
 
-#: C/same-gnome.xml:176(title)
+#: C/same-gnome.xml:204(title)
 msgid "Customization"
 msgstr "Personalització"
 
-#: C/same-gnome.xml:179(title)
+#: C/same-gnome.xml:207(title)
 msgid "Changing the Look"
 msgstr "Canviar l'aparença"
 
-#: C/same-gnome.xml:180(para)
+#: C/same-gnome.xml:208(para)
 msgid ""
 "Changing the size of the objects is as simple as resizing the window. To "
 "make the maximum use of the screen choose the <guimenuitem>Fullscreen</"
@@ -375,7 +411,7 @@ msgstr ""
 "<guimenuitem>Pantalla completa</guimenuitem> en el menú <guimenu>Visualitza</"
 "guimenu>."
 
-#: C/same-gnome.xml:182(para)
+#: C/same-gnome.xml:210(para)
 msgid ""
 "To change the appearance of the objects use the <guimenuitem>Theme</"
 "guimenuitem> item in the <guimenu>View</guimenu> menu. Selecting an item "
@@ -385,7 +421,7 @@ msgstr ""
 "<guimenuitem>Tema</guimenuitem> en el menú <guimenu>Visualitza</guimenu>. En "
 "seleccionar un element de la llista s'aplicarà el tema immediatament."
 
-#: C/same-gnome.xml:184(para)
+#: C/same-gnome.xml:212(para)
 msgid ""
 "You can also create your own themes, although the process is not very "
 "straight-forward yet. Use a copy of an existing theme as a template and "
@@ -403,11 +439,11 @@ msgstr ""
 "<application>Same GNOME</application>. El <filename>$XDG_DATA_HOME</"
 "filename> normalment és el <filename>~/.local/share/</filename>."
 
-#: C/same-gnome.xml:188(title)
+#: C/same-gnome.xml:216(title)
 msgid "Changing the Size"
 msgstr "Canviar la mida"
 
-#: C/same-gnome.xml:189(para)
+#: C/same-gnome.xml:217(para)
 msgid ""
 "The <guimenu>Size</guimenu> menu contains three settings: small, medium and "
 "large. Aside from increasing the number of objects, the large setting also "
@@ -417,11 +453,11 @@ msgstr ""
 "i gran. A part d'incrementar el número d'objectes, el paràmetre gran també "
 "incrementa el número d'objectes diferents."
 
-#: C/same-gnome.xml:193(title)
+#: C/same-gnome.xml:221(title)
 msgid "Changing the Speed"
 msgstr "Canviar la velocitat"
 
-#: C/same-gnome.xml:194(para)
+#: C/same-gnome.xml:222(para)
 msgid ""
 "The default animation is designed to be smooth and graceful. If you like "
 "playing fast and furious then this may be too slow for you. By selecting the "
@@ -434,11 +470,11 @@ msgstr ""
 "<guimenu>Visualitza</guimenu> podreu accelerar la partida a costa de la "
 "qualitat de l'animació."
 
-#: C/same-gnome.xml:200(title)
+#: C/same-gnome.xml:228(title)
 msgid "Strategy"
 msgstr "Estratègia"
 
-#: C/same-gnome.xml:202(para)
+#: C/same-gnome.xml:230(para)
 msgid ""
 "The most important rule when aiming for a high score is to think ahead: each "
 "group you remove will form and destroy other groups."
@@ -446,7 +482,7 @@ msgstr ""
 "La regla més important quan intenteu obtenir una puntuació alta és pensar "
 "per avançat: cada grup que treieu crearà i desfarà altres grups."
 
-#: C/same-gnome.xml:204(para)
+#: C/same-gnome.xml:232(para)
 msgid ""
 "Remove higher groups first, unless removing another group will make it "
 "larger. Vertically aligned objects can't be misaligned, but horizontal "
@@ -456,7 +492,7 @@ msgstr ""
 "faci més gran. Els objectes alineats verticalment no es poden desalinear, "
 "però els horitzontals sí."
 
-#: C/same-gnome.xml:206(para)
+#: C/same-gnome.xml:234(para)
 msgid ""
 "Since the score increases quadratically, big groups of objects are always "
 "better. For example, the points difference between a six object group and a "
@@ -474,7 +510,7 @@ msgstr ""
 "objecte. Tot i que els grups de dos que heu deixat no puntuen, el grup gran "
 "puntua més que tot junt."
 
-#: C/same-gnome.xml:208(para)
+#: C/same-gnome.xml:236(para)
 msgid ""
 "Don't forget the thousand point bonus for clearing all the balls. To get "
 "1000 points from a single group you need 34 objects. You are very unlikely "
@@ -486,11 +522,11 @@ msgstr ""
 "que es doni la situació on heu de sacrificar un grup tant gran per a netejar "
 "el tauler."
 
-#: C/same-gnome.xml:213(title)
+#: C/same-gnome.xml:241(title)
 msgid "About <application>Same GNOME</application>"
 msgstr "Quant al <application>Same GNOME</application>"
 
-#: C/same-gnome.xml:214(para)
+#: C/same-gnome.xml:242(para)
 msgid ""
 "<application>Same GNOME</application> was written by Callum McKenzie "
 "(<email>callum@physics.otago.ac.nz</email>). To find more information about "
@@ -499,11 +535,10 @@ msgid ""
 msgstr ""
 "En Callum McKenzie (<email>callum@physics.otago.ac.nz</email>) ha escrit el "
 "<application>Same GNOME</application>. Per a trobar més informació sobre el "
-"<application>Same GNOME</application>, visiteu la <ulink url=\"http://"
-"live.gnome.org/GnomeGames/\" type=\"http\">pàgina web dels jocs del "
-"GNOME</ulink>."
+"<application>Same GNOME</application>, visiteu la <ulink url=\"http://live."
+"gnome.org/GnomeGames/\" type=\"http\">pàgina web dels jocs del GNOME</ulink>."
 
-#: C/same-gnome.xml:218(para)
+#: C/same-gnome.xml:246(para)
 msgid ""
 "To report a bug or make a suggestion regarding this application or this "
 "manual, follow the directions in the <ulink url=\"ghelp:user-guide?feedback-"
@@ -514,7 +549,7 @@ msgstr ""
 "feedback-bugs\" type=\"help\">Secció de comentaris de la guia d'usuari del "
 "GNOME</ulink>."
 
-#: C/same-gnome.xml:224(para)
+#: C/same-gnome.xml:252(para)
 msgid ""
 "This program is distributed under the terms of the GNU General Public "
 "license as published by the Free Software Foundation; either version 2 of "
@@ -527,13 +562,16 @@ msgstr ""
 "general de GNU tal com publica la Free Software Foundation; tant en la "
 "versió 2 de la llicència, o (a la vostra opció) una versió posterior. "
 "S'inclou una <ulink url=\"ghelp:gpl\" type=\"help\">còpia d'aquesta "
-"llicència</ulink> amb aquesta documentació; se'n pot trobar una altra "
-"en el fitxer COPYING inclòs amb el codi font d'aquest programa."
+"llicència</ulink> amb aquesta documentació; se'n pot trobar una altra en el "
+"fitxer COPYING inclòs amb el codi font d'aquest programa."
 
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2.
 #: C/same-gnome.xml:0(None)
 msgid "translator-credits"
-msgstr "Joan Duran <jodufi@gmail.com>, 2008"
+msgstr "Joan Duran <jodufi@gmail.com>, 2007-2009"
+
+#~ msgid "Playing <application>Same GNOME</application>."
+#~ msgstr "Jugar al <application>Same GNOME</application>."
 
 #~ msgid ""
 #~ "<application><application>Same GNOME</application></application> Manual"
