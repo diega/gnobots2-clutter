@@ -1,0 +1,342 @@
+# Abigail Brady <morwen@evilmagic.org>, 2009.
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Blackjack\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-03-13 04:35+0000\n"
+"PO-Revision-Date: 2009-03-13 07:59+0000\n"
+"Last-Translator: Jen Ockwell <jenfraggleubuntu@gmail.com>\n"
+"Language-Team: English/GB <en@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/blackjack.xml:332(None) 
+msgid "@@image: 'figures/blackjack_start_window.png'; md5=639433a68f4f671a78ef838afabdb21b"
+msgstr "@@image: 'figures/blackjack_start_window.png'; md5=639433a68f4f671a78ef838afabdb21b"
+
+#: C/blackjack.xml:29(title) 
+msgid "<application>Blackjack</application> Manual"
+msgstr "<application>Blackjack</application> Manual"
+
+#: C/blackjack.xml:31(para) 
+msgid "Blackjack is a casino rules, multiple deck blackjack game for the GNOME Project. The object of the game is to obtain a hand value that is closer to 21 than that of the dealer, without going over 21. The player bets with virtual chips."
+msgstr "Blackjack is a casino rules, multiple deck blackjack game for the GNOME Project. The object of the game is to obtain a hand value that is closer to 21 than that of the dealer, without going over 21. The player bets with virtual chips."
+
+#: C/blackjack.xml:40(year) 
+msgid "2003"
+msgstr "2003"
+
+#: C/blackjack.xml:41(holder) 
+msgid "William Jon McCann"
+msgstr "William Jon McCann"
+
+#: C/blackjack.xml:56(publishername) 
+msgid "GNOME Documentation Project"
+msgstr "GNOME Documentation Project"
+
+#: C/blackjack.xml:2(para) 
+msgid "Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License (GFDL), Version 1.1 or any later version published by the Free Software Foundation with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. You can find a copy of the GFDL at this <ulink type=\"help\" url=\"ghelp:fdl\">link</ulink> or in the file COPYING-DOCS distributed with this manual."
+msgstr "Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation Licence (GFDL), Version 1.1 or any later version published by the Free Software Foundation with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. You can find a copy of the GFDL at this <ulink type=\"help\" url=\"ghelp:fdl\">link</ulink> or in the file COPYING-DOCS distributed with this manual."
+
+#: C/blackjack.xml:12(para) 
+msgid "This manual is part of a collection of GNOME manuals distributed under the GFDL. If you want to distribute this manual separately from the collection, you can do so by adding a copy of the license to the manual, as described in section 6 of the license."
+msgstr "This manual is part of a collection of GNOME manuals distributed under the GFDL. If you want to distribute this manual separately from the collection, you can do so by adding a copy of the licence to the manual, as described in section 6 of the licence."
+
+#: C/blackjack.xml:19(para) 
+msgid "Many of the names used by companies to distinguish their products and services are claimed as trademarks. Where those names appear in any GNOME documentation, and the members of the GNOME Documentation Project are made aware of those trademarks, then the names are in capital letters or initial capital letters."
+msgstr "Many of the names used by companies to distinguish their products and services are claimed as trademarks. Where those names appear in any GNOME documentation, and the members of the GNOME Documentation Project are made aware of those trademarks, then the names are in capital letters or initial capital letters."
+
+#: C/blackjack.xml:35(para) 
+msgid "DOCUMENT IS PROVIDED ON AN \"AS IS\" BASIS, WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION, WARRANTIES THAT THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS FREE OF DEFECTS MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE OR NON-INFRINGING. THE ENTIRE RISK AS TO THE QUALITY, ACCURACY, AND PERFORMANCE OF THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS WITH YOU. SHOULD ANY DOCUMENT OR MODIFIED VERSION PROVE DEFECTIVE IN ANY RESPECT, YOU (NOT THE INITIAL WRITER, AUTHOR OR ANY CONTRIBUTOR) ASSUME THE COST OF ANY NECESSARY SERVICING, REPAIR OR CORRECTION. THIS DISCLAIMER OF WARRANTY CONSTITUTES AN ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS DISCLAIMER; AND"
+msgstr "DOCUMENT IS PROVIDED ON AN \"AS IS\" BASIS, WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION, WARRANTIES THAT THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS FREE OF DEFECTS MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE OR NON-INFRINGING. THE ENTIRE RISK AS TO THE QUALITY, ACCURACY, AND PERFORMANCE OF THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS WITH YOU. SHOULD ANY DOCUMENT OR MODIFIED VERSION PROVE DEFECTIVE IN ANY RESPECT, YOU (NOT THE INITIAL WRITER, AUTHOR OR ANY CONTRIBUTOR) ASSUME THE COST OF ANY NECESSARY SERVICING, REPAIR OR CORRECTION. THIS DISCLAIMER OF WARRANTY CONSTITUTES AN ESSENTIAL PART OF THIS LICENCE. NO USE OF ANY DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS DISCLAIMER; AND"
+
+#: C/blackjack.xml:55(para) 
+msgid "UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER IN TORT (INCLUDING NEGLIGENCE), CONTRACT, OR OTHERWISE, SHALL THE AUTHOR, INITIAL WRITER, ANY CONTRIBUTOR, OR ANY DISTRIBUTOR OF THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT, OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE LIABLE TO ANY PERSON FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY CHARACTER INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF GOODWILL, WORK STOPPAGE, COMPUTER FAILURE OR MALFUNCTION, OR ANY AND ALL OTHER DAMAGES OR LOSSES ARISING OUT OF OR RELATING TO USE OF THE DOCUMENT AND MODIFIED VERSIONS OF THE DOCUMENT, EVEN IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE POSSIBILITY OF SUCH DAMAGES."
+msgstr "UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER IN TORT (INCLUDING NEGLIGENCE), CONTRACT, OR OTHERWISE, SHALL THE AUTHOR, INITIAL WRITER, ANY CONTRIBUTOR, OR ANY DISTRIBUTOR OF THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT, OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE LIABLE TO ANY PERSON FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY CHARACTER INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF GOODWILL, WORK STOPPAGE, COMPUTER FAILURE OR MALFUNCTION, OR ANY AND ALL OTHER DAMAGES OR LOSSES ARISING OUT OF OR RELATING TO USE OF THE DOCUMENT AND MODIFIED VERSIONS OF THE DOCUMENT, EVEN IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE POSSIBILITY OF SUCH DAMAGES."
+
+#: C/blackjack.xml:28(para) 
+msgid "DOCUMENT AND MODIFIED VERSIONS OF THE DOCUMENT ARE PROVIDED UNDER THE TERMS OF THE GNU FREE DOCUMENTATION LICENSE WITH THE FURTHER UNDERSTANDING THAT: <placeholder-1/>"
+msgstr "DOCUMENT AND MODIFIED VERSIONS OF THE DOCUMENT ARE PROVIDED UNDER THE TERMS OF THE GNU FREE DOCUMENTATION LICENCE WITH THE FURTHER UNDERSTANDING THAT: <placeholder-1/>"
+
+#: C/blackjack.xml:66(firstname) 
+msgid "William Jon"
+msgstr "William Jon"
+
+#: C/blackjack.xml:67(surname) 
+msgid "McCann"
+msgstr "McCann"
+
+#: C/blackjack.xml:70(email) 
+msgid "mccann@jhu.edu"
+msgstr "mccann@jhu.edu"
+
+#: C/blackjack.xml:105(revnumber) 
+msgid "Blackjack Manual V2.8"
+msgstr "Blackjack Manual V2.8"
+
+#: C/blackjack.xml:106(date) 
+msgid "September 2004"
+msgstr "September 2004"
+
+#: C/blackjack.xml:108(para) 
+msgid "William Jon McCann <email>mccann@jhu.edu</email>"
+msgstr "William Jon McCann <email>mccann@jhu.edu</email>"
+
+#: C/blackjack.xml:116(releaseinfo) 
+msgid "This manual describes version 2.12 of Blackjack."
+msgstr "This manual describes version 2.12 of Blackjack."
+
+#: C/blackjack.xml:119(title) 
+msgid "Feedback"
+msgstr "Feedback"
+
+#: C/blackjack.xml:120(para) 
+msgid "To report a bug or make a suggestion regarding the <application>Blackjack</application> application or this manual, follow the directions in the <ulink url=\"ghelp:gnome-feedback\" type=\"help\">GNOME Feedback Page</ulink>."
+msgstr "To report a bug or make a suggestion regarding the <application>Blackjack</application> application or this manual, follow the directions in the <ulink url=\"ghelp:gnome-feedback\" type=\"help\">GNOME Feedback Page</ulink>."
+
+#: C/blackjack.xml:129(primary) C/blackjack.xml:157(term) C/blackjack.xml:0(application) 
+msgid "Blackjack"
+msgstr "Blackjack"
+
+#: C/blackjack.xml:132(primary) 
+msgid "mygnomeapp"
+msgstr "mygnomeapp"
+
+#: C/blackjack.xml:141(title) 
+msgid "Introduction"
+msgstr "Introduction"
+
+#: C/blackjack.xml:143(para) 
+msgid "<application>Blackjack</application> is a multiple deck, casino rules blackjack game. The object of the game is to hold cards having a higher count than those of the dealer without going over 21."
+msgstr "<application>Blackjack</application> is a multiple deck, casino rules blackjack game. The object of the game is to hold cards having a higher count than those of the dealer without going over 21."
+
+#: C/blackjack.xml:149(title) 
+msgid "Blackjack Basics"
+msgstr "Blackjack Basics"
+
+#: C/blackjack.xml:152(title) 
+msgid "Blackjack Terminology"
+msgstr "Blackjack Terminology"
+
+#: C/blackjack.xml:153(para) 
+msgid "Here are a few important terms that are used in the game."
+msgstr "Here are a few important terms that are used in the game."
+
+#: C/blackjack.xml:159(para) 
+msgid "A hand whose first two cards total 21; an instant win worth 150% of your wager"
+msgstr "A hand whose first two cards total 21; an instant win worth 150% of your wager"
+
+#: C/blackjack.xml:164(term) 
+msgid "Bust"
+msgstr "Bust"
+
+#: C/blackjack.xml:166(para) 
+msgid "When the value of a hand exceeds 21; a losing hand"
+msgstr "When the value of a hand exceeds 21; a losing hand"
+
+#: C/blackjack.xml:171(term) 
+msgid "Double down"
+msgstr "Double down"
+
+#: C/blackjack.xml:173(para) 
+msgid "To double the initial wager and receive exactly one more card"
+msgstr "To double the initial wager and receive exactly one more card"
+
+#: C/blackjack.xml:179(term) 
+msgid "Hit"
+msgstr "Hit"
+
+#: C/blackjack.xml:181(para) 
+msgid "To request another card to be added to the hand"
+msgstr "To request another card to be added to the hand"
+
+#: C/blackjack.xml:186(term) 
+msgid "Insurance"
+msgstr "Insurance"
+
+#: C/blackjack.xml:188(para) 
+msgid "A side wager of 50% of the original wager that the dealer has a natural 21 (aka blackjack) that is offered when the dealer's face up card is an ace. If the dealer has a natural 21 then the player is paid double."
+msgstr "A side wager of 50% of the original wager that the dealer has a natural 21 (aka blackjack) that is offered when the dealer's face up card is an ace. If the dealer has a natural 21 then the player is paid double."
+
+#: C/blackjack.xml:196(term) 
+msgid "Push"
+msgstr "Push"
+
+#: C/blackjack.xml:198(para) 
+msgid "When the value of the player hand and the dealer hand are equal, the original wager is returned to the player"
+msgstr "When the value of the player hand and the dealer hand are equal, the original wager is returned to the player"
+
+#: C/blackjack.xml:204(term) 
+msgid "Split"
+msgstr "Split"
+
+#: C/blackjack.xml:206(para) 
+msgid "When a hand starts with two cards of the same value (or rank) it may be split to form two independent hands"
+msgstr "When a hand starts with two cards of the same value (or rank) it may be split to form two independent hands"
+
+#: C/blackjack.xml:212(term) 
+msgid "Stand"
+msgstr "Stand"
+
+#: C/blackjack.xml:214(para) 
+msgid "To stop adding cards to a hand"
+msgstr "To stop adding cards to a hand"
+
+#: C/blackjack.xml:219(term) 
+msgid "Surrender"
+msgstr "Surrender"
+
+#: C/blackjack.xml:221(para) 
+msgid "To give up half your wager to not complete the hand"
+msgstr "To give up half your wager to not complete the hand"
+
+#: C/blackjack.xml:230(title) 
+msgid "Card Values"
+msgstr "Card Values"
+
+#: C/blackjack.xml:235(para) 
+msgid "An Ace can count as either 1 or 11."
+msgstr "An Ace can count as either 1 or 11."
+
+#: C/blackjack.xml:238(para) 
+msgid "The cards 2 through 9 are valued as indicated."
+msgstr "The cards 2 through 9 are valued as indicated."
+
+#: C/blackjack.xml:241(para) 
+msgid "The 10, Jack, Queen, and King are all valued at 10."
+msgstr "The 10, Jack, Queen, and King are all valued at 10."
+
+#: C/blackjack.xml:231(para) 
+msgid "In blackjack, each card is assigned a value. <placeholder-1/>"
+msgstr "In blackjack, each card is assigned a value. <placeholder-1/>"
+
+#: C/blackjack.xml:246(para) 
+msgid "The value of a hand is the sum of the values of each card in the hand."
+msgstr "The value of a hand is the sum of the values of each card in the hand."
+
+#: C/blackjack.xml:252(title) 
+msgid "Dealer Rules"
+msgstr "Dealer Rules"
+
+#: C/blackjack.xml:259(term) 
+msgid "Dealer stands on all 17s"
+msgstr "Dealer stands on all 17s"
+
+#: C/blackjack.xml:261(para) 
+msgid "The dealer must continue to draw cards (hit) until the hand total is at least 17."
+msgstr "The dealer must continue to draw cards (hit) until the hand total is at least 17."
+
+#: C/blackjack.xml:267(term) 
+msgid "Dealer hits soft 17"
+msgstr "Dealer hits soft 17"
+
+#: C/blackjack.xml:269(para) 
+msgid "The dealer must continue to draw cards (hit) until the hand total is at least 17, except when the dealer has a soft total of 17 he must take another card. A soft total is one where an Ace card is counted as an 11."
+msgstr "The dealer must continue to draw cards (hit) until the hand total is at least 17, except when the dealer has a soft total of 17 he must take another card. A soft total is one where an Ace card is counted as an 11."
+
+#: C/blackjack.xml:253(para) 
+msgid "The dealer must play his hand according to very specific rules. There are two basic rule variations that determine what hand total the dealer must draw to. <placeholder-1/>"
+msgstr "The dealer must play his hand according to very specific rules. There are two basic rule variations that determine what hand total the dealer must draw to. <placeholder-1/>"
+
+#: C/blackjack.xml:292(title) 
+msgid "Getting Started"
+msgstr "Getting Started"
+
+#: C/blackjack.xml:295(title) 
+msgid "To Start <application>Blackjack</application>"
+msgstr "To Start <application>Blackjack</application>"
+
+#: C/blackjack.xml:296(para) 
+msgid "You can start <application>Blackjack</application> in the following ways:"
+msgstr "You can start <application>Blackjack</application> in the following ways:"
+
+#: C/blackjack.xml:300(term) 
+msgid "<guimenu>Applications</guimenu> menu"
+msgstr "<guimenu>Applications</guimenu> menu"
+
+#: C/blackjack.xml:302(para) 
+msgid "Choose <menuchoice><guisubmenu>Games </guisubmenu><guimenuitem>Blackjack</guimenuitem></menuchoice>."
+msgstr "Choose <menuchoice><guisubmenu>Games</guisubmenu><guimenuitem>Blackjack</guimenuitem></menuchoice>."
+
+#: C/blackjack.xml:310(term) 
+msgid "Command line"
+msgstr "Command line"
+
+#: C/blackjack.xml:312(para) 
+msgid "To start <application>Blackjack</application> from a command line, type the following command, then press <keycap>Return</keycap>:"
+msgstr "To start <application>Blackjack</application> from a command line, type the following command, then press <keycap>Return</keycap>:"
+
+#: C/blackjack.xml:315(command) 
+msgid "blackjack"
+msgstr "blackjack"
+
+#: C/blackjack.xml:323(title) 
+msgid "When You Start <application>Blackjack</application>"
+msgstr "When You Start <application>Blackjack</application>"
+
+#: C/blackjack.xml:324(para) 
+msgid "When you start <application>Blackjack</application>, the following window is displayed."
+msgstr "When you start <application>Blackjack</application>, the following window is displayed."
+
+#: C/blackjack.xml:328(title) 
+msgid "<application>Blackjack</application> Start Up Window"
+msgstr "<application>Blackjack</application> Start Up Window"
+
+#: C/blackjack.xml:341(phrase) 
+msgid "Shows <placeholder-1/> main window. Contains titlebar, menubar, toolbar, playing area, and scrollbars. Menubar contains Game, Settings, and Help menus."
+msgstr "Shows <placeholder-1/> main window. Contains titlebar, menubar, toolbar, playing area, and scrollbars. Menubar contains Game, Settings, and Help menus."
+
+#. for example, the items on the menubar and on the toolbar. This section is optional.
+#: C/blackjack.xml:352(para) 
+msgid "The <application>Blackjack</application> window contains the following elements:"
+msgstr "The <application>Blackjack</application> window contains the following elements:"
+
+#: C/blackjack.xml:357(term) 
+msgid "Menubar"
+msgstr "Menubar"
+
+#: C/blackjack.xml:359(para) 
+msgid "The menus on the menubar contain all of the commands you need to work with files in <application>Blackjack</application>."
+msgstr "The menus on the menubar contain all of the commands you need to work with files in <application>Blackjack</application>."
+
+#: C/blackjack.xml:365(term) 
+msgid "Toolbar"
+msgstr "Toolbar"
+
+#: C/blackjack.xml:367(para) 
+msgid "The toolbar contains a subset of the commands that you can access from the menubar."
+msgstr "The toolbar contains a subset of the commands that you can access from the menubar."
+
+#: C/blackjack.xml:372(term) 
+msgid "Statusbar"
+msgstr "Statusbar"
+
+#: C/blackjack.xml:374(para) 
+msgid "The statusbar displays information about current <application>Blackjack</application> activity and contextual information about the menu items."
+msgstr "The statusbar displays information about current <application>Blackjack</application> activity and contextual information about the menu items."
+
+#: C/blackjack.xml:380(term) 
+msgid "Playing area"
+msgstr "Playing area"
+
+#: C/blackjack.xml:382(para) 
+msgid "The playing area contains the dealer position, player position, player wager stack, and the player's chips."
+msgstr "The playing area contains the dealer position, player position, player wager stack, and the player's chips."
+
+#: C/blackjack.xml:391(title) 
+msgid "<application>Blackjack</application> Menus"
+msgstr "<application>Blackjack</application> Menus"
+
+#: C/blackjack.xml:392(para) 
+msgid "The menu bar, located above the <interface>game table</interface>, contains the following menus:"
+msgstr "The menu bar, located above the <interface>game table</interface>, contains the following menus:"
+
+#: C/blackjack.xml:402(guimenu) C/blackjack.xml:766(title) 
+msgid "Game"
+msgstr "Game"
+

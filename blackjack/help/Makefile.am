@@ -1,6 +1,6 @@
 include $(top_srcdir)/gnome-doc-utils.make
 
-DOC_LINGUAS = ca de el es eu fr oc sv
+DOC_LINGUAS = ca de el en_GB es eu fr oc sv
 
 DOC_MODULE = blackjack
 
