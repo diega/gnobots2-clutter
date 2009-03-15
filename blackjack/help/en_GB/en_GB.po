@@ -528,7 +528,7 @@ msgid ""
 "game</guimenuitem></menuchoice> — This clears the table and starts a new "
 "game."
 msgstr ""
-"<menuchoice><shortcut><keycap>Ctrl</keycap><keycap>N</keycap></"
+"<menuchoice><shortcut><keycombo><keycap>Ctrl</keycap><keycap>N</keycap></keycombo></"
 "shortcut><guimenuitem>New game</guimenuitem></menuchoice> — This clears the "
 "table and starts a new game."
 
@@ -553,7 +553,7 @@ msgid ""
 "<menuchoice><shortcut><keysym>Ctrl-Q</keysym></shortcut><guimenuitem>Exit</"
 "guimenuitem></menuchoice> — This quits the game."
 msgstr ""
-"<menuchoice><shortcut><keycap>Ctrl</keycap><keycap>Q</keycap></"
+"<menuchoice><shortcut><keycombo><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo></"
 "shortcut><guimenuitem>Exit</guimenuitem></menuchoice> — This quits the game."
 
 #: C/blackjack.xml:404(para) C/blackjack.xml:460(para)
