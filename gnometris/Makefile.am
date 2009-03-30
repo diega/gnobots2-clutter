@@ -11,27 +11,13 @@ gnometris_SOURCES = \
 	scoreframe.cpp \
 	scoreframe.h \
 	tetris.cpp \
-	tetris.h
-
-if HAVE_CLUTTER
-gnometris_SOURCES += \
+	tetris.h \
 	preview.cpp \
 	preview.h \
 	blockops.cpp \
 	blockops.h \
 	renderer.cpp \
 	renderer.h
-else
-gnometris_SOURCES += \
-	field-noclutter.cpp \
-	field-noclutter.h \
-	preview-noclutter.cpp \
-	preview-noclutter.h \
-	blockops-noclutter.cpp \
-	blockops-noclutter.h \
-	renderer-noclutter.cpp \
-	renderer-noclutter.h
-endif
 
 gnometris_CPPFLAGS = \
 	-I$(top_srcdir) \
@@ -39,10 +25,14 @@ gnometris_CPPFLAGS = \
 
 gnometris_CXXFLAGS = \
 	$(GTK_CFLAGS) \
+	$(CLUTTER_CFLAGS) \
+	$(CLUTTER_GTK_CFLAGS) \
 	$(AM_CXXFLAGS)
 
 gnometris_LDADD = \
 	$(top_builddir)/libgames-support/libgames-support.la \
+	$(CLUTTER_LIBS) \
+	$(CLUTTER_GTK_LIBS) \
 	$(GTK_LIBS) \
 	$(INTLLIBS)
 
@@ -52,43 +42,13 @@ gnometris_LDADD += $(GNOME_LIBS)
 endif
 
 if HAVE_RSVG
-gnometris_CXXFLAGS += $(RSVG_CFLAGS)
+gnometris_CXXFLAGS += $(RSVG_CFLAGS) 
 gnometris_LDADD += $(RSVG_LIBS)
 endif
 
 if WITH_GTHREAD
 gnometris_CXXFLAGS += $(GHTREAD_CFLAGS)
 gnometris_LDADD += $(GTHREAD_LIBS)
-endif
-
-if HAVE_CLUTTER
-#noinst_PROGRAMS = gnometris-noclutter
-
-#gnometris_noclutter_SOURCES = \
-#	main.cpp \
-#	blocks.cpp \
-#	blocks.h \
-#	preview-noclutter.cpp \
-#	preview-noclutter.h \
-#	blockops-noclutter.cpp \
-#	blockops-noclutter.h \
-#	field-noclutter.cpp \
-#	field-noclutter.h \
-#	highscores.cpp \
-#	highscores.h \
-#	renderer-noclutter.cpp \
-#	renderer-noclutter.h \
-#	scoreframe.cpp \
-#	scoreframe.h \
-#	tetris.cpp \
-#	tetris.h
-
-#gnometris_noclutter_CPPFLAGS = $(gnometris_CPPFLAGS) -UHAVE_CLUTTER
-#gnometris_noclutter_CXXFLAGS = $(gnometris_CXXFLAGS) -UHAVE_CLUTTER
-#gnometris_noclutter_LDADD = $(gnometris_LDADD)
-gnometris_CPPFLAGS += -DHAVE_CLUTTER
-gnometris_CXXFLAGS += $(CLUTTER_CFLAGS) $(CLUTTER_GTK_CFLAGS)
-gnometris_LDADD += $(CLUTTER_LIBS) $(CLUTTER_GTK_LIBS)
 endif
 
 pixmapdir = $(pkgdatadir)/gnometris/pixmaps

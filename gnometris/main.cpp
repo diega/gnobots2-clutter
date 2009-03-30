@@ -25,10 +25,7 @@
 #include <libgames-support/games-sound.h>
 #include <libgames-support/games-conf.h>
 #include <libgames-support/games-runtime.h>
-
-#ifdef HAVE_CLUTTER
 #include <clutter-gtk/gtk-clutter-embed.h>
-#endif
 
 #include "tetris.h"
 
@@ -54,9 +51,7 @@ main(int argc, char *argv[])
 	GOptionContext *context = g_option_context_new (NULL);
 
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
-#ifdef HAVE_CLUTTER
 	g_option_context_add_group (context, clutter_get_option_group_without_init ());
-#endif
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
 	games_sound_add_option_group (context);
 
@@ -74,13 +69,11 @@ main(int argc, char *argv[])
 
 	games_conf_initialise ("Gnometris");
 
-#ifdef HAVE_CLUTTER
         if (gtk_clutter_init_with_args (NULL, NULL, NULL, NULL, NULL, &error) != CLUTTER_INIT_SUCCESS) {
 		g_printerr ("Failed to initialise clutter: %s\n", error->message);
 		g_error_free (error);
 		return 1;
 	}
-#endif
 
 	Tetris *t = new Tetris(cmdlineLevel);
 

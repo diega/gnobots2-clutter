@@ -24,7 +24,6 @@
 
 #include "tetris.h"
 #include "renderer.h"
-
 #include <clutter/clutter.h>
 
 enum SlotType {
