@@ -27,7 +27,7 @@
 #include <libgames-support/games-runtime.h>
 
 #ifdef HAVE_CLUTTER
-#include <libgames-support/games-clutter-embed.h>
+#include <clutter-gtk/gtk-clutter-embed.h>
 #endif
 
 #include "tetris.h"
