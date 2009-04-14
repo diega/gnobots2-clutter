@@ -744,7 +744,7 @@ void wait_for_input(void);
  * Input routine, initialized to one of the specific
  * input routines. The given argument is the prompt.
  */
-void (*getline) (char *);
+void (*getline_intrl) (char *);
 
 #define MAXSTR 128
 extern char inputstr[MAXSTR];

@@ -128,7 +128,7 @@ void *input_func(void *arg __attribute__((unused)) )
 	      (RealGameCnt+1)/2 + 1 );
     }
     pthread_mutex_lock(&input_mutex);
-    getline(prompt);
+    getline_intrl(prompt);
     input_status = INPUT_AVAILABLE;
     pthread_cond_signal(&input_cond);
     pthread_mutex_unlock(&input_mutex);
@@ -174,13 +174,13 @@ void InitInput(void)
 {
 #ifdef HAVE_LIBREADLINE
   if (isatty(STDIN_FILENO)) {
-    getline = getline_readline;
+    getline_intrl = getline_readline;
     using_history();
   } else {
-    getline = getline_standard;
+    getline_intrl = getline_standard;
   }
 #else
-  getline = getline_standard;
+  getline_intrl = getline_standard;
 #endif
   /* Start input thread */
   pthread_create(&input_thread, NULL, input_func, NULL);
