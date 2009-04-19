@@ -18,7 +18,10 @@ DOC_INCLUDES = \
 	legal.xml
 
 DOC_FIGURES = \
-	figures/play.png \
+	figures/play1.png \
+	figures/play2.png \
+	figures/play3.png \
+	figures/play4.png \
 	figures/start-up.png
 
 dist-hook: doc-dist-hook
