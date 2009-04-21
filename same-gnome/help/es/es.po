@@ -1,12 +1,12 @@
 # translation of same-gnome.HEAD.po to Español
-# Jorge González <jorgegonz@svn.gnome.org>, 2007, 2008.
 # Spanish translation for same gnome manual
 # traducción al español del manual de same gnome
+# Jorge González <jorgegonz@svn.gnome.org>, 2007, 200, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: same-gnome.HEAD\n"
-"POT-Creation-Date: 2008-11-07 12:57+0100\n"
-"PO-Revision-Date: 2008-11-08 13:43+0100\n"
+"POT-Creation-Date: 2009-04-19 19:14+0000\n"
+"PO-Revision-Date: 2009-04-21 21:13+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -382,6 +382,10 @@ msgstr "36"
 msgid "49"
 msgstr "49"
 
+#: C/same-gnome.xml:195(entry)
+msgid "⋮"
+msgstr "⋮"
+
 #: C/same-gnome.xml:196(entry)
 msgid "p"
 msgstr "p"
@@ -570,7 +574,7 @@ msgstr ""
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2.
 #: C/same-gnome.xml:0(None)
 msgid "translator-credits"
-msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2007-2008"
+msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2007-2009"
 
 #~ msgid "Playing <application>Same GNOME</application>."
 #~ msgstr "Jugar a <application>Same GNOME</application>."
