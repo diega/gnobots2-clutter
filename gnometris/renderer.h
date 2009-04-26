@@ -26,7 +26,7 @@
 
 #include <cairo.h>
 #include <glib.h>
-#include <clutter-cairo/clutter-cairo.h>
+#include <clutter/clutter.h>
 
 #include "blocks.h"
 #include "tetris.h"
