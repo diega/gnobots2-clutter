@@ -71,6 +71,12 @@ gnobots2_CFLAGS += $(GHTREAD_CFLAGS)
 gnobots2_LDADD += $(GTHREAD_LIBS)
 endif
 
+if HAVE_CLUTTER
+gnobots2_CFLAGS += $(CLUTTER_CFLAGS) $(CLUTTER_GTK_CFLAGS)
+gnobots2_LDADD += $(CLUTTER_LIBS) $(CLUTTER_GTK_LIBS)
+endif
+
+
 pixmapdir = $(pkgdatadir)/gnobots2/pixmaps
 pixmap_DATA = gnomes.png \
               yahoo.png \
