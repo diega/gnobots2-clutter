@@ -35,6 +35,9 @@
 #include <libgames-support/games-scores-dialog.h>
 #include <libgames-support/games-stock.h>
 
+#include <clutter/clutter.h>
+#include <clutter-gtk.h>
+
 #ifdef WITH_SMCLIENT
 #include <libgames-support/eggsmclient.h>
 #endif /* WITH_SMCLIENT */
@@ -64,6 +67,7 @@
 GtkWidget *app = NULL;
 GtkWidget *game_area = NULL;
 GamesScores *highscores;
+ClutterActor *stage = NULL;
 /**********************************************************************/
 
 
@@ -195,7 +199,7 @@ int
 main (int argc, char *argv[])
 {
   GtkWidget *errordialog;
-  GtkWidget *vbox, *menubar, *toolbar, *statusbar, *gridframe;
+  GtkWidget *vbox, *menubar, *toolbar, *statusbar, *gridframe, *hbox, *clutter_widget;
   GtkUIManager *ui_manager;
   GOptionContext *context;
   struct timeval tv;
@@ -205,6 +209,9 @@ main (int argc, char *argv[])
 #ifdef WITH_SMCLIENT
   EggSMClient *sm_client;
 #endif /* WITH_SMCLIENT */
+  ClutterColor stage_color = { 0x00, 0x00, 0x00, 0xff };
+
+  gtk_clutter_init (&argc, &argv);
 
   if (!games_runtime_init ("gnobots2"))
     return 1;
@@ -259,7 +266,7 @@ main (int argc, char *argv[])
   app = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (app), _("Robots"));
 
-  gtk_window_set_default_size (GTK_WINDOW (app), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+  gtk_window_set_default_size (GTK_WINDOW (app), DEFAULT_WIDTH*2, DEFAULT_HEIGHT);
   games_conf_add_window (GTK_WINDOW (app), KEY_GEOMETRY_GROUP);
 
   g_signal_connect (G_OBJECT (app), "delete_event",
@@ -292,13 +299,27 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (game_area), "expose-event",
 		    G_CALLBACK (expose_cb), NULL);
 
+  hbox = gtk_hbox_new (FALSE, 0);
+
   gridframe = games_grid_frame_new (GAME_WIDTH, GAME_HEIGHT);
   gtk_container_add (GTK_CONTAINER (gridframe), game_area);
+
+  clutter_widget = gtk_clutter_embed_new ();
+  gtk_widget_set_size_request (GTK_WIDGET(clutter_widget), 
+                               MINIMUM_TILE_WIDTH * GAME_WIDTH, 
+                               MINIMUM_TILE_HEIGHT * GAME_HEIGHT);
+  stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (clutter_widget));
+  clutter_stage_set_color (CLUTTER_STAGE (stage), &stage_color);
+  clutter_actor_show (stage);
+
+  gtk_box_pack_start (GTK_BOX (hbox), gridframe, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), clutter_widget, TRUE, TRUE, 0);
+
 
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), menubar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), gridframe, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), statusbar, FALSE, FALSE, 0);
 
   gtk_container_add (GTK_CONTAINER (app), vbox);
