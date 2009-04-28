@@ -199,7 +199,7 @@ int
 main (int argc, char *argv[])
 {
   GtkWidget *errordialog;
-  GtkWidget *vbox, *menubar, *toolbar, *statusbar, *gridframe, *hbox, *clutter_widget;
+  GtkWidget *vbox, *menubar, *toolbar, *statusbar, *gridframe, *hbox, *clutter_widget, *clutter_gridframe;
   GtkUIManager *ui_manager;
   GOptionContext *context;
   struct timeval tv;
@@ -209,7 +209,7 @@ main (int argc, char *argv[])
 #ifdef WITH_SMCLIENT
   EggSMClient *sm_client;
 #endif /* WITH_SMCLIENT */
-  ClutterColor stage_color = { 0x00, 0x00, 0x00, 0xff };
+  ClutterColor stage_color = { 0x20, 0x20, 0xA0, 0xff };
 
   gtk_clutter_init (&argc, &argv);
 
@@ -299,22 +299,24 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (game_area), "expose-event",
 		    G_CALLBACK (expose_cb), NULL);
 
-  hbox = gtk_hbox_new (FALSE, 0);
 
   gridframe = games_grid_frame_new (GAME_WIDTH, GAME_HEIGHT);
   gtk_container_add (GTK_CONTAINER (gridframe), game_area);
 
+
   clutter_widget = gtk_clutter_embed_new ();
+  clutter_gridframe = games_grid_frame_new (GAME_WIDTH, GAME_HEIGHT);
+  gtk_container_add (GTK_CONTAINER (clutter_gridframe), clutter_widget);
+
   gtk_widget_set_size_request (GTK_WIDGET(clutter_widget), 
-                               MINIMUM_TILE_WIDTH * GAME_WIDTH, 
-                               MINIMUM_TILE_HEIGHT * GAME_HEIGHT);
+			       MINIMUM_TILE_WIDTH * GAME_WIDTH,
+			       MINIMUM_TILE_HEIGHT * GAME_HEIGHT);
   stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (clutter_widget));
   clutter_stage_set_color (CLUTTER_STAGE (stage), &stage_color);
-  clutter_actor_show (stage);
 
+  hbox = gtk_hbox_new (TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), gridframe, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), clutter_widget, TRUE, TRUE, 0);
-
+  gtk_box_pack_start (GTK_BOX (hbox), clutter_gridframe, TRUE, TRUE, 0);
 
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), menubar, FALSE, FALSE, 0);
@@ -333,6 +335,7 @@ main (int argc, char *argv[])
     gtk_window_move (GTK_WINDOW (app), session_xpos, session_ypos);
   }
 
+  clutter_actor_show (stage);
   gtk_widget_show_all (app);
 
   if (!load_game_configs ()) {
