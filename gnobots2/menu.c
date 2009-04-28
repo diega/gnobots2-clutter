@@ -25,6 +25,7 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <clutter/clutter.h>
 
 #include <libgames-support/games-help.h>
 #include <libgames-support/games-stock.h>

@@ -24,6 +24,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <clutter/clutter.h>
 
 #include <libgames-support/games-preimage.h>
 #include <libgames-support/games-runtime.h>

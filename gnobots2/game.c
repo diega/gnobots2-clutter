@@ -26,6 +26,7 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <clutter/clutter.h>
 
 #include <libgames-support/games-scores.h>
 #include <libgames-support/games-scores-dialog.h>
@@ -1474,5 +1475,18 @@ move_cb (GtkWidget * widget, GdkEventMotion * e, gpointer data)
 
   return TRUE;
 }
+
+gboolean
+clutter_move_cb (GtkWidget * widget, GdkEventMotion * e, gpointer data)
+{
+  int dx, dy;
+
+  get_dir (e->x, e->y, &dx, &dy);
+
+  set_clutter_cursor_by_direction (e->x, e->y, dx, dy);
+
+  return TRUE;
+}
+
 
 /**********************************************************************/

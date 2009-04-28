@@ -26,6 +26,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+#include <clutter/clutter.h>
 
 #include <libgames-support/games-frame.h>
 #include <libgames-support/games-controls.h>

@@ -22,10 +22,13 @@
 
 #include <config.h>
 #include <gtk/gtk.h>
+#include <clutter/clutter.h>
+#include <libgames-support/games-scores.h>
 
 #include "cursors.h"
 #include "game.h"
 #include "gbdefs.h"
+#include "gnobots.h"
 
 #define d_width 20
 #define d_height 20
@@ -230,6 +233,7 @@ cursor_props cursor_list[] = { {ul_bits, ul_mask_bits, 20, 20, 3, 3, NULL},
 
 
 GdkCursor *default_cursor;
+ClutterActor *clutter_cursor = NULL;
 
 void
 make_cursors (void)
@@ -281,4 +285,47 @@ set_cursor_by_direction (GdkWindow * window, int dx, int dy)
   index = 3 * dy + dx + 4;
 
   gdk_window_set_cursor (window, cursor_list[index].cursor);
+}
+
+void
+set_clutter_cursor_by_direction(int x, int y, int dx, int dy)
+{
+  int index, rotation;
+  if (NULL == clutter_cursor)
+  {
+    clutter_cursor = clutter_texture_new_from_file ("img/arrow.png", NULL);
+    clutter_container_add_actor (CLUTTER_CONTAINER (stage), clutter_cursor);
+    clutter_actor_set_anchor_point_from_gravity (clutter_cursor, CLUTTER_GRAVITY_CENTER);
+    clutter_actor_set_scale (clutter_cursor, 0.25, 0.25);
+  }
+  clutter_actor_set_position (clutter_cursor, x, y);
+  index = 3 * dy + dx + 4;
+  switch (index){
+  case 0:
+    rotation = 315;
+    break;
+  case 1:
+    rotation = 0;
+    break;
+  case 2:
+    rotation = 45;
+    break;
+  case 3:
+    rotation = 270;
+    break;
+  case 5:
+    rotation = 90;
+    break;
+  case 6:
+    rotation = 225;
+    break;
+  case 7:
+    rotation = 180;
+    break;
+  case 8:
+    rotation = 135;
+    break;
+  }
+  clutter_actor_set_rotation (clutter_cursor, CLUTTER_Z_AXIS, rotation, 0, 0, 0);
+
 }

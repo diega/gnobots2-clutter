@@ -184,6 +184,15 @@ quit_sm_cb (EggSMClient *client,
 }
 #endif /* WITH_SMCLIENT */
 
+void
+prepare_clutter (GtkClutterEmbed *embed){
+  g_signal_connect (G_OBJECT (embed), "motion-notify-event",
+                    G_CALLBACK (clutter_move_cb), NULL);
+
+  ClutterColor stage_color = { 0x20, 0x20, 0xA0, 0xff };
+  clutter_stage_set_color (CLUTTER_STAGE (stage), &stage_color);
+  clutter_stage_hide_cursor (CLUTTER_STAGE (stage));
+}
 /**
  * main
  * @argc: number of arguments
@@ -209,7 +218,6 @@ main (int argc, char *argv[])
 #ifdef WITH_SMCLIENT
   EggSMClient *sm_client;
 #endif /* WITH_SMCLIENT */
-  ClutterColor stage_color = { 0x20, 0x20, 0xA0, 0xff };
 
   gtk_clutter_init (&argc, &argv);
 
@@ -305,14 +313,15 @@ main (int argc, char *argv[])
 
 
   clutter_widget = gtk_clutter_embed_new ();
+  stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (clutter_widget));
   clutter_gridframe = games_grid_frame_new (GAME_WIDTH, GAME_HEIGHT);
   gtk_container_add (GTK_CONTAINER (clutter_gridframe), clutter_widget);
 
   gtk_widget_set_size_request (GTK_WIDGET(clutter_widget), 
 			       MINIMUM_TILE_WIDTH * GAME_WIDTH,
 			       MINIMUM_TILE_HEIGHT * GAME_HEIGHT);
-  stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (clutter_widget));
-  clutter_stage_set_color (CLUTTER_STAGE (stage), &stage_color);
+ 
+  prepare_clutter (GTK_CLUTTER_EMBED (clutter_widget));
 
   hbox = gtk_hbox_new (TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), gridframe, TRUE, TRUE, 0);

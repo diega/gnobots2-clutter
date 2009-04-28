@@ -26,5 +26,6 @@
 void make_cursors (void);
 void set_cursor_default (GdkWindow * window);
 void set_cursor_by_direction (GdkWindow * window, int dx, int dy);
+void set_clutter_cursor_by_direction (int x, int y, int dx, int dy);
 
 #endif
