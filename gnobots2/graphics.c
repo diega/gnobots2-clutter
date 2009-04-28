@@ -389,6 +389,16 @@ draw_tile_pixmap (gint tileno, gint x, gint y, GtkWidget * area)
   }
 }
 
+void
+move_clutter_object (gint x, gint y, ClutterActor* actor){
+  x *= tile_width;
+  y *= tile_height;
+
+  x += tile_width / 2;
+  y += tile_height /2;
+
+  clutter_actor_set_position (actor, x, y);
+}
 
 /**
  * draw_object

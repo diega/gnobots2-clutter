@@ -189,6 +189,8 @@ prepare_clutter (GtkClutterEmbed *embed){
   g_signal_connect (G_OBJECT (embed), "motion-notify-event",
                     G_CALLBACK (clutter_move_cb), NULL);
 
+  g_signal_connect (G_OBJECT (embed), "button-press-event",
+		    G_CALLBACK (mouse_cb), NULL);
   ClutterColor stage_color = { 0x20, 0x20, 0xA0, 0xff };
   clutter_stage_set_color (CLUTTER_STAGE (stage), &stage_color);
   clutter_stage_hide_cursor (CLUTTER_STAGE (stage));

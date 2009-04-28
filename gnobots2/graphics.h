@@ -26,6 +26,7 @@ void draw_bubble (void);
 
 void draw_tile_pixmap (gint, gint, gint, GtkWidget *);
 void draw_object (gint, gint, gint);
+void move_clutter_object (gint, gint, ClutterActor *);
 void clear_game_area (void);
 void animate_game_graphics (void);
 void reset_player_animation (void);
