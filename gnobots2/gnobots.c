@@ -385,6 +385,11 @@ main (int argc, char *argv[])
 
   init_game ();
 
+  //it's important to keep this callback after the game initialization
+  //because will try to resize before the objects exists in the stage
+  g_signal_connect (G_OBJECT (clutter_widget), "size-allocate",
+                    G_CALLBACK (resize_clutter_cb), NULL);
+
   if (cmdline_scenario) {
     set_game_graphics (cmdline_scenario);
   }

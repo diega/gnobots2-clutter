@@ -390,38 +390,69 @@ check_location (gint x, gint y)
   return arena[x][y];
 }
 
-static ClutterActor* 
-add_player(gint x, gint y)
-{
-  ClutterActor *player = clutter_texture_new_from_file ("img/player.png", NULL);
-  clutter_container_add_actor (CLUTTER_CONTAINER (stage), player);
-  clutter_actor_set_anchor_point_from_gravity (player, CLUTTER_GRAVITY_CENTER);
-  clutter_actor_set_scale (player, 0.4, 0.4);
-  move_clutter_object(x, y, player);
+static ClutterActor*
+get_player(){
+  if (player == NULL){
+    player = clutter_texture_new_from_file ("img/player.png", NULL);
+    clutter_container_add_actor (CLUTTER_CONTAINER (stage), player);
+    clutter_actor_set_anchor_point_from_gravity (player, CLUTTER_GRAVITY_CENTER);
+    clutter_actor_set_scale (player, 0.4, 0.4);
+  }
   return player;
 }
 
-static ClutterActor*
-add_robot1(gint x, gint y)
-{
-  ClutterActor *robot1 = clutter_texture_new_from_file ("img/robot1.png", NULL);
-  clutter_container_add_actor (CLUTTER_CONTAINER (stage), robot1);
-  clutter_actor_set_anchor_point_from_gravity (robot1, CLUTTER_GRAVITY_CENTER);
-  clutter_actor_set_scale (robot1, 0.4, 0.4);
-  move_clutter_object(x, y, robot1);
-  return robot1;
+gboolean
+robot1_exists(gint x, gint y){
+  return NULL != robots1[x][y];
 }
 
 static ClutterActor*
-add_robot2(gint x, gint y)
-{
-  ClutterActor *robot2 = clutter_texture_new_from_file ("img/robot2.png", NULL);
-  clutter_container_add_actor (CLUTTER_CONTAINER (stage), robot2);
-  clutter_actor_set_anchor_point_from_gravity (robot2, CLUTTER_GRAVITY_CENTER);
-  clutter_actor_set_scale (robot2, 0.4, 0.4);
-  move_clutter_object(x, y, robot2);
-  return robot2;
+get_robot1(gint x, gint y){
+  ClutterActor *robot = robots1[x][y];
+  if (NULL == robot){
+    robot = clutter_texture_new_from_file ("img/robot1.png", NULL);
+    robots1[x][y] = robot;
+    clutter_container_add_actor (CLUTTER_CONTAINER (stage), robot);
+    clutter_actor_set_anchor_point_from_gravity (robot, CLUTTER_GRAVITY_CENTER);
+    clutter_actor_set_scale (robot, 0.4, 0.4);
+  }
+  return robot;
 }
+
+gboolean
+robot2_exists(gint x, gint y){
+  return NULL != robots2[x][y];
+}
+
+static ClutterActor*
+get_robot2(gint x, gint y){
+  ClutterActor *robot = robots2[x][y];
+  if (NULL == robot){
+    robot = clutter_texture_new_from_file ("img/robot2.png", NULL);
+    robots2[x][y] = robot;
+    clutter_container_add_actor (CLUTTER_CONTAINER (stage), robot);
+    clutter_actor_set_anchor_point_from_gravity (robot, CLUTTER_GRAVITY_CENTER);
+    clutter_actor_set_scale (robot, 0.4, 0.4);
+  }
+  return robot;
+}
+
+void
+resize_clutter_cb (GtkWidget *widget, GtkAllocation *allocation, gpointer data)
+{
+  gint i, j;
+
+  scale_clutter_object(player_xpos, player_ypos, allocation->width, allocation->height, get_player());
+  for (i = 0; i < GAME_WIDTH; ++i) {
+    for (j = 0; j < GAME_HEIGHT; ++j) {
+      if (robot1_exists(i, j))
+        scale_clutter_object(i, j, allocation->width, allocation->height, get_robot1(i, j));
+      else if (robot2_exists(i, j))
+        scale_clutter_object(i, j, allocation->width, allocation->height, get_robot2(i, j));
+    }
+  }
+}
+
 
 /**
  * generate_level
@@ -441,7 +472,7 @@ generate_level (void)
   arena[PLAYER_DEF_XPOS][PLAYER_DEF_YPOS] = OBJECT_PLAYER;
   player_xpos = PLAYER_DEF_XPOS;
   player_ypos = PLAYER_DEF_YPOS;
-  player = add_player(PLAYER_DEF_XPOS, PLAYER_DEF_YPOS);
+  move_clutter_object(PLAYER_DEF_XPOS, PLAYER_DEF_YPOS, get_player());
 
   num_robots1 = game_config ()->initial_type1 +
     game_config ()->increment_type1 * current_level;
@@ -485,7 +516,7 @@ generate_level (void)
       yp = rand () % GAME_HEIGHT;
 
       if (check_location (xp, yp) == OBJECT_NONE) {
-        robots1[xp][yp] = add_robot1(xp, yp);
+        move_clutter_object(xp, yp, get_robot1(xp, yp));
 	arena[xp][yp] = OBJECT_ROBOT1;
 	break;
       }
@@ -499,7 +530,7 @@ generate_level (void)
       yp = rand () % GAME_HEIGHT;
 
       if (check_location (xp, yp) == OBJECT_NONE) {
-        robots2[xp][yp] = add_robot2(xp, yp);
+        move_clutter_object(xp, yp, get_robot2(xp, yp));
 	arena[xp][yp] = OBJECT_ROBOT2;
 	break;
       }
@@ -1178,21 +1209,14 @@ safe_teleport_available (void)
   return FALSE;
 }
 
-void
-move_clutter_player (gint x, gint y)
-{
-  move_clutter_object ( x, y, player);
-}
-
 void move_clutter_robot (gint origx, gint origy, gint x, gint y)
 {
-  if (NULL != robots1[origx][origy])
+  if (robot1_exists(origx, origy))
   {
     move_clutter_object( x, y, robots1[origx][origy]);
     robots1[x][y] = robots1[origx][origy];
     robots1[origx][origy] = NULL;
-  }
-  if (NULL != robots2[origx][origy])
+  } else if (robot2_exists(origx, origy))
   {
     move_clutter_object( x, y, robots2[origx][origy]);
     robots2[x][y] = robots2[origx][origy];
@@ -1247,7 +1271,7 @@ player_move (gint dx, gint dy)
 
   if (temp_arena[player_xpos][player_ypos] == OBJECT_NONE) {
     temp_arena[player_xpos][player_ypos] = OBJECT_PLAYER;
-    move_clutter_player(player_xpos, player_ypos);
+    move_clutter_object(player_xpos, player_ypos, get_player());
   }
 
   reset_player_animation ();
@@ -1295,7 +1319,7 @@ random_teleport (void)
       player_ypos = yp;
       temp_arena[player_xpos][player_ypos] = OBJECT_PLAYER;
 
-      move_clutter_player(player_xpos, player_ypos);
+      move_clutter_object (player_xpos, player_ypos, get_player());
 
       reset_player_animation ();
 

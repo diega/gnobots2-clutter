@@ -30,6 +30,7 @@ void start_new_game (void);
 gboolean mouse_cb (GtkWidget * widget, GdkEventButton * e, gpointer data);
 gboolean move_cb (GtkWidget * widget, GdkEventMotion * e, gpointer data);
 gboolean clutter_move_cb (GtkWidget * widget, GdkEventMotion * e, gpointer data);
+void resize_clutter_cb (GtkWidget *widget, GtkAllocation *allocation, gpointer data);
 
 /**********************************************************************/
 

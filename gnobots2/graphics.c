@@ -400,6 +400,21 @@ move_clutter_object (gint x, gint y, ClutterActor* actor){
   clutter_actor_set_position (actor, x, y);
 }
 
+void
+scale_clutter_object (gint orig_x, gint orig_y, gint width, gint height, ClutterActor* actor)
+{
+  gint x, y, dx, dy;
+
+  dx = width / GAME_WIDTH;
+  dy = height / GAME_HEIGHT;
+  x = orig_x * dx;
+  y = orig_y * dy;
+  x += dx / 2;
+  y += dy / 2;
+
+  clutter_actor_set_position ( actor, x, y);
+}
+
 /**
  * draw_object
  * @x: x position 
