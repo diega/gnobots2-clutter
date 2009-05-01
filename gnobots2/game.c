@@ -74,6 +74,7 @@ static gint temp_arena[GAME_WIDTH][GAME_HEIGHT];
 static ClutterActor *player;
 static ClutterActor *robots2[GAME_WIDTH][GAME_HEIGHT];
 static ClutterActor *robots1[GAME_WIDTH][GAME_HEIGHT];
+static ClutterActor *explosions[GAME_WIDTH][GAME_HEIGHT];
 
 /**********************************************************************/
 
@@ -103,6 +104,19 @@ static gboolean safe_teleport_available (void);
 static gboolean player_move (gint dx, gint dy);
 static gboolean random_teleport (void);
 static gboolean safe_teleport (void);
+
+static ClutterActor* get_player ();
+gboolean robot1_exists (gint x, gint y);
+static ClutterActor* get_robot1 (gint x, gint y);
+gboolean robot2_exists (gint x, gint y);
+static ClutterActor* get_robot2 (gint x, gint y);
+void move_clutter_robot (gint origx, gint origy, gint x, gint y);
+void delete_clutter_robot (gint x, gint y);
+void delete_clutter_actor (ClutterActor *actor);
+gboolean explosion_exists (gint x, gint y);
+static ClutterActor* get_explosion (gint x, gint y);
+void move_explosion (gint origx, gint origy, gint x, gint y);
+
 /**********************************************************************/
 
 
@@ -339,11 +353,20 @@ clear_arena (void)
     for (j = 0; j < GAME_HEIGHT; ++j) {
       arena[i][j] = OBJECT_NONE;
       old_arena[i][j] = OBJECT_FOO;
+
+      if (explosion_exists (i, j))
+        delete_clutter_actor (get_explosion(i, j));
+      explosions[i][j] = NULL;
     }
   }
 
   num_robots1 = 0;
   num_robots2 = 0;
+
+  delete_clutter_actor (get_player());
+  player = NULL;
+  
+  //clutter_group_remove_all ( CLUTTER_GROUP (stage));
 }
 
 /**
@@ -438,8 +461,72 @@ get_robot2(gint x, gint y){
 }
 
 void
+move_explosion (gint origx, gint origy, gint x, gint y)
+{
+  move_clutter_object(x, y, explosions[origx][origy]);
+  explosions[x][y] = explosions[origx][origy];
+  explosions[origx][origy] = NULL;
+}
+
+void
+move_clutter_robot (gint origx, gint origy, gint x, gint y)
+{
+  if (robot1_exists(origx, origy))
+  {
+    move_clutter_object( x, y, robots1[origx][origy]);
+    robots1[x][y] = robots1[origx][origy];
+    robots1[origx][origy] = NULL;
+  } else if (robot2_exists(origx, origy))
+  {
+    move_clutter_object( x, y, robots2[origx][origy]);
+    robots2[x][y] = robots2[origx][origy];
+    robots2[origx][origy] = NULL;
+  }
+}
+
+void
+delete_clutter_robot (gint x, gint y)
+{
+  if (robot1_exists(x, y))
+  {
+    delete_clutter_actor(robots1[x][y]);
+    robots1[x][y] = NULL;
+  } else if (robot2_exists(x, y))
+  {
+    clutter_actor_hide (robots2[x][y]);
+    clutter_actor_destroy (robots2[x][y]);
+    robots2[x][y] = NULL;
+  }
+}
+
+void
+delete_clutter_actor (ClutterActor* actor){
+  clutter_actor_hide (actor);
+  clutter_actor_destroy (actor);
+}
+
+gboolean
+explosion_exists(gint x, gint y){
+  return NULL != explosions[x][y];
+}
+
+static ClutterActor*
+get_explosion(gint x, gint y){
+  ClutterActor *explosion = explosions[x][y];
+  if (NULL == explosion){
+    explosion = clutter_texture_new_from_file ("img/explosion.png", NULL);
+    explosions[x][y] = explosion;
+    clutter_container_add_actor (CLUTTER_CONTAINER (stage), explosion);
+    clutter_actor_set_anchor_point_from_gravity (explosion, CLUTTER_GRAVITY_CENTER);
+    clutter_actor_set_scale (explosion, 0.4, 0.4);
+  }
+  return explosion;
+}
+
+void
 resize_clutter_cb (GtkWidget *widget, GtkAllocation *allocation, gpointer data)
 {
+  g_printf("me llaman\n");
   gint i, j;
 
   scale_clutter_object(player_xpos, player_ypos, allocation->width, allocation->height, get_player());
@@ -449,6 +536,8 @@ resize_clutter_cb (GtkWidget *widget, GtkAllocation *allocation, gpointer data)
         scale_clutter_object(i, j, allocation->width, allocation->height, get_robot1(i, j));
       else if (robot2_exists(i, j))
         scale_clutter_object(i, j, allocation->width, allocation->height, get_robot2(i, j));
+      if (explosion_exists(i, j))
+        scale_clutter_object(i, j, allocation->width, allocation->height, get_explosion(i, j));
     }
   }
 }
@@ -467,7 +556,6 @@ generate_level (void)
   gint xp, yp;
 
   clear_arena ();
-  clutter_group_remove_all (stage);
 
   arena[PLAYER_DEF_XPOS][PLAYER_DEF_YPOS] = OBJECT_PLAYER;
   player_xpos = PLAYER_DEF_XPOS;
@@ -843,11 +931,15 @@ move_all_robots (void)
 
 	if (temp_arena[nx][ny] == OBJECT_HEAP) {
 	  add_kill (arena[i][j]);
+          delete_clutter_robot (i, j);
 	} else if ((temp_arena[nx][ny] == OBJECT_ROBOT1) ||
 		   (temp_arena[nx][ny] == OBJECT_ROBOT2)) {
 	  add_kill (arena[i][j]);
 	  add_kill (temp_arena[nx][ny]);
 	  temp_arena[nx][ny] = OBJECT_HEAP;
+          delete_clutter_robot (i, j);
+          delete_clutter_robot (nx, ny);
+          move_clutter_object(nx, ny, get_explosion(nx, ny));
 	} else {
 	  temp_arena[nx][ny] = arena[i][j];
           move_clutter_robot(i, j, nx, ny);
@@ -898,11 +990,15 @@ move_type2_robots (void)
 
 	if (temp_arena[nx][ny] == OBJECT_HEAP) {
 	  add_kill (arena[i][j]);
+          delete_clutter_robot (i, j);
 	} else if ((temp_arena[nx][ny] == OBJECT_ROBOT1) ||
 		   (temp_arena[nx][ny] == OBJECT_ROBOT2)) {
 	  add_kill (arena[i][j]);
 	  add_kill (temp_arena[nx][ny]);
 	  temp_arena[nx][ny] = OBJECT_HEAP;
+          delete_clutter_robot (i, j);
+          delete_clutter_robot (nx, ny);
+          move_clutter_object(nx, ny, get_explosion(nx, ny));
 	} else {
 	  temp_arena[nx][ny] = arena[i][j];
           move_clutter_robot(i, j, nx, ny);
@@ -1076,6 +1172,7 @@ push_heap (gint x, gint y, gint dx, gint dy)
   temp_arena[nx][ny] = OBJECT_HEAP;
   temp_arena[x][y] = OBJECT_NONE;
 
+  move_explosion(x, y, nx, ny);
   return TRUE;
 }
 
@@ -1207,21 +1304,6 @@ safe_teleport_available (void)
   }
 
   return FALSE;
-}
-
-void move_clutter_robot (gint origx, gint origy, gint x, gint y)
-{
-  if (robot1_exists(origx, origy))
-  {
-    move_clutter_object( x, y, robots1[origx][origy]);
-    robots1[x][y] = robots1[origx][origy];
-    robots1[origx][origy] = NULL;
-  } else if (robot2_exists(origx, origy))
-  {
-    move_clutter_object( x, y, robots2[origx][origy]);
-    robots2[x][y] = robots2[origx][origy];
-    robots2[origx][origy] = NULL;
-  }
 }
 
 /**
