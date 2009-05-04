@@ -22,7 +22,6 @@
 #include <config.h>
 
 #include <libgames-support/games-scores.h>
-#include <libgames-support/games-sound.h>
 #include <libgames-support/games-conf.h>
 #include <libgames-support/games-runtime.h>
 #include <clutter-gtk/clutter-gtk.h>
@@ -53,7 +52,6 @@ main(int argc, char *argv[])
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 	g_option_context_add_group (context, clutter_get_option_group_without_init ());
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
-	games_sound_add_option_group (context);
 
 	retval = g_option_context_parse (context, &argc, &argv, &error);
 	g_option_context_free (context);
