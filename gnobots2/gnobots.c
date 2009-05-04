@@ -322,7 +322,7 @@ main (int argc, char *argv[])
   clutter_gridframe = games_grid_frame_new (GAME_WIDTH, GAME_HEIGHT);
   gtk_container_add (GTK_CONTAINER (clutter_gridframe), clutter_widget);
 
-  gtk_widget_set_size_request (GTK_WIDGET(clutter_widget), 
+  gtk_widget_set_size_request (GTK_WIDGET(clutter_widget),
 			       MINIMUM_TILE_WIDTH * GAME_WIDTH,
 			       MINIMUM_TILE_HEIGHT * GAME_HEIGHT);
  
