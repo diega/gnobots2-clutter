@@ -116,17 +116,17 @@ void Renderer::rescaleCache (gint x, gint y)
 		for (int i = 0; i<NCOLOURS; i++) {
 			clutter_actor_set_size (CLUTTER_ACTOR(cache[i]),
 						pxwidth, pxheight);
-			clutter_cairo_surface_resize (CLUTTER_CAIRO(cache[i]),
-						      pxwidth, pxheight);
-			cairo_t *cr = clutter_cairo_create (CLUTTER_CAIRO(cache[i]));
+			clutter_cairo_texture_set_surface_size (CLUTTER_CAIRO_TEXTURE(cache[i]),
+								pxwidth, pxheight);
+			cairo_t *cr = clutter_cairo_texture_create (CLUTTER_CAIRO_TEXTURE(cache[i]));
 			cairo_scale(cr, 1.0 * pxwidth, 1.0 * pxheight);
 			drawCell (cr, i);
 			cairo_destroy (cr);
 		}
 	} else {
 		for (int i = 0; i<NCOLOURS; i++) {
-			cache[i] = clutter_cairo_new (pxwidth, pxheight);
-			cairo_t *cr = clutter_cairo_create (CLUTTER_CAIRO(cache[i]));
+			cache[i] = clutter_cairo_texture_new (pxwidth, pxheight);
+			cairo_t *cr = clutter_cairo_texture_create (CLUTTER_CAIRO_TEXTURE(cache[i]));
 			cairo_scale(cr, 1.0 * pxwidth, 1.0 * pxheight);
 			drawCell (cr, i);
 			cairo_destroy (cr);

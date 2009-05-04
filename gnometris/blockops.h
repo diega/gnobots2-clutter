@@ -45,20 +45,31 @@ public:
 
 	int x;
 	int y;
-	static ClutterTimeline *fall_tml;
-	static ClutterAlpha *fall_alpha;
-	ClutterBehaviour *fall_path;
-	static ClutterTimeline *explode_tml;
-	static ClutterEffectTemplate *explode_tmpl;
 
 	void createActor (ClutterActor *chamber, ClutterActor *texture_source);
 	void associateActor (ClutterActor *chamber, ClutterActor *other_actor);
 
-	static GList *destroy_actors;
-	static GList *fall_behaviours;
-	static void explode_end (ClutterTimeline *timeline, gpointer *f);
+	static GList *destroy_blocks;
+
+	/* These statics are here because you only need one timeline that can
+	 * be shared among all behaviours and because 'fade' affects all blocks
+	 * equally regardless of their position, so why have more than one since
+	 * a behaviour can have many actors? */
+	static ClutterBehaviour *explode_fade_behaviour;
+	static ClutterTimeline *move_time;
+	static ClutterTimeline *explode_time;
+	static ClutterTimeline *fall_time;
+
+	/* But every block will have a unique position */
+	ClutterBehaviour *move_behaviour;
+	ClutterBehaviour *explode_move_behaviour;
+	ClutterBehaviour *fall_behaviour;
+
 	static void move_end (ClutterTimeline *timeline, gpointer *data);
-	static void fall_end (ClutterTimeline *timeline, BlockOps *f);
+	static void explode_end (ClutterTimeline *timeline, gpointer *data);
+	static void fall_end (ClutterTimeline *timeline, BlockOps *data);
+
+	static void reap_block (Block *block);
 };
 
 class BlockOps {
@@ -90,6 +101,8 @@ public:
 	void hideGameOverMessage ();
 	void setTheme (gint id);
 	void drawMessage ();
+
+	float quake_ratio;
 
 	GtkWidget *getWidget () {
 		return w;
@@ -135,23 +148,12 @@ private:
 	int posy_old;
 
 	ClutterActor *playingField;
-	static guint32 earthquake_alpha_func (ClutterAlpha *alpha, gpointer data);
-	static ClutterTimeline *long_anim_tml;
-	static ClutterEffectTemplate *effect_earthquake;
-
-	float quake_ratio;
 
 	int center_anchor_x;
 	int center_anchor_y;
 
-	ClutterTimeline *move_block_tml;
-	ClutterAlpha *move_block_alpha;
-	ClutterBehaviour *move_path[4][4];
-
-	static void move_end (ClutterTimeline *tml, BlockOps *f);
-
-	static gboolean resize(GtkWidget *widget, GtkAllocation *event,
-					   BlockOps *field);
+	static gboolean resize (GtkWidget *widget, GtkAllocation *event,
+				BlockOps *field);
 };
 
 #endif //__blockops_h__

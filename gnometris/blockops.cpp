@@ -1,6 +1,7 @@
 /* -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:true -*- */
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
+ * massively altered for Clutter by Jason D. Clinton <me@jasonclinton.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,42 +27,65 @@
 
 #define FONT "Sans Bold"
 
-GList *Block::destroy_actors = NULL;
-GList *Block::fall_behaviours = NULL;
-ClutterTimeline *Block::fall_tml = NULL;
-ClutterAlpha *Block::fall_alpha = NULL;
-ClutterTimeline *Block::explode_tml = NULL;
-ClutterEffectTemplate *Block::explode_tmpl = NULL;
+GList *Block::destroy_blocks = NULL;
+ClutterBehaviour *Block::explode_fade_behaviour = NULL;
+ClutterTimeline *Block::move_time = NULL;
+ClutterTimeline *Block::explode_time = NULL;
+ClutterTimeline *Block::fall_time = NULL;
 
 void
-Block::explode_end (ClutterTimeline *tml, gpointer *f)
+Block::move_end (ClutterTimeline *tml, gpointer *f)
 {
-	ClutterActor *tmp_actor = NULL;
-	g_list_foreach (destroy_actors,
-			(GFunc)clutter_actor_destroy,
-			tmp_actor);
-	g_list_free (destroy_actors);
-	destroy_actors = NULL;
+	for (int x = 0; x < 4; ++x)
+		for (int y = 0; y < 4; ++y) {
+//			clutter_behaviour_remove_all (f->move_behaviour[x][y]);
+//			clutter_behaviour_path_clear ((ClutterBehaviourPath *) f->move_behaviour[x][y]);
+		}
 }
 
 void
-Block::fall_end (ClutterTimeline *tml, BlockOps *f)
+Block::explode_end (ClutterTimeline *tml, gpointer *data)
 {
-	ClutterBehaviour *tmp_behav = NULL;
-	if (fall_behaviours) {
-		g_list_foreach (fall_behaviours,
-				(GFunc)clutter_behaviour_remove_all,
-				tmp_behav);
-		//FIXME unref this too when it doesn't blow up
-	}
-	g_list_free (fall_behaviours);
-	fall_behaviours = NULL;
+	Block *block;
+	g_list_foreach (destroy_blocks,
+			(GFunc)Block::reap_block,
+			block);
+	g_list_free (destroy_blocks);
+}
 
-	//FIXME jclinton maybe this should be part of a ClutterScore?
-	clutter_actor_set_position (CLUTTER_ACTOR(f->playingField),
-			f->center_anchor_x, f->center_anchor_y + f->cell_height * f->quake_ratio);
-	clutter_effect_move (f->effect_earthquake, f->playingField,
-			f->center_anchor_x, f->center_anchor_y, NULL, NULL);
+void
+Block::fall_end (ClutterTimeline *tml, BlockOps *data)
+{
+	ClutterBehaviour *tmp_behave;
+//	if (fall_behaviours) {
+//		g_list_foreach (fall_behaviours,
+//				(GFunc)clutter_behaviour_remove_all,
+//				tmp_behave);
+//	}
+//	g_list_free (fall_behaviours);
+
+	//After fall, start the earthquake effect.
+	ClutterTimeline *tmp_timeline = clutter_timeline_new_for_duration
+						(120);
+	ClutterAlpha *tmp_alpha = clutter_alpha_new_full (tmp_timeline,
+					CLUTTER_EASE_OUT_ELASTIC);
+	ClutterPath *tmp_path = clutter_path_new ();
+	clutter_path_add_move_to (tmp_path, data->center_anchor_x,
+				 data->center_anchor_y);
+	clutter_path_add_move_to (tmp_path, data->center_anchor_x,
+				 data->center_anchor_y + data->cell_height *
+				 data->quake_ratio);
+	tmp_behave = clutter_behaviour_path_new (tmp_alpha, tmp_path);
+	clutter_behaviour_apply (tmp_behave, CLUTTER_ACTOR (data->playingField));
+	g_object_unref (tmp_timeline);
+	g_object_unref (tmp_alpha);
+}
+
+/* fuck C++ */
+void
+Block::reap_block (Block *block)
+{
+	delete block;
 }
 
 Block::Block ():
@@ -69,28 +93,29 @@ Block::Block ():
 	actor(NULL),
 	x(0),
 	y(0),
-	fall_path(NULL)
+	move_behaviour(NULL),
+	explode_move_behaviour(NULL),
+	fall_behaviour(NULL)
 {
-	if (!fall_tml)
-		fall_tml = clutter_timeline_new_for_duration (120);
-	if (!fall_alpha)
-		fall_alpha = clutter_alpha_new_full (fall_tml, CLUTTER_ALPHA_RAMP_INC,
-				NULL, NULL);
-	if (!explode_tml)
-		explode_tml = clutter_timeline_new_for_duration (360);
-	if (!explode_tmpl) {
-		explode_tmpl = clutter_effect_template_new (explode_tml,
-				CLUTTER_ALPHA_SINE_INC);
-		clutter_effect_template_set_timeline_clone (explode_tmpl, FALSE);
-	}
+	if (!move_time)
+		move_time = clutter_timeline_new_for_duration (60);
+	if (!explode_time)
+		explode_time = clutter_timeline_new_for_duration (120);
+	if (!fall_time)
+		fall_time = clutter_timeline_new_for_duration (120);
+	ClutterAlpha *move_alpha = clutter_alpha_new_full (move_time,
+							   CLUTTER_EASE_OUT_QUAD);
+	move_behaviour = clutter_behaviour_path_new_with_knots (move_alpha,
+								NULL, NULL);
+	g_object_unref (move_alpha);
 }
 
 Block::~Block ()
 {
 	if (actor)
 		clutter_actor_destroy (CLUTTER_ACTOR(actor));
-	if (fall_path)
-		g_object_unref (fall_path);
+	if (move_behaviour)
+		g_object_unref (move_behaviour);
 }
 
 void
@@ -98,7 +123,7 @@ Block::createActor (ClutterActor *chamber, ClutterActor *texture_source)
 {
 	if (actor)
 		clutter_actor_destroy (CLUTTER_ACTOR(actor));
-	actor = clutter_clone_texture_new (CLUTTER_TEXTURE(texture_source));
+	actor = clutter_clone_new (CLUTTER_ACTOR(texture_source));
 	clutter_group_add (CLUTTER_GROUP (chamber), actor);
 	clutter_actor_set_position (CLUTTER_ACTOR(actor), x, y);
 	clutter_actor_show (CLUTTER_ACTOR(actor));
@@ -114,13 +139,17 @@ Block::move_from (Block& b, BlockOps *f)
 		b.color = 0;
 		if (actor) {
 			//this shouldn't happen
-			//destroy_actors = g_list_append (destroy_actors, actor);
+			destroy_blocks = g_list_prepend (destroy_blocks, actor);
 		}
 		if (b.actor) {
 			const ClutterKnot knot_line[] = {{b.x, b.y}, {x, y}};
-			fall_path = clutter_behaviour_path_new (fall_alpha, knot_line, 2);
-			clutter_behaviour_apply (fall_path, b.actor);
-			fall_behaviours = g_list_append (fall_behaviours, fall_path);
+			ClutterAlpha *fall_alpha = clutter_alpha_new_full
+							(fall_time,
+							 CLUTTER_EASE_IN_QUAD);
+			fall_behaviour = clutter_behaviour_path_new_with_knots
+				(fall_alpha, knot_line, 2);
+			clutter_behaviour_apply (fall_behaviour, b.actor);
+			g_object_unref (fall_alpha);
 		}
 		actor = b.actor;
 		b.actor = NULL;
@@ -128,10 +157,8 @@ Block::move_from (Block& b, BlockOps *f)
 	return *this;
 }
 
-ClutterTimeline *BlockOps::long_anim_tml = NULL;
-ClutterEffectTemplate *BlockOps::effect_earthquake = NULL;
-
 BlockOps::BlockOps() :
+	quake_ratio(0.0),
 	background(NULL),
 	foreground(NULL),
 	width(0),
@@ -144,7 +171,6 @@ BlockOps::BlockOps() :
 	rot(0),
 	color(0),
 	backgroundImage(NULL),
-	quake_ratio(0.0),
 	center_anchor_x(0),
 	center_anchor_y(0)
 {
@@ -164,32 +190,12 @@ BlockOps::BlockOps() :
 
 	playingField = clutter_group_new ();
 	clutter_group_add (CLUTTER_GROUP(stage), CLUTTER_ACTOR(playingField));
-
-	long_anim_tml = clutter_timeline_new_for_duration (600);
-	effect_earthquake = clutter_effect_template_new (long_anim_tml, earthquake_alpha_func);
-
-	move_block_tml = clutter_timeline_new_for_duration (60);
-	move_block_alpha = clutter_alpha_new_full (move_block_tml,
-			CLUTTER_ALPHA_RAMP_INC, NULL, NULL);
-	g_signal_connect (move_block_tml, "completed",
-				G_CALLBACK (BlockOps::move_end), this);
-
-	for (int x = 0; x < 4; ++x)
-		for (int y = 0; y < 4; ++y)
-			move_path[x][y] = clutter_behaviour_path_new (move_block_alpha, NULL, 0);
 }
 
 BlockOps::~BlockOps()
 {
 	for (int i = 0; i < COLUMNS; ++i)
 		delete[] field[i];
-
-	g_object_unref (effect_earthquake);
-	g_object_unref (long_anim_tml);
-
-	if (move_path)
-		g_object_unref (move_path);
-
 
 	delete[] field;
 }
@@ -337,25 +343,6 @@ BlockOps::fallingToLaying()
 				field[x][y].what = LAYING;
 }
 
-guint32
-BlockOps::earthquake_alpha_func (ClutterAlpha *alpha, gpointer data)
-{
-	ClutterTimeline *tmp_tml = clutter_alpha_get_timeline (alpha);
-	gdouble t = clutter_timeline_get_current_frame (tmp_tml);
-	gdouble d = clutter_timeline_get_n_frames (tmp_tml);
-	//t = d - t;
-	// Following code is temporary LGPLv2+ code from clutter-0.9. Will be removed in 2.27 cycle
-	// Copyright 2009 held by Intel Corp. (previously OpenedHand)
-	if ((t /= d) < (1 / 2.75))
-		return CLUTTER_ALPHA_MAX_ALPHA * (7.5625 * t * t);
-	else if (t < (2 / 2.75))
-		return CLUTTER_ALPHA_MAX_ALPHA * (7.5625 * (t -= (1.5 / 2.75)) * t + .75);
-	else if (t < (2.5 / 2.75))
-		return CLUTTER_ALPHA_MAX_ALPHA * (7.5625 * (t -= (2.25 / 2.75)) * t + .9375);
-	else
-		return CLUTTER_ALPHA_MAX_ALPHA * (7.5625 * (t -= (2.625 / 2.75)) * t + .984375);
-}
-
 void
 BlockOps::eliminateLine(int l)
 {
@@ -365,15 +352,15 @@ BlockOps::eliminateLine(int l)
 			int cur_x, cur_y = 0;
 			g_object_get (G_OBJECT (field[x][l].actor), "x", &cur_x, "y", &cur_y, NULL);
 			clutter_actor_raise_top (field[x][l].actor);
-			clutter_effect_fade (Block::explode_tmpl, field[x][l].actor, 0, NULL, NULL);
-			clutter_effect_move (Block::explode_tmpl, field[x][l].actor,
-					cur_x + g_random_int_range(-60 - cell_width / 4, 60),
-					cur_y + g_random_int_range(-60 - cell_height / 4, 60),
-					NULL, NULL);
-			clutter_effect_scale (Block::explode_tmpl, field[x][l].actor,
-					1.5, 1.5, NULL, NULL);
-			Block::destroy_actors = g_list_append (Block::destroy_actors,
-							       field[x][l].actor);
+//			clutter_effect_fade (Block::explode_tmpl, field[x][l].actor, 0, NULL, NULL);
+//			clutter_effect_move (Block::explode_tmpl, field[x][l].actor,
+//					cur_x + g_random_int_range(-60 - cell_width / 4, 60),
+//					cur_y + g_random_int_range(-60 - cell_height / 4, 60),
+//					NULL, NULL);
+//			clutter_effect_scale (Block::explode_tmpl, field[x][l].actor,
+//					1.5, 1.5, NULL, NULL);
+			Block::destroy_blocks = g_list_append (Block::destroy_blocks,
+							       &field[x][l]);
 		}
 	}
 }
@@ -420,12 +407,12 @@ BlockOps::checkFullLines()
 
 	if (numFullLines > 0)
 	{
-		g_signal_connect (Block::fall_tml, "completed",
-				G_CALLBACK (Block::fall_end), this);
-		g_signal_connect (Block::explode_tml, "completed",
-				  G_CALLBACK (Block::explode_end), (gpointer) NULL);
-		clutter_timeline_start (Block::fall_tml);
-		clutter_timeline_start (Block::explode_tml);
+//		g_signal_connect (Block::fall_time, "completed",
+//				G_CALLBACK (Block::fall_end), this);
+//		g_signal_connect (Block::explode_tml, "completed",
+//				  G_CALLBACK (Block::explode_end), (gpointer) NULL);
+		clutter_timeline_start (Block::fall_time);
+		clutter_timeline_start (Block::explode_time);
 		quake_ratio = ((float) numCascades) / (float) LINES;
 	}
 
@@ -523,16 +510,6 @@ BlockOps::putBlockInField (SlotType fill)
 }
 
 void
-BlockOps::move_end (ClutterTimeline *tml, BlockOps *f)
-{
-	for (int x = 0; x < 4; ++x)
-		for (int y = 0; y < 4; ++y) {
-			clutter_behaviour_remove_all (f->move_path[x][y]);
-			clutter_behaviour_path_clear ((ClutterBehaviourPath *) f->move_path[x][y]);
-		}
-}
-
-void
 BlockOps::updateBlockInField ()
 {
 	int shift_x = posx - posx_old;
@@ -568,15 +545,15 @@ BlockOps::updateBlockInField ()
 					int cur_x, cur_y = 0;
 					g_object_get (G_OBJECT (field[i][j].actor), "x", &cur_x, "y", &cur_y, NULL);
 					const ClutterKnot knot_line[] = {{cur_x, cur_y}, {field[i][j].x, field[i][j].y}};
-					clutter_behaviour_remove_all (move_path[x][y]);
-					clutter_behaviour_path_clear ((ClutterBehaviourPath *) move_path[x][y]);
-					clutter_behaviour_path_append_knots ((ClutterBehaviourPath *) move_path[x][y], &knot_line[0], &knot_line[1], NULL);
-					clutter_behaviour_apply (move_path[x][y], field[i][j].actor);
+//					clutter_behaviour_remove_all (move_path[x][y]);
+//					clutter_behaviour_path_clear ((ClutterBehaviourPath *) move_path[x][y]);
+//					clutter_behaviour_path_append_knots ((ClutterBehaviourPath *) move_path[x][y], &knot_line[0], &knot_line[1], NULL);
+//					clutter_behaviour_apply (move_path[x][y], field[i][j].actor);
 				}
 			}
 		}
 	}
-	clutter_timeline_start (move_block_tml);
+	clutter_timeline_start (Block::move_time);
 	posx_old = posx;
 	posy_old = posy;
 }
@@ -638,11 +615,11 @@ BlockOps::rescaleField ()
 	}
 
 	if (background) {
-		clutter_actor_set_size (CLUTTER_ACTOR(background), width, height);
-		clutter_cairo_surface_resize (CLUTTER_CAIRO(background),
-					      width, height);
+//		clutter_actor_set_size (CLUTTER_ACTOR(background), width, height);
+//		clutter_cairo_texture_set_size (CLUTTER_CAIRO_TEXTURE(background),
+//					      width, height);
 	} else {
-		background = clutter_cairo_new (width, height);
+		background = clutter_cairo_texture_new (width, height);
 		/*FIXME jclinton: eventually allow solid color background
 		 * for software rendering case */
 		ClutterColor stage_color = { 0x61, 0x64, 0x8c, 0xff };
@@ -657,15 +634,15 @@ BlockOps::rescaleField ()
 	if (foreground) {
 		clutter_actor_set_size (CLUTTER_ACTOR(foreground),
 					width, height);
-		clutter_cairo_surface_resize (CLUTTER_CAIRO(foreground),
-					      width, height);
+//		clutter_cairo_surface_resize (CLUTTER_CAIRO(foreground),
+//					      width, height);
 	} else {
-		foreground = clutter_cairo_new (width, height);
+		foreground = clutter_cairo_texture_new (width, height);
 		clutter_group_add (CLUTTER_GROUP (stage),
 				   foreground);
 	}
 
-	bg_cr = clutter_cairo_create (CLUTTER_CAIRO(background));
+	bg_cr = clutter_cairo_texture_create (CLUTTER_CAIRO_TEXTURE(background));
 	cairo_set_operator (bg_cr, CAIRO_OPERATOR_CLEAR);
 	cairo_paint(bg_cr);
 	cairo_set_operator (bg_cr, CAIRO_OPERATOR_OVER);
@@ -713,7 +690,7 @@ BlockOps::drawMessage()
 	cairo_t *cr;
 	char *msg;
 
-	cr = clutter_cairo_create (CLUTTER_CAIRO(foreground));
+	cr = clutter_cairo_texture_create (CLUTTER_CAIRO_TEXTURE(foreground));
 	clutter_actor_raise_top (CLUTTER_ACTOR(foreground));
 	cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
 	cairo_paint(cr);

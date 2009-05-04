@@ -65,8 +65,7 @@ Preview::Preview():
 
 	piece_timeline = clutter_timeline_new_for_duration (180);
 	alpha = clutter_alpha_new_full (piece_timeline,
-			CLUTTER_ALPHA_SINE_HALF,
-			NULL, NULL);
+			CLUTTER_EASE_IN_OUT_SINE);
 	piece_behav = clutter_behaviour_scale_new (alpha,
 			1.0, 1.0, 1.4, 1.4);
 	clutter_actor_set_anchor_point (piece, PREVIEW_SIZE*10, PREVIEW_SIZE*10);
