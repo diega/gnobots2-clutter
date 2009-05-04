@@ -191,6 +191,10 @@ prepare_clutter (GtkClutterEmbed *embed){
 
   g_signal_connect (G_OBJECT (embed), "button-press-event",
 		    G_CALLBACK (mouse_cb), NULL);
+
+  g_signal_connect (G_OBJECT (embed), "size-allocate",
+                    G_CALLBACK (resize_clutter_cb), NULL);
+
   ClutterColor stage_color = { 0x20, 0x20, 0xA0, 0xff };
   clutter_stage_set_color (CLUTTER_STAGE (stage), &stage_color);
   clutter_stage_hide_cursor (CLUTTER_STAGE (stage));
@@ -313,7 +317,6 @@ main (int argc, char *argv[])
   gridframe = games_grid_frame_new (GAME_WIDTH, GAME_HEIGHT);
   gtk_container_add (GTK_CONTAINER (gridframe), game_area);
 
-
   clutter_widget = gtk_clutter_embed_new ();
   stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (clutter_widget));
   clutter_gridframe = games_grid_frame_new (GAME_WIDTH, GAME_HEIGHT);
@@ -323,6 +326,7 @@ main (int argc, char *argv[])
 			       MINIMUM_TILE_WIDTH * GAME_WIDTH,
 			       MINIMUM_TILE_HEIGHT * GAME_HEIGHT);
  
+
   prepare_clutter (GTK_CLUTTER_EMBED (clutter_widget));
 
   hbox = gtk_hbox_new (TRUE, 0);
@@ -385,10 +389,6 @@ main (int argc, char *argv[])
 
   init_game ();
 
-  //it's important to keep this callback after the game initialization
-  //because will try to resize before the objects exists in the stage
-  g_signal_connect (G_OBJECT (clutter_widget), "size-allocate",
-                    G_CALLBACK (resize_clutter_cb), NULL);
 
   if (cmdline_scenario) {
     set_game_graphics (cmdline_scenario);
