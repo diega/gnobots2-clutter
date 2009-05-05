@@ -41,6 +41,8 @@ gnobots2_SOURCES = \
 	gbdefs.h \
 	find-file.c \
 	find-file.h \
+        game-clutter.h \
+        game-clutter.c \
 	$(NULL)
 
 gnobots2_CPPFLAGS = \
