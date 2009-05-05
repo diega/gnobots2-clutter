@@ -27,60 +27,6 @@
 
 #define FONT "Sans Bold"
 
-GList *Block::destroy_blocks = NULL;
-ClutterBehaviour *Block::explode_fade_behaviour = NULL;
-ClutterTimeline *Block::move_time = NULL;
-ClutterTimeline *Block::explode_time = NULL;
-ClutterTimeline *Block::fall_time = NULL;
-
-void
-Block::move_end (ClutterTimeline *tml, gpointer *f)
-{
-	for (int x = 0; x < 4; ++x)
-		for (int y = 0; y < 4; ++y) {
-//			clutter_behaviour_remove_all (f->move_behaviour[x][y]);
-//			clutter_behaviour_path_clear ((ClutterBehaviourPath *) f->move_behaviour[x][y]);
-		}
-}
-
-void
-Block::explode_end (ClutterTimeline *tml, gpointer *data)
-{
-	Block *block;
-	g_list_foreach (destroy_blocks,
-			(GFunc)Block::reap_block,
-			block);
-	g_list_free (destroy_blocks);
-}
-
-void
-Block::fall_end (ClutterTimeline *tml, BlockOps *data)
-{
-	ClutterBehaviour *tmp_behave;
-//	if (fall_behaviours) {
-//		g_list_foreach (fall_behaviours,
-//				(GFunc)clutter_behaviour_remove_all,
-//				tmp_behave);
-//	}
-//	g_list_free (fall_behaviours);
-
-	//After fall, start the earthquake effect.
-	ClutterTimeline *tmp_timeline = clutter_timeline_new_for_duration
-						(120);
-	ClutterAlpha *tmp_alpha = clutter_alpha_new_full (tmp_timeline,
-					CLUTTER_EASE_OUT_ELASTIC);
-	ClutterPath *tmp_path = clutter_path_new ();
-	clutter_path_add_move_to (tmp_path, data->center_anchor_x,
-				 data->center_anchor_y);
-	clutter_path_add_move_to (tmp_path, data->center_anchor_x,
-				 data->center_anchor_y + data->cell_height *
-				 data->quake_ratio);
-	tmp_behave = clutter_behaviour_path_new (tmp_alpha, tmp_path);
-	clutter_behaviour_apply (tmp_behave, CLUTTER_ACTOR (data->playingField));
-	g_object_unref (tmp_timeline);
-	g_object_unref (tmp_alpha);
-}
-
 /* fuck C++ */
 void
 Block::reap_block (Block *block)
@@ -94,21 +40,9 @@ Block::Block ():
 	x(0),
 	y(0),
 	move_behaviour(NULL),
-	explode_move_behaviour(NULL),
-	fall_behaviour(NULL)
-{
-	if (!move_time)
-		move_time = clutter_timeline_new_for_duration (60);
-	if (!explode_time)
-		explode_time = clutter_timeline_new_for_duration (120);
-	if (!fall_time)
-		fall_time = clutter_timeline_new_for_duration (120);
-	ClutterAlpha *move_alpha = clutter_alpha_new_full (move_time,
-							   CLUTTER_EASE_OUT_QUAD);
-	move_behaviour = clutter_behaviour_path_new_with_knots (move_alpha,
-								NULL, NULL);
-	g_object_unref (move_alpha);
-}
+	fall_behaviour(NULL),
+	explode_move_behaviour(NULL)
+{}
 
 Block::~Block ()
 {
@@ -116,6 +50,10 @@ Block::~Block ()
 		clutter_actor_destroy (CLUTTER_ACTOR(actor));
 	if (move_behaviour)
 		g_object_unref (move_behaviour);
+	if (fall_behaviour)
+		g_object_unref (fall_behaviour);
+	if (explode_move_behaviour)
+		g_object_unref (explode_move_behaviour);
 }
 
 void
@@ -129,6 +67,17 @@ Block::createActor (ClutterActor *chamber, ClutterActor *texture_source)
 	clutter_actor_show (CLUTTER_ACTOR(actor));
 }
 
+void
+Block::bindAnimations (BlockOps *f)
+{
+	move_behaviour = clutter_behaviour_path_new_with_knots (f->move_alpha,
+								NULL, 0);
+	fall_behaviour = clutter_behaviour_path_new_with_knots (f->fall_alpha,
+								NULL, 0);
+	explode_move_behaviour = clutter_behaviour_path_new_with_knots (f->explode_alpha,
+									NULL, 0);
+}
+
 Block&
 Block::move_from (Block& b, BlockOps *f)
 {
@@ -139,17 +88,13 @@ Block::move_from (Block& b, BlockOps *f)
 		b.color = 0;
 		if (actor) {
 			//this shouldn't happen
-			destroy_blocks = g_list_prepend (destroy_blocks, actor);
+			f->destroy_blocks = g_list_prepend (f->destroy_blocks, actor);
 		}
 		if (b.actor) {
 			const ClutterKnot knot_line[] = {{b.x, b.y}, {x, y}};
-			ClutterAlpha *fall_alpha = clutter_alpha_new_full
-							(fall_time,
-							 CLUTTER_EASE_IN_QUAD);
-			fall_behaviour = clutter_behaviour_path_new_with_knots
-				(fall_alpha, knot_line, 2);
+			fall_behaviour = clutter_behaviour_path_new_with_knots (f->fall_alpha,
+										knot_line, 2);
 			clutter_behaviour_apply (fall_behaviour, b.actor);
-			g_object_unref (fall_alpha);
 		}
 		actor = b.actor;
 		b.actor = NULL;
@@ -157,7 +102,41 @@ Block::move_from (Block& b, BlockOps *f)
 	return *this;
 }
 
+/******************************************************************************/
+
+gboolean
+BlockOps::move_end (ClutterTimeline *time, BlockOps *f)
+{
+	//clutter_path_clear (clutter_behaviour_path_get_path (f->move_behaviour));
+	return FALSE;
+}
+
+gboolean
+BlockOps::explode_end (ClutterTimeline *time, BlockOps *f)
+{
+	Block *block;
+	g_list_foreach (f->destroy_blocks,
+			(GFunc)Block::reap_block,
+			block);
+	g_list_free (f->destroy_blocks);
+	return FALSE;
+}
+
+gboolean
+BlockOps::fall_end (ClutterTimeline *tml, BlockOps *f)
+{
+	//After fall, start the earthquake effect
+	ClutterPath *tmp_path = clutter_path_new ();
+	clutter_path_add_move_to (tmp_path, f->center_anchor_x,
+				  f->center_anchor_y);
+	clutter_path_add_move_to (tmp_path, f->center_anchor_x,
+				  f->center_anchor_y + f->cell_height *
+				  f->quake_ratio);
+	return FALSE;
+}
+
 BlockOps::BlockOps() :
+	destroy_blocks(NULL),
 	quake_ratio(0.0),
 	background(NULL),
 	foreground(NULL),
@@ -190,6 +169,31 @@ BlockOps::BlockOps() :
 
 	playingField = clutter_group_new ();
 	clutter_group_add (CLUTTER_GROUP(stage), CLUTTER_ACTOR(playingField));
+	
+	move_time = clutter_timeline_new_for_duration (60);
+	g_signal_connect (move_time, "completed", G_CALLBACK
+			  (BlockOps::move_end), this);
+	move_alpha = clutter_alpha_new_full (move_time,
+					     CLUTTER_EASE_OUT_QUAD);
+	
+	fall_time = clutter_timeline_new_for_duration (120);
+	g_signal_connect (fall_time, "completed", G_CALLBACK
+			  (BlockOps::fall_end), this);
+	fall_alpha = clutter_alpha_new_full (fall_time,
+					     CLUTTER_EASE_IN_QUAD);
+					     
+	explode_time = clutter_timeline_new_for_duration (120);
+	g_signal_connect (explode_time, "completed", G_CALLBACK
+			  (BlockOps::explode_end), this);
+	explode_alpha = clutter_alpha_new_full (explode_time,
+						CLUTTER_EASE_IN_QUAD);
+	explode_fade_behaviour = clutter_behaviour_opacity_new (explode_alpha,
+								255, 0);
+	quake_time = clutter_timeline_new_for_duration (360);
+	quake_alpha = clutter_alpha_new_full (quake_time,
+					      CLUTTER_EASE_OUT_ELASTIC);
+	quake_behaviour = clutter_behaviour_path_new_with_knots (quake_alpha,
+								 NULL, 0);
 }
 
 BlockOps::~BlockOps()
@@ -198,6 +202,17 @@ BlockOps::~BlockOps()
 		delete[] field[i];
 
 	delete[] field;
+	
+	g_object_unref (move_time);
+	g_object_unref (move_alpha);
+	g_object_unref (fall_time);
+	g_object_unref (fall_alpha);
+	g_object_unref (explode_time);
+	g_object_unref (explode_alpha);
+	g_object_unref (explode_fade_behaviour);
+	g_object_unref (quake_time);
+	g_object_unref (quake_alpha);
+	g_object_unref (quake_behaviour);
 }
 
 bool
@@ -352,15 +367,14 @@ BlockOps::eliminateLine(int l)
 			int cur_x, cur_y = 0;
 			g_object_get (G_OBJECT (field[x][l].actor), "x", &cur_x, "y", &cur_y, NULL);
 			clutter_actor_raise_top (field[x][l].actor);
-//			clutter_effect_fade (Block::explode_tmpl, field[x][l].actor, 0, NULL, NULL);
 //			clutter_effect_move (Block::explode_tmpl, field[x][l].actor,
 //					cur_x + g_random_int_range(-60 - cell_width / 4, 60),
 //					cur_y + g_random_int_range(-60 - cell_height / 4, 60),
 //					NULL, NULL);
 //			clutter_effect_scale (Block::explode_tmpl, field[x][l].actor,
 //					1.5, 1.5, NULL, NULL);
-			Block::destroy_blocks = g_list_append (Block::destroy_blocks,
-							       &field[x][l]);
+			destroy_blocks = g_list_append (destroy_blocks,
+							&field[x][l]);
 		}
 	}
 }
@@ -407,12 +421,8 @@ BlockOps::checkFullLines()
 
 	if (numFullLines > 0)
 	{
-//		g_signal_connect (Block::fall_time, "completed",
-//				G_CALLBACK (Block::fall_end), this);
-//		g_signal_connect (Block::explode_tml, "completed",
-//				  G_CALLBACK (Block::explode_end), (gpointer) NULL);
-		clutter_timeline_start (Block::fall_time);
-		clutter_timeline_start (Block::explode_time);
+		clutter_timeline_start (fall_time);
+		clutter_timeline_start (explode_time);
 		quake_ratio = ((float) numCascades) / (float) LINES;
 	}
 
@@ -553,7 +563,7 @@ BlockOps::updateBlockInField ()
 			}
 		}
 	}
-	clutter_timeline_start (Block::move_time);
+	clutter_timeline_start (move_time);
 	posx_old = posx;
 	posy_old = posy;
 }

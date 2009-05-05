@@ -47,27 +47,14 @@ public:
 	int y;
 
 	void createActor (ClutterActor *chamber, ClutterActor *texture_source);
-	void associateActor (ClutterActor *chamber, ClutterActor *other_actor);
+	void bindAnimations (BlockOps *f);
 
-	static GList *destroy_blocks;
-
-	/* These statics are here because you only need one timeline that can
-	 * be shared among all behaviours and because 'fade' affects all blocks
-	 * equally regardless of their position, so why have more than one since
-	 * a behaviour can have many actors? */
-	static ClutterBehaviour *explode_fade_behaviour;
-	static ClutterTimeline *move_time;
-	static ClutterTimeline *explode_time;
-	static ClutterTimeline *fall_time;
-
-	/* But every block will have a unique position */
+	/* Every block will have a unique position
+	 * These can be continuously cleared and repopulated with new paths */
 	ClutterBehaviour *move_behaviour;
-	ClutterBehaviour *explode_move_behaviour;
 	ClutterBehaviour *fall_behaviour;
+	ClutterBehaviour *explode_move_behaviour;
 
-	static void move_end (ClutterTimeline *timeline, gpointer *data);
-	static void explode_end (ClutterTimeline *timeline, gpointer *data);
-	static void fall_end (ClutterTimeline *timeline, BlockOps *data);
 
 	static void reap_block (Block *block);
 };
@@ -102,7 +89,28 @@ public:
 	void setTheme (gint id);
 	void drawMessage ();
 
+	GList *destroy_blocks;
+
+	/* These are here because you only need one timeline that can
+	 * be shared among all blocks and because 'fade' affects all blocks
+	 * equally regardless of their position, so why have more than one since
+	 * a behaviour can have many actors? */
+	ClutterTimeline *move_time;
+	ClutterAlpha *move_alpha;
+	ClutterTimeline *fall_time;
+	ClutterAlpha *fall_alpha;
+	ClutterTimeline *explode_time;
+	ClutterAlpha *explode_alpha;
+	ClutterBehaviour *explode_fade_behaviour;
+	static gboolean move_end (ClutterTimeline *timeline, BlockOps *f);
+	static gboolean fall_end (ClutterTimeline *timeline, BlockOps *f);
+	static gboolean explode_end (ClutterTimeline *timeline, BlockOps *f);
+
+	/* These are for playing field, not blocks */
+	ClutterTimeline *quake_time;
+	ClutterAlpha *quake_alpha;
 	float quake_ratio;
+	ClutterBehaviour *quake_behaviour;
 
 	GtkWidget *getWidget () {
 		return w;
