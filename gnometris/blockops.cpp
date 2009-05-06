@@ -113,6 +113,7 @@ BlockOps::explode_end (ClutterTimeline *time, BlockOps *f)
 			(GFunc)clutter_actor_destroy,
 			block);
 	g_list_free (f->destroy_actors);
+	f->destroy_actors = NULL;
 	return FALSE;
 }
 
