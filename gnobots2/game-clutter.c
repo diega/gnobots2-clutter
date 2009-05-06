@@ -65,8 +65,11 @@ move_explosion (gint origx, gint origy, gint x, gint y)
 void
 delete_clutter_explosion (gint x, gint y)
 {
-  delete_clutter_actor (get_explosion(x, y));
-  explosions[x][y] = NULL;
+  if(explosion_exists (x, y))
+  {
+    delete_clutter_actor (explosions[x][y]);
+    explosions[x][y] = NULL;
+  }
 }
 
 gboolean
@@ -148,12 +151,11 @@ delete_clutter_robot (gint x, gint y)
 {
   if (robot1_exists(x, y))
   {
-    delete_clutter_actor(robots1[x][y]);
+    delete_clutter_actor (robots1[x][y]);
     robots1[x][y] = NULL;
   } else if (robot2_exists(x, y))
   {
-    clutter_actor_hide (robots2[x][y]);
-    clutter_actor_destroy (robots2[x][y]);
+    delete_clutter_actor (robots2[x][y]);
     robots2[x][y] = NULL;
   }
 }

@@ -339,8 +339,8 @@ clear_arena (void)
       arena[i][j] = OBJECT_NONE;
       old_arena[i][j] = OBJECT_FOO;
 
-      if (explosion_exists (i, j))
-        delete_clutter_explosion (i, j);
+      delete_clutter_explosion (i, j);
+      delete_clutter_robot (i, j);
     }
   }
 
@@ -348,8 +348,6 @@ clear_arena (void)
   num_robots2 = 0;
 
   delete_clutter_player();
-  
-  //clutter_group_remove_all ( CLUTTER_GROUP (stage));
 }
 
 /**
