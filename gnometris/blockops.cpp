@@ -121,13 +121,14 @@ gboolean
 BlockOps::fall_end (ClutterTimeline *tml, BlockOps *f)
 {
 	//After fall, start the earthquake effect
-	clutter_path_clear (clutter_behaviour_path_get_path (CLUTTER_BEHAVIOUR_PATH(f->quake_behaviour)));
-	ClutterPath *tmp_path = clutter_path_new ();
-	clutter_path_add_move_to (tmp_path, f->center_anchor_x,
-				  f->center_anchor_y);
-	clutter_path_add_move_to (tmp_path, f->center_anchor_x,
-				  f->center_anchor_y + f->cell_height *
-				  f->quake_ratio);
+	ClutterPath *path_line = clutter_path_new ();
+	clutter_path_add_move_to (path_line,
+				  f->center_anchor_x,
+				  f->center_anchor_y + f->cell_height * f->quake_ratio);
+	clutter_path_add_line_to (path_line, f->center_anchor_x, f->center_anchor_y);
+	clutter_behaviour_remove_all (f->quake_behaviour);
+	clutter_behaviour_path_set_path (CLUTTER_BEHAVIOUR_PATH(f->quake_behaviour), path_line);
+	clutter_behaviour_apply (f->quake_behaviour, f->playingField);
 	clutter_timeline_start (f->quake_time);
 	return FALSE;
 }
@@ -168,23 +169,23 @@ BlockOps::BlockOps() :
 	move_alpha = clutter_alpha_new_full (move_time,
 					     CLUTTER_EASE_IN_QUAD);
 
-	fall_time = clutter_timeline_new_for_duration (120);
+	fall_time = clutter_timeline_new_for_duration (360);
 	g_signal_connect (fall_time, "completed", G_CALLBACK
 			  (BlockOps::fall_end), this);
 	fall_alpha = clutter_alpha_new_full (fall_time,
 					     CLUTTER_EASE_IN_QUAD);
 
-	explode_time = clutter_timeline_new_for_duration (120);
+	explode_time = clutter_timeline_new_for_duration (360);
 	g_signal_connect (explode_time, "completed", G_CALLBACK
 			  (BlockOps::explode_end), this);
 	explode_alpha = clutter_alpha_new_full (explode_time,
-						CLUTTER_EASE_IN_QUAD);
+						CLUTTER_EASE_OUT_QUINT);
 	explode_fade_behaviour = clutter_behaviour_opacity_new (explode_alpha,
 								255, 0);
 
 	quake_time = clutter_timeline_new_for_duration (360);
 	quake_alpha = clutter_alpha_new_full (quake_time,
-					      CLUTTER_EASE_OUT_ELASTIC);
+					      CLUTTER_EASE_OUT_BOUNCE);
 	quake_behaviour = clutter_behaviour_path_new_with_knots (quake_alpha,
 								 NULL, 0);
 
