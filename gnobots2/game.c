@@ -1332,6 +1332,7 @@ safe_teleport (void)
       safe_teleports -= 1;
 
       update_arena ();
+      move_clutter_object (xp, yp, get_player());
       break;
     }
 
