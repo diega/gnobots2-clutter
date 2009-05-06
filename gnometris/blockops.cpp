@@ -165,7 +165,7 @@ BlockOps::BlockOps() :
 	g_signal_connect (move_time, "completed", G_CALLBACK
 			  (BlockOps::move_end), this);
 	move_alpha = clutter_alpha_new_full (move_time,
-					     CLUTTER_EASE_OUT_QUAD);
+					     CLUTTER_EASE_IN_QUAD);
 
 	fall_time = clutter_timeline_new_for_duration (120);
 	g_signal_connect (fall_time, "completed", G_CALLBACK
@@ -509,7 +509,10 @@ BlockOps::putBlockInField (SlotType fill)
 					field[i][j].createActor (playingField,
 								 renderer->getCacheCellById (color));
 				} else {
-					field[i][j].actor = NULL;
+					if (field[i][j].actor) {
+						clutter_actor_destroy (field[i][j].actor);
+						field[i][j].actor = NULL;
+					}
 				}
 			}
 		}
