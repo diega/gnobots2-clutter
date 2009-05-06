@@ -373,14 +373,20 @@ BlockOps::eliminateLine(int l)
 			int cur_x, cur_y = 0;
 			g_object_get (G_OBJECT (field[x][l].actor), "x", &cur_x, "y", &cur_y, NULL);
 			clutter_actor_raise_top (field[x][l].actor);
-//			clutter_effect_move (Block::explode_tmpl, field[x][l].actor,
-//					cur_x + g_random_int_range(-60 - cell_width / 4, 60),
-//					cur_y + g_random_int_range(-60 - cell_height / 4, 60),
-//					NULL, NULL);
+			ClutterPath *path_line = clutter_path_new ();
+			clutter_path_add_move_to (path_line, cur_x, cur_y);
+			clutter_path_add_line_to (path_line,
+						  cur_x + g_random_int_range (-60 - cell_width / 4, 60),
+						  cur_y + g_random_int_range (-60 - cell_height / 4, 60));
+			clutter_behaviour_remove_all (field[x][l].explode_move_behaviour);
+			clutter_behaviour_path_set_path (CLUTTER_BEHAVIOUR_PATH(field[x][l].explode_move_behaviour), path_line);
+			clutter_behaviour_apply (field[x][l].explode_move_behaviour, field[x][l].actor);
+			clutter_behaviour_apply (explode_fade_behaviour, field[x][l].actor);
 //			clutter_effect_scale (Block::explode_tmpl, field[x][l].actor,
 //					1.5, 1.5, NULL, NULL);
 			destroy_actors = g_list_append (destroy_actors,
 							field[x][l].actor);
+			field[x][l].actor = NULL;
 		}
 	}
 }
@@ -407,6 +413,7 @@ BlockOps::checkFullLines()
 	// we can have at most 4 full lines (vertical block)
 	int numFullLines = 0;
 	int numCascades = 0;
+	clutter_behaviour_remove_all (explode_fade_behaviour);
 
 	for (int y = MIN (posy + 4, LINES); y > 0; --y)
 	{
