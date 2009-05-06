@@ -37,7 +37,7 @@ public:
 	Block ();
 	~Block ();
 
-	Block& move_from (Block &b, BlockOps *f);
+	Block& moveFrom (Block &b, BlockOps *f);
 
 	SlotType what;
 	guint color;
@@ -54,9 +54,6 @@ public:
 	ClutterBehaviour *move_behaviour;
 	ClutterBehaviour *fall_behaviour;
 	ClutterBehaviour *explode_move_behaviour;
-
-
-	static void reap_block (Block *block);
 };
 
 class BlockOps {
@@ -89,7 +86,7 @@ public:
 	void setTheme (gint id);
 	void drawMessage ();
 
-	GList *destroy_blocks;
+	GList *destroy_actors;
 
 	/* These are here because you only need one timeline that can
 	 * be shared among all blocks and because 'fade' affects all blocks
@@ -148,12 +145,10 @@ private:
 
 	void rescaleField ();
 	void rescaleBlockPos ();
-	void updateBlockInField ();
+	void moveBlockInField (gint x_trans, gint y_trans);
 
 	int posx;
 	int posy;
-	int posx_old;
-	int posy_old;
 
 	ClutterActor *playingField;
 
