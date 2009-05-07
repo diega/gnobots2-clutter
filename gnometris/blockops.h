@@ -100,6 +100,7 @@ public:
 	ClutterTimeline *explode_time;
 	ClutterAlpha *explode_alpha;
 	ClutterBehaviour *explode_fade_behaviour;
+	ClutterBehaviour *explode_scale_behaviour;
 	static gboolean move_end (ClutterTimeline *timeline, BlockOps *f);
 	static gboolean fall_end (ClutterTimeline *timeline, BlockOps *f);
 	static gboolean explode_end (ClutterTimeline *timeline, BlockOps *f);

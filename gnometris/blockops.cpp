@@ -188,6 +188,9 @@ BlockOps::BlockOps() :
 						CLUTTER_EASE_OUT_QUINT);
 	explode_fade_behaviour = clutter_behaviour_opacity_new (explode_alpha,
 								255, 0);
+	explode_scale_behaviour = clutter_behaviour_scale_new (explode_alpha,
+								1.0, 1.0,
+								2.0, 2.0);
 
 	quake_time = clutter_timeline_new_for_duration (360);
 	quake_alpha = clutter_alpha_new_full (quake_time,
@@ -217,6 +220,7 @@ BlockOps::~BlockOps()
 	g_object_unref (fall_time);
 	g_object_unref (explode_time);
 	g_object_unref (explode_fade_behaviour);
+	g_object_unref (explode_scale_behaviour);
 	g_object_unref (quake_time);
 	g_object_unref (quake_behaviour);
 }
@@ -389,8 +393,7 @@ BlockOps::eliminateLine(int l)
 							 path_line);
 			clutter_behaviour_apply (field[x][l].explode_move_behaviour, field[x][l].actor);
 			clutter_behaviour_apply (explode_fade_behaviour, field[x][l].actor);
-//			clutter_effect_scale (Block::explode_tmpl, field[x][l].actor,
-//					1.5, 1.5, NULL, NULL);
+			clutter_behaviour_apply (explode_scale_behaviour, field[x][l].actor);
 			destroy_actors = g_list_prepend (destroy_actors, field[x][l].actor);
 			field[x][l].actor = NULL;
 		}
@@ -419,6 +422,7 @@ BlockOps::checkFullLines()
 	// we can have at most 4 full lines (vertical block)
 	int num_full_lines = 0;
 	clutter_behaviour_remove_all (explode_fade_behaviour);
+	clutter_behaviour_remove_all (explode_scale_behaviour);
 
 	for (int y = MIN (posy + 4, LINES); y > 0; --y)
 	{
