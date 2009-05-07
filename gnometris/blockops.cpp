@@ -155,7 +155,8 @@ BlockOps::BlockOps() :
 	backgroundImage(NULL),
 	center_anchor_x(0),
 	center_anchor_y(0),
-	FALL_TIMING(360)
+	FALL_TIMING(360),
+	QUAKE_TIMING(720)
 {
 	w = gtk_clutter_embed_new ();
 
@@ -192,7 +193,7 @@ BlockOps::BlockOps() :
 								1.0, 1.0,
 								2.0, 2.0);
 
-	quake_time = clutter_timeline_new_for_duration (360);
+	quake_time = clutter_timeline_new_for_duration (QUAKE_TIMING);
 	quake_alpha = clutter_alpha_new_full (quake_time,
 					      CLUTTER_EASE_OUT_BOUNCE);
 	quake_behaviour = clutter_behaviour_path_new_with_knots (quake_alpha,
@@ -443,6 +444,7 @@ BlockOps::checkFullLines()
 	if (num_full_lines > 0)
 	{
 		clutter_timeline_set_duration (fall_time, FALL_TIMING / (5 - num_full_lines));
+		clutter_timeline_set_duration (quake_time, QUAKE_TIMING / (5 - num_full_lines));
 		clutter_timeline_start (fall_time);
 		clutter_timeline_start (explode_time);
 		quake_ratio = ((float) num_full_lines) / 4.0;

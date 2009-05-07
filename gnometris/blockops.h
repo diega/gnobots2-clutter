@@ -161,6 +161,7 @@ private:
 				BlockOps *field);
 
 	const gint FALL_TIMING;
+	const gint QUAKE_TIMING;
 };
 
 #endif //__blockops_h__
