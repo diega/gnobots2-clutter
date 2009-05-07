@@ -633,9 +633,9 @@ BlockOps::rescaleField ()
 	}
 
 	if (background) {
-//		clutter_actor_set_size (CLUTTER_ACTOR(background), width, height);
-//		clutter_cairo_texture_set_size (CLUTTER_CAIRO_TEXTURE(background),
-//					      width, height);
+		clutter_actor_set_size (CLUTTER_ACTOR(background), width, height);
+		clutter_cairo_texture_set_surface_size (CLUTTER_CAIRO_TEXTURE(background),
+							width, height);
 	} else {
 		background = clutter_cairo_texture_new (width, height);
 		/*FIXME jclinton: eventually allow solid color background
@@ -652,8 +652,8 @@ BlockOps::rescaleField ()
 	if (foreground) {
 		clutter_actor_set_size (CLUTTER_ACTOR(foreground),
 					width, height);
-//		clutter_cairo_surface_resize (CLUTTER_CAIRO(foreground),
-//					      width, height);
+		clutter_cairo_texture_set_surface_size (CLUTTER_CAIRO_TEXTURE(foreground),
+							width, height);
 	} else {
 		foreground = clutter_cairo_texture_new (width, height);
 		clutter_group_add (CLUTTER_GROUP (stage),
