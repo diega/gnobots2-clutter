@@ -81,15 +81,12 @@ Block::moveFrom (Block& b, BlockOps *f)
 		b.what = EMPTY;
 		color = b.color;
 		b.color = 0;
-		if (actor) {
-			//this shouldn't happen
-			f->destroy_actors = g_list_prepend (f->destroy_actors, actor);
-		}
 		if (b.actor) {
 			const ClutterKnot knot_line[] = {{b.x, b.y}, {x, y}};
 			fall_behaviour = clutter_behaviour_path_new_with_knots (f->fall_alpha,
 										knot_line, 2);
 			clutter_behaviour_apply (fall_behaviour, b.actor);
+			f->fall_behaviours = g_list_prepend (f->fall_behaviours, fall_behaviour);
 		}
 		actor = b.actor;
 		b.actor = NULL;
@@ -120,6 +117,13 @@ BlockOps::explode_end (ClutterTimeline *time, BlockOps *f)
 gboolean
 BlockOps::fall_end (ClutterTimeline *tml, BlockOps *f)
 {
+	Block *behave = NULL;
+	g_list_foreach (f->fall_behaviours,
+			(GFunc)clutter_behaviour_remove_all,
+			behave);
+	g_list_free (f->fall_behaviours);
+	f->fall_behaviours = NULL;
+
 	//After fall, start the earthquake effect
 	ClutterPath *path_line = clutter_path_new ();
 	clutter_path_add_move_to (path_line,
@@ -135,6 +139,7 @@ BlockOps::fall_end (ClutterTimeline *tml, BlockOps *f)
 
 BlockOps::BlockOps() :
 	destroy_actors(NULL),
+	fall_behaviours(NULL),
 	quake_ratio(0.0),
 	background(NULL),
 	foreground(NULL),
@@ -379,13 +384,13 @@ BlockOps::eliminateLine(int l)
 						  cur_x + g_random_int_range (-60 - cell_width / 4, 60),
 						  cur_y + g_random_int_range (-60 - cell_height / 4, 60));
 			clutter_behaviour_remove_all (field[x][l].explode_move_behaviour);
-			clutter_behaviour_path_set_path (CLUTTER_BEHAVIOUR_PATH(field[x][l].explode_move_behaviour), path_line);
+			clutter_behaviour_path_set_path (CLUTTER_BEHAVIOUR_PATH(field[x][l].explode_move_behaviour),
+							 path_line);
 			clutter_behaviour_apply (field[x][l].explode_move_behaviour, field[x][l].actor);
 			clutter_behaviour_apply (explode_fade_behaviour, field[x][l].actor);
 //			clutter_effect_scale (Block::explode_tmpl, field[x][l].actor,
 //					1.5, 1.5, NULL, NULL);
-			destroy_actors = g_list_append (destroy_actors,
-							field[x][l].actor);
+			destroy_actors = g_list_prepend (destroy_actors, field[x][l].actor);
 			field[x][l].actor = NULL;
 		}
 	}

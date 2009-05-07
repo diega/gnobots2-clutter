@@ -87,6 +87,7 @@ public:
 	void drawMessage ();
 
 	GList *destroy_actors;
+	GList *fall_behaviours;
 
 	/* These are here because you only need one timeline that can
 	 * be shared among all blocks and because 'fade' affects all blocks
