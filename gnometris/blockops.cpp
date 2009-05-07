@@ -181,7 +181,7 @@ BlockOps::BlockOps() :
 	fall_alpha = clutter_alpha_new_full (fall_time,
 					     CLUTTER_EASE_IN_QUAD);
 
-	explode_time = clutter_timeline_new_for_duration (360);
+	explode_time = clutter_timeline_new_for_duration (720);
 	g_signal_connect (explode_time, "completed", G_CALLBACK
 			  (BlockOps::explode_end), this);
 	explode_alpha = clutter_alpha_new_full (explode_time,
