@@ -154,7 +154,8 @@ BlockOps::BlockOps() :
 	color(0),
 	backgroundImage(NULL),
 	center_anchor_x(0),
-	center_anchor_y(0)
+	center_anchor_y(0),
+	FALL_TIMING(360)
 {
 	w = gtk_clutter_embed_new ();
 
@@ -174,7 +175,7 @@ BlockOps::BlockOps() :
 	move_alpha = clutter_alpha_new_full (move_time,
 					     CLUTTER_EASE_IN_QUAD);
 
-	fall_time = clutter_timeline_new_for_duration (360);
+	fall_time = clutter_timeline_new_for_duration (FALL_TIMING);
 	g_signal_connect (fall_time, "completed", G_CALLBACK
 			  (BlockOps::fall_end), this);
 	fall_alpha = clutter_alpha_new_full (fall_time,
@@ -416,35 +417,34 @@ int
 BlockOps::checkFullLines()
 {
 	// we can have at most 4 full lines (vertical block)
-	int numFullLines = 0;
-	int numCascades = 0;
+	int num_full_lines = 0;
 	clutter_behaviour_remove_all (explode_fade_behaviour);
 
 	for (int y = MIN (posy + 4, LINES); y > 0; --y)
 	{
 		if (checkFullLine (y))
 		{
-			++numFullLines;
+			++num_full_lines;
 			eliminateLine(y);
 		}
-		else if (numFullLines > 0)
+		else if (num_full_lines > 0)
 		{
 			for (int x = 0; x < COLUMNS; ++x)
 			{
-				field[x][y+numFullLines].moveFrom (field[x][y], this);
+				field[x][y + num_full_lines].moveFrom (field[x][y], this);
 			}
-			++numCascades;
 		}
 	}
 
-	if (numFullLines > 0)
+	if (num_full_lines > 0)
 	{
+		clutter_timeline_set_duration (fall_time, FALL_TIMING / (5 - num_full_lines));
 		clutter_timeline_start (fall_time);
 		clutter_timeline_start (explode_time);
-		quake_ratio = ((float) numCascades) / (float) LINES;
+		quake_ratio = ((float) num_full_lines) / 4.0;
 	}
 
-	return numFullLines;
+	return num_full_lines;
 }
 
 bool

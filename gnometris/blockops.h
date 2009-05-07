@@ -158,6 +158,8 @@ private:
 
 	static gboolean resize (GtkWidget *widget, GtkAllocation *event,
 				BlockOps *field);
+
+	const gint FALL_TIMING;
 };
 
 #endif //__blockops_h__
