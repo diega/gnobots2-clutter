@@ -215,7 +215,7 @@ Tetris::Tetris(int cmdlLevel):
 	gtk_container_add (GTK_CONTAINER (aspect_frame), field->getWidget());
 
 	gtk_widget_set_events(w, gtk_widget_get_events(w) |
-						  GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
+			      GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 
 	GtkWidget *vb1 = gtk_vbox_new(FALSE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vb1), 10);
@@ -242,15 +242,7 @@ Tetris::Tetris(int cmdlLevel):
 
 	themeList = NULL;
 
-	gtk_widget_show(vbox);
-	gtk_widget_show(hb);
-	gtk_widget_show(vb1);
-	gtk_widget_show(vb2);
-	gtk_widget_show(aspect_frame);
-	gtk_widget_show(field->getWidget());
-	gtk_widget_show(preview->getWidget());
-	scoreFrame->show();
-	gtk_widget_show(w);
+	gtk_widget_show_all(w);
 
 	gtk_action_set_sensitive(pause_action, FALSE);
 	gtk_action_set_sensitive(end_game_action, FALSE);
