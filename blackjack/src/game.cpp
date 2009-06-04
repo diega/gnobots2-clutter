@@ -1,3 +1,4 @@
+
 // -*- mode:C++; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil -*-
 /*
  * Blackjack - game.cpp
@@ -23,6 +24,7 @@
 
 #include <config.h>
 
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glib/gi18n.h>
@@ -334,20 +336,11 @@ bj_game_get_config_dir (void)
                                      GNOME_DOT_GNOME,
                                      "blackjack.d",
                                      NULL);
-        return conf_dir;
-}
 
-static void
-bj_game_ensure_config_dir_exists (const char *dir)
-{
-        if (g_file_test (dir, G_FILE_TEST_IS_DIR) == FALSE) {
-                if (g_file_test (dir, G_FILE_TEST_EXISTS) == TRUE) {
-                        // FIXME: use a dialog
-                        cerr << dir << " exists, please move it out of the way." << endl;
-                }
-                if (g_mkdir (dir, 488) != 0)
-                        cerr << "Failed to create directory " << dir << endl;
-        }
+        if (g_mkdir_with_parents (conf_dir, 0700) < 0 && errno != EEXIST)
+                g_warning ("Failed to create config directory \"%s\": %s\n", conf_dir, g_strerror (errno));
+
+        return conf_dir;
 }
 
 static void
@@ -376,7 +369,6 @@ bj_game_eval_installed_file (const gchar *file)
                 gchar *cache_filename = g_strdup_printf ("%s%s", file, ".dat");
 
                 char *config_dir = bj_game_get_config_dir ();
-                bj_game_ensure_config_dir_exists (config_dir);
                 installed_filename = g_build_filename (config_dir, cache_filename, NULL);
                 g_free (config_dir);
                         
