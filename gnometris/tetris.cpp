@@ -56,6 +56,7 @@ int rot_next = -1;
 int color_next = -1;
 
 bool random_block_colors = false;
+bool bastard_mode = false;
 bool do_preview = true;
 bool default_bgimage = false;
 bool rotateCounterClockWise = true;
@@ -430,6 +431,8 @@ Tetris::initOptions ()
 
 	random_block_colors = confGetBoolean (KEY_OPTIONS_GROUP, KEY_RANDOM_BLOCK_COLORS, TRUE);
 
+	bastard_mode = confGetBoolean (KEY_OPTIONS_GROUP, KEY_BASTARD_MODE, FALSE);
+
 	rotateCounterClockWise = confGetBoolean (KEY_OPTIONS_GROUP, KEY_ROTATE_COUNTER_CLOCKWISE, TRUE);
 
 	line_fill_height = confGetInt (KEY_OPTIONS_GROUP, KEY_LINE_FILL_HEIGHT, 0);
@@ -468,6 +471,7 @@ Tetris::setOptions ()
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sound_toggle), games_sound_is_enabled ());
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (do_preview_toggle), do_preview);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (random_block_colors_toggle), random_block_colors);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (bastard_mode_toggle), bastard_mode);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rotate_counter_clock_wise_toggle), rotateCounterClockWise);
 
 		if (theme_preview) {
@@ -498,6 +502,13 @@ void
 Tetris::setSelectionBlocks(GtkWidget *widget, void *d)
 {
 	games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_RANDOM_BLOCK_COLORS,
+				GTK_TOGGLE_BUTTON (widget)->active);
+}
+
+void
+Tetris::setBastardMode(GtkWidget *widget, void *d)
+{
+	games_conf_set_boolean (KEY_OPTIONS_GROUP, KEY_BASTARD_MODE,
 				GTK_TOGGLE_BUTTON (widget)->active);
 }
 
@@ -682,6 +693,15 @@ Tetris::gameProperties(GtkAction *action, void *d)
 			  G_CALLBACK (setSelectionBlocks), d);
 	gtk_box_pack_start (GTK_BOX (fvbox), t->random_block_colors_toggle,
 			    0, 0, 0);
+
+	/* bastard mode */
+	t->bastard_mode_toggle =
+		gtk_check_button_new_with_mnemonic (_("_Bastard mode"));
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (t->bastard_mode_toggle),
+				     bastard_mode);
+	g_signal_connect (t->bastard_mode_toggle, "clicked",
+			  G_CALLBACK (setBastardMode), d);
+	gtk_box_pack_start (GTK_BOX (fvbox), t->bastard_mode_toggle, 0, 0, 0);
 
 	/* rotate counter clock wise */
  	t->rotate_counter_clock_wise_toggle =

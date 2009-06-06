@@ -119,6 +119,9 @@ private:
 	bool blockOkHere (int x, int y, int b, int r);
 	void eliminateLine (int l);
 	bool checkFullLine(int l);
+	void bastardPick ();
+	void saveField ();
+	void restoreField ();
 
 	GtkWidget * w;
 
@@ -132,6 +135,7 @@ private:
 	gint themeID;
 
 	Block **field;
+	Block **backfield;
 
 	int blocknr;
 	int rot;
@@ -139,6 +143,7 @@ private:
 
 	bool showPause;
 	bool showGameOver;
+	bool animate;
 
 	GdkPixbuf *backgroundImage;
 	bool backgroundImageTiled;

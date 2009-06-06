@@ -2,6 +2,7 @@
 /*
  * written by J. Marcin Gorycki <marcin.gorycki@intel.com>
  * massively altered for Clutter by Jason D. Clinton <me@jasonclinton.com>
+ * "bastard" mode by Lubomir Rintel <lkundrak@v3.sk>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -152,6 +153,7 @@ BlockOps::BlockOps() :
 	blocknr(0),
 	rot(0),
 	color(0),
+	animate(true),
 	backgroundImage(NULL),
 	center_anchor_x(0),
 	center_anchor_y(0),
@@ -200,9 +202,11 @@ BlockOps::BlockOps() :
 								 NULL, 0);
 
 	field = new Block*[COLUMNS];
+	backfield = new Block*[COLUMNS];
 	for (int i = 0; i < COLUMNS; ++i)
 	{
 		field[i] = new Block[LINES];
+		backfield[i] = new Block[LINES];
 		for (int j = 0; j < LINES; ++j)
 		{
 			field[i][j].bindAnimations (this);
@@ -368,6 +372,8 @@ BlockOps::fallingToLaying()
 			if (field[x][y].what == FALLING)
 			{
 				field[x][y].what = LAYING;
+				if (!animate)
+					continue;
 				clutter_actor_set_position (field[x][y].actor,
 							    field[x][y].x,
 							    field[x][y].y);
@@ -453,20 +459,141 @@ BlockOps::checkFullLines()
 	return num_full_lines;
 }
 
+void
+BlockOps::saveField ()
+{
+	for (int y = 0; y < LINES; y++)
+		for (int x = 0; x < COLUMNS; x++)
+			backfield[x][y] = field[x][y];
+}
+
+void
+BlockOps::restoreField ()
+{
+	for (int y = 0; y < LINES; y++)
+		for (int x = 0; x < COLUMNS; x++)
+			field[x][y] = backfield[x][y];
+}
+
+/*
+ * An implementation of "Bastard" algorithm 
+ * it comes from Federico Poloni's "bastet"
+ */
+
+void
+BlockOps::bastardPick ()
+{
+	int scores[tableSize];
+	int blocks[tableSize];
+	int chance[tableSize];
+
+	animate = false;
+	/* This generates a priority for each block */
+	saveField ();
+	for (blocknr = 0; blocknr < tableSize; blocknr++)
+	{
+		scores[blocknr] = -32000;
+		for (rot = 0; rot < 4; rot++)
+		{
+			for (posx = 0; posx < COLUMNS; posx++)
+			{
+				int this_score = 0;
+				int x, y;
+
+				if (!blockOkHere(posx, posy = 0, blocknr, rot))
+					continue;
+
+				dropBlock();
+				fallingToLaying();
+
+				/* Count the completed lines */
+				for (y = MIN (posy + 4, LINES); y > 0; --y) {
+					if (checkFullLine(y)) {
+						this_score += 5000;
+					}
+				}
+
+				/* Count heights of columns */
+				for (x = 0; x < COLUMNS; x++)
+				{
+					for (y = 0; y < LINES; y++)
+						if (field[x][y].what == LAYING)
+							break;
+					this_score -= 5 * (LINES - y);
+				}
+
+				restoreField ();
+				if (scores[blocknr] < this_score)
+					scores[blocknr] = this_score;
+			}
+		}
+	}
+
+	for (int i = 0; i < tableSize; i++) {
+		/* Initialize chances table */
+		chance[i] = 100;
+		/* Initialize block/priority table */
+		blocks[i] = i;
+		/* Perturb score (-2 to +2), to avoid stupid tie handling */
+		scores[i] += g_random_int_range(-2, 2);
+	}
+
+	/* Sorts blocks by priorities, worst (interesting to us) first*/
+	for (int i = 0; i < tableSize; i++)
+	{
+		for (int ii = 0; ii < tableSize - 1; ii++)
+		{
+			if (scores[blocks[ii]] > scores[blocks[ii+1]])
+			{
+				int t = blocks[ii];
+				blocks[ii] = blocks[ii+1];
+				blocks[ii+1] = t;
+			}
+		}
+	}
+
+	/* Lower the chances we're giving the worst one */
+	chance[0] = 75;
+	chance[1] = 92;
+	chance[2] = 98;
+
+	/* Actually choose a piece */
+	int rnd = g_random_int_range(0, 99);
+	for (int i = 0; i < tableSize; i++)
+	{
+		blocknr = blocks[i];
+		if (rnd < chance[i])
+			break;
+	}
+
+	/* This will almost certainly not given next */
+	blocknr_next = blocks[tableSize-1];
+	animate = true;
+}
+
 bool
 BlockOps::generateFallingBlock()
 {
+	if (bastard_mode)
+	{
+		bastardPick();
+		color_next = -1;
+	}
+	else
+	{
+		blocknr = blocknr_next == -1 ? g_random_int_range(0, tableSize) :
+			blocknr_next;
+		blocknr_next = g_random_int_range(0, tableSize);
+	}
+
 	posx = COLUMNS / 2 + 1;
 	posy = 0;
 
-	blocknr = blocknr_next == -1 ? g_random_int_range(0, tableSize) :
-		blocknr_next;
 	rot = rot_next == -1 ? g_random_int_range(0, 4) : rot_next;
 	int cn = random_block_colors ? g_random_int_range(0, NCOLOURS) :
 		blocknr % NCOLOURS;
 	color = color_next == -1 ? cn : color_next;
 
-	blocknr_next = g_random_int_range(0, tableSize);
 	rot_next = g_random_int_range(0, 4);
 	color_next = random_block_colors ? g_random_int_range(0, NCOLOURS) :
 		blocknr_next % NCOLOURS;
@@ -553,7 +680,8 @@ BlockOps::moveBlockInField (gint x_trans, gint y_trans)
 				blocks_actor[x][y] = field[i-x_trans][j-y_trans].actor;
 				field[i-x_trans][j-y_trans].what = EMPTY;
 				field[i-x_trans][j-y_trans].actor = NULL;
-				clutter_behaviour_remove_all (field[i-x_trans][j-y_trans].move_behaviour);
+				if (animate)
+					clutter_behaviour_remove_all (field[i-x_trans][j-y_trans].move_behaviour);
 			}
 		}
 	}
@@ -566,7 +694,7 @@ BlockOps::moveBlockInField (gint x_trans, gint y_trans)
 				field[i][j].what = FALLING;
 				field[i][j].color = color;
 				field[i][j].actor = blocks_actor[x][y];
-				if (field[i][j].actor) {
+				if (field[i][j].actor && animate) {
 					gint cur_x, cur_y = 0;
 					g_object_get (G_OBJECT (field[i][j].actor), "x", &cur_x, "y", &cur_y, NULL);
 					ClutterPath *path_line = clutter_path_new ();
@@ -579,7 +707,8 @@ BlockOps::moveBlockInField (gint x_trans, gint y_trans)
 			}
 		}
 	}
-	clutter_timeline_start (move_time);
+	if (animate)
+		clutter_timeline_start (move_time);
 }
 
 bool

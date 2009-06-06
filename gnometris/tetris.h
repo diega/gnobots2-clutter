@@ -36,6 +36,7 @@
 #define KEY_DO_PREVIEW                "do_preview"
 #define KEY_LINE_FILL_HEIGHT          "line_fill_height"
 #define KEY_LINE_FILL_PROBABILITY     "line_fill_probability"
+#define KEY_BASTARD_MODE              "bastard_mode"
 #define KEY_RANDOM_BLOCK_COLORS       "random_block_colors"
 #define KEY_ROTATE_COUNTER_CLOCKWISE  "rotate_counter_clock_wise"
 #define KEY_SOUND                     "sound"
@@ -64,6 +65,7 @@ extern int blocknr_next;
 extern int rot_next;
 
 extern bool random_block_colors;
+extern bool bastard_mode;
 
 class Preview;
 class BlockOps;
@@ -137,6 +139,7 @@ private:
 	static void setSound (GtkWidget * widget, gpointer data);
 	static void setSelectionPreview (GtkWidget * widget, void *d);
 	static void setSelectionBlocks (GtkWidget * widget, void *d);
+	static void setBastardMode (GtkWidget * widget, void *d);
 	static void setRotateCounterClockWise (GtkWidget * widget, void *d);
 	static void setTarget (GtkWidget * widget, void *d);
 	static void setSelection (GtkWidget * widget, void *data);
@@ -176,6 +179,7 @@ private:
 	GtkWidget *fill_prob_spinner;
 	GtkWidget *do_preview_toggle;
 	GtkWidget *random_block_colors_toggle;
+	GtkWidget *bastard_mode_toggle;
 	GtkWidget *rotate_counter_clock_wise_toggle;
 	GtkWidget *useTargetToggle;
 	GtkWidget *sound_toggle;
