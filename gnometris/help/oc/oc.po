@@ -139,7 +139,7 @@ msgstr ""
 msgid ""
 "To report a bug or make a suggestion regarding the <application>Gnometris</"
 "application> application or this manual, follow the directions in the <ulink "
-"url=\"ghelp:gnome-feedback\" type=\"help\">GNOME Feedback Page</ulink>."
+"url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">GNOME Feedback Page</ulink>."
 msgstr ""
 
 #: C/gnometris.xml:116(primary)
@@ -454,7 +454,7 @@ msgid ""
 "<application>Klotski</application> was written by J. Marcin Gorycki "
 "(<email>janusz.gorycki@intel.com</email>). This manual was written by Angela "
 "Boyle. To report a bug or make a suggestion regarding this application or "
-"this manual, follow the directions in this <ulink url=\"ghelp:gnome-feedback"
+"this manual, follow the directions in this <ulink url=\"ghelp:user-guide?feedback-bugs"
 "\" type=\"help\">document</ulink>."
 msgstr ""
 

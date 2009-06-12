@@ -80,8 +80,8 @@ msgid "Feedback"
 msgstr "Обратная связь"
 
 #: C/same-gnome.xml:95(para) 
-msgid "To report a bug or make a suggestion regarding the <application>Same GNOME</application> game or this manual, follow the directions in the <ulink url=\"ghelp:gnome-feedback\" type=\"help\">GNOME Feedback Page</ulink>."
-msgstr "Чтобы сообщить об ошибке или внести предложение относительно игры <application>Тот же GNOME</application> или данного руководства, следуйте ссылке <ulink url=\"ghelp:gnome-feedback\" type=\"help\">Обратная связь с GNOME</ulink>."
+msgid "To report a bug or make a suggestion regarding the <application>Same GNOME</application> game or this manual, follow the directions in the <ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">GNOME Feedback Page</ulink>."
+msgstr "Чтобы сообщить об ошибке или внести предложение относительно игры <application>Тот же GNOME</application> или данного руководства, следуйте ссылке <ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">Обратная связь с GNOME</ulink>."
 
 #: C/same-gnome.xml:103(primary) 
 msgid "Same GNOME"
@@ -252,8 +252,8 @@ msgid "<application>Same GNOME</application> was written by Callum McKenzie (<em
 msgstr "Игра <application>Тот же GNOME</application> была написана Callum McKenzie (<email>callum@physics.otago.ac.nz</email>). Чтобы получить больше информации об игре <application>Тот же GNOME</application> посетите, пожалуйста, <ulink url=\"http://www.gnome.org/projects/gnome-games/\" type=\"http\">Веб-страницу игр GNOME</ulink>."
 
 #: C/same-gnome.xml:204(para) 
-msgid "To report a bug or make a suggestion regarding this application or this manual, follow the directions in this <ulink url=\"ghelp:gnome-feedback\" type=\"help\">document</ulink>."
-msgstr "Чтобы сообщить об ошибке или внести предложение относительно этого приложения или данного руководства следуйте ссылке <ulink url=\"ghelp:gnome-feedback\" type=\"help\">Обратная связь с GNOME</ulink>."
+msgid "To report a bug or make a suggestion regarding this application or this manual, follow the directions in this <ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">document</ulink>."
+msgstr "Чтобы сообщить об ошибке или внести предложение относительно этого приложения или данного руководства следуйте ссылке <ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">Обратная связь с GNOME</ulink>."
 
 #: C/same-gnome.xml:210(para) 
 msgid "This program is distributed under the terms of the GNU General Public license as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. A copy of this license can be found at this <ulink url=\"ghelp:gpl\" type=\"help\">link</ulink>, or in the file COPYING included with the source code of this program."

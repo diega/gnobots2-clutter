@@ -170,7 +170,7 @@ msgstr ""
 msgid ""
 "To report a bug or make a suggestion regarding the <application>GNOME "
 "Mahjongg</application> application or this manual, follow the directions in "
-"the <ulink url=\"ghelp:gnome-feedback\" type=\"help\">GNOME Feedback Page</"
+"the <ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">GNOME Feedback Page</"
 "ulink>."
 msgstr ""
 
@@ -611,7 +611,7 @@ msgid ""
 "Jonathan Buzzard and Max Watson. This manual was written by Eric Baudais "
 "(<email>baudais@okstate.edu</email>). To report a bug or make a suggestion "
 "regarding this application or this manual, follow the directions in this "
-"<ulink url=\"ghelp:gnome-feedback\" type=\"help\">document</ulink>."
+"<ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">document</ulink>."
 msgstr ""
 
 #: C/mahjongg.xml:663(title)

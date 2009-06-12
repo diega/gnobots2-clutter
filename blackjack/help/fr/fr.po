@@ -197,11 +197,11 @@ msgstr "Votre avis"
 msgid ""
 "To report a bug or make a suggestion regarding the <application>Blackjack</"
 "application> application or this manual, follow the directions in the <ulink "
-"url=\"ghelp:gnome-feedback\" type=\"help\">GNOME Feedback Page</ulink>."
+"url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">GNOME Feedback Page</ulink>."
 msgstr ""
 "Pour rapporter une anomalie ou émettre une suggestion concernant "
 "<application>Blackjack</application> ou ce manuel, procédez selon les "
-"instructions de la <ulink url=\"ghelp:gnome-feedback\" type=\"help\">page "
+"instructions de la <ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">page "
 "des réactions sur GNOME</ulink>."
 
 #: C/blackjack.xml:129(primary) C/blackjack.xml:157(term)
@@ -986,12 +986,12 @@ msgstr ""
 #: C/blackjack.xml:860(para)
 msgid ""
 "To report a bug or make a suggestion regarding this application or this "
-"manual, follow the directions in this <ulink url=\"ghelp:gnome-feedback\" "
+"manual, follow the directions in this <ulink url=\"ghelp:user-guide?feedback-bugs\" "
 "type=\"help\">document</ulink>."
 msgstr ""
 "Pour rapporter une anomalie ou émettre une suggestion concernant cette "
 "application ou ce manuel, procédez selon les instructions de <ulink url="
-"\"ghelp:gnome-feedback\" type=\"help\">ce document</ulink>."
+"\"ghelp:user-guide?feedback-bugs\" type=\"help\">ce document</ulink>."
 
 # Mentions légales
 #: C/blackjack.xml:866(para)

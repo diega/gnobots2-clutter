@@ -92,8 +92,8 @@ msgid "Feedback"
 msgstr "Återkoppling"
 
 #: C/blackjack.xml:120(para)
-msgid "To report a bug or make a suggestion regarding the <application>Blackjack</application> application or this manual, follow the directions in the <ulink url=\"ghelp:gnome-feedback\" type=\"help\">GNOME Feedback Page</ulink>."
-msgstr "För att rapportera ett fel eller föreslå någonting angående programmet <application>Tjugoett</application> eller den här handboken, följ anvisningarna på <ulink url=\"ghelp:gnome-feedback\" type=\"help\">GNOME:s återkopplingssida</ulink>."
+msgid "To report a bug or make a suggestion regarding the <application>Blackjack</application> application or this manual, follow the directions in the <ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">GNOME Feedback Page</ulink>."
+msgstr "För att rapportera ett fel eller föreslå någonting angående programmet <application>Tjugoett</application> eller den här handboken, följ anvisningarna på <ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">GNOME:s återkopplingssida</ulink>."
 
 #: C/blackjack.xml:129(primary)
 #: C/blackjack.xml:157(term)
@@ -626,8 +626,8 @@ msgid "<application>Blackjack</application> was written by William Jon McCann (<
 msgstr "<application>Tjugoett</application> skrevs av William Jon McCann (<email>mccann@jhu.edu</email>)."
 
 #: C/blackjack.xml:860(para)
-msgid "To report a bug or make a suggestion regarding this application or this manual, follow the directions in this <ulink url=\"ghelp:gnome-feedback\" type=\"help\">document</ulink>."
-msgstr "För att rapportera ett fel eller föreslå någoning angående det här programmet eller den här handboken, följ anvisningarna i det här <ulink url=\"ghelp:gnome-feedback\" type=\"help\">dokumentet</ulink>."
+msgid "To report a bug or make a suggestion regarding this application or this manual, follow the directions in this <ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">document</ulink>."
+msgstr "För att rapportera ett fel eller föreslå någoning angående det här programmet eller den här handboken, följ anvisningarna i det här <ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">dokumentet</ulink>."
 
 #: C/blackjack.xml:866(para)
 msgid "This program is distributed under the terms of the GNU General Public license as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. A copy of this license can be found at this <ulink url=\"ghelp:gpl\" type=\"help\">link</ulink>, or in the file COPYING included with the source code of this program."

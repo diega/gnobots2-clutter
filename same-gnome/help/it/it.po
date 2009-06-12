@@ -234,7 +234,7 @@ msgid ""
 msgstr ""
 "Per segnalare un problema o inviare suggerimenti sul gioco <application>Same "
 "GNOME</application> o su questo manuale, seguire le istruzioni presenti alla "
-"<ulink url=\"ghelp:gnome-feedback\" type=\"help\">pagina di commenti su "
+"<ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">pagina di commenti su "
 "GNOME</ulink>."
 
 #: C/same-gnome.xml:117(primary)
@@ -549,7 +549,7 @@ msgid ""
 "To report a bug or make a suggestion regarding this application or this "
 "manual, follow the directions in the <ulink url=\"ghelp:user-guide?feedback-"
 "bugs\" type=\"help\">Feedback section of the GNOME User Guide</ulink>."
-msgstr "Per segnalare un errore o inviare un suggerimento riguardo questa applicazione o questo manuale, seguire le indicazioni nella <ulink url=\"ghelp:gnome-feedback\" type=\"help\">Pagina dei commenti GNOME</ulink>."
+msgstr "Per segnalare un errore o inviare un suggerimento riguardo questa applicazione o questo manuale, seguire le indicazioni nella <ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">Pagina dei commenti GNOME</ulink>."
 
 #: C/same-gnome.xml:252(para)
 msgid ""

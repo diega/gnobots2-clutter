@@ -238,7 +238,7 @@ msgid ""
 msgstr ""
 "Per a informar d'un error o fer algun suggeriment sobre el <application>Same "
 "GNOME</application> o aquest manual, seguiu les indicacions a la <ulink url="
-"\"ghelp:gnome-feedback\" type=\"help\">pàgina de comentaris del GNOME</"
+"\"ghelp:user-guide?feedback-bugs\" type=\"help\">pàgina de comentaris del GNOME</"
 "ulink>."
 
 #: C/same-gnome.xml:117(primary)

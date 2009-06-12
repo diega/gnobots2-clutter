@@ -332,7 +332,7 @@ msgstr "Το <application>Ίδια GNOME</application> γράφτηκε από �
 
 #: C/same-gnome.xml:246(para)
 msgid "To report a bug or make a suggestion regarding this application or this manual, follow the directions in the <ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">Feedback section of the GNOME User Guide</ulink>."
-msgstr "Για να αναφέρετε ένα σφάλμα ή να κάνετε μια πρόταση σχετικά με αυτή την εφαρμογή ή αυτό το εγχειρίδιο, ακολουθήστε τις οδηγίες στη <ulink url=\"ghelp:gnome-feedback\" type=\"help\">σελίδα ανάδρασης GNOME </ulink>."
+msgstr "Για να αναφέρετε ένα σφάλμα ή να κάνετε μια πρόταση σχετικά με αυτή την εφαρμογή ή αυτό το εγχειρίδιο, ακολουθήστε τις οδηγίες στη <ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">σελίδα ανάδρασης GNOME </ulink>."
 
 #: C/same-gnome.xml:252(para)
 msgid "This program is distributed under the terms of the GNU General Public license as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. A <ulink url=\"ghelp:gpl\" type=\"help\">copy of this license</ulink> is included with this documentation; another can be found in the file COPYING included with the source code of this program."

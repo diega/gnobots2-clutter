@@ -196,11 +196,11 @@ msgstr "Ανάδραση"
 msgid ""
 "To report a bug or make a suggestion regarding the <application>Blackjack</"
 "application> application or this manual, follow the directions in the <ulink "
-"url=\"ghelp:gnome-feedback\" type=\"help\">GNOME Feedback Page</ulink>."
+"url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">GNOME Feedback Page</ulink>."
 msgstr ""
 "Για να αναφέρετε ένα σφάλμα ή να κάνετε μια πρόταση σχετικά με το "
 "<application>Μπλάκτζακ</application> ή αυτή την τεκμηρίωση, ακολουθήστε τις "
-"οδηγίες στη σελίδα <ulink url=\"ghelp:gnome-feedback\" type=\"help"
+"οδηγίες στη σελίδα <ulink url=\"ghelp:user-guide?feedback-bugs\" type=\"help"
 "\">ανάδρασης GNOME </ulink>."
 
 #: C/blackjack.xml:129(primary) C/blackjack.xml:157(term)
@@ -1015,12 +1015,12 @@ msgstr ""
 #: C/blackjack.xml:860(para)
 msgid ""
 "To report a bug or make a suggestion regarding this application or this "
-"manual, follow the directions in this <ulink url=\"ghelp:gnome-feedback\" "
+"manual, follow the directions in this <ulink url=\"ghelp:user-guide?feedback-bugs\" "
 "type=\"help\">document</ulink>."
 msgstr ""
 "Για να αναφέρετε ένα σφάλμα ή να κάνετε μια πρόταση σχετικά με αυτήν την "
 "εφαρμογή ή αυτή την τεκμηρίωση, ακολουθήστε τις οδηγίες στη σελίδα <ulink "
-"url=\"ghelp:gnome-feedback\" type=\"help\">document</ulink>."
+"url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">document</ulink>."
 
 #: C/blackjack.xml:866(para)
 msgid ""
