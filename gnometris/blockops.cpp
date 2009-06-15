@@ -172,19 +172,19 @@ BlockOps::BlockOps() :
 	playingField = clutter_group_new ();
 	clutter_group_add (CLUTTER_GROUP(stage), CLUTTER_ACTOR(playingField));
 	
-	move_time = clutter_timeline_new_for_duration (60);
+	move_time = clutter_timeline_new (60);
 	g_signal_connect (move_time, "completed", G_CALLBACK
 			  (BlockOps::move_end), this);
 	move_alpha = clutter_alpha_new_full (move_time,
 					     CLUTTER_EASE_IN_QUAD);
 
-	fall_time = clutter_timeline_new_for_duration (FALL_TIMING);
+	fall_time = clutter_timeline_new (FALL_TIMING);
 	g_signal_connect (fall_time, "completed", G_CALLBACK
 			  (BlockOps::fall_end), this);
 	fall_alpha = clutter_alpha_new_full (fall_time,
 					     CLUTTER_EASE_IN_QUAD);
 
-	explode_time = clutter_timeline_new_for_duration (720);
+	explode_time = clutter_timeline_new (720);
 	g_signal_connect (explode_time, "completed", G_CALLBACK
 			  (BlockOps::explode_end), this);
 	explode_alpha = clutter_alpha_new_full (explode_time,
@@ -195,7 +195,7 @@ BlockOps::BlockOps() :
 								1.0, 1.0,
 								2.0, 2.0);
 
-	quake_time = clutter_timeline_new_for_duration (QUAKE_TIMING);
+	quake_time = clutter_timeline_new (QUAKE_TIMING);
 	quake_alpha = clutter_alpha_new_full (quake_time,
 					      CLUTTER_EASE_OUT_BOUNCE);
 	quake_behaviour = clutter_behaviour_path_new_with_knots (quake_alpha,

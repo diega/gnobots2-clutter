@@ -63,7 +63,7 @@ Preview::Preview():
 			   piece);
 	clutter_actor_show_all (stage);
 
-	piece_timeline = clutter_timeline_new_for_duration (180);
+	piece_timeline = clutter_timeline_new (180);
 	alpha = clutter_alpha_new_full (piece_timeline,
 			CLUTTER_EASE_IN_OUT_SINE);
 	piece_behav = clutter_behaviour_scale_new (alpha,
