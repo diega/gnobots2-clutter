@@ -95,11 +95,11 @@ Renderer::~Renderer ()
 {
 	for (int i = 0; i<NCOLOURS; i++) {
 		if (cache[i])
-			clutter_actor_destroy (CLUTTER_ACTOR(cache[i]));
+			cairo_surface_destroy (cache[i]);
 	}
 }
 
-ClutterActor* Renderer::getCacheCellById (gint id)
+cairo_surface_t* Renderer::getCacheCellById (gint id)
 {
 	return cache[id];
 }
@@ -114,20 +114,21 @@ void Renderer::rescaleCache (gint x, gint y)
 
 	if(cache[0]) {
 		for (int i = 0; i<NCOLOURS; i++) {
-			clutter_actor_set_size (CLUTTER_ACTOR(cache[i]),
-						pxwidth, pxheight);
-			clutter_cairo_texture_set_surface_size (CLUTTER_CAIRO_TEXTURE(cache[i]),
-								pxwidth, pxheight);
-			cairo_t *cr = clutter_cairo_texture_create (CLUTTER_CAIRO_TEXTURE(cache[i]));
-			cairo_scale(cr, 1.0 * pxwidth, 1.0 * pxheight);
+			g_object_unref (cache[i]);
+			cache[i] = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+							       pxwidth,
+							       pxheight);
+			cairo_t *cr = cairo_create (cache[i]);
+			cairo_scale (cr, 1.0 * pxwidth, 1.0 * pxheight);
 			drawCell (cr, i);
 			cairo_destroy (cr);
 		}
 	} else {
 		for (int i = 0; i<NCOLOURS; i++) {
-			cache[i] = clutter_cairo_texture_new (pxwidth, pxheight);
-			cairo_t *cr = clutter_cairo_texture_create (CLUTTER_CAIRO_TEXTURE(cache[i]));
-			cairo_scale(cr, 1.0 * pxwidth, 1.0 * pxheight);
+			cache[i] = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+							       pxwidth, pxheight);
+			cairo_t *cr = cairo_create (cache[i]);
+			cairo_scale (cr, 1.0 * pxwidth, 1.0 * pxheight);
 			drawCell (cr, i);
 			cairo_destroy (cr);
 		}

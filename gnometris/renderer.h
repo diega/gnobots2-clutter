@@ -26,7 +26,6 @@
 
 #include <cairo.h>
 #include <glib.h>
-#include <clutter/clutter.h>
 
 #include "blocks.h"
 #include "tetris.h"
@@ -44,12 +43,12 @@ public:
 	virtual ~ Renderer ();
 
 	void rescaleCache (gint pxw, gint pxh);
-	ClutterActor* getCacheCellById (gint id);
+	cairo_surface_t* getCacheCellById (gint id);
 
 	gint pxwidth;
 	gint pxheight;
 protected:
-	ClutterActor* cache[NCOLOURS];
+	cairo_surface_t* cache[NCOLOURS];
 	virtual void drawCell (cairo_t * cr, guint color);
 };
 

@@ -46,7 +46,7 @@ public:
 	int x;
 	int y;
 
-	void createActor (ClutterActor *chamber, ClutterActor *texture_source);
+	void createActor (ClutterActor *chamber, cairo_surface_t *texture_source);
 	void bindAnimations (BlockOps *f);
 
 	/* Every block will have a unique position

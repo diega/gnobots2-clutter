@@ -51,11 +51,19 @@ Block::~Block ()
 }
 
 void
-Block::createActor (ClutterActor *chamber, ClutterActor *texture_source)
+Block::createActor (ClutterActor *chamber, cairo_surface_t *texture_source)
 {
 	if (actor)
 		clutter_actor_destroy (CLUTTER_ACTOR(actor));
-	actor = clutter_clone_new (CLUTTER_ACTOR(texture_source));
+	actor = clutter_texture_new ();
+	// FIXME jclinton ... this should really be cluttercairo somehow for efficiency
+	clutter_texture_set_from_rgb_data (CLUTTER_TEXTURE(actor),
+					   cairo_image_surface_get_data(texture_source),
+					   TRUE,
+					   cairo_image_surface_get_width(texture_source),
+					   cairo_image_surface_get_height(texture_source),
+					   cairo_image_surface_get_stride(texture_source),
+					   32, CLUTTER_TEXTURE_NONE, NULL);
 	clutter_group_add (CLUTTER_GROUP (chamber), actor);
 	clutter_actor_set_position (CLUTTER_ACTOR(actor), x, y);
 	clutter_actor_show (CLUTTER_ACTOR(actor));
