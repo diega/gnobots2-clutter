@@ -2,9 +2,9 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY appversion "2.12">
-  <!ENTITY manrevision "2.10">
-  <!ENTITY date "June 2005">
+  <!ENTITY appversion "2.26">
+  <!ENTITY manrevision "2.26">
+  <!ENTITY date "June 2009">
   <!ENTITY app "<application>Mahjongg</application>">
   <!ENTITY appname "Mahjongg">
 ]>
@@ -38,6 +38,10 @@
       <year>2000</year>
       <holder>Eric Baudais (Documentation Author)</holder>
     </copyright>  
+	    <copyright>
+      <year>2009</year>
+      <holder>Paul Cutler (Documentation Author)</holder>
+    </copyright> 
     
     <!-- translators: uncomment this:
     
@@ -66,6 +70,22 @@
 	  <address> <email>baudais@okstate.edu</email> </address> 
 	</affiliation> 
       </author> 
+	        <author role="maintainer">
+	<firstname>Artur</firstname> 
+	<surname>Szymanski</surname> 
+	<affiliation> 
+	</affiliation> 
+      </author>
+	        <author role="maintainer">
+	<firstname>Paul</firstname> 
+	<surname>Cutler</surname> 
+	<affiliation> 
+		<orgname>GNOME Documentation Project</orgname>
+	  <address> <email>pcutler@gnome.org</email> </address> 
+	</affiliation> 
+      </author> 
+
+
 <!-- This is appropriate place for other contributors: translators,
       maintainers,  etc. Commented out by default.
        <othercredit role="translator">
@@ -80,20 +100,38 @@
 -->
     </authorgroup>
 	
-	<releaseinfo revision="2.26" role="review"/>
+	<releaseinfo revision="2.26" role="candidate"/>
+	
+	    <revhistory>
+      <!-- Remember to remove the &manrevision; entity from the revision entries other
+   than the current revision. -->
 
-    <revhistory>
+      <revision>
+        <revnumber>&appname; Manual V &appversion;</revnumber>
+        <date>2009-06-16</date>
+        <revdescription>
+          <para role="author">Paul Cutler</para>
+          <para role="publisher">GNOME Documentation Project</para>
+        </revdescription>
+      </revision>
+      <revision>
+        <revnumber>&appname; Manual V &appversion;</revnumber>
+        <date>2009-06-16</date>
+        <revdescription>
+          <para role="author">Artur Szymanski</para>
+        </revdescription>
+      </revision>	  
       <revision> 
-	<revnumber>&appname; Manual V&manrevision;</revnumber> 
-	<date>&date;</date> 
+	<revnumber>&appname; Manual V2.10;</revnumber> 
+	<date>June 2005</date> 
 	<revdescription> 
 	  <para role="author">Eric Baudais
 	    <email>baudais@okstate.edu</email>
 	  </para>
 	  <para role="publisher">GNOME Documentation Project</para>
 	</revdescription> 
-      </revision> 
-    </revhistory> 
+	</revision>
+	</revhistory>
 
     <releaseinfo>This manual describes version &appversion; of &appname;.
     </releaseinfo>
@@ -122,16 +160,14 @@
     <title>Introduction</title>
 
     <para>
-      <application>GNOME Mahjongg</application>, or Mahjongg for short,
-      is a solitaire (one player) version of the classic Eastern tile game, 
+      &app; is a solitaire (one player) version of the classic Eastern tile game, 
       Mahjongg.  It has all the functionality you expect from a tile or 
       card game.  You can change the type of tiles, the background, and 
       the difficulty level, among other things, in the 
       <link linkend="prefs">Preferences</link> dialog.  
       Other features, like the <link linkend="pause"><guibutton>Pause
       </guibutton> button</link>, make the game more 
-      competitive when you play against the clock. This document describes 
-      <application>Mahjongg</application>.
+      competitive when you play against the clock. 
     </para>
 
     <sect2 id="history">
@@ -153,7 +189,7 @@
 	flood.  Another theory says that the Chinese philosopher, Confucius, made 
 	the game.  The three <quote>Cardinal</quote> tiles have the same names as 
 	his three Cardinal virtues, Chung (middle) the Red, Fa (prosperity) the 
-	Green, and Po (white) the White, cooresponding with Benevolence, Sincerity, 
+	Green, and Po (white) the White, corresponding with Benevolence, Sincerity, 
 	and Filial Piety.  Still another theory says that Mahjongg is derived from 
 	other Chinese games.  <quote>Ya Pei</quote> is played with 32 cards made of 
 	wood or ivory and have the same oblong shape as present day Mahjongg tiles.  
@@ -191,6 +227,8 @@
       </para>
     </sect2>
   </sect1>
+  
+   <!-- ============= Playing Mahjongg ============================= -->
 
   <sect1 id="usage">
     <title>Playing Mahjongg</title>
@@ -200,7 +238,7 @@
       covered up by the tiles on top.  The harder the level you set in the 
       <link linkend="prefs"><interface>Preferences</interface> dialog</link>, 
       the more tiles are covered when the game starts.  The object of 
-      <application>GNOME Mahjongg</application> is to remove all the tiles 
+      &app; is to remove all the tiles 
       from the game.  To remove tiles you have to find matching pairs which 
       look alike.  A matching tile will usually have the same number of buttons 
       or markings on it or will look similar to each other.
@@ -213,11 +251,11 @@
       If you want to match the tile on the top level, you need to look for the 
       tile with the same green bamboo symbols.  Do you see a matching tile yet?  
       There are three tiles, which are visible, that match the tile on the top 
-      level.  Two are to the left and the lower right. The thrid one is on the top row, but you can't
+      level.  Two are to the left and the lower right. The third one is on the top row, but you can't
       remove that tile yet because the tile isn't 
-      on the outside of the stack of tiles.  Later I'll explain more fully which 
+      on the outside of the stack of tiles.  Later you will learn which 
       tiles can be removed and which tiles can't be removed even though they match.
-      I'll let you find the other two matching tiles, which are visible, on your own.
+      Find the other two matching tiles, which are visible, on your own.
     </para>
 
     <figure id="mahjongg-fig">
@@ -236,7 +274,7 @@
     </figure>
 
     <para>
-      <application>Mahongg</application> is played by 
+      &app; is played by 
       clicking on two matching tiles that are then removed. Play
       continues until all the tiles are removed or there are no
       available pairs.
@@ -252,7 +290,10 @@
 
     <para>
       If you can't match any more tiles, a 
-      dialog will appear telling you no more tiles can be matched and giving you the option of shuffling the tiles or undoing your last move (although you may have to undo many more moves to find your mistake).
+      dialog will appear telling you no more tiles can be matched and giving 
+      you the option of shuffling the tiles (adding an additional 60 seconds 
+      penalty to the game clock), starting a new game or undoing your
+      last move (although you may have to undo many more moves to find your mistake).
     </para>
 
     <figure id="info-fig1">
@@ -272,20 +313,10 @@
     
     <sect2 id="toolbar">
       <title>Toolbar</title>
-      <para>
-	The <interface>toolbar</interface> can be moved around the 
-	<interface>desktop</interface>.  If you click on the far 
-	left side of it, you will be able to drag it any place 
-	on the <interface>desktop</interface> you wish.  The 
-	<interface>toolbar</interface> also snaps into place 
-	at the top and left side of the <interface>Main Window
-	</interface> in <application>GNOME Mahjongg</application>, 
-	but the default place the toolbar is located, and the best 
-	in my opinion, is under the <interface>menubar</interface>.
-      </para>
 
       <para>
-	The <interface>toolbar</interface> contains the following buttons:
+	The <interface>toolbar</interface>, located below the
+	<interface>Menu Bar</interface>, contains the following buttons:
       </para>
       
       <variablelist>
@@ -317,7 +348,7 @@
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term><guibutton>Undo</guibutton></term>
+	  <term><guibutton>Undo Move</guibutton></term>
 	  <listitem>
 	    <para>
 	      This button replaces two tiles you removed until 
@@ -326,10 +357,10 @@
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term><guibutton>Redo</guibutton></term>
+	  <term><guibutton>Redo Move</guibutton></term>
 	  <listitem>
 	    <para>
-	      This button replays your previous move, the <guibutton>Undo</guibutton> 
+	      This button replays your previous move, the <guibutton>Undo Move</guibutton> 
 	      button took back.
 	    </para>
 	  </listitem>
@@ -338,7 +369,8 @@
 	  <term><guibutton>Hint</guibutton></term>
 	  <listitem>
 	    <para>
-	      This button gives you a pair of matching tiles to remove.
+	      This button gives you a pair of matching tiles to remove. Each time you use it,
+	      30 seconds penalty will be added to the game clock. 
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -361,8 +393,16 @@
 	  <term><guilabel>Moves Left:</guilabel></term>
 	  <listitem>
 	    <para>
-	      This number 
+	      This shows the number 
 	      of possible matches you can make.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><guilabel>Time:</guilabel></term>
+	  <listitem>
+	    <para>
+	      This shows the elapsed time from game start.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -403,7 +443,7 @@
 		  <para>
 		    <menuchoice>
 		      <shortcut>
-			<keysym>Ctrl-N</keysym>
+			<keycap>Ctrl-N</keycap>
 		      </shortcut>
 		      <guimenuitem>New</guimenuitem>
 		    </menuchoice> — 
@@ -431,7 +471,7 @@
 		  <para>
 		    <menuchoice>
 		      <shortcut>
-			<keysym>Ctrl-Z</keysym>
+			<keycap>Ctrl-Z</keycap>
 		      </shortcut>
 		      <guimenuitem>Undo move</guimenuitem>
 		    </menuchoice> — 
@@ -443,7 +483,7 @@
 		  <para>
 		    <menuchoice>
 		      <shortcut>
-			<keysym>Ctrl-R</keysym>
+			<keycap>Ctrl-R</keycap>
 		      </shortcut>
 		      <guimenuitem>Redo move</guimenuitem>
 		    </menuchoice> — 
@@ -475,9 +515,9 @@
 		  <para id="quit">
 		    <menuchoice>
 		      <shortcut>
-			<keysym>Ctrl-Q</keysym>
+			<keycap>Ctrl-Q</keycap>
 		      </shortcut>
-		      <guimenuitem>Exit</guimenuitem>
+		      <guimenuitem>Quit</guimenuitem>
 		    </menuchoice> — 
 		    This item allows you to quit the game.
 		  </para>
@@ -493,6 +533,20 @@
 	    <para>
 	      The menu contains:
 	      <itemizedlist mark="opencircle">
+		<listitem>
+		  <para>
+		    <menuchoice>
+		      <shortcut>
+			<keycap>F11</keycap>
+		      </shortcut>
+		      <guimenuitem>Fullscreen</guimenuitem>
+		    </menuchoice> — 
+		    This item allows to play the game in fullscreen mode. 
+		    To leave fullscreen press <keycap>F11</keycap> or 
+		    click <guibutton>Leave Fullscreen</guibutton> button on
+		    <interface>toolbar</interface>.    
+		  </para>
+		</listitem>
 		<listitem>
 		  <para>
 		    <menuchoice>
@@ -529,7 +583,7 @@
 		  <para>
 		    <menuchoice>
                       <shortcut>
-			<keysym>F1</keysym>
+			<keycap>F1</keycap>
 		      </shortcut>
 		      <guimenuitem>Contents</guimenuitem>
 		    </menuchoice> — 
@@ -554,6 +608,8 @@
 
     </sect2>
   </sect1>
+  
+   <!-- ============= Customization ============================= -->
 
   <sect1 id="prefs">
     <title>Customization</title>
@@ -631,13 +687,15 @@ and risk annoying the user.
  </sect1>
 -->
 
+ <!-- ============= Authors ============================= -->
+
  <sect1 id="authors">
   <title>Authors</title>
   <para>
-   <application>GNOME Mahjongg</application> was written by Francisco 
+   &app; was written by Francisco 
    Bustamante (<email>pancho@nuclecu.unam.mx</email>), Michael Meeks 
    (<email>mmeeks@gnu.org</email>), Max Watson, Heinz Hempe, and 
-   Philippe Chavin.  Tiles for <application>GNOME Mahjongg</application>
+   Philippe Chavin.  Tiles for &app;
    were made by Jonathan Buzzard and Max Watson.    This manual was written by Eric Baudais
    (<email>baudais@okstate.edu</email>).
    To report a bug or make a suggestion regarding this application or
