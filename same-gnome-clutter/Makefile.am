@@ -12,9 +12,14 @@ same_DATA = \
     score.js \
     yellow.svg
 
-bin_SCRIPTS = same-gnome-clutter
+same_gnome_clutter_c_SOURCES = same.c
+same_gnome_clutter_c_CFLAGS = `pkg-config --cflags clutter-0.9 glib-2.0`
+same_gnome_clutter_c_LDFLAGS = `pkg-config --libs clutter-0.9 glib-2.0`
 
-desktop_in_files = same-gnome-clutter.desktop.in.in
+bin_SCRIPTS = same-gnome-clutter
+bin_PROGRAMS = same-gnome-clutter-c
+
+desktop_in_files = same-gnome-clutter.desktop.in.in same-gnome-clutter-c.desktop.in.in
 desktopdir = $(datadir)/applications
 desktop_DATA = $(desktop_in_files:.desktop.in.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
@@ -31,5 +36,6 @@ EXTRA_DIST = \
     red.svg \
     same-seed.ui \
     score.js \
-    yellow.svg
+    yellow.svg \
+    same.c
 
