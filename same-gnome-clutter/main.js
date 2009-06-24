@@ -24,11 +24,11 @@ Gtk.init(Seed.argv);
 Clutter.init(Seed.argv);
 GConf.init(Seed.argv);
 
-Seed.include("light.js");
-Seed.include("board.js");
-Seed.include("score.js");
+light = imports.light;
+board = imports.board;
+score = imports.score;
 
-var score = 0;
+var current_score = 0;
 var timelines = [];
 
 var stage = new Clutter.Stage();
@@ -38,7 +38,7 @@ stage.signal.hide.connect(Clutter.main_quit);
 stage.color = {alpha: 0};
 stage.set_size((tiles_w * tile_size),(tiles_h * tile_size));
 
-var board = new Board();
+var board = new board.Board();
 stage.add_actor(board);
 stage.show_all();
 

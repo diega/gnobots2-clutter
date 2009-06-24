@@ -1,8 +1,13 @@
+Clutter = imports.gi.Clutter;
+GLib = imports.gi.GLib;
+main = imports.main;
+
 var tile_svg_size = 50;
+var file_prefix = '@prefix@' + "/share/gnome-games/same-gnome-clutter/";
 
 function load_svg(file)
 {
-    var tx = new Clutter.Texture({filename: file});
+    var tx = new Clutter.Texture({filename: file_prefix+file});
     tx.filter_quality = Clutter.TextureQuality.HIGH;
     return tx;
 }
@@ -18,7 +23,7 @@ Light = new GType({
 	// Private
 	var closed = false;
 	var light_x, light_y;
-	var state = Math.floor(Math.random() * max_colors);
+	var state = Math.floor(Math.random() * main.max_colors);
 		
 	// Public
 	this.visited = false;
@@ -39,10 +44,10 @@ Light = new GType({
 	{
 	    this.on.anim = this.on.animate_with_timeline(Clutter.AnimationMode.LINEAR, timeline,
 							 {
-							     height: tile_size * 2,
-							     width: tile_size * 2,
-							     x: -tile_size/2,
-							     y: -tile_size/2
+							     height: main.tile_size * 2,
+							     width: main.tile_size * 2,
+							     x: -main.tile_size/2,
+							     y: -main.tile_size/2
 							 });
 	    
 	    this.anim = this.animate_with_timeline(Clutter.AnimationMode.LINEAR, timeline,
@@ -110,11 +115,11 @@ Light = new GType({
 	};
 	
 	// Implementation
-	this.on.set_size(tile_size, tile_size);
+	this.on.set_size(main.tile_size, main.tile_size);
 	
 	this.opacity = 180;
 	
-	this.set_anchor_point(tile_size / 2, tile_size / 2);
+	this.set_anchor_point(main.tile_size / 2, main.tile_size / 2);
 	
 	this.add_actor(this.on);
     }

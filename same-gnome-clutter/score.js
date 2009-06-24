@@ -1,3 +1,7 @@
+Clutter = imports.gi.Clutter;
+Pango = imports.gi.Pango;
+main = imports.main;
+
 Score = new GType({
 	parent: Clutter.Group.type,
 	name: "Score",
@@ -13,7 +17,7 @@ Score = new GType({
 				score = this;
 			
 			score.hide();
-			stage.remove_actor(score);
+			main.stage.remove_actor(score);
 		};
 		
 		this.animate_score = function (points)
@@ -25,7 +29,7 @@ Score = new GType({
 			label.set_text("+" + points);
 			this.set_anchor_point(this.width/2, this.height/2);
 			
-			stage.add_actor(this);
+			main.stage.add_actor(this);
 			this.show();
 			
 			this.anim = this.animate(Clutter.AnimationMode.EASE_OUT_SINE,400,
@@ -46,7 +50,7 @@ Score = new GType({
 			
 			this.set_anchor_point(this.width/2, this.height/2);
 			
-			stage.add_actor(this);
+			main.stage.add_actor(this);
 			this.show();
 			
 			//this.opacity = 0;
@@ -72,8 +76,8 @@ Score = new GType({
 		this.add_actor(label);
 		label.show();
 		
-		this.x = stage.width / 2;
-		this.y = stage.height / 2;
+		this.x = main.stage.width / 2;
+		this.y = main.stage.height / 2;
 	}
 });
 

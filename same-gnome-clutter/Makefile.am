@@ -31,7 +31,7 @@ EXTRA_DIST = \
     blue.svg \
     board.js \
     green.svg \
-    light.js \
+    light.js.in \
     main.js \
     red.svg \
     same-seed.ui \

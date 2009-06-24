@@ -1,7 +1,13 @@
+Clutter = imports.gi.Clutter;
+GLib = imports.gi.GLib;
+light = imports.light;
+score = imports.score;
+main = imports.main;
+
 Board = new GType({
 	parent: Clutter.Group.type,
 	name: "Board",
-	init: function()
+	init: function(self)
 	{
 		// Private
 		var lights = [], all_lights = [];
@@ -137,31 +143,31 @@ Board = new GType({
 		{
 			var points_awarded = calculate_score(tiles);
 			
-			if(fly_score)
+			if(main.fly_score)
 			{
-				var score_text = new Score();
+				var score_text = new score.Score();
 				score_text.animate_score(points_awarded);
 			}
 			
-			score += points_awarded;
+			main.current_score += points_awarded;
 			
-			print(score);
+			print(main.current_score);
 			
-			if(board.has_completed())
+			if(self.has_completed())
 			{
-				if(board.has_won())
-					score += 1000;
+				if(self.has_won())
+					main.current_score += 1000;
 				
-				final_score = new Score();
-				final_score.animate_final_score(score);
+				final_score = new score.Score();
+				final_score.animate_final_score(main.current_score);
 				
-				print("Done with: " + score + " points!");
+				print("Done with: " + main.current_score + " points!");
 			}
 		}
 		
 		function enter_tile(actor, event)
 		{
-			var picked = stage.get_actor_at_pos(Clutter.PickMode.ALL,
+			var picked = main.stage.get_actor_at_pos(Clutter.PickMode.ALL,
 			                                    event.motion.x,
 			                                    event.motion.y).get_parent();
 			
@@ -258,8 +264,8 @@ Board = new GType({
 					li.set_light_x(real_x);
 					li.set_light_y(parseInt(y,10));
 					
-					var new_x = real_x * tile_size + offset;
-					var new_y = (tiles_h - y - 1) * tile_size + offset;
+					var new_x = real_x * main.tile_size + main.offset;
+					var new_y = (main.tiles_h - y - 1) * main.tile_size + main.offset;
 					
 					if(!li.get_closed() && ((new_x != li.x) ||
 										    (new_y != li.y)))
@@ -287,7 +293,7 @@ Board = new GType({
 			else
 				animating = false;
 			
-			for(; real_x < tiles_w; real_x++)
+			for(; real_x < main.tiles_w; real_x++)
 				lights[real_x] = null;
 			
 			update_score(cl.length);
@@ -299,30 +305,30 @@ Board = new GType({
 		
 		this.new_game = function ()
 		{
-			var children = board.get_children();
+			var children = self.get_children();
 			
 			for(var i in children)
-				board.remove_actor(children[i]);
+				self.remove_actor(children[i]);
 			
 			if(final_score)
 				final_score.hide_score();
 			
 			all_lights = [];
 			
-			for(var x = 0; x < tiles_w; x++)
+			for(var x = 0; x < main.tiles_w; x++)
 			{
 				lights[x] = [];
-				for(var y = 0; y < tiles_h; y++)
+				for(var y = 0; y < main.tiles_h; y++)
 				{
-					var li = new Light();
+					var li = new light.Light();
 				
 					li.set_light_x(x);
 					li.set_light_y(y);
 				
-					li.set_position(x * tile_size + offset,
-									(tiles_h - y - 1) * tile_size + offset);
-					board.add_actor(li);
-					li.on.signal.button_release_event.connect(board.remove_region);
+					li.set_position(x * main.tile_size + main.offset,
+									(main.tiles_h - y - 1) * main.tile_size + main.offset);
+					self.add_actor(li);
+					li.on.signal.button_release_event.connect(self.remove_region);
 				
 					lights[x][y] = li;
 					all_lights.push(lights[x][y]);
