@@ -27,19 +27,18 @@ Score = new GType({
 			
 			label.set_font_name("Bitstrem Vera Sans Bold 40");
 			label.set_text("+" + points);
-			this.set_anchor_point(this.width/2, this.height/2);
 			
 			main.stage.add_actor(this);
 			this.show();
 			
-			this.anim = this.animate(Clutter.AnimationMode.EASE_OUT_SINE,400,
+			var a = this.animate(Clutter.AnimationMode.EASE_OUT_SINE,600,
 			{
 			    depth:  500,
-			    opacity: 0,
+			    opacity: 0
 			});
-			this.anim.timeline.start();
-			
-			this.anim.timeline.signal.completed.connect(this.hide_score, this);
+
+			a.timeline.start();			
+			a.timeline.signal.completed.connect(this.hide_score, this);
 		};
 		
 		this.animate_final_score = function (points)
@@ -48,8 +47,6 @@ Score = new GType({
 			label.set_markup("<b>Game Over!</b>\n" + points + " points");
 			label.set_line_alignment(Pango.Alignment.CENTER);
 			
-			this.set_anchor_point(this.width/2, this.height/2);
-			
 			main.stage.add_actor(this);
 			this.show();
 			
@@ -57,22 +54,23 @@ Score = new GType({
 			//this.y = -this.height;
 			this.scale_x = this.scale_y = 0;
 			
-			this.anim = this.animate(Clutter.AnimationMode.EASE_OUT_ELASTIC,2000,
+			var a = this.animate(Clutter.AnimationMode.EASE_OUT_ELASTIC,2000,
 			{
 			    scale_x: 1,
 			    scale_y: 1,
 				//y: [GObject.TYPE_INT, stage.width / 2],
 			    opacity: 255,
 			});
-			this.anim.timeline.start();
 			
-			//this.anim.timeline.signal.completed.connect(this.hide_score, this);
+			a.timeline.start();
+			//a.timeline.signal.completed.connect(this.hide_score, this);
 		};
 		
 		// Implementation
 		label = new Clutter.Text();
 		label.set_color({red:255, green:255, blue:255, alpha:255});
 		
+		this.anchor_gravity = Clutter.Gravity.CENTER;
 		this.add_actor(label);
 		label.show();
 		

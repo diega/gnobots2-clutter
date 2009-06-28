@@ -11,33 +11,16 @@ Board = new GType({
 	{
 		// Private
 		var lights = [], all_lights = [];
-		var cl, oldcl = [], oldpicked;
+		var last_light;
 		var animating = false;
+		var anim_timeline;
 		var final_score;
+		
+		// TODO: when a click is rejected, queue it up, like in the C version
 		
 		function done_animating()
 		{
 			animating = false;
-			
-			/*var x = {}, y = {};
-			window.window.get_pointer(x, y, null);
-			
-			var picked = stage.get_actor_at_pos(x.value, y.value);
-			
-			print(picked);
-			
-			if(picked)
-				picked = picked.get_parent();
-			
-			if(picked && picked.get_light_x)
-			{
-				if(picked == oldpicked)
-					return false;
-			
-				oldpicked = picked;
-				
-				light_lights_from(picked);
-			}*/
 			
 			return false;
 		}
@@ -87,31 +70,6 @@ Board = new GType({
 			return _connected_lights(li);
 		}
 		
-		function any_connected_lights(li)
-		{
-			if(!li || li.get_closed())
-				return false;
-			
-			var x = li.get_light_x();
-			var y = li.get_light_y();
-			
-			if(lights[x][y+1] && (li.get_state() == lights[x][y+1].get_state()))
-				return !lights[x][y+1].get_closed();
-
-			if(lights[x][y-1] && (li.get_state() == lights[x][y-1].get_state()))
-				return !lights[x][y-1].get_closed();
-			
-			if(lights[x+1] && lights[x+1][y] &&
-			   (li.get_state() == lights[x+1][y].get_state()))
-				return !lights[x+1][y].get_closed();
-			
-			if(lights[x-1] && lights[x-1][y] &&
-			   (li.get_state() == lights[x-1][y].get_state()))
-				return !lights[x-1][y].get_closed();
-			
-			return false;
-		}
-		
 		function calculate_score(n_lights)
 		{
 			if (n_lights < 3)
@@ -124,11 +82,7 @@ Board = new GType({
 		{
 			var i;
 			
-			cl = connected_lights(li);
-			
-			for(i in oldcl)
-				if(!oldcl[i].get_closed())
-					oldcl[i].opacity = 180;
+			var cl = connected_lights(li);
 			
 			if(cl.length < 2)
 				return false;
@@ -165,18 +119,25 @@ Board = new GType({
 			}
 		}
 		
-		function enter_tile(actor, event)
+		function light_entered(actor, event)
 		{
-			var picked = main.stage.get_actor_at_pos(Clutter.PickMode.ALL,
-			                                    event.motion.x,
-			                                    event.motion.y).get_parent();
-			
-			if(picked === oldpicked)
+			if(actor === last_light)
 				return false;
 			
-			oldpicked = picked;
+			last_light = actor;
 			
-			light_lights_from(picked);
+			light_lights_from(actor);
+			
+			return false;
+		}
+		
+		function light_left(actor, event)
+		{
+			var connected = connected_lights(actor);
+			
+			for(var i in connected)
+				if(!connected[i].get_closed())
+					connected[i].opacity = 180;
 			
 			return false;
 		}
@@ -188,7 +149,7 @@ Board = new GType({
 			{
 				li = all_lights[i];
 				
-				if(!li.get_closed() && any_connected_lights(li))
+				if(!li.get_closed() && (connected_lights(li).length > 1))
 					return false;
 			}
 			
@@ -217,9 +178,8 @@ Board = new GType({
 		{
 			if(animating)
 				return false;
-				
-			if(!cl)
-				light_lights_from(actor.get_parent());
+						
+			var cl = connected_lights(actor);
 			
 			if(cl.length < 2)
 				return false;
@@ -235,7 +195,7 @@ Board = new GType({
 			
 			animating = true;
 			
-			var anim_timeline = new Clutter.Timeline({duration: 500});
+			anim_timeline = new Clutter.Timeline({duration: 500});
 			
 			for(var x in lights)
 			{
@@ -284,21 +244,16 @@ Board = new GType({
 				if(!empty_col)
 					real_x++;
 			}
-
-			if(anim_timeline)
-            {
-				anim_timeline.signal.completed.connect(done_animating);
-				anim_timeline.start();
-			}
-			else
-				animating = false;
+		
+			anim_timeline.signal.completed.connect(done_animating);
+			anim_timeline.start();
 			
 			for(; real_x < main.tiles_w; real_x++)
 				lights[real_x] = null;
 			
 			update_score(cl.length);
 			
-			cl = oldpicked = null;
+			cl = last_light = null;
 			
 			return false;
 		};
@@ -328,7 +283,9 @@ Board = new GType({
 					li.set_position(x * main.tile_size + main.offset,
 									(main.tiles_h - y - 1) * main.tile_size + main.offset);
 					self.add_actor(li);
-					li.on.signal.button_release_event.connect(self.remove_region);
+					li.signal.button_release_event.connect(self.remove_region);
+					li.signal.enter_event.connect(light_entered);
+					li.signal.leave_event.connect(light_left);
 				
 					lights[x][y] = li;
 					all_lights.push(lights[x][y]);
@@ -337,7 +294,6 @@ Board = new GType({
 		};
 		
 		// Implementation
-		this.signal.motion_event.connect(enter_tile);
 		this.reactive = true;
 	}
 });

@@ -29,8 +29,7 @@ Light = new GType({
 	this.visited = false;
 	
 	if(loaded_colors[state])
-		this.on = new Clutter.Clone({source: loaded_colors[state],
-		                             reactive: true});
+		this.on = new Clutter.Clone({source: loaded_colors[state]});
 	else
 		this.on = loaded_colors[state] = load_svg(colors[state]);
 	
@@ -42,18 +41,18 @@ Light = new GType({
 	
 	this.animate_out = function (timeline)
 	{
-	    this.on.anim = this.on.animate_with_timeline(Clutter.AnimationMode.LINEAR, timeline,
-							 {
-							     height: main.tile_size * 2,
-							     width: main.tile_size * 2,
-							     x: -main.tile_size/2,
-							     y: -main.tile_size/2
-							 });
+	    this.on.animate_with_timeline(Clutter.AnimationMode.LINEAR, timeline,
+		{
+			height: main.tile_size * 2,
+			width: main.tile_size * 2,
+			x: -main.tile_size/2,
+			y: -main.tile_size/2
+		});
 	    
-	    this.anim = this.animate_with_timeline(Clutter.AnimationMode.LINEAR, timeline,
-						   {
-						       opacity: 0
-						   });
+	    this.animate_with_timeline(Clutter.AnimationMode.LINEAR, timeline,
+		{
+		   opacity: 0
+		});
 	    
 	    timeline.signal.completed.connect(this.hide_light, this);
 	    
@@ -62,11 +61,11 @@ Light = new GType({
 	
 	this.animate_to = function (new_x, new_y, timeline)
 	{
-	    this.anim = this.animate_with_timeline(Clutter.AnimationMode.EASE_OUT_BOUNCE, timeline,
-						   {
-						       x: new_x,
-						       y: new_y
-						   });
+	    this.animate_with_timeline(Clutter.AnimationMode.EASE_OUT_BOUNCE, timeline,
+		{
+			x: new_x,
+			y: new_y
+		});
 	    
 	    GLib.main_context_iteration();
 	};
@@ -118,10 +117,12 @@ Light = new GType({
 	this.on.set_size(main.tile_size, main.tile_size);
 	
 	this.opacity = 180;
+	this.reactive = true;
 	
 	this.set_anchor_point(main.tile_size / 2, main.tile_size / 2);
 	
 	this.add_actor(this.on);
     }
 });
+
 
