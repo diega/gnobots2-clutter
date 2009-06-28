@@ -1,13 +1,13 @@
 # Czech translation of gnometris help.
-# Copyright (C) 2009 the author(s) ofgnome-games.
+# Copyright (C) 2009 the author(s) of gnome-games.
 # This file is distributed under the same license as the gnometris help.
 # Marek Černocký <marek@manet.cz>, 2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-games gnome-2-26\n"
-"POT-Creation-Date: 2009-06-12 14:25+0000\n"
-"PO-Revision-Date: 2009-06-20 11:28+0100\n"
+"POT-Creation-Date: 2009-06-21 22:31+0000\n"
+"PO-Revision-Date: 2009-06-24 19:55+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 
 #: C/gnometris.xml:27(title)
 msgid "<application>Gnometris</application> Manual"
-msgstr "Návod ke hře <application>Gnometris</application>"
+msgstr "Příručka ke hře <application>Gnometris</application>"
 
 #: C/gnometris.xml:30(para)
 msgid ""
@@ -50,12 +50,12 @@ msgid ""
 "of the GFDL at this <ulink type=\"help\" url=\"ghelp:fdl\">link</ulink> or "
 "in the file COPYING-DOCS distributed with this manual."
 msgstr ""
-"Je uděleno oprávnění ke kopírování, distribuci a/nebo úpravám tohoto "
-"dokumentu pod podmínkami GNU Free Documentation License (GFDL), verze 1.1 "
-"nebo v pozdějším znění vydaném Free Software Foundation bez neměnných částí "
-"a bez textu předního a zadního přebalu. Kopii GFDL naleznete pod tímto  "
-"<ulink type=\"help\" url=\"ghelp:fdl\">odkazem</ulink> nebo v souboru "
-"COPYING-DOCS šířeném spolu s tímto návodem."
+"Je povoleno kopírovat, šířit a/nebo upravovat tento dokument za podmínek GNU "
+"Free Documentation License, verze 1.1 nebo jakékoli další verze vydané "
+"nadací Free Software Foundation; bez neměnných oddílů, bez textů předních "
+"desek a bez textů zadních desek. Kopie této licence je zahrnuta v oddílu "
+"jménem <ulink type=\"help\" url=\"ghelp:fdl\">GNU Free Documentation "
+"License</ulink> nebo v souboru COPYING-DOCS dodávaném s touto příručkou."
 
 #: C/gnometris.xml:12(para)
 msgid ""
@@ -64,9 +64,9 @@ msgid ""
 "you can do so by adding a copy of the license to the manual, as described in "
 "section 6 of the license."
 msgstr ""
-"Tento návod je součástí kolekce návodů GNOME šířených pod GFDL. Pokud chcete "
-"tento manuál šířit oddělené od kolekce, musíte jej doplnit o kopii licence "
-"tak, jak je uvedeno v bodu 6 licence."
+"Tato příručka je součástí kolekce příruček GNOME, distribuovaných pod "
+"licencí GNU FDL. Pokud chcete tento dokument šířit odděleně od kolekce, "
+"musíte přiložit kopii licence dle popisu v sekci 6 dané licence."
 
 #: C/gnometris.xml:19(para)
 msgid ""
@@ -76,11 +76,11 @@ msgid ""
 "aware of those trademarks, then the names are in capital letters or initial "
 "capital letters."
 msgstr ""
-"Mnoho názvů používaných firmami k označení jejich produktů a služeb je "
-"prohlášeno za obchodní značku. Pokud se některé z těchto názvů objeví v "
-"dokumentaci GNOME a členové Dokumentačního projektu GNOME jsou si vědomi, že "
-"se jedná o obchodní značku, jsou tyto názvy uvedeny velkými písmeny nebo s "
-"prvním velkým písmenem."
+"Mnoho užívaných jmen určených k zviditelnění produktů nebo služeb jsou "
+"ochranné známky. Na místech, kde jsou tato jména v dokumentaci užita a "
+"členové Dokumentačního projektu GNOME jsou si vědomi skutečnosti, že se "
+"jedná o ochrannou známku, je takové jméno psáno velkými písmeny celé nebo s "
+"velkým písmenem na začátku."
 
 #: C/gnometris.xml:35(para)
 msgid ""
@@ -96,17 +96,16 @@ msgid ""
 "ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY DOCUMENT OR MODIFIED VERSION "
 "OF THE DOCUMENT IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS DISCLAIMER; AND"
 msgstr ""
-"DOKUMENT JE POSKYTOVÁN „TAK JAK JE“, BEZ JAKÉKOLIV ZÁRUKY, VÝSLOVNÉ NEBO "
-"PŘEDPOKLÁDANÉ, VČETNĚ, ALE NEJEN, ZÁRUKY NA TENTO DOKUMENT A Z NĚJ ODVOZENÉ "
-"VERZE DOKUMENTŮ, ŽE JE BEZ VAD VZHLEDEM K OBCHODOVATELNOSTI, VHODNOSTI PRO "
-"URČITÉ ÚČELY NEBO NEPORUŠENOSTI. VEŠKERÁ RIZIKA PLYNOUCÍ Z KVALITY, "
-"SPRÁVNOSTI A PROVEDENÍ TOHOTO DOKUMENTU A Z NĚJ ODVOZENÝCH VERZÍ DOKUMENTŮ "
-"LEŽÍ POUZE NA VÁS. POKUD SE V DOKUMENTU NEBO V UPRAVENÉ VERZI PROJEVÍ V "
-"JAKÉMKOLIV OHLEDU VADA, POTOM VY (NIKOLIV PŮVODNÍ AUTOR, AUTOR NEBO "
-"KTERÝKOLIV PŘISPĚVATEL) PONESETE NÁKLADY NA NUTNOU ÚDRŽBU, OPRAVY NEBO "
-"KOREKCE. TOTO USTANOVENÍ O ZÁRUCE PŘEDSTAVUJE STĚŽEJNÍ ČÁST TÉTO LICENCE. "
-"NENÍ DOVOLENO POUŽÍVAT TENTO DOKUMENT NEBO UPRAVENÉ VERZE TOHOTO DOKUMENTU "
-"BEZ ODSOUHLASENÍ TĚCHTO PODMÍNEK. A DÁLE"
+"DOKUMENT JE POSKYTOVÁN V PODOBĚ „JAK JE“ BEZ ZÁRUKY V JAKÉKOLIV PODOBĚ, "
+"NEPOSKYTUJÍ SE ANI ODVOZENÉ ZÁRUKY, ZÁRUKY, ŽE DOKUMENT, NEBO JEHO UPRAVENÁ "
+"VERZE, JE BEZCHYBNÝ NEBO ZÁRUKY PRODEJNOSTI, VHODNOSTI PRO URČITÝ ÚČEL NEBO "
+"NEPORUŠENOSTI. RIZIKO NEKVALITY, NEPŘESNOSTI A ŠPATNÉHO PROVEDENÍ DOKUMENTU, "
+"NEBO JEHO UPRAVENÉ VERZE, LEŽÍ NA VÁS. POKUD KVŮLI TOMUTO DOKUMENTU, NEBO "
+"JEHO UPRAVENÉ VERZI, NASTANE PROBLÉM, VY (NIKOLIV PŮVODNÍ AUTOR NEBO "
+"JAKÝKOLIV PŘISPĚVATEL) PŘEBÍRÁTE JAKÉKOLIV NÁKLADY ZA NUTNÉ ÚPRAVY, OPRAVY "
+"ČI SLUŽBY. TOTO PROHLÁŠENÍ O ZÁRUCE PŘEDSTAVUJE ZÁKLADNÍ SOUČÁST TÉTO "
+"LICENCE. BEZ TOHOTO PROHLÁŠENÍ NENÍ, PODLE TÉTO DOHODY, POVOLENO UŽÍVÁNÍ ANI "
+"ÚPRAVY TOHOTO DOKUMENTU; DÁLE"
 
 #: C/gnometris.xml:55(para)
 msgid ""
@@ -138,8 +137,8 @@ msgid ""
 "OF THE GNU FREE DOCUMENTATION LICENSE WITH THE FURTHER UNDERSTANDING THAT: "
 "<placeholder-1/>"
 msgstr ""
-"DOKUMENT A JEHO ODVOZENÉ VERZE JSOU POSKYTOVANÉ ZA PODMÍNEK GNU FREE "
-"DOCUMENTATION LICENSE S DODATEČNÝM VYROZUMĚNÍM ŽE: <placeholder-1/>"
+"DOKUMENT A JEHO UPRAVENÉ VERZE JSOU ŠÍŘENY V SOULADU SE ZNĚNÍM LICENCE GNU "
+"FREE DOCUMENTATION LICENSE S NÁSLEDUJÍCÍM USTANOVENÍM: <placeholder-1/>"
 
 #: C/gnometris.xml:67(firstname)
 msgid "Angela"
@@ -155,7 +154,7 @@ msgstr "anjela@u.washington.edu"
 
 #: C/gnometris.xml:89(revnumber)
 msgid "Gnometris Manual V2.8"
-msgstr "Návod V2.8 ke hře Gnometris"
+msgstr "Příručka V2.8 ke hře Gnometris"
 
 #: C/gnometris.xml:90(date)
 msgid "June 2004"
@@ -167,11 +166,11 @@ msgstr "Angela Boyle <email>anjela@u.washington.edu</email>"
 
 #: C/gnometris.xml:100(releaseinfo)
 msgid "This manual describes version 2.12 of Gnometris."
-msgstr "Tento návod popisuje verzi 2.12 hry Gnometris."
+msgstr "Tato příručka popisuje verzi 2.12 hry Gnometris."
 
 #: C/gnometris.xml:107(title)
 msgid "Feedback"
-msgstr "Zpětná vazba"
+msgstr "Ohlasy"
 
 #: C/gnometris.xml:108(para)
 msgid ""
@@ -180,10 +179,10 @@ msgid ""
 "url=\"ghelp:user-guide?feedback-bugs\" type=\"help\">GNOME Feedback Page</"
 "ulink>."
 msgstr ""
-"K nahlášení chyby nebo podání návrhu týkajícího se aplikace "
-"<application>Gnometris</application> nebo tohoto návodu použijte postup "
-"uvedený na <ulink url=\"ghelp:gnome-feedback\" type=\"help\">stránce Zpětná "
-"vazba GNOME</ulink>."
+" Pokud chcete oznámit chybu nebo navrhnout vylepšení vztahující se k "
+"aplikaci <application>Gnometris</application> nebo této příručce, postupujte "
+"dle instrukcí na stránce <ulink url=\"ghelp:gnome-feedback\" type=\"help"
+"\">Stránka s ohlasy na GNOME</ulink>."
 
 #: C/gnometris.xml:120(primary)
 msgid "Gnometris"
@@ -596,7 +595,7 @@ msgid ""
 "user-guide?feedback-bugs\" type=\"help\">document</ulink>."
 msgstr ""
 "<application>Gnometris</application> napsal J. Marcin Gorycki v roce 1999 a "
-"od té doby jej udržuje Gnome Games Team. Tento návod napsala Angela Boyle. "
+"od té doby jej udržuje Gnome Games Team. Tuto příručku napsala Angela Boyle. "
 "Pokud chcete nahlásit chybu nebo podat návrh týkající se této aplikace nebo "
 "tohoto návodu, tak se řiďte instrukcemi v tomto <ulink url=\"ghelp:user-"
 "guide?feedback-bugs\" type=\"help\">dokumentu</ulink>."
