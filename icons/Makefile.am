@@ -142,6 +142,11 @@ icons_svg = \
 	$(NULL)
 
 private_icons = \
+	hicolor_actions_16x16_cards-deal.png \
+	hicolor_actions_22x22_cards-deal.png \
+	hicolor_actions_24x24_cards-deal.png \
+	hicolor_actions_32x32_cards-deal.png \
+	hicolor_actions_48x48_cards-deal.png \
 	hicolor_actions_scalable_cards-deal.svg \
 	$(NULL)
 
