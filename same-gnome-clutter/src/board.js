@@ -3,6 +3,7 @@ GLib = imports.gi.GLib;
 light = imports.light;
 score = imports.score;
 main = imports.main;
+settings = imports.settings;
 
 Board = new GType({
 	parent: Clutter.Group.type,

@@ -1,13 +1,13 @@
 Clutter = imports.gi.Clutter;
 GLib = imports.gi.GLib;
 main = imports.main;
+settings = imports.settings;
 
 var tile_svg_size = 50;
-var file_prefix = '@prefix@' + "/share/gnome-games/same-gnome-clutter/";
 
 function load_svg(file)
 {
-    var tx = new Clutter.Texture({filename: file_prefix+file});
+    var tx = new Clutter.Texture({filename: settings.file_prefix+"/themes/tango/" + file});
     tx.filter_quality = Clutter.TextureQuality.HIGH;
     return tx;
 }

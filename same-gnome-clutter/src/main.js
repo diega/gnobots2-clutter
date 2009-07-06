@@ -2,8 +2,6 @@
 
 // Configuration
 
-var file_prefix = "/usr/local/share/gnome-games/same-gnome-clutter";
-
 var tiles_w = 15;
 var tiles_h = 10;
 var tile_size = 50;
@@ -33,9 +31,10 @@ GConf.init(Seed.argv);
 light = imports.light;
 board = imports.board;
 score = imports.score;
+settings = imports.settings;
 
 b = new Gtk.Builder();
-b.add_from_file(file_prefix + "/same-seed.ui");
+b.add_from_file(settings.file_prefix + "/same-gnome.ui");
 //b.connect_signals(handlers);
 
 var window = b.get_object("main_window");

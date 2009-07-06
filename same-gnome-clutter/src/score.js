@@ -1,6 +1,7 @@
 Clutter = imports.gi.Clutter;
 Pango = imports.gi.Pango;
 main = imports.main;
+settings = imports.settings;
 
 Score = new GType({
 	parent: Clutter.Group.type,

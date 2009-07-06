@@ -1,16 +1,14 @@
+SUBDIRS = data/themes
+
 samedir=$(pkgdatadir)/same-gnome-clutter
 
 same_DATA = \
-    bkg.svg \
-    blue.svg \
-    board.js \
-    green.svg \
-    light.js \
-    main.js \
-    red.svg \
-    same-seed.ui \
-    score.js \
-    yellow.svg
+    src/board.js \
+    src/light.js \
+    src/main.js \
+    data/same-gnome.ui \
+    src/score.js \
+    src/settings.js
 
 same_gnome_clutter_c_SOURCES = same.c
 same_gnome_clutter_c_CFLAGS = `pkg-config --cflags clutter-0.9 glib-2.0`
@@ -27,15 +25,10 @@ desktop_DATA = $(desktop_in_files:.desktop.in.in=.desktop)
 CLEANFILES = $(desktop_DATA)
 
 EXTRA_DIST = \
-    bkg.svg \
-    blue.svg \
-    board.js \
-    green.svg \
-    light.js.in \
-    main.js \
-    red.svg \
-    same-seed.ui \
-    score.js \
-    yellow.svg \
-    same.c
+    src/board.js \
+    src/light.js \
+    src/main.js \
+    data/same-gnome.ui \
+    src/score.js \
+    src/settings.js.in
 
