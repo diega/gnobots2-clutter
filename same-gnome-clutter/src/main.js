@@ -33,6 +33,7 @@ light = imports.light;
 board = imports.board;
 score = imports.score;
 settings = imports.settings;
+about = imports.about;
 
 handlers = {
 	show_settings: function(selector, ud)
@@ -41,7 +42,7 @@ handlers = {
 	},
 	show_about: function(selector, ud)
 	{
-		About.show_about_dialog();
+		about.show_about_dialog();
 	},
 	reset_score: function(selector, ud)
 	{

@@ -3,6 +3,7 @@ SUBDIRS = data/themes
 samedir=$(pkgdatadir)/same-gnome-clutter
 
 same_DATA = \
+    src/about.js \
     src/board.js \
     src/light.js \
     src/main.js \
@@ -25,6 +26,7 @@ desktop_DATA = $(desktop_in_files:.desktop.in.in=.desktop)
 CLEANFILES = $(desktop_DATA)
 
 EXTRA_DIST = \
+    src/about.js \
     src/board.js \
     src/light.js \
     src/main.js \
