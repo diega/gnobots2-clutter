@@ -9,11 +9,11 @@ var _ = imports.gettext.gettext;
 function show_about_dialog()
 {
 	var about_dialog = new Gtk.AboutDialog();
-	about_dialog.program_name = _("Same Gnome");
+	about_dialog.program_name = _("Same GNOME");
 	about_dialog.version = "1.0";
-	about_dialog.comments = _("I want to play that game! You know, they all go whirly-round and you click on them and they vanish!\n\nLights Off is a part of GNOME Games.");
+	about_dialog.comments = _("I want to play that game! You know, they all go whirly-round and you click on them and they vanish!\n\nSame GNOME is a part of GNOME Games.");
 	about_dialog.copyright = _("Copyright \xa9 2009 Tim Horton");
-	about_dialog.license = GnomeGamesSupport.get_license(_("Same Gnome"));
+	about_dialog.license = GnomeGamesSupport.get_license(_("Same GNOME"));
 	about_dialog.wrap_license = true;
 	about_dialog.logo_icon_name = "gnome-samegnome";
 	about_dialog.website = "http://www.gnome.org/projects/gnome-games/";
