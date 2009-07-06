@@ -37,7 +37,7 @@ b = new Gtk.Builder();
 b.add_from_file(settings.file_prefix + "/same-gnome.ui");
 //b.connect_signals(handlers);
 
-var window = b.get_object("main_window");
+var window = b.get_object("game_window");
 var clutter_embed = b.get_object("clutter");
 window.signal.hide.connect(Gtk.main_quit);
 //b.get_object("game_vbox").pack_start(clutter_embed, true, true);
