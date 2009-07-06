@@ -216,10 +216,6 @@ gboolean light_left(ClutterActor * actor,
 {
 	light * l = (light *)user_data;
 	GList * cl = connected_lights(l);
-	
-	if(g_list_length(cl) < 2)
-		return FALSE;
-
 	GList * li;
 	
 	for(li = cl; li != NULL; li = g_list_next(li))
