@@ -14,6 +14,7 @@ imports.gi.versions.Clutter = "0.9";
 
 Gtk = imports.gi.Gtk;
 GtkClutter = imports.gi.GtkClutter;
+GtkBuilder = imports.gtkbuilder;
 Clutter = imports.gi.Clutter;
 GdkPixbuf = imports.gi.GdkPixbuf;
 GConf = imports.gi.GConf;
@@ -33,14 +34,31 @@ board = imports.board;
 score = imports.score;
 settings = imports.settings;
 
+handlers = {
+	show_settings: function(selector, ud)
+	{
+		//Settings.show_settings();
+	},
+	show_about: function(selector, ud)
+	{
+		About.show_about_dialog();
+	},
+	reset_score: function(selector, ud)
+	{
+		board.new_game();
+	},
+	quit: function(selector, ud)
+	{
+		Gtk.main_quit();
+	}
+};
+
 b = new Gtk.Builder();
 b.add_from_file(settings.file_prefix + "/same-gnome.ui");
-//b.connect_signals(handlers);
+b.connect_signals(handlers);
 
 var window = b.get_object("game_window");
 var clutter_embed = b.get_object("clutter");
-window.signal.hide.connect(Gtk.main_quit);
-//b.get_object("game_vbox").pack_start(clutter_embed, true, true);
 
 var stage = clutter_embed.get_stage();
 
@@ -53,7 +71,6 @@ stage.color = {alpha: 0};
 stage.set_size((tiles_w * tile_size),(tiles_h * tile_size));
 clutter_embed.set_size_request((tiles_w * tile_size),(tiles_h * tile_size));
 
-// TODO: determine size of window before we show it
 // NOTE: show the window before the stage, and the stage before any children
 window.show_all();
 stage.show_all();
