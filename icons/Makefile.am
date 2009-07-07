@@ -212,7 +212,11 @@ gtk_update_icon_cache = gtk-update-icon-cache -f -t $(datadir)/icons/hicolor
 install-private-icons:
 	for icon in $(private_icons); do \
 		THEME=`echo $$icon | cut -d_ -f1`; \
-		CONTEXT=`echo $$icon | cut -d_ -f2`; \
+		if test -n "@HAVE_HILDON_TRUE@"; then \
+			CONTEXT=`echo $$icon | cut -d_ -f2`; \
+		else \
+			CONTEXT=hildon; \
+		fi; \
 		SIZE=`echo $$icon | cut -d_ -f3`; \
 		ICONFILE=`echo $$icon | cut -d_ -f4`; \
 		$(mkdir_p) $(DESTDIR)$(pkgdatadir)/icons/$$THEME/$$SIZE/$$CONTEXT; \
@@ -222,7 +226,11 @@ install-private-icons:
 uninstall-private-icons:
 	for icon in $(private_icons); do \
 		THEME=`echo $$icon | cut -d_ -f1`; \
-		CONTEXT=`echo $$icon | cut -d_ -f2`; \
+		if test -n "@HAVE_HILDON_TRUE@"; then \
+			CONTEXT=`echo $$icon | cut -d_ -f2`; \
+		else \
+			CONTEXT=hildon; \
+		fi; \
 		SIZE=`echo $$icon | cut -d_ -f3`; \
 		ICONFILE=`echo $$icon | cut -d_ -f4`; \
 		rm -f $(DESTDIR)$(pkgdatadir)/icons/$$THEME/$$SIZE/$$CONTEXT/$$ICONFILE; \
