@@ -24,12 +24,12 @@
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 
-#include "games-card.h"
-#include "games-frame.h"
-#include "games-files.h"
-#include "games-card-theme.h"
+#include <libgames-support/games-card.h>
+#include <libgames-support/games-frame.h>
+#include <libgames-support/games-files.h>
+#include <libgames-support/games-card-theme.h>
 
-#include "games-card-selector.h"
+#include "card-selector.h"
 
 enum {
   COL_INFO,
@@ -84,7 +84,7 @@ create_combo_box (GamesCardThemes *theme_manager,
   themes = games_card_themes_get_themes (theme_manager);
 
   for (l = themes; l != NULL; l = l->next) {
-    GamesCardThemeInfo *info = l->data;
+    GamesCardThemeInfo *info = (GamesCardThemeInfo *) l->data;
 
     gtk_list_store_insert_with_values (store, &iter, -1,
                                        COL_INFO, info,
@@ -118,7 +118,7 @@ games_card_selector_new (GamesCardThemes *theme_manager,
 {
   GamesCardSelector *selector;
 
-  selector = g_object_new (GAMES_TYPE_CARD_SELECTOR, NULL);
+  selector = (GamesCardSelector *) g_object_new (GAMES_TYPE_CARD_SELECTOR, NULL);
 
   games_frame_set_label (GAMES_FRAME (selector), _("Card Style"));
 

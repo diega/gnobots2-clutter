@@ -24,9 +24,9 @@
 
 #include <gtk/gtk.h>
 
-#include "games-frame.h"
-#include "games-card-theme.h"
-#include "games-card-themes.h"
+#include <libgames-support/games-frame.h>
+#include <libgames-support/games-card-theme.h>
+#include <libgames-support/games-card-themes.h>
 
 G_BEGIN_DECLS
 

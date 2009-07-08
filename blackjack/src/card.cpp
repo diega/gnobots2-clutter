@@ -27,8 +27,8 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <libgames-support/games-card-theme.h>
 #include <libgames-support/games-card-images.h>
-#include <libgames-support/games-card-selector.h>
 #include "card.h"
+#include "card-selector.h"
 #include "chips.h"
 #include "draw.h"
 

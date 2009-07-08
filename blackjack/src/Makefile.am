@@ -7,6 +7,8 @@ blackjack_SOURCES = 	\
 	blackjack.h	\
 	card.cpp	\
 	card.h		\
+	card-selector.cpp \
+	card-selector.h	\
 	chips.cpp	\
 	chips.h		\
 	dialog.cpp	\
