@@ -44,6 +44,7 @@ blackjack_CXXFLAGS = \
 
 blackjack_LDADD = \
 	$(top_builddir)/libgames-support/libgames-support.la \
+	$(top_builddir)/libgames-support/libgamescards.la \
 	$(GTK_LIBS) \
 	$(XML_LIBS) \
 	-lz
