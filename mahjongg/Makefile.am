@@ -95,7 +95,11 @@ install-scorefiles-local:
 		chown $(scores_user):$(scores_group) $(DESTDIR)$(scoredir)/mahjongg.$$i.scores; \
 		chmod 664 $(DESTDIR)$(scoredir)/mahjongg.$$i.scores; \
 	done
-	-if test "x$(setgid)" = "xtrue"; then chgrp $(scores_group) $(DESTDIR)$(bindir)/mahjongg && chmod 2555 $(DESTDIR)$(bindir)/mahjongg ; fi
+
+install-exec-hook:
+	-if test "$(setgid)" = "true"; then \
+	  chgrp $(scores_group) $(DESTDIR)$(bindir)/mahjongg && chmod 2555 $(DESTDIR)$(bindir)/mahjongg ;\
+	fi
 
 install-data-local: install-schemas-local install-scorefiles-local
 

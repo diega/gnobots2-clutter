@@ -97,7 +97,11 @@ install-scorefiles-local:
 	  chown $(scores_user):$(scores_group) $(DESTDIR)$(scoredir)/same-gnome.$$i.scores; \
 	  chmod 664 $(DESTDIR)$(scoredir)/same-gnome.$$i.scores; \
 	done
-	-if test "x$(setgid)" = "xtrue"; then chgrp $(scores_group) $(DESTDIR)$(bindir)/same-gnome && chmod 2555 $(DESTDIR)$(bindir)/same-gnome ; fi
+
+install-exec-hook:
+	-if test "$(setgid)" = "true"; then \
+	  chgrp $(scores_group) $(DESTDIR)$(bindir)/same-gnome && chmod 2555 $(DESTDIR)$(bindir)/same-gnome ;\
+	fi
 
 install-data-local: install-schemas-local install-scorefiles-local
 
