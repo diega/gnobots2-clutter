@@ -222,12 +222,14 @@ private_icons = \
 	hicolor_actions_scalable_cards-deal.svg \
 	$(NULL)
 
+if BUILD_GNOBOTS2
 if !HAVE_HILDON
 private_icons += \
 	hicolor_actions_24x24_teleport.png \
 	hicolor_actions_24x24_teleport-random.png \
 	$(NULL)
 endif # !HAVE_HILDON
+endif # BUILD_GNOBOTS2
 
 EXTRA_DIST = \
 	$(private_icons)\
