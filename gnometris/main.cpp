@@ -37,7 +37,9 @@ main(int argc, char *argv[])
 	if (!games_runtime_init ("gnometris"))
 		return 1;
 
+#ifdef ENABLE_SETGID
 	setgid_io_init ();
+#endif
 
 	int cmdlineLevel = 0;
 
