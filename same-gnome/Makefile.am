@@ -56,8 +56,10 @@ same_gnome_LDADD += $(GTHREAD_LIBS)
 endif
 
 schema_in_files = same-gnome.schemas.in
+if HAVE_GNOME
 schemadir = $(GCONF_SCHEMA_FILE_DIR)
 schema_DATA = $(schema_in_files:.schemas.in=.schemas)
+endif
 
 desktop_in_files = same-gnome.desktop.in.in
 desktopdir = $(datadir)/applications

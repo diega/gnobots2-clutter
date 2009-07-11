@@ -63,9 +63,11 @@ Games_in_files = gnometris.desktop.in.in
 Games_DATA = $(Games_in_files:.desktop.in.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
-schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_in_files = gnometris.schemas.in
+if HAVE_GNOME
+schemadir = $(GCONF_SCHEMA_FILE_DIR)
 schema_DATA = $(schema_in_files:.schemas.in=.schemas)
+endif
 @INTLTOOL_SCHEMAS_RULE@
 
 EXTRA_DIST = AUTHORS \
