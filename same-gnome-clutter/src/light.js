@@ -2,8 +2,6 @@ Clutter = imports.gi.Clutter;
 GLib = imports.gi.GLib;
 main = imports.main;
 
-var tile_svg_size = 50;
-
 Light = new GType({
     parent: Clutter.Group.type,
     name: "Light",

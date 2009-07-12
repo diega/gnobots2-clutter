@@ -81,7 +81,7 @@ ThemeLoader.load_theme(stage, theme);
 
 var board = new board.Board();
 stage.add_actor(board);
-stage.show_all();
+board.show();
 
 board.new_game();
 
