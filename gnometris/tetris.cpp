@@ -147,8 +147,7 @@ Tetris::Tetris(int cmdlLevel):
 	/* Locate our background image. */
 
 	outdir = g_build_filename (g_get_user_data_dir (), "gnometris", NULL);
-	if (!g_file_test (outdir, G_FILE_TEST_EXISTS))
-	    mkdir (outdir, 0700);
+	g_mkdir_with_parents (outdir, 0700);
 	bgPixmap = g_build_filename (outdir, "background.bin", NULL);
 	g_free (outdir);
 
