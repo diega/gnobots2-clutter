@@ -1192,7 +1192,7 @@ new_game (gboolean shuffle)
 
   /* Prepare clock */
   games_clock_stop (GAMES_CLOCK (chrono));
-  games_clock_set_seconds (GAMES_CLOCK (chrono), 0);
+  games_clock_reset (GAMES_CLOCK (chrono));
 
   /* Redraw */
   draw_all_tiles ();
