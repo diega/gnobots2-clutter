@@ -67,6 +67,7 @@ var current_score = 0;
 var timelines = [];
 
 stage.signal.hide.connect(Gtk.main_quit);
+stage.set_use_fog(false);
 
 stage.color = {alpha: 0};
 stage.set_size((tiles_w * tile_size),(tiles_h * tile_size));
