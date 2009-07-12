@@ -269,6 +269,8 @@ Board = new GType({
 			if(final_score)
 				final_score.hide_score();
 			
+			main.current_score = 0;
+			
 			all_lights = [];
 			
 			for(var x = 0; x < main.tiles_w; x++)
