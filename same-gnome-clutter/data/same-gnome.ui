@@ -25,8 +25,18 @@
 										<property name="visible">True</property>
 										<child>
 											<object class="GtkImageMenuItem" id="new_game_item">
-												<signal name="activate" handler="reset_score"/>
+												<signal name="activate" handler="new_game"/>
 												<property name="label">games-new-game</property>
+												<property name="visible">True</property>
+												<property name="use_underline">True</property>
+												<property name="use_stock">True</property>
+												<property name="accel_group">accel_group</property>
+											</object>
+										</child>
+										<child>
+											<object class="GtkImageMenuItem" id="scores_item">
+												<signal name="activate" handler="show_scores"/>
+												<property name="label">games-scores</property>
 												<property name="visible">True</property>
 												<property name="use_underline">True</property>
 												<property name="use_stock">True</property>
@@ -61,7 +71,7 @@
 											</object>
 										</child>
 										<child>
-											<object class="GtkSeparatorMenuItem" id="separator2" />
+											<object class="GtkSeparatorMenuItem" id="separator3" />
 										</child>
 										<child>
 											<object class="GtkImageMenuItem" id="quit_item">

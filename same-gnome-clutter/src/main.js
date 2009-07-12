@@ -42,9 +42,12 @@ handlers = {
 	},
 	show_about: function(selector, ud)
 	{
-		about.show_about_dialog();
+		About.show_about_dialog();
 	},
-	reset_score: function(selector, ud)
+	show_scores: function(selector, ud)
+	{
+	},
+	new_game: function(selector, ud)
 	{
 		board.new_game();
 	},
