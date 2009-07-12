@@ -131,7 +131,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkComboBox" id="theme-selector1">
+                              <object class="GtkComboBox" id="theme-selector">
                                 <property name="visible">True</property>
                                 <property name="model">liststore1</property>
                               </object>

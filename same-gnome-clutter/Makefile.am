@@ -7,6 +7,7 @@ same_DATA = \
     src/Board.js \
     src/Light.js \
     src/main.js \
+    src/Settings.js \
     data/same-gnome.ui \
     data/settings.ui \
     src/Score.js \
@@ -32,6 +33,7 @@ EXTRA_DIST = \
     src/Board.js \
     src/Light.js \
     src/main.js \
+    src/Settings.js \
     data/same-gnome.ui \
     data/settings.ui \
     src/Score.js \

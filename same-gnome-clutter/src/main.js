@@ -34,11 +34,12 @@ Light = imports.Light;
 Board = imports.Board;
 Score = imports.Score;
 About = imports.About;
+Settings = imports.Settings;
 
 handlers = {
 	show_settings: function(selector, ud)
 	{
-		//Settings.show_settings();
+		Settings.show_settings();
 	},
 	show_about: function(selector, ud)
 	{
