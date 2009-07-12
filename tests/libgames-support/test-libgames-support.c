@@ -44,28 +44,6 @@ START_TEST (test_games_clock_new)
 END_TEST
 
 
-/* TESTCASE 2: Setting and getting time with games-clock.c */
-START_TEST (test_games_clock_set)
-{
-  GtkWidget *clock;
-  time_t end;
-
-  clock = games_clock_new ();
-  fail_if (!GTK_IS_WIDGET (clock), 
-           "games_clock_new() failed.");
-
-  games_clock_set_seconds (GAMES_CLOCK (clock), 10);
-  games_clock_add_seconds (GAMES_CLOCK (clock), 10);
-  end = games_clock_get_seconds (GAMES_CLOCK (clock));
-
-  fail_unless (end == 20, 
-               "Expected current time to be 20, "
-	       "but the games-clock returned %d instead", end);
-  
-}
-END_TEST
-
-
 /* Create test suite for libgames-support  */
 static Suite *
 libgames_support_suite (void)
