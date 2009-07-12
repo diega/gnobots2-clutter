@@ -9,7 +9,8 @@ same_DATA = \
     src/main.js \
     data/same-gnome.ui \
     src/score.js \
-    src/settings.js
+    src/path.js \
+    src/ThemeLoader.js
 
 same_gnome_clutter_c_SOURCES = same.c
 same_gnome_clutter_c_CFLAGS = `pkg-config --cflags clutter-0.9 glib-2.0`
@@ -32,5 +33,6 @@ EXTRA_DIST = \
     src/main.js \
     data/same-gnome.ui \
     src/score.js \
-    src/settings.js.in
+    src/path.js.in \
+    src/ThemeLoader.js.in
 

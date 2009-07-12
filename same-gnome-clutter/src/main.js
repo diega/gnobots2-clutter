@@ -22,6 +22,7 @@ GLib = imports.gi.GLib;
 Pango = imports.gi.Pango;
 GObject = imports.gi.GObject;
 GnomeGamesSupport = imports.gi.GnomeGamesSupport;
+ThemeLoader = imports.ThemeLoader;
 
 GtkClutter.init(Seed.argv);
 GnomeGamesSupport.runtime_init("same-gnome");
@@ -32,7 +33,6 @@ GConf.init(Seed.argv);
 light = imports.light;
 board = imports.board;
 score = imports.score;
-settings = imports.settings;
 about = imports.about;
 
 handlers = {
@@ -55,7 +55,7 @@ handlers = {
 };
 
 b = new Gtk.Builder();
-b.add_from_file(settings.file_prefix + "/same-gnome.ui");
+b.add_from_file(imports.path.file_prefix + "/same-gnome.ui");
 b.connect_signals(handlers);
 
 var window = b.get_object("game_window");
@@ -75,6 +75,9 @@ clutter_embed.set_size_request((tiles_w * tile_size),(tiles_h * tile_size));
 // NOTE: show the window before the stage, and the stage before any children
 window.show_all();
 stage.show_all();
+
+theme = ThemeLoader.load_themes().Tango;
+ThemeLoader.load_theme(stage, theme);
 
 var board = new board.Board();
 stage.add_actor(board);

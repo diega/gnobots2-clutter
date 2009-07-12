@@ -4,14 +4,14 @@ theme_DATA = \
 	blue.svg \
 	green.svg \
 	red.svg \
-	yellow.svg
+	yellow.svg \
+	theme.js
 
 EXTRA_DIST = \
 	bkg.svg \
 	blue.svg \
 	green.svg \
 	red.svg \
-	yellow.svg
-
-CLEANFILES = theme.js
+	yellow.svg \
+	theme.js
 

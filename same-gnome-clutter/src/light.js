@@ -1,19 +1,8 @@
 Clutter = imports.gi.Clutter;
 GLib = imports.gi.GLib;
 main = imports.main;
-settings = imports.settings;
 
 var tile_svg_size = 50;
-
-function load_svg(file)
-{
-    var tx = new Clutter.Texture({filename: settings.file_prefix+"/themes/tango/" + file});
-    tx.filter_quality = Clutter.TextureQuality.HIGH;
-    return tx;
-}
-
-var colors = ["blue.svg", "green.svg", "red.svg", "yellow.svg"];
-var loaded_colors = {};
 
 Light = new GType({
     parent: Clutter.Group.type,
@@ -28,11 +17,7 @@ Light = new GType({
 	// Public
 	this.visited = false;
 	
-	if(loaded_colors[state])
-		this.on = new Clutter.Clone({source: loaded_colors[state]});
-	else
-		this.on = loaded_colors[state] = load_svg(colors[state]);
-	
+	this.on = new Clutter.Clone({source: main.theme.colors[state]});
 	
 	this.get_state = function ()
 	{
