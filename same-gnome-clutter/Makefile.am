@@ -3,13 +3,14 @@ SUBDIRS = data/themes
 samedir=$(pkgdatadir)/same-gnome-clutter
 
 same_DATA = \
-    src/about.js \
-    src/board.js \
-    src/light.js \
+    src/About.js \
+    src/Board.js \
+    src/Light.js \
     src/main.js \
     data/same-gnome.ui \
-    src/score.js \
-    src/path.js \
+    data/settings.ui \
+    src/Score.js \
+    src/Path.js \
     src/ThemeLoader.js
 
 same_gnome_clutter_c_SOURCES = same.c
@@ -27,12 +28,13 @@ desktop_DATA = $(desktop_in_files:.desktop.in.in=.desktop)
 CLEANFILES = $(desktop_DATA)
 
 EXTRA_DIST = \
-    src/about.js \
-    src/board.js \
-    src/light.js \
+    src/About.js \
+    src/Board.js \
+    src/Light.js \
     src/main.js \
     data/same-gnome.ui \
-    src/score.js \
-    src/path.js.in \
+    data/settings.ui \
+    src/Score.js \
+    src/Path.js.in \
     src/ThemeLoader.js.in
 

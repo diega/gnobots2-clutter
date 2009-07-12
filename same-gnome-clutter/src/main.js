@@ -30,10 +30,10 @@ GnomeGamesSupport.stock_init();
 
 GConf.init(Seed.argv);
 
-light = imports.light;
-board = imports.board;
-score = imports.score;
-about = imports.about;
+Light = imports.Light;
+Board = imports.Board;
+Score = imports.Score;
+About = imports.About;
 
 handlers = {
 	show_settings: function(selector, ud)
@@ -55,7 +55,7 @@ handlers = {
 };
 
 b = new Gtk.Builder();
-b.add_from_file(imports.path.file_prefix + "/same-gnome.ui");
+b.add_from_file(imports.Path.file_prefix + "/same-gnome.ui");
 b.connect_signals(handlers);
 
 var window = b.get_object("game_window");
@@ -80,7 +80,7 @@ stage.show_all();
 theme = ThemeLoader.load_themes().Tango;
 ThemeLoader.load_theme(stage, theme);
 
-var board = new board.Board();
+var board = new Board.Board();
 stage.add_actor(board);
 board.show();
 

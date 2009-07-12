@@ -1,9 +1,9 @@
 Clutter = imports.gi.Clutter;
 GLib = imports.gi.GLib;
-light = imports.light;
-score = imports.score;
+Light = imports.Light;
+Score = imports.Score;
 main = imports.main;
-settings = imports.settings;
+Settings = imports.Settings;
 
 Board = new GType({
 	parent: Clutter.Group.type,
@@ -100,7 +100,7 @@ Board = new GType({
 			
 			if(main.fly_score)
 			{
-				var score_text = new score.Score();
+				var score_text = new Score.Score();
 				score_text.animate_score(points_awarded);
 			}
 			
@@ -113,7 +113,7 @@ Board = new GType({
 				if(self.has_won())
 					main.current_score += 1000;
 				
-				final_score = new score.Score();
+				final_score = new Score.Score();
 				final_score.animate_final_score(main.current_score);
 				
 				print("Done with: " + main.current_score + " points!");
@@ -278,7 +278,7 @@ Board = new GType({
 				lights[x] = [];
 				for(var y = 0; y < main.tiles_h; y++)
 				{
-					var li = new light.Light();
+					var li = new Light.Light();
 				
 					li.set_light_x(x);
 					li.set_light_y(y);
