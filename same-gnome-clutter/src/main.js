@@ -64,7 +64,6 @@ var clutter_embed = b.get_object("clutter");
 var stage = clutter_embed.get_stage();
 
 var current_score = 0;
-var timelines = [];
 
 stage.signal.hide.connect(Gtk.main_quit);
 stage.set_use_fog(false);
@@ -78,6 +77,8 @@ window.show_all();
 stage.show_all();
 
 ThemeLoader.load_theme(stage, Settings.theme);
+
+//Settings.Watcher.signal.size_changed.connect(size_changed);
 
 var board = new Board.Board();
 stage.add_actor(board);

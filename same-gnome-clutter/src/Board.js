@@ -143,6 +143,11 @@ Board = new GType({
 			return false;
 		}
 		
+		function colors_changed()
+		{
+			self.new_game();
+		}
+		
 		// Public
 		this.has_completed = function ()
 		{
@@ -298,6 +303,8 @@ Board = new GType({
 		
 		// Implementation
 		this.reactive = true;
+		
+		Settings.Watcher.signal.colors_changed.connect(colors_changed);
 	}
 });
 	

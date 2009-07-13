@@ -12,6 +12,11 @@ Light = new GType({
 	var closed = false;
 	var light_x, light_y;
 	var state = Math.floor(Math.random() * Settings.colors);
+	
+	function theme_changed()
+	{
+		on.source = Settings.theme.colors[state];
+	}
 		
 	// Public
 	this.visited = false;
@@ -106,6 +111,8 @@ Light = new GType({
 	this.set_anchor_point(main.tile_size / 2, main.tile_size / 2);
 	
 	this.add_actor(this.on);
+	
+	Settings.Watcher.signal.theme_changed.connect(theme_changed);
     }
 });
 

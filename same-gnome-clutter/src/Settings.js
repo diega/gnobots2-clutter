@@ -66,7 +66,7 @@ handlers = {
 	select_theme: function(selector, ud)
 	{
 		new_theme = themes[selector.get_active_text()];
-		
+
 		if(new_theme == theme)
 			return;
 		
@@ -112,7 +112,12 @@ handlers = {
 	},
 	update_size: function(widget, ud)
 	{
-		size = widget.get_active();
+		new_size = widget.get_active();
+		
+		if(new_size == size);
+			return;
+		
+		size = new_size;
 		
 		try
 		{
@@ -127,7 +132,12 @@ handlers = {
 	},
 	update_colors: function(widget, ud)
 	{
-		colors = widget.get_value();
+		new_colors = widget.get_value();
+		
+		if(new_colors == colors)
+			return;
+
+		colors = new_colors;
 
 		try
 		{

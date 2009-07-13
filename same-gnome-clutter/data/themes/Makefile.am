@@ -1,1 +1,1 @@
-SUBDIRS = tango
+SUBDIRS = tango test
