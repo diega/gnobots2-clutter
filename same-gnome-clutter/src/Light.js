@@ -6,7 +6,7 @@ Settings = imports.Settings;
 Light = new GType({
     parent: Clutter.Group.type,
     name: "Light",
-    init: function()
+    init: function(self)
     {
 	// Private
 	var closed = false;
@@ -15,7 +15,10 @@ Light = new GType({
 	
 	function theme_changed()
 	{
-		on.source = Settings.theme.colors[state];
+		self.remove_actor(self.on);
+		self.on = new Clutter.Clone({source: Settings.theme.colors[state]});
+		self.on.set_size(main.tile_size, main.tile_size);	
+		self.add_actor(self.on);
 	}
 		
 	// Public
