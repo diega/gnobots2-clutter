@@ -8,32 +8,27 @@ ThemeLoader = imports.ThemeLoader;
 GConf.init(Seed.argv);
 
 // Defaults
-var theme, columns, rows, colors, zealous, fly_score;
+var theme, colors, zealous, fly_score, size;
 var default_theme = "Tango";
-var default_columns = 15;
-var default_rows = 10;
+var default_size = 1;
 var default_colors = 3;
 var default_zealous = true;
 var default_fly_score = true;
 
 // Map theme names to themes
 var themes = ThemeLoader.load_themes();
+var sizes = [{name: "Small", columns: 6, rows: 5},
+             {name: "Normal", columns: 15, rows: 10},
+             {name: "Large", columns: 20, rows: 15}];
 
 try
 {
 	gconf_client = GConf.Client.get_default();
 	theme = themes[gconf_client.get_string("/apps/same-gnome-clutter/theme")];
-	columns = gconf_client.get_int("/apps/same-gnome-clutter/columns");
-	rows = gconf_client.get_int("/apps/same-gnome-clutter/rows");
+	size = gconf_client.get_int("/apps/same-gnome-clutter/size");
 	colors = gconf_client.get_int("/apps/same-gnome-clutter/colors");
 	zealous = gconf_client.get_bool("/apps/same-gnome-clutter/zealous");
 	fly_score = gconf_client.get_bool("/apps/same-gnome-clutter/fly_score");
-	
-	if(columns < 4 || columns > 20) // TODO: arbitrary. determine reasonable limits
-		columns = default_columns;
-	
-	if(rows < 4 || rows > 20)
-		rows = default_rows;
 	
 	if(colors < 2 || colors > 4)
 		colors = default_colors;
@@ -45,8 +40,7 @@ catch(e)
 {
 	print("Couldn't load settings from GConf.");
 	theme = themes[default_theme];
-	columns = default_columns;
-	rows = default_rows;
+	size = default_size;
 	colors = default_colors;
 	zealous = default_zealous;
 	fly_score = default_fly_score;
@@ -116,28 +110,13 @@ handlers = {
 			print("Couldn't save settings to GConf.");
 		}
 	},
-	update_rows: function(widget, ud)
+	update_size: function(widget, ud)
 	{
-		rows = widget.get_value();
+		size = widget.get_active();
 		
 		try
 		{
-			gconf_client.set_int("/apps/same-gnome-clutter/rows", rows);
-		}
-		catch(e)
-		{
-			print("Couldn't save settings to GConf.");
-		}
-	
-		Watcher.signal.size_changed.emit();
-	},
-	update_columns: function(widget, ud)
-	{
-		columns = widget.get_value();
-
-		try
-		{
-			gconf_client.set_int("/apps/same-gnome-clutter/columns", columns);
+			gconf_client.set_int("/apps/same-gnome-clutter/size", size);
 		}
 		catch(e)
 		{
@@ -176,10 +155,10 @@ function show_settings()
 	b.connect_signals(handlers);
 
 	populate_theme_selector(b.get_object("theme-selector"));
+	populate_size_selector(b.get_object("size-selector"));
 	
 	// Set current values
-	b.get_object("rows-spinner").value = rows;
-	b.get_object("columns-spinner").value = columns;
+	b.get_object("size-selector").set_active(size);
 	b.get_object("colors-spinner").value = colors;
 	b.get_object("zealous-checkbox").active = zealous;
 	b.get_object("fly-score-checkbox").active = fly_score;
@@ -190,6 +169,20 @@ function show_settings()
 	var result = settings_dialog.run();
 	
 	settings_dialog.destroy();
+}
+
+function populate_size_selector(selector)
+{
+	// Since we're using GtkBuilder, we can't make a Gtk.ComboBox.text. Instead,
+	// we'll construct the cell renderer here, once, and use that.
+	var cell = new Gtk.CellRendererText();
+	selector.pack_start(cell, true);
+	selector.add_attribute(cell, "text", 0);
+
+	for(var i in sizes)
+	{
+		selector.append_text(sizes[i].name);
+	}
 }
 
 function populate_theme_selector(selector)

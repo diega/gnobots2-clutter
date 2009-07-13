@@ -14,29 +14,17 @@
       </schema>
 
       <schema>
-        <key>/schemas/apps/same-gnome-clutter/columns</key>
-        <applyto>/apps/same-gnome-clutter/columns</applyto>
+        <key>/schemas/apps/same-gnome-clutter/size</key>
+        <applyto>/apps/same-gnome-clutter/size</applyto>
         <owner>same-gnome-clutter</owner>
         <type>int</type>
-        <default>15</default>
+        <default>1</default>
         <locale name="C">
-          <short>Board column count</short>
-          <long>The number of columns of tiles in the game board.</long>
+          <short>Board size</short>
+          <long>The size of the game board.</long>
         </locale>
       </schema>
-      
-      <schema>
-        <key>/schemas/apps/same-gnome-clutter/rows</key>
-        <applyto>/apps/same-gnome-clutter/rows</applyto>
-        <owner>same-gnome-clutter</owner>
-        <type>int</type>
-        <default>10</default>
-        <locale name="C">
-          <short>Board row count</short>
-          <long>The number of rows of tiles in the game board.</long>
-        </locale>
-      </schema>
-      
+
       <schema>
         <key>/schemas/apps/same-gnome-clutter/colors</key>
         <applyto>/apps/same-gnome-clutter/colors</applyto>

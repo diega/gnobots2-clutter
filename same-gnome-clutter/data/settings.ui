@@ -36,20 +36,10 @@
                               <object class="GtkLabel" id="label3">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Number of rows:</property>
+                                <property name="label" translatable="yes">Board size:</property>
                               </object>
                               <packing>
                                 <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="label4">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Number of columns:</property>
-                              </object>
-                              <packing>
-                                <property name="position">1</property>
                               </packing>
                             </child>
                             <child>
@@ -59,7 +49,7 @@
                                 <property name="label" translatable="yes">Number of colors:</property>
                               </object>
                               <packing>
-                                <property name="position">2</property>
+                                <property name="position">1</property>
                               </packing>
                             </child>
                           </object>
@@ -72,27 +62,13 @@
                             <property name="visible">True</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkSpinButton" id="rows-spinner">
+                              <object class="GtkComboBox" id="size-selector">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">&#x2022;</property>
-                                <property name="adjustment">rows-adjustment</property>
-                                <signal name="value_changed" handler="update_rows"/>
+                                <property name="model">liststore2</property>
+                                <signal name="changed" handler="update_size"/>
                               </object>
                               <packing>
                                 <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton" id="columns-spinner">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">&#x2022;</property>
-                                <property name="adjustment">columns-adjustment</property>
-                                <signal name="value_changed" handler="update_columns"/>
-                              </object>
-                              <packing>
-                                <property name="position">1</property>
                               </packing>
                             </child>
                             <child>
@@ -104,7 +80,7 @@
                                 <signal name="value_changed" handler="update_colors"/>
                               </object>
                               <packing>
-                                <property name="position">2</property>
+                                <property name="position">1</property>
                               </packing>
                             </child>
                           </object>
@@ -321,5 +297,11 @@
     <property name="lower">2</property>
     <property name="upper">4</property>
     <property name="step_increment">1</property>
+  </object>
+  <object class="GtkListStore" id="liststore2">
+    <columns>
+      <!-- column-name str -->
+      <column type="gchararray"/>
+    </columns>
   </object>
 </interface>
