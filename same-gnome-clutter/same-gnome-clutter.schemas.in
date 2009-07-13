@@ -1,0 +1,78 @@
+<gconfschemafile>
+    <schemalist>    
+
+      <schema>
+        <key>/schemas/apps/same-gnome-clutter/theme</key>
+        <applyto>/apps/same-gnome-clutter/theme</applyto>
+        <owner>same-gnome-clutter</owner>
+        <type>string</type>
+        <default>Tango</default>
+        <locale name="C">
+          <short>The theme to use</short>
+          <long>The title of the tile theme to use.</long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/same-gnome-clutter/columns</key>
+        <applyto>/apps/same-gnome-clutter/columns</applyto>
+        <owner>same-gnome-clutter</owner>
+        <type>int</type>
+        <default>15</default>
+        <locale name="C">
+          <short>Board column count</short>
+          <long>The number of columns of tiles in the game board.</long>
+        </locale>
+      </schema>
+      
+      <schema>
+        <key>/schemas/apps/same-gnome-clutter/rows</key>
+        <applyto>/apps/same-gnome-clutter/rows</applyto>
+        <owner>same-gnome-clutter</owner>
+        <type>int</type>
+        <default>10</default>
+        <locale name="C">
+          <short>Board row count</short>
+          <long>The number of rows of tiles in the game board.</long>
+        </locale>
+      </schema>
+      
+      <schema>
+        <key>/schemas/apps/same-gnome-clutter/colors</key>
+        <applyto>/apps/same-gnome-clutter/colors</applyto>
+        <owner>same-gnome-clutter</owner>
+        <type>int</type>
+        <default>3</default>
+        <locale name="C">
+          <short>Board color count</short>
+          <long>The number of colors of tiles to use in the game.</long>
+        </locale>
+      </schema>
+      
+      <schema>
+        <key>/schemas/apps/same-gnome-clutter/zealous</key>
+        <applyto>/apps/same-gnome-clutter/columns</applyto>
+        <owner>same-gnome-clutter</owner>
+        <type>bool</type>
+        <default>true</default>
+        <locale name="C">
+          <short>Zealous animation</short>
+          <long>Use more flashy, but slower, animations.</long>
+        </locale>
+      </schema>
+      
+      <schema>
+        <key>/schemas/apps/same-gnome-clutter/fly_score</key>
+        <applyto>/apps/same-gnome-clutter/fly_score</applyto>
+        <owner>same-gnome-clutter</owner>
+        <type>bool</type>
+        <default>true</default>
+        <locale name="C">
+          <short>Fly score</short>
+          <long>Animate the number of points at the end of each move.</long>
+        </locale>
+      </schema>
+
+  </schemalist>
+  
+</gconfschemafile>
