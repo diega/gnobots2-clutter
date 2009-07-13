@@ -16,13 +16,8 @@ Gtk = imports.gi.Gtk;
 GtkClutter = imports.gi.GtkClutter;
 GtkBuilder = imports.gtkbuilder;
 Clutter = imports.gi.Clutter;
-GdkPixbuf = imports.gi.GdkPixbuf;
 GConf = imports.gi.GConf;
-GLib = imports.gi.GLib;
-Pango = imports.gi.Pango;
-GObject = imports.gi.GObject;
 GnomeGamesSupport = imports.gi.GnomeGamesSupport;
-ThemeLoader = imports.ThemeLoader;
 
 GtkClutter.init(Seed.argv);
 GnomeGamesSupport.runtime_init("same-gnome");
@@ -35,6 +30,7 @@ Board = imports.Board;
 Score = imports.Score;
 About = imports.About;
 Settings = imports.Settings;
+ThemeLoader = imports.ThemeLoader;
 
 handlers = {
 	show_settings: function(selector, ud)
@@ -81,8 +77,7 @@ clutter_embed.set_size_request((tiles_w * tile_size),(tiles_h * tile_size));
 window.show_all();
 stage.show_all();
 
-theme = ThemeLoader.load_themes().Tango;
-ThemeLoader.load_theme(stage, theme);
+ThemeLoader.load_theme(stage, Settings.theme);
 
 var board = new Board.Board();
 stage.add_actor(board);

@@ -1,6 +1,7 @@
 Clutter = imports.gi.Clutter;
 GLib = imports.gi.GLib;
 main = imports.main;
+Settings = imports.Settings;
 
 Light = new GType({
     parent: Clutter.Group.type,
@@ -10,12 +11,12 @@ Light = new GType({
 	// Private
 	var closed = false;
 	var light_x, light_y;
-	var state = Math.floor(Math.random() * main.max_colors);
+	var state = Math.floor(Math.random() * Settings.colors);
 		
 	// Public
 	this.visited = false;
 	
-	this.on = new Clutter.Clone({source: main.theme.colors[state]});
+	this.on = new Clutter.Clone({source: Settings.theme.colors[state]});
 	
 	this.get_state = function ()
 	{
