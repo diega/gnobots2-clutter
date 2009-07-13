@@ -8,8 +8,13 @@ ThemeLoader = imports.ThemeLoader;
 GConf.init(Seed.argv);
 
 // Defaults
-var theme;
+var theme, columns, rows, colors, zealous, fly_score;
 var default_theme = "Tango";
+var default_columns = 15;
+var default_rows = 10;
+var default_colors = 3;
+var default_zealous = true;
+var default_fly_score = true;
 
 // Map theme names to themes
 var themes = ThemeLoader.load_themes();
@@ -18,6 +23,20 @@ try
 {
 	gconf_client = GConf.Client.get_default();
 	theme = themes[gconf_client.get_string("/apps/same-gnome-clutter/theme")];
+	columns = gconf_client.get_int("/apps/same-gnome-clutter/columns");
+	rows = gconf_client.get_int("/apps/same-gnome-clutter/rows");
+	colors = gconf_client.get_int("/apps/same-gnome-clutter/colors");
+	zealous = gconf_client.get_bool("/apps/same-gnome-clutter/zealous");
+	fly_score = gconf_client.get_bool("/apps/same-gnome-clutter/fly_score");
+	
+	if(columns < 4 || columns > 20) // TODO: arbitrary. determine reasonable limits
+		columns = default_columns;
+	
+	if(rows < 4 || rows > 20)
+		rows = default_rows;
+	
+	if(colors < 2 || colors > 4)
+		colors = default_colors;
 	
 	if(theme == null)
 		theme = themes[default_theme];
@@ -26,6 +45,11 @@ catch(e)
 {
 	print("Couldn't load settings from GConf.");
 	theme = themes[default_theme];
+	columns = default_columns;
+	rows = default_rows;
+	colors = default_colors;
+	zealous = default_zealous;
+	fly_score = default_fly_score;
 }
 
 // Settings Event Handler
@@ -33,7 +57,7 @@ catch(e)
 SettingsWatcher = new GType({
 	parent: Gtk.Button.type, // TODO: Can I make something inherit directly from GObject?!
 	name: "SettingsWatcher",
-	signals: [{name: "theme_changed"}],
+	signals: [{name: "theme_changed"}, {name: "size_changed"}, {name: "colors_changed"}],
 	init: function()
 	{
 		
@@ -57,14 +81,89 @@ handlers = {
 		
 		try
 		{
-			gconf_client.set_string("/apps/lightsoff/theme", selector.get_active_text());
+			gconf_client.set_string("/apps/same-gnome-clutter/theme", selector.get_active_text());
 		}
 		catch(e)
 		{
-			Seed.print("Couldn't save settings to GConf.");
+			print("Couldn't save settings to GConf.");
 		}
 	
 		Watcher.signal.theme_changed.emit();
+	},
+	set_zealous_animation: function(widget, ud)
+	{
+		zealous = widget.active;
+		
+		try
+		{
+			gconf_client.set_bool("/apps/same-gnome-clutter/zealous", zealous);
+		}
+		catch(e)
+		{
+			print("Couldn't save settings to GConf.");
+		}
+	},
+	set_fly_score: function(widget, ud)
+	{
+		fly_score = widget.active;
+		
+		try
+		{
+			gconf_client.set_bool("/apps/same-gnome-clutter/fly_score", fly_score);
+		}
+		catch(e)
+		{
+			print("Couldn't save settings to GConf.");
+		}
+	},
+	update_rows: function(widget, ud)
+	{
+		rows = widget.get_value();
+		
+		try
+		{
+			gconf_client.set_int("/apps/same-gnome-clutter/rows", rows);
+		}
+		catch(e)
+		{
+			print("Couldn't save settings to GConf.");
+		}
+	
+		Watcher.signal.size_changed.emit();
+	},
+	update_columns: function(widget, ud)
+	{
+		columns = widget.get_value();
+
+		try
+		{
+			gconf_client.set_int("/apps/same-gnome-clutter/columns", columns);
+		}
+		catch(e)
+		{
+			print("Couldn't save settings to GConf.");
+		}
+	
+		Watcher.signal.size_changed.emit();
+	},
+	update_colors: function(widget, ud)
+	{
+		colors = widget.get_value();
+
+		try
+		{
+			gconf_client.set_int("/apps/same-gnome-clutter/colors", colors);
+		}
+		catch(e)
+		{
+			print("Couldn't save settings to GConf.");
+		}
+	
+		Watcher.signal.colors_changed.emit();
+	},
+	reset_defaults: function(widget, ud)
+	{
+		print("Not yet implemented.");
 	}
 };
 
@@ -77,7 +176,14 @@ function show_settings()
 	b.connect_signals(handlers);
 
 	populate_theme_selector(b.get_object("theme-selector"));
-
+	
+	// Set current values
+	b.get_object("rows-spinner").value = rows;
+	b.get_object("columns-spinner").value = columns;
+	b.get_object("colors-spinner").value = colors;
+	b.get_object("zealous-checkbox").active = zealous;
+	b.get_object("fly-score-checkbox").active = fly_score;
+	
 	settings_dialog = b.get_object("dialog1");
 	settings_dialog.set_transient_for(main.window);
 	
