@@ -231,7 +231,7 @@ Board = new GType({
 					li.set_light_y(parseInt(y,10));
 					
 					var new_x = real_x * main.tile_size + main.offset;
-					var new_y = (main.tiles_h - y - 1) * main.tile_size + main.offset;
+					var new_y = (main.size_o.columns - y - 1) * main.tile_size + main.offset;
 					
 					if(!li.get_closed() && ((new_x != li.x) ||
 										    (new_y != li.y)))
@@ -254,7 +254,7 @@ Board = new GType({
 			anim_timeline.signal.completed.connect(done_animating);
 			anim_timeline.start();
 			
-			for(; real_x < main.tiles_w; real_x++)
+			for(; real_x < main.size_o.columns; real_x++)
 				lights[real_x] = null;
 			
 			update_score(cl.length);
@@ -278,10 +278,10 @@ Board = new GType({
 			
 			all_lights = [];
 			
-			for(var x = 0; x < main.tiles_w; x++)
+			for(var x = 0; x < main.size_o.columns; x++)
 			{
 				lights[x] = [];
-				for(var y = 0; y < main.tiles_h; y++)
+				for(var y = 0; y < main.size_o.rows; y++)
 				{
 					var li = new Light.Light();
 				
@@ -289,7 +289,7 @@ Board = new GType({
 					li.set_light_y(y);
 				
 					li.set_position(x * main.tile_size + main.offset,
-									(main.tiles_h - y - 1) * main.tile_size + main.offset);
+									(main.size_o.rows - y - 1) * main.tile_size + main.offset);
 					self.add_actor(li);
 					li.signal.button_release_event.connect(self.remove_region);
 					li.signal.enter_event.connect(light_entered);

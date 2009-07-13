@@ -114,7 +114,7 @@ handlers = {
 	{
 		new_size = widget.get_active();
 		
-		if(new_size == size);
+		if(new_size == size)
 			return;
 		
 		size = new_size;
@@ -127,7 +127,7 @@ handlers = {
 		{
 			print("Couldn't save settings to GConf.");
 		}
-	
+		
 		Watcher.signal.size_changed.emit();
 	},
 	update_colors: function(widget, ud)

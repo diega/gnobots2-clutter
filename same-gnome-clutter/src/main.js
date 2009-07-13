@@ -54,6 +54,8 @@ handlers = {
 	}
 };
 
+size_o = Settings.sizes[Settings.size];
+
 b = new Gtk.Builder();
 b.add_from_file(imports.Path.file_prefix + "/same-gnome.ui");
 b.connect_signals(handlers);
@@ -69,8 +71,10 @@ stage.signal.hide.connect(Gtk.main_quit);
 stage.set_use_fog(false);
 
 stage.color = {alpha: 0};
-stage.set_size((tiles_w * tile_size),(tiles_h * tile_size));
-clutter_embed.set_size_request((tiles_w * tile_size),(tiles_h * tile_size));
+stage.set_size((size_o.columns * tile_size),
+               (size_o.rows * tile_size));
+clutter_embed.set_size_request((size_o.columns * tile_size),
+                               (size_o.rows * tile_size));
 
 // NOTE: show the window before the stage, and the stage before any children
 window.show_all();
@@ -78,7 +82,24 @@ stage.show_all();
 
 ThemeLoader.load_theme(stage, Settings.theme);
 
-//Settings.Watcher.signal.size_changed.connect(size_changed);
+function size_changed()
+{
+	size_o = Settings.sizes[Settings.size];
+	
+	stage.set_size((size_o.columns * tile_size),
+	               (size_o.rows * tile_size));
+	clutter_embed.set_size_request((size_o.columns * tile_size),
+	                               (size_o.rows * tile_size));
+
+	var new_board = new Board.Board();
+	new_board.new_game();
+	stage.add_actor(new_board);
+	stage.remove_actor(board);
+	board.show();
+	board = new_board;
+}
+
+Settings.Watcher.signal.size_changed.connect(size_changed);
 
 var board = new Board.Board();
 stage.add_actor(board);
