@@ -54,13 +54,6 @@ libgames_support_suite (void)
   tcase_add_test (tc1, test_games_clock_new);
   tcase_add_checked_fixture (tc1, fx_setup_gtk, fx_teardown_gtk);
   suite_add_tcase (s, tc1);
-
-  TCase *tc2 = tcase_create ("games-clock-set");
-  tcase_add_test (tc2, test_games_clock_set);
-  tcase_add_checked_fixture (tc2, fx_setup_gtk, fx_teardown_gtk);
-  tcase_set_timeout(tc2, 0);
-  suite_add_tcase (s, tc2);
-
   
   return s;
 }
