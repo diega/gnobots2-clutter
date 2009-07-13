@@ -231,7 +231,7 @@ Board = new GType({
 					li.set_light_y(parseInt(y,10));
 					
 					var new_x = real_x * main.tile_size + main.offset;
-					var new_y = (main.size_o.columns - y - 1) * main.tile_size + main.offset;
+					var new_y = (main.size_o.rows - y - 1) * main.tile_size + main.offset;
 					
 					if(!li.get_closed() && ((new_x != li.x) ||
 										    (new_y != li.y)))
