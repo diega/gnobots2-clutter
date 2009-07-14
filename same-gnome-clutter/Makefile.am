@@ -42,7 +42,7 @@ EXTRA_DIST = \
     data/settings.ui \
     src/Score.js \
     src/Path.js.in \
-    src/ThemeLoader.js.in
+    src/ThemeLoader.js
 
 
 install-schemas-local: $(schema_DATA)
