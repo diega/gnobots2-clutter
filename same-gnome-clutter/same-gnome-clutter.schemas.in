@@ -48,18 +48,6 @@
           <long>Use more flashy, but slower, animations.</long>
         </locale>
       </schema>
-      
-      <schema>
-        <key>/schemas/apps/same-gnome-clutter/fly_score</key>
-        <applyto>/apps/same-gnome-clutter/fly_score</applyto>
-        <owner>same-gnome-clutter</owner>
-        <type>bool</type>
-        <default>true</default>
-        <locale name="C">
-          <short>Fly score</short>
-          <long>Animate the number of points at the end of each move.</long>
-        </locale>
-      </schema>
 
   </schemalist>
   

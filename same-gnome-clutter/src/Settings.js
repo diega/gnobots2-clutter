@@ -8,12 +8,11 @@ ThemeLoader = imports.ThemeLoader;
 GConf.init(Seed.argv);
 
 // Defaults
-var theme, colors, zealous, fly_score, size;
+var theme, colors, zealous, size;
 var default_theme = "Tango";
 var default_size = 1;
 var default_colors = 3;
 var default_zealous = true;
-var default_fly_score = true;
 
 // Map theme names to themes
 var themes = ThemeLoader.load_themes();
@@ -28,7 +27,6 @@ try
 	size = gconf_client.get_int("/apps/same-gnome-clutter/size");
 	colors = gconf_client.get_int("/apps/same-gnome-clutter/colors");
 	zealous = gconf_client.get_bool("/apps/same-gnome-clutter/zealous");
-	fly_score = gconf_client.get_bool("/apps/same-gnome-clutter/fly_score");
 	
 	if(colors < 2 || colors > 4)
 		colors = default_colors;
@@ -97,19 +95,6 @@ handlers = {
 			print("Couldn't save settings to GConf.");
 		}
 	},
-	set_fly_score: function(widget, ud)
-	{
-		fly_score = widget.active;
-		
-		try
-		{
-			gconf_client.set_bool("/apps/same-gnome-clutter/fly_score", fly_score);
-		}
-		catch(e)
-		{
-			print("Couldn't save settings to GConf.");
-		}
-	},
 	update_size: function(widget, ud)
 	{
 		new_size = widget.get_active();
@@ -171,7 +156,6 @@ function show_settings()
 	b.get_object("size-selector").set_active(size);
 	b.get_object("colors-spinner").value = colors;
 	b.get_object("zealous-checkbox").active = zealous;
-	b.get_object("fly-score-checkbox").active = fly_score;
 	
 	settings_dialog = b.get_object("dialog1");
 	settings_dialog.set_transient_for(main.window);
