@@ -1,5 +1,9 @@
 SUBDIRS = data/themes
 
+#if BUILD_HELP
+#SUBDIRS += help
+#endif
+
 samedir=$(pkgdatadir)/same-gnome-clutter
 
 same_DATA = \

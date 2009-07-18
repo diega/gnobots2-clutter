@@ -39,6 +39,10 @@ handlers = {
 	show_scores: function(selector, ud)
 	{
 	},
+	show_help: function(selector, ud)
+	{
+		GnomeGamesSupport.help_display(window, "same-gnome", null);
+	},
 	new_game: function(selector, ud)
 	{
 		board.new_game();
