@@ -53,7 +53,10 @@ Light = new GType({
 	
 	this.animate_to = function (new_x, new_y, timeline)
 	{
-	    this.animate_with_timeline(Clutter.AnimationMode.EASE_OUT_BOUNCE, timeline,
+		var anim_mode = Settings.zealous ?
+		                	Clutter.AnimationMode.EASE_OUT_BOUNCE :
+		                	Clutter.AnimationMode.EASE_OUT_QUAD;
+		this.animate_with_timeline(anim_mode, timeline,
 		{
 			x: new_x,
 			y: new_y

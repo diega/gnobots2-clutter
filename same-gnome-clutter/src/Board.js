@@ -98,7 +98,7 @@ Board = new GType({
 		{
 			var points_awarded = calculate_score(tiles);
 			
-			if(main.fly_score)
+			if(Settings.zealous)
 			{
 				var score_text = new Score.Score();
 				score_text.animate_score(points_awarded);
@@ -234,7 +234,7 @@ Board = new GType({
 					var new_y = (main.size_o.rows - y - 1) * main.tile_size + main.offset;
 					
 					if(!li.get_closed() && ((new_x != li.x) ||
-										    (new_y != li.y)))
+					                        (new_y != li.y)))
 					{
 						li.animate_to(new_x, new_y, anim_timeline);
 					}
