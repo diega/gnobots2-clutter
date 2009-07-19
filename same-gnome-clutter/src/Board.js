@@ -4,6 +4,8 @@ Light = imports.Light;
 Score = imports.Score;
 main = imports.main;
 Settings = imports.Settings;
+gettext = imports.gettext;
+_ = gettext.gettext;
 
 Board = new GType({
 	parent: Clutter.Group.type,
@@ -92,6 +94,8 @@ Board = new GType({
 				cl[i].opacity = 255;
 			
 			oldcl = cl;
+			
+			return cl;
 		}
 		
 		function update_score(tiles)
@@ -106,8 +110,6 @@ Board = new GType({
 			
 			main.current_score += points_awarded;
 			
-			print(main.current_score);
-			
 			if(self.has_completed())
 			{
 				if(self.has_won())
@@ -115,9 +117,9 @@ Board = new GType({
 				
 				final_score = new Score.Score();
 				final_score.animate_final_score(main.current_score);
-				
-				print("Done with: " + main.current_score + " points!");
 			}
+			
+			main.score_label.label = Seed.sprintf(_("Score: %d"), main.current_score);
 		}
 		
 		function light_entered(actor, event)
@@ -127,7 +129,14 @@ Board = new GType({
 			
 			last_light = actor;
 			
-			light_lights_from(actor);
+			var lights_lit = light_lights_from(actor).length;
+			var new_score = calculate_score(lights_lit);
+			var score_string = "No points";
+			
+			if(new_score > 0)
+				score_string = Seed.sprintf(gettext.ngettext("%d point", "%d points", new_score), new_score);
+			
+			main.message_label.label = score_string;
 			
 			return false;
 		}
@@ -139,6 +148,8 @@ Board = new GType({
 			for(var i in connected)
 				if(!connected[i].get_closed())
 					connected[i].opacity = 180;
+			
+			main.message_label.label = "";
 			
 			return false;
 		}

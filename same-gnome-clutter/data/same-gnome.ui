@@ -130,7 +130,31 @@
 					<object class="GtkClutterEmbed" id="clutter" />
 				</child>
 				<child>
-					<object class="GtkStatusbar" id="statusbar">
+					<object class="GtkHSeparator" id="separator5" />
+				</child>
+				<child>
+					<object class="GtkHBox" id="statusbar">
+						<property name="homogeneous">True</property>
+						<child>
+							<object class="GtkLabel" id="message_label">
+								<property name="visible">True</property>
+								<property name="label"></property>
+							</object>
+							<packing>
+								<property name="expand">True</property>
+								<property name="fill">False</property>
+							</packing>
+						</child>
+						<child>
+							<object class="GtkLabel" id="score_label">
+								<property name="visible">True</property>
+								<property name="label"></property>
+							</object>
+							<packing>
+								<property name="expand">True</property>
+								<property name="fill">False</property>
+							</packing>
+						</child>
 					</object>
 				</child>
 			</object>

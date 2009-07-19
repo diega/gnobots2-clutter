@@ -61,6 +61,8 @@ b.connect_signals(handlers);
 
 var window = b.get_object("game_window");
 var clutter_embed = b.get_object("clutter");
+var message_label = b.get_object("message_label");
+var score_label = b.get_object("score_label");
 
 var stage = clutter_embed.get_stage();
 
