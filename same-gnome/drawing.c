@@ -96,12 +96,14 @@ draw_ball_with_offset (GtkWidget * canvas, game_cell * p, int x,
     /* We don't add an offset to the blank tile since it is part of 
      * the background. The background movement is compensated for when
      * the other tiles were created. */
-    gdk_draw_drawable (canvas->window, canvas->style->black_gc,
+    gdk_draw_drawable (gtk_widget_get_window (canvas),
+                       gtk_widget_get_style (canvas)->black_gc,
                        blank_pixmap, 0, 0, x * tile_size,
                        y * tile_size, tile_size, tile_size);
   } else {
     pixmap = pixmaps[colour][frame];
-    gdk_draw_drawable (canvas->window, canvas->style->black_gc,
+    gdk_draw_drawable (gtk_widget_get_window (canvas),
+                       gtk_widget_get_style (canvas)->black_gc,
                        pixmap, 0, 0, x * tile_size + dx,
                        y * tile_size - dy, tile_size, tile_size);
   }
@@ -109,7 +111,7 @@ draw_ball_with_offset (GtkWidget * canvas, game_cell * p, int x,
   /* Draw the cursor is needed. */
   if (draw_cursor && (x == cursor_x) && (y == cursor_y)) {
     if (cursorgc == NULL) {
-      cursorgc = gdk_gc_new (canvaswidget->window);
+      cursorgc = gdk_gc_new (gtk_widget_get_window (canvaswidget));
       gdk_colormap_alloc_color (gdk_colormap_get_system (),
                                 &cursorcolor, TRUE, TRUE);
       gdk_gc_set_foreground (cursorgc, &cursorcolor);
@@ -117,7 +119,7 @@ draw_ball_with_offset (GtkWidget * canvas, game_cell * p, int x,
                                   GDK_CAP_BUTT, GDK_JOIN_MITER);
     }
 
-    gdk_draw_rectangle (canvaswidget->window, cursorgc,
+    gdk_draw_rectangle (gtk_widget_get_window (canvaswidget), cursorgc,
                         FALSE, x * tile_size + 2, y * tile_size + 2,
                         tile_size - 3, tile_size - 3);
   }
@@ -163,12 +165,12 @@ expose_cb (GtkWidget * canvas, GdkEventExpose * event, gpointer data)
   game_cell dummy = { -1, 0, 0, 0 };
 
   if (gridgc == NULL) {
-    gridgc = gdk_gc_new (canvas->window);
+    gridgc = gdk_gc_new (gtk_widget_get_window (canvas));
     gdk_colormap_alloc_color (gdk_colormap_get_system (),
                               &gridcolor, TRUE, TRUE);
     gdk_gc_set_foreground (gridgc, &gridcolor);
 
-    bggc = gdk_gc_new (canvas->window);
+    bggc = gdk_gc_new (gtk_widget_get_window (canvas));
     gdk_colormap_alloc_color (gdk_colormap_get_system (),
                               &bgcolor, TRUE, TRUE);
     gdk_gc_set_foreground (bggc, &bgcolor);
@@ -195,13 +197,13 @@ expose_cb (GtkWidget * canvas, GdkEventExpose * event, gpointer data)
 
     /* Fixup the left and bottom lines. */
     if ((event->area.y + event->area.height + 1) >= board_height * tile_size) {
-      gdk_draw_line (canvas->window, gridgc,
+      gdk_draw_line (gtk_widget_get_window (canvas), gridgc,
                      event->area.x, board_height * tile_size,
                      event->area.x + event->area.width - 2,
                      board_height * tile_size);
     }
     if ((event->area.x + event->area.width + 1) >= board_width * tile_size) {
-      gdk_draw_line (canvas->window, gridgc,
+      gdk_draw_line (gtk_widget_get_window (canvas), gridgc,
                      board_width * tile_size, event->area.y,
                      board_width * tile_size,
                      event->area.y + event->area.height - 2);
@@ -209,7 +211,7 @@ expose_cb (GtkWidget * canvas, GdkEventExpose * event, gpointer data)
 
   } else {                        /* Draw only the grid. */
 
-    gdk_draw_rectangle (canvas->window, bggc, TRUE,
+    gdk_draw_rectangle (gtk_widget_get_window (canvas), bggc, TRUE,
                         event->area.x, event->area.y,
                         event->area.width, event->area.height);
 
@@ -217,7 +219,7 @@ expose_cb (GtkWidget * canvas, GdkEventExpose * event, gpointer data)
     for (x = tile_size * (event->area.x / tile_size);
          x <= tile_size * ((event->area.x + event->area.width) / tile_size);
          x += tile_size) {
-      gdk_draw_line (canvas->window, gridgc, x,
+      gdk_draw_line (gtk_widget_get_window (canvas), gridgc, x,
                      event->area.y, x, event->area.y + event->area.height);
     }
 
@@ -225,7 +227,7 @@ expose_cb (GtkWidget * canvas, GdkEventExpose * event, gpointer data)
     for (x = tile_size * (event->area.y / tile_size);
          x <= tile_size * ((event->area.y + event->area.height) / tile_size);
          x += tile_size) {
-      gdk_draw_line (canvas->window, gridgc,
+      gdk_draw_line (gtk_widget_get_window (canvas), gridgc,
                      event->area.x, x, event->area.x + event->area.width, x);
     }
 
@@ -307,10 +309,11 @@ render_cb (GtkWidget * canvas)
     }
     if (blank_pixmap != NULL)
       g_object_unref (blank_pixmap);
-    blank_pixmap = gdk_pixmap_new (canvas->window, tile_size, tile_size, -1);
-    gdk_draw_pixbuf (blank_pixmap, canvas->style->black_gc, bg_pixbuf,
-                     0, 0, 0, 0, tile_size, tile_size, GDK_RGB_DITHER_NORMAL,
-                     0, 0);
+    blank_pixmap = gdk_pixmap_new (gtk_widget_get_window (canvas), tile_size,
+                                   tile_size, -1);
+    gdk_draw_pixbuf (blank_pixmap, gtk_widget_get_style (canvas)->black_gc,
+                     bg_pixbuf, 0, 0, 0, 0, tile_size, tile_size,
+                     GDK_RGB_DITHER_NORMAL, 0, 0);
 
     /* This code is far from perfect. For starters it only checks to
      * see if the file exists before deciding that the filename is the
@@ -387,10 +390,10 @@ render_cb (GtkWidget * canvas)
                             1.0 - n * ftile_size,
                             1.0, 1.0, GDK_INTERP_TILES, 255);
 
-      pixmaps[n][m] = gdk_pixmap_new (canvas->window, tile_size, tile_size,
-                                      -1);
-      gdk_draw_pixbuf (pixmaps[n][m], canvas->style->black_gc, tile,
-                       0, 0, 0, 0, tile_size, tile_size,
+      pixmaps[n][m] = gdk_pixmap_new (gtk_widget_get_window (canvas), tile_size,
+                                      tile_size, -1);
+      gdk_draw_pixbuf (pixmaps[n][m], gtk_widget_get_style (canvas)->black_gc,
+                       tile, 0, 0, 0, 0, tile_size, tile_size,
                        GDK_RGB_DITHER_NORMAL, 0, 0);
 
       g_object_unref (tile);
@@ -437,10 +440,10 @@ render_cb (GtkWidget * canvas)
         }
       }
 
-      pixmaps[n][m] = gdk_pixmap_new (canvas->window, tile_size, tile_size,
-                                      -1);
-      gdk_draw_pixbuf (pixmaps[n][m], canvas->style->black_gc, tile,
-                       0, 0, 0, 0, tile_size, tile_size,
+      pixmaps[n][m] = gdk_pixmap_new (gtk_widget_get_window (canvas), tile_size,
+                                      tile_size, -1);
+      gdk_draw_pixbuf (pixmaps[n][m], gtk_widget_get_style (canvas)->black_gc,
+                       tile, 0, 0, 0, 0, tile_size, tile_size,
                        GDK_RGB_DITHER_NORMAL, 0, 0);
 
       g_object_unref (tile);
@@ -491,10 +494,10 @@ render_cb (GtkWidget * canvas)
                             ftile_size, 1.0, 1.0 - n * ftile_size,
                             1.0, 1.0, GDK_INTERP_TILES, 255);
 
-      pixmaps[n][m] = gdk_pixmap_new (canvas->window, tile_size, tile_size,
-                                      -1);
-      gdk_draw_pixbuf (pixmaps[n][m], canvas->style->black_gc, tile,
-                       0, 0, 0, 0, tile_size, tile_size,
+      pixmaps[n][m] = gdk_pixmap_new (gtk_widget_get_window (canvas), tile_size,
+                                      tile_size, -1);
+      gdk_draw_pixbuf (pixmaps[n][m], gtk_widget_get_style (canvas)->black_gc,
+                       tile, 0, 0, 0, 0, tile_size, tile_size,
                        GDK_RGB_DITHER_NORMAL, 0, 0);
 
       g_object_unref (tile);
@@ -547,10 +550,10 @@ render_cb (GtkWidget * canvas)
                             ftile_size, 1.0, 1.0 - n * ftile_size,
                             1.0, 1.0, GDK_INTERP_TILES, 255);
 
-      pixmaps[n][m] = gdk_pixmap_new (canvas->window, tile_size, tile_size,
-                                      -1);
-      gdk_draw_pixbuf (pixmaps[n][m], canvas->style->black_gc, tile,
-                       0, 0, 0, 0, tile_size, tile_size,
+      pixmaps[n][m] = gdk_pixmap_new (gtk_widget_get_window (canvas), tile_size,
+                                      tile_size, -1);
+      gdk_draw_pixbuf (pixmaps[n][m], gtk_widget_get_style (canvas)->black_gc,
+                       tile, 0, 0, 0, 0, tile_size, tile_size,
                        GDK_RGB_DITHER_NORMAL, 0, 0);
 
       g_object_unref (tile);

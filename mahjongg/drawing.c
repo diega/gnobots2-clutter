@@ -239,7 +239,8 @@ draw_tile (gint tileno)
 
   /* We could queue this draw, but given that this function is at worst case
    * called twice in a short time span it doesn't seem worth the code. */
-  gdk_draw_drawable (board->window, board->style->black_gc, buffer, ox, oy,
+  gdk_draw_drawable (gtk_widget_get_window (board),
+                     gtk_widget_get_style (board)->black_gc, buffer, ox, oy,
 		     ox, oy, tilewidth, tileheight);
 }
 
@@ -348,7 +349,8 @@ configure_pixmaps (void)
 
   if (buffer != NULL)
     g_object_unref (buffer);
-  buffer = gdk_pixmap_new (board->window, windowwidth, windowheight, -1);
+  buffer = gdk_pixmap_new (gtk_widget_get_window (board), windowwidth, 
+                           windowheight, -1);
 
   /* Recreate the tile images only if the theme or tile size changed. */
   if ((prior_tilebasewidth != tilebasewidth) || (update_tileimages)) {
@@ -360,10 +362,11 @@ configure_pixmaps (void)
     if (tilebuffer != NULL)
       g_object_unref (tilebuffer);
 
-    tileimages = gdk_pixmap_new (board->window, NUM_PATTERNS * tilewidth,
-				 2 * tileheight, -1);
+    tileimages = gdk_pixmap_new (gtk_widget_get_window (board),
+                                 NUM_PATTERNS * tilewidth, 2 * tileheight, -1);
     tilemask = gdk_pixmap_new (NULL, tilewidth, tileheight, 1);
-    tilebuffer = gdk_pixmap_new (board->window, tilewidth, tileheight, -1);
+    tilebuffer = gdk_pixmap_new (gtk_widget_get_window (board), tilewidth,
+                                 tileheight, -1);
 
     recreate_tile_images ();
     update_tileimages = FALSE;
@@ -377,8 +380,8 @@ configure_board (GtkWidget * w, GdkEventConfigure * e, gpointer data)
   nowindow = FALSE;
 
   if (gc == NULL) {
-    gc = gdk_gc_new (w->window);
-    gdk_gc_copy (gc, w->style->black_gc);
+    gc = gdk_gc_new (gtk_widget_get_window (w));
+    gdk_gc_copy (gc, gtk_widget_get_style (w)->black_gc);
     gdk_colormap_alloc_color (gdk_colormap_get_system (), &bgcolour, FALSE,
 			      TRUE);
     gdk_gc_set_foreground (gc, &bgcolour);
@@ -398,9 +401,10 @@ configure_board (GtkWidget * w, GdkEventConfigure * e, gpointer data)
 static void
 expose_board (GtkWidget * w, GdkEventExpose * e, gpointer data)
 {
-  gdk_draw_drawable (w->window, w->style->black_gc, buffer, e->area.x,
+  gdk_draw_drawable (gtk_widget_get_window (w),
+                     gtk_widget_get_style (w)->black_gc, buffer, e->area.x,
 		     e->area.y, e->area.x, e->area.y, e->area.width,
-		     e->area.height);
+                     e->area.height);
 }
 
 static void

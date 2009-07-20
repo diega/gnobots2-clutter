@@ -287,7 +287,7 @@ theme_cb (void)
 					  GTK_STOCK_CLOSE,
 					  GTK_RESPONSE_ACCEPT, NULL);
     gtk_container_set_border_width (GTK_CONTAINER (dialog), 5);
-    gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 2);
+    gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), 2);
     gtk_dialog_set_default_response (GTK_DIALOG (dialog),
 				     GTK_RESPONSE_ACCEPT);
     g_signal_connect (G_OBJECT (dialog), "response",
@@ -303,8 +303,8 @@ theme_cb (void)
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroll),
 					 GTK_SHADOW_ETCHED_IN);
     gtk_widget_set_size_request (scroll, 250, 250);
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), scroll,
-			TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))),
+      scroll,	TRUE, TRUE, 0);
 
     list = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_STRING);
 
