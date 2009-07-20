@@ -18,7 +18,6 @@ Board = new GType({
 		var last_light;
 		var animating = false;
 		var anim_timeline;
-		var final_score;
 		
 		// TODO: when a click is rejected, queue it up, like in the C version
 		
@@ -265,8 +264,8 @@ Board = new GType({
 			for(var i in children)
 				self.remove_actor(children[i]);
 			
-			if(final_score)
-				final_score.hide_score();
+			if(Score.final_score)
+				Score.final_score.hide_score();
 			
 			Score.set_score(0);
 			

@@ -5,6 +5,7 @@ Settings = imports.Settings;
 _ = imports.gettext.gettext;
 
 var current_score = 0;
+var final_score;
 
 function set_score(score)
 {
