@@ -73,14 +73,6 @@ Board = new GType({
 			return _connected_lights(li);
 		}
 		
-		function calculate_score(n_lights)
-		{
-			if (n_lights < 3)
-				return 0;
-
-			return (n_lights - 2) * (n_lights - 2);
-		}
-		
 		function light_lights_from(li)
 		{
 			var i;
@@ -98,30 +90,6 @@ Board = new GType({
 			return cl;
 		}
 		
-		function update_score(tiles)
-		{
-			var points_awarded = calculate_score(tiles);
-			
-			if(Settings.zealous)
-			{
-				var score_text = new Score.Score();
-				score_text.animate_score(points_awarded);
-			}
-			
-			main.current_score += points_awarded;
-			
-			if(self.has_completed())
-			{
-				if(self.has_won())
-					main.current_score += 1000;
-				
-				final_score = new Score.Score();
-				final_score.animate_final_score(main.current_score);
-			}
-			
-			main.score_label.label = Seed.sprintf(_("Score: %d"), main.current_score);
-		}
-		
 		function light_entered(actor, event)
 		{
 			if(actor === last_light)
@@ -130,7 +98,7 @@ Board = new GType({
 			last_light = actor;
 			
 			var lights_lit = light_lights_from(actor).length;
-			var new_score = calculate_score(lights_lit);
+			var new_score = Score.calculate_score(lights_lit);
 			var score_string = "No points";
 			
 			if(new_score > 0)
@@ -200,6 +168,8 @@ Board = new GType({
 			
 			if(cl.length < 2)
 				return false;
+				
+			main.message_label.label = "";
 			
 			var close_timeline = new Clutter.Timeline({duration: 500});
 			
@@ -268,7 +238,10 @@ Board = new GType({
 			for(; real_x < main.size_o.columns; real_x++)
 				lights[real_x] = null;
 			
-			update_score(cl.length);
+			Score.increment_score(cl.length);
+			
+			if(self.has_completed())
+				Score.game_completed(self.has_won())
 			
 			cl = last_light = null;
 			
@@ -285,7 +258,7 @@ Board = new GType({
 			if(final_score)
 				final_score.hide_score();
 			
-			main.current_score = 0;
+			Score.set_score(0);
 			
 			all_lights = [];
 			

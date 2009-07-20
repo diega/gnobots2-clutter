@@ -66,8 +66,6 @@ var score_label = b.get_object("score_label");
 
 var stage = clutter_embed.get_stage();
 
-var current_score = 0;
-
 stage.signal.hide.connect(Gtk.main_quit);
 stage.set_use_fog(false);
 

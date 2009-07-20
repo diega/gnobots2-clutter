@@ -2,8 +2,49 @@ Clutter = imports.gi.Clutter;
 Pango = imports.gi.Pango;
 main = imports.main;
 Settings = imports.Settings;
+_ = imports.gettext.gettext;
 
-Score = new GType({
+var current_score = 0;
+
+function set_score(score)
+{
+	current_score = score;
+	main.score_label.label = Seed.sprintf(_("Score: %d"), current_score);
+}
+
+function calculate_score(n_lights)
+{
+	if (n_lights < 3)
+		return 0;
+
+	return (n_lights - 2) * (n_lights - 2);
+}
+
+function increment_score(tiles)
+{
+	var points_awarded = calculate_score(tiles);
+	var new_score = current_score;
+	
+	if(Settings.zealous)
+	{
+		var score_text = new ScoreView();
+		score_text.animate_score(points_awarded);
+	}
+	
+	new_score += points_awarded;
+	
+	set_score(new_score);
+}
+
+function game_completed(won)
+{
+	set_score(current_score + 1000);
+	
+	final_score = new ScoreView();
+	final_score.animate_final_score(current_score);
+}
+
+ScoreView = new GType({
 	parent: Clutter.Group.type,
 	name: "Score",
 	init: function()
