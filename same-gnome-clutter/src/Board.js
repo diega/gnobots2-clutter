@@ -1,5 +1,6 @@
 Clutter = imports.gi.Clutter;
 GLib = imports.gi.GLib;
+Gdk = imports.gi.Gdk;
 Light = imports.Light;
 Score = imports.Score;
 main = imports.main;
@@ -116,6 +117,15 @@ Board = new GType({
 			for(var i in connected)
 				if(!connected[i].get_closed())
 					connected[i].opacity = 180;
+			
+			return false;
+		}
+		
+		function board_left()
+		{
+			for(var i in all_lights)
+				if(!all_lights[i].get_closed())
+					all_lights[i].opacity = 180;
 			
 			main.message_label.label = "";
 			
@@ -287,6 +297,11 @@ Board = new GType({
 		
 		// Implementation
 		this.reactive = true;
+		
+		// Enable & connect to widget leave signal
+		var gdkwindow = main.clutter_embed.get_window();
+		gdkwindow.set_events(gdkwindow.get_events() | Gdk.EventMask.LEAVE_NOTIFY_MASK);
+		main.clutter_embed.signal.leave_notify_event.connect(board_left);
 		
 		Settings.Watcher.signal.colors_changed.connect(colors_changed);
 	}

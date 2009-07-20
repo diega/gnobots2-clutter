@@ -4,10 +4,10 @@ main = imports.main;
 Settings = imports.Settings;
 
 Light = new GType({
-    parent: Clutter.Group.type,
-    name: "Light",
-    init: function(self)
-    {
+	parent: Clutter.Group.type,
+	name: "Light",
+	init: function(self)
+	{
 		// Private
 		var closed = false;
 		var light_x, light_y;
@@ -116,10 +116,11 @@ Light = new GType({
 	
 		this.set_anchor_point(main.tile_size / 2, main.tile_size / 2);
 	
+		this.add_actor(new Clutter.Rectangle({width: main.tile_size, height: main.tile_size, color: {alpha:255}}));
 		this.add_actor(this.on);
 	
 		Settings.Watcher.signal.theme_changed.connect(theme_changed);
-    }
+	}
 });
 
 
