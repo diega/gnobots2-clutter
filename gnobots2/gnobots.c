@@ -36,7 +36,7 @@
 #include <libgames-support/games-stock.h>
 
 #include <clutter/clutter.h>
-#include <clutter-gtk.h>
+#include <clutter-gtk/clutter-gtk.h>
 
 #ifdef WITH_SMCLIENT
 #include <libgames-support/eggsmclient.h>
