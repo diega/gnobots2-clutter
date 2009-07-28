@@ -3,7 +3,6 @@ GnomeGamesSupport = imports.gi.GnomeGamesSupport;
 
 main = imports.main;
 
-// Not sure that this is acceptable; if it is, should it be in a Seed extension?
 _ = imports.gettext.gettext;
 
 function show_about_dialog()
