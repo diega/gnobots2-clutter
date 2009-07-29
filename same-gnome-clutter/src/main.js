@@ -1,7 +1,5 @@
 #!/usr/bin/env seed
 
-// Configuration
-
 var tile_size = 50;
 var offset = tile_size/2;
 
@@ -13,6 +11,7 @@ GtkBuilder = imports.gtkbuilder;
 Clutter = imports.gi.Clutter;
 GConf = imports.gi.GConf;
 GnomeGamesSupport = imports.gi.GnomeGamesSupport;
+_ = imports.gettext.gettext;
 
 GtkClutter.init(Seed.argv);
 GnomeGamesSupport.runtime_init("same-gnome");
@@ -38,6 +37,7 @@ handlers = {
 	},
 	show_scores: function(selector, ud)
 	{
+		Score.show_scores_dialog();
 	},
 	show_help: function(selector, ud)
 	{
@@ -107,4 +107,8 @@ board.show();
 board.new_game();
 
 Gtk.main();
+
+// should use GGS conf stuff instead of gconf?
+//GnomeGamesSupport.Conf.get_default().shutdown();
+GnomeGamesSupport.runtime_shutdown();
 
