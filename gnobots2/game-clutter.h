@@ -1,4 +1,5 @@
-#include <clutter/clutter.h>
+#ifndef GAME_CLUTTER_H
+#define GAME_CLUTTER_H
 
 ClutterActor *get_player ();
 void delete_clutter_player ();
@@ -15,3 +16,4 @@ void delete_clutter_robot (gint, gint);
 
 //void resize_clutter_cb (GtkWidget *, GtkAllocation *, gpointer);
 //gboolean clutter_move_cb (GtkWidget *, GdkEventMotion *, gpointer);
+#endif

@@ -290,7 +290,7 @@ set_cursor_by_direction (GdkWindow * window, int dx, int dy)
 void
 set_clutter_cursor_by_direction(int x, int y, int dx, int dy)
 {
-  int index, rotation;
+  int index, rotation = 0;
   if (NULL == clutter_cursor)
   {
     clutter_cursor = clutter_texture_new_from_file ("img/arrow.png", NULL);

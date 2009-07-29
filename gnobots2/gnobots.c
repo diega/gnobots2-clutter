@@ -124,6 +124,8 @@ static const GamesScoresCategory scorecats[] = {
 static gint save_state_cb (EggSMClient *, GKeyFile *, gpointer);
 static gint quit_sm_cb (EggSMClient *, gpointer);
 #endif /* WITH_SMCLIENT */
+
+void prepare_clutter (GtkClutterEmbed *embed);
 /**********************************************************************/
 
 

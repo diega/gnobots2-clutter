@@ -8,8 +8,8 @@
 #include "gbdefs.h"
 #include "cursors.h"
 
-ClutterActor *get_player();
-void delete_clutter_player();
+ClutterActor *get_player(void);
+void delete_clutter_player(void);
 void move_explosion (gint, gint, gint, gint);
 void delete_clutter_explosion (gint, gint);
 gboolean explosion_exists(gint, gint);
